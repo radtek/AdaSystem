@@ -7,17 +7,21 @@ using System.Threading.Tasks;
 
 namespace Ada.Core
 {
+    /// <summary>
+    /// 服务于数据层的接口，规范CURD
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
    public interface IRepository<T> where T : class, new()
     {
 
-        bool Add(T entity);
-        bool Add(IEnumerable<T> entitites);
-        bool Update(T entity);
-        bool Update(string id, IDictionary<string, object> iDictionary);
-        bool Remove(T entity);
-        bool Remove(params string[] ids);
-        bool Delete(params string[] ids);
-        bool Delete(IEnumerable<T> entities);
+        void Add(T entity);
+        void Add(IEnumerable<T> entitites);
+        void Update(T entity);
+        void Update(string id, IDictionary<string, object> iDictionary);
+        void Remove(T entity);
+        void Remove(params string[] ids);
+        void Delete(params string[] ids);
+        void Delete(IEnumerable<T> entities);
         IQueryable<T> LoadEntities(Expression<Func<T, bool>> whereLambda);
         IQueryable<T> LoadPageEntities<TK>(int pageSize, int pageIndex, out int totalPage,
             Expression<Func<T, bool>> whereLambda, Expression<Func<T, TK>> orderLambda, bool isAsc);

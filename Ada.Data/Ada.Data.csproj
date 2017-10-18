@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="AdaEFDbcontext.cs" />
     <Compile Include="AdaEFRepository.cs" />
+    <Compile Include="EFDbcontext.cs" />
     <Compile Include="Mapping\Admin\RoleMap.cs" />
     <Compile Include="Mapping\Admin\OrganizationMap.cs" />
     <Compile Include="Mapping\Admin\MenuMap.cs" />

@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace Ada.Data
 {
+    /// <summary>
+    /// EF上下文
+    /// </summary>
     public class AdaEFDbcontext : DbContext
     {
         public AdaEFDbcontext() : base("name=ADADCS")

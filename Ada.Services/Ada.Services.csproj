@@ -40,7 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\IManagerService.cs" />
+    <Compile Include="Admin\ManagerService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ada.Core\Ada.Core.csproj">
+      <Project>{1E0B290A-3337-43C9-9CE9-BFB8CE741DBA}</Project>
+      <Name>Ada.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

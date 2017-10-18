@@ -9,6 +9,10 @@ using Ada.Core;
 
 namespace Ada.Data
 {
+    /// <summary>
+    /// 公共CURD方法
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class AdaEFRepository<T> : IRepository<T> where T : class, new()
     {
         private readonly DbContext _context;
@@ -23,10 +27,9 @@ namespace Ada.Data
         /// </summary>
         /// <param name="entity">新增实体</param>
         /// <returns>新增实体</returns>
-        public bool Add(T entity)
+        public virtual void Add(T entity)
         {
             _context.Set<T>().Add(entity);
-            return _context.SaveChanges() > 0;
         }
         #endregion
 
@@ -36,10 +39,9 @@ namespace Ada.Data
         /// </summary>
         /// <param name="entitites">新增实体集合</param>
         /// <returns>新增实体</returns>
-        public bool Add(IEnumerable<T> entitites)
+        public virtual void Add(IEnumerable<T> entitites)
         {
             _context.Set<T>().AddRange(entitites);
-            return true;
         }
         #endregion
 
@@ -49,14 +51,13 @@ namespace Ada.Data
         /// </summary>
         /// <param name="entity">更新实体</param>
         /// <returns>是否成功</returns>
-        public bool Update(T entity)
+        public virtual void Update(T entity)
         {
             //db.Set<T>().Attach(entity); //内部就是只是把实体的 状态改成unchange跟数据库查询出来的状态时一样的。
             _context.Entry(entity).State = EntityState.Modified;
-            return true;
         }
 
-        public bool Update(string id, IDictionary<string, object> iDictionary)
+        public virtual void Update(string id, IDictionary<string, object> iDictionary)
         {
             var entity = _context.Set<T>().Find(id);
             foreach (KeyValuePair<string, object> keyValuePair in iDictionary)
@@ -64,7 +65,6 @@ namespace Ada.Data
                 _context.Entry(entity).Property(keyValuePair.Key).CurrentValue = keyValuePair.Value;
                 _context.Entry(entity).Property(keyValuePair.Key).IsModified = true;
             }
-            return true;
         }
         #endregion
 
@@ -74,10 +74,9 @@ namespace Ada.Data
         /// </summary>
         /// <param name="entity">删除实体</param>
         /// <returns>是否成功</returns>
-        public bool Remove(T entity)
+        public virtual void Remove(T entity)
         {
             _context.Entry(entity).State = EntityState.Deleted;
-            return true;
         }
         #endregion
 
@@ -87,21 +86,20 @@ namespace Ada.Data
         /// </summary>
         /// <param name="ids">实体ID数组</param>
         /// <returns>删除数目</returns>
-        public bool Remove(params string[] ids)
+        public virtual void Remove(params string[] ids)
         {
             foreach (var id in ids)
             {
                 var entity = _context.Set<T>().Find(id);
                 _context.Set<T>().Remove(entity);
             }
-            return true;
         }
         /// <summary>
         /// 批量删除实体(逻辑删除)
         /// </summary>
         /// <param name="ids">实体ID数组</param>
         /// <returns>删除数目</returns>
-        public bool Delete(params string[] ids)
+        public virtual void Delete(params string[] ids)
         {
             foreach (var id in ids)
             {
@@ -109,7 +107,6 @@ namespace Ada.Data
                 _context.Entry(entity).Property("IsDelete").CurrentValue = true;
                 _context.Entry(entity).Property("IsDelete").IsModified = true;
             }
-            return true;
         }
         #endregion
 
@@ -119,10 +116,9 @@ namespace Ada.Data
         /// </summary>
         /// <param name="entities">实体集合</param>
         /// <returns>删除数目</returns>
-        public bool Delete(IEnumerable<T> entities)
+        public virtual void Delete(IEnumerable<T> entities)
         {
             _context.Set<T>().RemoveRange(entities);
-            return true;
         }
         #endregion
 
