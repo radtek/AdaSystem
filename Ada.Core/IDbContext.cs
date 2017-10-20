@@ -10,7 +10,7 @@ namespace Ada.Core
     /// <summary>
     /// 用于服务层的数据上下文
     /// </summary>
-   public interface IDbContext
+   public interface IDbContext: IDependency
     {
         int SaveChanges();
         int ExecuteSql(string sql, params SqlParameter[] pars);

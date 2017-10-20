@@ -1,3 +1,6 @@
+using Ada.Core;
+using Ada.Core.Domain.Admin;
+
 namespace Ada.Data.Migrations
 {
     using System;
@@ -27,6 +30,12 @@ namespace Ada.Data.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
+            context.Set<Manager>().Add(new Manager()
+            {
+                Id = IdBuilder.CreateIdNum(),
+                UserName = "adaxiong",
+                Password = "123456"
+            });
         }
     }
 }

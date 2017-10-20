@@ -16,7 +16,6 @@ namespace Ada.Data
     public class AdaEFRepository<T> : IRepository<T> where T : class, new()
     {
         private readonly DbContext _context;
-
         public AdaEFRepository(DbContext context)
         {
             _context = context;

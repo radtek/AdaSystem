@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ada.Core;
 using Ada.Core.Domain.Admin;
 using Ada.Core.ViewModel.Admin;
 
 namespace Ada.Services.Admin
 {
-    public interface IManagerService
+    public interface IManagerService: IDependency
     {
         IQueryable<Manager> LoadEntitiesFilter(ManagerView managerView);
         bool SetRole(List<string> managerIds, List<string> roleIds);
