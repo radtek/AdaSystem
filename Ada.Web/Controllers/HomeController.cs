@@ -21,13 +21,7 @@ namespace Ada.Web.Controllers
         }
         public ActionResult Index()
         {
-            _repository.Add(new Manager()
-            {
-                Id = IdBuilder.CreateIdNum(),
-                UserName = "xjb",
-                Password = "123456"
-            });
-            _dbContext.SaveChanges();
+
             var model = _repository.LoadEntities(d => d.IsDelete == false).ToList();
             
             return View(model);
