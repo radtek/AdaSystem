@@ -15,6 +15,7 @@ namespace Ada.Framework.Filter
 {
     public abstract class BaseController : Controller
     {
+        
         private readonly IPermissionService _permissionService;
         protected BaseController(IPermissionService permissionService)
         {
@@ -40,7 +41,7 @@ namespace Ada.Framework.Filter
                 //没登陆
                 filterContext.Result = isAjax
                     ? Json(new { State = 0, Msg = "您尚未登陆或登陆超时，请重新登陆！" })
-                    : (ActionResult)RedirectToAction("Index", "Login", new { area = "Admin" });
+                    : (ActionResult)RedirectToAction("Index", "Login", new { area = "" });
                 return;
             }
             CurrentManager = SerializeHelper.DeserializeToObject<Manager>(obj.ToString());
