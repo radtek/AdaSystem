@@ -41,7 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\IManagerService.cs" />
+    <Compile Include="Admin\IPermissionService.cs" />
     <Compile Include="Admin\ManagerService.cs" />
+    <Compile Include="Admin\PermissionService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

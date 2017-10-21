@@ -18,15 +18,16 @@ namespace Ada.Web
         public static void Register()
         {
             var builder = new ContainerBuilder();
-            //数据存储注册
+            //注册数据存储
             builder.Register<DbContext>(d => new AdaEFDbcontext()).InstancePerLifetimeScope();//EF上下文
             builder.RegisterGeneric(typeof(AdaEFRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();//数据仓储
 
-            //获取所有继承IDependency的接口
+            //获取所有程序集
             var assemblys = BuildManager.GetReferencedAssemblies().Cast<Assembly>().ToArray();
+            builder.RegisterControllers(assemblys);//注册控制器
+            builder.RegisterAssemblyModules(assemblys);//所有继承module中的类都会被注册
             var dependencyType = typeof(IDependency);
             var singletonType = typeof(ISingleDependency);
-            builder.RegisterControllers(assemblys);
             //注册依赖
             builder.RegisterAssemblyTypes(assemblys)
                 .Where(t => dependencyType.IsAssignableFrom(t) && t != dependencyType && !t.IsAbstract)
@@ -35,7 +36,6 @@ namespace Ada.Web
             builder.RegisterAssemblyTypes(assemblys)
                 .Where(t => singletonType.IsAssignableFrom(t) && t != singletonType && !t.IsAbstract)
                 .AsImplementedInterfaces().SingleInstance();
-            builder.RegisterAssemblyModules(assemblys);//所有继承module中的类都会被注册
             IContainer container = builder.Build();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
         }
