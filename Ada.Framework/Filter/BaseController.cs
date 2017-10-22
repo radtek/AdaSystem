@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain.Admin;
+using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel;
 using Ada.Services.Admin;
+using log4net;
 using Action = Ada.Core.Domain.Admin.Action;
 
 namespace Ada.Framework.Filter
@@ -17,11 +19,13 @@ namespace Ada.Framework.Filter
     {
         
         private readonly IPermissionService _permissionService;
-        protected BaseController(IPermissionService permissionService)
+        protected BaseController()
         {
-            _permissionService = permissionService;
+            _permissionService = EngineContext.Current.Resolve<IPermissionService>();
         }
-        readonly log4net.ILog _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        public ILog Log { get; set; }
+        //private readonly log4net.ILog _logger;//= log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public Manager CurrentManager { get; set; }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -64,7 +68,7 @@ namespace Ada.Framework.Filter
             if (!hasPermission)
             {
                 //写个用户日志
-                _logger.Warn(
+                Log.Warn(
                     $"用户：{CurrentManager.UserName}(IP[{Utils.GetIpAddress()}]),请求[{actionRecord.Area + "/" + actionRecord.ControllerName + "/" + actionRecord.MethodName}]时,出现无权限访问情况！]");
                 filterContext.Result = Error(isAjax, new HttpResultView() { HttpCode = 401, Msg = "您无此功能的操作权限！请联系管理员处理" });
             }

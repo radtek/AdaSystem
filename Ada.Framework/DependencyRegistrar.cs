@@ -3,21 +3,23 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web.Compilation;
-using System.Web.Mvc;
 using Ada.Core;
+using Ada.Core.Infrastructure;
 using Ada.Data;
 using Autofac;
 using Autofac.Integration.Mvc;
 
-namespace Ada.Web
+namespace Ada.Framework
 {
-    public class DependencyRegistrar
+    public class DependencyRegistrar : IDependencyRegistrar
     {
-        public static void Register()
+        public int Order => 0;
+
+        public void Register(ContainerBuilder builder)
         {
-            var builder = new ContainerBuilder();
             //注册数据存储
             builder.Register<DbContext>(d => new AdaEFDbcontext()).InstancePerLifetimeScope();//EF上下文
             builder.RegisterGeneric(typeof(AdaEFRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();//数据仓储
@@ -36,8 +38,6 @@ namespace Ada.Web
             builder.RegisterAssemblyTypes(assemblys)
                 .Where(t => singletonType.IsAssignableFrom(t) && t != singletonType && !t.IsAbstract)
                 .AsImplementedInterfaces().SingleInstance();
-            IContainer container = builder.Build();
-            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
         }
     }
 }

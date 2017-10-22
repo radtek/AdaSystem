@@ -6,6 +6,8 @@ using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain.Admin;
+using Ada.Core.Infrastructure;
+using log4net;
 
 namespace Ada.Web.Controllers
 {
