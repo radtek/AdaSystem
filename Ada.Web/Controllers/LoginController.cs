@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
+using Ada.Core.Domain.Log;
 using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
 using log4net;
@@ -14,10 +15,12 @@ namespace Ada.Web.Controllers
 {
     public class LoginController : Controller
     {
-        private IRepository<Manager> _repository;
-        public LoginController(IRepository<Manager> repository)
+        private readonly IRepository<Manager> _repository;
+        private readonly IDbContext _dbContext;
+        public LoginController(IRepository<Manager> repository,IDbContext dbContext)
         {
             _repository = repository;
+            _dbContext = dbContext;
         }
         public ActionResult Index()
         {
@@ -36,7 +39,18 @@ namespace Ada.Web.Controllers
                 ModelState.AddModelError("message", "用户名或密码有误");
                 return View();
             }
+            //记录日志
+            manager.ManagerLoginLogs.Add(new ManagerLoginLog()
+            {
+                Id = IdBuilder.CreateIdNum(),
+                IpAddress = Utils.GetIpAddress(),
+                LoginTime = DateTime.Now,
+                WebInfo = Request.UserAgent
+            });
+            _dbContext.SaveChanges();
             Session["LoginManager"] = SerializeHelper.SerializeToString(manager);
+            
+            
             return RedirectToAction("Index", "Home", new { area = "Admin" });
 
         }
@@ -45,7 +59,7 @@ namespace Ada.Web.Controllers
         {
             Session.Abandon();
             Response.Cookies.Add(new HttpCookie("ASP.NET_SessionId", string.Empty) { HttpOnly = true });
-            return RedirectToAction("Index", "Login");
+            return RedirectToAction("Index", "Default",new{area=""});
         }
 
     }

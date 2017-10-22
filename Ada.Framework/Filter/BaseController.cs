@@ -49,6 +49,8 @@ namespace Ada.Framework.Filter
                 return;
             }
             CurrentManager = SerializeHelper.DeserializeToObject<Manager>(obj.ToString());
+            //当前用户
+            ViewBag.CurrentMangager = CurrentManager;
             ////后门，用于调试
             if (CurrentManager.UserName == "adaxiong")
             {
@@ -73,6 +75,8 @@ namespace Ada.Framework.Filter
                 filterContext.Result = Error(isAjax, new HttpResultView() { HttpCode = 401, Msg = "您无此功能的操作权限！请联系管理员处理" });
             }
            
+            //用户菜单
+            ViewBag.Menus = _permissionService.AuthorizeMenu(CurrentManager.Id);
         }
         private ActionResult Error(bool isAjax, HttpResultView httpResultView)
         {

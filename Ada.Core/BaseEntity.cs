@@ -13,6 +13,7 @@ namespace Ada.Core
         protected BaseEntity()
         {
             IsDelete = false;
+            Taxis = 99;
         }
         /// <summary>
         /// 主键

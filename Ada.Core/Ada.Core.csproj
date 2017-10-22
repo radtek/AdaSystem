@@ -86,6 +86,7 @@
     <Compile Include="Domain\Admin\Action.cs" />
     <Compile Include="Domain\Admin\Manager.cs" />
     <Compile Include="Domain\Admin\ManagerAction.cs" />
+    <Compile Include="Domain\Log\ManagerLoginLog.cs" />
     <Compile Include="Domain\Admin\Menu.cs" />
     <Compile Include="Domain\Admin\Organization.cs" />
     <Compile Include="Domain\Admin\Role.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Tools\SerializeHelper.cs" />
     <Compile Include="Tools\Utils.cs" />
     <Compile Include="ViewModel\Admin\ManagerView.cs" />
+    <Compile Include="ViewModel\Admin\MenuView.cs" />
     <Compile Include="ViewModel\BaseView.cs" />
     <Compile Include="ViewModel\HttpResultView.cs" />
   </ItemGroup>

@@ -32,8 +32,6 @@ namespace Ada.Core.ViewModel.Admin
         /// </summary>
         [Display(Name = "授权ID")]
         public string OpenId { get; set; }
-
-
         /// <summary>
         /// 用户状态
         /// </summary>
@@ -49,5 +47,15 @@ namespace Ada.Core.ViewModel.Admin
         /// </summary>
         [Display(Name = "机构组织")]
         public string OrganizationId { get; set; }
+        /// <summary>
+        /// 所属角色
+        /// </summary>
+        [Display(Name = "所属角色")]
+        public string Roles { get; set; }
+        /// <summary>
+        /// 所属机构组织
+        /// </summary>
+        [Display(Name = "所属机构组织")]
+        public string Organizations { get; set; }
     }
 }

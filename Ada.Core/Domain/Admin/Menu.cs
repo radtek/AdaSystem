@@ -62,5 +62,6 @@ namespace Ada.Core.Domain.Admin
         /// </summary>
         [Display(Name = "菜单父级")]
         public string ParentId { get; set; }
+
     }
 }

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using Ada.Core.Domain.Admin;
 
-namespace Ada.Core.Domain.Admin
+namespace Ada.Core.Domain.Log
 {
    public class ManagerLoginLog:BaseEntity
     {

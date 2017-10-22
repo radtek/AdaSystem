@@ -1,5 +1,7 @@
 using Ada.Core;
+using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
+using Ada.Core.Tools;
 
 namespace Ada.Data.Migrations
 {
@@ -30,12 +32,18 @@ namespace Ada.Data.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
-            context.Set<Manager>().Add(new Manager()
+            var manager = context.Set<Manager>().FirstOrDefault(d => d.UserName == "adaxiong" && d.IsDelete == false);
+            if (manager==null)
             {
-                Id = IdBuilder.CreateIdNum(),
-                UserName = "adaxiong",
-                Password = "123456"
-            });
+                context.Set<Manager>().Add(new Manager()
+                {
+                    Id = IdBuilder.CreateIdNum(),
+                    UserName = "adaxiong",
+                    Password = Encrypt.Encode("123456"),
+                    Status = Consts.StateNormal
+                });
+            }
+            
         }
     }
 }

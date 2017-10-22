@@ -4,13 +4,13 @@
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
             <form role="search" class="navbar-form-custom" method="post" action="">
                 <div class="form-group">
-                    <input type="text" placeholder="Search for something..." class="form-control" name="top-search" id="top-search">
+                    <input type="text" placeholder="查找..." class="form-control" name="top-search" id="top-search">
                 </div>
             </form>
         </div>
         <ul class="nav navbar-top-links navbar-right">
             <li>
-                <span class="m-r-sm text-muted welcome-message" data-i18n="topnav.welcometext">Welcome to INSPINIA+ Admin Theme.</span>
+                <span class="m-r-sm text-muted welcome-message" data-i18n="topnav.welcometext">欢迎使用【微广+】ERP管理系统.</span>
             </li>
             <li class="dropdown">
                 <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
@@ -108,8 +108,8 @@
                 </ul>
             </li>
             <li>
-                <a href="@Url.Action("Login", "Pages")">
-                    <i class="fa fa-sign-out"></i> Log out
+                <a href="@Url.Action("Quit", "Login",new{area=""})">
+                    <i class="fa fa-sign-out"></i> 退出
                 </a>
             </li>
             <li>

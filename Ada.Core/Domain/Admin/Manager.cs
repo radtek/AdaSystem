@@ -4,16 +4,21 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ada.Core.Domain.Log;
+using Newtonsoft.Json;
 
 namespace Ada.Core.Domain.Admin
 {
-   public class Manager: BaseEntity
+    [Serializable]
+    [JsonObject(MemberSerialization.OptOut)]
+    public class Manager: BaseEntity
     {
         public Manager()
         {
             this.Organizations = new HashSet<Organization>();
             this.Roles = new HashSet<Role>();
             this.ManagerActions = new HashSet<ManagerAction>();
+            this.ManagerLoginLogs = new HashSet<ManagerLoginLog>();
         }
         /// <summary>
         /// 用户名
@@ -72,14 +77,22 @@ namespace Ada.Core.Domain.Admin
         /// <summary>
         /// 机构组织
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<Organization> Organizations { get; set; }
         /// <summary>
         /// 角色
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<Role> Roles { get; set; }
         /// <summary>
         /// 权限
         /// </summary>
+        [JsonIgnore]
         public virtual ICollection<ManagerAction> ManagerActions { get; set; }
+        /// <summary>
+        /// 权限
+        /// </summary>
+        [JsonIgnore]
+        public virtual ICollection<ManagerLoginLog> ManagerLoginLogs { get; set; }
     }
 }

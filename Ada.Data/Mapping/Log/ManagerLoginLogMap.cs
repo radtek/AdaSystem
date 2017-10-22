@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core.Domain.Admin;
+using Ada.Core.Domain.Log;
 
 namespace Ada.Data.Mapping.Log
 {

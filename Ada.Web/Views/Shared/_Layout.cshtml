@@ -1,6 +1,9 @@
 ﻿@using System.Web.Optimization
+@using Ada.Core.Domain.Admin
 @using Ada.Framework
-
+@{
+    var manager = (Manager)ViewBag.CurrentMangager;
+}
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,7 +37,7 @@
     <div id="wrapper" class="@Html.PageClass()">
 
         <!-- Navigation -->
-        @Html.Partial("_Navigation")
+        @Html.Partial("_Navigation",manager)
 
         <!-- Page wraper -->
         <div id="page-wrapper" class="gray-bg @ViewBag.SpecialClass">
