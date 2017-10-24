@@ -1398,6 +1398,7 @@
     <Content Include="Scripts\plugins\jquery-ui\jquery-ui.min.js" />
     <Content Include="Scripts\plugins\jquery-ui\LICENSE.txt" />
     <Content Include="Scripts\plugins\jsKnob\jquery.knob.js" />
+    <Content Include="Scripts\plugins\jsTree\jstree.js" />
     <Content Include="Scripts\plugins\jsTree\jstree.min.js" />
     <Content Include="Scripts\plugins\justified-gallery\jquery.justifiedgallery.css" />
     <Content Include="Scripts\plugins\justified-gallery\jquery.justifiedgallery.js" />

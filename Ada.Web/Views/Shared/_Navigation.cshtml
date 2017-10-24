@@ -39,9 +39,19 @@
                     <li class="@Html.IsSelected(action: "Dashboard_5")"><a href="@Url.Action("Dashboard_5", "Dashboards")">Dashboard v.5</a></li>
                 </ul>
             </li>*@
-            <li class="@Html.IsSelected(controller: "Home")">
-                <a href="@Url.Action("Index", "Home")"><i class="fa fa-diamond"></i> <span class="nav-label" data-i18n="nav.layouts">控制面板</span></a>
-            </li>
+        <li class="@Html.IsSelected(controller: "Home")">
+            <a href="@Url.Action("Index", "Home")"><i class="fa fa-desktop"></i> <span class="nav-label">工作台</span></a>
+        </li>
+        <li class="@Html.IsSelected(controller: "Graphs")">
+            <a href="#"><i class="fa fa-cubes"></i> <span class="nav-label">系统管理</span><span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Graphs", cssClass: "in")">
+                <li class="@Html.IsSelected(action: "Flot")"><a href="@Url.Action("Flot", "Graphs")">机构组织</a></li>
+                <li class="@Html.IsSelected(action: "Morris")"><a href="@Url.Action("Morris", "Graphs")">角色管理</a></li>
+                <li class="@Html.IsSelected(action: "Rickshaw")"><a href="@Url.Action("Rickshaw", "Graphs")">用户管理</a></li>
+                <li class="@Html.IsSelected(action: "Action")"><a href="@Url.Action("Index", "Action")">功能管理</a></li>
+              
+            </ul>
+        </li>
             @*<li class="@Html.IsSelected(controller: "Graphs")">
                 <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label" data-i18n="nav.graphs">Graphs</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Graphs", cssClass: "in")">
@@ -235,7 +245,7 @@
                 <a href="@Url.Action("Index", "CSSAnimations")"><i class="fa fa-magic"></i> <span class="nav-label" data-i18n="nav.animations">CSS Animations </span><span class="label label-info pull-right">62</span></a>
             </li>*@
             <li class="special_link @Html.IsSelected(controller: " Default")">
-                <a href="@Url.Action("Index", "Default",new{area=""})"><i class="fa fa-star"></i> <span class="nav-label" data-i18n="nav.landing">网站首页</span></a>
+                <a href="@Url.Action("Index", "Default",new{area=""})" target="_blank"><i class="fa fa-star"></i> <span class="nav-label" data-i18n="nav.landing">网站首页</span></a>
             </li>
             
         </ul>

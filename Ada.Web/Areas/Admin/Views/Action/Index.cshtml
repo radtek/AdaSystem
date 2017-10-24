@@ -1,0 +1,188 @@
+﻿@using System.Web.Optimization
+@model Ada.Core.Domain.Admin.Action
+@{
+    ViewBag.Title = "功能权限";
+}
+
+@Html.Partial("Bread")
+
+<div class="wrapper wrapper-content animated fadeInRight">
+   
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>功能权限列表 <small>控制用户的行为.</small></h5>
+                    <div class="ibox-tools">
+                        <button type="button" class="btn btn-primary btn-xs">添加根目录</button>
+                        @*<a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>*@
+
+                    </div>
+                </div>
+                <div class="ibox-content">
+
+                    <div id="jstree1">
+                        <ul>
+                            <li class="jstree-open">
+                                所有权限
+                                <ul>
+                                    <li data-jstree='{"type":"html"}'> 工作台</li>
+                                    <li class="jstree-open">
+                                        用户(Manager)
+                                        <ul>
+                                            <li data-jstree='{"type":"css"}'>新增</li>
+                                            <li data-jstree='{"type":"img"}'>更新</li>
+                                            <li data-jstree='{"type":"js"}'>数据</li>
+                                            <li class="text-navy" data-jstree='{"type":"html"}'>删除</li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="jstree-open">
+                                        功能(Action)
+                                        <ul>
+                                            <li data-jstree='{"type":"css"}'>新增</li>
+                                            <li data-jstree='{"type":"img"}'>更新</li>
+                                            <li data-jstree='{"type":"js"}'>数据</li>
+                                            <li class="text-navy" data-jstree='{"type":"html"}'>删除</li>
+                                        </ul>
+                                    </li>
+
+
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>功能详情</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        
+                    </div>
+                </div>
+                <div class="ibox-content">
+
+                    @using (Html.BeginForm("Update","Action",FormMethod.Post,new{@class= "form-horizontal" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            @Html.LabelFor(d=>d.ActionName,Html.DisplayNameFor(d=>d.ActionName).ToString(),new {@class= "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(d=>d.ActionName,new{@class= "form-control", required = "" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Area, Html.DisplayNameFor(d => d.Area).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(d => d.Area, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.ControllerName, Html.DisplayNameFor(d => d.ControllerName).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(d => d.ControllerName, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.MethodName, Html.DisplayNameFor(d => d.MethodName).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(d => d.MethodName, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.HttpMethod, Html.DisplayNameFor(d => d.HttpMethod).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(d => d.HttpMethod, new List<SelectListItem>()
+                                {
+                                    new SelectListItem(){Text = "GET",Value = "GET"},
+                                    new SelectListItem(){Text = "POST",Value = "POST"}
+                                },new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.LinkUrl, Html.DisplayNameFor(d => d.LinkUrl).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(d => d.LinkUrl, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.IconCls, Html.DisplayNameFor(d => d.IconCls).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(d => d.IconCls, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <button class="btn btn-primary" type="submit">保存更新</button>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+@section Styles {
+    @Styles.Render("~/Content/plugins/jsTree")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/jsTree")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#jstree1').jstree({
+                'core': {
+                    'check_callback': true
+                },
+                'plugins': ['types', 'dnd'],
+                'types': {
+                    'default': {
+                        'icon': 'fa fa-folder'
+                    },
+                    'html': {
+                        'icon': 'fa fa-file-code-o'
+                    },
+                    'svg': {
+                        'icon': 'fa fa-file-picture-o'
+                    },
+                    'css': {
+                        'icon': 'fa fa-file-code-o'
+                    },
+                    'img': {
+                        'icon': 'fa fa-file-image-o'
+                    },
+                    'js': {
+                        'icon': 'fa fa-file-text-o'
+                    }
+
+                }
+            });
+
+           
+
+        });
+    </script>
+}
