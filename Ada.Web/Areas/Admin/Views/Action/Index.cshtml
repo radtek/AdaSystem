@@ -14,7 +14,7 @@
                 <div class="ibox-title">
                     <h5>功能权限列表 <small>控制用户的行为.</small></h5>
                     <div class="ibox-tools">
-                        <button type="button" class="btn btn-primary btn-xs">添加根目录</button>
+                        <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#addAction">添加根节点</button>
                         @*<a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
                         </a>*@
@@ -28,7 +28,16 @@
                             <li class="jstree-open">
                                 所有权限
                                 <ul>
-                                    <li data-jstree='{"type":"html"}'> 工作台</li>
+                                    <li data-jstree='{"type":"html"}'> 工作台
+                                    <div class="btn-group">
+                                        <button data-toggle="dropdown" class="btn btn-link btn-xs dropdown-toggle"><span class="caret"></span></button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#">添加子节点</a></li>
+                                            <li><a href="#">编辑子节点</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="#">删除此节点</a></li>
+                                        </ul>
+                                    </div></li>
                                     <li class="jstree-open">
                                         用户(Manager)
                                         <ul>
@@ -72,7 +81,7 @@
                 </div>
                 <div class="ibox-content">
 
-                    @using (Html.BeginForm("Update","Action",FormMethod.Post,new{@class= "form-horizontal" }))
+                    @using (Html.BeginForm("Add","Action",FormMethod.Post,new{@class= "form-horizontal" }))
                     {
                         @Html.AntiForgeryToken()
                         <div class="form-group">
@@ -139,7 +148,23 @@
             </div>
         </div>
     </div>
-
+    <div class="modal inmodal" id="addAction" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated fadeIn">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h5 class="modal-title">添加功能权限</h5>
+                </div>
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary">添加</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 
@@ -157,7 +182,7 @@
                 'core': {
                     'check_callback': true
                 },
-                'plugins': ['types', 'dnd'],
+                'plugins': ['types','contextmenu'],
                 'types': {
                     'default': {
                         'icon': 'fa fa-folder'
@@ -179,6 +204,7 @@
                     }
 
                 }
+                
             });
 
            

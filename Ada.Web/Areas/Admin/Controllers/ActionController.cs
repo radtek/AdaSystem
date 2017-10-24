@@ -16,9 +16,16 @@ namespace Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public ActionResult Add()
+        {
+            return Json(null);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Update()
         {
             return Json(null);
         }
+
     }
 }

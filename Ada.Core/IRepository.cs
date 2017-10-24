@@ -20,8 +20,9 @@ namespace Ada.Core
         void Update(string id, IDictionary<string, object> iDictionary);
         void Remove(T entity);
         void Remove(params string[] ids);
+        void Remove(IEnumerable<T> entities);
         void Delete(params string[] ids);
-        void Delete(IEnumerable<T> entities);
+        void Delete(T entity);
         IQueryable<T> LoadEntities(Expression<Func<T, bool>> whereLambda);
         IQueryable<T> LoadPageEntities<TK>(int pageSize, int pageIndex, out int totalPage,
             Expression<Func<T, bool>> whereLambda, Expression<Func<T, TK>> orderLambda, bool isAsc);

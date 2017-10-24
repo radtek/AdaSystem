@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\ActionService.cs" />
+    <Compile Include="Admin\IActionService.cs" />
     <Compile Include="Admin\IManagerService.cs" />
     <Compile Include="Admin\IPermissionService.cs" />
     <Compile Include="Admin\ManagerService.cs" />

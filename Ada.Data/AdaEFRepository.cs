@@ -77,6 +77,16 @@ namespace Ada.Data
         {
             _context.Entry(entity).State = EntityState.Deleted;
         }
+        /// <summary>
+        /// 删除实体(逻辑删除)
+        /// </summary>
+        /// <param name="entity">删除实体</param>
+        /// <returns>是否成功</returns>
+        public virtual void Delete(T entity)
+        {
+            _context.Entry(entity).Property("IsDelete").CurrentValue = true;
+            _context.Entry(entity).Property("IsDelete").IsModified = true;
+        }
         #endregion
 
         #region 批量删除实体
@@ -94,6 +104,15 @@ namespace Ada.Data
             }
         }
         /// <summary>
+        /// 批量删除实体
+        /// </summary>
+        /// <param name="entities">实体集合</param>
+        /// <returns>删除数目</returns>
+        public virtual void Remove(IEnumerable<T> entities)
+        {
+            _context.Set<T>().RemoveRange(entities);
+        }
+        /// <summary>
         /// 批量删除实体(逻辑删除)
         /// </summary>
         /// <param name="ids">实体ID数组</param>
@@ -109,17 +128,6 @@ namespace Ada.Data
         }
         #endregion
 
-        #region 批量删除实体
-        /// <summary>
-        /// 批量删除实体
-        /// </summary>
-        /// <param name="entities">实体集合</param>
-        /// <returns>删除数目</returns>
-        public virtual void Delete(IEnumerable<T> entities)
-        {
-            _context.Set<T>().RemoveRange(entities);
-        }
-        #endregion
 
         #region 查询实体集合
         /// <summary>
