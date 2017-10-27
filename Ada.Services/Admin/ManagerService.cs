@@ -80,7 +80,7 @@ namespace Ada.Services.Admin
                 var managerActions = _managerActionRepository.LoadEntities(a => a.ManagerId == managerId);
                 if (managerActions.Any())
                 {
-                    _managerActionRepository.Delete(managerActions);
+                    _managerActionRepository.Remove(managerActions);
                 }
                 //新增
                 foreach (var ids in actionIds)

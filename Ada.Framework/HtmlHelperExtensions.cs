@@ -29,5 +29,18 @@ namespace Ada.Framework
             string currentAction = (string)html.ViewContext.RouteData.Values["action"];
             return currentAction;
         }
+
+
+
+
+        private static Action<T> Fix<T>(Func<Action<T>, Action<T>> f)
+        {
+            return x => f(Fix(f))(x);
+        }
+
+        public static void Render<T>(this HtmlHelper helper, T model, Func<Action<T>, Action<T>> f)
+        {
+            Fix(f)(model);
+        }
     }
 }

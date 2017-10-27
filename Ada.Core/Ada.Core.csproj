@@ -107,10 +107,12 @@
     <Compile Include="Tools\Encrypt.cs" />
     <Compile Include="Tools\SerializeHelper.cs" />
     <Compile Include="Tools\Utils.cs" />
+    <Compile Include="ViewModel\Admin\ActionView.cs" />
     <Compile Include="ViewModel\Admin\ManagerView.cs" />
     <Compile Include="ViewModel\Admin\MenuView.cs" />
     <Compile Include="ViewModel\BaseView.cs" />
     <Compile Include="ViewModel\HttpResultView.cs" />
+    <Compile Include="ViewModel\TreeView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

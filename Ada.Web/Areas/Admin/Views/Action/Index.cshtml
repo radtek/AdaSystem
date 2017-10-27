@@ -1,13 +1,43 @@
 ﻿@using System.Web.Optimization
-@model Ada.Core.Domain.Admin.Action
+@using Ada.Core.ViewModel
+@using Ada.Framework
+@model Ada.Core.ViewModel.Admin.ActionView
 @{
     ViewBag.Title = "功能权限";
+    List<TreeView> actions = ViewBag.Actions;
 }
+
+
 
 @Html.Partial("Bread")
 
+@helper TreeHelper(List<TreeView> list)
+{
+    if (list.Count>0)
+    {
+        <ul>
+            @foreach (var item in list)
+            {
+                <li class="jstree-open">
+                    @item.Text
+                    <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-link btn-xs dropdown-toggle"><span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">添加子节点</a></li>
+                            <li><a href="#">编辑子节点</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">删除此节点</a></li>
+                        </ul>
+                    </div>
+                    @TreeHelper(item.Children)
+                </li>
+            }
+        </ul>
+    }
+}
+
 <div class="wrapper wrapper-content animated fadeInRight">
-   
+
     <div class="row">
         <div class="col-lg-6">
             <div class="ibox float-e-margins">
@@ -16,28 +46,39 @@
                     <div class="ibox-tools">
                         <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#addAction">添加根节点</button>
                         @*<a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>*@
+                                <i class="fa fa-chevron-up"></i>
+                            </a>*@
 
                     </div>
                 </div>
                 <div class="ibox-content">
 
                     <div id="jstree1">
-                        <ul>
+                       
+
+                        @TreeHelper(actions)
+
+
+
+
+                        @*<ul>
+
+
                             <li class="jstree-open">
                                 所有权限
                                 <ul>
-                                    <li data-jstree='{"type":"html"}'> 工作台
-                                    <div class="btn-group">
-                                        <button data-toggle="dropdown" class="btn btn-link btn-xs dropdown-toggle"><span class="caret"></span></button>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="#">添加子节点</a></li>
-                                            <li><a href="#">编辑子节点</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">删除此节点</a></li>
-                                        </ul>
-                                    </div></li>
+                                    <li data-jstree='{"type":"html"}'>
+                                        工作台
+                                        <div class="btn-group">
+                                            <button data-toggle="dropdown" class="btn btn-link btn-xs dropdown-toggle"><span class="caret"></span></button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">添加子节点</a></li>
+                                                <li><a href="#">编辑子节点</a></li>
+                                                <li class="divider"></li>
+                                                <li><a href="#">删除此节点</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
                                     <li class="jstree-open">
                                         用户(Manager)
                                         <ul>
@@ -62,7 +103,9 @@
 
                                 </ul>
                             </li>
-                        </ul>
+
+                        </ul>*@
+
                     </div>
 
                 </div>
@@ -76,18 +119,33 @@
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
                         </a>
-                        
+
                     </div>
                 </div>
                 <div class="ibox-content">
 
-                    @using (Html.BeginForm("Add","Action",FormMethod.Post,new{@class= "form-horizontal" }))
-                    {
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal inmodal" id="addAction" tabindex="-1" role="dialog" aria-hidden="true">
+        @using (Html.BeginForm("Add", "Action", FormMethod.Post))
+        {
+            <div class="modal-dialog">
+                <div class="modal-content animated fadeIn">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h5 class="modal-title">添加功能权限</h5>
+                    </div>
+                    <div class="modal-body form-horizontal">
+
                         @Html.AntiForgeryToken()
                         <div class="form-group">
-                            @Html.LabelFor(d=>d.ActionName,Html.DisplayNameFor(d=>d.ActionName).ToString(),new {@class= "col-sm-2 control-label" })
+                            @Html.LabelFor(d => d.ActionName, Html.DisplayNameFor(d => d.ActionName).ToString(), new { @class = "col-sm-2 control-label" })
                             <div class="col-sm-10">
-                                @Html.TextBoxFor(d=>d.ActionName,new{@class= "form-control", required = "" })
+                                @Html.TextBoxFor(d => d.ActionName, new { @class = "form-control", required = "" })
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -116,10 +174,10 @@
                             @Html.LabelFor(d => d.HttpMethod, Html.DisplayNameFor(d => d.HttpMethod).ToString(), new { @class = "col-sm-2 control-label" })
                             <div class="col-sm-10">
                                 @Html.DropDownListFor(d => d.HttpMethod, new List<SelectListItem>()
-                                {
-                                    new SelectListItem(){Text = "GET",Value = "GET"},
-                                    new SelectListItem(){Text = "POST",Value = "POST"}
-                                },new { @class = "form-control" })
+                            {
+                                new SelectListItem() {Text = "GET", Value = "GET"},
+                                new SelectListItem() {Text = "POST", Value = "POST"}
+                            }, new { @class = "form-control" })
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -136,34 +194,21 @@
                                 @Html.TextBoxFor(d => d.IconCls, new { @class = "form-control" })
                             </div>
                         </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group">
-                            <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-primary" type="submit">保存更新</button>
-                            </div>
-                        </div>
-                    }
+                        @*<div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-primary" type="submit">保存更新</button>
+                                </div>
+                            </div>*@
 
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">添加</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="modal inmodal" id="addAction" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content animated fadeIn">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h5 class="modal-title">添加功能权限</h5>
-                </div>
-                <div class="modal-body">
-                    
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary">添加</button>
-                </div>
-            </div>
-        </div>
+        }
     </div>
 
 </div>
@@ -182,7 +227,7 @@
                 'core': {
                     'check_callback': true
                 },
-                'plugins': ['types','contextmenu'],
+                'plugins': ['types', 'contextmenu'],
                 'types': {
                     'default': {
                         'icon': 'fa fa-folder'
@@ -204,10 +249,10 @@
                     }
 
                 }
-                
+
             });
 
-           
+
 
         });
     </script>
