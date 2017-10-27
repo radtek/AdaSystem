@@ -17,7 +17,7 @@ namespace Ada.Framework.Filter
 {
     public abstract class BaseController : Controller
     {
-        
+
         private readonly IPermissionService _permissionService;
         protected BaseController()
         {
@@ -51,6 +51,7 @@ namespace Ada.Framework.Filter
             CurrentManager = SerializeHelper.DeserializeToObject<Manager>(obj.ToString());
             //当前用户
             ViewBag.CurrentMangager = CurrentManager;
+            
             ////后门，用于调试
             if (CurrentManager.UserName == "adaxiong")
             {
@@ -65,7 +66,7 @@ namespace Ada.Framework.Filter
                     HttpMethod = Request.HttpMethod
                 };
             //校验权限
-           var hasPermission= _permissionService.Authorize(actionRecord,CurrentManager.Id);
+            var hasPermission = _permissionService.Authorize(actionRecord, CurrentManager.Id);
             //1.根据获取的URL地址与请求的方式查询权限表。
             if (!hasPermission)
             {
@@ -74,9 +75,10 @@ namespace Ada.Framework.Filter
                     $"用户：{CurrentManager.UserName}(IP[{Utils.GetIpAddress()}]),请求[{actionRecord.Area + "/" + actionRecord.ControllerName + "/" + actionRecord.MethodName}]时,出现无权限访问情况！]");
                 filterContext.Result = Error(isAjax, new HttpResultView() { HttpCode = 401, Msg = "您无此功能的操作权限！请联系管理员处理" });
             }
-           
+
             //用户菜单
             ViewBag.Menus = _permissionService.AuthorizeMenu(CurrentManager.Id);
+            
         }
         private ActionResult Error(bool isAjax, HttpResultView httpResultView)
         {

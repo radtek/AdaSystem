@@ -47,6 +47,11 @@ namespace Ada.Core.ViewModel.Admin
         /// </summary>
         [Display(Name = "图标样式")]
         public string IconCls { get; set; }
+        /// <summary>
+        /// 父级节点
+        /// </summary>
+        [Display(Name = "父级节点")]
+        public string ParentId { get; set; }
     }
 
     

@@ -26,7 +26,7 @@ namespace Admin.Controllers
         // GET: Action
         public ActionResult Index()
         {
-            var actions = _repository.LoadEntities(d => d.IsDelete == false).OrderBy(d=>d.Taxis).ToList();
+            var actions = _repository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis).ToList();
             ViewBag.Actions = GetTree(null, actions);
             return View();
         }
@@ -64,14 +64,21 @@ namespace Admin.Controllers
                 MethodName = actionView.MethodName,
                 LinkUrl = actionView.LinkUrl
             };
+            if (!string.IsNullOrWhiteSpace(actionView.ParentId))
+            {
+                action.ParentId = actionView.ParentId;
+            }
             _actionService.Add(action);
+            TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Update()
+        public ActionResult Delete(string id)
         {
-            return Json(null);
+            _actionService.Delete(id);
+            TempData["Msg"] = "删除成功";
+            return RedirectToAction("Index");
         }
 
     }

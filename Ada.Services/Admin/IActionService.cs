@@ -11,6 +11,6 @@ namespace Ada.Services.Admin
    {
        void Add(Core.Domain.Admin.Action action);
        void Update(Core.Domain.Admin.Action action);
-       void Delete(Core.Domain.Admin.Action action);
+       void Delete(params string[] ids);
    }
 }

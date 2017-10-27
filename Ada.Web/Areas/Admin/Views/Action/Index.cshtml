@@ -23,10 +23,10 @@
                     <div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-link btn-xs dropdown-toggle"><span class="caret"></span></button>
                         <ul class="dropdown-menu">
-                            <li><a href="#">添加子节点</a></li>
+                            <li><a href="#" onclick="addChild('@item.Id');">添加子节点</a></li>
                             <li><a href="#">编辑子节点</a></li>
                             <li class="divider"></li>
-                            <li><a href="#">删除此节点</a></li>
+                            <li><a href="javascript:;" onclick="deleteAction('@item.Id','@item.Text');">删除此节点</a></li>
                         </ul>
                     </div>
                     @TreeHelper(item.Children)
@@ -194,6 +194,7 @@
                                 @Html.TextBoxFor(d => d.IconCls, new { @class = "form-control" })
                             </div>
                         </div>
+                        @Html.HiddenFor(d=>d.ParentId)
                         @*<div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
@@ -215,14 +216,16 @@
 
 @section Styles {
     @Styles.Render("~/Content/plugins/jsTree")
+    @Styles.Render("~/plugins/sweetAlertStyles")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/jsTree")
+    @Scripts.Render("~/plugins/sweetAlert")
 
     <script type="text/javascript">
         $(document).ready(function () {
-
+            
             $('#jstree1').jstree({
                 'core': {
                     'check_callback': true
@@ -255,5 +258,31 @@
 
 
         });
+
+        function deleteAction(id, text) {
+            swal({
+                title: "您确定吗?",
+                text: "您确定要删除功能 " + text + "?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                closeOnConfirm: false
+            }, function () {
+                var magicToken = $("input[name=__RequestVerificationToken]").first();
+                if (!magicToken) { return; }
+                var form = $("<form action=\"@Url.Action("Delete")\" method=\"POST\" />");
+                form.append(magicToken.clone());
+                form.append($("<input type=\"hidden\" name=\"id\" value=\"" + id + "\" />"));
+                $("body").append(form);
+                form.submit();
+            });
+        }
+
+        function addChild(parentId) {
+            $("#ParentId").val(parentId);
+            $('#addAction').modal('show');
+        }
     </script>
 }
