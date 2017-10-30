@@ -1,89 +1,170 @@
 ﻿@using System.Web.Optimization
+@using Ada.Core.ViewModel
+@using Ada.Core.ViewModel.Admin
 @model Ada.Core.ViewModel.Admin.RoleView
 @{
     ViewBag.Title = "角色管理";
+    List<TreeView> actions = ViewBag.Actions;
+    IEnumerable<RoleView> roles = ViewBag.Roles;
 }
 @Html.Partial("Bread")
 
-
+@helper TreeHelper(List<TreeView> list)
+{
+    if (list.Count > 0)
+    {
+        <ul>
+            @foreach (var item in list)
+            {
+                <li class="jstree-open" id="@item.Id">
+                    <span>@item.Text</span>
+                    @TreeHelper(item.Children)
+                </li>
+            }
+        </ul>
+    }
+}
 
 <div class="wrapper wrapper-content animated fadeInRight">
-
-
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>@ViewBag.Title</h5>
+                    @*<h5>@ViewBag.Title</h5>*@
 
                     <div class="ibox-tools">
-                        <button type="button" class="btn btn-success btn-xs" onclick=""><i class="fa fa-plus-square"></i> 添加角色</button>
+                        <button type="button" class="btn btn-success btn-sm" onclick="add();"><i class="fa fa-plus-square"></i> 添加角色</button>
                     </div>
                 </div>
                 <div class="ibox-content">
                     @*<input type="text" class="form-control input-sm m-b-xs" id="filter"
-                           placeholder="Search in table">*@
+                        placeholder="Search in table">*@
 
                     <table class="table table-striped" data-sorting="true">
                         <thead>
-                        <tr>
-                            <th>@Html.DisplayNameFor(d=>d.RoleName)</th>
-                            <th>@Html.DisplayNameFor(d =>d.Id)</th>
-                        </tr>
+                            <tr>
+                                <th>@Html.DisplayNameFor(d => d.RoleName)</th>
+                                <th>@Html.DisplayNameFor(d => d.Id)</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>超级管理员</td>
-                            <td>
-                                <div class="btn-group m-b-n-xs">
-                                    <button class="btn-white btn btn-xs"><i class="fa fa-pencil"></i> 编辑</button>
-                                    <button class="btn-white btn btn-xs"><i class="fa fa-trash-o"></i> 删除</button>
-                                </div>
-                            </td>
-                            
-                        </tr>
-                        <tr>
-                            <td>CTrident</td>
-                            <td>
-                                <div class="btn-group m-b-n-xs">
-                                    <button class="btn-white btn btn-xs">编辑</button>
-                                    <button class="btn-white btn btn-xs">删除</button>
-                                </div>
-                            </td>
-                            
-                        </tr>
-                        <tr>
-                            <td>系统管理员</td>
-                            <td>
-                                <div class="btn-group m-b-n-xs">
-                                    <button class="btn-white btn btn-xs">编辑</button>
-                                    <button class="btn-white btn btn-xs">删除</button>
-                                </div>
-                            </td>
-                            
-                        </tr>
+                        @foreach (var item in roles)
+                        {
+                            <tr>
+                                <td>@item.RoleName</td>
+                                <td>
+                                    <div class="btn-group m-b-n-xs">
+                                        <button class="btn-white btn btn-xs" onclick="update('@item.Id','@Url.Action("GetEntity")');"><i class="fa fa-pencil"></i> 编辑</button>
+                                        <button class="btn-white btn btn-xs" onclick="del('@item.Id','@item.RoleName','@Url.Action("Delete")');"><i class="fa fa-trash-o"></i> 删除</button>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        }
+                        
+
                         </tbody>
-                       
+
                     </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<div class="modal inmodal" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+    @using (Html.BeginForm("AddOrUpdate", "Role"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog">
+            <div class="modal-content animated fadeIn">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h5 class="modal-title"><span></span>角色</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#tab-1">角色属性</a></li>
+                            <li class=""><a data-toggle="tab" href="#tab-2">角色权限</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="tab-1" class="tab-pane active">
+                                <div class="panel-body form-horizontal">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.RoleName, Html.DisplayNameFor(d => d.RoleName).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.RoleName, new { @class = "form-control", required = "" })
+                                        </div>
+                                    </div>
+                                    @Html.HiddenFor(d => d.Id)
+                                    @Html.HiddenFor(d => d.ActionIds)
+                                </div>
+                            </div>
+                            <div id="tab-2" class="tab-pane">
+                                <div class="panel-body">
+                                    <div id="jstree">
+                                        @TreeHelper(actions)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="subForm();">提交</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
 
 
 @section Styles {
     @Styles.Render("~/plugins/footableV3Styles")
+    @Styles.Render("~/Content/plugins/jsTree")
+    @Styles.Render("~/plugins/sweetAlertStyles")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/footableV3")
-
+    @Scripts.Render("~/plugins/jsTree")
+    @Scripts.Render("~/plugins/sweetAlert")
+    @Scripts.Render("~/plugins/formFill")
+    @Scripts.Render("~/bundles/base")
     <script type="text/javascript">
         $(document).ready(function () {
-
             $('.table').footable();
-
+            var tree = $('#jstree');
+            tree.jstree({
+                'core': {
+                    'check_callback': true
+                },
+                'plugins': ['types', 'checkbox'],
+                'types': {
+                    'default': {
+                        'icon': 'fa fa-folder'
+                    }
+                },
+                "checkbox" : {
+                    "keep_selected_style": false,
+                    "three_state": false
+                }
+            });
+            //tree.jstree('check_all');
         });
+
+        function subForm() {
+            if (!$("#RoleName").val()) {
+                toastr.warning('请输入角色名称！');
+                return;
+            }
+            var arry = $('#jstree').jstree("get_checked");
+            $("#ActionIds").val(arry.join(','));
+            $('#modal form').submit();
+        }
     </script>
 }

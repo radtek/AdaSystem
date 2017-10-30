@@ -13,13 +13,13 @@
 
 @helper TreeHelper(List<TreeView> list)
 {
-    if (list.Count>0)
-    {
+if (list.Count > 0)
+{
         <ul>
             @foreach (var item in list)
             {
                 <li class="jstree-open">
-                   <span onclick="">@item.Text</span> 
+                    <span>@item.Text</span>
                     <div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-link btn-xs dropdown-toggle"><span class="caret"></span></button>
                         <ul class="dropdown-menu">
@@ -33,7 +33,7 @@
                 </li>
             }
         </ul>
-    }
+}
 }
 
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -44,7 +44,7 @@
                 <div class="ibox-title">
                     <h5>功能权限列表 <small>控制用户的行为.</small></h5>
                     <div class="ibox-tools">
-                        
+
                         <button type="button" class="btn btn-primary btn-xs" onclick="$('#jstree').jstree('close_all');"><i class="fa fa-plus"></i> 折叠</button>
                         <button type="button" class="btn btn-warning btn-xs" onclick="$('#jstree').jstree('open_all');"><i class="fa fa-minus"></i> 展开</button>
                         <button type="button" class="btn btn-success btn-xs m-l-xl" onclick="addNode();">添加根节点</button>
@@ -57,7 +57,7 @@
                 <div class="ibox-content">
 
                     <div id="jstree">
-                       
+
 
                         @TreeHelper(actions)
 
@@ -67,47 +67,47 @@
                         @*<ul>
 
 
-                            <li class="jstree-open">
-                                所有权限
-                                <ul>
-                                    <li data-jstree='{"type":"html"}'>
-                                        工作台
-                                        <div class="btn-group">
-                                            <button data-toggle="dropdown" class="btn btn-link btn-xs dropdown-toggle"><span class="caret"></span></button>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">添加子节点</a></li>
-                                                <li><a href="#">编辑子节点</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="#">删除此节点</a></li>
+                                <li class="jstree-open">
+                                    所有权限
+                                    <ul>
+                                        <li data-jstree='{"type":"html"}'>
+                                            工作台
+                                            <div class="btn-group">
+                                                <button data-toggle="dropdown" class="btn btn-link btn-xs dropdown-toggle"><span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">添加子节点</a></li>
+                                                    <li><a href="#">编辑子节点</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="#">删除此节点</a></li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li class="jstree-open">
+                                            用户(Manager)
+                                            <ul>
+                                                <li data-jstree='{"type":"css"}'>新增</li>
+                                                <li data-jstree='{"type":"img"}'>更新</li>
+                                                <li data-jstree='{"type":"js"}'>数据</li>
+                                                <li class="text-navy" data-jstree='{"type":"html"}'>删除</li>
                                             </ul>
-                                        </div>
-                                    </li>
-                                    <li class="jstree-open">
-                                        用户(Manager)
-                                        <ul>
-                                            <li data-jstree='{"type":"css"}'>新增</li>
-                                            <li data-jstree='{"type":"img"}'>更新</li>
-                                            <li data-jstree='{"type":"js"}'>数据</li>
-                                            <li class="text-navy" data-jstree='{"type":"html"}'>删除</li>
-                                        </ul>
-                                    </li>
+                                        </li>
 
-                                    <li class="jstree-open">
-                                        功能(Action)
-                                        <ul>
-                                            <li data-jstree='{"type":"css"}'>新增</li>
-                                            <li data-jstree='{"type":"img"}'>更新</li>
-                                            <li data-jstree='{"type":"js"}'>数据</li>
-                                            <li class="text-navy" data-jstree='{"type":"html"}'>删除</li>
-                                        </ul>
-                                    </li>
+                                        <li class="jstree-open">
+                                            功能(Action)
+                                            <ul>
+                                                <li data-jstree='{"type":"css"}'>新增</li>
+                                                <li data-jstree='{"type":"img"}'>更新</li>
+                                                <li data-jstree='{"type":"js"}'>数据</li>
+                                                <li class="text-navy" data-jstree='{"type":"html"}'>删除</li>
+                                            </ul>
+                                        </li>
 
 
 
-                                </ul>
-                            </li>
+                                    </ul>
+                                </li>
 
-                        </ul>*@
+                            </ul>*@
 
                     </div>
 
@@ -134,7 +134,7 @@
         </div>
     </div>
     <div class="modal inmodal" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
-        @using (Html.BeginForm("AddOrUpdate","Action"))
+        @using (Html.BeginForm("AddOrUpdate", "Action"))
         {
             @Html.AntiForgeryToken()
             <div class="modal-dialog">
@@ -145,7 +145,7 @@
                     </div>
                     <div class="modal-body form-horizontal">
 
-                       
+
                         <div class="form-group">
                             @Html.LabelFor(d => d.ActionName, Html.DisplayNameFor(d => d.ActionName).ToString(), new { @class = "col-sm-2 control-label" })
                             <div class="col-sm-10">
@@ -205,14 +205,8 @@
                                 @Html.TextBoxFor(d => d.Taxis, new { @class = "form-control" })
                             </div>
                         </div>
-                        @Html.HiddenFor(d=>d.ParentId)
+                        @Html.HiddenFor(d => d.ParentId)
                         @Html.HiddenFor(d => d.Id)
-                        @*<div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-primary" type="submit">保存更新</button>
-                                </div>
-                            </div>*@
 
                     </div>
                     <div class="modal-footer">
@@ -242,7 +236,7 @@
                 'core': {
                     'check_callback': true
                 },
-                'plugins': ['types', 'contextmenu'],
+                'plugins': ['types'],
                 'types': {
                     'default': {
                         'icon': 'fa fa-folder'
@@ -270,7 +264,7 @@
         function deleteAction(id, text) {
             swal({
                 title: "您确定吗?",
-                text: "您确定要删除功能 " + text + "?",
+                text: "您确定要删除  " + text + "?",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
@@ -293,6 +287,7 @@
             if (parentId) {
                 $("#ParentId").val(parentId);
             }
+            $("#Id").val("");
             $(".modal-title").text("添加功能权限");
             $('#modal').modal('show');
         }
@@ -305,6 +300,6 @@
                     $('#modal').modal('show');
                 });
         }
-        
+
     </script>
 }

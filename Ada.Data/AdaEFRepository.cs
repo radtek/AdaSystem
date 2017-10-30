@@ -126,6 +126,14 @@ namespace Ada.Data
                 _context.Entry(entity).Property("IsDelete").IsModified = true;
             }
         }
+        public virtual void Delete(IEnumerable<T> entities)
+        {
+            foreach (var entity in entities)
+            {
+                _context.Entry(entity).Property("IsDelete").CurrentValue = true;
+                _context.Entry(entity).Property("IsDelete").IsModified = true;
+            }
+        }
         #endregion
 
 

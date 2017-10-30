@@ -62,8 +62,8 @@ namespace Admin.Controllers
                 MethodName = action.MethodName,
                 ParentId = action.ParentId,
                 Taxis = action.Taxis
-                
-            },JsonRequestBehavior.AllowGet);
+
+            }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -71,8 +71,7 @@ namespace Admin.Controllers
         {
             var action = new Action
             {
-                AddedBy = CurrentManager.Id,
-                AddedDate = DateTime.Now,
+
                 ActionName = actionView.ActionName,
                 Area = actionView.Area,
                 ControllerName = actionView.ControllerName,
@@ -89,23 +88,30 @@ namespace Admin.Controllers
             if (!string.IsNullOrWhiteSpace(actionView.Id))
             {
                 action.Id = actionView.Id;
+                action.ModifiedBy = CurrentManager.Id;
+                action.ModifiedDate = DateTime.Now;
                 _actionService.Update(action);
                 TempData["Msg"] = "更新成功";
             }
             else
             {
                 action.Id = IdBuilder.CreateIdNum();
+                action.AddedBy = CurrentManager.Id;
+                action.AddedDate = DateTime.Now;
                 _actionService.Add(action);
                 TempData["Msg"] = "添加成功";
             }
-            
+
             return RedirectToAction("Index");
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(string id)
         {
-            _actionService.Delete(id);
+            var action = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            action.DeletedBy = CurrentManager.Id;
+            action.DeletedDate = DateTime.Now;
+            _actionService.Delete(action);
             TempData["Msg"] = "删除成功";
             return RedirectToAction("Index");
         }

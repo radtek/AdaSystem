@@ -469,7 +469,8 @@ namespace Ada.Web
             bundles.Add(new ScriptBundle("~/plugins/formFill").Include(
                 "~/Scripts/plugins/jquery-form-fill/jquery.formautofill.min.js"));
 
-
+            bundles.Add(new ScriptBundle("~/bundles/base").Include(
+                "~/Scripts/base.js"));
         }
     }
 }

@@ -31,9 +31,9 @@ namespace Ada.Services.Admin
             _dbContext.SaveChanges();
         }
 
-        public void Delete(params string[] ids)
+        public void Delete(Action action)
         {
-            _repository.Delete(ids);
+            _repository.Delete(action);
             _dbContext.SaveChanges();
         }
     }

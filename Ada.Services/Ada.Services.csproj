@@ -44,8 +44,10 @@
     <Compile Include="Admin\IActionService.cs" />
     <Compile Include="Admin\IManagerService.cs" />
     <Compile Include="Admin\IPermissionService.cs" />
+    <Compile Include="Admin\IRoleService.cs" />
     <Compile Include="Admin\ManagerService.cs" />
     <Compile Include="Admin\PermissionService.cs" />
+    <Compile Include="Admin\RoleService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

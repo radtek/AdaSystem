@@ -1098,6 +1098,7 @@
     <Content Include="Images\zender_logo.png" />
     <Content Include="Scripts\app\inspinia.js" />
     <Content Include="Scripts\app\skin.config.min.js" />
+    <Content Include="Scripts\base.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.1.1.min.js" />

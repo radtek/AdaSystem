@@ -25,5 +25,10 @@ namespace Ada.Core.ViewModel.Admin
         /// </summary>
         [Display(Name = "操作")]
         public string Id { get; set; }
+        /// <summary>
+        /// 权限集合
+        /// </summary>
+        [Display(Name = "权限集合")]
+        public string ActionIds { get; set; }
     }
 }
