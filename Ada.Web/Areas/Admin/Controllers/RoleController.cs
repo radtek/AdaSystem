@@ -4,17 +4,14 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Ada.Framework.Filter;
-using Ada.Services.Admin;
 
 namespace Admin.Controllers
 {
-    public class HomeController : BaseController
+    public class RoleController : BaseController
     {
-       
-        // GET: Home
+        // GET: Role
         public ActionResult Index()
         {
-
             return View();
         }
     }

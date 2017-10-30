@@ -324,11 +324,14 @@ namespace Ada.Web
             // Footable Styless
             bundles.Add(new StyleBundle("~/plugins/footableStyles").Include(
                       "~/Content/plugins/footable/footable.core.css", new CssRewriteUrlTransform()));
-
+            bundles.Add(new StyleBundle("~/plugins/footableV3Styles").Include(
+                "~/Content/plugins/footable/footable.bootstrap.min.css"));
             // Footable alert
             bundles.Add(new ScriptBundle("~/plugins/footable").Include(
                       "~/Scripts/plugins/footable/footable.all.min.js"));
-
+            bundles.Add(new ScriptBundle("~/plugins/footableV3").Include(
+                "~/Scripts/plugins/fullcalendar/moment.min.js",
+                "~/Scripts/plugins/footable/footable.min.js"));
             // Select2 Styless
             bundles.Add(new StyleBundle("~/plugins/select2Styles").Include(
                       "~/Content/plugins/select2/select2.min.css"));
@@ -462,7 +465,9 @@ namespace Ada.Web
                         "~/Scripts/plugins/pwstrength/pwstrength-bootstrap.min.js",
                         "~/Scripts/plugins/pwstrength/zxcvbn.js"));
 
-
+            // jQuery form auto fill
+            bundles.Add(new ScriptBundle("~/plugins/formFill").Include(
+                "~/Scripts/plugins/jquery-form-fill/jquery.formautofill.min.js"));
 
 
         }

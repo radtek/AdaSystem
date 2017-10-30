@@ -47,13 +47,30 @@ namespace Admin.Controllers
             });
             return treeViews;
         }
+        public ActionResult GetEntity(string id)
+        {
+            var action = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            return Json(new ActionView()
+            {
+                Id = action.Id,
+                ActionName = action.ActionName,
+                Area = action.Area,
+                ControllerName = action.ControllerName,
+                HttpMethod = action.HttpMethod,
+                IconCls = action.IconCls,
+                LinkUrl = action.LinkUrl,
+                MethodName = action.MethodName,
+                ParentId = action.ParentId,
+                Taxis = action.Taxis
+                
+            },JsonRequestBehavior.AllowGet);
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(ActionView actionView)
+        public ActionResult AddOrUpdate(ActionView actionView)
         {
             var action = new Action
             {
-                Id = IdBuilder.CreateIdNum(),
                 AddedBy = CurrentManager.Id,
                 AddedDate = DateTime.Now,
                 ActionName = actionView.ActionName,
@@ -62,14 +79,26 @@ namespace Admin.Controllers
                 HttpMethod = actionView.HttpMethod,
                 IconCls = actionView.IconCls,
                 MethodName = actionView.MethodName,
-                LinkUrl = actionView.LinkUrl
+                LinkUrl = actionView.LinkUrl,
+                Taxis = actionView.Taxis
             };
             if (!string.IsNullOrWhiteSpace(actionView.ParentId))
             {
                 action.ParentId = actionView.ParentId;
             }
-            _actionService.Add(action);
-            TempData["Msg"] = "添加成功";
+            if (!string.IsNullOrWhiteSpace(actionView.Id))
+            {
+                action.Id = actionView.Id;
+                _actionService.Update(action);
+                TempData["Msg"] = "更新成功";
+            }
+            else
+            {
+                action.Id = IdBuilder.CreateIdNum();
+                _actionService.Add(action);
+                TempData["Msg"] = "添加成功";
+            }
+            
             return RedirectToAction("Index");
         }
         [HttpPost]

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ada.Core.ViewModel.Admin
 {
-   public class ActionView: BaseView
+   public class ActionView
     {
         /// <summary>
         /// 权限名称
@@ -52,6 +52,16 @@ namespace Ada.Core.ViewModel.Admin
         /// </summary>
         [Display(Name = "父级节点")]
         public string ParentId { get; set; }
+        /// <summary>
+        /// 主键
+        /// </summary>
+        [Display(Name = "主键")]
+        public string Id { get; set; }
+        /// <summary>
+        /// 排序
+        /// </summary>
+        [Display(Name = "排序")]
+        public int? Taxis { get; set; }
     }
 
     

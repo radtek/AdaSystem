@@ -19,12 +19,12 @@
             @foreach (var item in list)
             {
                 <li class="jstree-open">
-                    @item.Text
+                   <span onclick="">@item.Text</span> 
                     <div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-link btn-xs dropdown-toggle"><span class="caret"></span></button>
                         <ul class="dropdown-menu">
-                            <li><a href="#" onclick="addChild('@item.Id');">添加子节点</a></li>
-                            <li><a href="#">编辑子节点</a></li>
+                            <li><a href="#" onclick="addNode('@item.Id');">添加子节点</a></li>
+                            <li><a href="#" onclick="updateNode('@item.Id');">编辑子节点</a></li>
                             <li class="divider"></li>
                             <li><a href="javascript:;" onclick="deleteAction('@item.Id','@item.Text');">删除此节点</a></li>
                         </ul>
@@ -44,7 +44,10 @@
                 <div class="ibox-title">
                     <h5>功能权限列表 <small>控制用户的行为.</small></h5>
                     <div class="ibox-tools">
-                        <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#addAction">添加根节点</button>
+                        
+                        <button type="button" class="btn btn-primary btn-xs" onclick="$('#jstree').jstree('close_all');"><i class="fa fa-plus"></i> 折叠</button>
+                        <button type="button" class="btn btn-warning btn-xs" onclick="$('#jstree').jstree('open_all');"><i class="fa fa-minus"></i> 展开</button>
+                        <button type="button" class="btn btn-success btn-xs m-l-xl" onclick="addNode();">添加根节点</button>
                         @*<a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
                             </a>*@
@@ -53,7 +56,7 @@
                 </div>
                 <div class="ibox-content">
 
-                    <div id="jstree1">
+                    <div id="jstree">
                        
 
                         @TreeHelper(actions)
@@ -124,24 +127,25 @@
                 </div>
                 <div class="ibox-content">
 
-
+                    <p>填写相关控制器名称和动作名称，以及请求方法名称，记录到数据库，以达到控制用户的权限行为</p>
 
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal inmodal" id="addAction" tabindex="-1" role="dialog" aria-hidden="true">
-        @using (Html.BeginForm("Add", "Action", FormMethod.Post))
+    <div class="modal inmodal" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        @using (Html.BeginForm("AddOrUpdate","Action"))
         {
+            @Html.AntiForgeryToken()
             <div class="modal-dialog">
                 <div class="modal-content animated fadeIn">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h5 class="modal-title">添加功能权限</h5>
+                        <h5 class="modal-title">功能权限</h5>
                     </div>
                     <div class="modal-body form-horizontal">
 
-                        @Html.AntiForgeryToken()
+                       
                         <div class="form-group">
                             @Html.LabelFor(d => d.ActionName, Html.DisplayNameFor(d => d.ActionName).ToString(), new { @class = "col-sm-2 control-label" })
                             <div class="col-sm-10">
@@ -194,7 +198,15 @@
                                 @Html.TextBoxFor(d => d.IconCls, new { @class = "form-control" })
                             </div>
                         </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Taxis, Html.DisplayNameFor(d => d.Taxis).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(d => d.Taxis, new { @class = "form-control" })
+                            </div>
+                        </div>
                         @Html.HiddenFor(d=>d.ParentId)
+                        @Html.HiddenFor(d => d.Id)
                         @*<div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
@@ -205,7 +217,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                        <button type="submit" class="btn btn-primary">添加</button>
+                        <button type="submit" class="btn btn-primary">提交</button>
                     </div>
                 </div>
             </div>
@@ -222,11 +234,11 @@
 @section Scripts {
     @Scripts.Render("~/plugins/jsTree")
     @Scripts.Render("~/plugins/sweetAlert")
-
+    @Scripts.Render("~/plugins/formFill")
     <script type="text/javascript">
         $(document).ready(function () {
-            
-            $('#jstree1').jstree({
+            var tree = $('#jstree');
+            tree.jstree({
                 'core': {
                     'check_callback': true
                 },
@@ -250,12 +262,8 @@
                     'js': {
                         'icon': 'fa fa-file-text-o'
                     }
-
                 }
-
             });
-
-
 
         });
 
@@ -280,9 +288,23 @@
             });
         }
 
-        function addChild(parentId) {
-            $("#ParentId").val(parentId);
-            $('#addAction').modal('show');
+        function addNode(parentId) {
+            $('#modal form')[0].reset();
+            if (parentId) {
+                $("#ParentId").val(parentId);
+            }
+            $(".modal-title").text("添加功能权限");
+            $('#modal').modal('show');
         }
+
+        function updateNode(id) {
+            $.getJSON("@Url.Action("GetEntity")",{id:id},
+                function(data) {
+                    $("form").autofill(data);
+                    $(".modal-title").text("编辑功能权限");
+                    $('#modal').modal('show');
+                });
+        }
+        
     </script>
 }

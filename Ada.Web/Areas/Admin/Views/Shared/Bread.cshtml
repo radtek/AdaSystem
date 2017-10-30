@@ -3,7 +3,7 @@
         <h2>@ViewBag.Title</h2>
         <ol class="breadcrumb">
             <li>
-                <a href="@Url.Action("Index","Home")">工作台</a>
+                <a href="@Url.Action("Index","Home",new{area= "Dashboards" })">工作台</a>
             </li>
             <li class="active">
                 <strong>@ViewBag.Title</strong>

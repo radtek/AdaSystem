@@ -189,6 +189,8 @@
     <Content Include="Content\plugins\dropzone\dropzone.css" />
     <Content Include="Content\plugins\dualListbox\bootstrap-duallistbox.min.css" />
     <Content Include="Content\plugins\footable\fonts\footable.svg" />
+    <Content Include="Content\plugins\footable\footable.bootstrap.css" />
+    <Content Include="Content\plugins\footable\footable.bootstrap.min.css" />
     <Content Include="Content\plugins\footable\footable.core.css" />
     <Content Include="Content\plugins\fullcalendar\fullcalendar.css" />
     <Content Include="Content\plugins\fullcalendar\fullcalendar.print.css" />
@@ -1100,6 +1102,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.1.1.min.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
+    <Content Include="Scripts\jquery.min.js" />
     <Content Include="Scripts\plugins\blueimp\jquery.blueimp-gallery.min.js" />
     <Content Include="Scripts\plugins\bootstrap-markdown\bootstrap-markdown.js" />
     <Content Include="Scripts\plugins\bootstrap-markdown\markdown.js" />
@@ -1330,6 +1333,8 @@
     <Content Include="Scripts\plugins\flot\jquery.flot.time.js" />
     <Content Include="Scripts\plugins\flot\jquery.flot.tooltip.min.js" />
     <Content Include="Scripts\plugins\footable\footable.all.min.js" />
+    <Content Include="Scripts\plugins\footable\footable.js" />
+    <Content Include="Scripts\plugins\footable\footable.min.js" />
     <Content Include="Scripts\plugins\fullcalendar\fullcalendar.min.js" />
     <Content Include="Scripts\plugins\fullcalendar\moment.min.js" />
     <Content Include="Scripts\plugins\gritter\images\gritter-light.png" />
@@ -1388,6 +1393,8 @@
     <Content Include="Scripts\plugins\jqGrid\i18n\grid.locale-ua.js" />
     <Content Include="Scripts\plugins\jqGrid\i18n\grid.locale-vi.js" />
     <Content Include="Scripts\plugins\jqGrid\jquery.jqGrid.min.js" />
+    <Content Include="Scripts\plugins\jquery-form-fill\jquery.formautofill.js" />
+    <Content Include="Scripts\plugins\jquery-form-fill\jquery.formautofill.min.js" />
     <Content Include="Scripts\plugins\jquery-ui\images\ui-icons_444444_256x240.png" />
     <Content Include="Scripts\plugins\jquery-ui\images\ui-icons_555555_256x240.png" />
     <Content Include="Scripts\plugins\jquery-ui\images\ui-icons_777620_256x240.png" />

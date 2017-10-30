@@ -16,8 +16,8 @@
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
     <!-- Add local styles, mostly for plugins css file -->
-    @if (IsSectionDefined("Styles"))
-    {@RenderSection("Styles", required: false)}
+    @if (IsSectionDefined("StylesFirst"))
+    {@RenderSection("StylesFirst", required: false)}
     @Styles.Render("~/plugins/toastrStyles")
     <!-- Add jQuery Style direct - used for jQGrid plugin -->
     <link href="@Url.Content("~/Scripts/plugins/jquery-ui/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
@@ -25,7 +25,8 @@
     <!-- Primary Inspinia style -->
     @Styles.Render("~/Content/css")
     @Styles.Render("~/font-awesome/css")
-
+     @if (IsSectionDefined("Styles"))
+     {@RenderSection("Styles", required: false)}
 </head>
 <body>
 
