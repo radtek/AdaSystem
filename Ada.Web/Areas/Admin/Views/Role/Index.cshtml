@@ -102,9 +102,19 @@
                             </div>
                             <div id="tab-2" class="tab-pane">
                                 <div class="panel-body">
-                                    <div id="jstree">
-                                        @TreeHelper(actions)
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <button type="button" class="btn btn-primary btn-xs" onclick="$('#jstree').jstree('check_all');"><i class="fa fa-check-square-o"></i> 全选</button>
+                                            <button type="button" class="btn btn-warning btn-xs" onclick="$('#jstree').jstree('uncheck_all');"><i class="fa fa-square-o"></i> 清除</button>
+                                        </div>
+                                       
                                     </div>
+                                    <div class="row">
+                                        <div id="jstree">
+                                            @TreeHelper(actions)
+                                        </div>
+                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -154,9 +164,33 @@
                     "three_state": false
                 }
             });
-            //tree.jstree('check_all');
         });
-
+        //新增
+        function add() {
+            $('#modal form')[0].reset();
+            $("#Id").val("");
+            //清空check
+            $('#jstree').jstree("uncheck_all");
+            $(".modal-title span").text("添加");
+            $('#modal').modal('show');
+        }
+        //编辑
+        function update(id, url) {
+            //清空check
+            $('#jstree').jstree("uncheck_all");
+            $.getJSON(url, { id: id, r: Date.now() },
+                function (data) {
+                    $('#modal form').autofill(data);
+                    //check选中
+                    if (data.ActionIds) {
+                        var ids = data.ActionIds.split(",");
+                        $('#jstree').jstree("check_node", ids);
+                    }
+                    $(".modal-title span").text("编辑");
+                    $('#modal').modal('show');
+                });
+        }
+        //提交表单
         function subForm() {
             if (!$("#RoleName").val()) {
                 toastr.warning('请输入角色名称！');

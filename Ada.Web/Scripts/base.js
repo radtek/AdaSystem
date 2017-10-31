@@ -28,10 +28,17 @@ function add() {
 }
 //编辑
 function update(id, url) {
-    $.getJSON(url, { id: id },
+    $.getJSON(url, { id: id, r: Date.now()},
         function (data) {
             $('#modal form').autofill(data);
             $(".modal-title span").text("编辑");
             $('#modal').modal('show');
         });
+}
+//初始化ichecks
+function initiChecks() {
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green'
+    });
 }

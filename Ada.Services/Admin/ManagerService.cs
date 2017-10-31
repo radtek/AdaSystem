@@ -48,14 +48,7 @@ namespace Ada.Services.Admin
             {
                 allList = allList.Where(d => d.Status == viewModel.Status);
             }
-            if (!string.IsNullOrWhiteSpace(viewModel.RoleId))
-            {
-                allList = allList.Where(d => d.Roles.Select(r => r.Id).Contains(viewModel.RoleId));
-            }
-            if (!string.IsNullOrWhiteSpace(viewModel.OrganizationId))
-            {
-                allList = allList.Where(d => d.Organizations.Select(r => r.Id).Contains(viewModel.OrganizationId));
-            }
+            
             viewModel.total = allList.Count();
             int page = viewModel.page ?? 1;
             int rows = viewModel.rows ?? 10;
@@ -66,6 +59,89 @@ namespace Ada.Services.Admin
             }
             return allList.OrderBy(d => d.Id).Skip((page - 1) * rows).Take(rows);
         }
+
+        /// <summary>
+        /// 新增用户
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="roleIds"></param>
+        /// <param name="organizationIds"></param>
+        public void Add(Manager entity, List<string> roleIds = null, List<string> organizationIds = null)
+        {
+            _managerRepository.Add(entity);
+            if (roleIds!=null)
+            {
+                
+                foreach (var id in roleIds)
+                {
+                    var role = _roleRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+                    if (role!=null)
+                    {
+                        entity.Roles.Add(role);
+                    }
+                }
+            }
+            if (organizationIds!=null)
+            {
+                
+                foreach (var id in organizationIds)
+                {
+                    var organization = _organizationRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+                    if (organization != null)
+                    {
+                        entity.Organizations.Add(organization);
+                    }
+                }
+            }
+            _dbContext.SaveChanges();
+        }
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="roleIds"></param>
+        /// <param name="organizationIds"></param>
+        public void Update(Manager entity, List<string> roleIds = null, List<string> organizationIds = null)
+        {
+            _managerRepository.Update(entity);
+            entity.Roles.Clear();
+            entity.Organizations.Clear();
+            if (roleIds != null)
+            {
+
+                foreach (var id in roleIds)
+                {
+                    var role = _roleRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+                    if (role != null)
+                    {
+                        entity.Roles.Add(role);
+                    }
+                }
+            }
+            if (organizationIds != null)
+            {
+
+                foreach (var id in organizationIds)
+                {
+                    var organization = _organizationRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+                    if (organization != null)
+                    {
+                        entity.Organizations.Add(organization);
+                    }
+                }
+            }
+            _dbContext.SaveChanges();
+        }
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="entity"></param>
+        public void Delete(Manager entity)
+        {
+            _managerRepository.Delete(entity);
+            _dbContext.SaveChanges();
+        }
+
         /// <summary>
         /// 设置权限
         /// </summary>
@@ -103,57 +179,6 @@ namespace Ada.Services.Admin
             }
             return _dbContext.SaveChanges() >= 0;
         }
-        /// <summary>
-        /// 设计机构
-        /// </summary>
-        /// <param name="managerIds"></param>
-        /// <param name="organizationIdIds"></param>
-        /// <returns></returns>
-        public bool SetOrganization(List<string> managerIds, List<string> organizationIdIds)
-        {
-            foreach (var managerId in managerIds)
-            {
-                var manager = _managerRepository.LoadEntities(d => d.Id == managerId).FirstOrDefault();
-                if (manager != null)
-                {
-                    manager.Organizations.Clear();
-                    foreach (var organizationIdId in organizationIdIds)
-                    {
-                        var dep = _organizationRepository.LoadEntities(d => d.Id == organizationIdId).FirstOrDefault();
-                        if (dep != null)
-                        {
-                            manager.Organizations.Add(dep);
-                        }
-                    }
-                }
-            }
-            return _dbContext.SaveChanges() >= 0;
-        }
-        /// <summary>
-        /// 设置角色
-        /// </summary>
-        /// <param name="managerIds"></param>
-        /// <param name="roleIds"></param>
-        /// <returns></returns>
-        public bool SetRole(List<string> managerIds, List<string> roleIds)
-        {
-            foreach (var managerId in managerIds)
-            {
-                var manager = _managerRepository.LoadEntities(d => d.Id == managerId).FirstOrDefault();
-                if (manager != null)
-                {
-                    manager.Roles.Clear();
-                    foreach (var roleId in roleIds)
-                    {
-                        var role = _roleRepository.LoadEntities(d => d.Id == roleId).FirstOrDefault();
-                        if (role != null)
-                        {
-                            manager.Roles.Add(role);
-                        }
-                    }
-                }
-            }
-            return _dbContext.SaveChanges() >= 0;
-        }
+        
     }
 }

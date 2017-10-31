@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>江西微广联合 | @ViewBag.Title</title>
+    <title>江西微广 | @ViewBag.Title</title>
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
     <!-- Add local styles, mostly for plugins css file -->
@@ -76,6 +76,12 @@
                 <text>
                     toastr.options.positionClass = "toast-bottom-right";
                     toastr.success('@TempData["Msg"]');
+                </text>
+            }
+            @if (TempData["Warning"]!= null){
+                <text>
+                    toastr.options.positionClass = "toast-bottom-right";
+                    toastr.warning('@TempData["Warning"]');
                 </text>
             }
         });

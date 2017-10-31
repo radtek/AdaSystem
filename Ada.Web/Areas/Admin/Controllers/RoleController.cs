@@ -65,14 +65,11 @@ namespace Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddOrUpdate(RoleView viewModel)
         {
-            var role = new Role
-            {
-                RoleName = viewModel.RoleName
-            };
-
             if (!string.IsNullOrWhiteSpace(viewModel.Id))
             {
-                role.Id = viewModel.Id;
+                var role = _roleRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
+                role.RoleName = viewModel.RoleName;
+                role.RoleType = viewModel.RoleType;
                 role.ModifiedBy = CurrentManager.Id;
                 role.ModifiedDate = DateTime.Now;
                 _roleService.Update(role, viewModel.ActionIds);
@@ -80,13 +77,17 @@ namespace Admin.Controllers
             }
             else
             {
-                role.Id = IdBuilder.CreateIdNum();
-                role.AddedBy = CurrentManager.Id;
-                role.AddedDate = DateTime.Now;
+                var role = new Role
+                {
+                    RoleName = viewModel.RoleName,
+                    RoleType = viewModel.RoleType,
+                    Id = IdBuilder.CreateIdNum(),
+                    AddedBy = CurrentManager.Id,
+                    AddedDate = DateTime.Now
+                };
                 _roleService.Add(role, viewModel.ActionIds);
                 TempData["Msg"] = "添加成功";
             }
-
             return RedirectToAction("Index");
         }
         [HttpPost]

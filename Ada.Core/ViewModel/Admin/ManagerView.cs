@@ -13,12 +13,13 @@ namespace Ada.Core.ViewModel.Admin
         /// 用户名
         /// </summary>
         [Display(Name = "用户名")]
+        [Required]
         public string UserName { get; set; }
 
         /// <summary>
         /// 真实姓名
         /// </summary>
-        [Display(Name = "真实姓名")]
+        [Display(Name = "姓名")]
         public string RealName { get; set; }
 
         /// <summary>
@@ -33,29 +34,45 @@ namespace Ada.Core.ViewModel.Admin
         [Display(Name = "授权ID")]
         public string OpenId { get; set; }
         /// <summary>
-        /// 用户状态
+        /// 激活
         /// </summary>
-        [Display(Name = "用户状态")]
+        [Display(Name = "激活")]
         public short? Status { get; set; }
         /// <summary>
         /// 角色
         /// </summary>
         [Display(Name = "角色")]
-        public string RoleId { get; set; }
+        public List<string> RoleIds { get; set; }
         /// <summary>
         /// 机构组织
         /// </summary>
         [Display(Name = "机构组织")]
-        public string OrganizationId { get; set; }
+        public string OrganizationIds { get; set; }
         /// <summary>
         /// 所属角色
         /// </summary>
         [Display(Name = "所属角色")]
         public string Roles { get; set; }
         /// <summary>
-        /// 所属机构组织
+        /// 所属机构
         /// </summary>
-        [Display(Name = "所属机构组织")]
+        [Display(Name = "所属机构")]
         public string Organizations { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        [Display(Name = "创建时间")]
+        public string AddDate { get; set; }
+        /// <summary>
+        /// 登陆密码
+        /// </summary>
+        [Display(Name = "登陆密码")]
+        [Required]
+        public string Password { get; set; }
+        /// <summary>
+        /// 操作
+        /// </summary>
+        [Display(Name = "操作")]
+        public string Id { get; set; }
     }
 }

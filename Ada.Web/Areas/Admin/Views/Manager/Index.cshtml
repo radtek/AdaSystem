@@ -1,4 +1,270 @@
-﻿@{
+﻿@using System.Web.Optimization
+@using Ada.Core.Domain
+@using Ada.Core.ViewModel
+@using Ada.Core.ViewModel.Admin
+@model ManagerView
+@{
     ViewBag.Title = "用户管理";
+    List<TreeView> organizations = ViewBag.Organizations;
+    IEnumerable<ManagerView> managers = ViewBag.Managers==null?new List<ManagerView>() : ViewBag.Managers;
+    IEnumerable<RoleView> roles = ViewBag.Roles;
+    int roleIndex = 0;
 }
 @Html.Partial("Bread")
+
+@helper TreeHelper(List<TreeView> list)
+{
+if (list.Count > 0)
+{
+        <ul>
+            @foreach (var item in list)
+            {
+                <li class="jstree-open" id="@item.Id">
+                    <span>@item.Text</span>
+                    @TreeHelper(item.Children)
+                </li>
+            }
+        </ul>
+}
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    @*<h5>用户列表 <small> 管理用户的权限及其角色</small></h5>*@
+
+                    <div class="ibox-tools">
+                        <button type="button" class="btn btn-success btn-sm" onclick="add();"><i class="fa fa-plus-square"></i> 添加用户</button>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    @*<input type="text" class="form-control input-sm m-b-xs" id="filter"
+                        placeholder="Search in table">*@
+
+                    <table class="table table-striped" data-sorting="true">
+                        <thead>
+                            <tr>
+                                <th>@Html.DisplayNameFor(d => d.UserName)</th>
+                                <th>@Html.DisplayNameFor(d => d.RealName)</th>
+                                <th>@Html.DisplayNameFor(d => d.Roles)</th>
+                                <th>@Html.DisplayNameFor(d => d.Status)</th>
+                                <th>@Html.DisplayNameFor(d => d.AddDate)</th>
+                                <th>@Html.DisplayNameFor(d => d.Id)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in managers)
+                            {
+                                <tr>
+                                    <td>@item.UserName</td>
+                                    <td>@item.RealName</td>
+                                    <td>@item.Roles</td>
+                                    @if (item.Status == Consts.StateNormal)
+                                    {
+                                        <td><span class="label label-primary">是</span></td>
+                                    }
+                                    else
+                                    {
+                                        <td><span class="label label-danger">否</span></td>
+                                    }
+                                    
+                                    <td>@item.AddDate</td>
+                                    <td>
+                                        <div class="btn-group m-b-n-xs">
+                                            <button class="btn-white btn btn-xs" onclick="update('@item.Id','@Url.Action("GetEntity")');"><i class="fa fa-pencil"></i> 编辑</button>
+                                            <button class="btn-white btn btn-xs" onclick="del('@item.Id','@item.UserName','@Url.Action("Delete")');"><i class="fa fa-trash-o"></i> 删除</button>
+                                            <button class="btn-white btn btn-xs" onclick="unbind('@item.Id');"><i class="fa fa-unlock"></i> 解绑</button>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            }
+
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal inmodal" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+    @using (Html.BeginForm("AddOrUpdate", "Manager"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog">
+            <div class="modal-content animated fadeIn">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h5 class="modal-title"><span></span>用户</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#tab-1">用户信息</a></li>
+                            <li class=""><a data-toggle="tab" href="#tab-2">角色分配</a></li>
+                            <li class=""><a data-toggle="tab" href="#tab-3">机构组织</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="tab-1" class="tab-pane active">
+                                <div class="panel-body form-horizontal">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.UserName, Html.DisplayNameFor(d => d.UserName).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.UserName, new { @class = "form-control", required = "" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Password, Html.DisplayNameFor(d => d.Password).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.PasswordFor(d => d.Password, new { @class = "form-control", required = "" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.RealName, Html.DisplayNameFor(d => d.RealName).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.RealName, new { @class = "form-control", required = "" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Phone, Html.DisplayNameFor(d => d.Phone).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Phone, new { @class = "form-control", required = "" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        
+                                        @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            <div class="checkbox checkbox-info">
+                                                <input id="Status" type="checkbox" name="Status" value="1">
+                                                <label for="Status">
+                                                    <strong>是</strong>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @Html.HiddenFor(d => d.Id)
+                                    @Html.HiddenFor(d => d.OrganizationIds)
+                                </div>
+                            </div>
+                            <div id="tab-2" class="tab-pane">
+                                <div class="panel-body">
+                                    
+                                    <div class="form-group">
+                                        @foreach (var item in roles)
+                                        {
+                                            <div class="checkbox checkbox-info">
+                                                <input id="@item.Id" name="RoleIds" type="checkbox" value="@item.Id">
+                                                <label for="@item.Id">
+                                                    <strong>@item.RoleName</strong> 
+                                                </label>
+                                            </div>
+                                            
+                                        }
+                                        
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div id="tab-3" class="tab-pane">
+                                <div class="panel-body">
+                                    
+                                    <div class="row">
+                                        <div id="jstree">
+                                            @TreeHelper(organizations)
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="subForm();">提交</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+@section Styles {
+    @Styles.Render("~/plugins/footableV3Styles")
+    @Styles.Render("~/Content/plugins/jsTree")
+    @Styles.Render("~/plugins/sweetAlertStyles")
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/footableV3")
+    @Scripts.Render("~/plugins/jsTree")
+    @Scripts.Render("~/plugins/sweetAlert")
+    @Scripts.Render("~/plugins/formFill")
+    @Scripts.Render("~/bundles/base")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.table').footable();
+            var tree = $('#jstree');
+            tree.jstree({
+                'core': {
+                    'check_callback': true
+                },
+                'plugins': ['types', 'checkbox'],
+                'types': {
+                    'default': {
+                        'icon': 'fa fa-folder'
+                    }
+                },
+                "checkbox" : {
+                    "keep_selected_style": false,
+                    //"three_state": false
+                }
+            });
+
+        });
+        //新增
+        function add() {
+            $('#modal form')[0].reset();
+            $("#Id").val("");
+            //清空check
+            $('#jstree').jstree("uncheck_all");
+            $(".modal-title span").text("添加");
+            $('#modal').modal('show');
+        }
+        //编辑
+        function update(id, url) {
+            //清空check
+            $('#jstree').jstree("uncheck_all");
+            $.getJSON(url, { id: id, r: Date.now() },
+                function (data) {
+                    $('#modal form').autofill(data);
+                    //check选中
+                    if (data.OrganizationIds) {
+                        var ids = data.OrganizationIds.split(",");
+                        $('#jstree').jstree("check_node", ids);
+                    }
+                    $(".modal-title span").text("编辑");
+                    $('#modal').modal('show');
+                });
+        }
+        //提交表单
+        function subForm() {
+            var arry = $('#jstree').jstree("get_checked");
+            $("#OrganizationIds").val(arry.join(','));
+            $('#modal form').submit();
+        }
+    </script>
+}

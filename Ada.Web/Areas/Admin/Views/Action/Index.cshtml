@@ -293,7 +293,7 @@ if (list.Count > 0)
         }
 
         function updateNode(id) {
-            $.getJSON("@Url.Action("GetEntity")",{id:id},
+            $.getJSON("@Url.Action("GetEntity")", { id: id, r: Date.now()},
                 function(data) {
                     $("form").autofill(data);
                     $(".modal-title").text("编辑功能权限");

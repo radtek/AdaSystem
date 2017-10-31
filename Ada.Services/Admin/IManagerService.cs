@@ -12,8 +12,9 @@ namespace Ada.Services.Admin
     public interface IManagerService: IDependency
     {
         IQueryable<Manager> LoadEntitiesFilter(ManagerView managerView);
-        bool SetRole(List<string> managerIds, List<string> roleIds);
-        bool SetOrganization(List<string> managerIds, List<string> organizationIds);
+        void Add(Manager entity, List<string> roleIds = null, List<string> organizationIds = null);
+        void Update(Manager entity, List<string> roleIds = null, List<string> organizationIds = null);
+        void Delete(Manager entity);
         bool SetAction(List<string> managerIds, List<string> actionIds);
     }
 }

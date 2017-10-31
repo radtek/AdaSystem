@@ -49,9 +49,9 @@ namespace Ada.Services.Admin
         public void Update(Role role, string actionIds)
         {
             _roleRepository.Update(role);
+            role.Actions.Clear();
             if (!string.IsNullOrWhiteSpace(actionIds))
             {
-                role.Actions.Clear();
                 var arry = actionIds.Split(',');
                 foreach (var id in arry)
                 {

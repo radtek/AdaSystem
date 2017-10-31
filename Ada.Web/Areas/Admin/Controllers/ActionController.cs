@@ -71,7 +71,6 @@ namespace Admin.Controllers
         {
             var action = new Action
             {
-
                 ActionName = actionView.ActionName,
                 Area = actionView.Area,
                 ControllerName = actionView.ControllerName,
