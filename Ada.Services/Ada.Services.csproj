@@ -46,10 +46,12 @@
     <Compile Include="Admin\IOrganizationService.cs" />
     <Compile Include="Admin\IPermissionService.cs" />
     <Compile Include="Admin\IRoleService.cs" />
+    <Compile Include="Admin\ISystemLogService.cs" />
     <Compile Include="Admin\ManagerService.cs" />
     <Compile Include="Admin\OrganizationService.cs" />
     <Compile Include="Admin\PermissionService.cs" />
     <Compile Include="Admin\RoleService.cs" />
+    <Compile Include="Admin\SystemLogService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

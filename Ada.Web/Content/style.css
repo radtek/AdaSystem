@@ -8560,3 +8560,16 @@ body.md-skin {
     margin: 0;
   }
 }
+
+
+
+
+
+.table-detail-name {
+    display: table-cell;
+    font-weight: bold;
+    padding-right: 0.5em;
+}
+.table-detail-value {
+    display: table-cell;
+}

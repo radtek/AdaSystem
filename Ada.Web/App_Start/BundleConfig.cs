@@ -469,8 +469,17 @@ namespace Ada.Web
             bundles.Add(new ScriptBundle("~/plugins/formFill").Include(
                 "~/Scripts/plugins/jquery-form-fill/jquery.formautofill.min.js"));
 
+            // base Script
             bundles.Add(new ScriptBundle("~/bundles/base").Include(
                 "~/Scripts/base.js"));
+
+            //Bootstrap Table
+            bundles.Add(new StyleBundle("~/plugins/bootstrapTableStyle").Include(
+                "~/Content/plugins/bootstrap-table/bootstrap-table.min.css"));
+            bundles.Add(new ScriptBundle("~/plugins/bootstrapTableScript").Include(
+                "~/Scripts/plugins/bootstrap-table/bootstrap-table.min.js",
+                "~/Scripts/plugins/bootstrap-table/extensions/mobile/bootstrap-table-mobile.min.js",
+                "~/Scripts/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"));
         }
     }
 }

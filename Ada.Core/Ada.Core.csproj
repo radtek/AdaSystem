@@ -112,6 +112,7 @@
     <Compile Include="ViewModel\Admin\MenuView.cs" />
     <Compile Include="ViewModel\Admin\OrganizationView.cs" />
     <Compile Include="ViewModel\Admin\RoleView.cs" />
+    <Compile Include="ViewModel\Admin\SystemLogView.cs" />
     <Compile Include="ViewModel\BaseView.cs" />
     <Compile Include="ViewModel\HttpResultView.cs" />
     <Compile Include="ViewModel\TreeView.cs" />

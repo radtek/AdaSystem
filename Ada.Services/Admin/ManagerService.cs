@@ -50,14 +50,14 @@ namespace Ada.Services.Admin
             }
             
             viewModel.total = allList.Count();
-            int page = viewModel.page ?? 1;
-            int rows = viewModel.rows ?? 10;
+            int offset = viewModel.offset ?? 0;
+            int rows = viewModel.limit ?? 10;
             string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
             if (order == "desc")
             {
-                return allList.OrderByDescending(d => d.Id).Skip((page - 1) * rows).Take(rows);
+                return allList.OrderByDescending(d => d.Id).Skip(offset).Take(rows);
             }
-            return allList.OrderBy(d => d.Id).Skip((page - 1) * rows).Take(rows);
+            return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
         }
 
         /// <summary>

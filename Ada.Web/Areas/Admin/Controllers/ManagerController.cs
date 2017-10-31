@@ -72,6 +72,20 @@ namespace Admin.Controllers
             });
             return treeViews;
         }
+
+        public ActionResult GetList(ManagerView viewModel)
+        {
+            var result = _managerService.LoadEntitiesFilter(viewModel).ToList();
+            return Json(result.Select(d => new ManagerView()
+            {
+                Id = d.Id,
+                UserName = d.UserName,
+                Status = d.Status,
+                RealName = d.RealName,
+                AddDate = d.AddedDate?.ToString("yyyy年MM月dd日") ?? "",
+                Roles = d.Roles.Count > 0 ? string.Join(",", d.Roles.Select(r => r.RoleName)) : ""
+            }));
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddOrUpdate(ManagerView viewModel)

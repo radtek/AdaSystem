@@ -11,11 +11,11 @@ namespace Ada.Core.ViewModel
         /// <summary>
         /// 当前页
         /// </summary>
-        public int? page { get; set; }
+        public int? offset { get; set; }
         /// <summary>
         /// 当前页总条数
         /// </summary>
-        public int? rows { get; set; }
+        public int? limit { get; set; }
         /// <summary>
         /// 总条数
         /// </summary>
@@ -28,5 +28,9 @@ namespace Ada.Core.ViewModel
         /// 排序字段
         /// </summary>
         public string sort { get; set; }
+        /// <summary>
+        /// 排序字段
+        /// </summary>
+        public string search { get; set; }
     }
 }
