@@ -6,32 +6,53 @@
 @Html.Partial("Bread")
 
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
-
-
-    <div class="ibox-content m-b-sm border-bottom">
-        <div class="row">
-            <div class="col-sm-2">
-                <div class="form-group">
-                    @Html.LabelFor(d => d.Level, Html.DisplayNameFor(d => d.Level).ToString(), new { @class = "control-label" })
-                    @Html.TextBoxFor(d => d.Level, new { @class = "form-control" })
-                </div>
+    <div class="ibox collapsed">
+        <div class="ibox-title">
+            <h5>高级筛选</h5>
+            <div class="ibox-tools">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
             </div>
-            <div class="col-sm-2">
-                <div class="form-group">
-                    @Html.LabelFor(d => d.Logger, Html.DisplayNameFor(d => d.Logger).ToString(), new { @class = "control-label" })
-                    @Html.TextBoxFor(d => d.Logger, new { @class = "form-control" })
-                </div>
-            </div>
-            @*<div class="col-sm-4">
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.Message, Html.DisplayNameFor(d => d.Message).ToString(), new { @class = "control-label" })
-                        @Html.TextBoxFor(d => d.Message, new { @class = "form-control" })
+        </div>
+        <div class="ibox-content">
+            <form class="form-inline" id="searchFrm" onSubmit="javascript:searchFrm.search(this,event);">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Level, Html.DisplayNameFor(d => d.Level) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.Level, new { @class = "form-control input-sm" })
+                        </div>
                     </div>
-                </div>*@
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Logger, Html.DisplayNameFor(d => d.Logger) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.Logger, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    @*<div class="col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Message, Html.DisplayNameFor(d => d.Message).ToString(), new { @class = "control-label" })
+                                @Html.TextBoxFor(d => d.Message, new { @class = "form-control" })
+                            </div>
+                        </div>*@
+
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 搜索</button>
+                            <button class="btn btn-warning" type="button" id="btn_reset"><i class="fa fa-repeat"></i> 重置</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
 
         </div>
-
     </div>
+
+
 
     <div class="row">
         <div class="col-lg-12">
@@ -47,24 +68,25 @@
 </div>
 
 <div id="toolbar" class="btn-group">
-    <button id="btn_add" type="button"  class="btn btn-primary btn-outline">
+    <button id="btn_add" type="button" class="btn btn-primary btn-outline">
         <i class="fa fa-plus"></i> 新增
     </button>
-    <button id="btn_edit" type="button"  class="btn btn-primary btn-outline">
+    <button id="btn_edit" type="button" class="btn btn-primary btn-outline">
         <i class="fa fa-pencil"></i> 修改
     </button>
-    <button id="btn_delete" type="button"  class="btn btn-primary btn-outline">
+    <button id="btn_delete" type="button" class="btn btn-primary btn-outline">
         <i class="fa fa-trash-o"></i> 删除
     </button>
 </div>
 
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/sweetAlertStyles")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-
+    @Scripts.Render("~/plugins/sweetAlert")
     <script type="text/javascript">
         $(document).ready(function () {
             //1.初始化Table
@@ -87,7 +109,8 @@
                     pagination: true,                   //是否显示分页（*）
                     sortable: true,                     //是否启用排序
                     sortOrder: "desc",                   //排序方式
-                    queryParams: oTableInit.queryParams,//传递参数（*）
+                    sortName:"Id",
+                    //queryParams: oTableInit.queryParams,//传递参数（*）
                     sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
                     pageNumber: 1,                       //初始化加载第一页，默认第一页
                     pageSize: 10,                       //每页的记录行数（*）
@@ -133,7 +156,6 @@
                     ]
                 });
             };
-
             //得到查询的参数
             oTableInit.queryParams = function (params) {
                 var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
@@ -149,8 +171,6 @@
         };
         var ButtonInit = function () {
             var oInit = new Object();
-            var postdata = {};
-
             oInit.Init = function () {
                 //$("#btn_add").click(function () {
                 //    $("#myModalLabel").text("新增");
@@ -182,37 +202,61 @@
                 //    $('#myModal').modal();
                 //});
 
-                //$("#btn_delete").click(function () {
-                //    var arrselections = $("#tb_departments").bootstrapTable('getSelections');
-                //    if (arrselections.length <= 0) {
-                //        toastr.warning('请选择有效数据');
-                //        return;
-                //    }
+                $("#btn_delete").click(function () {
+                    var arrselections = $("#table").bootstrapTable('getSelections');
 
-                //    Ewin.confirm({ message: "确认要删除选择的数据吗？" }).on(function (e) {
-                //        if (!e) {
-                //            return;
-                //        }
-                //        $.ajax({
-                //            type: "post",
-                //            url: "/Home/Delete",
-                //            data: { "": JSON.stringify(arrselections) },
-                //            success: function (data, status) {
-                //                if (status == "success") {
-                //                    toastr.success('提交数据成功');
-                //                    $("#tb_departments").bootstrapTable('refresh');
-                //                }
-                //            },
-                //            error: function () {
-                //                toastr.error('Error');
-                //            },
-                //            complete: function () {
+                    if (arrselections.length <= 0) {
+                        swal("操作提醒", "请选择有效数据", "warning");
+                        return;
+                    }
+                    var ids = [];
+                    $.each(arrselections,
+                        function(k, v) {
+                            ids.push(v.Id);
+                        });
+                    swal({
+                        title: "您确定吗?",
+                        text: "确认要删除选择的数据吗?",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "确定",
+                        cancelButtonText: "取消",
+                        closeOnConfirm: false
+                    }, function () {
+                        $.ajax({
+                            type: "post",
+                            headers: {
+                                '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                            },
+                            url: "@Url.Action("Delete")",
+                            data: { "Ids": ids.join(',') },
+                            success: function (data) {
+                                if (data.State == 1) {
+                                    $("#table").bootstrapTable('refresh');
+                                    swal({
+                                        title: "操作成功",
+                                        text: data.Msg,
+                                        timer: 2000,
+                                        type:"success",
+                                        showConfirmButton: false
+                                    });
 
-                //            }
+                                } else {
+                                    swal("操作提醒", data.Msg, "warning");
+                                }
+                            },
+                            error: function () {
+                                swal("操作失败", data.Msg, "error");
+                            },
+                            complete: function () {
 
-                //        });
-                //    });
-                //});
+                            }
+
+                        });
+                    });
+
+                });
 
                 //$("#btn_submit").click(function () {
                 //    postdata.DEPARTMENT_NAME = $("#txt_departmentname").val();
@@ -239,9 +283,9 @@
                 //    });
                 //});
 
-                //$("#btn_query").click(function () {
-                //    $("#tb_departments").bootstrapTable('refresh');
-                //});
+                $("#btn_reset").click(function () {
+                    searchFrm.reset($("#searchFrm"));
+                });
             };
 
             return oInit;
@@ -249,5 +293,6 @@
         function detailFormatter(index, row) {
             return "<div class='table-detail-name'>@Html.DisplayNameFor(d=>d.Exception)：</div><div class='table-detail-value'>" + row.Exception +"</div>";
         }
+
     </script>
 }

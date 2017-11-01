@@ -9,8 +9,6 @@ using Newtonsoft.Json;
 
 namespace Ada.Core.Domain.Admin
 {
-    [Serializable]
-    [JsonObject(MemberSerialization.OptOut)]
     public class Manager: BaseEntity
     {
         public Manager()
@@ -77,22 +75,18 @@ namespace Ada.Core.Domain.Admin
         /// <summary>
         /// 机构组织
         /// </summary>
-        [JsonIgnore]
         public virtual ICollection<Organization> Organizations { get; set; }
         /// <summary>
         /// 角色
         /// </summary>
-        [JsonIgnore]
         public virtual ICollection<Role> Roles { get; set; }
         /// <summary>
         /// 权限
         /// </summary>
-        [JsonIgnore]
         public virtual ICollection<ManagerAction> ManagerActions { get; set; }
         /// <summary>
         /// 权限
         /// </summary>
-        [JsonIgnore]
         public virtual ICollection<ManagerLoginLog> ManagerLoginLogs { get; set; }
     }
 }

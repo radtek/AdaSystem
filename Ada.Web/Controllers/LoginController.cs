@@ -9,6 +9,7 @@ using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Log;
 using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
+using Ada.Core.ViewModel.Admin;
 using log4net;
 
 namespace Ada.Web.Controllers
@@ -17,7 +18,7 @@ namespace Ada.Web.Controllers
     {
         private readonly IRepository<Manager> _repository;
         private readonly IDbContext _dbContext;
-        public LoginController(IRepository<Manager> repository,IDbContext dbContext)
+        public LoginController(IRepository<Manager> repository, IDbContext dbContext)
         {
             _repository = repository;
             _dbContext = dbContext;
@@ -48,9 +49,18 @@ namespace Ada.Web.Controllers
                 WebInfo = Request.UserAgent
             });
             _dbContext.SaveChanges();
-            Session["LoginManager"] = SerializeHelper.SerializeToString(manager);
-            
-            
+            ManagerView managerView = new ManagerView()
+            {
+                Id = manager.Id,
+                Phone = manager.Phone,
+                RealName = manager.RealName,
+                UserName = manager.UserName,
+                Roles = manager.Roles.Count > 0 ? string.Join(",", manager.Roles.Select(d => d.RoleName)) : "",
+                Organizations = manager.Organizations.Count > 0 ? String.Join("-", manager.Organizations.Select(d => d.OrganizationName)) : ""
+            };
+            Session["LoginManager"] = SerializeHelper.SerializeToString(managerView);
+
+
             return RedirectToAction("Index", "Home", new { area = "Dashboards" });
 
         }
@@ -59,7 +69,7 @@ namespace Ada.Web.Controllers
         {
             Session.Abandon();
             Response.Cookies.Add(new HttpCookie("ASP.NET_SessionId", string.Empty) { HttpOnly = true });
-            return RedirectToAction("Index", "Default",new{area=""});
+            return RedirectToAction("Index", "Default", new { area = "" });
         }
 
     }

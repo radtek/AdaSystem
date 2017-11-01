@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Ada.Core.ViewModel
 {
-   public class BaseView
+    [Serializable]
+    public class BaseView
     {
         /// <summary>
         /// 当前页

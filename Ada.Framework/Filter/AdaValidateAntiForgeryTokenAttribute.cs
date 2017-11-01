@@ -17,19 +17,24 @@ namespace Ada.Framework.Filter
     {
         private void ValidateRequestHeader(HttpRequestBase request)
         {
-            string cookieToken = string.Empty;
-            string formToken = string.Empty;
-            string tokenValue = request.Headers["RequestVerificationToken"];
-            if (!string.IsNullOrEmpty(tokenValue))
-            {
-                string[] tokens = tokenValue.Split(':');
-                if (tokens.Length == 2)
-                {
-                    cookieToken = tokens[0].Trim();
-                    formToken = tokens[1].Trim();
-                }
-            }
-            AntiForgery.Validate(cookieToken, formToken);
+            //string cookieToken = string.Empty;
+            //string formToken = string.Empty;
+            //string tokenValue = request.Headers["RequestVerificationToken"];
+            //if (!string.IsNullOrEmpty(tokenValue))
+            //{
+            //    string[] tokens = tokenValue.Split(':');
+            //    if (tokens.Length == 2)
+            //    {
+            //        cookieToken = tokens[0].Trim();
+            //        formToken = tokens[1].Trim();
+            //    }
+            //}
+            //AntiForgery.Validate(cookieToken, formToken);
+            var antiForgeryCookie = request.Cookies[AntiForgeryConfig.CookieName];
+            var cookieValue = antiForgeryCookie?.Value;
+            //从cookies 和 Headers 中 验证防伪标记
+            //这里可以加try-catch
+            AntiForgery.Validate(cookieValue, request.Headers["__RequestVerificationToken"]);
         }
 
         public void OnAuthorization(AuthorizationContext filterContext)
@@ -48,7 +53,7 @@ namespace Ada.Framework.Filter
             }
             catch (HttpAntiForgeryException)
             {
-                throw new HttpAntiForgeryException("Anti forgery token cookie not found");
+                throw new HttpAntiForgeryException("防伪验证失败");
             }
         }
     }

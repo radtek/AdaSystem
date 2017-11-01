@@ -1,5 +1,8 @@
-﻿@using Ada.Framework
-
+﻿@using Ada.Core.ViewModel.Admin
+@using Ada.Framework
+@{
+    var manager = (ManagerView)ViewBag.CurrentManager;
+}
 <nav class="navbar-default navbar-static-side" role="navigation">
     <div class="sidebar-collapse">
         <ul class="nav" id="side-menu">
@@ -11,10 +14,10 @@
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <span class="clear">
                             <span class="block m-t-xs">
-                                <strong class="font-bold">@Model.UserName</strong>
+                                <strong class="font-bold">@manager.UserName</strong>
                             </span> 
                             
-                            <span class="text-muted text-xs block">超级管理员 <b class="caret"></b></span>
+                            <span class="text-muted text-xs block">@manager.Roles <b class="caret"></b></span>
                         </span>
                     </a>
                     <ul class="dropdown-menu animated fadeInRight m-t-xs">

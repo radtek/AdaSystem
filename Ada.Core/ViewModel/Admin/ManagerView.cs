@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ada.Core.ViewModel.Admin
 {
+
   public class ManagerView: BaseView
     {
         /// <summary>

@@ -9,6 +9,7 @@ using Ada.Core.Domain.Admin;
 using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel;
+using Ada.Core.ViewModel.Admin;
 using Ada.Services.Admin;
 using log4net;
 using Action = Ada.Core.Domain.Admin.Action;
@@ -19,14 +20,16 @@ namespace Ada.Framework.Filter
     {
 
         private readonly IPermissionService _permissionService;
+        private readonly IRepository<Manager> _repository;
         protected BaseController()
         {
             _permissionService = EngineContext.Current.Resolve<IPermissionService>();
+            _repository = EngineContext.Current.Resolve<IRepository<Manager>>();
         }
 
         public ILog Log { get; set; }
         //private readonly log4net.ILog _logger;//= log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public Manager CurrentManager { get; set; }
+        public ManagerView CurrentManager { get; set; }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -48,10 +51,12 @@ namespace Ada.Framework.Filter
                     : (ActionResult)RedirectToAction("Index", "Login", new { area = "" });
                 return;
             }
-            CurrentManager = SerializeHelper.DeserializeToObject<Manager>(obj.ToString());
+            CurrentManager = SerializeHelper.DeserializeToObject<ManagerView>(obj.ToString());
             //当前用户
-            ViewBag.CurrentMangager = CurrentManager;
-            
+            ViewBag.CurrentManager = CurrentManager;
+            //用户登录日志
+            ViewBag.CurrentManagerLoginLog = _repository.LoadEntities(d => d.Id == CurrentManager.Id).FirstOrDefault()
+                ?.ManagerLoginLogs.OrderByDescending(d=>d.Id).Take(5).ToList();
             ////后门，用于调试
             if (CurrentManager.UserName == "adaxiong")
             {

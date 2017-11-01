@@ -265,10 +265,9 @@ namespace Ada.Web
             // jsTree
             bundles.Add(new ScriptBundle("~/plugins/jsTree").Include(
                       "~/Scripts/plugins/jsTree/jstree.min.js"));
-
             // jsTree styles
-            bundles.Add(new StyleBundle("~/Content/plugins/jsTree").Include(
-                      "~/Content/plugins/jsTree/style.css"));
+            bundles.Add(new StyleBundle("~/plugins/jsTreeStyles").Include(
+                      "~/Content/plugins/jsTree/css/style.min.css", new CssRewriteUrlTransform()));
 
             // Diff
             bundles.Add(new ScriptBundle("~/plugins/diff").Include(
@@ -287,7 +286,7 @@ namespace Ada.Web
             bundles.Add(new StyleBundle("~/plugins/chartistStyles").Include(
                       "~/Content/plugins/chartist/chartist.min.css"));
 
-            // jsTree styles
+            // chartist styles
             bundles.Add(new ScriptBundle("~/plugins/chartist").Include(
                       "~/Scripts/plugins/chartist/chartist.min.js"));
 
