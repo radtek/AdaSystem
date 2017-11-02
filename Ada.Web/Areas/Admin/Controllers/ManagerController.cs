@@ -36,27 +36,16 @@ namespace Admin.Controllers
         }
         public ActionResult Index()
         {
-            var managers = _managerRepository.LoadEntities(d => d.IsDelete == false).ToList();
-            if (managers.Count > 0)
-            {
-                ViewBag.Managers = managers.Select(d => new ManagerView()
-                {
-                    Id = d.Id,
-                    UserName = d.UserName,
-                    Status = d.Status,
-                    RealName = d.RealName,
-                    AddDate = d.AddedDate?.ToString("yyyy年MM月dd日") ?? "",
-                    Roles = d.Roles.Count > 0 ? string.Join(",", d.Roles.Select(r => r.RoleName)) : ""
-                });
-            }
             var roles = _roleRepository.LoadEntities(d => d.IsDelete == false).ToList();
             ViewBag.Roles = roles.Select(d => new RoleView() { Id = d.Id, RoleName = d.RoleName });
             var organizations = _organizationRepository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis)
                 .ToList();
-            ViewBag.Organizations = GetOrganizationTree(null, organizations);
+            ViewBag.Organizations = GetTree(null, organizations);
+            var actions = _actionRepository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis).ToList();
+            ViewBag.Actions = GetTree(null, actions);
             return View();
         }
-        private List<TreeView> GetOrganizationTree(string parentId, List<Organization> list)
+        private List<TreeView> GetTree(string parentId, List<Organization> list)
         {
             var newlist = list.Where(d => d.ParentId == parentId).ToList();
             List<TreeView> treeViews = new List<TreeView>();
@@ -65,39 +54,82 @@ namespace Admin.Controllers
                 treeViews.Add(new TreeView
                 {
                     Id = item.Id,
-                    Children = GetOrganizationTree(item.Id, list),
+                    Children = GetTree(item.Id, list),
                     ParentId = item.ParentId,
                     Text = item.OrganizationName
                 });
             });
             return treeViews;
         }
-
-        public ActionResult GetList(ManagerView viewModel)
+        private List<TreeView> GetTree(string parentId, List<Action> list)
         {
-            var result = _managerService.LoadEntitiesFilter(viewModel).ToList();
-            return Json(result.Select(d => new ManagerView()
+            var newlist = list.Where(d => d.ParentId == parentId).ToList();
+            List<TreeView> treeViews = new List<TreeView>();
+            newlist.ForEach(item =>
+            {
+                treeViews.Add(new TreeView
+                {
+                    Id = item.Id,
+                    Children = GetTree(item.Id, list),
+                    ParentId = item.ParentId,
+                    Text = item.ActionName
+                });
+            });
+            return treeViews;
+        }
+        public ActionResult GetEntity(string id)
+        {
+            var d = _managerRepository.LoadEntities(m => m.Id == id).FirstOrDefault();
+            return Json(new ManagerView
             {
                 Id = d.Id,
                 UserName = d.UserName,
+                Password = Encrypt.Decode(d.Password),
+                Phone = d.Phone,
                 Status = d.Status,
                 RealName = d.RealName,
                 AddDate = d.AddedDate?.ToString("yyyy年MM月dd日") ?? "",
-                Roles = d.Roles.Count > 0 ? string.Join(",", d.Roles.Select(r => r.RoleName)) : ""
-            }));
+                RoleIds = d.Roles.Count > 0 ? d.Roles.Select(r => r.Id).ToList() : null,
+                OrganizationIds = d.Organizations.Count > 0 ? string.Join(",", d.Organizations.Select(r => r.Id)) : null,
+                ActionIds = d.ManagerActions.Count > 0 ? SetActionIds(d.ManagerActions) : null
+            }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GetList(ManagerView viewModel)
+        {
+            var result = _managerService.LoadEntitiesFilter(viewModel).ToList();
+            return Json(new
+            {
+                viewModel.total,
+                rows = result.Select(d => new ManagerView
+                {
+                    Id = d.Id,
+                    UserName = d.UserName,
+                    Password = Encrypt.Decode(d.Password),
+                    Phone = d.Phone,
+                    Status = d.Status,
+                    RealName = d.RealName,
+                    AddDate = d.AddedDate?.ToString("yyyy年MM月dd日") ?? "",
+                    Roles = d.Roles.Count > 0 ? string.Join(",", d.Roles.Select(r => r.RoleName)) : "",
+                    Organizations = d.Organizations.Count > 0 ? string.Join(" → ", d.Organizations.Select(r => r.OrganizationName)) : "",
+                    LastLoginDate = d.ManagerLoginLogs.OrderByDescending(l => l.LoginTime).FirstOrDefault() == null ? "" : Utils.ToRead(d.ManagerLoginLogs.OrderByDescending(l => l.LoginTime).FirstOrDefault().LoginTime)
+                })
+            }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [AdaValidateAntiForgeryToken]
         public ActionResult AddOrUpdate(ManagerView viewModel)
         {
             if (!ModelState.IsValid)
             {
-                TempData["Warning"] = "请核对输入的用户信息是否正确";
-                return RedirectToAction("Index");
+                return Json(new { State = 0, Msg = "请核对输入的用户信息是否正确" });
             }
+            var msg = string.Empty;
             var organizationIds = string.IsNullOrWhiteSpace(viewModel.OrganizationIds)
                 ? null
                 : viewModel.OrganizationIds.Split(',').ToList();
+            var actionIds = string.IsNullOrWhiteSpace(viewModel.ActionIds)
+                ? null
+                : viewModel.ActionIds.Split(',').ToList();
             if (!string.IsNullOrWhiteSpace(viewModel.Id))
             {
                 //校验唯一性
@@ -106,8 +138,7 @@ namespace Admin.Controllers
                     .FirstOrDefault();
                 if (temp != null)
                 {
-                    TempData["Warning"] = "用户名：" + viewModel.UserName + "，已被占用！";
-                    return RedirectToAction("Index");
+                    return Json(new { State = 0, Msg = "用户名：" + viewModel.UserName + "，已被占用！" });
                 }
                 var manager = _managerRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
                 manager.UserName = viewModel.UserName;
@@ -117,9 +148,8 @@ namespace Admin.Controllers
                 manager.Password = Encrypt.Encode(viewModel.Password);
                 manager.ModifiedBy = CurrentManager.Id;
                 manager.ModifiedDate = DateTime.Now;
-
-                _managerService.Update(manager, viewModel.RoleIds, organizationIds);
-                TempData["Msg"] = "更新成功";
+                _managerService.AddOrUpdate(manager, false, viewModel.RoleIds, organizationIds, actionIds);
+                msg = "更新成功";
             }
             else
             {
@@ -129,8 +159,7 @@ namespace Admin.Controllers
                       .FirstOrDefault();
                 if (temp != null)
                 {
-                    TempData["Warning"] = "用户名：" + viewModel.UserName + "，已被占用！";
-                    return RedirectToAction("Index");
+                    return Json(new { State = 0, Msg = "用户名：" + viewModel.UserName + "，已被占用！" });
                 }
                 var manager = new Manager()
                 {
@@ -143,22 +172,38 @@ namespace Admin.Controllers
                     AddedBy = CurrentManager.Id,
                     AddedDate = DateTime.Now
                 };
-                _managerService.Add(manager, viewModel.RoleIds, organizationIds);
-                TempData["Msg"] = "添加成功";
+                _managerService.AddOrUpdate(manager, true, viewModel.RoleIds, organizationIds, actionIds);
+                msg = "添加成功";
             }
 
-            return RedirectToAction("Index");
+            return Json(new { State = 1, Msg = msg });
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(string id)
+        [AdaValidateAntiForgeryToken]
+        public ActionResult Delete()
         {
-            var manager = _managerRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            manager.DeletedBy = CurrentManager.Id;
-            manager.DeletedDate = DateTime.Now;
-            _managerService.Delete(manager);
-            TempData["Msg"] = "删除成功";
-            return RedirectToAction("Index");
+            var ids = Request["Ids"].Split(',');
+            List<Manager> list = new List<Manager>();
+            foreach (var id in ids)
+            {
+                var manager = _managerRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+                manager.DeletedBy = CurrentManager.Id;
+                manager.DeletedDate = DateTime.Now;
+                list.Add(manager);
+            }
+            _managerService.Delete(list);
+            return Json(new { State = 1, Msg = "删除成功" });
+        }
+
+        private string SetActionIds(IEnumerable<ManagerAction> list)
+        {
+            List<string> temp = new List<string>();
+            foreach (var managerAction in list)
+            {
+                var ispass = managerAction.IsPass ? "true" : "false";
+                temp.Add(managerAction.ActionInfoId + "^" + ispass);
+            }
+            return string.Join(",", temp);
         }
     }
 }

@@ -6,13 +6,12 @@
 @{
     ViewBag.Title = "用户管理";
     List<TreeView> organizations = ViewBag.Organizations;
-    IEnumerable<ManagerView> managers = ViewBag.Managers==null?new List<ManagerView>() : ViewBag.Managers;
+    List<TreeView> actions = ViewBag.Actions;
     IEnumerable<RoleView> roles = ViewBag.Roles;
-    int roleIndex = 0;
 }
 @Html.Partial("Bread")
 
-@helper TreeHelper(List<TreeView> list)
+@helper TreeHelper(List<TreeView> list, bool showBtn = false)
 {
 if (list.Count > 0)
 {
@@ -21,7 +20,22 @@ if (list.Count > 0)
             {
                 <li class="jstree-open" id="@item.Id">
                     <span>@item.Text</span>
-                    @TreeHelper(item.Children)
+                    @if (showBtn)
+                    {
+                        <div class="btn-group m-l-xs m-b-4px">
+                            <button data-toggle="dropdown" class="btn btn-success btn-xs dropdown-toggle">
+                                <span class="action @item.Id" ispass="" data-value="@item.Id">选择</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="javascript:;" onclick="seletAction('@item.Id','允许');">允许</a></li>
+                                <li><a href="javascript:;" onclick="seletAction('@item.Id','拒绝');">拒绝</a></li>
+                                <li class="divider"></li>
+                                <li><a href="javascript:;" onclick="seletAction('@item.Id','选择');">清除</a></li>
+                            </ul>
+                        </div>
+                    }
+                    @TreeHelper(item.Children, showBtn)
                 </li>
             }
         </ul>
@@ -31,70 +45,30 @@ if (list.Count > 0)
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    @*<h5>用户列表 <small> 管理用户的权限及其角色</small></h5>*@
-
-                    <div class="ibox-tools">
-                        <button type="button" class="btn btn-success btn-sm" onclick="add();"><i class="fa fa-plus-square"></i> 添加用户</button>
-                    </div>
-                </div>
+            <div class="ibox">
                 <div class="ibox-content">
-                    @*<input type="text" class="form-control input-sm m-b-xs" id="filter"
-                        placeholder="Search in table">*@
-
-                    <table class="table table-striped" data-sorting="true">
-                        <thead>
-                            <tr>
-                                <th>@Html.DisplayNameFor(d => d.UserName)</th>
-                                <th>@Html.DisplayNameFor(d => d.RealName)</th>
-                                <th>@Html.DisplayNameFor(d => d.Roles)</th>
-                                <th>@Html.DisplayNameFor(d => d.Status)</th>
-                                <th>@Html.DisplayNameFor(d => d.AddDate)</th>
-                                <th>@Html.DisplayNameFor(d => d.Id)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in managers)
-                            {
-                                <tr>
-                                    <td>@item.UserName</td>
-                                    <td>@item.RealName</td>
-                                    <td>@item.Roles</td>
-                                    @if (item.Status == Consts.StateNormal)
-                                    {
-                                        <td><span class="label label-primary">是</span></td>
-                                    }
-                                    else
-                                    {
-                                        <td><span class="label label-danger">否</span></td>
-                                    }
-                                    
-                                    <td>@item.AddDate</td>
-                                    <td>
-                                        <div class="btn-group m-b-n-xs">
-                                            <button class="btn-white btn btn-xs" onclick="update('@item.Id','@Url.Action("GetEntity")');"><i class="fa fa-pencil"></i> 编辑</button>
-                                            <button class="btn-white btn btn-xs" onclick="del('@item.Id','@item.UserName','@Url.Action("Delete")');"><i class="fa fa-trash-o"></i> 删除</button>
-                                            <button class="btn-white btn btn-xs" onclick="unbind('@item.Id');"><i class="fa fa-unlock"></i> 解绑</button>
-                                        </div>
-                                    </td>
-
-                                </tr>
-                            }
-
-
-                        </tbody>
-
-                    </table>
+                    <table id="table"></table>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div id="toolbar" class="btn-group">
+    <button id="btn_add" type="button" class="btn btn-primary btn-outline">
+        <i class="fa fa-plus"></i> 新增
+    </button>
+    <button id="btn_edit" type="button" class="btn btn-primary btn-outline">
+        <i class="fa fa-pencil"></i> 修改
+    </button>
+    <button id="btn_delete" type="button" class="btn btn-primary btn-outline">
+        <i class="fa fa-trash-o"></i> 删除
+    </button>
+</div>
+
 <div class="modal inmodal" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
     @using (Html.BeginForm("AddOrUpdate", "Manager"))
     {
-        @Html.AntiForgeryToken()
         <div class="modal-dialog">
             <div class="modal-content animated fadeIn">
                 <div class="modal-header">
@@ -107,6 +81,7 @@ if (list.Count > 0)
                             <li class="active"><a data-toggle="tab" href="#tab-1">用户信息</a></li>
                             <li class=""><a data-toggle="tab" href="#tab-2">角色分配</a></li>
                             <li class=""><a data-toggle="tab" href="#tab-3">机构组织</a></li>
+                            <li class=""><a data-toggle="tab" href="#tab-4">特殊权限</a></li>
                         </ul>
                         <div class="tab-content">
                             <div id="tab-1" class="tab-pane active">
@@ -114,33 +89,33 @@ if (list.Count > 0)
                                     <div class="form-group">
                                         @Html.LabelFor(d => d.UserName, Html.DisplayNameFor(d => d.UserName).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.UserName, new { @class = "form-control", required = "" })
+                                            @Html.TextBoxFor(d => d.UserName, new { @class = "form-control" })
                                         </div>
                                     </div>
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
                                         @Html.LabelFor(d => d.Password, Html.DisplayNameFor(d => d.Password).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
-                                            @Html.PasswordFor(d => d.Password, new { @class = "form-control", required = "" })
+                                            @Html.PasswordFor(d => d.Password, new { @class = "form-control" })
                                         </div>
                                     </div>
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
                                         @Html.LabelFor(d => d.RealName, Html.DisplayNameFor(d => d.RealName).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.RealName, new { @class = "form-control", required = "" })
+                                            @Html.TextBoxFor(d => d.RealName, new { @class = "form-control" })
                                         </div>
                                     </div>
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
                                         @Html.LabelFor(d => d.Phone, Html.DisplayNameFor(d => d.Phone).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.Phone, new { @class = "form-control", required = "" })
+                                            @Html.TextBoxFor(d => d.Phone, new { @class = "form-control" })
                                         </div>
                                     </div>
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
-                                        
+
                                         @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
                                             <div class="checkbox checkbox-info">
@@ -153,33 +128,46 @@ if (list.Count > 0)
                                     </div>
                                     @Html.HiddenFor(d => d.Id)
                                     @Html.HiddenFor(d => d.OrganizationIds)
+                                    @Html.HiddenFor(d => d.ActionIds)
+
                                 </div>
                             </div>
                             <div id="tab-2" class="tab-pane">
                                 <div class="panel-body">
-                                    
+
                                     <div class="form-group">
                                         @foreach (var item in roles)
                                         {
                                             <div class="checkbox checkbox-info">
                                                 <input id="@item.Id" name="RoleIds" type="checkbox" value="@item.Id">
                                                 <label for="@item.Id">
-                                                    <strong>@item.RoleName</strong> 
+                                                    <strong>@item.RoleName</strong>
                                                 </label>
                                             </div>
-                                            
+
                                         }
-                                        
+
                                     </div>
 
                                 </div>
                             </div>
                             <div id="tab-3" class="tab-pane">
                                 <div class="panel-body">
-                                    
+
                                     <div class="row">
                                         <div id="jstree">
                                             @TreeHelper(organizations)
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div id="tab-4" class="tab-pane">
+                                <div class="panel-body">
+
+                                    <div class="row">
+                                        <div id="jstree_action">
+                                            @TreeHelper(actions, true)
                                         </div>
                                     </div>
 
@@ -192,7 +180,7 @@ if (list.Count > 0)
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" onclick="subForm();">提交</button>
+                    <button type="submit" class="ladda-button btn btn-primary" data-style="zoom-in">提交</button>
                 </div>
             </div>
         </div>
@@ -202,23 +190,24 @@ if (list.Count > 0)
 
 
 @section Styles {
-    @Styles.Render("~/plugins/footableV3Styles")
     @Styles.Render("~/plugins/jsTreeStyles")
     @Styles.Render("~/plugins/sweetAlertStyles")
+    @Styles.Render("~/plugins/laddaStyles")
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
+    @Styles.Render("~/plugins/bootstrapTableStyle")
 }
 
 @section Scripts {
-    @Scripts.Render("~/plugins/footableV3")
     @Scripts.Render("~/plugins/jsTree")
     @Scripts.Render("~/plugins/sweetAlert")
+    @Scripts.Render("~/plugins/ladda")
     @Scripts.Render("~/plugins/formFill")
-    @Scripts.Render("~/bundles/base")
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/validate")
     <script type="text/javascript">
         $(document).ready(function () {
-            $('.table').footable();
-            var tree = $('#jstree');
-            tree.jstree({
+
+            $('#jstree').jstree({
                 'core': {
                     'check_callback': true
                 },
@@ -230,41 +219,337 @@ if (list.Count > 0)
                 },
                 "checkbox" : {
                     "keep_selected_style": false,
+                    //"tie_selection": false
                     //"three_state": false
                 }
             });
+            $('#jstree_action').jstree({
+                'core': {
+                    'check_callback': true
+                },
+                'plugins': ['types'],
+                'types': {
+                    'default': {
+                        'icon': 'fa fa-folder'
+                    }
+                }
+            });
+            //1.初始化Table
+            var oTable = new TableInit();
+            oTable.Init();
+            //2.初始化Button的点击事件
+            var oButtonInit = new ButtonInit();
+            oButtonInit.Init();
 
         });
-        //新增
-        function add() {
-            $('#modal form')[0].reset();
-            $("#Id").val("");
-            //清空check
-            $('#jstree').jstree("uncheck_all");
-            $(".modal-title span").text("添加");
-            $('#modal').modal('show');
-        }
-        //编辑
-        function update(id, url) {
-            //清空check
-            $('#jstree').jstree("uncheck_all");
-            $.getJSON(url, { id: id, r: Date.now() },
-                function (data) {
-                    $('#modal form').autofill(data);
-                    //check选中
-                    if (data.OrganizationIds) {
-                        var ids = data.OrganizationIds.split(",");
-                        $('#jstree').jstree("check_node", ids);
-                    }
-                    $(".modal-title span").text("编辑");
+
+
+        var TableInit = function () {
+            var oTableInit = new Object();
+            //初始化Table
+            oTableInit.Init = function () {
+                $('#table').bootstrapTable({
+                    url: '@Url.Action("GetList")',         //请求后台的URL（*）
+                    toolbar: '#toolbar',                //工具按钮用哪个容器
+                    striped: true,                      //是否显示行间隔色
+                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    pagination: true,                   //是否显示分页（*）
+                    sortable: true,                     //是否启用排序
+                    sortOrder: "desc",                   //排序方式
+                    sortName:"Id",
+                    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1,                       //初始化加载第一页，默认第一页
+                    pageSize: 10,                       //每页的记录行数（*）
+                    search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                    strictSearch: true,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
+                    showColumns: true,                  //是否显示所有的列
+                    showRefresh: true,                  //是否显示刷新按钮
+                    minimumCountColumns: 2,             //最少允许的列数
+                    clickToSelect: true,                //是否启用点击选中行
+                    singleSelect: true,                  //设置True 将禁止多选
+                    uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                    showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                    cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
+                    //detailView: true,                   //设置为 true 可以显示详细页面模式。
+                    //detailFormatter: detailFormatter,
+                    mobileResponsive:true,
+                    columns: [
+                        {
+                        checkbox: true
+                        },
+                        {
+                            field: 'UserName',
+                            title: '@Html.DisplayNameFor(d=>d.UserName)',
+                            align:"center"
+                        },
+                        {
+                            field: 'RealName',
+                            title: '@Html.DisplayNameFor(d=>d.RealName)',
+                            align: "center"
+                        },
+                        {
+                            field: 'Phone',
+                            title: '@Html.DisplayNameFor(d=>d.Phone)',
+                            align: "center"
+                        },
+                        {
+                            field: 'Roles',
+                            title: '@Html.DisplayNameFor(d=>d.Roles)',
+                            align: "center"
+                        },
+                        @*{
+                            field: 'Organizations',
+                            title: '@Html.DisplayNameFor(d=>d.Organizations)',
+                            align: "center"
+                        },*@
+                        {
+                            field: 'Status',
+                            title: '@Html.DisplayNameFor(d=>d.Status)',
+                            align: "center",
+                            formatter: formatter.userStatus
+                        },
+                        {
+                            field: 'LastLoginDate',
+                            title: '@Html.DisplayNameFor(d=>d.LastLoginDate)',
+                            align: "center"
+                        },
+                        {
+                            field: 'AddDate',
+                            title: '@Html.DisplayNameFor(d=>d.AddDate)',
+                            align: "center"
+                        }
+                    ]
+                });
+            };
+            return oTableInit;
+        };
+
+        var ButtonInit = function () {
+            var oInit = new Object();
+            oInit.Init = function () {
+                var roles = $("input[name='RoleIds']");
+                var actions = $(".action");
+                //新增
+                $("#btn_add").click(function () {
+                    $('#modal form')[0].reset();
+                    //清空check
+                    roles.removeAttr("checked");
+                    $('#jstree').jstree("uncheck_all");
+                    //清空权限
+                    clearAction(actions);
+                    $("#Id").val("");
+                    $(".modal-title span").text("添加");
                     $('#modal').modal('show');
                 });
+                //编辑
+                $("#btn_edit").click(function () {
+                    var arrselections = $("#table").bootstrapTable('getSelections');
+                    if (arrselections.length > 1) {
+                        swal("操作提醒", "只能选择一行进行编辑", "warning");
+                        return;
+                    }
+                    if (arrselections.length <= 0) {
+                        swal("操作提醒", "请选择有效数据", "warning");
+                        return;
+                    }
+                    $.getJSON("@Url.Action("GetEntity")", { id: arrselections[0].Id, r: Date.now()},
+                        function(data) {
+                            //清空check
+                            roles.removeAttr("checked");
+                            $('#jstree').jstree("uncheck_all");
+                            //清空权限
+                            clearAction(actions);
+                            //check选中
+                            if (data.OrganizationIds) {
+                                var ids = data.OrganizationIds.split(",");
+                                $('#jstree').jstree("check_node", ids);
+                            }
+                            var roleIds = data.RoleIds;
+                            if (roleIds) {
+                                $.each(roles,
+                                    function(k, v) {
+                                        var result = $.inArray($(v).val(), roleIds);
+                                        if (result>=0) {
+                                            $(v).attr("checked", true);
+                                        }
+                                    });
+                            }
+                            delete data.RoleIds;
+                            //权限选中
+                            if (data.ActionIds) {
+                                resetAction(data.ActionIds);
+                            }
+                            $('#modal form').autofill(data);
+                            $(".modal-title span").text("编辑");
+                            $('#modal').modal('show');
+                        });
+
+                });
+                //删除
+                $("#btn_delete").click(function () {
+                    var arrselections = $("#table").bootstrapTable('getSelections');
+                    if (arrselections.length <= 0) {
+                        swal("操作提醒", "请选择有效数据", "warning");
+                        return;
+                    }
+                    var ids = [];
+                    $.each(arrselections,
+                        function(k, v) {
+                            ids.push(v.Id);
+                        });
+                    swal({
+                        title: "您确定吗?",
+                        text: "确认要删除选择的数据吗?",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "确定",
+                        cancelButtonText: "取消",
+                        closeOnConfirm: false
+                    }, function () {
+                        $.ajax({
+                            type: "post",
+                            headers: {
+                                '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                            },
+                            url: "@Url.Action("Delete")",
+                            data: { "Ids": ids.join(',') },
+                            success: function (data) {
+                                if (data.State == 1) {
+                                    $("#table").bootstrapTable('refresh');
+                                    swal({
+                                        title: "操作成功",
+                                        text: data.Msg,
+                                        timer: 2000,
+                                        type:"success",
+                                        showConfirmButton: false
+                                    });
+
+                                } else {
+                                    swal("操作提醒", data.Msg, "warning");
+                                }
+                            },
+                            error: function () {
+                                swal("操作失败", data.Msg, "error");
+                            },
+                            complete: function () {
+
+                            }
+
+                        });
+                    });
+
+                });
+                //表单提交
+                var subBtn = $('.ladda-button').ladda();
+                $("#modal form").validate({
+                    rules: {
+                        UserName: {
+                            required: true
+                        },
+                        Password: {
+                            required: true
+                        }
+                    },
+                    messages: {
+                        UserName: {
+                            required: "此为必填项"
+                        },
+                        Password: {
+                            required: "此为必填项"
+                        }
+                    },
+                    submitHandler: function (form) {
+                        var arry = $('#jstree').jstree("get_checked");
+                        $("#OrganizationIds").val(arry.join(','));
+                        //特殊权限处理
+                        var actionArry = [];
+                        $.each(actions,
+                            function(k, v) {
+                                var ispass = $(v).attr("ispass");
+                                if (ispass) {
+                                    var id = $(v).attr("data-value");
+                                    actionArry.push(id + "^" + ispass);
+                                }
+                            });
+                        $("#ActionIds").val(actionArry.join(','));
+                        var $form = $(form),
+                            data = $form.serialize(); //序列化表单数据
+                        $.ajax({
+                            type: "post",
+                            headers: {
+                                '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                            },
+                            beforeSend: function() {
+                                subBtn.ladda('start');
+                            },
+                            url: form.action,
+                            data: data,
+                            success: function (res) {
+                                if (res.State == 1) {
+                                    $('#modal').modal('hide');
+                                    $("#table").bootstrapTable('refresh');
+                                    swal({
+                                        title: "操作成功",
+                                        text: res.Msg,
+                                        timer: 2000,
+                                        type:"success",
+                                        showConfirmButton: false
+                                    });
+
+                                } else {
+                                    swal("操作提醒", res.Msg, "warning");
+                                }
+                            },
+                            error: function () {
+                                swal("操作失败", res.Msg, "error");
+                            },
+                            complete: function () {
+                                subBtn.ladda('stop');
+                            }
+                        });
+                    }
+                });
+
+            };
+            return oInit;
+        };
+
+        function seletAction(id, text) {
+            var classname = "btn-success";
+            var ispass = "";
+            if (text=="允许") {
+                classname = "btn-primary";
+                ispass = "true";
+            }
+            if (text=="拒绝") {
+                classname = "btn-danger";
+                ispass = "false";
+            }
+            $("." + id).text(text).attr("ispass",ispass).parent().removeClass('btn-success btn-danger btn-primary').addClass(classname);
         }
-        //提交表单
-        function subForm() {
-            var arry = $('#jstree').jstree("get_checked");
-            $("#OrganizationIds").val(arry.join(','));
-            $('#modal form').submit();
+
+        function clearAction(actions) {
+            $.each(actions,
+                function(k, v) {
+                    $(v).text("选择").attr("ispass", "").parent().removeClass('btn-success btn-danger btn-primary')
+                        .addClass("btn-success");
+                });
+        }
+
+        function resetAction(ids) {
+            var arry = ids.split(',');
+            $.each(arry,
+                function(k, v) {
+                    var temp = v.split('^');
+                    var text = "拒绝";
+                    var classname = "btn-danger";
+                    if (temp[1]=="true") {
+                        text = "允许";
+                        classname = "btn-primary";
+                    }
+                    $("." + temp[0]).text(text).attr("ispass", temp[1]).parent().removeClass('btn-success btn-danger btn-primary').addClass(classname);
+                });
         }
     </script>
 }

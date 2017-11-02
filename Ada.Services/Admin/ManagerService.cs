@@ -32,9 +32,9 @@ namespace Ada.Services.Admin
         {
             var allList = _managerRepository.LoadEntities(d => d.IsDelete == false);
             //条件过滤
-            if (!string.IsNullOrWhiteSpace(viewModel.UserName))
+            if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.UserName.Contains(viewModel.UserName));
+                allList = allList.Where(d => d.UserName.Contains(viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.Phone))
             {
@@ -48,7 +48,7 @@ namespace Ada.Services.Admin
             {
                 allList = allList.Where(d => d.Status == viewModel.Status);
             }
-            
+
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
@@ -61,51 +61,32 @@ namespace Ada.Services.Admin
         }
 
         /// <summary>
-        /// 新增用户
+        /// 新增或更新用户
         /// </summary>
         /// <param name="entity"></param>
+        /// <param name="isAdd"></param>
         /// <param name="roleIds"></param>
         /// <param name="organizationIds"></param>
-        public void Add(Manager entity, List<string> roleIds = null, List<string> organizationIds = null)
+        /// <param name="actionIds"></param>
+        public void AddOrUpdate(Manager entity, bool isAdd = true, List<string> roleIds = null, List<string> organizationIds = null, List<string> actionIds = null)
         {
-            _managerRepository.Add(entity);
-            if (roleIds!=null)
+            if (isAdd)
             {
-                
-                foreach (var id in roleIds)
+                _managerRepository.Add(entity);
+            }
+            else
+            {
+                _managerRepository.Update(entity);
+                //清除
+                entity.Roles.Clear();
+                entity.Organizations.Clear();
+                var managerActions = _managerActionRepository.LoadEntities(a => a.ManagerId == entity.Id);
+                if (managerActions.Any())
                 {
-                    var role = _roleRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
-                    if (role!=null)
-                    {
-                        entity.Roles.Add(role);
-                    }
+                    _managerActionRepository.Remove(managerActions);
                 }
             }
-            if (organizationIds!=null)
-            {
-                
-                foreach (var id in organizationIds)
-                {
-                    var organization = _organizationRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
-                    if (organization != null)
-                    {
-                        entity.Organizations.Add(organization);
-                    }
-                }
-            }
-            _dbContext.SaveChanges();
-        }
-        /// <summary>
-        /// 修改
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="roleIds"></param>
-        /// <param name="organizationIds"></param>
-        public void Update(Manager entity, List<string> roleIds = null, List<string> organizationIds = null)
-        {
-            _managerRepository.Update(entity);
-            entity.Roles.Clear();
-            entity.Organizations.Clear();
+
             if (roleIds != null)
             {
 
@@ -130,35 +111,8 @@ namespace Ada.Services.Admin
                     }
                 }
             }
-            _dbContext.SaveChanges();
-        }
-        /// <summary>
-        /// 删除
-        /// </summary>
-        /// <param name="entity"></param>
-        public void Delete(Manager entity)
-        {
-            _managerRepository.Delete(entity);
-            _dbContext.SaveChanges();
-        }
-
-        /// <summary>
-        /// 设置权限
-        /// </summary>
-        /// <param name="managerIds"></param>
-        /// <param name="actionIds"></param>
-        /// <returns></returns>
-        public bool SetAction(List<string> managerIds, List<string> actionIds)
-        {
-            foreach (var managerId in managerIds)
+            if (actionIds != null)
             {
-                //清除
-                var managerActions = _managerActionRepository.LoadEntities(a => a.ManagerId == managerId);
-                if (managerActions.Any())
-                {
-                    _managerActionRepository.Remove(managerActions);
-                }
-                //新增
                 foreach (var ids in actionIds)
                 {
                     if (!string.IsNullOrWhiteSpace(ids))
@@ -166,19 +120,28 @@ namespace Ada.Services.Admin
                         var arr = ids.Split('^');
                         var actionId = arr[0];
                         var isPass = bool.Parse(arr[1]);
-                        ManagerAction managerAction = new ManagerAction
+                        ManagerAction managerAction = new ManagerAction()
                         {
                             Id = IdBuilder.CreateIdNum(),
                             ActionInfoId = actionId,
-                            ManagerId = managerId,
+                            ManagerId = entity.Id,
                             IsPass = isPass
                         };
                         _managerActionRepository.Add(managerAction);
                     }
                 }
             }
-            return _dbContext.SaveChanges() >= 0;
+            _dbContext.SaveChanges();
         }
         
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="entities"></param>
+        public void Delete(IEnumerable<Manager> entities)
+        {
+            _managerRepository.Delete(entities);
+            _dbContext.SaveChanges();
+        }
     }
 }

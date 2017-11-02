@@ -26,7 +26,14 @@ searchFrm.reset = function (form) {
     $("#table").bootstrapTable("refresh");
 }
 
-
+var formatter = {};
+formatter.userStatus= function(value,row,index) {
+    if (value==1) {
+        return "<span class='label label-primary'>是</span>";
+    } else {
+        return "<span class='label label-danger'>否</span>";
+    }
+}
 
 
 

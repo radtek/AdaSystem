@@ -4475,6 +4475,9 @@ a.close-canvas-menu:hover {
 .m-b-xxs {
   margin-bottom: 1px;
 }
+.m-b-4px {
+    margin-bottom: 4px;
+}
 .m-b-xs {
   margin-bottom: 5px;
 }

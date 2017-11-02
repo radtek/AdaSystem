@@ -50,6 +50,11 @@ namespace Ada.Core.ViewModel.Admin
         [Display(Name = "机构组织")]
         public string OrganizationIds { get; set; }
         /// <summary>
+        /// 特殊权限
+        /// </summary>
+        [Display(Name = "特殊权限")]
+        public string ActionIds { get; set; }
+        /// <summary>
         /// 所属角色
         /// </summary>
         [Display(Name = "所属角色")]
@@ -70,6 +75,11 @@ namespace Ada.Core.ViewModel.Admin
         [Display(Name = "登陆密码")]
         [Required]
         public string Password { get; set; }
+        /// <summary>
+        /// 上次登陆
+        /// </summary>
+        [Display(Name = "上次登陆")]
+        public string LastLoginDate { get; set; }
         /// <summary>
         /// 操作
         /// </summary>
