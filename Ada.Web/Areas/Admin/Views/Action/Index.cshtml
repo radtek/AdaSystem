@@ -44,71 +44,14 @@ if (list.Count > 0)
                 <div class="ibox-title">
                     <h5>功能权限列表 <small>控制用户的行为.</small></h5>
                     <div class="ibox-tools">
-
                         <button type="button" class="btn btn-primary btn-xs" onclick="$('#jstree').jstree('close_all');"><i class="fa fa-plus"></i> 折叠</button>
                         <button type="button" class="btn btn-warning btn-xs" onclick="$('#jstree').jstree('open_all');"><i class="fa fa-minus"></i> 展开</button>
                         <button type="button" class="btn btn-success btn-xs m-l-xl" onclick="addNode();">添加根节点</button>
-                        @*<a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>*@
-
                     </div>
                 </div>
                 <div class="ibox-content">
-
                     <div id="jstree">
-
-
                         @TreeHelper(actions)
-
-
-
-
-                        @*<ul>
-
-
-                                <li class="jstree-open">
-                                    所有权限
-                                    <ul>
-                                        <li data-jstree='{"type":"html"}'>
-                                            工作台
-                                            <div class="btn-group">
-                                                <button data-toggle="dropdown" class="btn btn-link btn-xs dropdown-toggle"><span class="caret"></span></button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a href="#">添加子节点</a></li>
-                                                    <li><a href="#">编辑子节点</a></li>
-                                                    <li class="divider"></li>
-                                                    <li><a href="#">删除此节点</a></li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                        <li class="jstree-open">
-                                            用户(Manager)
-                                            <ul>
-                                                <li data-jstree='{"type":"css"}'>新增</li>
-                                                <li data-jstree='{"type":"img"}'>更新</li>
-                                                <li data-jstree='{"type":"js"}'>数据</li>
-                                                <li class="text-navy" data-jstree='{"type":"html"}'>删除</li>
-                                            </ul>
-                                        </li>
-
-                                        <li class="jstree-open">
-                                            功能(Action)
-                                            <ul>
-                                                <li data-jstree='{"type":"css"}'>新增</li>
-                                                <li data-jstree='{"type":"img"}'>更新</li>
-                                                <li data-jstree='{"type":"js"}'>数据</li>
-                                                <li class="text-navy" data-jstree='{"type":"html"}'>删除</li>
-                                            </ul>
-                                        </li>
-
-
-
-                                    </ul>
-                                </li>
-
-                            </ul>*@
-
                     </div>
 
                 </div>
@@ -205,6 +148,30 @@ if (list.Count > 0)
                                 @Html.TextBoxFor(d => d.Taxis, new { @class = "form-control" })
                             </div>
                         </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.IsButton, Html.DisplayNameFor(d => d.IsButton).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                <div class="checkbox checkbox-info">
+                                    <input id="IsButton" type="checkbox" name="IsButton" value="true">
+                                    <label for="IsButton">
+                                        <strong>是</strong>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.IsMenu, Html.DisplayNameFor(d => d.IsMenu).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                <div class="checkbox checkbox-info">
+                                    <input id="IsMenu" type="checkbox" name="IsMenu" value="true">
+                                    <label for="IsMenu">
+                                        <strong>是</strong>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                         @Html.HiddenFor(d => d.ParentId)
                         @Html.HiddenFor(d => d.Id)
 
@@ -223,6 +190,7 @@ if (list.Count > 0)
 @section Styles {
     @Styles.Render("~/plugins/jsTreeStyles")
     @Styles.Render("~/plugins/sweetAlertStyles")
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
 }
 
 @section Scripts {
@@ -240,21 +208,6 @@ if (list.Count > 0)
                 'types': {
                     'default': {
                         'icon': 'fa fa-folder'
-                    },
-                    'html': {
-                        'icon': 'fa fa-file-code-o'
-                    },
-                    'svg': {
-                        'icon': 'fa fa-file-picture-o'
-                    },
-                    'css': {
-                        'icon': 'fa fa-file-code-o'
-                    },
-                    'img': {
-                        'icon': 'fa fa-file-image-o'
-                    },
-                    'js': {
-                        'icon': 'fa fa-file-text-o'
                     }
                 }
             });

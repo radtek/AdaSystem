@@ -62,6 +62,16 @@ namespace Ada.Core.ViewModel.Admin
         /// </summary>
         [Display(Name = "排序")]
         public int? Taxis { get; set; }
+        /// <summary>
+        /// 是否按钮
+        /// </summary>
+        [Display(Name = "是否按钮")]
+        public bool? IsButton { get; set; }
+        /// <summary>
+        /// 是否菜单
+        /// </summary>
+        [Display(Name = "是否菜单")]
+        public bool? IsMenu { get; set; }
     }
 
     

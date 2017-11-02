@@ -61,7 +61,9 @@ namespace Admin.Controllers
                 LinkUrl = action.LinkUrl,
                 MethodName = action.MethodName,
                 ParentId = action.ParentId,
-                Taxis = action.Taxis
+                Taxis = action.Taxis,
+                IsMenu = action.IsMenu,
+                IsButton = action.IsButton
 
             }, JsonRequestBehavior.AllowGet);
         }
@@ -78,7 +80,9 @@ namespace Admin.Controllers
                 IconCls = actionView.IconCls,
                 MethodName = actionView.MethodName,
                 LinkUrl = actionView.LinkUrl,
-                Taxis = actionView.Taxis
+                Taxis = actionView.Taxis,
+                IsButton = actionView.IsButton,
+                IsMenu = actionView.IsMenu
             };
             if (!string.IsNullOrWhiteSpace(actionView.ParentId))
             {
