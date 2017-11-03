@@ -19,14 +19,14 @@ namespace Ada.Data.Mapping.Admin
             //this.Property(s => s.ID).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             //配置字段
             Property(s => s.MenuName).IsRequired().HasMaxLength(32);
-            Property(s => s.TreePath).HasMaxLength(32);
+            Property(s => s.TreePath).HasMaxLength(1024);
             Property(s => s.ParentId).HasMaxLength(128);
             Property(s => s.IsLeaf);
             Property(s => s.Level);
             Property(s => s.IsVisable);
             Property(s => s.Image).HasMaxLength(512);
             Property(s => s.IconCls).HasMaxLength(32);
-            Property(s => s.ActionInfoId).HasMaxLength(128);
+            Property(s => s.ActionId).HasMaxLength(128);
 
 
 

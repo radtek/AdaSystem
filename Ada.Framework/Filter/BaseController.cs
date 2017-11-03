@@ -57,6 +57,8 @@ namespace Ada.Framework.Filter
             //用户登录日志
             ViewBag.CurrentManagerLoginLog = _repository.LoadEntities(d => d.Id == CurrentManager.Id).FirstOrDefault()
                 ?.ManagerLoginLogs.OrderByDescending(d=>d.Id).Take(5).ToList();
+            //用户菜单
+            ViewBag.Menus = _permissionService.AuthorizeMenu(CurrentManager.Id);
             ////后门，用于调试
             if (CurrentManager.UserName == "adaxiong")
             {
@@ -81,8 +83,7 @@ namespace Ada.Framework.Filter
                 filterContext.Result = Error(isAjax, new HttpResultView() { HttpCode = 401, Msg = "您无此功能的操作权限！请联系管理员处理" });
             }
 
-            //用户菜单
-            ViewBag.Menus = _permissionService.AuthorizeMenu(CurrentManager.Id);
+            
             
         }
         private ActionResult Error(bool isAjax, HttpResultView httpResultView)

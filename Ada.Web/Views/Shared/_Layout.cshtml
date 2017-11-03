@@ -4,70 +4,80 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>江西微广 | @ViewBag.Title</title>
+  <title>江西微广 | @ViewBag.Title</title>
 
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
-    <!-- Add local styles, mostly for plugins css file -->
-    @if (IsSectionDefined("StylesFirst"))
-    {@RenderSection("StylesFirst", required: false)}
-    @Styles.Render("~/plugins/toastrStyles")
-    <!-- Add jQuery Style direct - used for jQGrid plugin -->
-    <link href="@Url.Content("~/Scripts/plugins/jquery-ui/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+  <!-- Add local styles, mostly for plugins css file -->
+  @if (IsSectionDefined("StylesFirst"))
+  {@RenderSection("StylesFirst", required: false)}
+  @Styles.Render("~/plugins/toastrStyles")
+  <!-- Add jQuery Style direct - used for jQGrid plugin -->
+  <link href="@Url.Content("~/Scripts/plugins/jquery-ui/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
 
-    <!-- Primary Inspinia style -->
-    @Styles.Render("~/Content/css")
-    @Styles.Render("~/font-awesome/css")
-     @if (IsSectionDefined("Styles"))
-     {@RenderSection("Styles", required: false)}
+  <!-- Primary Inspinia style -->
+  @Styles.Render("~/Content/css")
+  @Styles.Render("~/font-awesome/css")
+  @Styles.Render("~/plugins/sweetAlertStyles")
+  @Styles.Render("~/plugins/imagecropperStyles")
+  @if (IsSectionDefined("Styles"))
+  {@RenderSection("Styles", required: false)}
+  <style>
+    .img-container img {
+      max-width: 100%;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Skin configuration box -->
-    @Html.Partial("_SkinConfig")
+  <!-- Skin configuration box -->
+  @Html.Partial("_SkinConfig")
 
-    <!-- Wrapper-->
-    <!-- PageClass give you ability to specify custom style for specific view based on action -->
-    <div id="wrapper" class="@Html.PageClass()">
+  <!-- Wrapper-->
+  <!-- PageClass give you ability to specify custom style for specific view based on action -->
+  <div id="wrapper" class="@Html.PageClass()">
 
-        <!-- Navigation -->
-        @Html.Partial("_Navigation")
+    <!-- Navigation -->
+    @Html.Partial("_Navigation")
 
-        <!-- Page wraper -->
-        <div id="page-wrapper" class="gray-bg @ViewBag.SpecialClass">
+    <!-- Page wraper -->
+    <div id="page-wrapper" class="gray-bg @ViewBag.SpecialClass">
 
-            <!-- Top Navbar -->
-            @Html.Partial("_TopNavbar")
+      <!-- Top Navbar -->
+      @Html.Partial("_TopNavbar")
 
-            <!-- Main view  -->
-            @RenderBody()
+      <!-- Main view  -->
+      @RenderBody()
 
-            <!-- Footer -->
-            @Html.Partial("_Footer")
-
-        </div>
-        <!-- End page wrapper-->
-        <!-- Right Sidebar -->
-        @Html.Partial("_RightSidebar")
+      <!-- Footer -->
+      @Html.Partial("_Footer")
 
     </div>
-    <!-- End wrapper-->
-    <!-- Section for main scripts render -->
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/plugins/slimScroll")
-    @Scripts.Render("~/bundles/inspinia")
-    @Scripts.Render("~/plugins/toastr")
-    <!-- Skin config script - only for demo purpose-->
-    @Scripts.Render("~/bundles/skinConfig")
-    @Scripts.Render("~/bundles/base")
-    <!-- Handler for local scripts -->
-    @RenderSection("Scripts", required: false)
-    <script>
+    <!-- End page wrapper-->
+    <!-- Right Sidebar -->
+    @Html.Partial("_RightSidebar")
+
+  </div>
+  <!-- End wrapper-->
+  <!-- Section for main scripts render -->
+  @Scripts.Render("~/bundles/jquery")
+  @Scripts.Render("~/bundles/bootstrap")
+  @Scripts.Render("~/plugins/slimScroll")
+  @Scripts.Render("~/bundles/inspinia")
+  @Scripts.Render("~/plugins/toastr")
+  <!-- Skin config script - only for demo purpose-->
+  @Scripts.Render("~/bundles/skinConfig")
+  @Scripts.Render("~/plugins/sweetAlert")
+  @Scripts.Render("~/plugins/validate")
+  @Scripts.Render("~/plugins/imagecropper")
+  @Scripts.Render("~/bundles/base")
+  <!-- Handler for local scripts -->
+  @RenderSection("Scripts", required: false)
+  <script>
         $(document).ready(function () {
             @if (TempData["Msg"]!= null){
                 <text>
@@ -81,7 +91,144 @@
                     toastr.warning('@TempData["Warning"]');
                 </text>
             }
+            $('[data-toggle="tooltip"]').tooltip();
+            $("#modal-changepwd form").validate({
+                    rules: {
+                        old: {
+                            required: true
+                        },
+                        fresh: {
+                            required: true
+                        },
+                        refresh: {
+                            required: true
+                        }
+                    },
+                    messages: {
+                        old: {
+                            required: "此为必填项"
+                        },
+                        fresh: {
+                            required: "此为必填项"
+                        },
+                        refresh: {
+                            required: "此为必填项"
+                        }
+                    },
+                    submitHandler: function (form) {
+                        var $form = $(form),
+                            data = $form.serialize(); //序列化表单数据
+                        $.ajax({
+                            type: "post",
+                            headers: {
+                                '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                            },
+                            url: form.action,
+                            data: data,
+                            success: function (res) {
+                                if (res.State == 1) {
+                                    $('#modal-changepwd').modal('hide');
+                                    swal({
+                                        title: "操作成功",
+                                        text: res.Msg,
+                                        timer: 2000,
+                                        type:"success",
+                                        showConfirmButton: false
+                                    });
+
+                                } else {
+                                    swal("操作提醒", res.Msg, "warning");
+                                }
+                            },
+                            error: function () {
+                                swal("操作失败", res.Msg, "error");
+                            }
+                        });
+                    }
+                    });
+
+            var image = document.getElementById('image');
+            var cropBoxData;
+            var canvasData;
+            var cropper;
+            var options = {
+                autoCropArea: 0.5,
+                preview: ".img-preview",
+                ready: function (e) {
+                    console.log(e.type);
+                    // Strict mode: set crop box data first
+                    cropper.setCropBoxData(cropBoxData).setCanvasData(canvasData);
+                },
+                cropstart: function (e) {
+                    console.log(e.type, e.detail.action);
+                },
+                cropmove: function (e) {
+                    console.log(e.type, e.detail.action);
+                },
+                cropend: function (e) {
+                    console.log(e.type, e.detail.action);
+                },
+                crop: function (e) {
+                    var data = e.detail;
+                    console.log(e.type);
+                },
+                zoom: function (e) {
+                    console.log(e.type, e.detail.ratio);
+                }
+            };
+            $('#modal-image').on('shown.bs.modal', function () {
+                cropper = new Cropper(image,options);
+            }).on('hidden.bs.modal', function () {
+                cropBoxData = cropper.getCropBoxData();
+                canvasData = cropper.getCanvasData();
+                cropper.destroy();
+              });
+
+            $("#zoomIn").click(function () {
+              cropper.zoom(0.1);
+            });
+
+            $("#zoomOut").click(function () {
+              cropper.zoom(-0.1);
+            });
+
+            $("#rotateLeft").click(function () {
+              cropper.rotate(-45);
+            });
+
+            $("#rotateRight").click(function () {
+              cropper.rotate(45);
+            });
+            $("#cropReset").click(function () {
+            cropper.reset();;
+          });
+          var $inputImage = $("#inputImage");
+          if (window.FileReader) {
+            $inputImage.change(function () {
+              var fileReader = new FileReader(),
+                files = this.files;
+              if (!files.length) {
+                return;
+              }
+              var file = files[0];
+              if (/^image\/\w+$/.test(file.type)) {
+                fileReader.readAsDataURL(file);
+                fileReader.onload = function () {
+                    
+                    image.src = this.result;
+                    cropper.destroy();
+                    cropper = new Cropper(image, options);
+                    $inputImage.val("");
+                    
+                };
+              } else {
+                swal("操作提醒", "请选择图片类型文件", "warning");
+              }
+            });
+          } else {
+            $inputImage.addClass("hide");
+          }
         });
-    </script>
+  </script>
 </body>
 </html>

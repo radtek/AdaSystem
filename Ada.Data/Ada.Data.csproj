@@ -65,6 +65,10 @@
     <Compile Include="Migrations\201710221333304_ManagerLoginLog.Designer.cs">
       <DependentUpon>201710221333304_ManagerLoginLog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711030419417_Menu.cs" />
+    <Compile Include="Migrations\201711030419417_Menu.Designer.cs">
+      <DependentUpon>201711030419417_Menu.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -84,6 +88,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201710221333304_ManagerLoginLog.resx">
       <DependentUpon>201710221333304_ManagerLoginLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711030419417_Menu.resx">
+      <DependentUpon>201711030419417_Menu.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

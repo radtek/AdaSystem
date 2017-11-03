@@ -37,12 +37,12 @@ namespace Ada.Core.Domain.Admin
         /// 菜单地址
         /// </summary>
         [Display(Name = "菜单地址")]
-        public string ActionInfoId { get; set; }
+        public string ActionId { get; set; }
 
         /// <summary>
-        /// 是否显示
+        /// 隐藏
         /// </summary>
-        [Display(Name = "是否显示")]
+        [Display(Name = "隐藏")]
         public bool? IsVisable { get; set; }
 
         /// <summary>

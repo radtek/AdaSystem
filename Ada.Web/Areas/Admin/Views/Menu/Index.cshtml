@@ -1,8 +1,212 @@
-﻿
+﻿@using System.Web.Optimization
+@using Ada.Core.ViewModel
+@model Ada.Core.ViewModel.Admin.MenuView
 @{
     ViewBag.Title = "系统菜单";
+    List<TreeView> trees = ViewBag.Trees;
+    List<SelectListItem> actions = ViewBag.Actions;
 }
 
-
-
 @Html.Partial("Bread")
+
+@helper TreeHelper(List<TreeView> list)
+{
+if (list.Count > 0)
+{
+        <ul>
+            @foreach (var item in list)
+            {
+                <li class="jstree-open">
+                    <span>@item.Text</span>
+                    <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-link btn-xs dropdown-toggle"><span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" onclick="addNode('@item.Id');">添加子菜单</a></li>
+                            <li><a href="#" onclick="updateNode('@item.Id');">编辑子菜单</a></li>
+                            <li class="divider"></li>
+                            <li><a href="javascript:;" onclick="deleteAction('@item.Id','@item.Text');">删除此菜单</a></li>
+                        </ul>
+                    </div>
+                    @TreeHelper(item.Children)
+                </li>
+            }
+        </ul>
+}
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>菜单列表</h5>
+                    <div class="ibox-tools">
+
+                        <button type="button" class="btn btn-primary btn-xs" onclick="$('#jstree').jstree('close_all');"><i class="fa fa-plus"></i> 折叠</button>
+                        <button type="button" class="btn btn-warning btn-xs" onclick="$('#jstree').jstree('open_all');"><i class="fa fa-minus"></i> 展开</button>
+                        <button type="button" class="btn btn-success btn-xs m-l-xl" onclick="addNode();">添加根菜单</button>
+                        @*<a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>*@
+
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div id="jstree">
+                        @TreeHelper(trees)
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>菜单功能说明</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <p>根据权限来控制菜单，灵活方便。</p>
+                    <p>菜单图标样式，采用的是Font Awesome的图标，可以在官方网站查找相应的图标填写，例如：fa-windows 对应的图标为：<i class="fa fa-windows"></i></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal inmodal" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        @using (Html.BeginForm("AddOrUpdate", "Menu"))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-dialog">
+                <div class="modal-content animated fadeIn">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h5 class="modal-title"><span></span>系统菜单</h5>
+                    </div>
+                    <div class="modal-body form-horizontal">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Name, Html.DisplayNameFor(d => d.Name).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(d => d.Name, new { @class = "form-control", required = "" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.ActionId, Html.DisplayNameFor(d => d.ActionId).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(d => d.ActionId, actions, "请选择", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.IconCls, Html.DisplayNameFor(d => d.IconCls).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(d => d.IconCls, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Taxis, Html.DisplayNameFor(d => d.Taxis).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(d => d.Taxis, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.IsVisable, Html.DisplayNameFor(d => d.IsVisable).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                <div class="checkbox checkbox-info">
+                                    <input id="IsVisable" type="checkbox" name="IsVisable" value="true">
+                                    <label for="IsVisable">
+                                        <strong>是</strong>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        @Html.HiddenFor(d => d.ParentId)
+                        @Html.HiddenFor(d => d.Id)
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">提交</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/jsTreeStyles")
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/jsTree")
+    @Scripts.Render("~/plugins/formFill")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var tree = $('#jstree');
+            tree.jstree({
+                'core': {
+                    'check_callback': true
+                },
+                'plugins': ['types'],
+                'types': {
+                    'default': {
+                        'icon': 'fa fa-folder'
+                    }
+                }
+            });
+
+        });
+
+        function deleteAction(id, text) {
+            swal({
+                title: "您确定吗?",
+                text: "您确定要删除  " + text + "?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                closeOnConfirm: false
+            }, function () {
+                var magicToken = $("input[name=__RequestVerificationToken]").first();
+                if (!magicToken) { return; }
+                var form = $("<form action=\"@Url.Action("Delete")\" method=\"POST\" />");
+                form.append(magicToken.clone());
+                form.append($("<input type=\"hidden\" name=\"id\" value=\"" + id + "\" />"));
+                $("body").append(form);
+                form.submit();
+            });
+        }
+
+        function addNode(parentId) {
+            $('#modal form')[0].reset();
+            if (parentId) {
+                $("#ParentId").val(parentId);
+            }
+            $("#Id").val("");
+            $(".modal-title span").text("添加");
+            $('#modal').modal('show');
+        }
+
+        function updateNode(id) {
+            $.getJSON("@Url.Action("GetEntity")", { id: id, r: Date.now()},
+                function(data) {
+                    $("#modal form").autofill(data);
+                    $(".modal-title span").text("编辑");
+                    $('#modal').modal('show');
+                });
+        }
+
+    </script>
+}

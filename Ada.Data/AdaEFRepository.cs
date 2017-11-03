@@ -52,7 +52,7 @@ namespace Ada.Data
         /// <returns>是否成功</returns>
         public virtual void Update(T entity)
         {
-            //db.Set<T>().Attach(entity); //内部就是只是把实体的 状态改成unchange跟数据库查询出来的状态时一样的。
+            //_context.Set<T>().Attach(entity); //内部就是只是把实体的 状态改成unchange跟数据库查询出来的状态时一样的。
             _context.Entry(entity).State = EntityState.Modified;
         }
 

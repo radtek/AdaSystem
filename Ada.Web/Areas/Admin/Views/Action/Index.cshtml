@@ -49,7 +49,7 @@ if (list.Count > 0)
                         <button type="button" class="btn btn-success btn-xs m-l-xl" onclick="addNode();">添加根节点</button>
                     </div>
                 </div>
-                <div class="ibox-content">
+                <div class="ibox-content content600">
                     <div id="jstree">
                         @TreeHelper(actions)
                     </div>
@@ -189,13 +189,11 @@ if (list.Count > 0)
 
 @section Styles {
     @Styles.Render("~/plugins/jsTreeStyles")
-    @Styles.Render("~/plugins/sweetAlertStyles")
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/jsTree")
-    @Scripts.Render("~/plugins/sweetAlert")
     @Scripts.Render("~/plugins/formFill")
     <script type="text/javascript">
         $(document).ready(function () {

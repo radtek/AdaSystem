@@ -101,7 +101,7 @@
                                 </div>
                             </div>
                             <div id="tab-2" class="tab-pane">
-                                <div class="panel-body">
+                                <div class="panel-body content600">
                                     <div class="row">
                                         <div class="col-xs-12">
                                             <button type="button" class="btn btn-primary btn-xs" onclick="$('#jstree').jstree('check_all');"><i class="fa fa-check-square-o"></i> 全选</button>
@@ -136,15 +136,12 @@
 @section Styles {
     @Styles.Render("~/plugins/footableV3Styles")
     @Styles.Render("~/plugins/jsTreeStyles")
-    @Styles.Render("~/plugins/sweetAlertStyles")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/footableV3")
     @Scripts.Render("~/plugins/jsTree")
-    @Scripts.Render("~/plugins/sweetAlert")
     @Scripts.Render("~/plugins/formFill")
-    @Scripts.Render("~/bundles/base")
     <script type="text/javascript">
         $(document).ready(function () {
             $('.table').footable();

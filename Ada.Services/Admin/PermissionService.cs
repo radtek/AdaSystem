@@ -75,7 +75,7 @@ namespace Ada.Services.Admin
         /// <returns></returns>
         public List<MenuView> AuthorizeMenu(string managerId)
         {
-            var allMenus = _menuRepository.LoadEntities(d => d.IsDelete == false && d.IsVisable == true).ToList();
+            var allMenus = _menuRepository.LoadEntities(d => d.IsDelete == false && d.IsVisable != true).ToList();
             var manager= _managerRepository.LoadEntities(d => d.Id == managerId).FirstOrDefault();
             //拿到了角色对应的权限的id
             var allRoleActionIds = (from r in manager.Roles
@@ -99,7 +99,7 @@ namespace Ada.Services.Admin
             result = result.Distinct().ToList();
             //获取权限对应的菜单数据
             var allMenuData = (from m in allMenus
-                where result.Contains(m.ActionInfoId)
+                where result.Contains(m.ActionId)
                 select m).ToList();
             List<Menu> list = new List<Menu>();
             foreach (var menuInfo in allMenuData)
@@ -125,7 +125,7 @@ namespace Ada.Services.Admin
                 IsLeaf = d.IsLeaf,
                 IconCls = d.IconCls,
                 TreePath = d.TreePath,
-                Url = GetUrl(d.ActionInfoId),
+                Url = GetUrl(d.ActionId),
                 Taxis = d.Taxis
             }).OrderBy(d => d.Taxis).ToList();
         }

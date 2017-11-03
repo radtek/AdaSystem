@@ -186,6 +186,10 @@ namespace Admin.Controllers
             List<Manager> list = new List<Manager>();
             foreach (var id in ids)
             {
+                if (id==CurrentManager.Id)
+                {
+                    return Json(new { State = 0, Msg = "不能删除当前账号，如需删除，请登陆其他账户进行操作。" });
+                }
                 var manager = _managerRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
                 manager.DeletedBy = CurrentManager.Id;
                 manager.DeletedDate = DateTime.Now;
@@ -194,7 +198,28 @@ namespace Admin.Controllers
             _managerService.Delete(list);
             return Json(new { State = 1, Msg = "删除成功" });
         }
-
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult ChangePassword(string old,string fresh,string refresh)
+        {
+            if (string.IsNullOrWhiteSpace(old)||string.IsNullOrWhiteSpace(fresh)||string.IsNullOrWhiteSpace(refresh))
+            {
+                return Json(new { State = 0, Msg = "请正确输入密码信息" });
+            }
+            if (fresh!=refresh)
+            {
+                return Json(new { State = 0, Msg = "两次密码不一致" });
+            }
+            var oldpwd = Encrypt.Encode(old);
+            var manager = _managerRepository.LoadEntities(d => d.Id == CurrentManager.Id&&d.Password==oldpwd).FirstOrDefault();
+            if (manager==null)
+            {
+                return Json(new { State = 0, Msg = "当前密码有误" });
+            }
+            manager.Password = Encrypt.Encode(fresh);
+            _managerService.Edit(manager);
+            return Json(new { State = 1, Msg = "修改成功" });
+        }
         private string SetActionIds(IEnumerable<ManagerAction> list)
         {
             List<string> temp = new List<string>();

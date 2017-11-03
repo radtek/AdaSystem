@@ -31,5 +31,10 @@ namespace Ada.Services.Admin
         /// </summary>
         /// <param name="entities">集合</param>
         void Delete(IEnumerable<Manager> entities);
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="entity"></param>
+        void Edit(Manager entity);
     }
 }

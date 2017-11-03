@@ -42,7 +42,7 @@ if (list.Count > 0)
         <div class="col-lg-6">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>机构组织列表 <small>公司部门机构的树形结构数据.</small></h5>
+                    <h5>机构组织列表</h5>
                     <div class="ibox-tools">
 
                         <button type="button" class="btn btn-primary btn-xs" onclick="$('#jstree').jstree('close_all');"><i class="fa fa-plus"></i> 折叠</button>
@@ -120,12 +120,10 @@ if (list.Count > 0)
 
 @section Styles {
     @Styles.Render("~/plugins/jsTreeStyles")
-    @Styles.Render("~/plugins/sweetAlertStyles")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/jsTree")
-    @Scripts.Render("~/plugins/sweetAlert")
     @Scripts.Render("~/plugins/formFill")
     <script type="text/javascript">
         $(document).ready(function () {

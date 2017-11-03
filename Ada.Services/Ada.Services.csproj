@@ -43,11 +43,13 @@
     <Compile Include="Admin\ActionService.cs" />
     <Compile Include="Admin\IActionService.cs" />
     <Compile Include="Admin\IManagerService.cs" />
+    <Compile Include="Admin\IMenuService.cs" />
     <Compile Include="Admin\IOrganizationService.cs" />
     <Compile Include="Admin\IPermissionService.cs" />
     <Compile Include="Admin\IRoleService.cs" />
     <Compile Include="Admin\ISystemLogService.cs" />
     <Compile Include="Admin\ManagerService.cs" />
+    <Compile Include="Admin\MenuService .cs" />
     <Compile Include="Admin\OrganizationService.cs" />
     <Compile Include="Admin\PermissionService.cs" />
     <Compile Include="Admin\RoleService.cs" />

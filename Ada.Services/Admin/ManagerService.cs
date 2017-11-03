@@ -143,5 +143,14 @@ namespace Ada.Services.Admin
             _managerRepository.Delete(entities);
             _dbContext.SaveChanges();
         }
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="entity"></param>
+        public void Edit(Manager entity)
+        {
+            _managerRepository.Update(entity);
+            _dbContext.SaveChanges();
+        }
     }
 }

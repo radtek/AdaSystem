@@ -8576,3 +8576,9 @@ body.md-skin {
 .table-detail-value {
     display: table-cell;
 }
+
+.content600{
+    height: 600px;
+    overflow: auto;
+    padding-bottom: 150px;
+}
