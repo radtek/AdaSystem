@@ -52,11 +52,12 @@ namespace Ada.Framework.Filter
                 return;
             }
             CurrentManager = SerializeHelper.DeserializeToObject<ManagerView>(obj.ToString());
+            var manager = _repository.LoadEntities(d => d.Id == CurrentManager.Id).FirstOrDefault();
             //当前用户
+            CurrentManager.Image = manager.Image;//更新头像
             ViewBag.CurrentManager = CurrentManager;
             //用户登录日志
-            ViewBag.CurrentManagerLoginLog = _repository.LoadEntities(d => d.Id == CurrentManager.Id).FirstOrDefault()
-                ?.ManagerLoginLogs.OrderByDescending(d=>d.Id).Take(5).ToList();
+            ViewBag.CurrentManagerLoginLog = manager.ManagerLoginLogs.OrderByDescending(d=>d.Id).Take(5).ToList();
             //用户菜单
             ViewBag.Menus = _permissionService.AuthorizeMenu(CurrentManager.Id);
             ////后门，用于调试

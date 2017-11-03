@@ -54,6 +54,7 @@ namespace Ada.Web.Controllers
                 Id = manager.Id,
                 Phone = manager.Phone,
                 RealName = manager.RealName,
+                Image = manager.Image,
                 UserName = manager.UserName,
                 Roles = manager.Roles.Count > 0 ? string.Join(",", manager.Roles.Select(d => d.RoleName)) : "",
                 Organizations = manager.Organizations.Count > 0 ? String.Join("-", manager.Organizations.Select(d => d.OrganizationName)) : ""

@@ -85,5 +85,10 @@ namespace Ada.Core.ViewModel.Admin
         /// </summary>
         [Display(Name = "操作")]
         public string Id { get; set; }
+        /// <summary>
+        /// 相片
+        /// </summary>
+        [Display(Name = "相片")]
+        public string Image { get; set; }
     }
 }

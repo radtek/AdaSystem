@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -9,6 +10,7 @@ using Ada.Core.Tools;
 using Ada.Core.ViewModel;
 using Ada.Core.ViewModel.Admin;
 using Ada.Framework.Filter;
+using Ada.Framework.UploadFile;
 using Ada.Services.Admin;
 using Action = Ada.Core.Domain.Admin.Action;
 
@@ -186,7 +188,7 @@ namespace Admin.Controllers
             List<Manager> list = new List<Manager>();
             foreach (var id in ids)
             {
-                if (id==CurrentManager.Id)
+                if (id == CurrentManager.Id)
                 {
                     return Json(new { State = 0, Msg = "不能删除当前账号，如需删除，请登陆其他账户进行操作。" });
                 }
@@ -200,19 +202,19 @@ namespace Admin.Controllers
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
-        public ActionResult ChangePassword(string old,string fresh,string refresh)
+        public ActionResult ChangePassword(string old, string fresh, string refresh)
         {
-            if (string.IsNullOrWhiteSpace(old)||string.IsNullOrWhiteSpace(fresh)||string.IsNullOrWhiteSpace(refresh))
+            if (string.IsNullOrWhiteSpace(old) || string.IsNullOrWhiteSpace(fresh) || string.IsNullOrWhiteSpace(refresh))
             {
                 return Json(new { State = 0, Msg = "请正确输入密码信息" });
             }
-            if (fresh!=refresh)
+            if (fresh != refresh)
             {
                 return Json(new { State = 0, Msg = "两次密码不一致" });
             }
             var oldpwd = Encrypt.Encode(old);
-            var manager = _managerRepository.LoadEntities(d => d.Id == CurrentManager.Id&&d.Password==oldpwd).FirstOrDefault();
-            if (manager==null)
+            var manager = _managerRepository.LoadEntities(d => d.Id == CurrentManager.Id && d.Password == oldpwd).FirstOrDefault();
+            if (manager == null)
             {
                 return Json(new { State = 0, Msg = "当前密码有误" });
             }
@@ -220,6 +222,45 @@ namespace Admin.Controllers
             _managerService.Edit(manager);
             return Json(new { State = 1, Msg = "修改成功" });
         }
+
+        [HttpPost]
+        public ActionResult UploadImage()
+        {
+            UEditorModel uploadConfig = new UEditorModel()
+            {
+                AllowExtensions = new[] { ".png" },
+                PathFormat = UEditorConfig.GetString("scrawlPathFormat"),
+                SizeLimit = UEditorConfig.GetInt("scrawlMaxSize"),
+                UploadFieldName = UEditorConfig.GetString("scrawlFieldName"),
+                Base64 = true,
+                Base64Filename = "scrawl.png"
+            };
+            var uploadFileName = uploadConfig.Base64Filename;
+            var base64Str = Request[uploadConfig.UploadFieldName];
+            var uploadFileBytes = Convert.FromBase64String(base64Str.Replace("data:image/png;base64,", ""));
+            var savePath = PathFormatter.Format(uploadFileName, uploadConfig.PathFormat);
+            var localPath = Server.MapPath(savePath);
+            try
+            {
+                if (!Directory.Exists(Path.GetDirectoryName(localPath)))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(localPath));
+                }
+                System.IO.File.WriteAllBytes(localPath, uploadFileBytes);
+                var imgPath = savePath;
+                var manager = _managerRepository.LoadEntities(d => d.Id == CurrentManager.Id).FirstOrDefault();
+                manager.Image = imgPath;
+                _managerService.Edit(manager);
+                return Json(new { State = 1, Msg = imgPath });
+
+            }
+            catch (Exception e)
+            {
+                return Json(new { State = 0, Msg = e.Message });
+            }
+
+        }
+
         private string SetActionIds(IEnumerable<ManagerAction> list)
         {
             List<string> temp = new List<string>();

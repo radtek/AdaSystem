@@ -8582,3 +8582,7 @@ body.md-skin {
     overflow: auto;
     padding-bottom: 150px;
 }
+
+.img-container img {
+    max-width: 100%;
+}
