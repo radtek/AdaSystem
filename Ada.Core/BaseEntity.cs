@@ -31,6 +31,11 @@ namespace Ada.Core
         [Display(Name = "添加者")]
         public string AddedBy { get; set; }
         /// <summary>
+        /// 添加者
+        /// </summary>
+        [Display(Name = "添加者")]
+        public string AddedById { get; set; }
+        /// <summary>
         /// 修改时间
         /// </summary>
         [Display(Name = "修改时间")]
@@ -40,6 +45,11 @@ namespace Ada.Core
         /// </summary>
         [Display(Name = "修改者")]
         public string ModifiedBy { get; set; }
+        /// <summary>
+        /// 修改者
+        /// </summary>
+        [Display(Name = "修改者")]
+        public string ModifiedById { get; set; }
         /// <summary>
         /// 是否删除
         /// </summary>
@@ -55,6 +65,11 @@ namespace Ada.Core
         /// </summary>
         [Display(Name = "删除者")]
         public string DeletedBy { get; set; }
+        /// <summary>
+        /// 删除者
+        /// </summary>
+        [Display(Name = "删除者")]
+        public string DeletedById { get; set; }
         /// <summary>
         /// IP地址
         /// </summary>

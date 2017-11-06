@@ -86,6 +86,7 @@
                     toastr.warning('@TempData["Warning"]');
                 </text>
             }
+          $('[data-toggle="tooltip"]').tooltip();
           initChangePwd($('@Html.AntiForgeryToken()').val());
           initCropper("@Url.Action("UploadImage","Manager",new{area="Admin"})");
         });

@@ -83,7 +83,8 @@ namespace Admin.Controllers
                 entity.IsVisable = viewModel.IsVisable;
                 entity.IconCls = viewModel.IconCls;
                 entity.ParentId = viewModel.ParentId;
-                entity.ModifiedBy = CurrentManager.Id;
+                entity.ModifiedById = CurrentManager.Id;
+                entity.ModifiedBy = CurrentManager.UserName;
                 entity.ModifiedDate = DateTime.Now;
                 _menuService.Update(entity);
                 TempData["Msg"] = "更新成功";
@@ -98,7 +99,8 @@ namespace Admin.Controllers
                     IsVisable = viewModel.IsVisable,
                     ParentId = viewModel.ParentId,
                     Id = IdBuilder.CreateIdNum(),
-                    AddedBy = CurrentManager.Id,
+                    AddedBy = CurrentManager.UserName,
+                    AddedById = CurrentManager.Id,
                     AddedDate = DateTime.Now,
                     IconCls = viewModel.IconCls
 
@@ -114,7 +116,8 @@ namespace Admin.Controllers
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.TreePath.Contains(id)).FirstOrDefault();
-            entity.DeletedBy = CurrentManager.Id;
+            entity.DeletedBy = CurrentManager.UserName;
+            entity.DeletedById = CurrentManager.Id;
             entity.DeletedDate = DateTime.Now;
             _menuService.Delete(entity);
             TempData["Msg"] = "删除成功";

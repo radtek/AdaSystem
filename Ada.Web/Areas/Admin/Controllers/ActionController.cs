@@ -7,6 +7,7 @@ using Ada.Core;
 using Ada.Core.Domain.Admin;
 using Ada.Core.ViewModel;
 using Ada.Core.ViewModel.Admin;
+using Ada.Framework.Caching;
 using Ada.Framework.Filter;
 using Ada.Services.Admin;
 using Action = Ada.Core.Domain.Admin.Action;
@@ -18,7 +19,7 @@ namespace Admin.Controllers
         private readonly IActionService _actionService;
         private readonly IRepository<Action> _repository;
         public ActionController(IActionService actionService,
-            IRepository<Action> repository)
+            IRepository<Action> repository,ICacheManager cacheManager)
         {
             _actionService = actionService;
             _repository = repository;
@@ -71,36 +72,47 @@ namespace Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddOrUpdate(ActionView actionView)
         {
-            var action = new Action
-            {
-                ActionName = actionView.ActionName,
-                Area = actionView.Area,
-                ControllerName = actionView.ControllerName,
-                HttpMethod = actionView.HttpMethod,
-                IconCls = actionView.IconCls,
-                MethodName = actionView.MethodName,
-                LinkUrl = actionView.LinkUrl,
-                Taxis = actionView.Taxis,
-                IsButton = actionView.IsButton,
-                IsMenu = actionView.IsMenu
-            };
-            if (!string.IsNullOrWhiteSpace(actionView.ParentId))
-            {
-                action.ParentId = actionView.ParentId;
-            }
+
             if (!string.IsNullOrWhiteSpace(actionView.Id))
             {
-                action.Id = actionView.Id;
-                action.ModifiedBy = CurrentManager.Id;
+                var action = _repository.LoadEntities(d => d.Id == actionView.Id).FirstOrDefault();
+                action.ActionName = actionView.ActionName;
+                action.Area = actionView.Area;
+                action.ControllerName = actionView.ControllerName;
+                action.HttpMethod = actionView.HttpMethod;
+                action.IconCls = actionView.IconCls;
+                action.MethodName = actionView.MethodName;
+                action.LinkUrl = actionView.LinkUrl;
+                action.Taxis = actionView.Taxis;
+                action.IsButton = actionView.IsButton;
+                action.IsMenu = actionView.IsMenu;
+                action.ParentId = actionView.ParentId;
+                action.ModifiedBy = CurrentManager.UserName;
+                action.ModifiedById = CurrentManager.Id;
                 action.ModifiedDate = DateTime.Now;
                 _actionService.Update(action);
                 TempData["Msg"] = "更新成功";
             }
             else
             {
-                action.Id = IdBuilder.CreateIdNum();
-                action.AddedBy = CurrentManager.Id;
-                action.AddedDate = DateTime.Now;
+                var action = new Action
+                {
+                    ActionName = actionView.ActionName,
+                    Area = actionView.Area,
+                    ControllerName = actionView.ControllerName,
+                    HttpMethod = actionView.HttpMethod,
+                    IconCls = actionView.IconCls,
+                    MethodName = actionView.MethodName,
+                    LinkUrl = actionView.LinkUrl,
+                    Taxis = actionView.Taxis,
+                    IsButton = actionView.IsButton,
+                    IsMenu = actionView.IsMenu,
+                    ParentId = actionView.ParentId,
+                    Id = IdBuilder.CreateIdNum(),
+                    AddedBy = CurrentManager.UserName,
+                    AddedById = CurrentManager.Id,
+                    AddedDate = DateTime.Now
+                };
                 _actionService.Add(action);
                 TempData["Msg"] = "添加成功";
             }
@@ -112,7 +124,8 @@ namespace Admin.Controllers
         public ActionResult Delete(string id)
         {
             var action = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            action.DeletedBy = CurrentManager.Id;
+            action.DeletedBy = CurrentManager.UserName;
+            action.DeletedById = CurrentManager.Id;
             action.DeletedDate = DateTime.Now;
             _actionService.Delete(action);
             TempData["Msg"] = "删除成功";

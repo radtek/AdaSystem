@@ -10,7 +10,10 @@ using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel;
 using Ada.Core.ViewModel.Admin;
+using Ada.Framework.Caching;
+using Ada.Framework.Services;
 using Ada.Services.Admin;
+using Autofac;
 using log4net;
 using Action = Ada.Core.Domain.Admin.Action;
 
@@ -21,14 +24,17 @@ namespace Ada.Framework.Filter
 
         private readonly IPermissionService _permissionService;
         private readonly IRepository<Manager> _repository;
+        private readonly ICacheManager _cacheManager;
+        private readonly ISignals _signals;
         protected BaseController()
         {
             _permissionService = EngineContext.Current.Resolve<IPermissionService>();
             _repository = EngineContext.Current.Resolve<IRepository<Manager>>();
+            _cacheManager = EngineContext.Current.ContainerManager.Scope().Resolve<ICacheManager>(new TypedParameter(typeof(Type), GetType().BaseType));
+            _signals = EngineContext.Current.Resolve<ISignals>();
         }
 
         public ILog Log { get; set; }
-        //private readonly log4net.ILog _logger;//= log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public ManagerView CurrentManager { get; set; }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -57,14 +63,26 @@ namespace Ada.Framework.Filter
             CurrentManager.Image = manager.Image;//更新头像
             ViewBag.CurrentManager = CurrentManager;
             //用户登录日志
-            ViewBag.CurrentManagerLoginLog = manager.ManagerLoginLogs.OrderByDescending(d=>d.Id).Take(5).ToList();
-            //用户菜单
-            ViewBag.Menus = _permissionService.AuthorizeMenu(CurrentManager.Id);
-            ////后门，用于调试
-            if (CurrentManager.UserName == "adaxiong")
+            var loginLogs= _cacheManager.Get("LoginLog" + CurrentManager.Id, c =>
             {
-                return;
-            }
+                c.Monitor(_signals.When("LoginLog" + CurrentManager.Id + ".Changed"));
+                return manager.ManagerLoginLogs.OrderByDescending(d => d.Id).Take(5).ToList();
+            });
+            ViewBag.CurrentManagerLoginLog = loginLogs;
+            //ViewBag.CurrentManagerLoginLog = manager.ManagerLoginLogs.OrderByDescending(d=>d.Id).Take(5).ToList();
+            //用户菜单
+            var menus=_cacheManager.Get("Menu" + CurrentManager.Id, c =>
+            {
+                c.Monitor(_signals.When("Menu" + CurrentManager.Id + ".Changed"));
+                return _permissionService.AuthorizeMenu(CurrentManager.Id);
+            });
+            ViewBag.Menus = menus;
+            //ViewBag.Menus = _permissionService.AuthorizeMenu(CurrentManager.Id);
+            //////后门，用于调试
+            //if (CurrentManager.UserName == "adaxiong")
+            //{
+            //    return;
+            //}
             var actionRecord =
                 new Action
                 {

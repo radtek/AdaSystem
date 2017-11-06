@@ -92,7 +92,7 @@ function initChangePwd(token) {
     });
 }
 function initCropper(apiurl) {
-    $('[data-toggle="tooltip"]').tooltip();
+    
     var image = document.getElementById('image');
     var cropBoxData;
     var canvasData;
@@ -156,39 +156,38 @@ function initCropper(apiurl) {
         }
     });
     $("#savePic").click(function () {
-        if (image.src) {
             var result = cropper.getCroppedCanvas({ width: 320, height: 180 });
-            var href = result.toDataURL();
-            $.ajax({
-                type: "post",
-                url: apiurl,
-                data: { upfile: href },
-                success: function (res) {
-                    if (res.State == 1) {
-                        $('#modal-image').modal('hide');
-                        image.src = "";
-                        swal({
-                            title: "操作成功",
-                            text: "修改相片成功",
-                            type: "success",
-                            showCancelButton: false,
-                            confirmButtonText: "确定",
-                            closeOnConfirm: false
-                        },
-                            function() {
-                                window.location.reload();
-                            });
-                        
-                    } else {
-                        swal("操作提醒", res.Msg, "warning");
-                    }
-                },
-                error: function () {
-                    swal("操作失败", res.Msg, "error");
-                }
-            });
-        }
+            if (result) {
+                var href = result.toDataURL();
+                $.ajax({
+                    type: "post",
+                    url: apiurl,
+                    data: { upfile: href },
+                    success: function (res) {
+                        if (res.State == 1) {
+                            $('#modal-image').modal('hide');
+                            image.src = "";
+                            swal({
+                                    title: "操作成功",
+                                    text: "修改相片成功",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonText: "确定",
+                                    closeOnConfirm: false
+                                },
+                                function () {
+                                    window.location.reload();
+                                });
 
+                        } else {
+                            swal("操作提醒", res.Msg, "warning");
+                        }
+                    },
+                    error: function () {
+                        swal("操作失败", res.Msg, "error");
+                    }
+                });
+            }
     });
     var $inputImage = $("#inputImage");
     if (window.FileReader) {

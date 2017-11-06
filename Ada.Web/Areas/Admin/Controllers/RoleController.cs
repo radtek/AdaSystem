@@ -70,8 +70,10 @@ namespace Admin.Controllers
                 var role = _roleRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
                 role.RoleName = viewModel.RoleName;
                 role.RoleType = viewModel.RoleType;
-                role.ModifiedBy = CurrentManager.Id;
+                role.ModifiedBy = CurrentManager.UserName;
+                role.ModifiedById = CurrentManager.Id;
                 role.ModifiedDate = DateTime.Now;
+
                 _roleService.Update(role, viewModel.ActionIds);
                 TempData["Msg"] = "更新成功";
             }
@@ -82,7 +84,8 @@ namespace Admin.Controllers
                     RoleName = viewModel.RoleName,
                     RoleType = viewModel.RoleType,
                     Id = IdBuilder.CreateIdNum(),
-                    AddedBy = CurrentManager.Id,
+                    AddedBy = CurrentManager.UserName,
+                    AddedById = CurrentManager.Id,
                     AddedDate = DateTime.Now
                 };
                 _roleService.Add(role, viewModel.ActionIds);
@@ -95,7 +98,8 @@ namespace Admin.Controllers
         public ActionResult Delete(string id)
         {
             var role = _roleRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            role.DeletedBy = CurrentManager.Id;
+            role.DeletedBy = CurrentManager.UserName;
+            role.DeletedById = CurrentManager.Id;
             role.DeletedDate = DateTime.Now;
             _roleService.Delete(role);
             TempData["Msg"] = "删除成功";

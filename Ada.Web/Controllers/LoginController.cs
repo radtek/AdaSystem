@@ -10,6 +10,7 @@ using Ada.Core.Domain.Log;
 using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel.Admin;
+using Ada.Framework.Caching;
 using log4net;
 
 namespace Ada.Web.Controllers
@@ -18,10 +19,12 @@ namespace Ada.Web.Controllers
     {
         private readonly IRepository<Manager> _repository;
         private readonly IDbContext _dbContext;
-        public LoginController(IRepository<Manager> repository, IDbContext dbContext)
+        private readonly ISignals _signals;
+        public LoginController(IRepository<Manager> repository, IDbContext dbContext, ISignals signals)
         {
             _repository = repository;
             _dbContext = dbContext;
+            _signals = signals;
         }
         public ActionResult Index()
         {
@@ -60,7 +63,8 @@ namespace Ada.Web.Controllers
                 Organizations = manager.Organizations.Count > 0 ? String.Join("-", manager.Organizations.Select(d => d.OrganizationName)) : ""
             };
             Session["LoginManager"] = SerializeHelper.SerializeToString(managerView);
-
+            //清空缓存
+            _signals.Trigger("LoginLog" + managerView.Id + ".Changed");
 
             return RedirectToAction("Index", "Home", new { area = "Dashboards" });
 

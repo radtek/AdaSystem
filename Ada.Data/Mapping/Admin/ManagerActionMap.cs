@@ -22,17 +22,17 @@ namespace Ada.Data.Mapping.Admin
             Property(s => s.IsPass);
             Property(s => s.ManagerId).HasMaxLength(128);
             Property(s => s.ActionInfoId).HasMaxLength(128);
-            
-
-
 
             Property(s => s.AddedDate);
             Property(s => s.AddedBy).HasMaxLength(32);
+            Property(s => s.AddedById).HasMaxLength(32);
             Property(s => s.ModifiedDate);
             Property(s => s.ModifiedBy).HasMaxLength(32);
+            Property(s => s.ModifiedById).HasMaxLength(32);
             Property(s => s.IsDelete).IsRequired();
             Property(s => s.DeletedDate);
             Property(s => s.DeletedBy).HasMaxLength(32);
+            Property(s => s.DeletedById).HasMaxLength(32);
             Property(s => s.IpAddress).HasMaxLength(32);
             Property(s => s.Taxis);
             Property(s => s.Remark).HasMaxLength(1024);

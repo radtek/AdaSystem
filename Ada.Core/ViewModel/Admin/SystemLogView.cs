@@ -36,10 +36,5 @@ namespace Ada.Core.ViewModel.Admin
         /// </summary>
         [Display(Name = "日志时间")]
         public string Date { get; set; }
-        /// <summary>
-        /// 主键
-        /// </summary>
-        [Display(Name = "主键")]
-        public string Id { get; set; }
     }
 }

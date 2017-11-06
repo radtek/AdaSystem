@@ -72,7 +72,8 @@ namespace Admin.Controllers
             if (!string.IsNullOrWhiteSpace(viewModel.Id))
             {
                 entity.Id = viewModel.Id;
-                entity.ModifiedBy = CurrentManager.Id;
+                entity.ModifiedBy = CurrentManager.UserName;
+                entity.ModifiedById = CurrentManager.Id;
                 entity.ModifiedDate = DateTime.Now;
                 _organizationService.Update(entity);
                 TempData["Msg"] = "更新成功";
@@ -80,7 +81,8 @@ namespace Admin.Controllers
             else
             {
                 entity.Id = IdBuilder.CreateIdNum();
-                entity.AddedBy = CurrentManager.Id;
+                entity.AddedBy = CurrentManager.UserName;
+                entity.AddedById = CurrentManager.Id;
                 entity.AddedDate = DateTime.Now;
                 _organizationService.Add(entity);
                 TempData["Msg"] = "添加成功";
@@ -93,7 +95,8 @@ namespace Admin.Controllers
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            entity.DeletedBy = CurrentManager.Id;
+            entity.DeletedBy = CurrentManager.UserName;
+            entity.DeletedById = CurrentManager.Id;
             entity.DeletedDate = DateTime.Now;
             _organizationService.Delete(entity);
             TempData["Msg"] = "删除成功";

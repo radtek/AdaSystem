@@ -9,6 +9,7 @@ using Ada.Core.Domain.Admin;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel;
 using Ada.Core.ViewModel.Admin;
+using Ada.Framework.Caching;
 using Ada.Framework.Filter;
 using Ada.Framework.UploadFile;
 using Ada.Services.Admin;
@@ -23,18 +24,21 @@ namespace Admin.Controllers
         private readonly IRepository<Manager> _managerRepository;
         private readonly IManagerService _managerService;
         private readonly IRepository<Organization> _organizationRepository;
+        private readonly ISignals _signals;
 
         public ManagerController(IManagerService managerService,
             IRepository<Manager> managerRepository,
             IRepository<Role> roleRepository,
             IRepository<Action> actionRepository,
-            IRepository<Organization> organizationRepository)
+            IRepository<Organization> organizationRepository,
+            ISignals signals)
         {
             _actionRepository = actionRepository;
             _roleRepository = roleRepository;
             _managerRepository = managerRepository;
             _managerService = managerService;
             _organizationRepository = organizationRepository;
+            _signals = signals;
         }
         public ActionResult Index()
         {
@@ -148,10 +152,13 @@ namespace Admin.Controllers
                 manager.Phone = viewModel.Phone;
                 manager.Status = viewModel.Status;
                 manager.Password = Encrypt.Encode(viewModel.Password);
-                manager.ModifiedBy = CurrentManager.Id;
+                manager.ModifiedById = CurrentManager.Id;
+                manager.ModifiedBy = CurrentManager.UserName;
                 manager.ModifiedDate = DateTime.Now;
                 _managerService.AddOrUpdate(manager, false, viewModel.RoleIds, organizationIds, actionIds);
                 msg = "更新成功";
+                //清空缓存
+                _signals.Trigger("Menu" + viewModel.Id + ".Changed");
             }
             else
             {
@@ -171,7 +178,8 @@ namespace Admin.Controllers
                     Status = viewModel.Status,
                     Password = Encrypt.Encode(viewModel.Password),
                     Id = IdBuilder.CreateIdNum(),
-                    AddedBy = CurrentManager.Id,
+                    AddedBy = CurrentManager.UserName,
+                    AddedById = CurrentManager.Id,
                     AddedDate = DateTime.Now
                 };
                 _managerService.AddOrUpdate(manager, true, viewModel.RoleIds, organizationIds, actionIds);
@@ -193,11 +201,15 @@ namespace Admin.Controllers
                     return Json(new { State = 0, Msg = "不能删除当前账号，如需删除，请登陆其他账户进行操作。" });
                 }
                 var manager = _managerRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
-                manager.DeletedBy = CurrentManager.Id;
+                manager.DeletedById = CurrentManager.Id;
+                manager.DeletedBy = CurrentManager.UserName;
                 manager.DeletedDate = DateTime.Now;
                 list.Add(manager);
+                _signals.Trigger("Menu" + id + ".Changed");
             }
             _managerService.Delete(list);
+            //清空缓存
+            
             return Json(new { State = 1, Msg = "删除成功" });
         }
         [HttpPost]

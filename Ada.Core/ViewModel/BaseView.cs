@@ -33,5 +33,9 @@ namespace Ada.Core.ViewModel
         /// 排序字段
         /// </summary>
         public string search { get; set; }
+        /// <summary>
+        /// 操作
+        /// </summary>
+        public string Id { get; set; }
     }
 }

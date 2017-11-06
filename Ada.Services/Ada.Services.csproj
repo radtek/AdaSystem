@@ -40,7 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\FieldService.cs" />
+    <Compile Include="Admin\FieldTypeService.cs" />
     <Compile Include="Admin\ActionService.cs" />
+    <Compile Include="Admin\IFieldService.cs" />
+    <Compile Include="Admin\IFieldTypeService.cs" />
     <Compile Include="Admin\IActionService.cs" />
     <Compile Include="Admin\IManagerService.cs" />
     <Compile Include="Admin\IMenuService.cs" />

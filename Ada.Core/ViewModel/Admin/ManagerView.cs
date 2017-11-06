@@ -81,11 +81,6 @@ namespace Ada.Core.ViewModel.Admin
         [Display(Name = "上次登陆")]
         public string LastLoginDate { get; set; }
         /// <summary>
-        /// 操作
-        /// </summary>
-        [Display(Name = "操作")]
-        public string Id { get; set; }
-        /// <summary>
         /// 相片
         /// </summary>
         [Display(Name = "相片")]

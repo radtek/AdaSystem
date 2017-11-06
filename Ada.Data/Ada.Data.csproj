@@ -53,6 +53,8 @@
     <Compile Include="AdaEFDbcontext.cs" />
     <Compile Include="AdaEFRepository.cs" />
     <Compile Include="EFDbcontext.cs" />
+    <Compile Include="Mapping\Admin\FieldTypeMap.cs" />
+    <Compile Include="Mapping\Admin\FieldMap.cs" />
     <Compile Include="Mapping\Admin\RoleMap.cs" />
     <Compile Include="Mapping\Admin\OrganizationMap.cs" />
     <Compile Include="Mapping\Admin\MenuMap.cs" />
@@ -68,6 +70,14 @@
     <Compile Include="Migrations\201711030419417_Menu.cs" />
     <Compile Include="Migrations\201711030419417_Menu.Designer.cs">
       <DependentUpon>201711030419417_Menu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711060210127_Admin.cs" />
+    <Compile Include="Migrations\201711060210127_Admin.Designer.cs">
+      <DependentUpon>201711060210127_Admin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711060353408_Field.cs" />
+    <Compile Include="Migrations\201711060353408_Field.Designer.cs">
+      <DependentUpon>201711060353408_Field.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -91,6 +101,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711030419417_Menu.resx">
       <DependentUpon>201711030419417_Menu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711060210127_Admin.resx">
+      <DependentUpon>201711060210127_Admin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711060353408_Field.resx">
+      <DependentUpon>201711060353408_Field.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

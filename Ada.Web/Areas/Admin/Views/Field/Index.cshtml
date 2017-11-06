@@ -1,0 +1,446 @@
+﻿@using System.Web.Optimization
+@using Ada.Core.ViewModel
+@model Ada.Core.ViewModel.Admin.FieldView
+@{
+    ViewBag.Title = "数据字典";
+    List<TreeView> trees = ViewBag.Trees;
+}
+
+
+
+@Html.Partial("Bread")
+
+@helper TreeHelper(List<TreeView> list)
+{
+if (list.Count > 0)
+{
+        <ul>
+            @foreach (var item in list)
+            {
+                <li class="jstree-open" id="@item.Id">
+                    <span>@item.Text</span>
+                    <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-link btn-xs dropdown-toggle"><span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" onclick="addNode('@item.Id');">添加子类别</a></li>
+                            <li><a href="#" onclick="updateNode('@item.Id');">编辑子类别</a></li>
+                            <li class="divider"></li>
+                            <li><a href="javascript:;" onclick="deleteAction('@item.Id','@item.Text');">删除此类别</a></li>
+                        </ul>
+                    </div>
+                    @TreeHelper(item.Children)
+                </li>
+            }
+        </ul>
+}
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>数据字典类别</h5>
+                    <div class="ibox-tools">
+                        <button type="button" class="btn btn-success btn-xs m-l-xl" onclick="addNode();">添加根类别</button>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div id="jstree">
+                        @TreeHelper(trees)
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>数据字典列表</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <table id="table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="toolbar" class="btn-group">
+        <button id="btn_add" type="button" class="btn btn-primary btn-outline">
+            <i class="fa fa-plus"></i> 新增
+        </button>
+        <button id="btn_edit" type="button" class="btn btn-primary btn-outline">
+            <i class="fa fa-pencil"></i> 修改
+        </button>
+        <button id="btn_delete" type="button" class="btn btn-primary btn-outline">
+            <i class="fa fa-trash-o"></i> 删除
+        </button>
+    </div>
+    <div class="modal inmodal" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        @using (Html.BeginForm("AddOrUpdateType", "Field"))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-dialog">
+                <div class="modal-content animated fadeIn">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h5 class="modal-title"><span></span>字典类别</h5>
+                    </div>
+                    <div class="modal-body form-horizontal">
+                        <div class="form-group">
+                            @Html.Label("TypeName", "类别名称", new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextBox("TypeName","", new { @class = "form-control", required = "" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            @Html.Label("CallIndex", "调用别名", new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextBox("CallIndex", "", new { @class = "form-control" })
+                            </div>
+                        </div>
+                      
+                        @Html.Hidden("ParentId")
+                        @Html.Hidden("TypeId")
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">提交</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="modal inmodal" id="modalfield" tabindex="-1" role="dialog" aria-hidden="true">
+        @using (Html.BeginForm("AddOrUpdateField", "Field"))
+        {
+            <div class="modal-dialog">
+                <div class="modal-content animated fadeIn">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h5 class="modal-title"><span></span>数据字典</h5>
+                    </div>
+                    <div class="modal-body form-horizontal">
+                        <div class="form-group">
+                            @Html.LabelFor(d=>d.Text, Html.DisplayNameFor(d=>d.Text).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(d => d.Text, new { @class = "form-control", required = "" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Value, Html.DisplayNameFor(d => d.Value).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(d=>d.Value, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Taxis, Html.DisplayNameFor(d => d.Taxis).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(d=>d.Taxis, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        @Html.HiddenFor(d=>d.Id)
+                        @Html.HiddenFor(d=>d.FieldTypeId)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="ladda-button btn btn-primary">提交</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/jsTreeStyles")
+    @Styles.Render("~/plugins/laddaStyles")
+    @Styles.Render("~/plugins/bootstrapTableStyle")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/jsTree")
+    @Scripts.Render("~/plugins/ladda")
+    @Scripts.Render("~/plugins/formFill")
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var tree = $('#jstree');
+            tree.jstree({
+                'core': {
+                    'check_callback': true
+                },
+                'plugins': ['types'],
+                'types': {
+                    'default': {
+                        'icon': 'fa fa-folder'
+                    }
+                }
+            });
+            tree.on("activate_node.jstree", function (obj, e) {
+                // 处理代码
+                // 获取当前节点
+                var currentNode = e.node;
+                $("#FieldTypeId").val(currentNode.id);
+                //加载表格
+                $("#table").bootstrapTable("refresh", { query: { FieldTypeId: currentNode.id} });
+            });
+            //1.初始化Table
+            var oTable = new TableInit();
+            oTable.Init();
+            //2.初始化Button的点击事件
+            var oButtonInit = new ButtonInit();
+            oButtonInit.Init();
+        });
+
+        function deleteAction(id, text) {
+            swal({
+                title: "您确定吗?",
+                text: "您确定要删除  " + text + "?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                closeOnConfirm: false
+            }, function () {
+                var magicToken = $("input[name=__RequestVerificationToken]").first();
+                if (!magicToken) { return; }
+                var form = $("<form action=\"@Url.Action("DeleteType")\" method=\"POST\" />");
+                form.append(magicToken.clone());
+                form.append($("<input type=\"hidden\" name=\"id\" value=\"" + id + "\" />"));
+                $("body").append(form);
+                form.submit();
+            });
+        }
+
+        function addNode(parentId) {
+            $('#modal form')[0].reset();
+            if (parentId) {
+                $("#ParentId").val(parentId);
+            }
+            $("#Id").val("");
+            $(".modal-title span").text("添加");
+            $('#modal').modal('show');
+        }
+
+        function updateNode(id) {
+            $.getJSON("@Url.Action("GetEntityType")", { id: id, r: Date.now()},
+                function(data) {
+                    $("#modal form").autofill(data);
+                    $(".modal-title span").text("编辑");
+                    $('#modal').modal('show');
+                });
+        }
+
+
+
+        var TableInit = function () {
+            var oTableInit = new Object();
+            //初始化Table
+            oTableInit.Init = function () {
+                $('#table').bootstrapTable({
+                    url: '@Url.Action("GetList")',         //请求后台的URL（*）
+                    toolbar: '#toolbar',                //工具按钮用哪个容器
+                    striped: true,                      //是否显示行间隔色
+                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    pagination: true,                   //是否显示分页（*）
+                    sortable: true,                     //是否启用排序
+                    sortOrder: "asc",                   //排序方式
+                    sortName:"Id",
+                    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1,                       //初始化加载第一页，默认第一页
+                    pageSize: 10,                       //每页的记录行数（*）
+                    search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                    strictSearch: true,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
+                    showColumns: true,                  //是否显示所有的列
+                    showRefresh: true,                  //是否显示刷新按钮
+                    minimumCountColumns: 2,             //最少允许的列数
+                    clickToSelect: true,                //是否启用点击选中行
+                    singleSelect: true,                  //设置True 将禁止多选
+                    uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                    showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                    cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
+                    //detailView: true,                   //设置为 true 可以显示详细页面模式。
+                    //detailFormatter: detailFormatter,
+                    mobileResponsive:true,
+                    columns: [
+                        {
+                        checkbox: true
+                        },
+                        {
+                            field: 'Text',
+                            title: '@Html.DisplayNameFor(d=>d.Text)',
+                            align:"center"
+                        },
+                        {
+                            field: 'Value',
+                            title: '@Html.DisplayNameFor(d=>d.Value)',
+                            align: "center"
+                        },
+                        {
+                            field: 'Taxis',
+                            title: '@Html.DisplayNameFor(d=>d.Taxis)',
+                            align: "center"
+                        }
+
+                    ]
+                });
+            };
+            return oTableInit;
+        };
+        var ButtonInit = function () {
+            var oInit = new Object();
+            oInit.Init = function () {
+                //新增
+                $("#btn_add").click(function () {
+                    $('#modalfield form')[0].reset();
+                    $("#Id").val("");
+                    if ($("#FieldTypeId").val()) {
+                        $("#modalfield .modal-title span").text("添加");
+                        $('#modalfield').modal('show');
+                    } else {
+                        swal("操作提醒", "请先选择类别", "warning");
+                    }
+                    
+                });
+                //编辑
+                $("#btn_edit").click(function () {
+                    var arrselections = $("#table").bootstrapTable('getSelections');
+                    if (arrselections.length > 1) {
+                        swal("操作提醒", "只能选择一行进行编辑", "warning");
+                        return;
+                    }
+                    if (arrselections.length <= 0) {
+                        swal("操作提醒", "请选择有效数据", "warning");
+                        return;
+                    }
+                    $.getJSON("@Url.Action("GetEntityField")", { id: arrselections[0].Id, r: Date.now()},
+                        function(data) {
+                           
+                            $('#modalfield form').autofill(data);
+                            $("#modalfield .modal-title span").text("编辑");
+                            $('#modalfield').modal('show');
+                        });
+
+                });
+                //删除
+                $("#btn_delete").click(function () {
+                    var arrselections = $("#table").bootstrapTable('getSelections');
+                    if (arrselections.length <= 0) {
+                        swal("操作提醒", "请选择有效数据", "warning");
+                        return;
+                    }
+                    
+                    swal({
+                        title: "您确定吗?",
+                        text: "确认要删除选择的数据吗?",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "确定",
+                        cancelButtonText: "取消",
+                        closeOnConfirm: false
+                    }, function () {
+                        $.ajax({
+                            type: "post",
+                            headers: {
+                                '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                            },
+                            url: "@Url.Action("DeleteField")",
+                            data: { "id": arrselections[0].Id },
+                            success: function (data) {
+                                if (data.State == 1) {
+                                    $("#table").bootstrapTable('refresh');
+                                    swal({
+                                        title: "操作成功",
+                                        text: data.Msg,
+                                        timer: 2000,
+                                        type:"success",
+                                        showConfirmButton: false
+                                    });
+
+                                } else {
+                                    swal("操作提醒", data.Msg, "warning");
+                                }
+                            },
+                            error: function () {
+                                swal("操作失败", data.Msg, "error");
+                            },
+                            complete: function () {
+
+                            }
+
+                        });
+                    });
+
+                });
+                //表单提交
+                var subBtn = $('.ladda-button').ladda();
+                $("#modalfield form").validate({
+                    rules: {
+                        Text: {
+                            required: true
+                        }
+                    },
+                    messages: {
+                        Text: {
+                            required: "此为必填项"
+                        }
+                    },
+                    submitHandler: function (form) {
+                        var $form = $(form),
+                            data = $form.serialize(); //序列化表单数据
+                        $.ajax({
+                            type: "post",
+                            headers: {
+                                '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                            },
+                            beforeSend: function() {
+                                subBtn.ladda('start');
+                            },
+                            url: form.action,
+                            data: data,
+                            success: function (res) {
+                                if (res.State == 1) {
+                                    $('#modalfield').modal('hide');
+                                    $("#table").bootstrapTable('refresh');
+                                    swal({
+                                        title: "操作成功",
+                                        text: res.Msg,
+                                        timer: 2000,
+                                        type:"success",
+                                        showConfirmButton: false
+                                    });
+
+                                } else {
+                                    swal("操作提醒", res.Msg, "warning");
+                                }
+                            },
+                            error: function () {
+                                swal("操作失败", res.Msg, "error");
+                            },
+                            complete: function () {
+                                subBtn.ladda('stop');
+                            }
+                        });
+                    }
+                });
+
+            };
+            return oInit;
+        };
+    </script>
+}
+
+

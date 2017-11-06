@@ -84,6 +84,8 @@
   <ItemGroup>
     <Compile Include="BaseEntity.cs" />
     <Compile Include="Domain\Admin\Action.cs" />
+    <Compile Include="Domain\Admin\Field.cs" />
+    <Compile Include="Domain\Admin\FieldType.cs" />
     <Compile Include="Domain\Admin\Manager.cs" />
     <Compile Include="Domain\Admin\ManagerAction.cs" />
     <Compile Include="Domain\Log\ManagerLoginLog.cs" />
@@ -93,6 +95,7 @@
     <Compile Include="Domain\Consts.cs" />
     <Compile Include="Domain\Log\SystemLog.cs" />
     <Compile Include="Domain\StatusEnum.cs" />
+    <Compile Include="ICacheStorageProvider.cs" />
     <Compile Include="IDbContext.cs" />
     <Compile Include="IdBuilder.cs" />
     <Compile Include="IDependency.cs" />
@@ -111,6 +114,8 @@
     <Compile Include="ViewModel\Admin\ManagerView.cs" />
     <Compile Include="ViewModel\Admin\MenuView.cs" />
     <Compile Include="ViewModel\Admin\OrganizationView.cs" />
+    <Compile Include="ViewModel\Admin\FieldTypeView.cs" />
+    <Compile Include="ViewModel\Admin\FieldView.cs" />
     <Compile Include="ViewModel\Admin\RoleView.cs" />
     <Compile Include="ViewModel\Admin\SystemLogView.cs" />
     <Compile Include="ViewModel\BaseView.cs" />
