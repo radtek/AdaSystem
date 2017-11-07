@@ -24,21 +24,18 @@ namespace Admin.Controllers
         private readonly IRepository<Manager> _managerRepository;
         private readonly IManagerService _managerService;
         private readonly IRepository<Organization> _organizationRepository;
-        private readonly ISignals _signals;
 
         public ManagerController(IManagerService managerService,
             IRepository<Manager> managerRepository,
             IRepository<Role> roleRepository,
             IRepository<Action> actionRepository,
-            IRepository<Organization> organizationRepository,
-            ISignals signals)
+            IRepository<Organization> organizationRepository)
         {
             _actionRepository = actionRepository;
             _roleRepository = roleRepository;
             _managerRepository = managerRepository;
             _managerService = managerService;
             _organizationRepository = organizationRepository;
-            _signals = signals;
         }
         public ActionResult Index()
         {
@@ -157,8 +154,7 @@ namespace Admin.Controllers
                 manager.ModifiedDate = DateTime.Now;
                 _managerService.AddOrUpdate(manager, false, viewModel.RoleIds, organizationIds, actionIds);
                 msg = "更新成功";
-                //清空缓存
-                _signals.Trigger("Menu" + viewModel.Id + ".Changed");
+               
             }
             else
             {
@@ -205,11 +201,8 @@ namespace Admin.Controllers
                 manager.DeletedBy = CurrentManager.UserName;
                 manager.DeletedDate = DateTime.Now;
                 list.Add(manager);
-                _signals.Trigger("Menu" + id + ".Changed");
             }
             _managerService.Delete(list);
-            //清空缓存
-            
             return Json(new { State = 1, Msg = "删除成功" });
         }
         [HttpPost]

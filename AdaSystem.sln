@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ada.Core", "Ada.Core\Ada.Core.csproj", "{1E0B290A-3337-43C9-9CE9-BFB8CE741DBA}"
 EndProject
@@ -20,6 +20,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Admin", "Ada.Web\Areas\Admin\Admin.csproj", "{9A4569E9-870E-4649-B2EB-D8AE843E9FE8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dashboards", "Ada.Web\Areas\Dashboards\Dashboards.csproj", "{94B525E5-8CC3-4F7D-8428-81F715608018}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customer", "Ada.Web\Areas\Customer\Customer.csproj", "{FC5EDF01-4BA3-44CA-BAAC-2589F6B1CDCF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resource", "Ada.Web\Areas\Resource\Resource.csproj", "{9DF100D9-F9D0-421D-BB19-C7B0C7D3DCF4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +63,14 @@ Global
 		{94B525E5-8CC3-4F7D-8428-81F715608018}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94B525E5-8CC3-4F7D-8428-81F715608018}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94B525E5-8CC3-4F7D-8428-81F715608018}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC5EDF01-4BA3-44CA-BAAC-2589F6B1CDCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC5EDF01-4BA3-44CA-BAAC-2589F6B1CDCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC5EDF01-4BA3-44CA-BAAC-2589F6B1CDCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC5EDF01-4BA3-44CA-BAAC-2589F6B1CDCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DF100D9-F9D0-421D-BB19-C7B0C7D3DCF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DF100D9-F9D0-421D-BB19-C7B0C7D3DCF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DF100D9-F9D0-421D-BB19-C7B0C7D3DCF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DF100D9-F9D0-421D-BB19-C7B0C7D3DCF4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +78,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{9A4569E9-870E-4649-B2EB-D8AE843E9FE8} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
 		{94B525E5-8CC3-4F7D-8428-81F715608018} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
+		{FC5EDF01-4BA3-44CA-BAAC-2589F6B1CDCF} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
+		{9DF100D9-F9D0-421D-BB19-C7B0C7D3DCF4} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AB64B513-252F-4F91-A011-A6FD97731889}

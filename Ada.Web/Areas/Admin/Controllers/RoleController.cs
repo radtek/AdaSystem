@@ -73,7 +73,6 @@ namespace Admin.Controllers
                 role.ModifiedBy = CurrentManager.UserName;
                 role.ModifiedById = CurrentManager.Id;
                 role.ModifiedDate = DateTime.Now;
-
                 _roleService.Update(role, viewModel.ActionIds);
                 TempData["Msg"] = "更新成功";
             }
@@ -91,6 +90,7 @@ namespace Admin.Controllers
                 _roleService.Add(role, viewModel.ActionIds);
                 TempData["Msg"] = "添加成功";
             }
+            ClearCacheByManagers("Menu");
             return RedirectToAction("Index");
         }
         [HttpPost]
@@ -103,6 +103,7 @@ namespace Admin.Controllers
             role.DeletedDate = DateTime.Now;
             _roleService.Delete(role);
             TempData["Msg"] = "删除成功";
+            ClearCacheByManagers("Menu");
             return RedirectToAction("Index");
         }
 

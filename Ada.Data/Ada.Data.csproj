@@ -61,6 +61,9 @@
     <Compile Include="Mapping\Admin\ManagerActionMap.cs" />
     <Compile Include="Mapping\Admin\ActionMap.cs" />
     <Compile Include="Mapping\Admin\ManagerMap.cs" />
+    <Compile Include="Mapping\Customer\PayAccountMap.cs" />
+    <Compile Include="Mapping\Customer\LinkManMap.cs" />
+    <Compile Include="Mapping\Customer\CommpanyMap.cs" />
     <Compile Include="Mapping\Log\ManagerLoginLogMap.cs" />
     <Compile Include="Mapping\Log\SystemLogMap.cs" />
     <Compile Include="Migrations\201710221333304_ManagerLoginLog.cs" />

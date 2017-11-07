@@ -118,5 +118,15 @@ namespace Ada.Framework.Filter
             };
             return result;
         }
+
+        public void ClearCacheByManagers(string key)
+        {
+            var managers = _repository.LoadEntities(d => d.IsDelete == false).ToList();
+            foreach (var manager in managers)
+            {
+                _signals.Trigger(key + manager.Id + ".Changed");
+            }
+            
+        }
     }
 }

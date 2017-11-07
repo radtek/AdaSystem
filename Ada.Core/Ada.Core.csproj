@@ -88,12 +88,17 @@
     <Compile Include="Domain\Admin\FieldType.cs" />
     <Compile Include="Domain\Admin\Manager.cs" />
     <Compile Include="Domain\Admin\ManagerAction.cs" />
+    <Compile Include="Domain\Customer\Commpany.cs" />
+    <Compile Include="Domain\Customer\LinkMan.cs" />
+    <Compile Include="Domain\Customer\PayAccount.cs" />
     <Compile Include="Domain\Log\ManagerLoginLog.cs" />
     <Compile Include="Domain\Admin\Menu.cs" />
     <Compile Include="Domain\Admin\Organization.cs" />
     <Compile Include="Domain\Admin\Role.cs" />
     <Compile Include="Domain\Consts.cs" />
     <Compile Include="Domain\Log\SystemLog.cs" />
+    <Compile Include="Domain\Resource\Media.cs" />
+    <Compile Include="Domain\Resource\MediaType.cs" />
     <Compile Include="Domain\StatusEnum.cs" />
     <Compile Include="ICacheStorageProvider.cs" />
     <Compile Include="IDbContext.cs" />
