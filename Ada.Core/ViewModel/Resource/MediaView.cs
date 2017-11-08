@@ -4,17 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Ada.Core.Domain.Customer;
 
-namespace Ada.Core.Domain.Resource
+namespace Ada.Core.ViewModel.Resource
 {
-    public class Media : BaseEntity
+    public class MediaView : BaseView
     {
-        public Media()
-        {
-            MediaTags=new HashSet<MediaTag>();
-            MediaPrices=new HashSet<MediaPrice>();
-        }
         /// <summary>
         /// 媒体名称
         /// </summary>
@@ -25,21 +19,6 @@ namespace Ada.Core.Domain.Resource
         /// </summary>
         [Display(Name = "媒体ID")]
         public string MediaID { get; set; }
-        /// <summary>
-        /// 媒体链接
-        /// </summary>
-        [Display(Name = "媒体链接")]
-        public string MediaLink { get; set; }
-        /// <summary>
-        /// 媒体Logo
-        /// </summary>
-        [Display(Name = "媒体Logo")]
-        public string MediaLogo { get; set; }
-        /// <summary>
-        /// 媒体二维码
-        /// </summary>
-        [Display(Name = "媒体二维码")]
-        public string MediaQR { get; set; }
         /// <summary>
         /// 是否认证
         /// </summary>
@@ -146,18 +125,9 @@ namespace Ada.Core.Domain.Resource
         [Display(Name = "数据更新日期")]
         public DateTime? ApiUpDate { get; set; }
         /// <summary>
-        /// 媒体类型
+        /// 广告位
         /// </summary>
-        [Display(Name = "媒体类型")]
-        public string MediaTypeId { get; set; }
-        public virtual MediaType MediaType { get; set; }
-        /// <summary>
-        /// 联系人
-        /// </summary>
-        [Display(Name = "结算人")]
-        public string LinkManId { get; set; }
-        public virtual LinkMan LinkMan { get; set; }
-        public virtual ICollection<MediaTag> MediaTags { get; set; }
-        public virtual ICollection<MediaPrice> MediaPrices { get; set; }
+        [Display(Name = "广告位")]
+        public string AdPositionId { get; set; }
     }
 }

@@ -58,7 +58,11 @@
     <Compile Include="Admin\PermissionService.cs" />
     <Compile Include="Admin\RoleService.cs" />
     <Compile Include="Admin\SystemLogService.cs" />
+    <Compile Include="Customer\CommpanyService.cs" />
+    <Compile Include="Customer\ICommpanyService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resource\IMediaService.cs" />
+    <Compile Include="Resource\MediaService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ada.Core\Ada.Core.csproj">

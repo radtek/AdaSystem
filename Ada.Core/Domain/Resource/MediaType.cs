@@ -19,11 +19,22 @@ namespace Ada.Core.Domain.Resource
         [Display(Name = "类型名称")]
         public string TypeName { get; set; }
         /// <summary>
+        /// 调用别名
+        /// </summary>
+        [Display(Name = "调用别名")]
+        public string CallIndex { get; set; }
+        /// <summary>
         /// 父级类型
         /// </summary>
         [Display(Name = "父级类型")]
         public string ParentId { get; set; }
+        /// <summary>
+        /// 封面图片
+        /// </summary>
+        [Display(Name = "封面图片")]
+        public string Image { get; set; }
 
         public virtual ICollection<Media> Medias { get; set; }
+        public virtual ICollection<AdPosition> AdPositions { get; set; }
     }
 }

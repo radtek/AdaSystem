@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ada.Core.Domain.Resource;
 
 namespace Ada.Core.Domain.Customer
 {
@@ -86,6 +87,6 @@ namespace Ada.Core.Domain.Customer
         public virtual Commpany Commpany { get; set; }
 
         public virtual ICollection<PayAccount> PayAccounts { get; set; }
-
+        public virtual ICollection<Media> Medias { get; set; }
     }
 }

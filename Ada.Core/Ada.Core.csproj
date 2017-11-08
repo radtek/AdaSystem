@@ -98,6 +98,9 @@
     <Compile Include="Domain\Consts.cs" />
     <Compile Include="Domain\Log\SystemLog.cs" />
     <Compile Include="Domain\Resource\Media.cs" />
+    <Compile Include="Domain\Resource\MediaPrice.cs" />
+    <Compile Include="Domain\Resource\AdPosition.cs" />
+    <Compile Include="Domain\Resource\MediaTag.cs" />
     <Compile Include="Domain\Resource\MediaType.cs" />
     <Compile Include="Domain\StatusEnum.cs" />
     <Compile Include="ICacheStorageProvider.cs" />
@@ -124,12 +127,15 @@
     <Compile Include="ViewModel\Admin\RoleView.cs" />
     <Compile Include="ViewModel\Admin\SystemLogView.cs" />
     <Compile Include="ViewModel\BaseView.cs" />
+    <Compile Include="ViewModel\Customer\CommpanyView.cs" />
     <Compile Include="ViewModel\HttpResultView.cs" />
+    <Compile Include="ViewModel\Resource\MediaView.cs" />
     <Compile Include="ViewModel\TreeView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
