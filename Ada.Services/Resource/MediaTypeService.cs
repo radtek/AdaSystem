@@ -7,7 +7,7 @@ using Ada.Core.ViewModel.Resource;
 
 namespace Ada.Services.Resource
 {
-   public class MediaTypeService : IMediaTypeService
+    public class MediaTypeService : IMediaTypeService
     {
         private readonly IDbContext _dbContext;
         private readonly IRepository<MediaType> _repository;
@@ -37,10 +37,10 @@ namespace Ada.Services.Resource
             }
             return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
         }
-        public void Add(MediaType entity,List<string> adPositions=null)
+        public void Add(MediaType entity, List<string> adPositions = null)
         {
             _repository.Add(entity);
-            if (adPositions!=null)
+            if (adPositions != null)
             {
                 foreach (var adPosition in adPositions)
                 {
@@ -59,8 +59,12 @@ namespace Ada.Services.Resource
         public void Update(MediaType entity, List<string> adPositions = null)
         {
             _repository.Update(entity);
-            entity.AdPositions.Clear();
-            if (adPositions!=null)
+            var list = _adPositionrepository.LoadEntities(d => d.MediaTypeId == entity.Id);
+            foreach (var adPosition in list)
+            {
+                _adPositionrepository.Remove(adPosition);
+            }
+            if (adPositions != null)
             {
                 foreach (var adPosition in adPositions)
                 {
@@ -68,10 +72,10 @@ namespace Ada.Services.Resource
                     {
                         Id = IdBuilder.CreateIdNum(),
                         AddedDate = DateTime.Now,
-                        MediaTypeId = entity.Id,
-                        Name = adPosition
+                        Name = adPosition,
+                        MediaTypeId = entity.Id
                     };
-                    entity.AdPositions.Add(temp);
+                    _adPositionrepository.Add(temp);
                 }
             }
             _dbContext.SaveChanges();

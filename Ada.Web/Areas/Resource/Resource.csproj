@@ -107,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\MediaTypeController.cs" />
+    <Compile Include="Controllers\WeiXinController.cs" />
     <Compile Include="ResourceAreaRegistration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -118,6 +119,9 @@
     <Content Include="Views\Shared\Bread.cshtml" />
     <Content Include="Views\MediaType\Add.cshtml" />
     <Content Include="Views\MediaType\Update.cshtml" />
+    <Content Include="Views\WeiXin\Index.cshtml" />
+    <Content Include="Views\WeiXin\Add.cshtml" />
+    <Content Include="Views\WeiXin\Update.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

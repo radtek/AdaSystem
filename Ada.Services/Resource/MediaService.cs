@@ -18,14 +18,35 @@ namespace Ada.Services.Resource
             _repository = repository;
             _dbContext = dbContext;
         }
+
+        public void Add(Media entity)
+        {
+            _repository.Add(entity);
+            _dbContext.SaveChanges();
+        }
+
+        public void Delete(Media entity)
+        {
+            _repository.Delete(entity);
+            _dbContext.SaveChanges();
+        }
+
         public IQueryable<Media> LoadEntitiesFilter(MediaView viewModel)
         {
-            var allList = _repository.LoadEntities(d => true);
-            if (!string.IsNullOrWhiteSpace(viewModel.AdPositionId))
+            var allList = _repository.LoadEntities(d => d.IsDelete==false);
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeIndex))
+            {
+                allList = allList.Where(d => d.MediaType.CallIndex == viewModel.MediaTypeIndex);
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.search))
+            {
+                allList = allList.Where(d => d.MediaName.Contains(viewModel.search));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
             {
                 allList = from m in allList
                           from p in m.MediaPrices
-                          where p.AdPositionId==viewModel.AdPositionId
+                          where p.AdPositionName==viewModel.AdPositionName
                           select m;
             }
             
@@ -38,6 +59,12 @@ namespace Ada.Services.Resource
                 return allList.OrderByDescending(d => d.Id).Skip(offset).Take(rows);
             }
             return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
+        }
+
+        public void Update(Media entity)
+        {
+            _repository.Update(entity);
+            _dbContext.SaveChanges();
         }
     }
 }

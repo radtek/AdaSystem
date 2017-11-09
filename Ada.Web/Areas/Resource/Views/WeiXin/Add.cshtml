@@ -1,0 +1,184 @@
+﻿@using Ada.Core.Infrastructure
+@model Ada.Core.ViewModel.Resource.MediaView
+@{
+    ViewBag.Title = "添加微信";
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "微信资源", Value = Url.Action("Index") } };
+    
+}
+@Html.Partial("Bread", urls)
+
+
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="tabs-container">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tab-1"> 基本信息</a></li>
+                    <li class=""><a data-toggle="tab" href="#tab-2"> 媒体数据</a></li>
+                    <li class=""><a data-toggle="tab" href="#tab-3"> 媒体价格</a></li>
+              
+                </ul>
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane active">
+                        <div class="panel-body">
+
+                            <fieldset class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Name:</label>
+                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="Product name"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Price:</label>
+                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="$160.00"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Description:</label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Meta Tag Title:</label>
+                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="..."></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Meta Tag Description:</label>
+                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="Sheets containing Lorem"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Meta Tag Keywords:</label>
+                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="Lorem, Ipsum, has, been"></div>
+                                </div>
+                            </fieldset>
+
+                        </div>
+                    </div>
+                    <div id="tab-2" class="tab-pane">
+                        <div class="panel-body">
+
+                            <fieldset class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">ID:</label>
+                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="543"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Model:</label>
+                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="..."></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Location:</label>
+                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="location"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Tax Class:</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control">
+                                            <option>option 1</option>
+                                            <option>option 2</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Quantity:</label>
+                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="Quantity"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Minimum quantity:</label>
+                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="2"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Sort order:</label>
+                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="0"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Status:</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control">
+                                            <option>option 1</option>
+                                            <option>option 2</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+
+                        </div>
+                    </div>
+                    <div id="tab-3" class="tab-pane">
+                        <div class="panel-body">
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                广告位
+                                            </th>
+                                            <th>
+                                                采购价格
+                                            </th>
+                                            <th style="width: 20%">
+                                                价格日期
+                                            </th>
+                                            <th style="width: 20%">
+                                                失效日期
+                                            </th>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <input type="text" class="form-control" readonly="readonly" value="头条">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" placeholder="$10.00">
+                                            </td>
+                                            <td>
+                                                <div class="input-group date">
+                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" value="07/01/2014">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group date">
+                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" value="07/01/2014">
+                                                </div>
+                                            </td>
+                                            
+                                        </tr>
+                                    <tr>
+                                        <td>
+                                            <input type="text" class="form-control" readonly="readonly" value="头条">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="$10.00">
+                                        </td>
+                                        <td>
+                                            <div class="input-group date">
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" value="07/01/2014">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group date">
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" value="07/01/2014">
+                                            </div>
+                                        </td>
+                                            
+                                    </tr>
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

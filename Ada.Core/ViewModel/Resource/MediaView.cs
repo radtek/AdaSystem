@@ -20,6 +20,21 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "媒体ID")]
         public string MediaID { get; set; }
         /// <summary>
+        /// 媒体链接
+        /// </summary>
+        [Display(Name = "媒体链接")]
+        public string MediaLink { get; set; }
+        /// <summary>
+        /// 媒体Logo
+        /// </summary>
+        [Display(Name = "媒体Logo")]
+        public string MediaLogo { get; set; }
+        /// <summary>
+        /// 媒体二维码
+        /// </summary>
+        [Display(Name = "媒体二维码")]
+        public string MediaQR { get; set; }
+        /// <summary>
         /// 是否认证
         /// </summary>
         [Display(Name = "是否认证")]
@@ -128,6 +143,39 @@ namespace Ada.Core.ViewModel.Resource
         /// 广告位
         /// </summary>
         [Display(Name = "广告位")]
-        public string AdPositionId { get; set; }
+        public string AdPositionName { get; set; }
+        /// <summary>
+        /// 结算人
+        /// </summary>
+        [Display(Name = "结算人")]
+        public string LinkManId { get; set; }
+        /// <summary>
+        /// 结算人
+        /// </summary>
+        [Display(Name = "结算人")]
+        public string LinkManName { get; set; }
+        /// <summary>
+        /// 媒体分类
+        /// </summary>
+        [Display(Name = "媒体分类")]
+        public string MediaTags { get; set; }
+        /// <summary>
+        /// 媒体类别
+        /// </summary>
+        [Display(Name = "媒体类别")]
+        public string MediaTypeIndex { get; set; }
+        /// <summary>
+        /// 媒体价格
+        /// </summary>
+        [Display(Name = "媒体价格")]
+        public List<WeiXinPrice> MediaPrices { get; set; }
+    }
+
+    public class WeiXinPrice
+    {
+        public string AdPosition { get; set; }
+        public decimal? PurchasePrice { get; set; }
+        public DateTime? PriceDate { get; set; }
+        public DateTime? InvalidDate { get; set; }
     }
 }
