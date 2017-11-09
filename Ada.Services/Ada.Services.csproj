@@ -58,9 +58,13 @@
     <Compile Include="Admin\PermissionService.cs" />
     <Compile Include="Admin\RoleService.cs" />
     <Compile Include="Admin\SystemLogService.cs" />
+    <Compile Include="Customer\LinkManService.cs" />
     <Compile Include="Customer\CommpanyService.cs" />
+    <Compile Include="Customer\ILinkManService.cs" />
     <Compile Include="Customer\ICommpanyService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resource\MediaTypeService.cs" />
+    <Compile Include="Resource\IMediaTypeService.cs" />
     <Compile Include="Resource\IMediaService.cs" />
     <Compile Include="Resource\MediaService.cs" />
   </ItemGroup>

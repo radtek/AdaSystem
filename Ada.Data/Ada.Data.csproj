@@ -91,6 +91,10 @@
     <Compile Include="Migrations\201711080649334_CustomerAndResource.Designer.cs">
       <DependentUpon>201711080649334_CustomerAndResource.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711090121293_LinMan.cs" />
+    <Compile Include="Migrations\201711090121293_LinMan.Designer.cs">
+      <DependentUpon>201711090121293_LinMan.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -122,6 +126,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711080649334_CustomerAndResource.resx">
       <DependentUpon>201711080649334_CustomerAndResource.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711090121293_LinMan.resx">
+      <DependentUpon>201711090121293_LinMan.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

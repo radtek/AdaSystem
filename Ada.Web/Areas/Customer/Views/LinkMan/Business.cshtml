@@ -1,8 +1,8 @@
 ﻿
 @using System.Web.Optimization
-@model Ada.Core.ViewModel.Customer.CommpanyView
+@model Ada.Core.ViewModel.Customer.LinkManView
 @{
-    ViewBag.Title = "客户公司";
+    ViewBag.Title = "商家信息";
 }
 @Html.Partial("Bread")
 
@@ -21,11 +21,11 @@
                 <div class="row">
                     <div class="col-sm-2">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.CommpanyType, Html.DisplayNameFor(d => d.CommpanyType) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.CommpanyType, new { @class = "form-control input-sm" })
+                            @Html.LabelFor(d => d.CommpanyName, Html.DisplayNameFor(d => d.CommpanyName) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.CommpanyName, new { @class = "form-control input-sm" })
                         </div>
                     </div>
-                   
+
 
                 </div>
                 <div class="hr-line-dashed"></div>
@@ -42,8 +42,6 @@
         </div>
     </div>
 
-
-
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
@@ -58,7 +56,7 @@
 </div>
 
 <div id="toolbar" class="btn-group">
-    <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
+    <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("AddBusiness")">
         <i class="fa fa-plus"></i> 新增
     </a>
     <button id="btn_edit" type="button" class="btn btn-primary btn-outline">
@@ -90,7 +88,7 @@
             var obj = new Object();
             obj.Init = function() {
                 $('#table').bootstrapTable({
-                url: '@Url.Action("GetList")',         //请求后台的URL（*）
+                url: '@Url.Action("GetList")?IsBusiness=true',         //请求后台的URL（*）
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
@@ -119,28 +117,38 @@
                         checkbox: true
                     },
                     {
+                        field: 'CommpanyName',
+                        title: '@Html.DisplayNameFor(d=>d.CommpanyName)',
+                        align: "center"
+                    },
+                    {
                         field: 'Name',
                         title: '@Html.DisplayNameFor(d=>d.Name)',
                         align:"center"
                     },
                     {
-                        field: 'City',
-                        title: '@Html.DisplayNameFor(d=>d.City)',
+                        field: 'LinkManType',
+                        title: '@Html.DisplayNameFor(d=>d.LinkManType)',
                         align: "center"
                     },
                     {
-                        field: 'CommpanyType',
-                        title: '@Html.DisplayNameFor(d=>d.CommpanyType)',
+                        field: 'Status',
+                        title: '@Html.DisplayNameFor(d=>d.Status)',
                         align: "center"
                     },
                     {
-                        field: 'CommpanyGrade',
-                        title: '@Html.DisplayNameFor(d=>d.CommpanyGrade)',
+                        field: 'Phone',
+                        title: '@Html.DisplayNameFor(d=>d.Phone)',
                         align: "center"
                     },
                     {
-                        field: 'Address',
-                        title: '@Html.DisplayNameFor(d=>d.Address)',
+                        field: 'WeiXin',
+                        title: '@Html.DisplayNameFor(d=>d.WeiXin)',
+                        align: "center"
+                    },
+                    {
+                        field: 'QQ',
+                        title: '@Html.DisplayNameFor(d=>d.QQ)',
                         align: "center"
                     }
                 ]
@@ -151,7 +159,7 @@
         var ButtonInit = function () {
             var oInit = new Object();
             oInit.Init = function () {
-                
+
                 //编辑
                 $("#btn_edit").click(function () {
                     var arrselections = $("#table").bootstrapTable('getSelections');
@@ -163,22 +171,21 @@
                         swal("操作提醒", "请选择有效数据", "warning");
                         return;
                     }
-
+                    window.location.href = "@Url.Action("UpdateBusiness")?id="+arrselections[0].Id;
 
                 });
 
                 $("#btn_delete").click(function () {
                     var arrselections = $("#table").bootstrapTable('getSelections');
-
+                    if (arrselections.length > 1) {
+                        swal("操作提醒", "只能选择一行进行删除", "warning");
+                        return;
+                    }
                     if (arrselections.length <= 0) {
                         swal("操作提醒", "请选择有效数据", "warning");
                         return;
                     }
-                    var ids = [];
-                    $.each(arrselections,
-                        function(k, v) {
-                            ids.push(v.Id);
-                        });
+
                     swal({
                         title: "您确定吗?",
                         text: "确认要删除选择的数据吗?",
@@ -195,7 +202,7 @@
                                 '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
                             },
                             url: "@Url.Action("Delete")",
-                            data: { "Ids": ids.join(',') },
+                            data: { "id": arrselections[0].Id },
                             success: function (data) {
                                 if (data.State == 1) {
                                     $("#table").bootstrapTable('refresh');
@@ -236,5 +243,7 @@
 
     </script>
 }
+
+
 
 

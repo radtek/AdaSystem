@@ -5,15 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ada.Core.Domain.Resource
+namespace Ada.Core.ViewModel.Resource
 {
-  public class MediaType:BaseEntity
+    public class MediaTypeView : BaseView
     {
-        public MediaType()
-        {
-            Medias=new HashSet<Media>();
-            AdPositions=new HashSet<AdPosition>();
-        }
         /// <summary>
         /// 类型名称
         /// </summary>
@@ -34,8 +29,10 @@ namespace Ada.Core.Domain.Resource
         /// </summary>
         [Display(Name = "封面图片")]
         public string Image { get; set; }
-
-        public virtual ICollection<Media> Medias { get; set; }
-        public virtual ICollection<AdPosition> AdPositions { get; set; }
+        /// <summary>
+        /// 广告位
+        /// </summary>
+        [Display(Name = "广告位")]
+        public List<string> AdPositions { get; set; }
     }
 }

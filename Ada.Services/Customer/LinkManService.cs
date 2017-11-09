@@ -5,17 +5,17 @@ using Ada.Core.ViewModel.Customer;
 
 namespace Ada.Services.Customer
 {
-   public class CommpanyService : ICommpanyService
+   public class LinkManService : ILinkManService
     {
         private readonly IDbContext _dbContext;
-        private readonly IRepository<Commpany> _repository;
-        public CommpanyService(IDbContext dbContext,
-            IRepository<Commpany> repository)
+        private readonly IRepository<LinkMan> _repository;
+        public LinkManService(IDbContext dbContext,
+            IRepository<LinkMan> repository)
         {
             _dbContext = dbContext;
             _repository = repository;
         }
-        public IQueryable<Commpany> LoadEntitiesFilter(CommpanyView viewModel)
+        public IQueryable<LinkMan> LoadEntitiesFilter(LinkManView viewModel)
         {
             var allList = _repository.LoadEntities(d => d.IsDelete == false);
             //条件过滤
@@ -23,11 +23,11 @@ namespace Ada.Services.Customer
             {
                 allList = allList.Where(d => d.Name.Contains(viewModel.search));
             }
-            if (!string.IsNullOrWhiteSpace(viewModel.CommpanyType))
+            if (!string.IsNullOrWhiteSpace(viewModel.CommpanyName))
             {
-                allList = allList.Where(d => d.CommpanyType.Contains(viewModel.CommpanyType));
+                allList = allList.Where(d => d.Commpany.Name.Contains(viewModel.CommpanyName));
             }
-            allList = allList.Where(d => d.IsBusiness==viewModel.IsBusiness);
+            allList = allList.Where(d => d.Commpany.IsBusiness==viewModel.IsBusiness);
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
@@ -38,19 +38,19 @@ namespace Ada.Services.Customer
             }
             return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
         }
-        public void Add(Commpany entity)
+        public void Add(LinkMan entity)
         {
             _repository.Add(entity);
             _dbContext.SaveChanges();
         }
 
-        public void Update(Commpany entity)
+        public void Update(LinkMan entity)
         {
             _repository.Update(entity);
             _dbContext.SaveChanges();
         }
 
-        public void Delete(Commpany entity)
+        public void Delete(LinkMan entity)
         {
             _repository.Delete(entity);
             _dbContext.SaveChanges();

@@ -24,7 +24,7 @@ namespace Ada.Data.Mapping.Customer
             Property(s => s.Password).HasMaxLength(32);
             Property(s => s.LoginName).HasMaxLength(32);
             Property(s => s.CommpanyId).HasMaxLength(32);
-           
+            Property(s => s.IsLock);
 
             Property(s => s.AddedDate);
             Property(s => s.AddedBy).HasMaxLength(32);

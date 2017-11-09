@@ -127,8 +127,10 @@
     <Compile Include="ViewModel\Admin\RoleView.cs" />
     <Compile Include="ViewModel\Admin\SystemLogView.cs" />
     <Compile Include="ViewModel\BaseView.cs" />
+    <Compile Include="ViewModel\Customer\LinkManView.cs" />
     <Compile Include="ViewModel\Customer\CommpanyView.cs" />
     <Compile Include="ViewModel\HttpResultView.cs" />
+    <Compile Include="ViewModel\Resource\MediaTypeView.cs" />
     <Compile Include="ViewModel\Resource\MediaView.cs" />
     <Compile Include="ViewModel\TreeView.cs" />
   </ItemGroup>

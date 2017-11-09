@@ -1,0 +1,91 @@
+﻿
+@model Ada.Core.ViewModel.Resource.MediaTypeView
+@{
+    ViewBag.Title = "添加类型";
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "媒体类型", Value = Url.Action("Index") } };
+
+}
+@Html.Partial("Bread", urls)
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>@ViewBag.Title <small>请保证信息的准确性.</small></h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <p class="bg-danger">@Html.ValidationMessage("message") </p>
+                        <div class="form-horizontal">
+                            
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.TypeName, Html.DisplayNameFor(d => d.TypeName).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.TypeName, new { @class = "form-control", required = "" })
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.CallIndex, Html.DisplayNameFor(d => d.CallIndex).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.CallIndex, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.AdPositions, Html.DisplayNameFor(d => d.AdPositions).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    <button type="button" class="btn btn-success m-b btn-sm" onclick="addBtn(this);">
+                                        <i class="fa fa-plus"></i> 新增广告位
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <a class="btn btn-outline btn-default" href="@Url.Action("Index")"><i class="fa fa-reply"></i> 返回</a>
+                                    <button class="btn btn-primary" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <script>
+        function addBtn(obj) {
+            var html='<div class="input-group m-b">' +
+                '<input type="text" class="form-control" name="AdPositions">' +
+                '<span class="input-group-btn">' +
+                '<button type="button" class="btn btn-primary" onclick="deleteBtn(this);">' +
+                '<i class="fa fa-times"></i>' +
+                '</button>' +
+                '</span>' +
+                '</div>';
+            $(obj).parent().append(html);
+        }
+        function deleteBtn(obj) {
+            $(obj).parent().parent().remove();
+        }
+    </script>
+}
+
+
+

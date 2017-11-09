@@ -337,7 +337,7 @@ namespace Ada.Web
 
             // Select2
             bundles.Add(new ScriptBundle("~/plugins/select2").Include(
-                      "~/Scripts/plugins/select2/select2.full.min.js"));
+                      "~/Scripts/plugins/select2/select2.full.min.js", "~/Scripts/plugins/select2/i18n/zh-CN.js"));
 
             // Masonry
             bundles.Add(new ScriptBundle("~/plugins/masonry").Include(

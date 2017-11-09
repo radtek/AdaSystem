@@ -272,6 +272,7 @@
     <Content Include="Content\plugins\ladda\ladda.min.css" />
     <Content Include="Content\plugins\morris\morris-0.4.3.min.css" />
     <Content Include="Content\plugins\nouslider\jquery.nouislider.css" />
+    <Content Include="Content\plugins\select2\select2.css" />
     <Content Include="Content\plugins\select2\select2.min.css" />
     <Content Include="Content\plugins\slick\ajax-loader.gif" />
     <Content Include="Content\plugins\slick\fonts\slick.svg" />
@@ -1644,6 +1645,9 @@
     <Content Include="Scripts\plugins\pwstrength\zxcvbn.js" />
     <Content Include="Scripts\plugins\rickshaw\rickshaw.min.js" />
     <Content Include="Scripts\plugins\rickshaw\vendor\d3.v3.js" />
+    <Content Include="Scripts\plugins\select2\i18n\zh-CN.js" />
+    <Content Include="Scripts\plugins\select2\i18n\zh-TW.js" />
+    <Content Include="Scripts\plugins\select2\select2.full.js" />
     <Content Include="Scripts\plugins\select2\select2.full.min.js" />
     <Content Include="Scripts\plugins\slick\slick.min.js" />
     <Content Include="Scripts\plugins\slimscroll\jquery.slimscroll.min.js" />

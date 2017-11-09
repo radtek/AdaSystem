@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\CommpanyController.cs" />
+    <Compile Include="Controllers\LinkManController.cs" />
     <Compile Include="CustomerAreaRegistration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -113,8 +114,18 @@
     <None Include="packages.config" />
     <Content Include="Views\Shared\Bread.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Commpany\Index.cshtml" />
-    <Content Include="Views\Commpany\Add.cshtml" />
+    <Content Include="Views\Commpany\Custom.cshtml" />
+    <Content Include="Views\Commpany\AddCustom.cshtml" />
+    <Content Include="Views\Commpany\UpdateCustom.cshtml" />
+    <Content Include="Views\LinkMan\Custom.cshtml" />
+    <Content Include="Views\LinkMan\AddCustom.cshtml" />
+    <Content Include="Views\LinkMan\UpdateCustom.cshtml" />
+    <Content Include="Views\Commpany\UpdateBusiness.cshtml" />
+    <Content Include="Views\Commpany\Business.cshtml" />
+    <Content Include="Views\Commpany\AddBusiness.cshtml" />
+    <Content Include="Views\LinkMan\AddBusiness.cshtml" />
+    <Content Include="Views\LinkMan\Business.cshtml" />
+    <Content Include="Views\LinkMan\UpdateBusiness.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

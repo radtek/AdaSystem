@@ -4,16 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Ada.Core.Domain.Resource;
 
-namespace Ada.Core.Domain.Customer
+namespace Ada.Core.ViewModel.Customer
 {
-   public class LinkMan:BaseEntity
+   public class LinkManView : BaseView
     {
-        public LinkMan()
-        {
-            PayAccounts=new HashSet<PayAccount>();
-        }
         /// <summary>
         /// 联系人
         /// </summary>
@@ -80,18 +75,19 @@ namespace Ada.Core.Domain.Customer
         [Display(Name = "登陆账户")]
         public string LoginName { get; set; }
         /// <summary>
-        /// 是否锁定
-        /// </summary>
-        [Display(Name = "是否锁定")]
-        public bool? IsLock { get; set; }
-        /// <summary>
         /// 公司名称
         /// </summary>
         [Display(Name = "公司名称")]
         public string CommpanyId { get; set; }
-        public virtual Commpany Commpany { get; set; }
-
-        public virtual ICollection<PayAccount> PayAccounts { get; set; }
-        public virtual ICollection<Media> Medias { get; set; }
+        /// <summary>
+        /// 公司名称
+        /// </summary>
+        [Display(Name = "公司名称")]
+        public string CommpanyName { get; set; }
+        /// <summary>
+        /// 是否供应商
+        /// </summary>
+        [Display(Name = "是否供应商")]
+        public bool IsBusiness { get; set; }
     }
 }
