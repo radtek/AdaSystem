@@ -29,7 +29,8 @@ namespace Ada.Data.Mapping.Resource
             Property(s => s.TransmitNum);
             Property(s => s.CommentNum);
             Property(s => s.LikesNum);
-            Property(s => s.Content).HasColumnType("text");
+            Property(s => s.Content);
+            Property(s => s.ChannelType).HasMaxLength(32);
             Property(s => s.ClickNum);
             Property(s => s.IsHot);
             Property(s => s.IsTop);

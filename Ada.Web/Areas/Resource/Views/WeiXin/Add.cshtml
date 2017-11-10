@@ -1,184 +1,319 @@
-﻿@using Ada.Core.Infrastructure
+﻿@using System.Web.Optimization
+@using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Resource
+@using Ada.Services.Admin
+@using Ada.Services.Resource
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
     ViewBag.Title = "添加微信";
     List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "微信资源", Value = Url.Action("Index") } };
-    
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var channelTypes = fieldService.GetFieldsByKey("ChannelType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+
 }
 @Html.Partial("Bread", urls)
 
 
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="tabs-container">
+                    <p class="bg-danger">@Html.ValidationMessage("message") </p>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#tab-1"> 基本信息</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-2"> 媒体数据</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-3"> 媒体价格</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="panel-body">
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="tabs-container">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" href="#tab-1"> 基本信息</a></li>
-                    <li class=""><a data-toggle="tab" href="#tab-2"> 媒体数据</a></li>
-                    <li class=""><a data-toggle="tab" href="#tab-3"> 媒体价格</a></li>
-              
-                </ul>
-                <div class="tab-content">
-                    <div id="tab-1" class="tab-pane active">
-                        <div class="panel-body">
-
-                            <fieldset class="form-horizontal">
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Name:</label>
-                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="Product name"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Price:</label>
-                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="$160.00"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Description:</label>
-                                    <div class="col-sm-10">
-                                        <textarea class="form-control"></textarea>
+                                <fieldset class="form-horizontal">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.LinkManId, Html.DisplayNameFor(d => d.LinkManId).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            <select class="form-control" required="" name="LinkManId" id="LinkManId">
+                                                <option value="@Model.LinkManId">@Model.LinkManName</option>
+                                            </select>
+                                        </div>
+                                        @Html.HiddenFor(d => d.LinkManName)
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Meta Tag Title:</label>
-                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="..."></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Meta Tag Description:</label>
-                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="Sheets containing Lorem"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Meta Tag Keywords:</label>
-                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="Lorem, Ipsum, has, been"></div>
-                                </div>
-                            </fieldset>
-
-                        </div>
-                    </div>
-                    <div id="tab-2" class="tab-pane">
-                        <div class="panel-body">
-
-                            <fieldset class="form-horizontal">
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">ID:</label>
-                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="543"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Model:</label>
-                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="..."></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Location:</label>
-                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="location"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Tax Class:</label>
-                                    <div class="col-sm-10">
-                                        <select class="form-control">
-                                            <option>option 1</option>
-                                            <option>option 2</option>
-                                        </select>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.MediaName, "微信公众号", new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Quantity:</label>
-                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="Quantity"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Minimum quantity:</label>
-                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="2"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Sort order:</label>
-                                    <div class="col-sm-10"><input type="text" class="form-control" placeholder="0"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">Status:</label>
-                                    <div class="col-sm-10">
-                                        <select class="form-control">
-                                            <option>option 1</option>
-                                            <option>option 2</option>
-                                        </select>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.MediaID, "微信号", new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control", required = "" })
+                                        </div>
                                     </div>
-                                </div>
-                            </fieldset>
-
-
-                        </div>
-                    </div>
-                    <div id="tab-3" class="tab-pane">
-                        <div class="panel-body">
-
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                广告位
-                                            </th>
-                                            <th>
-                                                采购价格
-                                            </th>
-                                            <th style="width: 20%">
-                                                价格日期
-                                            </th>
-                                            <th style="width: 20%">
-                                                失效日期
-                                            </th>
-                                           
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="form-control" readonly="readonly" value="头条">
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control" placeholder="$10.00">
-                                            </td>
-                                            <td>
-                                                <div class="input-group date">
-                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" value="07/01/2014">
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group date">
-                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" value="07/01/2014">
-                                                </div>
-                                            </td>
-                                            
-                                        </tr>
-                                    <tr>
-                                        <td>
-                                            <input type="text" class="form-control" readonly="readonly" value="头条">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" placeholder="$10.00">
-                                        </td>
-                                        <td>
-                                            <div class="input-group date">
-                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" value="07/01/2014">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.MediaLink, Html.DisplayNameFor(d => d.MediaLink).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.MediaLink, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Area, Html.DisplayNameFor(d => d.Area).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Area, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.ChannelType, Html.DisplayNameFor(d => d.ChannelType).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.DropDownListFor(d => d.ChannelType, channelTypes,"请选择",new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.DropDownListFor(d => d.MediaTagIds, Model.MediaTags, new { @class = "form-control", multiple = "multiple" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Content, Html.DisplayNameFor(d => d.Content).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextAreaFor(d => d.Content, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            <div class="radio radio-info radio-inline">
+                                                @Html.RadioButtonFor(d => d.Status, 1)
+                                                <label> 正常 </label>
                                             </div>
-                                        </td>
-                                        <td>
-                                            <div class="input-group date">
-                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" value="07/01/2014">
+                                            <div class="radio radio-info radio-inline">
+                                                @Html.RadioButtonFor(d => d.Status, 0)
+                                                <label> 关闭 </label>
                                             </div>
-                                        </td>
-                                            
-                                    </tr>
+                                        </div>
+                                    </div>
+                                    @Html.HiddenFor(d => d.MediaTypeId)
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <div class="col-sm-4 col-sm-offset-2">
+                                            <a class="btn btn-outline btn-default" href="@Url.Action("Index")"><i class="fa fa-reply"></i> 返回</a>
+                                            <button class="btn btn-primary" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
+                                        </div>
+                                    </div>
+                                </fieldset>
 
-                                    </tbody>
-
-                                </table>
                             </div>
-
                         </div>
+                        <div id="tab-2" class="tab-pane">
+                            <div class="panel-body">
+
+                                <fieldset class="form-horizontal">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.FansNum, Html.DisplayNameFor(d => d.FansNum).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.FansNum, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.LastReadNum, Html.DisplayNameFor(d => d.LastReadNum).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.LastReadNum, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.AvgReadNum, Html.DisplayNameFor(d => d.AvgReadNum).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.AvgReadNum, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.PublishFrequency, Html.DisplayNameFor(d => d.PublishFrequency).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.PublishFrequency, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.IsAuthenticate, Html.DisplayNameFor(d => d.IsAuthenticate).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            <div class="radio radio-info radio-inline">
+                                                @Html.RadioButtonFor(d => d.IsAuthenticate, true)
+                                                <label> 是 </label>
+                                            </div>
+                                            <div class="radio radio-info radio-inline">
+                                                @Html.RadioButtonFor(d => d.IsAuthenticate, false)
+                                                <label> 否 </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.IsOriginal, Html.DisplayNameFor(d => d.IsOriginal).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            <div class="radio radio-info radio-inline">
+                                                @Html.RadioButtonFor(d => d.IsOriginal, true)
+                                                <label> 是 </label>
+                                            </div>
+                                            <div class="radio radio-info radio-inline">
+                                                @Html.RadioButtonFor(d => d.IsOriginal, false)
+                                                <label> 否 </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.IsComment, Html.DisplayNameFor(d => d.IsComment).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            <div class="radio radio-info radio-inline">
+                                                @Html.RadioButtonFor(d => d.IsComment, true)
+                                                <label> 是 </label>
+                                            </div>
+                                            <div class="radio radio-info radio-inline">
+                                                @Html.RadioButtonFor(d => d.IsComment, false)
+                                                <label> 否 </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+
+                            </div>
+                        </div>
+                        <div id="tab-3" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    广告位
+                                                </th>
+                                                <th>
+                                                    采购价格
+                                                </th>
+                                                <th style="width: 20%">
+                                                    价格日期
+                                                </th>
+                                                <th style="width: 20%">
+                                                    失效日期
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @for (int i = 0; i < Model.MediaPrices.Count; i++)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.HiddenFor(d => d.MediaPrices[i].AdPositionId)
+                                                        @Html.TextBoxFor(d => d.MediaPrices[i].AdPositionName, new { @class = "form-control", @readonly = "readonly" })
+                                                    </td>
+                                                    <td>
+                                                        @Html.TextBoxFor(d => d.MediaPrices[i].PurchasePrice, new { @class = "form-control", placeholder = "¥0.00" })
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group date">
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </span>
+                                                            @Html.TextBoxFor(d => d.MediaPrices[i].PriceDate, new { @class = "form-control" })
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group date">
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </span>
+                                                            @Html.TextBoxFor(d => d.MediaPrices[i].InvalidDate, new { @class = "form-control" })
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+
+
+                                        </tbody>
+
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+
                     </div>
-                    
                 </div>
             </div>
         </div>
-    </div>
+    }
+
 
 </div>
+
+
+@section Styles {
+    @Styles.Render("~/plugins/select2Styles")
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+    @Styles.Render("~/plugins/dataPickerStyles")
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/select2")
+    @Scripts.Render("~/plugins/dataPicker")
+    <script>
+    $(function() {
+        $("#LinkManId").select2({
+            placeholder: "请选择",
+            language: "zh-CN",
+            //allowClear: true,
+            ajax: {
+                url: "@Url.Action("GetList", "LinkMan", new {area = "Customer"})",
+                dataType: 'json',
+                delay: 800,
+                data: function(params) {
+                    return {
+                        search: params.term, // search term
+                        IsBusiness: true
+                    };
+                },
+                processResults: function(data, params) {
+                    var result = $.map(data.rows,
+                        function(v, k) {
+                            return { id: v.Id, text: v.Name, commpany: v.CommpanyName };
+                        });
+                    return {
+                        results: result
+                    };
+                },
+                cache: true
+            },
+            escapeMarkup: function(markup) { return markup; }, // 字符转义处理
+            minimumInputLength: 1,
+            templateResult:
+                formatRepo, //返回结果回调function formatRepo(repo){return repo.text},这样就可以将返回结果的的text显示到下拉框里，当然你可以return repo.text+"1";等
+            templateSelection: formatRepoSelection //选中项回调function formatRepoSelection(repo) { return repo.text }
+
+        });
+        $('#MediaTagIds').select2();
+        $("#MediaTagIds").val(@Html.Raw(Json.Encode(Model.MediaTagIds))).trigger("change");
+        $('.input-group.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            language: "zh-CN",
+            orientation: "bottom right",
+            todayHighlight: true
+        });
+    });
+
+    function formatRepo(repo) {
+            if (repo.loading) {
+                return repo.text;
+            }
+            return "<p>"+ repo.commpany + " 【 " + repo.text+" 】 <p>";
+        }
+        function formatRepoSelection(repo) {
+            $("#LinkManName").val(repo.text);
+            return repo.text;
+        }
+
+    </script>
+}

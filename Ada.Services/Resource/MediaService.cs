@@ -33,7 +33,7 @@ namespace Ada.Services.Resource
 
         public IQueryable<Media> LoadEntitiesFilter(MediaView viewModel)
         {
-            var allList = _repository.LoadEntities(d => d.IsDelete==false);
+            var allList = _repository.LoadEntities(d => d.IsDelete == false);
             if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeIndex))
             {
                 allList = allList.Where(d => d.MediaType.CallIndex == viewModel.MediaTypeIndex);
@@ -42,14 +42,62 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.MediaName.Contains(viewModel.search));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.LinkManName))
+            {
+                allList = allList.Where(d => d.LinkMan.Name.Contains(viewModel.LinkManName));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.AddedBy))
+            {
+                allList = allList.Where(d => d.AddedBy==viewModel.AddedBy);
+            }
+            if (viewModel.MediaTagIds != null)
+            {
+                allList = from m in allList
+                          from t in m.MediaTags
+                          where viewModel.MediaTagIds.Contains(t.Id)
+                          select m;
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
             {
                 allList = from m in allList
                           from p in m.MediaPrices
-                          where p.AdPositionName==viewModel.AdPositionName
+                          where p.AdPositionName == viewModel.AdPositionName
                           select m;
+                if (viewModel.PriceStart != null)
+                {
+                    allList = from m in allList
+                              from p in m.MediaPrices
+                              where p.PurchasePrice >= viewModel.PriceStart && p.AdPositionName == viewModel.AdPositionName
+                              select m;
+                }
+                if (viewModel.PriceEnd != null)
+                {
+                    allList = from m in allList
+                              from p in m.MediaPrices
+                              where p.PurchasePrice <= viewModel.PriceEnd && p.AdPositionName == viewModel.AdPositionName
+                              select m;
+                }
+
             }
-            
+            else
+            {
+                if (viewModel.PriceStart != null)
+                {
+                    allList = from m in allList
+                              from p in m.MediaPrices
+                              where p.PurchasePrice >= viewModel.PriceStart
+                              select m;
+                }
+                if (viewModel.PriceEnd != null)
+                {
+                    allList = from m in allList
+                              from p in m.MediaPrices
+                              where p.PurchasePrice <= viewModel.PriceEnd
+                              select m;
+                }
+            }
+
+            allList = allList.Distinct();
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;

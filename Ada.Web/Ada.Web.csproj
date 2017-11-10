@@ -227,6 +227,8 @@
     <Content Include="Content\plugins\colorpicker\bootstrap-colorpicker.min.css" />
     <Content Include="Content\plugins\cropper\cropper.css" />
     <Content Include="Content\plugins\cropper\cropper.min.css" />
+    <Content Include="Content\plugins\datapicker\bootstrap-datepicker3.css" />
+    <Content Include="Content\plugins\datapicker\bootstrap-datepicker3.min.css" />
     <Content Include="Content\plugins\datapicker\datepicker3.css" />
     <Content Include="Content\plugins\dataTables\datatables.min.css" />
     <Content Include="Content\plugins\daterangepicker\daterangepicker-bs3.css" />
@@ -1525,6 +1527,8 @@
     <Content Include="Scripts\plugins\d3\d3.min.js" />
     <Content Include="Scripts\plugins\datamaps\datamaps.all.min.js" />
     <Content Include="Scripts\plugins\datapicker\bootstrap-datepicker.js" />
+    <Content Include="Scripts\plugins\datapicker\bootstrap-datepicker.min.js" />
+    <Content Include="Scripts\plugins\datapicker\locales\bootstrap-datepicker.zh-CN.min.js" />
     <Content Include="Scripts\plugins\dataTables\datatables.min.js" />
     <Content Include="Scripts\plugins\daterangepicker\daterangepicker.js" />
     <Content Include="Scripts\plugins\diff_match_patch\javascript\diff_match_patch.js" />

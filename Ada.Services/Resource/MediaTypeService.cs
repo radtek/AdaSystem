@@ -86,5 +86,12 @@ namespace Ada.Services.Resource
             _repository.Delete(entity);
             _dbContext.SaveChanges();
         }
+
+        public MediaType GetMediaTypeByCallIndex(string callIndex)
+        {
+            return _repository.LoadEntities(d => d.CallIndex.Equals(callIndex, StringComparison.CurrentCultureIgnoreCase))
+                .FirstOrDefault();
+           
+        }
     }
 }

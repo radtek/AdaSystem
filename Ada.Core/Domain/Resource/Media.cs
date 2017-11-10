@@ -111,6 +111,11 @@ namespace Ada.Core.Domain.Resource
         [Display(Name = "媒体说明")]
         public string Content { get; set; }
         /// <summary>
+        /// 渠道类型
+        /// </summary>
+        [Display(Name = "渠道类型")]
+        public string ChannelType { get; set; }
+        /// <summary>
         /// 人气值
         /// </summary>
         [Display(Name = "人气值")]

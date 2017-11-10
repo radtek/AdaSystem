@@ -1,8 +1,12 @@
 ﻿
 @using System.Web.Optimization
+@using Ada.Core.Infrastructure
+@using Ada.Services.Resource
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
     ViewBag.Title = "微信资源";
+    var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
+    var adpositions = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("weixin").AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
 }
 @Html.Partial("Bread")
 
@@ -17,17 +21,59 @@
             </div>
         </div>
         <div class="ibox-content">
-            <form class="form-inline" id="searchFrm" onSubmit="javascript:searchFrm.search(this,event);">
+            <form id="searchFrm" onSubmit="javascript:searchFrm.search(this, event);">
                 <div class="row">
-                    <div class="col-sm-2">
+                    <div class="col-lg-12">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.MediaID, Html.DisplayNameFor(d => d.MediaID) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control input-sm" })
+                            @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds) + "：", new { @class = "control-label" })
+                            @foreach (var item in tags)
+                            {
+                                <div class="checkbox checkbox-success checkbox-inline">
+                                    <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
+                                    <label for="@item.Id">@item.TagName</label>
+                                </div>
+                            }
+                            
                         </div>
                     </div>
-
-
                 </div>
+                <div class="row">
+                    <div class="col-sm-2 m-b">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.MediaID, "微信号：", new {@class = "control-label"})
+                            @Html.TextBoxFor(d => d.MediaID, new {@class = "form-control input-sm"})
+                        </div>
+                    </div>
+                    <div class="col-sm-2 m-b">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName) + "：", new {@class = "control-label"})
+                            @Html.DropDownListFor(d => d.AdPositionName, adpositions, "不限", new {@class = "form-control input-sm"})
+                        </div>
+                    </div>
+                    <div class="col-sm-2 m-b">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart) + "：", new {@class = "control-label"})
+                            <div class="input-daterange input-group">
+                                @Html.TextBoxFor(d => d.PriceStart, new {@class = "form-control input-sm"})
+                                <span class="input-group-addon">至</span>
+                                @Html.TextBoxFor(d => d.PriceEnd, new {@class = "form-control input-sm"})
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 m-b">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName) + "：", new {@class = "control-label"})
+                            @Html.TextBoxFor(d => d.LinkManName, new {@class = "form-control input-sm"})
+                        </div>
+                    </div>
+                    <div class="col-sm-2 m-b">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.AddedBy, Html.DisplayNameFor(d => d.AddedBy) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.AddedBy, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                </div>
+
                 <div class="hr-line-dashed"></div>
                 <div class="row">
                     <div class="col-sm-12 text-center">
@@ -69,10 +115,12 @@
 
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
+
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -81,7 +129,6 @@
             //2.初始化Button的点击事件
             var oButtonInit = new ButtonInit();
             oButtonInit.Init();
-
 
         });
         var TableInit = function() {
@@ -109,46 +156,63 @@
                 uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
                 showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
                 cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
-                //detailView: true,                   //设置为 true 可以显示详细页面模式。
-                //detailFormatter: detailFormatter,
+                detailView: true,                   //设置为 true 可以显示详细页面模式。
+                detailFormatter: detailFormatter,
                 mobileResponsive:true,
                 columns: [
                     {
-                        checkbox: true
-                    },
-                    {
-                        field: 'MediaName',
-                        title: '@Html.DisplayNameFor(d=>d.MediaName)',
+                        checkbox: true,
+                        valign: "middle",
                         align: "center"
                     },
                     {
+                        field: 'MediaName',
+                        title: '微信公众号',
+                        valign: "middle",
+                        align:  "center"
+                    },
+                    {
                         field: 'MediaID',
-                        title: '@Html.DisplayNameFor(d=>d.MediaID)',
-                        align:"center"
+                        title: '微信号',
+                        valign: "middle",
+                        align: "center"
                     },
                     {
                         field: 'Area',
                         title: '@Html.DisplayNameFor(d=>d.Area)',
+                        valign: "middle",
                         align: "center"
                     },
                     {
-                        field: 'Status',
-                        title: '@Html.DisplayNameFor(d=>d.Status)',
-                        align: "center"
-                    },
-                    {
-                        field: 'MediaTags',
-                        title: '@Html.DisplayNameFor(d=>d.MediaTags)',
+                        field: 'MediaTagStr',
+                        title: '@Html.DisplayNameFor(d=>d.MediaTagStr)',
+                        valign: "middle",
                         align: "center"
                     },
                     {
                         field: 'MediaPrices',
                         title: '@Html.DisplayNameFor(d=>d.MediaPrices)',
-                        align: "center"
+                        valign: "middle",
+                        formatter: formatterPrice,
+                        //align: "center"
                     },
                     {
                         field: 'LinkManName',
                         title: '@Html.DisplayNameFor(d=>d.LinkManName)',
+                        valign: "middle",
+                        align: "center"
+                    },
+                    {
+                        field: 'Status',
+                        title: '@Html.DisplayNameFor(d=>d.Status)',
+                        valign: "middle",
+                        formatter: formatter.normalStatus,
+                        align: "center"
+                    },
+                    {
+                        field: 'AddedBy',
+                        title: '@Html.DisplayNameFor(d=>d.AddedBy)',
+                        valign: "middle",
                         align: "center"
                     }
                 ]
@@ -240,7 +304,19 @@
             return oInit;
         };
 
+        function formatterPrice(value, row, index) {
+            var result = "";
+            $.each(value,
+                function(k, v) {
+                    result += "<span class='label label-info'>"+v.AdPositionName + ":" + (v.PurchasePrice == 0 ? "不接单" : v.PurchasePrice) + "</span>";
+                });
+            return result;
 
+        }
+        function detailFormatter(index, row) {
+            return "<div class='table-detail-name'>@Html.DisplayNameFor(d=>d.Content)：</div><div class='table-detail-value'>" + (row.Content||"") + "</div><br />" +
+                "<div class='table-detail-name'>@Html.DisplayNameFor(d=>d.Content)：</div><div class='table-detail-value'>" + (row.Content || "") +"</div>";
+        }
     </script>
 }
 

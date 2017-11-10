@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace Ada.Core.ViewModel.Resource
 {
@@ -18,6 +19,7 @@ namespace Ada.Core.ViewModel.Resource
         /// 媒体ID
         /// </summary>
         [Display(Name = "媒体ID")]
+        [Required]
         public string MediaID { get; set; }
         /// <summary>
         /// 媒体链接
@@ -148,6 +150,7 @@ namespace Ada.Core.ViewModel.Resource
         /// 结算人
         /// </summary>
         [Display(Name = "结算人")]
+        [Required]
         public string LinkManId { get; set; }
         /// <summary>
         /// 结算人
@@ -158,24 +161,53 @@ namespace Ada.Core.ViewModel.Resource
         /// 媒体分类
         /// </summary>
         [Display(Name = "媒体分类")]
-        public string MediaTags { get; set; }
+        public List<SelectListItem> MediaTags { get; set; }
+        /// <summary>
+        /// 媒体分类
+        /// </summary>
+        [Display(Name = "媒体分类")]
+        public string MediaTagStr { get; set; }
+        /// <summary>
+        /// 媒体分类
+        /// </summary>
+        [Display(Name = "媒体分类")]
+        public List<string> MediaTagIds { get; set; }
+        /// <summary>
+        /// 媒体类别
+        /// </summary>
+        [Display(Name = "媒体类别")]
+        public string MediaTypeId { get; set; }
         /// <summary>
         /// 媒体类别
         /// </summary>
         [Display(Name = "媒体类别")]
         public string MediaTypeIndex { get; set; }
         /// <summary>
+        /// 渠道类型
+        /// </summary>
+        [Display(Name = "渠道类型")]
+        public string ChannelType { get; set; }
+        /// <summary>
         /// 媒体价格
         /// </summary>
         [Display(Name = "媒体价格")]
-        public List<WeiXinPrice> MediaPrices { get; set; }
+        public List<MediaPriceView> MediaPrices { get; set; }
+
+        /// <summary>
+        /// 价格范围
+        /// </summary>
+        [Display(Name = "价格范围")]
+        public decimal? PriceStart { get; set; }
+        /// <summary>
+        /// 价格范围
+        /// </summary>
+        [Display(Name = "价格范围")]
+        public decimal? PriceEnd { get; set; }
+        /// <summary>
+        /// 经办媒介
+        /// </summary>
+        [Display(Name = "经办媒介")]
+        public string AddedBy { get; set; }
     }
 
-    public class WeiXinPrice
-    {
-        public string AdPosition { get; set; }
-        public decimal? PurchasePrice { get; set; }
-        public DateTime? PriceDate { get; set; }
-        public DateTime? InvalidDate { get; set; }
-    }
 }

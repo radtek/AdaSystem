@@ -17,5 +17,7 @@ namespace Ada.Services.Resource
         /// <param name="viewModel"></param>
         /// <returns></returns>
         IQueryable<MediaType> LoadEntitiesFilter(MediaTypeView viewModel);
-    }
+
+       MediaType GetMediaTypeByCallIndex(string callIndex);
+   }
 }
