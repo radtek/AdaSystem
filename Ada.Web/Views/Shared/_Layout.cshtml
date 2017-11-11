@@ -74,6 +74,9 @@
     @RenderSection("Scripts", required: false)
     <script>
         $(document).ready(function () {
+            if ($(".field-validation-error").text()) {
+                $(".bg-danger").addClass("p-xs").addClass("b-r-sm");
+            }
             @if (TempData["Msg"]!= null){
                 <text>
                     toastr.options.positionClass = "toast-bottom-right";
@@ -86,7 +89,8 @@
                     toastr.warning('@TempData["Warning"]');
                 </text>
             }
-          $('[data-toggle="tooltip"]').tooltip();
+                    $('[data-toggle="tooltip"]').tooltip();
+                    
           initChangePwd($('@Html.AntiForgeryToken()').val());
           initCropper("@Url.Action("UploadImage","Manager",new{area="Admin"})");
         });

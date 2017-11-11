@@ -68,8 +68,8 @@
                     </div>
                     <div class="col-sm-2 m-b">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.AddedBy, Html.DisplayNameFor(d => d.AddedBy) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.AddedBy, new { @class = "form-control input-sm" })
+                            @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control input-sm" })
                         </div>
                     </div>
                 </div>
@@ -210,8 +210,8 @@
                         align: "center"
                     },
                     {
-                        field: 'AddedBy',
-                        title: '@Html.DisplayNameFor(d=>d.AddedBy)',
+                        field: 'Transactor',
+                        title: '@Html.DisplayNameFor(d=>d.Transactor)',
                         valign: "middle",
                         align: "center"
                     }

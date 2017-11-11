@@ -17,13 +17,15 @@ namespace Resource.Controllers
         private readonly IMediaService _mediaService;
         private readonly IRepository<Media> _repository;
         private readonly IRepository<MediaTag> _mediaTagRepository;
+        private readonly IRepository<MediaPrice> _mediaPriceRepository;
         private readonly IMediaTypeService _mediaTypeService;
         private readonly IMediaTagService _mediaTagService;
         public WeiXinController(IMediaService mediaService,
             IRepository<Media> repository,
             IMediaTypeService mediaTypeService,
             IMediaTagService mediaTagService,
-            IRepository<MediaTag> mediaTagRepository
+            IRepository<MediaTag> mediaTagRepository,
+            IRepository<MediaPrice> mediaPriceRepository
         )
         {
             _mediaService = mediaService;
@@ -31,6 +33,7 @@ namespace Resource.Controllers
             _mediaTypeService = mediaTypeService;
             _mediaTagService = mediaTagService;
             _mediaTagRepository = mediaTagRepository;
+            _mediaPriceRepository = mediaPriceRepository;
         }
         public ActionResult Index()
         {
@@ -63,6 +66,7 @@ namespace Resource.Controllers
                     CommentNum = d.CommentNum,
                     LikesNum = d.LikesNum,
                     Content = d.Content,
+                    Remark = d.Remark,
                     Status = d.Status,
                     ApiUpDate = d.ApiUpDate,
                     MediaLink = d.MediaLink,
@@ -70,7 +74,7 @@ namespace Resource.Controllers
                     MediaQR = d.MediaQR,
                     LinkManId = d.LinkManId,
                     LinkManName = d.LinkMan.Name,
-                    AddedBy = d.AddedBy,
+                    Transactor = d.Transactor,
                     MediaTagStr = string.Join(",", d.MediaTags.Select(t => t.TagName)),
                     MediaPrices = d.MediaPrices.Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = p.PurchasePrice }).ToList()
                 })
@@ -84,8 +88,9 @@ namespace Resource.Controllers
             viewModel.Status = Consts.StateNormal;
             viewModel.MediaPrices = mediaType.AdPositions
                 .Select(d => new MediaPriceView() { AdPositionName = d.Name, PurchasePrice = 0, AdPositionId = d.Id }).ToList();
-            viewModel.MediaTags = _mediaTagService.GetTags()
-                .Select(d => new SelectListItem() { Text = d.TagName, Value = d.Id }).ToList();
+            viewModel.MediaTags = _mediaTagService.GetTags();
+            viewModel.Transactor = CurrentManager.UserName;
+            viewModel.TransactorId = CurrentManager.Id;
             return View(viewModel);
         }
         [HttpPost]
@@ -95,8 +100,7 @@ namespace Resource.Controllers
             
             if (!ModelState.IsValid)
             {
-                viewModel.MediaTags = _mediaTagService.GetTags()
-                    .Select(d => new SelectListItem() { Text = d.TagName, Value = d.Id }).ToList();
+                viewModel.MediaTags = _mediaTagService.GetTags();
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
                 return View(viewModel);
             }
@@ -106,8 +110,7 @@ namespace Resource.Controllers
                 d.MediaTypeId == viewModel.MediaTypeId).FirstOrDefault();
             if (temp != null)
             {
-                viewModel.MediaTags = _mediaTagService.GetTags()
-                    .Select(d => new SelectListItem() { Text = d.TagName, Value = d.Id }).ToList();
+                viewModel.MediaTags = _mediaTagService.GetTags();
                 ModelState.AddModelError("message", viewModel.MediaID + "，此微信公众号已存在！");
                 return View(viewModel);
             }
@@ -116,6 +119,9 @@ namespace Resource.Controllers
             entity.AddedById = CurrentManager.Id;
             entity.AddedBy = CurrentManager.UserName;
             entity.AddedDate = DateTime.Now;
+            entity.Transactor = viewModel.Transactor;
+            entity.TransactorId = viewModel.TransactorId;
+
 
             entity.MediaName = viewModel.MediaName;
             entity.MediaID = viewModel.MediaID;
@@ -138,6 +144,7 @@ namespace Resource.Controllers
             //entity.CommentNum = viewModel.CommentNum;
             //entity.LikesNum = viewModel.LikesNum;
             entity.Content = viewModel.Content;
+            entity.Remark = viewModel.Remark;
             entity.Status = viewModel.Status;
             entity.ClickNum = viewModel.ClickNum;
             entity.IsHot = viewModel.IsHot;
@@ -156,6 +163,7 @@ namespace Resource.Controllers
                 price.InvalidDate = viewModelMediaPrice.InvalidDate;
                 price.PurchasePrice = viewModelMediaPrice.PurchasePrice;
                 price.PriceDate = viewModelMediaPrice.PriceDate;
+                //TODO 出售价格
                 entity.MediaPrices.Add(price);
             }
             //媒体分类
@@ -173,24 +181,51 @@ namespace Resource.Controllers
             var item = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             MediaView entity = new MediaView();
             entity.Id = item.Id;
+            entity.Transactor = item.Transactor;
+            entity.TransactorId = item.TransactorId;
+
             entity.MediaName = item.MediaName;
+            entity.MediaID = item.MediaID;
+            entity.MediaLink = item.MediaLink;
+            entity.MediaLogo = item.MediaLogo;
+            entity.MediaQR = item.MediaQR;
+
             entity.IsAuthenticate = item.IsAuthenticate;
             entity.IsOriginal = item.IsOriginal;
             entity.IsComment = item.IsComment;
+            entity.FansNum = item.FansNum;
             entity.LastReadNum = item.LastReadNum;
             entity.AvgReadNum = item.AvgReadNum;
             entity.PublishFrequency = item.PublishFrequency;
             entity.Area = item.Area;
-            entity.LastPushDate = item.LastPushDate;
-            entity.AuthenticateType = item.AuthenticateType;
-            entity.TransmitNum = item.TransmitNum;
-            entity.CommentNum = item.CommentNum;
-            entity.LikesNum = item.LikesNum;
+            entity.ChannelType = item.ChannelType;
+            //entity.AuthenticateType = item.AuthenticateType;
+            //entity.TransmitNum = item.TransmitNum;
+            //entity.CommentNum = item.CommentNum;
+            //entity.LikesNum = item.LikesNum;
             entity.Content = item.Content;
+            entity.Remark = item.Remark;
             entity.Status = item.Status;
-            entity.MediaLink = item.MediaLink;
-            entity.MediaLogo = item.MediaLogo;
-            entity.MediaQR = item.MediaQR;
+            entity.ClickNum = item.ClickNum;
+            entity.IsHot = item.IsHot;
+            entity.IsSlide = item.IsSlide;
+            entity.IsRecommend = item.IsRecommend;
+            //联系人
+            entity.LinkManId = item.LinkManId;
+            entity.LinkManName = item.LinkMan.Name;
+            //标签
+            entity.MediaTags= _mediaTagService.GetTags();
+            entity.MediaTagIds = item.MediaTags.Select(d => d.Id).ToList();
+            //媒体价格
+            entity.MediaPrices = item.MediaPrices.Select(d => new MediaPriceView()
+            {
+                Id = d.Id,
+                AdPositionName = d.AdPositionName,
+                AdPositionId = d.AdPositionId,
+                PriceDate = d.PriceDate,
+                InvalidDate = d.InvalidDate,
+                PurchasePrice = d.PurchasePrice
+            }).ToList();
             return View(entity);
         }
         [HttpPost]
@@ -200,15 +235,72 @@ namespace Resource.Controllers
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
+                viewModel.MediaTags = _mediaTagService.GetTags();
                 return View(viewModel);
             }
-            //var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
-            //entity.ModifiedById = CurrentManager.Id;
-            //entity.ModifiedBy = CurrentManager.UserName;
-            //entity.ModifiedDate = DateTime.Now;
-            //entity.TypeName = viewModel.TypeName;
-            //entity.CallIndex = viewModel.CallIndex;
-            //_mediaService.Update(entity, viewModel.AdPositions);
+            //校验ID不能重复
+            var temp = _repository.LoadEntities(d =>
+                d.MediaID.Equals(viewModel.MediaID, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
+                d.MediaTypeId == viewModel.MediaTypeId&&d.Id!=viewModel.Id).FirstOrDefault();
+            if (temp != null)
+            {
+                viewModel.MediaTags = _mediaTagService.GetTags();
+                ModelState.AddModelError("message", viewModel.MediaID + "，此微信公众号已存在！");
+                return View(viewModel);
+            }
+            var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
+            entity.ModifiedById = CurrentManager.Id;
+            entity.ModifiedBy = CurrentManager.UserName;
+            entity.ModifiedDate = DateTime.Now;
+            entity.Transactor = viewModel.Transactor;
+            entity.TransactorId = viewModel.TransactorId;
+
+            entity.MediaName = viewModel.MediaName;
+            entity.MediaID = viewModel.MediaID;
+            entity.MediaLink = viewModel.MediaLink;
+            entity.MediaLogo = viewModel.MediaLogo;
+            entity.MediaQR = viewModel.MediaQR;
+
+            entity.IsAuthenticate = viewModel.IsAuthenticate;
+            entity.IsOriginal = viewModel.IsOriginal;
+            entity.IsComment = viewModel.IsComment;
+            entity.FansNum = viewModel.FansNum;
+            entity.LastReadNum = viewModel.LastReadNum;
+            entity.AvgReadNum = viewModel.AvgReadNum;
+            entity.PublishFrequency = viewModel.PublishFrequency;
+            entity.Area = viewModel.Area;
+            entity.ChannelType = viewModel.ChannelType;
+            //entity.LastPushDate = viewModel.LastPushDate;
+            //entity.AuthenticateType = viewModel.AuthenticateType;
+            //entity.TransmitNum = viewModel.TransmitNum;
+            //entity.CommentNum = viewModel.CommentNum;
+            //entity.LikesNum = viewModel.LikesNum;
+            entity.Content = viewModel.Content;
+            entity.Remark = viewModel.Remark;
+            entity.Status = viewModel.Status;
+            entity.ClickNum = viewModel.ClickNum;
+            entity.IsHot = viewModel.IsHot;
+            entity.IsSlide = viewModel.IsSlide;
+            entity.IsRecommend = viewModel.IsRecommend;
+            //联系人
+            entity.LinkManId = viewModel.LinkManId;
+            //标签
+            entity.MediaTags.Clear();
+            foreach (var viewModelMediaTagId in viewModel.MediaTagIds)
+            {
+                var tag = _mediaTagRepository.LoadEntities(d => d.Id == viewModelMediaTagId).FirstOrDefault();
+                entity.MediaTags.Add(tag);
+            }
+            //价格
+            foreach (var viewModelMediaPrice in viewModel.MediaPrices)
+            {
+                var price = _mediaPriceRepository.LoadEntities(d => d.Id == viewModelMediaPrice.Id).FirstOrDefault();
+                price.InvalidDate = viewModelMediaPrice.InvalidDate;
+                price.PriceDate = viewModelMediaPrice.PriceDate;
+                price.PurchasePrice = viewModelMediaPrice.PurchasePrice;
+                //TODO 出售价格
+            }
+            _mediaService.Update(entity);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");
         }

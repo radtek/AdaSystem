@@ -99,6 +99,10 @@
     <Compile Include="Migrations\201711100839196_MediaChannelType.Designer.cs">
       <DependentUpon>201711100839196_MediaChannelType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711111329029_MediaTrantor.cs" />
+    <Compile Include="Migrations\201711111329029_MediaTrantor.Designer.cs">
+      <DependentUpon>201711111329029_MediaTrantor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -136,6 +140,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711100839196_MediaChannelType.resx">
       <DependentUpon>201711100839196_MediaChannelType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711111329029_MediaTrantor.resx">
+      <DependentUpon>201711111329029_MediaTrantor.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -107,6 +107,11 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "媒体说明")]
         public string Content { get; set; }
         /// <summary>
+        /// 备注说明
+        /// </summary>
+        [Display(Name = "备注说明")]
+        public string Remark { get; set; }
+        /// <summary>
         /// 人气值
         /// </summary>
         [Display(Name = "人气值")]
@@ -161,7 +166,7 @@ namespace Ada.Core.ViewModel.Resource
         /// 媒体分类
         /// </summary>
         [Display(Name = "媒体分类")]
-        public List<SelectListItem> MediaTags { get; set; }
+        public List<MediaTagView> MediaTags { get; set; }
         /// <summary>
         /// 媒体分类
         /// </summary>
@@ -204,10 +209,20 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "价格范围")]
         public decimal? PriceEnd { get; set; }
         /// <summary>
+        /// 创建人员
+        /// </summary>
+        [Display(Name = "创建人员")]
+        public string AddedBy { get; set; }
+        /// <summary>
         /// 经办媒介
         /// </summary>
         [Display(Name = "经办媒介")]
-        public string AddedBy { get; set; }
+        public string Transactor { get; set; }
+        /// <summary>
+        /// 经办媒介
+        /// </summary>
+        [Display(Name = "经办媒介")]
+        public string TransactorId { get; set; }
     }
 
 }

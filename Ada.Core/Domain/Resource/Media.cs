@@ -151,6 +151,16 @@ namespace Ada.Core.Domain.Resource
         [Display(Name = "数据更新日期")]
         public DateTime? ApiUpDate { get; set; }
         /// <summary>
+        /// 经办媒介
+        /// </summary>
+        [Display(Name = "经办媒介")]
+        public string Transactor { get; set; }
+        /// <summary>
+        /// 经办媒介
+        /// </summary>
+        [Display(Name = "经办媒介")]
+        public string TransactorId { get; set; }
+        /// <summary>
         /// 媒体类型
         /// </summary>
         [Display(Name = "媒体类型")]

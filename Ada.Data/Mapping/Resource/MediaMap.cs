@@ -40,7 +40,8 @@ namespace Ada.Data.Mapping.Resource
             Property(s => s.ApiUpDate);
             Property(s => s.MediaTypeId).HasMaxLength(32);
             Property(s => s.LinkManId).HasMaxLength(32);
-
+            Property(s => s.Transactor).HasMaxLength(32);
+            Property(s => s.TransactorId).HasMaxLength(32);
 
             Property(s => s.AddedDate);
             Property(s => s.AddedBy).HasMaxLength(32);
