@@ -205,6 +205,12 @@ namespace Admin.Controllers
             _managerService.Delete(list);
             return Json(new { State = 1, Msg = "删除成功" });
         }
+       
+        public ActionResult ChangePassword()
+        {
+            return PartialView("ChangePassword");
+        }
+
         [HttpPost]
         [AdaValidateAntiForgeryToken]
         public ActionResult ChangePassword(string old, string fresh, string refresh)
@@ -227,7 +233,10 @@ namespace Admin.Controllers
             _managerService.Edit(manager);
             return Json(new { State = 1, Msg = "修改成功" });
         }
-
+        public ActionResult UploadImage(string id)
+        {
+            return PartialView("UploadImage");
+        }
         [HttpPost]
         public ActionResult UploadImage()
         {

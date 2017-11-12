@@ -1756,6 +1756,9 @@
     <Content Include="Views\Shared\_Layout_Home.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Views\Shared\UploadImage.cshtml" />
+    <Content Include="Views\Shared\ChangePassword.cshtml" />
+    <Content Include="Views\Shared\Bread.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

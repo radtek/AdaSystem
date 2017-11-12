@@ -112,7 +112,6 @@
   <ItemGroup>
     <Content Include="Views\web.config" />
     <None Include="packages.config" />
-    <Content Include="Views\Shared\Bread.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Commpany\Custom.cshtml" />
     <Content Include="Views\Commpany\AddCustom.cshtml" />

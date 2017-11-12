@@ -26,8 +26,9 @@
           <ul class="dropdown-menu animated fadeInRight m-t-xs">
             @*<li><a href="@Url.Action("Profile", "AppViews")">Profile</a></li>
               <li><a href="@Url.Action("Contacts", "AppViews")">Contacts</a></li>*@
-            <li><a href="#modal-changepwd" data-toggle="modal">修改密码</a></li>
-            <li><a href="#modal-image" data-toggle="modal">修改头像</a></li>
+              @*<li><a href="#modal-changepwd" data-toggle="modal">修改密码</a></li>*@
+              <li><a href="javascript:;" id="changepwd">修改密码</a></li>
+            <li><a href="javascript:;" id="changeimage">修改头像</a></li>
             <li class="divider"></li>
             <li><a href="@Url.Action("Quit", "Login",new{area=""})">退出</a></li>
           </ul>
@@ -99,84 +100,5 @@
   </div>
 </nav>
 
-<div id="modal-changepwd" class="modal fade" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-sm-12">
-            <h3 class="text-center">修改密码</h3>
-            <hr />
-            @using (Html.BeginForm("ChangePassword", "Manager", new { area = "Admin" }))
-            {
-                <div class="form-group">
-                  <label>旧密码</label>
-                  <input type="password" class="form-control" name="old">
-                </div>
-                            <div class="form-group">
-                              <label>新密码</label>
-                              <input type="password" class="form-control" name="fresh">
-                            </div>
-                            <div class="form-group">
-                              <label>确认密码</label>
-                              <input type="password" class="form-control" name="refresh">
-                            </div>
-                            <div>
-                              <button class="btn btn-primary m-t-n-xs" type="submit"><strong>修改</strong></button>
-                            </div>
-            }
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="modal inmodal fade" id="modal-image" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title">上传图片</h4>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-7">
-            <div class="img-container">
-              <img id="image" src="" alt="请选择你要上传的图片">
-            </div>
-          </div>
-          <div class="col-md-5">
-            <h4>预览图片</h4>
-            <div class="img-preview img-preview-sm"></div>
-            <h4>操作</h4>
-
-            <div>
-              <label title="上传图片" for="inputImage" class="btn btn-primary">
-                <input type="file" accept="image/*" name="file" id="inputImage" class="hide">
-                上传图片
-              </label>
-              <button id="savePic" class="btn btn-warning" type="button">确定保存</button>
-            </div>
-
-            <h4>调整图片</h4>
-
-            <div class="btn-group">
-              <button class="btn btn-white" id="zoomIn" type="button" data-toggle="tooltip" data-placement="bottom" title="放大"><i class="fa fa-search-plus"></i></button>
-              <button class="btn btn-white" id="zoomOut" type="button" data-toggle="tooltip" data-placement="bottom" title="缩小"><i class="fa fa-search-minus"></i></button>
-              <button class="btn btn-white" id="rotateLeft" type="button" data-toggle="tooltip" data-placement="bottom" title="左转"><i class="fa fa-rotate-left"></i></button>
-              <button class="btn btn-white" id="rotateRight" type="button" data-toggle="tooltip" data-placement="bottom" title="右转"><i class="fa fa-rotate-right"></i></button>
-              <button class="btn btn-warning" id="cropReset" type="button" data-toggle="tooltip" data-placement="bottom" title="重置"><i class="fa fa-refresh"></i></button>
-            </div>
-          </div>
-        </div>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 

@@ -31,7 +31,7 @@ namespace Ada.Framework.Filter
                 filterContext.Result = new JsonResult()
                 {
                     Data = new { State = 0, Msg = ex.Message },
-                    JsonRequestBehavior = JsonRequestBehavior.DenyGet
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
                 };
             }
             else

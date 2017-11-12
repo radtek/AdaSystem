@@ -42,186 +42,202 @@ formatter.normalStatus = function (value, row, index) {
     }
 }
 
-function initChangePwd(token) {
-    $("#modal-changepwd form").validate({
-        rules: {
-            old: {
-                required: true
-            },
-            fresh: {
-                required: true
-            },
-            refresh: {
-                required: true
-            }
-        },
-        messages: {
-            old: {
-                required: "此为必填项"
-            },
-            fresh: {
-                required: "此为必填项"
-            },
-            refresh: {
-                required: "此为必填项"
-            }
-        },
-        submitHandler: function (form) {
-            var $form = $(form),
-                data = $form.serialize(); //序列化表单数据
-            $.ajax({
-                type: "post",
-                headers: {
-                    '__RequestVerificationToken': token
-                },
-                url: form.action,
-                data: data,
-                success: function (res) {
-                    if (res.State == 1) {
-                        $('#modal-changepwd').modal('hide');
-                        swal({
-                            title: "操作成功",
-                            text: res.Msg,
-                            timer: 2000,
-                            type: "success",
-                            showConfirmButton: false
-                        });
-
-                    } else {
-                        swal("操作提醒", res.Msg, "warning");
-                    }
-                },
-                error: function () {
-                    swal("操作失败", res.Msg, "error");
-                }
-            });
-        }
-    });
-}
-function initCropper(apiurl) {
-    
-    var image = document.getElementById('image');
-    var cropBoxData;
-    var canvasData;
-    var cropper;
-    var options = {
-        autoCropArea: 0.5,
-        preview: ".img-preview",
-        ready: function (e) {
-            //console.log(e.type);
-            // Strict mode: set crop box data first
-            cropper.setCropBoxData(cropBoxData).setCanvasData(canvasData);
-        },
-        cropstart: function (e) {
-            //console.log(e.type, e.detail.action);
-        },
-        cropmove: function (e) {
-            //console.log(e.type, e.detail.action);
-        },
-        cropend: function (e) {
-            //console.log(e.type, e.detail.action);
-        },
-        crop: function (e) {
-            //var data = e.detail;
-            //console.log(e.type);
-        },
-        zoom: function (e) {
-            //console.log(e.type, e.detail.ratio);
-        }
-    };
-    $('#modal-image').on('shown.bs.modal', function () {
-        cropper = new Cropper(image, options);
-    }).on('hidden.bs.modal', function () {
-        cropBoxData = cropper.getCropBoxData();
-        canvasData = cropper.getCanvasData();
-        cropper.destroy();
-    });
-    $("#zoomIn").click(function () {
-        if (image.src) {
-            cropper.zoom(0.1);
-        }
-    });
-    $("#zoomOut").click(function () {
-        if (image.src) {
-            cropper.zoom(-0.1);
-        }
-
-    });
-    $("#rotateLeft").click(function () {
-        if (image.src) {
-            cropper.rotate(-45);
-        }
-    });
-    $("#rotateRight").click(function () {
-        if (image.src) {
-            cropper.rotate(45);
-        }
-    });
-    $("#cropReset").click(function () {
-        if (image.src) {
-            cropper.reset();
-        }
-    });
-    $("#savePic").click(function () {
-            var result = cropper.getCroppedCanvas({ width: 320, height: 180 });
-            if (result) {
-                var href = result.toDataURL();
-                $.ajax({
-                    type: "post",
-                    url: apiurl,
-                    data: { upfile: href },
-                    success: function (res) {
-                        if (res.State == 1) {
-                            $('#modal-image').modal('hide');
-                            image.src = "";
-                            swal({
-                                    title: "操作成功",
-                                    text: "修改相片成功",
-                                    type: "success",
-                                    showCancelButton: false,
-                                    confirmButtonText: "确定",
-                                    closeOnConfirm: false
-                                },
-                                function () {
-                                    window.location.reload();
-                                });
-
-                        } else {
-                            swal("操作提醒", res.Msg, "warning");
+function initChangePwd(url,token) {
+    $("#changepwd").click(function() {
+        $("#modalView").load(url,
+            function () {
+                $('#modalView .modal').modal('show');
+                $("#modalView form").validate({
+                    rules: {
+                        old: {
+                            required: true
+                        },
+                        fresh: {
+                            required: true
+                        },
+                        refresh: {
+                            required: true
                         }
                     },
-                    error: function () {
-                        swal("操作失败", res.Msg, "error");
+                    messages: {
+                        old: {
+                            required: "此为必填项"
+                        },
+                        fresh: {
+                            required: "此为必填项"
+                        },
+                        refresh: {
+                            required: "此为必填项"
+                        }
+                    },
+                    submitHandler: function (form) {
+                        var $form = $(form),
+                            data = $form.serialize(); //序列化表单数据
+                        $.ajax({
+                            type: "post",
+                            headers: {
+                                '__RequestVerificationToken': token
+                            },
+                            url: form.action,
+                            data: data,
+                            success: function (res) {
+                                if (res.State == 1) {
+                                    $('#modalView .modal').modal('hide');
+                                    swal({
+                                        title: "操作成功",
+                                        text: res.Msg,
+                                        timer: 2000,
+                                        type: "success",
+                                        showConfirmButton: false
+                                    });
+
+                                } else {
+                                    swal("操作提醒", res.Msg, "warning");
+                                }
+                            },
+                            error: function () {
+                                swal("操作失败", res.Msg, "error");
+                            }
+                        });
                     }
                 });
-            }
+            });
     });
-    var $inputImage = $("#inputImage");
-    if (window.FileReader) {
-        $inputImage.change(function () {
-            var fileReader = new FileReader(),
-                files = this.files;
-            if (!files.length) {
-                return;
-            }
-            var file = files[0];
-            if (/^image\/\w+$/.test(file.type)) {
-                fileReader.readAsDataURL(file);
-                fileReader.onload = function () {
-
-                    image.src = this.result;
-                    cropper.destroy();
-                    cropper = new Cropper(image, options);
-                    $inputImage.val("");
-
+    
+}
+function initCropper(apiurl) {
+    $("#changeimage").click(function() {
+        $("#modalView").load(apiurl,
+            function () {
+                var image = document.getElementById('image');
+                var cropBoxData;
+                var canvasData;
+                var cropper;
+                var isload = false;
+                var options = {
+                    autoCropArea: 0.5,
+                    preview: ".img-preview",
+                    ready: function (e) {
+                        //console.log(e.type);
+                        // Strict mode: set crop box data first
+                        cropper.setCropBoxData(cropBoxData).setCanvasData(canvasData);
+                    },
+                    cropstart: function (e) {
+                        //console.log(e.type, e.detail.action);
+                    },
+                    cropmove: function (e) {
+                        //console.log(e.type, e.detail.action);
+                    },
+                    cropend: function (e) {
+                        //console.log(e.type, e.detail.action);
+                    },
+                    crop: function (e) {
+                        //var data = e.detail;
+                        //console.log(e.type);
+                    },
+                    zoom: function (e) {
+                        //console.log(e.type, e.detail.ratio);
+                    }
                 };
-            } else {
-                swal("操作提醒", "请选择图片类型文件", "warning");
-            }
-        });
-    } else {
-        $inputImage.addClass("hide");
-    }
+                $('#modalView .modal').on('shown.bs.modal', function () {
+                    cropper = new Cropper(image, options);
+                    
+                }).on('hidden.bs.modal', function () {
+                    cropBoxData = cropper.getCropBoxData();
+                    canvasData = cropper.getCanvasData();
+                    cropper.destroy();
+                    isload = false;
+                });
+                $("#zoomIn").click(function () {
+                    if (isload) {
+                        cropper.zoom(0.1);
+                    }
+                });
+                $("#zoomOut").click(function () {
+                    if (isload) {
+                        cropper.zoom(-0.1);
+                    }
+
+                });
+                $("#rotateLeft").click(function () {
+                    if (isload) {
+                        cropper.rotate(-45);
+                    }
+                });
+                $("#rotateRight").click(function () {
+                    if (isload) {
+                        cropper.rotate(45);
+                    }
+                });
+                $("#cropReset").click(function () {
+                    if (isload) {
+                        cropper.reset();
+                    }
+                });
+                $("#savePic").click(function () {
+                    var result = cropper.getCroppedCanvas({ width: 320, height: 180 });
+                    if (result) {
+                        var href = result.toDataURL();
+                        $.ajax({
+                            type: "post",
+                            url: apiurl,
+                            data: { upfile: href },
+                            success: function (res) {
+                                if (res.State == 1) {
+                                    $('#modalView .modal').modal('hide');
+                                    image.src = "";
+                                    swal({
+                                        title: "操作成功",
+                                        text: "修改相片成功",
+                                        type: "success",
+                                        showCancelButton: false,
+                                        confirmButtonText: "确定",
+                                        closeOnConfirm: false
+                                    },
+                                        function () {
+                                            window.location.reload();
+                                        });
+
+                                } else {
+                                    swal("操作提醒", res.Msg, "warning");
+                                }
+                            },
+                            error: function () {
+                                swal("操作失败", res.Msg, "error");
+                            }
+                        });
+                    }
+                });
+                var $inputImage = $("#inputImage");
+                if (window.FileReader) {
+                    $inputImage.change(function () {
+                        var fileReader = new FileReader(),
+                            files = this.files;
+                        if (!files.length) {
+                            return;
+                        }
+                        var file = files[0];
+                        if (/^image\/\w+$/.test(file.type)) {
+                            fileReader.readAsDataURL(file);
+                            fileReader.onload = function () {
+                                image.src = this.result;
+                                cropper.destroy();
+                                cropper = new Cropper(image, options);
+                                $inputImage.val("");
+                                isload = true;
+                            };
+                        } else {
+                            swal("操作提醒", "请选择图片类型文件", "warning");
+                        }
+                    });
+                } else {
+                    $inputImage.addClass("hide");
+                }
+
+                $('#modalView .modal').modal('show');
+            });
+    });
+    
 }
 
 

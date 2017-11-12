@@ -57,7 +57,8 @@
         @Html.Partial("_RightSidebar")
 
     </div>
-    <!-- End wrapper-->
+<!-- End wrapper-->
+    <div id="modalView"></div>
     <!-- Section for main scripts render -->
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
@@ -77,6 +78,7 @@
             if ($(".field-validation-error").text()) {
                 $(".bg-danger").addClass("p-xs").addClass("b-r-sm");
             }
+            $('[data-toggle="tooltip"]').tooltip();
             @if (TempData["Msg"]!= null){
                 <text>
                     toastr.options.positionClass = "toast-bottom-right";
@@ -89,9 +91,7 @@
                     toastr.warning('@TempData["Warning"]');
                 </text>
             }
-                    $('[data-toggle="tooltip"]').tooltip();
-                    
-          initChangePwd($('@Html.AntiForgeryToken()').val());
+          initChangePwd("@Url.Action("ChangePassword", "Manager",new{area="Admin"})",$('@Html.AntiForgeryToken()').val());
           initCropper("@Url.Action("UploadImage","Manager",new{area="Admin"})");
         });
     </script>

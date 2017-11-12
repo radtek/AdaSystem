@@ -117,7 +117,6 @@
     <None Include="packages.config" />
     <Content Include="Views\MediaType\Index.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\Bread.cshtml" />
     <Content Include="Views\MediaType\Add.cshtml" />
     <Content Include="Views\MediaType\Update.cshtml" />
     <Content Include="Views\WeiXin\Index.cshtml" />
