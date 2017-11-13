@@ -88,6 +88,11 @@
     <Compile Include="Domain\Admin\FieldType.cs" />
     <Compile Include="Domain\Admin\Manager.cs" />
     <Compile Include="Domain\Admin\ManagerAction.cs" />
+    <Compile Include="Domain\Business\BusinessCart.cs" />
+    <Compile Include="Domain\Business\BusinessOrder.cs" />
+    <Compile Include="Domain\Business\BusinessOrderDetail.cs" />
+    <Compile Include="Domain\Business\BusinessReturnOrderDetail.cs" />
+    <Compile Include="Domain\Business\BusinessReturnOrder.cs" />
     <Compile Include="Domain\Customer\Commpany.cs" />
     <Compile Include="Domain\Customer\LinkMan.cs" />
     <Compile Include="Domain\Customer\PayAccount.cs" />

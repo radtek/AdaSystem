@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Resource;
 
 namespace Ada.Core.Domain.Customer
@@ -13,6 +14,8 @@ namespace Ada.Core.Domain.Customer
         public LinkMan()
         {
             PayAccounts=new HashSet<PayAccount>();
+            Medias=new HashSet<Media>();
+            BusinessOrders=new HashSet<BusinessOrder>();
         }
         /// <summary>
         /// 联系人
@@ -93,5 +96,6 @@ namespace Ada.Core.Domain.Customer
 
         public virtual ICollection<PayAccount> PayAccounts { get; set; }
         public virtual ICollection<Media> Medias { get; set; }
+        public virtual ICollection<BusinessOrder> BusinessOrders { get; set; }
     }
 }
