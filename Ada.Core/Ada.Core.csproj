@@ -88,7 +88,6 @@
     <Compile Include="Domain\Admin\FieldType.cs" />
     <Compile Include="Domain\Admin\Manager.cs" />
     <Compile Include="Domain\Admin\ManagerAction.cs" />
-    <Compile Include="Domain\Business\BusinessCart.cs" />
     <Compile Include="Domain\Business\BusinessOrder.cs" />
     <Compile Include="Domain\Business\BusinessOrderDetail.cs" />
     <Compile Include="Domain\Business\BusinessReturnOrderDetail.cs" />
@@ -102,6 +101,10 @@
     <Compile Include="Domain\Admin\Role.cs" />
     <Compile Include="Domain\Consts.cs" />
     <Compile Include="Domain\Log\SystemLog.cs" />
+    <Compile Include="Domain\Purchase\PurchaseOrder.cs" />
+    <Compile Include="Domain\Purchase\PurchaseOrderDetail.cs" />
+    <Compile Include="Domain\Purchase\PurchaseReturenOrderDetail.cs" />
+    <Compile Include="Domain\Purchase\PurchaseReturnOrder.cs" />
     <Compile Include="Domain\Resource\Media.cs" />
     <Compile Include="Domain\Resource\MediaPrice.cs" />
     <Compile Include="Domain\Resource\AdPosition.cs" />
@@ -132,6 +135,7 @@
     <Compile Include="ViewModel\Admin\RoleView.cs" />
     <Compile Include="ViewModel\Admin\SystemLogView.cs" />
     <Compile Include="ViewModel\BaseView.cs" />
+    <Compile Include="ViewModel\Business\BusinessOrderView.cs" />
     <Compile Include="ViewModel\Customer\LinkManView.cs" />
     <Compile Include="ViewModel\Customer\CommpanyView.cs" />
     <Compile Include="ViewModel\HttpResultView.cs" />

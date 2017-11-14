@@ -1,36 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Ada.Core.Domain.Customer;
 
-namespace Ada.Core.Domain.Business
+namespace Ada.Core.Domain.Purchase
 {
-    /// <summary>
-    /// 销售订单
-    /// </summary>
-    public class BusinessOrder : BaseEntity
+  public  class PurchaseOrder:BaseEntity
     {
-        public BusinessOrder()
+        /// <summary>
+        /// 采购订单
+        /// </summary>
+        public PurchaseOrder()
         {
-            BusinessOrderDetails = new HashSet<BusinessOrderDetail>();
+            PurchaseOrderDetails=new HashSet<PurchaseOrderDetail>();
         }
         /// <summary>
-        /// 销售类型
+        /// 销售订单
         /// </summary>
-        [Display(Name = "销售类型")]
-        public string BusinessType { get; set; }
+        [Display(Name = "销售订单")]
+        public string BusinessOrderId { get; set; }
         /// <summary>
-        /// 订单编号
+        /// 采购类型
         /// </summary>
-        [Display(Name = "订单编号")]
+        [Display(Name = "采购类型")]
+        public string PurchaseType { get; set; }
+        /// <summary>
+        /// 采购编号
+        /// </summary>
+        [Display(Name = "采购编号")]
         public string OrderNum { get; set; }
         /// <summary>
-        /// 销售金额
+        /// 采购金额
         /// </summary>
-        [Display(Name = "销售金额")]
+        [Display(Name = "采购金额")]
         public decimal? TotalMoney { get; set; }
         /// <summary>
         /// 未核销金额
@@ -48,25 +50,20 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "核销状态")]
         public short? VerificationStatus { get; set; }
         /// <summary>
-        /// 经办业务
+        /// 经办媒介
         /// </summary>
-        [Display(Name = "经办业务")]
+        [Display(Name = "经办媒介")]
         public string Transactor { get; set; }
         /// <summary>
-        /// 经办业务
+        /// 经办媒介
         /// </summary>
-        [Display(Name = "经办业务")]
+        [Display(Name = "经办媒介")]
         public string TransactorId { get; set; }
         /// <summary>
         /// 订单状态
         /// </summary>
         [Display(Name = "订单状态")]
         public short? Status { get; set; }
-        /// <summary>
-        /// 税率%
-        /// </summary>
-        [Display(Name = "税率%")]
-        public short? Tax { get; set; }
         /// <summary>
         /// 折扣%
         /// </summary>
@@ -108,9 +105,9 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "作废时间")]
         public DateTime? CancelDate { get; set; }
         /// <summary>
-        /// 联系客户
+        /// 供应商
         /// </summary>
-        [Display(Name = "联系客户")]
+        [Display(Name = "供应商")]
         public string LinkManName { get; set; }
         /// <summary>
         /// 结算方式
@@ -123,11 +120,11 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "单据时间")]
         public DateTime? OrderDate { get; set; }
         /// <summary>
-        /// 联系客户
+        /// 供应商
         /// </summary>
-        [Display(Name = "联系客户")]
+        [Display(Name = "供应商")]
         public string LinkManId { get; set; }
         public virtual LinkMan LinkMan { get; set; }
-        public virtual ICollection<BusinessOrderDetail> BusinessOrderDetails { get; set; }
+        public virtual ICollection<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
     }
 }

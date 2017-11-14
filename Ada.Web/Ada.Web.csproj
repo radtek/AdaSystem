@@ -212,6 +212,9 @@
     <Content Include="Content\plugins\bootstrap-rtl\bootstrap-rtl.min.css" />
     <Content Include="Content\plugins\bootstrap-table\bootstrap-table.css" />
     <Content Include="Content\plugins\bootstrap-table\bootstrap-table.min.css" />
+    <Content Include="Content\plugins\bootstrap-table\extensions\editable\css\bootstrap-editable.css" />
+    <Content Include="Content\plugins\bootstrap-table\extensions\editable\img\clear.png" />
+    <Content Include="Content\plugins\bootstrap-table\extensions\editable\img\loading.gif" />
     <Content Include="Content\plugins\bootstrap-tagsinput\bootstrap-tagsinput.css" />
     <Content Include="Content\plugins\bootstrapSocial\bootstrap-social.css" />
     <Content Include="Content\plugins\bootstrapTour\bootstrap-tour.min.css" />
@@ -1175,6 +1178,8 @@
     <Content Include="Scripts\plugins\bootstrap-table\extensions\cookie\bootstrap-table-cookie.min.js" />
     <Content Include="Scripts\plugins\bootstrap-table\extensions\copy-rows\bootstrap-table-copy-rows.js" />
     <Content Include="Scripts\plugins\bootstrap-table\extensions\copy-rows\bootstrap-table-copy-rows.min.js" />
+    <Content Include="Scripts\plugins\bootstrap-table\extensions\editable\bootstrap-editable.js" />
+    <Content Include="Scripts\plugins\bootstrap-table\extensions\editable\bootstrap-editable.min.js" />
     <Content Include="Scripts\plugins\bootstrap-table\extensions\editable\bootstrap-table-editable.js" />
     <Content Include="Scripts\plugins\bootstrap-table\extensions\editable\bootstrap-table-editable.min.js" />
     <Content Include="Scripts\plugins\bootstrap-table\extensions\export\bootstrap-table-export.js" />

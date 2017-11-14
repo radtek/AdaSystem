@@ -5,25 +5,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ada.Core.Domain.Business
+namespace Ada.Core.Domain.Purchase
 {
     /// <summary>
-    /// 销售退款明细
+    /// 采购退款明细
     /// </summary>
-    public class BusinessReturnOrderDetail : BaseEntity
+    public class PurchaseReturenOrderDetail : BaseEntity
     {
         /// <summary>
-        /// 销售明细单
+        /// 采购明细单
         /// </summary>
-        [Display(Name = "销售明细单")]
-        public string BusinessOrderDetailId { get; set; }
-
+        [Display(Name = "采购明细单")]
+        public string PurchaseOrderDetailId { get; set; }
         /// <summary>
         /// 退款金额
         /// </summary>
         [Display(Name = "退款金额")]
         public decimal? Money { get; set; }
-
         /// <summary>
         /// 退款原因
         /// </summary>
@@ -40,10 +38,10 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "退款日期")]
         public DateTime? ReturnDate { get; set; }
         /// <summary>
-        /// 销售退款订单
+        /// 采购退款单
         /// </summary>
-        [Display(Name = "销售退款订单")]
-        public string BusinessReturnOrderId { get; set; }
-        public virtual BusinessReturnOrder BusinessReturnOrder { get; set; }
+        [Display(Name = "采购退款单")]
+        public string PurchaseReturnOrderId { get; set; }
+        public virtual PurchaseReturnOrder PurchaseReturnOrder { get; set; }
     }
 }

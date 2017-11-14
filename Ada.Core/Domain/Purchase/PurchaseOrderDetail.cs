@@ -1,33 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Ada.Core.Domain.Resource;
 
-namespace Ada.Core.Domain.Business
+namespace Ada.Core.Domain.Purchase
 {
     /// <summary>
-    /// 销售明细
+    /// 采购明细
     /// </summary>
-    public class BusinessOrderDetail : BaseEntity
+    public class PurchaseOrderDetail : BaseEntity
     {
         /// <summary>
-        /// 税额
+        /// 销售明细单
         /// </summary>
-        [Display(Name = "税额")]
-        public decimal? TaxMoney { get; set; }
+        [Display(Name = "销售明细单")]
+        public string BusinessOrderDetailId { get; set; }
         /// <summary>
         /// 折扣金额
         /// </summary>
         [Display(Name = "折扣金额")]
         public decimal? DiscountMoney { get; set; }
-        /// <summary>
-        /// 税率%
-        /// </summary>
-        [Display(Name = "税率%")]
-        public short? Tax { get; set; }
         /// <summary>
         /// 折扣%
         /// </summary>
@@ -39,9 +30,9 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "广告位")]
         public string AdPositionName { get; set; }
         /// <summary>
-        /// 应收金额
+        /// 实付金额
         /// </summary>
-        [Display(Name = "应收金额")]
+        [Display(Name = "实付金额")]
         public decimal? Money { get; set; }
         /// <summary>
         /// 成本金额
@@ -49,21 +40,26 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "成本金额")]
         public decimal? CostMoney { get; set; }
         /// <summary>
-        /// 销售金额
+        /// 采购金额
         /// </summary>
-        [Display(Name = "销售金额")]
-        public decimal? SellMoney { get; set; }
+        [Display(Name = "采购金额")]
+        public decimal? PurchaseMoney { get; set; }
 
         /// <summary>
-        /// 预出刊日期
+        /// 出刊日期
         /// </summary>
-        [Display(Name = "预出刊日期")]
-        public DateTime? PrePublishDate { get; set; }
+        [Display(Name = "出刊日期")]
+        public DateTime? PublishDate { get; set; }
         /// <summary>
         /// 稿件标题
         /// </summary>
         [Display(Name = "稿件标题")]
         public string MediaTitle { get; set; }
+        /// <summary>
+        /// 出刊链接
+        /// </summary>
+        [Display(Name = "出刊链接")]
+        public string PublishLink { get; set; }
         /// <summary>
         /// 媒体类型
         /// </summary>
@@ -81,10 +77,10 @@ namespace Ada.Core.Domain.Business
         public string MediaPriceId { get; set; }
         public virtual MediaPrice MediaPrice { get; set; }
         /// <summary>
-        /// 销售订单
+        /// 采购订单
         /// </summary>
-        [Display(Name = "销售订单")]
-        public string BusinessOrderId { get; set; }
-        public virtual BusinessOrder BusinessOrder { get; set; }
+        [Display(Name = "采购订单")]
+        public string PurchaseOrderId { get; set; }
+        public virtual PurchaseOrder PurchaseOrder { get; set; }
     }
 }

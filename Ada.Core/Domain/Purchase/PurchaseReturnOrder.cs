@@ -5,16 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ada.Core.Domain.Business
+namespace Ada.Core.Domain.Purchase
 {
     /// <summary>
-    /// 销售退款单
+    /// 采购退款单
     /// </summary>
-    public class BusinessReturnOrder : BaseEntity
+    public class PurchaseReturnOrder : BaseEntity
     {
-        public BusinessReturnOrder()
+        public PurchaseReturnOrder()
         {
-            BusinessReturnOrderDetails = new HashSet<BusinessReturnOrderDetail>();
+            PurchaseReturenOrderDetails = new HashSet<PurchaseReturenOrderDetail>();
         }
         /// <summary>
         /// 订单状态
@@ -22,10 +22,10 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "订单状态")]
         public short? Status { get; set; }
         /// <summary>
-        /// 销售订单
+        /// 采购订单
         /// </summary>
-        [Display(Name = "销售订单")]
-        public string BusinessOrderId { get; set; }
+        [Display(Name = "采购订单")]
+        public string PurchaseOrderId { get; set; }
         /// <summary>
         /// 退款编号
         /// </summary>
@@ -36,16 +36,15 @@ namespace Ada.Core.Domain.Business
         /// </summary>
         [Display(Name = "退款金额")]
         public decimal? TotalMoney { get; set; }
-
         /// <summary>
-        /// 经办业务
+        /// 经办媒介
         /// </summary>
-        [Display(Name = "经办业务")]
+        [Display(Name = "经办媒介")]
         public string Transactor { get; set; }
         /// <summary>
-        /// 经办业务
+        /// 经办媒介
         /// </summary>
-        [Display(Name = "经办业务")]
+        [Display(Name = "经办媒介")]
         public string TransactorId { get; set; }
         /// <summary>
         /// 审核人
@@ -87,7 +86,6 @@ namespace Ada.Core.Domain.Business
         /// </summary>
         [Display(Name = "单据时间")]
         public DateTime? ReturnDate { get; set; }
-
-        public virtual ICollection<BusinessReturnOrderDetail> BusinessReturnOrderDetails { get; set; }
+        public virtual ICollection<PurchaseReturenOrderDetail> PurchaseReturenOrderDetails { get; set; }
     }
 }

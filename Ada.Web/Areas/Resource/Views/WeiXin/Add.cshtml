@@ -68,7 +68,7 @@
                                     <div class="form-group">
                                         @Html.LabelFor(d => d.ChannelType, Html.DisplayNameFor(d => d.ChannelType).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
-                                            @Html.DropDownListFor(d => d.ChannelType, channelTypes,"请选择",new { @class = "form-control" })
+                                            @Html.DropDownListFor(d => d.ChannelType, channelTypes, "请选择", new { @class = "form-control" })
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -76,7 +76,7 @@
                                         <div class="col-sm-10">
                                             @foreach (var item in Model.MediaTags)
                                             {
-                                                var isChecked = Model.MediaTagIds==null?"": Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
+                                                var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
                                                 <div class="checkbox checkbox-success checkbox-inline">
                                                     <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
                                                     <label for="@item.Id">@item.TagName</label>
@@ -210,31 +210,31 @@
                                         <tbody>
                                             @for (int i = 0; i < Model.MediaPrices.Count; i++)
                                             {
-                                                <tr>
-                                                    <td>
-                                                        @Html.HiddenFor(d => d.MediaPrices[i].AdPositionId)
-                                                        @Html.TextBoxFor(d => d.MediaPrices[i].AdPositionName, new { @class = "form-control", @readonly = "readonly" })
-                                                    </td>
-                                                    <td>
-                                                        @Html.TextBoxFor(d => d.MediaPrices[i].PurchasePrice, new { @class = "form-control", placeholder = "¥0.00" })
-                                                    </td>
-                                                    <td>
-                                                        <div class="input-group date">
-                                                            <span class="input-group-addon">
-                                                                <i class="fa fa-calendar"></i>
-                                                            </span>
-                                                            @Html.TextBoxFor(d => d.MediaPrices[i].PriceDate, new { @class = "form-control" })
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="input-group date">
-                                                            <span class="input-group-addon">
-                                                                <i class="fa fa-calendar"></i>
-                                                            </span>
-                                                            @Html.TextBoxFor(d => d.MediaPrices[i].InvalidDate, new { @class = "form-control" })
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                            <tr>
+                                                <td>
+                                                    @Html.HiddenFor(d => d.MediaPrices[i].AdPositionId)
+                                                    @Html.TextBoxFor(d => d.MediaPrices[i].AdPositionName, new { @class = "form-control", @readonly = "readonly" })
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(d => d.MediaPrices[i].PurchasePrice, new { @class = "form-control", placeholder = "¥0.00" })
+                                                </td>
+                                                <td>
+                                                    <div class="input-group date">
+                                                        <span class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </span>
+                                                        @Html.TextBoxFor(d => d.MediaPrices[i].PriceDate, new { @class = "form-control" })
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group date">
+                                                        <span class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </span>
+                                                        @Html.TextBoxFor(d => d.MediaPrices[i].InvalidDate, new { @class = "form-control" })
+                                                    </div>
+                                                </td>
+                                            </tr>
                                             }
 
 
@@ -245,8 +245,8 @@
 
                             </div>
                         </div>
-                        @Html.HiddenFor(d=>d.Transactor)
-                        @Html.HiddenFor(d=>d.TransactorId)
+                        @Html.HiddenFor(d => d.Transactor)
+                        @Html.HiddenFor(d => d.TransactorId)
                     </div>
                 </div>
             </div>
@@ -266,13 +266,13 @@
     @Scripts.Render("~/plugins/select2")
     @Scripts.Render("~/plugins/dataPicker")
     <script>
-    $(function() {
-        $("#LinkManId").select2({
-            placeholder: "请选择",
-            language: "zh-CN",
-            //allowClear: true,
-            ajax: {
-                url: "@Url.Action("GetList", "LinkMan", new {area = "Customer"})",
+        $(function () {
+            $("#LinkManId").select2({
+                placeholder: "请选择",
+                language: "zh-CN",
+                //allowClear: true,
+                ajax: {
+                    url: "@Url.Action("GetList", "LinkMan", new {area = "Customer"})",
                 dataType: 'json',
                 delay: 250,
                 data: function(params) {
@@ -316,10 +316,13 @@
             }
             return "<p>"+ repo.commpany + " 【 " + repo.text+" 】 <p>";
         }
+
         function formatRepoSelection(repo) {
             $("#LinkManName").val(repo.text);
             return repo.text;
         }
+
+    
 
     </script>
 }

@@ -480,6 +480,12 @@ namespace Ada.Web
                 "~/Scripts/plugins/bootstrap-table/bootstrap-table.min.js",
                 "~/Scripts/plugins/bootstrap-table/extensions/mobile/bootstrap-table-mobile.min.js",
                 "~/Scripts/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"));
+            //Bootstrap Table Edit
+            bundles.Add(new StyleBundle("~/plugins/bootstrapEditTableStyle").Include(
+                "~/Content/plugins/bootstrap-table/extensions/editable/css/bootstrap-editable.css",new CssRewriteUrlTransform()));
+            bundles.Add(new ScriptBundle("~/plugins/bootstrapEditTableScript").Include(
+                "~/Scripts/plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js",
+                "~/Scripts/plugins/bootstrap-table/extensions/editable/bootstrap-editable.min.js"));
         }
     }
 }

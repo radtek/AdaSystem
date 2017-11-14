@@ -61,11 +61,19 @@
     <Compile Include="Mapping\Admin\ManagerActionMap.cs" />
     <Compile Include="Mapping\Admin\ActionMap.cs" />
     <Compile Include="Mapping\Admin\ManagerMap.cs" />
+    <Compile Include="Mapping\Business\BusinessReturnOrderDetailMap.cs" />
+    <Compile Include="Mapping\Business\BusinessOrderDetailMap.cs" />
+    <Compile Include="Mapping\Business\BusinessReturnOrderMap.cs" />
+    <Compile Include="Mapping\Business\BusinessOrderMap.cs" />
     <Compile Include="Mapping\Customer\PayAccountMap.cs" />
     <Compile Include="Mapping\Customer\LinkManMap.cs" />
     <Compile Include="Mapping\Customer\CommpanyMap.cs" />
     <Compile Include="Mapping\Log\ManagerLoginLogMap.cs" />
     <Compile Include="Mapping\Log\SystemLogMap.cs" />
+    <Compile Include="Mapping\Purchase\PurchaseOrderDetailMap.cs" />
+    <Compile Include="Mapping\Purchase\PurchaseOrderMap.cs" />
+    <Compile Include="Mapping\Purchase\PurchaseReturenOrderDetailMap.cs" />
+    <Compile Include="Mapping\Purchase\PurchaseReturnOrderMap.cs" />
     <Compile Include="Mapping\Resource\MediaPriceMap.cs" />
     <Compile Include="Mapping\Resource\MediaMap.cs" />
     <Compile Include="Mapping\Resource\MediaTagMap.cs" />
@@ -102,6 +110,14 @@
     <Compile Include="Migrations\201711111329029_MediaTrantor.cs" />
     <Compile Include="Migrations\201711111329029_MediaTrantor.Designer.cs">
       <DependentUpon>201711111329029_MediaTrantor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711140610140_Orders.cs" />
+    <Compile Include="Migrations\201711140610140_Orders.Designer.cs">
+      <DependentUpon>201711140610140_Orders.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711140656359_OrderAdd.cs" />
+    <Compile Include="Migrations\201711140656359_OrderAdd.Designer.cs">
+      <DependentUpon>201711140656359_OrderAdd.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -144,6 +160,13 @@
     <EmbeddedResource Include="Migrations\201711111329029_MediaTrantor.resx">
       <DependentUpon>201711111329029_MediaTrantor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711140610140_Orders.resx">
+      <DependentUpon>201711140610140_Orders.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711140656359_OrderAdd.resx">
+      <DependentUpon>201711140656359_OrderAdd.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

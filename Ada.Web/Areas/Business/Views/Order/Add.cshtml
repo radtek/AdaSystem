@@ -1,0 +1,192 @@
+﻿
+@using System.Web.Optimization
+@model Ada.Core.ViewModel.Business.BusinessOrderView
+@{
+    ViewBag.Title = "新增销售订单";
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "销售订单", Value = Url.Action("Index") } };
+    //var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    //var citys = fieldService.GetFieldsByKey("Area").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+
+}
+@Html.Partial("Bread", urls)
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <p class="bg-danger">@Html.ValidationMessage("message") </p>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <a class="btn btn-outline btn-default btn-sm" href="@Url.Action("Index")"><i class="fa fa-reply"></i> 返回</a>
+                        <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
+                        <button class="btn btn-success btn-sm" type="button"><i class="fa fa-floppy-o"></i> 转成采购订单</button>
+
+                    </div>
+                    <div class="ibox-content">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.OrderDate, Html.DisplayNameFor(d => d.OrderDate).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(d => d.OrderDate, new { @class = "form-control", required = "" })
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.OrderNum, Html.DisplayNameFor(d => d.OrderNum).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(d => d.OrderNum, new { @class = "form-control", placeholder = "自动编码", @readonly = "readonly" })
+                                    </div>
+
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.BusinessType, Html.DisplayNameFor(d => d.BusinessType).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(d => d.BusinessType, new { @class = "form-control" })
+                                    </div>
+
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.Tax, Html.DisplayNameFor(d => d.Tax).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(d => d.Tax, new { @class = "form-control" })
+                                    </div>
+
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.LinkManId, Html.DisplayNameFor(d => d.LinkManId).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        <select class="form-control" required="" name="LinkManId" id="LinkManId">
+                                            <option value="@Model.LinkManId">@Model.LinkManName</option>
+                                        </select>
+                                        @Html.HiddenFor(d => d.LinkManName)
+                                    </div>
+
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.TransactorId, Html.DisplayNameFor(d => d.TransactorId).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        <select class="form-control" required="" name="TransactorId" id="TransactorId">
+                                            <option value="@Model.TransactorId">@Model.Transactor</option>
+                                        </select>
+                                        @Html.HiddenFor(d => d.Transactor)
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <table id="table"
+                                           data-toggle="table">
+                                        <thead>
+                                            <tr>
+                                                <th data-field="id" data-align="center">操作</th>
+                                                <th data-field="name" data-editable="true" data-align="center">Item Name</th>
+                                                <th data-field="price" data-editable="true" data-align="center">Item Price</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        @*<div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-lg-12">
+                                    <table id="table"></table>
+                                </div>
+                            </div>*@
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Styles {
+
+    @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/bootstrapEditTableStyle")
+    @Styles.Render("~/plugins/select2Styles")
+    @Styles.Render("~/plugins/dataPickerStyles")
+}
+@section Scripts {
+
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/bootstrapEditTableScript")
+    @Scripts.Render("~/plugins/select2")
+    @Scripts.Render("~/plugins/dataPicker")
+
+    <script>
+        $(function () {
+            $("#LinkManId").select2({
+                placeholder: "请选择",
+                language: "zh-CN",
+                ajax: {
+                    url: "@Url.Action("GetList", "LinkMan", new {area = "Customer"})",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term, // search term
+                        IsBusiness: false
+                    };
+                },
+                processResults: function(data, params) {
+                    var result = $.map(data.rows,
+                        function(v, k) {
+                            return { id: v.Id, text: v.Name, commpany: v.CommpanyName };
+                        });
+                    return {
+                        results: result
+                    };
+                },
+                cache: true
+            },
+            escapeMarkup: function(markup) { return markup; }, // 字符转义处理
+            minimumInputLength: 1,
+            templateResult:
+                formatRepo, //返回结果回调function formatRepo(repo){return repo.text},这样就可以将返回结果的的text显示到下拉框里，当然你可以return repo.text+"1";等
+            templateSelection: formatRepoSelection //选中项回调function formatRepoSelection(repo) { return repo.text }
+
+        });
+        $('.input-group.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            language: "zh-CN",
+            orientation: "bottom right",
+            todayHighlight: true
+            });
+            var $table = $('#table');
+            $table.bootstrapTable('insertRow', {
+                index: 1,
+                row: {
+                    id: "",
+                    name: "",
+                    price: ""
+                }
+            });
+    });
+
+    function formatRepo(repo) {
+            if (repo.loading) {
+                return repo.text;
+            }
+            return "<p>"+ repo.commpany + " 【 " + repo.text+" 】 <p>";
+        }
+        function formatRepoSelection(repo) {
+            $("#LinkManName").val(repo.text);
+            return repo.text;
+        }
+
+
+    </script>
+}

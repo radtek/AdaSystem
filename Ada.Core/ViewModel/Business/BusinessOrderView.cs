@@ -4,19 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Ada.Core.Domain.Customer;
 
-namespace Ada.Core.Domain.Business
+namespace Ada.Core.ViewModel.Business
 {
-    /// <summary>
-    /// 销售订单
-    /// </summary>
-    public class BusinessOrder : BaseEntity
+    public class BusinessOrderView : BaseView
     {
-        public BusinessOrder()
-        {
-            BusinessOrderDetails = new HashSet<BusinessOrderDetail>();
-        }
         /// <summary>
         /// 销售类型
         /// </summary>
@@ -118,16 +110,25 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "结算方式")]
         public string SettlementType { get; set; }
         /// <summary>
-        /// 单据时间
-        /// </summary>
-        [Display(Name = "单据时间")]
-        public DateTime? OrderDate { get; set; }
-        /// <summary>
         /// 联系客户
         /// </summary>
         [Display(Name = "联系客户")]
         public string LinkManId { get; set; }
-        public virtual LinkMan LinkMan { get; set; }
-        public virtual ICollection<BusinessOrderDetail> BusinessOrderDetails { get; set; }
+        /// <summary>
+        /// 创建人员
+        /// </summary>
+        [Display(Name = "创建人员")]
+        public string AdderBy { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        [Display(Name = "创建时间")]
+        public string AdderDate { get; set; }
+        /// <summary>
+        /// 单据时间
+        /// </summary>
+        [Display(Name = "单据时间")]
+        public DateTime? OrderDate { get; set; }
+
     }
 }
