@@ -153,7 +153,9 @@ namespace Ada.Web
             bundles.Add(new ScriptBundle("~/plugins/fullCalendar").Include(
                       "~/Scripts/plugins/fullcalendar/moment.min.js",
                       "~/Scripts/plugins/fullcalendar/fullcalendar.min.js"));
-
+            // monent
+            bundles.Add(new ScriptBundle("~/plugins/moment").Include(
+                "~/Scripts/plugins/fullcalendar/moment-with-locales.min.js"));
             // vectorMap 
             bundles.Add(new ScriptBundle("~/plugins/vectorMap").Include(
                       "~/Scripts/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js",
@@ -486,6 +488,15 @@ namespace Ada.Web
             bundles.Add(new ScriptBundle("~/plugins/bootstrapEditTableScript").Include(
                 "~/Scripts/plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js",
                 "~/Scripts/plugins/bootstrap-table/extensions/editable/bootstrap-editable.min.js"));
+            //Bootstrap DateTime Picker
+            bundles.Add(new StyleBundle("~/plugins/dateTimePickerStyle").Include(
+                "~/Content/plugins/datetimepicker/bootstrap-datetimepicker.min.css"));
+            bundles.Add(new ScriptBundle("~/plugins/dateTimePickerScript").Include(
+                "~/Scripts/plugins/datetimepicker/bootstrap-datetimepicker.min.js",
+                "~/Scripts/plugins/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"));
+            // lodash
+            bundles.Add(new ScriptBundle("~/plugins/lodash").Include(
+                "~/Scripts/plugins/lodash/lodash.min.js"));
         }
     }
 }

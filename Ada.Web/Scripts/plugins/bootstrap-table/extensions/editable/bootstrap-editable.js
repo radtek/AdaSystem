@@ -3839,6 +3839,7 @@ $(function(){
        
        input2value: function() { 
            return this.$input.select2('val');
+           //return this.$input.val();//edit by adaxiong
        },
 
        str2value: function(str, separator) {

@@ -65,7 +65,9 @@
     <Compile Include="Customer\ILinkManService.cs" />
     <Compile Include="Customer\ICommpanyService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resource\IMediaPriceService.cs" />
     <Compile Include="Resource\IMediaTagService.cs" />
+    <Compile Include="Resource\MediaPriceService.cs" />
     <Compile Include="Resource\MediaTagService.cs" />
     <Compile Include="Resource\MediaTypeService.cs" />
     <Compile Include="Resource\IMediaTypeService.cs" />

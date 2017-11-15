@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain.Business;
+using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Business;
 using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Filter;
@@ -16,12 +17,14 @@ namespace Business.Controllers
     {
         private readonly IBusinessOrderService _businessOrderService;
         private readonly IRepository<BusinessOrder> _repository;
+        private readonly IRepository<MediaType> _mediaTypeRepository;
         public OrderController(IBusinessOrderService businessOrderService,
-            IRepository<BusinessOrder> repository
+            IRepository<BusinessOrder> repository, IRepository<MediaType> mediaTypeRepository
         )
         {
             _businessOrderService = businessOrderService;
             _repository = repository;
+            _mediaTypeRepository = mediaTypeRepository;
         }
         public ActionResult Index()
         {
@@ -41,7 +44,7 @@ namespace Business.Controllers
         }
         public ActionResult Add()
         {
-            BusinessOrderView viewModel=new BusinessOrderView();
+            BusinessOrderView viewModel = new BusinessOrderView();
             return View(viewModel);
         }
         [HttpPost]
@@ -64,6 +67,13 @@ namespace Business.Controllers
             //_mediaTypeService.Add(entity, viewModel.AdPositions);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
+        }
+
+        public ActionResult SelectMedia()
+        {
+            //媒体类型
+            var mediaTypes = _mediaTypeRepository.LoadEntities(d => d.IsDelete == false).ToList();
+            return PartialView("SelectMedia", mediaTypes);
         }
         public ActionResult Update(string id)
         {

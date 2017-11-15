@@ -235,6 +235,8 @@
     <Content Include="Content\plugins\datapicker\datepicker3.css" />
     <Content Include="Content\plugins\dataTables\datatables.min.css" />
     <Content Include="Content\plugins\daterangepicker\daterangepicker-bs3.css" />
+    <Content Include="Content\plugins\datetimepicker\bootstrap-datetimepicker.css" />
+    <Content Include="Content\plugins\datetimepicker\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\plugins\dropzone\basic.css" />
     <Content Include="Content\plugins\dropzone\dropzone.css" />
     <Content Include="Content\plugins\dualListbox\bootstrap-duallistbox.min.css" />
@@ -1536,6 +1538,9 @@
     <Content Include="Scripts\plugins\datapicker\locales\bootstrap-datepicker.zh-CN.min.js" />
     <Content Include="Scripts\plugins\dataTables\datatables.min.js" />
     <Content Include="Scripts\plugins\daterangepicker\daterangepicker.js" />
+    <Content Include="Scripts\plugins\datetimepicker\bootstrap-datetimepicker.js" />
+    <Content Include="Scripts\plugins\datetimepicker\bootstrap-datetimepicker.min.js" />
+    <Content Include="Scripts\plugins\datetimepicker\locales\bootstrap-datetimepicker.zh-CN.js" />
     <Content Include="Scripts\plugins\diff_match_patch\javascript\diff_match_patch.js" />
     <Content Include="Scripts\plugins\diff_match_patch\README.txt" />
     <Content Include="Scripts\plugins\dotdotdot\jquery.dotdotdot.min.js" />
@@ -1556,6 +1561,7 @@
     <Content Include="Scripts\plugins\footable\footable.js" />
     <Content Include="Scripts\plugins\footable\footable.min.js" />
     <Content Include="Scripts\plugins\fullcalendar\fullcalendar.min.js" />
+    <Content Include="Scripts\plugins\fullcalendar\moment-with-locales.min.js" />
     <Content Include="Scripts\plugins\fullcalendar\moment.min.js" />
     <Content Include="Scripts\plugins\gritter\images\gritter-light.png" />
     <Content Include="Scripts\plugins\gritter\images\gritter-long.png" />
@@ -1639,6 +1645,7 @@
     <Content Include="Scripts\plugins\ladda\ladda.jquery.min.js" />
     <Content Include="Scripts\plugins\ladda\ladda.min.js" />
     <Content Include="Scripts\plugins\ladda\spin.min.js" />
+    <Content Include="Scripts\plugins\lodash\lodash.min.js" />
     <Content Include="Scripts\plugins\masonary\masonry.pkgd.min.js" />
     <Content Include="Scripts\plugins\metisMenu\metisMenu.min.js" />
     <Content Include="Scripts\plugins\morris\morris.js" />

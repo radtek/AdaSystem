@@ -114,6 +114,7 @@
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Order\Add.cshtml" />
+    <Content Include="Views\Order\SelectMedia.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -21,7 +21,7 @@
                     <div class="ibox-title">
                         <a class="btn btn-outline btn-default btn-sm" href="@Url.Action("Index")"><i class="fa fa-reply"></i> 返回</a>
                         <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
-                        <button class="btn btn-success btn-sm" type="button"><i class="fa fa-floppy-o"></i> 转成采购订单</button>
+                        @*<button class="btn btn-success btn-sm" type="button"><i class="fa fa-floppy-o"></i> 转成采购订单</button>*@
 
                     </div>
                     <div class="ibox-content">
@@ -30,7 +30,19 @@
                                 <div class="form-group col-md-4">
                                     @Html.LabelFor(d => d.OrderDate, Html.DisplayNameFor(d => d.OrderDate).ToString(), new { @class = "col-sm-4 control-label" })
                                     <div class="col-sm-8">
-                                        @Html.TextBoxFor(d => d.OrderDate, new { @class = "form-control", required = "" })
+                                        @*<div class="input-group date">
+                                                @Html.TextBoxFor(d => d.OrderDate, new { @class = "form-control", required = "" })
+                                                <span class="input-group-addon">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>*@
+                                        <div class="input-group date">
+                                            @*<input class="form-control" size="16" type="text" value="" readonly required="">*@
+                                            @Html.TextBoxFor(d => d.OrderDate, new { @class = "form-control", required = "", @readonly = "" })
+                                            @*<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>*@
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                        @*@Html.HiddenFor(d => d.OrderDate)*@
                                     </div>
                                 </div>
                                 <div class="form-group col-md-4">
@@ -76,18 +88,17 @@
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
+
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <table id="table"
-                                           data-toggle="table">
-                                        <thead>
-                                            <tr>
-                                                <th data-field="id" data-align="center">操作</th>
-                                                <th data-field="name" data-editable="true" data-align="center">Item Name</th>
-                                                <th data-field="price" data-editable="true" data-align="center">Item Price</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
+                                    <div class="form-group">
+                                        <div class="col-sm-10">
+                                            <button type="button" class="btn btn-warning btn-sm" onclick="showMedia('@Url.Action("SelectMedia")');">
+                                                <i class="fa fa-plus"></i> 添加明细
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <table id="table"></table>
                                 </div>
                             </div>
                         </div>
@@ -110,83 +121,246 @@
 </div>
 
 @section Styles {
-
+    @Styles.Render("~/plugins/dateTimePickerStyle")
     @Styles.Render("~/plugins/bootstrapTableStyle")
     @Styles.Render("~/plugins/bootstrapEditTableStyle")
     @Styles.Render("~/plugins/select2Styles")
-    @Styles.Render("~/plugins/dataPickerStyles")
+
 }
 @section Scripts {
-
+    @Scripts.Render("~/plugins/dateTimePickerScript")
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/bootstrapEditTableScript")
     @Scripts.Render("~/plugins/select2")
-    @Scripts.Render("~/plugins/dataPicker")
-
+    @Scripts.Render("~/plugins/moment")
+    @Scripts.Render("~/plugins/lodash")
     <script>
-        $(function () {
-            $("#LinkManId").select2({
-                placeholder: "请选择",
-                language: "zh-CN",
-                ajax: {
-                    url: "@Url.Action("GetList", "LinkMan", new {area = "Customer"})",
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    return {
-                        search: params.term, // search term
-                        IsBusiness: false
-                    };
-                },
-                processResults: function(data, params) {
-                    var result = $.map(data.rows,
-                        function(v, k) {
-                            return { id: v.Id, text: v.Name, commpany: v.CommpanyName };
-                        });
-                    return {
-                        results: result
-                    };
-                },
-                cache: true
-            },
-            escapeMarkup: function(markup) { return markup; }, // 字符转义处理
-            minimumInputLength: 1,
-            templateResult:
-                formatRepo, //返回结果回调function formatRepo(repo){return repo.text},这样就可以将返回结果的的text显示到下拉框里，当然你可以return repo.text+"1";等
-            templateSelection: formatRepoSelection //选中项回调function formatRepoSelection(repo) { return repo.text }
-
-        });
-        $('.input-group.date').datepicker({
-            todayBtn: "linked",
-            keyboardNavigation: false,
-            forceParse: false,
-            autoclose: true,
-            language: "zh-CN",
-            orientation: "bottom right",
-            todayHighlight: true
-            });
-            var $table = $('#table');
-            $table.bootstrapTable('insertRow', {
-                index: 1,
-                row: {
-                    id: "",
-                    name: "",
-                    price: ""
-                }
-            });
-    });
-
-    function formatRepo(repo) {
+        var $table,
+            selections = [];
+        var linkmanSelect = {};
+        linkmanSelect.url = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})";
+        linkmanSelect.paramsData = function(params) {
+            return {
+                search: params.term, // search term
+                IsBusiness: false
+            };
+        };
+        linkmanSelect.processResults = function(data, params) {
+            var result = $.map(data.rows,
+                function (v, k) {
+                    return { id: v.Id, text: v.Name, commpany: v.CommpanyName };
+                });
+            return {
+                results: result
+            };
+        };
+        linkmanSelect.formatRepo = function(repo) {
             if (repo.loading) {
                 return repo.text;
             }
-            return "<p>"+ repo.commpany + " 【 " + repo.text+" 】 <p>";
-        }
-        function formatRepoSelection(repo) {
+            return "<p>" + repo.commpany + " 【 " + repo.text + " 】 <p>";
+        };
+        linkmanSelect.formatRepoSelection = function(repo) {
             $("#LinkManName").val(repo.text);
             return repo.text;
+        };
+
+        $(function () {
+            $('.input-group.date').datetimepicker({
+                language: 'zh-CN',
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                minView: 2,
+                forceParse: 0,
+                format: "yyyy年mm月dd日"
+            });
+            initSelect2("LinkManId", linkmanSelect);
+
+
+            $('#table').bootstrapTable({
+                columns: [
+                    {
+                        field: 'id',
+                        title: 'id',
+                        align:"center",
+                        editable: {
+                            type:'combodate',
+                            mode: "inline",
+                            emptytext: '请输入',
+                            format: 'YYYY-MM-DD',
+                            viewformat: 'YYYY-MM-DD',
+                            template: 'YYYY 年 MM 月 DD 日',
+                            combodate: {
+                                minYear: @DateTime.Now.Year,
+                                maxYear: @DateTime.Now.AddYears(2).Year,
+                                minuteStep: 1
+                            }
+                        }
+                    },
+                    {
+                        field: 'name',
+                        title: 'name',
+                        align: "center",
+                        editable: { mode: "inline", emptytext: '请输入'}
+                        //editable:{
+                        //    select2: {
+                        //        ajax: {
+                        //            dataType: 'json',
+                        //            data: linkmanSelect.paramsData,
+                        //            url: linkmanSelect.url,
+                        //            processResults: linkmanSelect.processResults
+                        //        },
+                        //        language: "zh-CN",
+                        //        placeholder: "请输入关键字",
+                        //        escapeMarkup: function (markup) { return markup; }, // 字符转义处理
+                        //        minimumInputLength: 1,
+                        //        templateResult: linkmanSelect.formatRepoSelection,
+                        //        templateSelection: linkmanSelect.formatRepoSelection
+                        //    },
+                        //    emptytext: '请选择媒体',
+                        //    tpl: '<select style="width:150px;">',
+                        //    type: 'select2',
+                        //    //success: function(response, newValue) {
+                        //    //    ////console.log('success');
+                        //    //    ////console.log(response);
+                        //    //    ////var editable = $(this).data('editable');
+                        //    //    ////var option = editable.input.$input.find('option[value="VALUE"]'.replace('VALUE',newValue));
+                        //    //    ////var newText = option.text();
+                        //    //    ////$(this).attr('data-text', newText);
+                        //    //    ////$(this).attr('data-value', newValue);
+                        //    //    //alert(newValue);
+                        //    //},
+                        //    display: function(value, sourceData ) {
+                        //        $(this).text(value);
+                        //    }
+                        //}
+                    }
+                    ,
+                    {
+                        field: 'price',
+                        title: 'price',
+                        align: "center",
+                        editable: { mode: "inline", emptytext: '请输入' }
+                    }
+
+                ],
+                formatNoMatches: function () {  //没有匹配的结果
+                    return '请先添加媒体信息';
+                }
+            });
+            //$table.bootstrapTable('insertRow', {
+            //    index: 1,
+            //    row: {
+            //        id: "",
+            //        name: "",
+            //        price: ""
+            //    }
+            //});
+
+        });
+
+        function showMedia(url) {
+            $("#modalView").load(url,
+                function () {
+                    //初始化
+                    $('#modalView .modal').on('shown.bs.modal', function () {
+                        $table = $('#mediaTable');
+                        $table.bootstrapTable({
+                                                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                                                pagination: true,                   //是否显示分页（*）
+                                                sortable: true,                     //是否启用排序
+                                                sortOrder: "desc",                   //排序方式
+                                                sortName:"Id",
+                                                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                                                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                                                pageSize: 10,                       //每页的记录行数（*）
+                                                search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                                                strictSearch: true,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
+                                                //showColumns: true,                  //是否显示所有的列
+                                                showRefresh: true,                  //是否显示刷新按钮
+                                                clickToSelect: true,                //是否启用点击选中行
+                                                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                                                responseHandler: responseHandler,
+                                                columns: [
+                                                    {
+                                                        field: 'state',
+                                                        checkbox: true
+                                                    },
+                                                    {
+                                                        field: 'MediaName',
+                                                        title: '媒体名称',
+                                                        align:  "center"
+                                                    },
+                                                    {
+                                                        field: 'MediaID',
+                                                        title: '媒体ID',
+                                                        align: "center"
+                                                    },
+                                                    {
+                                                        field: 'MediaTagStr',
+                                                        title: '媒体分类',
+                                                        align: "center"
+                                                    },
+                                                    {
+                                                        field: 'AdPositionName',
+                                                        title: '媒体价格',
+                                                        align: "center",
+                                                        formatter: function(v,r,i) {
+                                                            return "<span class='label label-warning'>" + v + "：" + (r.PurchasePrice == 0 ? "不接单" : r.PurchasePrice) + "</span>";
+                                                        }
+
+                                                    }
+                                                ]
+                                            });
+                        $table.on('check.bs.table check-all.bs.table ' +
+                                'uncheck.bs.table uncheck-all.bs.table', function (e, rows) {
+                                    var ids = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
+                                            return row.Id;
+                                        }),
+                                        func = $.inArray(e.type, ['check', 'check-all']) > -1 ? 'union' : 'difference';
+                                    selections = _[func](selections, ids);
+                                });
+                    }).on('hidden.bs.modal', function () {
+                        selections = [];
+                        $table.bootstrapTable('destroy');
+                    });
+                    $('#modalView .modal').modal('show');
+
+                });
+        }
+        function responseHandler(res) {
+            $.each(res.rows, function (i, row) {
+                row.state = $.inArray(row.Id, selections) !== -1;
+            });
+            return res;
         }
 
+        function mediasByType(obj, key) {
+            $(obj).addClass("active").siblings().removeClass("active");
+            $table.bootstrapTable('refresh', { url: '@Url.Action("GetMediaPrices", "Media", new { area = "Resource" })?MediaTypeIndex='+key });
+        }
+        function initSelect2(id, opt) {
+            $("#" + id).select2({
+                placeholder: "请输入关键字",
+                language: "zh-CN",
+                ajax: {
+                    url: opt.url,
+                    dataType: 'json',
+                    delay: 250,
+                    data: opt.paramsData,
+                    processResults: opt.processResults,
+                    cache: true
+                },
+                escapeMarkup: function (markup) { return markup; }, // 字符转义处理
+                minimumInputLength: 1,
+                templateResult: opt.formatRepo, //返回结果回调function formatRepo(repo){return repo.text},这样就可以将返回结果的的text显示到下拉框里，当然你可以return repo.text+"1";等
+                templateSelection: opt.formatRepoSelection //选中项回调function formatRepoSelection(repo) { return repo.text }
+
+            });
+        }
 
     </script>
 }
