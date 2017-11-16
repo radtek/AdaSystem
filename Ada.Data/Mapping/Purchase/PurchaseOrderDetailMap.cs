@@ -18,6 +18,8 @@ namespace Ada.Data.Mapping.Purchase
             Property(s => s.DiscountRate);
             Property(s => s.DiscountMoney);
             Property(s => s.Money);
+            Property(s => s.TaxMoney);
+            Property(s => s.Tax);
             Property(s => s.CostMoney);
             Property(s => s.PurchaseMoney);
             Property(s => s.AdPositionName).HasMaxLength(32);
@@ -25,7 +27,6 @@ namespace Ada.Data.Mapping.Purchase
             Property(s => s.MediaTypeName).HasMaxLength(32);
             Property(s => s.PublishLink).HasMaxLength(512);
             Property(s => s.MediaName).HasMaxLength(128);
-            Property(s => s.MediaPriceId).HasMaxLength(32);
 
 
             Property(s => s.AddedDate);

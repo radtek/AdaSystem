@@ -119,6 +119,10 @@
     <Compile Include="Migrations\201711140656359_OrderAdd.Designer.cs">
       <DependentUpon>201711140656359_OrderAdd.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711161037499_OrderMoney.cs" />
+    <Compile Include="Migrations\201711161037499_OrderMoney.Designer.cs">
+      <DependentUpon>201711161037499_OrderMoney.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -165,6 +169,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711140656359_OrderAdd.resx">
       <DependentUpon>201711140656359_OrderAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711161037499_OrderMoney.resx">
+      <DependentUpon>201711161037499_OrderMoney.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

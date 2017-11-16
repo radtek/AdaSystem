@@ -1,16 +1,20 @@
 ﻿
 @using System.Web.Optimization
+@using Ada.Core.Infrastructure
+@using Ada.Services.Admin
+@using Microsoft.Ajax.Utilities
 @model Ada.Core.ViewModel.Business.BusinessOrderView
 @{
     ViewBag.Title = "新增销售订单";
     List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "销售订单", Value = Url.Action("Index") } };
-    //var fieldService = EngineContext.Current.Resolve<IFieldService>();
-    //var citys = fieldService.GetFieldsByKey("Area").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var businessTypes = fieldService.GetFieldsByKey("BusinessType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var settlementTypes = fieldService.GetFieldsByKey("SettlementType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 
 }
 @Html.Partial("Bread", urls)
 
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content">
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
@@ -28,45 +32,6 @@
                         <div class="form-horizontal">
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    @Html.LabelFor(d => d.OrderDate, Html.DisplayNameFor(d => d.OrderDate).ToString(), new { @class = "col-sm-4 control-label" })
-                                    <div class="col-sm-8">
-                                        @*<div class="input-group date">
-                                                @Html.TextBoxFor(d => d.OrderDate, new { @class = "form-control", required = "" })
-                                                <span class="input-group-addon">
-                                                    <i class="fa fa-calendar"></i>
-                                                </span>
-                                            </div>*@
-                                        <div class="input-group date">
-                                            @*<input class="form-control" size="16" type="text" value="" readonly required="">*@
-                                            @Html.TextBoxFor(d => d.OrderDate, new { @class = "form-control", required = "", @readonly = "" })
-                                            @*<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>*@
-                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                        </div>
-                                        @*@Html.HiddenFor(d => d.OrderDate)*@
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    @Html.LabelFor(d => d.OrderNum, Html.DisplayNameFor(d => d.OrderNum).ToString(), new { @class = "col-sm-4 control-label" })
-                                    <div class="col-sm-8">
-                                        @Html.TextBoxFor(d => d.OrderNum, new { @class = "form-control", placeholder = "自动编码", @readonly = "readonly" })
-                                    </div>
-
-                                </div>
-                                <div class="form-group col-md-4">
-                                    @Html.LabelFor(d => d.BusinessType, Html.DisplayNameFor(d => d.BusinessType).ToString(), new { @class = "col-sm-4 control-label" })
-                                    <div class="col-sm-8">
-                                        @Html.TextBoxFor(d => d.BusinessType, new { @class = "form-control" })
-                                    </div>
-
-                                </div>
-                                <div class="form-group col-md-4">
-                                    @Html.LabelFor(d => d.Tax, Html.DisplayNameFor(d => d.Tax).ToString(), new { @class = "col-sm-4 control-label" })
-                                    <div class="col-sm-8">
-                                        @Html.TextBoxFor(d => d.Tax, new { @class = "form-control" })
-                                    </div>
-
-                                </div>
-                                <div class="form-group col-md-4">
                                     @Html.LabelFor(d => d.LinkManId, Html.DisplayNameFor(d => d.LinkManId).ToString(), new { @class = "col-sm-4 control-label" })
                                     <div class="col-sm-8">
                                         <select class="form-control" required="" name="LinkManId" id="LinkManId">
@@ -74,17 +39,70 @@
                                         </select>
                                         @Html.HiddenFor(d => d.LinkManName)
                                     </div>
-
                                 </div>
                                 <div class="form-group col-md-4">
-                                    @Html.LabelFor(d => d.TransactorId, Html.DisplayNameFor(d => d.TransactorId).ToString(), new { @class = "col-sm-4 control-label" })
+                                    @Html.LabelFor(d => d.OrderNum, Html.DisplayNameFor(d => d.OrderNum).ToString(), new {@class = "col-sm-4 control-label"})
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(d => d.OrderNum, new {@class = "form-control", placeholder = "自动编码", @readonly = "readonly"})
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.BusinessType, Html.DisplayNameFor(d => d.BusinessType).ToString(), new {@class = "col-sm-4 control-label"})
+                                    <div class="col-sm-8">
+                                        @Html.DropDownListFor(d => d.BusinessType, businessTypes,new {@class = "form-control"})
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.Tax, Html.DisplayNameFor(d => d.Tax).ToString(), new {@class = "col-sm-4 control-label"})
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(d => d.Tax, new {@class = "form-control"})
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.DiscountRate, Html.DisplayNameFor(d => d.DiscountRate).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(d => d.DiscountRate, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.DiscountMoney, Html.DisplayNameFor(d => d.DiscountMoney).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(d => d.DiscountMoney, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.SettlementType, Html.DisplayNameFor(d => d.SettlementType).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        @Html.DropDownListFor(d => d.SettlementType, settlementTypes, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.TransactorId, Html.DisplayNameFor(d => d.TransactorId).ToString(), new {@class = "col-sm-4 control-label"})
                                     <div class="col-sm-8">
                                         <select class="form-control" required="" name="TransactorId" id="TransactorId">
                                             <option value="@Model.TransactorId">@Model.Transactor</option>
                                         </select>
                                         @Html.HiddenFor(d => d.Transactor)
                                     </div>
-
+                                </div>
+                                
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.OrderDate, Html.DisplayNameFor(d => d.OrderDate).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        <div class="input-group date">
+                                            @*<input class="form-control" size="16" type="text" value="" readonly required="">*@
+                                            @Html.TextBoxFor(d => d.OrderDate, Model.OrderDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control", required = "", @readonly = "" })
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                        @*@Html.HiddenFor(d => d.OrderDate)*@
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(d => d.Remark, new { @class = "form-control" })
+                                    </div>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -94,25 +112,17 @@
                                     <div class="form-group">
                                         <div class="col-sm-10">
                                             <button type="button" class="btn btn-warning btn-sm" onclick="showMedia('@Url.Action("SelectMedia")');">
-                                                <i class="fa fa-plus"></i> 添加明细
+                                                <i class="fa fa-plus"></i> 添加销售明细
                                             </button>
                                         </div>
                                     </div>
                                     <table id="table"></table>
+                                    @Html.HiddenFor(d=>d.OrderDetails)
                                 </div>
                             </div>
+                            
+                            
                         </div>
-
-
-
-
-                        @*<div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                <div class="col-lg-12">
-                                    <table id="table"></table>
-                                </div>
-                            </div>*@
-
                     </div>
                 </div>
             </div>
@@ -135,9 +145,10 @@
     @Scripts.Render("~/plugins/moment")
     @Scripts.Render("~/plugins/lodash")
     <script>
-        var $table,
-            selections = [];
-        var linkmanSelect = {};
+        var $mediatable, $table = $('#table'),
+            selections = {}, linkmanSelect = {}, transactorSelect = {};
+        selections.ids = [];
+        selections.rows = [];
         linkmanSelect.url = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})";
         linkmanSelect.paramsData = function(params) {
             return {
@@ -164,8 +175,43 @@
             $("#LinkManName").val(repo.text);
             return repo.text;
         };
-
+        transactorSelect.url = "@Url.Action("GetList", "Manager", new {area = "Admin"})";
+        transactorSelect.paramsData = function(params) {
+            return {
+                search: params.term, // search term
+                Status: 1
+            };
+        };
+        transactorSelect.processResults = function(data, params) {
+            var result = $.map(data.rows,
+                function (v, k) {
+                    return { id: v.Id, text: v.UserName};
+                });
+            return {
+                results: result
+            };
+        };
+        transactorSelect.formatRepo = function(repo) {
+            if (repo.loading) {
+                return repo.text;
+            }
+            return repo.text;
+        };
+        transactorSelect.formatRepoSelection = function(repo) {
+            $("#Transactor").val(repo.text);
+            return repo.text;
+        };
         $(function () {
+            initData();
+            $(".wrapper.wrapper-content form").validate({
+                submitHandler: function(form) {
+                    setTableData();
+                    $(form).submit();
+                }
+            });
+        });
+
+        function initData() {
             $('.input-group.date').datetimepicker({
                 language: 'zh-CN',
                 weekStart: 1,
@@ -178,14 +224,39 @@
                 format: "yyyy年mm月dd日"
             });
             initSelect2("LinkManId", linkmanSelect);
-
-
-            $('#table').bootstrapTable({
+            initSelect2("TransactorId", transactorSelect);
+            $table.bootstrapTable({
                 columns: [
                     {
-                        field: 'id',
-                        title: 'id',
-                        align:"center",
+                        field: 'MediaTypeName',
+                        title: '媒体类型',
+                        align: "center", valign: "middle",
+                        footerFormatter: function() {
+                            return "<strong>合 计</strong>";
+                        }
+
+                    },
+                    {
+                        field: 'MediaName',
+                        title: '媒体名称',
+                        align: "center", valign: "middle"
+
+                    },
+                    {
+                        field: 'AdPositionName',
+                        title: '广告位',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'MediaTitle',
+                        title: '稿件标题',
+                        align: "center", valign: "middle",
+                        editable: { mode: "inline", emptytext: '请输入' }
+                    },
+                    {
+                        field: 'PrePublishDate',
+                        title: '预出刊日期',
+                        align: "center", valign:"middle",
                         editable: {
                             type:'combodate',
                             mode: "inline",
@@ -201,131 +272,141 @@
                         }
                     },
                     {
-                        field: 'name',
-                        title: 'name',
-                        align: "center",
-                        editable: { mode: "inline", emptytext: '请输入'}
-                        //editable:{
-                        //    select2: {
-                        //        ajax: {
-                        //            dataType: 'json',
-                        //            data: linkmanSelect.paramsData,
-                        //            url: linkmanSelect.url,
-                        //            processResults: linkmanSelect.processResults
-                        //        },
-                        //        language: "zh-CN",
-                        //        placeholder: "请输入关键字",
-                        //        escapeMarkup: function (markup) { return markup; }, // 字符转义处理
-                        //        minimumInputLength: 1,
-                        //        templateResult: linkmanSelect.formatRepoSelection,
-                        //        templateSelection: linkmanSelect.formatRepoSelection
-                        //    },
-                        //    emptytext: '请选择媒体',
-                        //    tpl: '<select style="width:150px;">',
-                        //    type: 'select2',
-                        //    //success: function(response, newValue) {
-                        //    //    ////console.log('success');
-                        //    //    ////console.log(response);
-                        //    //    ////var editable = $(this).data('editable');
-                        //    //    ////var option = editable.input.$input.find('option[value="VALUE"]'.replace('VALUE',newValue));
-                        //    //    ////var newText = option.text();
-                        //    //    ////$(this).attr('data-text', newText);
-                        //    //    ////$(this).attr('data-value', newValue);
-                        //    //    //alert(newValue);
-                        //    //},
-                        //    display: function(value, sourceData ) {
-                        //        $(this).text(value);
-                        //    }
-                        //}
+                        field: 'SellMoney',
+                        title: '无税金额',
+                        align: "center", valign:"middle",
+                        editable: { mode: "inline", emptytext: '请输入',validate: function (value) {
+                            if (isNaN(value)) {
+                                return '请输入有效的金额';
+                            }
+                        }
+                        },
+                        footerFormatter: sumFormatter
+                    },
+                    {
+                        field: 'Money',
+                        title: '销售金额',
+                        align: "center", valign:"middle",
+                        editable: {
+                            mode: "inline",
+                            emptytext: '请输入',
+                            validate: function (value) {
+                                if (isNaN(value)) {
+                                    return '请输入有效的金额';
+                                }
+                            }
+                        },
+                        footerFormatter: sumFormatter
+                    },
+                    {
+                        field: 'Tax',
+                        title: '税率%',
+                        align: "center", valign: "middle",
+                        //editable: { mode: "inline", emptytext: '请输入' }
+                    },
+                    {
+                        field: 'TaxMoney',
+                        title: '税额',
+                        align: "center", valign: "middle",
+                        footerFormatter: sumFormatter
                     }
                     ,
                     {
-                        field: 'price',
-                        title: 'price',
-                        align: "center",
-                        editable: { mode: "inline", emptytext: '请输入' }
+                        field: 'operate',
+                        title: '操作',
+                        align: "center", valign: "middle",
+                        events: operateEvents,
+                        formatter: operateFormatter
+
                     }
 
                 ],
                 formatNoMatches: function () {  //没有匹配的结果
-                    return '请先添加媒体信息';
-                }
+                    return '请先添加销售明细';
+                },
+                onEditableSave: function (field, row, oldValue, $el) {
+                    var index = $($el).parents('tr[data-index]').data('index');
+                    if (row.SellMoney && field =="SellMoney") {
+                        row.Money = Math.toFixMoney(row.SellMoney * (1 + row.Tax / 100));//乘以税率
+                    }
+                    if (row.Money && field == "Money") {
+                        row.SellMoney = Math.toFixMoney(row.Money / (1 + row.Tax / 100));
+                    }
+                    row.TaxMoney = Math.toFixMoney(row.SellMoney * (row.Tax / 100));
+                    $table.bootstrapTable('updateRow', { index: index, row: row });
+                },
+                showFooter:true
             });
-            //$table.bootstrapTable('insertRow', {
-            //    index: 1,
-            //    row: {
-            //        id: "",
-            //        name: "",
-            //        price: ""
-            //    }
-            //});
-
-        });
-
+        }
         function showMedia(url) {
             $("#modalView").load(url,
                 function () {
                     //初始化
                     $('#modalView .modal').on('shown.bs.modal', function () {
-                        $table = $('#mediaTable');
-                        $table.bootstrapTable({
-                                                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
-                                                pagination: true,                   //是否显示分页（*）
-                                                sortable: true,                     //是否启用排序
-                                                sortOrder: "desc",                   //排序方式
-                                                sortName:"Id",
-                                                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
-                                                pageNumber: 1,                       //初始化加载第一页，默认第一页
-                                                pageSize: 10,                       //每页的记录行数（*）
-                                                search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
-                                                strictSearch: true,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
-                                                //showColumns: true,                  //是否显示所有的列
-                                                showRefresh: true,                  //是否显示刷新按钮
-                                                clickToSelect: true,                //是否启用点击选中行
-                                                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
-                                                responseHandler: responseHandler,
-                                                columns: [
-                                                    {
-                                                        field: 'state',
-                                                        checkbox: true
-                                                    },
-                                                    {
-                                                        field: 'MediaName',
-                                                        title: '媒体名称',
-                                                        align:  "center"
-                                                    },
-                                                    {
-                                                        field: 'MediaID',
-                                                        title: '媒体ID',
-                                                        align: "center"
-                                                    },
-                                                    {
-                                                        field: 'MediaTagStr',
-                                                        title: '媒体分类',
-                                                        align: "center"
-                                                    },
-                                                    {
-                                                        field: 'AdPositionName',
-                                                        title: '媒体价格',
-                                                        align: "center",
-                                                        formatter: function(v,r,i) {
-                                                            return "<span class='label label-warning'>" + v + "：" + (r.PurchasePrice == 0 ? "不接单" : r.PurchasePrice) + "</span>";
-                                                        }
+                        $mediatable = $('#mediaTable');
+                        $mediatable.bootstrapTable({
+                            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                            pagination: true,                   //是否显示分页（*）
+                            sortable: true,                     //是否启用排序
+                            sortOrder: "desc",                   //排序方式
+                            sortName:"Id",
+                            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                            pageNumber: 1,                       //初始化加载第一页，默认第一页
+                            pageSize: 10,                       //每页的记录行数（*）
+                            search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                            strictSearch: true,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
+                            //showColumns: true,                  //是否显示所有的列
+                            showRefresh: true,                  //是否显示刷新按钮
+                            clickToSelect: true,                //是否启用点击选中行
+                            uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                            responseHandler: responseHandler,
+                            columns: [
+                                {
+                                    field: 'state',
+                                    checkbox: true
+                                },
+                                {
+                                    field: 'MediaName',
+                                    title: '媒体名称',
+                                    align:  "center"
+                                },
+                                {
+                                    field: 'MediaID',
+                                    title: '媒体ID',
+                                    align: "center"
+                                },
+                                {
+                                    field: 'MediaTagStr',
+                                    title: '媒体分类',
+                                    align: "center"
+                                },
+                                {
+                                    field: 'AdPositionName',
+                                    title: '媒体价格',
+                                    align: "center",
+                                    formatter: function(v,r,i) {
+                                        return "<span class='label label-warning'>" + v + "：" + (r.PurchasePrice == 0 ? "不接单" : r.PurchasePrice) + "</span>";
+                                    }
 
-                                                    }
-                                                ]
-                                            });
-                        $table.on('check.bs.table check-all.bs.table ' +
-                                'uncheck.bs.table uncheck-all.bs.table', function (e, rows) {
-                                    var ids = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
-                                            return row.Id;
-                                        }),
-                                        func = $.inArray(e.type, ['check', 'check-all']) > -1 ? 'union' : 'difference';
-                                    selections = _[func](selections, ids);
-                                });
+                                }
+                            ]
+                        });
+                        $mediatable.on('check.bs.table check-all.bs.table ' +
+                            'uncheck.bs.table uncheck-all.bs.table', function (e, rows) {
+                                var ids = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
+                                        return row.Id;
+                                    }),
+                                    rowarry = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
+                                        return row;
+                                    }),
+                                    func = $.inArray(e.type, ['check', 'check-all']) > -1 ? 'union' : 'difference';
+                                selections.ids = _[func](selections.ids, ids);
+                                selections.rows = _[func](selections.rows, rowarry);
+                            });
                     }).on('hidden.bs.modal', function () {
-                        selections = [];
-                        $table.bootstrapTable('destroy');
+                        selections.ids = [];
+                        selections.rows = [];
+                        $mediatable.bootstrapTable('destroy');
                     });
                     $('#modalView .modal').modal('show');
 
@@ -333,14 +414,13 @@
         }
         function responseHandler(res) {
             $.each(res.rows, function (i, row) {
-                row.state = $.inArray(row.Id, selections) !== -1;
+                row.state = $.inArray(row.Id, selections.ids) !== -1;
             });
             return res;
         }
-
         function mediasByType(obj, key) {
             $(obj).addClass("active").siblings().removeClass("active");
-            $table.bootstrapTable('refresh', { url: '@Url.Action("GetMediaPrices", "Media", new { area = "Resource" })?MediaTypeIndex='+key });
+            $mediatable.bootstrapTable('refresh', { url: '@Url.Action("GetMediaPrices", "Media", new { area = "Resource" })?MediaTypeIndex='+key });
         }
         function initSelect2(id, opt) {
             $("#" + id).select2({
@@ -361,6 +441,62 @@
 
             });
         }
+        window.operateEvents = {
+            'click .remove': function (e, value, row, index) {
+                $table.bootstrapTable('remove', {
+                    field: 'MediaPriceId',
+                    values: [row.MediaPriceId]
+                });
+            }
+        };
+        function operateFormatter(value, row, index) {
+            return [
+                '<a class="remove" href="javascript:void(0)" title="Remove">',
+                '<i class="glyphicon glyphicon-remove"></i>',
+                '</a>'
+            ].join('');
+        }
+        //获取选中数据，插入
+        function confirmData() {
+            if (selections.rows.length > 0) {
+                $table.bootstrapTable('append', getData());
+            }
+            $('#modalView .modal').modal('hide');
+        }
 
+        function getData() {
+            var temp = [];
+            var tax = $("#Tax").val();
+            var now = "@DateTime.Now.AddDays(10).ToString("yyyy-MM-dd")";
+            $.each(selections.rows,
+                function(k, v) {
+                    temp.push({
+                        MediaTypeName: v.TypeName,
+                        MediaPriceId: v.Id,
+                        MediaName: v.MediaName,
+                        AdPositionName: v.AdPositionName,
+                        TaxMoney: 0,
+                        Tax: tax,
+                        Money: 0,
+                        SellMoney: 0,
+                        MediaTitle: "",
+                        PrePublishDate:now
+
+                    });
+                });
+            return temp;
+        }
+        function sumFormatter(data) {
+            var field = this.field;
+            var total_sum = data.reduce(function(sum, row) {
+                return (sum)*1 + (row[field] || 0)*1;
+            }, 0);
+            return Math.toFixMoney(total_sum);
+        }
+
+        function setTableData() {
+           var tableData= $table.bootstrapTable('getData');
+           $("#OrderDetails").val(JSON.stringify(tableData));
+        }
     </script>
 }

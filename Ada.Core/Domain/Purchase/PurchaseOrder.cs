@@ -35,6 +35,31 @@ namespace Ada.Core.Domain.Purchase
         [Display(Name = "采购金额")]
         public decimal? TotalMoney { get; set; }
         /// <summary>
+        /// 税率%
+        /// </summary>
+        [Display(Name = "税率%")]
+        public decimal? Tax { get; set; }
+        /// <summary>
+        /// 折扣%
+        /// </summary>
+        [Display(Name = "折扣%")]
+        public decimal? DiscountRate { get; set; }
+        /// <summary>
+        /// 优惠金额
+        /// </summary>
+        [Display(Name = "优惠金额")]
+        public decimal? TotalDiscountMoney { get; set; }
+        /// <summary>
+        /// 无税金额
+        /// </summary>
+        [Display(Name = "无税金额")]
+        public decimal? TotalPurchaseMoney { get; set; }
+        /// <summary>
+        /// 税额
+        /// </summary>
+        [Display(Name = "税额")]
+        public decimal? TotalTaxMoney { get; set; }
+        /// <summary>
         /// 未核销金额
         /// </summary>
         [Display(Name = "未核销金额")]
@@ -64,11 +89,7 @@ namespace Ada.Core.Domain.Purchase
         /// </summary>
         [Display(Name = "订单状态")]
         public short? Status { get; set; }
-        /// <summary>
-        /// 折扣%
-        /// </summary>
-        [Display(Name = "折扣%")]
-        public short? DiscountRate { get; set; }
+        
         /// <summary>
         /// 审核人
         /// </summary>

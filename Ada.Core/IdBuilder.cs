@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Ada.Core
 {
-   public class IdBuilder
+    public class IdBuilder
     {
         private static object locker = new object();
+        private static object olocker = new object();
         private static int _sn = 0;
         public static string CreateIdNum()
         {
@@ -25,7 +26,21 @@ namespace Ada.Core
                 return "X" + DateTime.Now.ToString("yyMMddHHmmss") + _sn.ToString().PadLeft(4, '0');
             }
         }
-
+        public static string CreateOrderNum(string orderType="")
+        {
+            lock (olocker)
+            {
+                if (_sn == 9999)
+                {
+                    _sn = 0;
+                }
+                else
+                {
+                    _sn++;
+                }
+                return "VG" + orderType + DateTime.Now.ToString("yyMMdd") + _sn.ToString().PadLeft(4, '0');
+            }
+        }
         // 防止创建类的实例
         private IdBuilder() { }
     }

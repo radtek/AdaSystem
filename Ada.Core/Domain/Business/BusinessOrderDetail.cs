@@ -21,27 +21,27 @@ namespace Ada.Core.Domain.Business
         /// <summary>
         /// 折扣金额
         /// </summary>
-        [Display(Name = "折扣金额")]
+        [Display(Name = "优惠金额")]
         public decimal? DiscountMoney { get; set; }
         /// <summary>
         /// 税率%
         /// </summary>
         [Display(Name = "税率%")]
-        public short? Tax { get; set; }
+        public decimal? Tax { get; set; }
         /// <summary>
         /// 折扣%
         /// </summary>
         [Display(Name = "折扣%")]
-        public short? DiscountRate { get; set; }
+        public decimal? DiscountRate { get; set; }
         /// <summary>
         /// 广告位
         /// </summary>
         [Display(Name = "广告位")]
         public string AdPositionName { get; set; }
         /// <summary>
-        /// 应收金额
+        /// 销售金额
         /// </summary>
-        [Display(Name = "应收金额")]
+        [Display(Name = "销售金额")]
         public decimal? Money { get; set; }
         /// <summary>
         /// 成本金额
@@ -51,7 +51,7 @@ namespace Ada.Core.Domain.Business
         /// <summary>
         /// 销售金额
         /// </summary>
-        [Display(Name = "销售金额")]
+        [Display(Name = "无税金额")]
         public decimal? SellMoney { get; set; }
 
         /// <summary>

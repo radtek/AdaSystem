@@ -24,6 +24,32 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "销售金额")]
         public decimal? TotalMoney { get; set; }
+       
+        /// <summary>
+        /// 无税金额
+        /// </summary>
+        [Display(Name = "无税金额")]
+        public decimal? TotalSellMoney { get; set; }
+        /// <summary>
+        /// 税额
+        /// </summary>
+        [Display(Name = "税额")]
+        public decimal? TotalTaxMoney { get; set; }
+        /// <summary>
+        /// 税率%
+        /// </summary>
+        [Display(Name = "税率%")]
+        public decimal? Tax { get; set; }
+        /// <summary>
+        /// 折扣%
+        /// </summary>
+        [Display(Name = "折扣%")]
+        public decimal? DiscountRate { get; set; }
+        /// <summary>
+        /// 优惠金额
+        /// </summary>
+        [Display(Name = "优惠金额")]
+        public decimal? DiscountMoney { get; set; }
         /// <summary>
         /// 未核销金额
         /// </summary>
@@ -54,16 +80,7 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "订单状态")]
         public short? Status { get; set; }
-        /// <summary>
-        /// 税率%
-        /// </summary>
-        [Display(Name = "税率%")]
-        public short? Tax { get; set; }
-        /// <summary>
-        /// 折扣%
-        /// </summary>
-        [Display(Name = "折扣%")]
-        public short? DiscountRate { get; set; }
+        
         /// <summary>
         /// 审核人
         /// </summary>
@@ -129,6 +146,15 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "单据时间")]
         public DateTime? OrderDate { get; set; }
-
+        /// <summary>
+        /// 备注
+        /// </summary>
+        [Display(Name = "备注")]
+        public string Remark { get; set; }
+        /// <summary>
+        /// 订单明细
+        /// </summary>
+        [Display(Name = "订单明细")]
+        public string OrderDetails { get; set; }
     }
 }

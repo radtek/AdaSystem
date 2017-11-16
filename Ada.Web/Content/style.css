@@ -8586,3 +8586,9 @@ body.md-skin {
 .img-container img {
     max-width: 100%;
 }
+
+.select2-container--default .select2-selection--single {
+    border-radius: 1px !important;
+    height: 34px !important;
+    border: 1px solid #e5e6e7 !important
+}

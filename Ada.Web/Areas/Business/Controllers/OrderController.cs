@@ -4,12 +4,14 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
+using Ada.Core.Domain;
 using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Business;
 using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Filter;
 using Ada.Services.Business;
+using Newtonsoft.Json;
 
 namespace Business.Controllers
 {
@@ -38,33 +40,72 @@ namespace Business.Controllers
                 viewModel.total,
                 rows = result.Select(d => new BusinessOrderView
                 {
-                    Id = d.Id
+                    Id = d.Id,
+                    OrderNum = d.OrderNum,
+                    LinkManName = d.LinkManName,
+                    TotalMoney = d.TotalMoney,
+                    Transactor = d.Transactor,
+                    Status = d.Status,
+                    OrderDate = d.OrderDate,
+                    TotalSellMoney = d.TotalSellMoney,
+                    TotalTaxMoney = d.TotalTaxMoney,
+                    DiscountMoney = d.TotalDiscountMoney,
+                    AdderBy = d.AddedBy
+                    
+                    
                 })
             }, JsonRequestBehavior.AllowGet);
         }
         public ActionResult Add()
         {
             BusinessOrderView viewModel = new BusinessOrderView();
+            viewModel.DiscountRate = 100;
+            viewModel.Tax = 0;
+            viewModel.DiscountMoney = 0;
+            viewModel.OrderDate = DateTime.Now;
+            viewModel.Transactor = CurrentManager.UserName;
+            viewModel.TransactorId = CurrentManager.Id;
             return View(viewModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Add(BusinessOrderView viewModel)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
-            //    return View();
-            //}
-            //MediaType entity = new MediaType();
-            //entity.Id = IdBuilder.CreateIdNum();
-            //entity.AddedById = CurrentManager.Id;
-            //entity.AddedBy = CurrentManager.UserName;
-            //entity.AddedDate = DateTime.Now;
-            //entity.TypeName = viewModel.TypeName;
-            //entity.CallIndex = viewModel.CallIndex;
-
-            //_mediaTypeService.Add(entity, viewModel.AdPositions);
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
+                return View(viewModel);
+            }
+            BusinessOrder order = new BusinessOrder();
+            order.Id = IdBuilder.CreateIdNum();
+            order.OrderNum = IdBuilder.CreateOrderNum("XD");
+            order.Status = Consts.StateLock;
+            order.AuditStatus = Consts.StateLock;
+            order.AddedBy = CurrentManager.UserName;
+            order.AddedById = CurrentManager.Id;
+            order.AddedDate=DateTime.Now;
+            order.BusinessType = viewModel.BusinessType;
+            order.ConfirmVerificationMoney = 0;
+            order.LinkManId = viewModel.LinkManId;
+            order.LinkManName = viewModel.LinkManName;
+            order.Transactor = viewModel.Transactor;
+            order.TransactorId = viewModel.TransactorId;
+            order.Tax = viewModel.Tax;
+            order.DiscountRate = viewModel.DiscountRate;
+            order.SettlementType = viewModel.SettlementType;
+            order.OrderDate = viewModel.OrderDate;
+            order.TotalDiscountMoney = viewModel.DiscountMoney;
+            order.VerificationStatus = Consts.StateLock;
+            var orderDetails = JsonConvert.DeserializeObject<List<BusinessOrderDetail>>(viewModel.OrderDetails);
+            foreach (var businessOrderDetail in orderDetails)
+            {
+                businessOrderDetail.Id = IdBuilder.CreateIdNum();
+                order.BusinessOrderDetails.Add(businessOrderDetail);
+            }
+            order.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);
+            order.TotalMoney = orderDetails.Sum(d => d.Money);
+            order.TotalSellMoney = orderDetails.Sum(d => d.SellMoney);
+            _businessOrderService.Add(order);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
         }

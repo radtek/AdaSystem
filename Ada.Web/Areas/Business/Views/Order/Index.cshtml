@@ -153,7 +153,10 @@
                     {
                         field: 'OrderDate',
                         title: '@Html.DisplayNameFor(d=>d.OrderDate)',
-                        align: "center"
+                        align: "center",
+                        formatter: function(value) {
+                          return  moment(value).format("YYYY-MM-DD");
+                        }
                     }
                 ]
             });

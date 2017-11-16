@@ -27,6 +27,7 @@ namespace Resource.Controllers
                 {
                     d.Id,
                     d.Media.MediaName,
+                    d.Media.MediaType.TypeName,
                     d.Media.MediaID,
                     d.AdPositionName,
                     d.PurchasePrice,

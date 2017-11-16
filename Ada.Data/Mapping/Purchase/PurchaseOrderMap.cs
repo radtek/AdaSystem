@@ -20,11 +20,15 @@ namespace Ada.Data.Mapping.Purchase
             Property(s => s.BusinessOrderId).HasMaxLength(32);
             Property(s => s.PurchaseType).HasMaxLength(32);
             Property(s => s.TotalMoney).IsRequired();
+            Property(s => s.DiscountRate);
+            Property(s => s.Tax);
+            Property(s => s.TotalDiscountMoney);
+            Property(s => s.TotalPurchaseMoney);
+            Property(s => s.TotalTaxMoney);
             Property(s => s.VerificationMoney);
             Property(s => s.ConfirmVerificationMoney);
             Property(s => s.VerificationStatus);
             Property(s => s.Status);
-            Property(s => s.DiscountRate);
             Property(s => s.AuditDate);
             Property(s => s.AuditStatus);
             Property(s => s.CancelDate);

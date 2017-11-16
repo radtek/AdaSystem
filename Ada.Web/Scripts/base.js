@@ -15,6 +15,13 @@ $.fn.serializeObject = function () {
     });
     return o;
 };
+
+Math.toFixMoney = function (value) {
+    var money = value || 0;
+    return Math.round(money * 100) / 100;
+}
+
+
 var searchFrm = {};
 searchFrm.search = function (form, evt) {
     var query = $(form).serializeObject();

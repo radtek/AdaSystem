@@ -23,16 +23,11 @@ namespace Ada.Core.Domain.Purchase
         /// 折扣%
         /// </summary>
         [Display(Name = "折扣%")]
-        public short? DiscountRate { get; set; }
+        public decimal? DiscountRate { get; set; }
         /// <summary>
-        /// 广告位
+        /// 采购金额
         /// </summary>
-        [Display(Name = "广告位")]
-        public string AdPositionName { get; set; }
-        /// <summary>
-        /// 实付金额
-        /// </summary>
-        [Display(Name = "实付金额")]
+        [Display(Name = "采购金额")]
         public decimal? Money { get; set; }
         /// <summary>
         /// 成本金额
@@ -40,11 +35,25 @@ namespace Ada.Core.Domain.Purchase
         [Display(Name = "成本金额")]
         public decimal? CostMoney { get; set; }
         /// <summary>
-        /// 采购金额
+        /// 税额
         /// </summary>
-        [Display(Name = "采购金额")]
+        [Display(Name = "税额")]
+        public decimal? TaxMoney { get; set; }
+        /// <summary>
+        /// 税率%
+        /// </summary>
+        [Display(Name = "税率%")]
+        public decimal? Tax { get; set; }
+        /// <summary>
+        /// 无税金额
+        /// </summary>
+        [Display(Name = "无税金额")]
         public decimal? PurchaseMoney { get; set; }
-
+        /// <summary>
+        /// 广告位
+        /// </summary>
+        [Display(Name = "广告位")]
+        public string AdPositionName { get; set; }
         /// <summary>
         /// 出刊日期
         /// </summary>
