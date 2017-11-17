@@ -29,7 +29,22 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => d.LinkManName.Contains(viewModel.search));
             }
-           
+            if (!string.IsNullOrWhiteSpace(viewModel.Transactor))
+            {
+                allList = allList.Where(d => d.Transactor.Contains(viewModel.Transactor));
+            }
+            if (viewModel.Status!=null)
+            {
+                allList = allList.Where(d => d.Status==viewModel.Status);
+            }
+            if (viewModel.AuditStatus != null)
+            {
+                allList = allList.Where(d => d.AuditStatus == viewModel.AuditStatus);
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.OrderNum))
+            {
+                allList = allList.Where(d => d.OrderNum == viewModel.OrderNum);
+            }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;

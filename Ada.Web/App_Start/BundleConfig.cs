@@ -143,7 +143,8 @@ namespace Ada.Web
 
             // validate 
             bundles.Add(new ScriptBundle("~/plugins/validate").Include(
-                      "~/Scripts/plugins/validate/jquery.validate.min.js"));
+                      "~/Scripts/plugins/validate/jquery.validate.min.js",
+                      "~/Scripts/plugins/validate/localization/messages_zh.min.js"));
 
             // fullCalendar styles
             bundles.Add(new StyleBundle("~/plugins/fullCalendarStyles").Include(
@@ -332,7 +333,6 @@ namespace Ada.Web
             bundles.Add(new ScriptBundle("~/plugins/footable").Include(
                       "~/Scripts/plugins/footable/footable.all.min.js"));
             bundles.Add(new ScriptBundle("~/plugins/footableV3").Include(
-                "~/Scripts/plugins/fullcalendar/moment.min.js",
                 "~/Scripts/plugins/footable/footable.min.js"));
             // Select2 Styless
             bundles.Add(new StyleBundle("~/plugins/select2Styles").Include(

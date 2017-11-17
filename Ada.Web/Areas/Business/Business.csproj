@@ -101,6 +101,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\order.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +116,9 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Order\Add.cshtml" />
     <Content Include="Views\Order\SelectMedia.cshtml" />
+    <Content Include="Views\Order\OrderEdit.cshtml" />
+    <Content Include="Views\Order\Update.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

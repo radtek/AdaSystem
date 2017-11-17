@@ -125,6 +125,7 @@
     <Content Include="Views\LinkMan\AddBusiness.cshtml" />
     <Content Include="Views\LinkMan\Business.cshtml" />
     <Content Include="Views\LinkMan\UpdateBusiness.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

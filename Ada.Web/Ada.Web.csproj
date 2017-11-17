@@ -1679,6 +1679,7 @@
     <Content Include="Scripts\plugins\touchspin\jquery.bootstrap-touchspin.min.js" />
     <Content Include="Scripts\plugins\typehead\bootstrap3-typeahead.min.js" />
     <Content Include="Scripts\plugins\validate\jquery.validate.min.js" />
+    <Content Include="Scripts\plugins\validate\localization\messages_zh.min.js" />
     <Content Include="Scripts\plugins\velocity\velocity.min.js" />
     <Content Include="Scripts\plugins\velocity\velocity.ui.min.js" />
     <Content Include="Scripts\plugins\video\responsible-video.js" />

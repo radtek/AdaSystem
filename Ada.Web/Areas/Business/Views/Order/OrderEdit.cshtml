@@ -1,0 +1,100 @@
+﻿@using Ada.Core.Infrastructure
+@using Ada.Services.Admin
+@using Microsoft.Ajax.Utilities
+@model Ada.Core.ViewModel.Business.BusinessOrderView
+@{
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var businessTypes = fieldService.GetFieldsByKey("BusinessType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var settlementTypes = fieldService.GetFieldsByKey("SettlementType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+}
+<div class="form-horizontal">
+    <div class="row">
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.LinkManId, Html.DisplayNameFor(d => d.LinkManId).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                <select class="form-control" required="" name="LinkManId" id="LinkManId">
+                    <option value="@Model.LinkManId">@Model.LinkManName</option>
+                </select>
+                @Html.HiddenFor(d => d.LinkManName)
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.OrderNum, Html.DisplayNameFor(d => d.OrderNum).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.OrderNum, new { @class = "form-control", placeholder = "自动编码", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.BusinessType, Html.DisplayNameFor(d => d.BusinessType).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.DropDownListFor(d => d.BusinessType, businessTypes, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.Tax, Html.DisplayNameFor(d => d.Tax).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.Tax, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.DiscountRate, Html.DisplayNameFor(d => d.DiscountRate).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.DiscountRate, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.DiscountMoney, Html.DisplayNameFor(d => d.DiscountMoney).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.DiscountMoney, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.SettlementType, Html.DisplayNameFor(d => d.SettlementType).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.DropDownListFor(d => d.SettlementType, settlementTypes, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.TransactorId, Html.DisplayNameFor(d => d.TransactorId).ToString(), new { @class = "col-sm-4 control-label", required = "" })
+            <div class="col-sm-8">
+                <select class="form-control" name="TransactorId" id="TransactorId">
+                    <option value="@Model.TransactorId">@Model.Transactor</option>
+                </select>
+                @Html.HiddenFor(d => d.Transactor)
+            </div>
+        </div>
+
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.OrderDate, Html.DisplayNameFor(d => d.OrderDate).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                <div class="input-group date">
+                    @Html.TextBoxFor(d => d.OrderDate, Model.OrderDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control", required = "", @readonly = "" })
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.Remark, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <button type="button" class="btn btn-warning btn-sm" onclick="showMedia('@Url.Action("SelectMedia")');">
+                        <i class="fa fa-plus"></i> 添加销售明细
+                    </button>
+                </div>
+            </div>
+            <table id="table"></table>
+            @Html.HiddenFor(d => d.OrderDetails)
+        </div>
+    </div>
+</div>
+
+

@@ -81,6 +81,7 @@
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
+
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -123,6 +124,12 @@
                         checkbox: true
                     },
                     {
+                        field: 'Status',
+                        title: '@Html.DisplayNameFor(d=>d.Status)',
+                        align: "center",
+                        formatter: formatter.businessStatus
+                    },
+                    {
                         field: 'OrderNum',
                         title: '@Html.DisplayNameFor(d=>d.OrderNum)',
                         align:"center"
@@ -137,6 +144,16 @@
                         field: 'TotalMoney',
                         title: '@Html.DisplayNameFor(d=>d.TotalMoney)',
                         align: "center"
+                    },
+                    {
+                        field: 'TotalSellMoney',
+                        title: '@Html.DisplayNameFor(d=>d.TotalSellMoney)',
+                        align: "center"
+                    },
+                    {
+                        field: 'TotalTaxMoney',
+                        title: '@Html.DisplayNameFor(d=>d.TotalTaxMoney)',
+                        align: "center"
                     }
                     ,
                     {
@@ -145,11 +162,6 @@
                         align: "center"
                     }
                     ,
-                    {
-                        field: 'Status',
-                        title: '@Html.DisplayNameFor(d=>d.Status)',
-                        align: "center"
-                    },
                     {
                         field: 'OrderDate',
                         title: '@Html.DisplayNameFor(d=>d.OrderDate)',
@@ -234,6 +246,9 @@
                             }
                         });
                     });
+                });
+                $("#btn_reset").click(function () {
+                    searchFrm.reset($("#searchFrm"));
                 });
             };
             return oInit;

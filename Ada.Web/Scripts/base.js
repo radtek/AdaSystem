@@ -48,35 +48,21 @@ formatter.normalStatus = function (value, row, index) {
         return "<span class='label label-danger'>关闭</span>";
     }
 }
-
+formatter.businessStatus = function (value, row, index) {
+    if (value == 1) {
+        return "<span class='label label-primary'>正常</span>";
+    } else if (value == -1) {
+        return "<span class='label label-danger'>作废</span>";
+    }else {
+        return "<span class='label label-warning'>待审</span>";
+    }
+}
 function initChangePwd(url,token) {
     $("#changepwd").click(function() {
         $("#modalView").load(url,
             function () {
                 $('#modalView .modal').modal('show');
                 $("#modalView form").validate({
-                    rules: {
-                        old: {
-                            required: true
-                        },
-                        fresh: {
-                            required: true
-                        },
-                        refresh: {
-                            required: true
-                        }
-                    },
-                    messages: {
-                        old: {
-                            required: "此为必填项"
-                        },
-                        fresh: {
-                            required: "此为必填项"
-                        },
-                        refresh: {
-                            required: "此为必填项"
-                        }
-                    },
                     submitHandler: function (form) {
                         var $form = $(form),
                             data = $form.serialize(); //序列化表单数据
