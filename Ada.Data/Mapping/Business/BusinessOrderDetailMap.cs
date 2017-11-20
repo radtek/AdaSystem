@@ -29,6 +29,7 @@ namespace Ada.Data.Mapping.Business
             Property(s => s.MediaTitle).HasMaxLength(512);
             Property(s => s.MediaTypeName).HasMaxLength(32);
             Property(s => s.MediaName).HasMaxLength(128);
+            Property(s => s.MediaByPurchase).HasMaxLength(32);
             Property(s => s.MediaPriceId).HasMaxLength(32);
 
 
@@ -49,7 +50,8 @@ namespace Ada.Data.Mapping.Business
             //配置表
             ToTable("BusinessOrderDetail");
             //配置关系【一对多的配置，外键是UserId】 Withmany方法允许多个。HasForeignKey方法表示哪个属性是User表的外键，WillCascadeOnDelete方法用来配置是否级联删除
-            HasRequired(s => s.BusinessOrder).WithMany(s => s.BusinessOrderDetails).HasForeignKey(s => s.BusinessOrderId).WillCascadeOnDelete(true);
+            HasRequired(s => s.BusinessOrder).WithMany(s => s.BusinessOrderDetails).HasForeignKey(s => s.BusinessOrderId).WillCascadeOnDelete(false);
+            HasRequired(s => s.MediaPrice).WithMany(s => s.BusinessOrderDetails).HasForeignKey(s => s.MediaPriceId).WillCascadeOnDelete(false);
         }
     }
 }

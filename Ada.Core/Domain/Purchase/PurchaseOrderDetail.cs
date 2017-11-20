@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Ada.Core.Domain.Customer;
 using Ada.Core.Domain.Resource;
 
 namespace Ada.Core.Domain.Purchase
@@ -50,6 +51,21 @@ namespace Ada.Core.Domain.Purchase
         [Display(Name = "无税金额")]
         public decimal? PurchaseMoney { get; set; }
         /// <summary>
+        /// 未核销金额
+        /// </summary>
+        [Display(Name = "未核销金额")]
+        public decimal? VerificationMoney { get; set; }
+        /// <summary>
+        /// 已核销金额
+        /// </summary>
+        [Display(Name = "已核销金额")]
+        public decimal? ConfirmVerificationMoney { get; set; }
+        /// <summary>
+        /// 核销状态
+        /// </summary>
+        [Display(Name = "核销状态")]
+        public short? VerificationStatus { get; set; }
+        /// <summary>
         /// 广告位
         /// </summary>
         [Display(Name = "广告位")]
@@ -80,11 +96,83 @@ namespace Ada.Core.Domain.Purchase
         [Display(Name = "媒体名称")]
         public string MediaName { get; set; }
         /// <summary>
+        /// 采购状态
+        /// </summary>
+        [Display(Name = "采购状态")]
+        public short? Status { get; set; }
+        /// <summary>
+        /// 经办媒介
+        /// </summary>
+        [Display(Name = "经办媒介")]
+        public string Transactor { get; set; }
+        /// <summary>
+        /// 经办媒介
+        /// </summary>
+        [Display(Name = "经办媒介")]
+        public string TransactorId { get; set; }
+        /// <summary>
+        /// 审核人
+        /// </summary>
+        [Display(Name = "审核人")]
+        public string AuditBy { get; set; }
+        /// <summary>
+        /// 审核人
+        /// </summary>
+        [Display(Name = "审核人")]
+        public string AuditById { get; set; }
+        /// <summary>
+        /// 审核时间
+        /// </summary>
+        [Display(Name = "审核时间")]
+        public DateTime? AuditDate { get; set; }
+        /// <summary>
+        /// 审核状态
+        /// </summary>
+        [Display(Name = "审核状态")]
+        public short? AuditStatus { get; set; }
+        /// <summary>
+        /// 作废人
+        /// </summary>
+        [Display(Name = "作废人")]
+        public string CancelBy { get; set; }
+        /// <summary>
+        /// 作废人
+        /// </summary>
+        [Display(Name = "作废人")]
+        public string CancelById { get; set; }
+        /// <summary>
+        /// 作废时间
+        /// </summary>
+        [Display(Name = "作废时间")]
+        public DateTime? CancelDate { get; set; }
+      
+        /// <summary>
+        /// 结算方式
+        /// </summary>
+        [Display(Name = "结算方式")]
+        public string SettlementType { get; set; }
+        /// <summary>
+        /// 采购类型
+        /// </summary>
+        [Display(Name = "采购类型")]
+        public string PurchaseType { get; set; }
+        /// <summary>
         /// 媒体名称
         /// </summary>
         [Display(Name = "媒体名称")]
         public string MediaPriceId { get; set; }
         public virtual MediaPrice MediaPrice { get; set; }
+        /// <summary>
+        /// 供应商
+        /// </summary>
+        [Display(Name = "供应商")]
+        public string LinkManName { get; set; }
+        /// <summary>
+        /// 供应商
+        /// </summary>
+        [Display(Name = "供应商")]
+        public string LinkManId { get; set; }
+        public virtual LinkMan LinkMan { get; set; }
         /// <summary>
         /// 采购订单
         /// </summary>

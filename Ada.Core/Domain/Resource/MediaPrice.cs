@@ -4,11 +4,28 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ada.Core.Domain.Business;
+using Ada.Core.Domain.Purchase;
 
 namespace Ada.Core.Domain.Resource
 {
    public class MediaPrice:BaseEntity
     {
+        public MediaPrice()
+        {
+            PurchaseOrderDetails=new HashSet<PurchaseOrderDetail>();
+            BusinessOrderDetails = new HashSet<BusinessOrderDetail>();
+        }
+        /// <summary>
+        /// 广告位
+        /// </summary>
+        [Display(Name = "广告位")]
+        public string AdPositionId { get; set; }
+        /// <summary>
+        /// 广告位
+        /// </summary>
+        [Display(Name = "广告位")]
+        public string AdPositionName { get; set; }
         /// <summary>
         /// 采购价格
         /// </summary>
@@ -40,15 +57,7 @@ namespace Ada.Core.Domain.Resource
         [Display(Name = "媒体名称")]
         public string MediaId { get; set; }
         public virtual Media Media { get; set; }
-        /// <summary>
-        /// 广告位
-        /// </summary>
-        [Display(Name = "广告位")]
-        public string AdPositionId { get; set; }
-        /// <summary>
-        /// 广告位
-        /// </summary>
-        [Display(Name = "广告位")]
-        public string AdPositionName { get; set; }
+        public virtual ICollection<BusinessOrderDetail> BusinessOrderDetails { get; set; }
+        public virtual ICollection<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
     }
 }

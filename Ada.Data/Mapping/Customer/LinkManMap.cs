@@ -43,7 +43,7 @@ namespace Ada.Data.Mapping.Customer
             //配置表
             ToTable("LinkMan");
             //配置关系【一对多的配置，外键是UserId】 Withmany方法允许多个。HasForeignKey方法表示哪个属性是User表的外键，WillCascadeOnDelete方法用来配置是否级联删除
-            HasRequired(s => s.Commpany).WithMany(s => s.LinkMans).HasForeignKey(s => s.CommpanyId).WillCascadeOnDelete(true);
+            HasRequired(s => s.Commpany).WithMany(s => s.LinkMans).HasForeignKey(s => s.CommpanyId).WillCascadeOnDelete(false);
         }
     }
 }

@@ -94,9 +94,8 @@ function initData() {
                 title: '媒体类型',
                 align: "center", valign: "middle",
                 footerFormatter: function () {
-                    return "<strong>合 计</strong>";
+                    return "合计";
                 }
-
             },
             {
                 field: 'MediaName',
@@ -108,6 +107,18 @@ function initData() {
                 field: 'AdPositionName',
                 title: '广告位',
                 align: "center", valign: "middle"
+            },
+            {
+                field: 'CostMoney',
+                title: '成本价格',
+                align: "center", valign: "middle",
+                footerFormatter: sumFormatter
+            },
+            {
+                field: 'MediaByPurchase',
+                title: '经办媒介',
+                align: "center", valign: "middle"
+
             },
             {
                 field: 'MediaTitle',
@@ -172,6 +183,12 @@ function initData() {
                 title: '税额',
                 align: "center", valign: "middle",
                 footerFormatter: sumFormatter
+            },
+            {
+                field: 'Remark',
+                title: '备注',
+                align: "center", valign: "middle",
+                editable: { mode: "inline", emptytext: '请输入' }
             }
             ,
             {
@@ -365,8 +382,10 @@ function getData() {
                 Money: 0,
                 SellMoney: 0,
                 MediaTitle: "",
-                PrePublishDate: now
-
+                PrePublishDate: now,
+                Remark: "",
+                MediaByPurchase: v.Transactor,
+                CostMoney: v.PurchasePrice
             });
         });
     return temp;

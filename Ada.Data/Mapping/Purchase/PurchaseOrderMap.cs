@@ -18,30 +18,14 @@ namespace Ada.Data.Mapping.Purchase
             //配置字段
             Property(s => s.OrderNum).IsRequired().HasMaxLength(32);
             Property(s => s.BusinessOrderId).HasMaxLength(32);
-            Property(s => s.PurchaseType).HasMaxLength(32);
             Property(s => s.TotalMoney).IsRequired();
-            Property(s => s.DiscountRate);
-            Property(s => s.Tax);
             Property(s => s.TotalDiscountMoney);
             Property(s => s.TotalPurchaseMoney);
             Property(s => s.TotalTaxMoney);
-            Property(s => s.VerificationMoney);
-            Property(s => s.ConfirmVerificationMoney);
-            Property(s => s.VerificationStatus);
             Property(s => s.Status);
-            Property(s => s.AuditDate);
-            Property(s => s.AuditStatus);
-            Property(s => s.CancelDate);
             Property(s => s.OrderDate);
-            Property(s => s.SettlementType).HasMaxLength(32);
-            Property(s => s.Transactor).HasMaxLength(32);
-            Property(s => s.TransactorId).HasMaxLength(32);
-            Property(s => s.AuditBy).HasMaxLength(32);
-            Property(s => s.AuditById).HasMaxLength(32);
-            Property(s => s.CancelBy).HasMaxLength(32);
-            Property(s => s.CancelById).HasMaxLength(32);
-            Property(s => s.LinkManName).HasMaxLength(32);
-            Property(s => s.LinkManId).HasMaxLength(32);
+            Property(s => s.BusinessBy).HasMaxLength(32);
+            Property(s => s.BusinessById).HasMaxLength(32);
 
 
             Property(s => s.AddedDate);

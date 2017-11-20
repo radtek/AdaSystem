@@ -41,7 +41,7 @@ namespace Ada.Data.Mapping.Log
             //配置表
             ToTable("ManagerLoginLog");
             //配置关系【一对多的配置，外键是UserId】 Withmany方法允许多个。HasForeignKey方法表示哪个属性是User表的外键，WillCascadeOnDelete方法用来配置是否级联删除
-            HasRequired(s => s.Manager).WithMany(s => s.ManagerLoginLogs).HasForeignKey(s => s.ManagerId).WillCascadeOnDelete(true);
+            HasRequired(s => s.Manager).WithMany(s => s.ManagerLoginLogs).HasForeignKey(s => s.ManagerId).WillCascadeOnDelete(false);
         }
     }
 }

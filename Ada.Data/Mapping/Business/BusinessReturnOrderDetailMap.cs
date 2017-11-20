@@ -41,7 +41,7 @@ namespace Ada.Data.Mapping.Business
             //配置表
             ToTable("BusinessReturnOrderDetail");
             //配置关系【一对多的配置，外键是UserId】 Withmany方法允许多个。HasForeignKey方法表示哪个属性是User表的外键，WillCascadeOnDelete方法用来配置是否级联删除
-            HasRequired(s => s.BusinessReturnOrder).WithMany(s => s.BusinessReturnOrderDetails).HasForeignKey(s => s.BusinessReturnOrderId).WillCascadeOnDelete(true);
+            HasRequired(s => s.BusinessReturnOrder).WithMany(s => s.BusinessReturnOrderDetails).HasForeignKey(s => s.BusinessReturnOrderId).WillCascadeOnDelete(false);
         }
     }
 }

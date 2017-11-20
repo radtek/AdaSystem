@@ -39,7 +39,7 @@ namespace Ada.Data.Mapping.Admin
             //配置表
             ToTable("Field");
             //配置关系【一对多的配置，外键是FKId】 Withmany方法允许多个。HasForeignKey方法表示哪个属性是外键表的外键，WillCascadeOnDelete方法用来配置是否级联删除
-            HasRequired(s => s.FieldType).WithMany(s => s.Fields).HasForeignKey(s => s.FieldTypeId).WillCascadeOnDelete(true);
+            HasRequired(s => s.FieldType).WithMany(s => s.Fields).HasForeignKey(s => s.FieldTypeId).WillCascadeOnDelete(false);
 
         }
     }

@@ -153,7 +153,10 @@ namespace Business.Controllers
                 d.Money,
                 d.Tax,
                 d.TaxMoney,
-                d.MediaPriceId
+                d.MediaPriceId,
+                d.Remark,
+                d.CostMoney,
+                d.MediaByPurchase
             });
             entity.OrderDetails = JsonConvert.SerializeObject(orderDetails);
 
@@ -220,6 +223,8 @@ namespace Business.Controllers
                     detail.AdPositionName = businessOrderDetail.AdPositionName;
                     detail.MediaName = businessOrderDetail.MediaName;
                     detail.MediaTypeName = businessOrderDetail.MediaTypeName;
+                    detail.Remark = businessOrderDetail.Remark;
+                    detail.CostMoney = businessOrderDetail.CostMoney;
                 }
             }
             entity.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);

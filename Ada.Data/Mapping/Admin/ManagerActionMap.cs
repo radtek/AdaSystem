@@ -41,8 +41,8 @@ namespace Ada.Data.Mapping.Admin
             ToTable("ManagerAction");
 
             //配置关系【一对多的配置，外键是UserId】 Withmany方法允许多个。HasForeignKey方法表示哪个属性是User表的外键，WillCascadeOnDelete方法用来配置是否级联删除
-            HasRequired(s => s.Manager).WithMany(s => s.ManagerActions).HasForeignKey(s => s.ManagerId).WillCascadeOnDelete(true);
-            HasRequired(s => s.Action).WithMany(s => s.ManagerActions).HasForeignKey(s => s.ActionInfoId).WillCascadeOnDelete(true);
+            HasRequired(s => s.Manager).WithMany(s => s.ManagerActions).HasForeignKey(s => s.ManagerId).WillCascadeOnDelete(false);
+            HasRequired(s => s.Action).WithMany(s => s.ManagerActions).HasForeignKey(s => s.ActionInfoId).WillCascadeOnDelete(false);
         }
     }
 }

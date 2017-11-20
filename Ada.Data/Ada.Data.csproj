@@ -123,6 +123,10 @@
     <Compile Include="Migrations\201711161037499_OrderMoney.Designer.cs">
       <DependentUpon>201711161037499_OrderMoney.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711200906545_Order201711201613.cs" />
+    <Compile Include="Migrations\201711200906545_Order201711201613.Designer.cs">
+      <DependentUpon>201711200906545_Order201711201613.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -172,6 +176,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711161037499_OrderMoney.resx">
       <DependentUpon>201711161037499_OrderMoney.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711200906545_Order201711201613.resx">
+      <DependentUpon>201711200906545_Order201711201613.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

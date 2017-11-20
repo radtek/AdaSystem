@@ -38,7 +38,7 @@ namespace Ada.Data.Mapping.Resource
 
             //配置表
             ToTable("AdPosition");
-            HasRequired(s => s.MediaType).WithMany(s => s.AdPositions).HasForeignKey(s => s.MediaTypeId).WillCascadeOnDelete(true);
+            HasRequired(s => s.MediaType).WithMany(s => s.AdPositions).HasForeignKey(s => s.MediaTypeId).WillCascadeOnDelete(false);
         }
     }
 }

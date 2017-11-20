@@ -75,6 +75,11 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "媒体名称")]
         public string MediaName { get; set; }
         /// <summary>
+        /// 经办媒介
+        /// </summary>
+        [Display(Name = "经办媒介")]
+        public string MediaByPurchase { get; set; }
+        /// <summary>
         /// 媒体名称
         /// </summary>
         [Display(Name = "媒体名称")]
