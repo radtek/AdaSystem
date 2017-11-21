@@ -20,8 +20,8 @@ namespace Ada.Data.Mapping.Admin
             //配置字段
             Property(s => s.ActionName).IsRequired().HasMaxLength(32);
             Property(s => s.Area).HasMaxLength(16);
-            Property(s => s.ControllerName).HasMaxLength(16);
-            Property(s => s.MethodName).HasMaxLength(16);
+            Property(s => s.ControllerName).HasMaxLength(32);
+            Property(s => s.MethodName).HasMaxLength(32);
             Property(s => s.LinkUrl).HasMaxLength(512);
             Property(s => s.HttpMethod).HasMaxLength(16);
             Property(s => s.TreePath).HasMaxLength(1024);

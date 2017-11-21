@@ -60,6 +60,10 @@
     <Compile Include="Admin\SystemLogService.cs" />
     <Compile Include="Business\IBusinessOrderService.cs" />
     <Compile Include="Business\BusinessOrderService.cs" />
+    <Compile Include="Purchase\IPurchaseOrderDetailService.cs" />
+    <Compile Include="Purchase\PurchaseOrderDetailService.cs" />
+    <Compile Include="Purchase\PurchaseOrderService.cs" />
+    <Compile Include="Purchase\IPurchaseOrderService.cs" />
     <Compile Include="Customer\LinkManService.cs" />
     <Compile Include="Customer\CommpanyService.cs" />
     <Compile Include="Customer\ILinkManService.cs" />

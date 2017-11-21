@@ -18,7 +18,7 @@
                     <div class="ibox-title">
                         <a class="btn btn-outline btn-default btn-sm" href="@Url.Action("Index")"><i class="fa fa-reply"></i> 返回</a>
                         <button class="btn btn-success btn-sm" type="submit" data-style="slide-right"><i class="fa fa-floppy-o"></i> 保存</button>
-                        <button class="btn btn-info btn-sm" type="button"><i class="fa fa-floppy-o"></i> 转成采购订单</button>
+                        <button class="btn btn-info btn-sm" type="button" onclick="transOrder('@Model.Id');"><i class="fa fa-floppy-o"></i> 转成采购订单</button>
                         <button class="btn btn-primary btn-sm" type="button"><i class="fa fa-floppy-o"></i> 审核</button>
                         <button class="btn btn-warning btn-sm" type="button"><i class="fa fa-floppy-o"></i> 弃审</button>
                         <button class="btn btn-danger btn-sm" type="button"><i class="fa fa-floppy-o"></i> 作废</button>
@@ -61,5 +61,47 @@
 
     </script>
     <script src="@Url.Content("~/Areas/Business/Scripts/order.js")"></script>
+    <script>
+        function transOrder(id) {
+            swal({
+                title: "您确定吗?",
+                text: "确认要转成采购订单吗?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    type: "post",
+                    headers: {
+                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                    },
+                    url: "@Url.Action("TransformPurchaseOrder")",
+                    data: { "id": id },
+                    success: function (data) {
+                        if (data.State == 1) {
+                            swal({
+                                title: "操作成功",
+                                text: data.Msg,
+                                timer: 2000,
+                                type:"success",
+                                showConfirmButton: false
+                            });
 
+                        } else {
+                            swal("操作提醒", data.Msg, "warning");
+                        }
+                    },
+                    error: function () {
+                        swal("操作失败", data.Msg, "error");
+                    },
+                    complete: function () {
+
+                    }
+                });
+            });
+        }
+    </script>
 }

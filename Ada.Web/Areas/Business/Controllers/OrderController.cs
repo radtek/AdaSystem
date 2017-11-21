@@ -6,11 +6,13 @@ using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Business;
+using Ada.Core.Domain.Purchase;
 using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Business;
 using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Filter;
 using Ada.Services.Business;
+using Ada.Services.Purchase;
 using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 
@@ -19,17 +21,25 @@ namespace Business.Controllers
     public class OrderController : BaseController
     {
         private readonly IBusinessOrderService _businessOrderService;
+        private readonly IPurchaseOrderService _purchaseOrderService;
         private readonly IRepository<BusinessOrder> _repository;
         private readonly IRepository<BusinessOrderDetail> _businessOrderDetailRepository;
+        private readonly IRepository<PurchaseOrder> _purchaseOrderRepository;
         private readonly IRepository<MediaType> _mediaTypeRepository;
         public OrderController(IBusinessOrderService businessOrderService,
-            IRepository<BusinessOrder> repository, IRepository<MediaType> mediaTypeRepository, IRepository<BusinessOrderDetail> businessOrderDetailRepository
+            IRepository<BusinessOrder> repository,
+            IRepository<MediaType> mediaTypeRepository,
+            IRepository<BusinessOrderDetail> businessOrderDetailRepository,
+            IPurchaseOrderService purchaseOrderService,
+            IRepository<PurchaseOrder> purchaseOrderRepository
         )
         {
             _businessOrderService = businessOrderService;
             _repository = repository;
             _mediaTypeRepository = mediaTypeRepository;
             _businessOrderDetailRepository = businessOrderDetailRepository;
+            _purchaseOrderService = purchaseOrderService;
+            _purchaseOrderRepository = purchaseOrderRepository;
         }
         public ActionResult Index()
         {
@@ -54,8 +64,8 @@ namespace Business.Controllers
                     TotalTaxMoney = d.TotalTaxMoney,
                     DiscountMoney = d.TotalDiscountMoney,
                     AdderBy = d.AddedBy
-                    
-                    
+
+
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -80,7 +90,7 @@ namespace Business.Controllers
                 return View(viewModel);
             }
             var orderDetails = JsonConvert.DeserializeObject<List<BusinessOrderDetail>>(viewModel.OrderDetails);
-            if (orderDetails.Count<=0)
+            if (orderDetails.Count <= 0)
             {
                 ModelState.AddModelError("message", "请录入订单明细！");
                 return View(viewModel);
@@ -92,7 +102,7 @@ namespace Business.Controllers
             entity.AuditStatus = Consts.StateLock;
             entity.AddedBy = CurrentManager.UserName;
             entity.AddedById = CurrentManager.Id;
-            entity.AddedDate=DateTime.Now;
+            entity.AddedDate = DateTime.Now;
             entity.BusinessType = viewModel.BusinessType;
             entity.ConfirmVerificationMoney = 0;
             entity.LinkManId = viewModel.LinkManId;
@@ -141,14 +151,14 @@ namespace Business.Controllers
             entity.DiscountMoney = item.TotalDiscountMoney;
             entity.OrderDate = item.OrderDate;
             entity.Remark = item.Remark;
-            var orderDetails = item.BusinessOrderDetails.Where(d=>d.IsDelete==false).Select(d => new
+            var orderDetails = item.BusinessOrderDetails.Where(d => d.IsDelete == false).Select(d => new
             {
                 d.Id,
                 d.MediaTypeName,
                 d.MediaName,
                 d.AdPositionName,
                 d.MediaTitle,
-                PrePublishDate=d.PrePublishDate.IfNotNull(t=>t.Value.ToString("yyyy-MM-dd"),DateTime.Now.ToString("yyyy-MM-dd")),
+                PrePublishDate = d.PrePublishDate.IfNotNull(t => t.Value.ToString("yyyy-MM-dd"), DateTime.Now.ToString("yyyy-MM-dd")),
                 d.SellMoney,
                 d.Money,
                 d.Tax,
@@ -225,6 +235,7 @@ namespace Business.Controllers
                     detail.MediaTypeName = businessOrderDetail.MediaTypeName;
                     detail.Remark = businessOrderDetail.Remark;
                     detail.CostMoney = businessOrderDetail.CostMoney;
+                    detail.MediaByPurchase = businessOrderDetail.MediaByPurchase;
                 }
             }
             entity.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);
@@ -238,12 +249,55 @@ namespace Business.Controllers
         [AdaValidateAntiForgeryToken]
         public ActionResult Delete(string id)
         {
-            //var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            //entity.DeletedBy = CurrentManager.UserName;
-            //entity.DeletedById = CurrentManager.Id;
-            //entity.DeletedDate = DateTime.Now;
-            //_mediaTypeService.Delete(entity);
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            entity.DeletedBy = CurrentManager.UserName;
+            entity.DeletedById = CurrentManager.Id;
+            entity.DeletedDate = DateTime.Now;
+            _businessOrderService.Delete(entity);
             return Json(new { State = 1, Msg = "删除成功" });
         }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult TransformPurchaseOrder(string id)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            var temp = _purchaseOrderRepository.LoadEntities(d => d.BusinessOrderId == id && d.IsDelete == false).FirstOrDefault();
+            if (temp != null)
+            {
+                return Json(new { State = 0, Msg = "此订单已转采购，无需重复操作" });
+            }
+            PurchaseOrder purchaseOrder = new PurchaseOrder();
+            purchaseOrder.Id = IdBuilder.CreateIdNum();
+            purchaseOrder.BusinessOrderId = entity.Id;
+            purchaseOrder.BusinessBy = entity.Transactor;
+            purchaseOrder.BusinessById = entity.TransactorId;
+            purchaseOrder.OrderDate = DateTime.Now;
+            purchaseOrder.TotalMoney = 0;
+            purchaseOrder.OrderNum = IdBuilder.CreateOrderNum("CD");
+            purchaseOrder.Status = Consts.StateLock;
+            foreach (var entityBusinessOrderDetail in entity.BusinessOrderDetails)
+            {
+                PurchaseOrderDetail purchaseOrderDetail = new PurchaseOrderDetail();
+                purchaseOrderDetail.Id = IdBuilder.CreateIdNum();
+                purchaseOrderDetail.BusinessOrderDetailId = entityBusinessOrderDetail.Id;
+                purchaseOrderDetail.CostMoney = entityBusinessOrderDetail.CostMoney;
+                purchaseOrderDetail.VerificationStatus = Consts.StateLock;
+                purchaseOrderDetail.AdPositionName = entityBusinessOrderDetail.AdPositionName;
+                purchaseOrderDetail.MediaTitle = entityBusinessOrderDetail.MediaTitle;
+                purchaseOrderDetail.MediaName = entityBusinessOrderDetail.MediaName;
+                purchaseOrderDetail.MediaTypeName = entityBusinessOrderDetail.MediaTypeName;
+                purchaseOrderDetail.MediaPrice = entityBusinessOrderDetail.MediaPrice;
+                purchaseOrderDetail.Transactor = entityBusinessOrderDetail.MediaPrice.Media.Transactor;
+                purchaseOrderDetail.TransactorId = entityBusinessOrderDetail.MediaPrice.Media.TransactorId;
+                purchaseOrderDetail.AuditStatus = Consts.StateLock;
+                purchaseOrderDetail.Status = Consts.StateLock;
+                purchaseOrderDetail.LinkMan = entityBusinessOrderDetail.MediaPrice.Media.LinkMan;
+                purchaseOrderDetail.LinkManName = entityBusinessOrderDetail.MediaPrice.Media.LinkMan.Name;
+                purchaseOrder.PurchaseOrderDetails.Add(purchaseOrderDetail);
+            }
+            _purchaseOrderService.Add(purchaseOrder);
+            return Json(new { State = 1, Msg = "转换成功" });
+        }
+
     }
 }
