@@ -293,6 +293,14 @@ namespace Business.Controllers
                 purchaseOrderDetail.Status = Consts.StateLock;
                 purchaseOrderDetail.LinkMan = entityBusinessOrderDetail.MediaPrice.Media.LinkMan;
                 purchaseOrderDetail.LinkManName = entityBusinessOrderDetail.MediaPrice.Media.LinkMan.Name;
+                purchaseOrderDetail.Tax = 0;
+                purchaseOrderDetail.TaxMoney = 0;
+                purchaseOrderDetail.BargainMoney = 0;
+                purchaseOrderDetail.Money = 0;
+                purchaseOrderDetail.ConfirmVerificationMoney = 0;
+                purchaseOrderDetail.VerificationMoney = 0;
+                purchaseOrderDetail.DiscountMoney = 0;
+                purchaseOrderDetail.PurchaseMoney = 0;
                 purchaseOrder.PurchaseOrderDetails.Add(purchaseOrderDetail);
             }
             _purchaseOrderService.Add(purchaseOrder);

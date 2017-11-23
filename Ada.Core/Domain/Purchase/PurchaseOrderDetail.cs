@@ -16,9 +16,9 @@ namespace Ada.Core.Domain.Purchase
         [Display(Name = "销售明细单")]
         public string BusinessOrderDetailId { get; set; }
         /// <summary>
-        /// 折扣金额
+        /// 优惠金额
         /// </summary>
-        [Display(Name = "折扣金额")]
+        [Display(Name = "优惠金额")]
         public decimal? DiscountMoney { get; set; }
         /// <summary>
         /// 折扣%
@@ -50,6 +50,11 @@ namespace Ada.Core.Domain.Purchase
         /// </summary>
         [Display(Name = "无税金额")]
         public decimal? PurchaseMoney { get; set; }
+        /// <summary>
+        /// 预付定金
+        /// </summary>
+        [Display(Name = "预付定金")]
+        public decimal? BargainMoney { get; set; }
         /// <summary>
         /// 未核销金额
         /// </summary>

@@ -45,6 +45,11 @@ namespace Ada.Core.Domain.Purchase
         [Display(Name = "优惠金额")]
         public decimal? TotalDiscountMoney { get; set; }
         /// <summary>
+        /// 预付定金
+        /// </summary>
+        [Display(Name = "预付定金")]
+        public decimal? TotalBargainMoney { get; set; }
+        /// <summary>
         /// 无税金额
         /// </summary>
         [Display(Name = "无税金额")]

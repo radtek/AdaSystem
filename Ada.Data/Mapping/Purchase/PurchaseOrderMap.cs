@@ -24,6 +24,7 @@ namespace Ada.Data.Mapping.Purchase
             Property(s => s.TotalTaxMoney);
             Property(s => s.Status);
             Property(s => s.OrderDate);
+            Property(s => s.TotalBargainMoney);
             Property(s => s.BusinessBy).HasMaxLength(32);
             Property(s => s.BusinessById).HasMaxLength(32);
 

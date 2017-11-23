@@ -17,6 +17,7 @@ namespace Ada.Data.Mapping.Purchase
             Property(s => s.PublishDate);
             Property(s => s.DiscountRate);
             Property(s => s.DiscountMoney);
+            Property(s => s.BargainMoney);
             Property(s => s.Money);
             Property(s => s.TaxMoney);
             Property(s => s.Tax);

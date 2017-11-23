@@ -88,6 +88,7 @@ function initData() {
     initSelect2("TransactorId", transactorSelect);
     $table.bootstrapTable({
         data: orderData,
+        classes:"table table-no-bordered",
         columns: [
             {
                 field: 'MediaTypeName',

@@ -81,6 +81,7 @@ namespace Purchase.Controllers
             item.MediaTypeName = entity.MediaTypeName;
             item.CostMoney = entity.CostMoney;
             item.PublishDate = entity.PublishDate;
+            item.PublishLink = entity.PublishLink;
             item.Tax = entity.Tax;
             item.TaxMoney = entity.TaxMoney;
             item.PurchaseMoney = entity.PurchaseMoney;
@@ -89,7 +90,57 @@ namespace Purchase.Controllers
             item.Transactor = entity.Transactor;
             item.TransactorId = entity.TransactorId;
             item.Status = entity.Status;
+            item.BargainMoney = entity.BargainMoney;
+            //item.OrderDate = entity.PurchaseOrder.OrderDate;
             return View(item);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(PurchaseOrderDetailView viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
+                return View(viewModel);
+            }
+            var entity = _purchaseOrderDetailRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
+            entity.ModifiedById = CurrentManager.Id;
+            entity.ModifiedBy = CurrentManager.UserName;
+            entity.ModifiedDate = DateTime.Now;
+            entity.PurchaseType = viewModel.PurchaseType;
+            entity.SettlementType = viewModel.SettlementType;
+            entity.LinkManId = viewModel.LinkManId;
+            entity.LinkManName = viewModel.LinkManName;
+            entity.Transactor = viewModel.Transactor;
+            entity.TransactorId = viewModel.TransactorId;
+            entity.PublishDate = viewModel.PublishDate;
+            entity.PublishLink = viewModel.PublishLink;
+
+            entity.Tax = viewModel.Tax;
+            entity.TaxMoney = viewModel.TaxMoney;
+            entity.PurchaseMoney = viewModel.PurchaseMoney;
+            entity.Money = viewModel.Money;
+            entity.DiscountMoney = viewModel.DiscountMoney;
+            entity.BargainMoney = viewModel.BargainMoney;
+
+           
+            entity.Status = viewModel.Status;
+            entity.Remark = viewModel.Remark;
+            
+            _purchaseOrderDetailService.Update(entity);
+            TempData["Msg"] = "更新成功";
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult Delete(string id)
+        {
+            var entity = _purchaseOrderDetailRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            entity.DeletedBy = CurrentManager.UserName;
+            entity.DeletedById = CurrentManager.Id;
+            entity.DeletedDate = DateTime.Now;
+            _purchaseOrderDetailService.Delete(entity);
+            return Json(new { State = 1, Msg = "删除成功" });
         }
     }
 }

@@ -57,6 +57,15 @@ formatter.businessStatus = function (value, row, index) {
         return "<span class='label label-warning'>待审</span>";
     }
 }
+formatter.purchaseStatus = function (value, row, index) {
+    if (value == 2) {
+        return "<span class='label label-primary'>已完成</span>";
+    } else if (value == 1) {
+        return "<span class='label label-warning'>已处理</span>";
+    } else {
+        return "<span class='label label-danger'>待响应</span>";
+    }
+}
 function initChangePwd(url,token) {
     $("#changepwd").click(function() {
         $("#modalView").load(url,

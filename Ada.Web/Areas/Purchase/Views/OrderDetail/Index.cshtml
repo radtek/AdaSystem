@@ -64,12 +64,12 @@
 </div>
 
 <div id="toolbar" class="btn-group">
-    <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
+    @*<a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
         <i class="fa fa-plus"></i> 新增
     </a>
     <button id="btn_edit" type="button" class="btn btn-primary btn-outline">
         <i class="fa fa-pencil"></i> 修改
-    </button>
+    </button>*@
     <button id="btn_delete" type="button" class="btn btn-primary btn-outline">
         <i class="fa fa-trash-o"></i> 删除
     </button>
@@ -126,39 +126,39 @@
                     {
                         field: 'Status',
                         title: '@Html.DisplayNameFor(d=>d.Status)',
-                        align: "center",
-                        formatter: formatter.businessStatus
+                        align: "center", valign: "middle",
+                        formatter: formatter.purchaseStatus
                     },
                     {
                         field: 'PurchaseOrderNum',
                         title: '@Html.DisplayNameFor(d=>d.PurchaseOrderNum)',
-                        align: "center"
+                        align: "center", valign: "middle",
                     },
                     {
                         field: 'BusinessBy',
                         title: '@Html.DisplayNameFor(d=>d.BusinessBy)',
-                        align: "center"
+                        align: "center", valign: "middle",
                     },
                     {
                         field: 'MediaTypeName',
                         title: '@Html.DisplayNameFor(d=>d.MediaTypeName)',
-                        align:"center"
+                        align: "center", valign: "middle",
                     },
                     {
                         field: 'MediaName',
                         title: '@Html.DisplayNameFor(d=>d.MediaName)',
-                        align: "center"
+                        align: "center", valign: "middle",
                     }
                     ,
                     {
                         field: 'AdPositionName',
                         title: '@Html.DisplayNameFor(d=>d.AdPositionName)',
-                        align: "center"
+                        align: "center", valign: "middle",
                     },
                     {
                         field: 'CostMoney',
                         title: '@Html.DisplayNameFor(d=>d.CostMoney)',
-                        align: "center"
+                        align: "center", valign: "middle",
                     },
                     @*{
                         field: 'PurchaseMoney',
@@ -182,20 +182,16 @@
                         title: '@Html.DisplayNameFor(d=>d.DiscountMoney)',
                         align: "center"
                     },*@
-                    {
-                        field: 'Money',
-                        title: '@Html.DisplayNameFor(d=>d.Money)',
-                        align: "center"
-                    },
+
                     {
                         field: 'MediaTitle',
                         title: '@Html.DisplayNameFor(d=>d.MediaTitle)',
-                        align: "center"
+                        align: "center", valign: "middle",
                     },
                     {
                         field: 'PrePublishDate',
                         title: '@Html.DisplayNameFor(d=>d.PrePublishDate)',
-                        align: "center",
+                        align: "center", valign: "middle",
                         formatter: function(value) {
                             return  moment(value).format("YYYY-MM-DD");
                         }
@@ -203,7 +199,7 @@
                     {
                         field: 'PublishDate',
                         title: '@Html.DisplayNameFor(d=>d.PublishDate)',
-                        align: "center",
+                        align: "center", valign: "middle",
                         formatter: function(value) {
                             if (value) {
                                 return moment(value).format("YYYY-MM-DD");
@@ -213,17 +209,22 @@
                     {
                         field: 'PublishLink',
                         title: '@Html.DisplayNameFor(d=>d.PublishLink)',
-                        align: "center"
+                        align: "center", valign: "middle",
+                    },
+                    {
+                        field: 'Money',
+                        title: '@Html.DisplayNameFor(d=>d.Money)',
+                        align: "center", valign: "middle",
                     },
                     {
                         field: 'Transactor',
                         title: '@Html.DisplayNameFor(d=>d.Transactor)',
-                        align: "center"
+                        align: "center", valign: "middle",
                     },
                     {
                         field: 'OrderDate',
                         title: '@Html.DisplayNameFor(d=>d.OrderDate)',
-                        align: "center",
+                        align: "center", valign: "middle",
                         formatter: function(value) {
                             return  moment(value).format("YYYY-MM-DD");
                         }
@@ -231,9 +232,9 @@
                     {
                         field: 'Id',
                         title: '操作',
-                        align: "center",
+                        align: "center", valign: "middle",
                         formatter: function (value) {
-                            return "<button class='btn btn-primary btn-sm' type='button' onclick='alert(\""+value+"\");'>订单跟进</button>";
+                            return "<a class='btn btn-primary btn-sm' href='@Url.Action("Update")?id="+value+"');'>处理订单</a>";
                         }
 
                     }
@@ -248,7 +249,7 @@
             var oInit = new Object();
             oInit.Init = function () {
 
-                //编辑
+                @*//编辑
                 $("#btn_edit").click(function () {
                     var arrselections = $("#table").bootstrapTable('getSelections');
                     if (arrselections.length > 1) {
@@ -261,7 +262,7 @@
                     }
                     window.location.href = "@Url.Action("Update")?id="+arrselections[0].Id;
 
-                });
+                });*@
 
                 $("#btn_delete").click(function () {
                     var arrselections = $("#table").bootstrapTable('getSelections');

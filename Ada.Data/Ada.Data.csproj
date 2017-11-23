@@ -131,6 +131,10 @@
     <Compile Include="Migrations\201711210112044_ActionMethodLength.Designer.cs">
       <DependentUpon>201711210112044_ActionMethodLength.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711230538157_dingjin.cs" />
+    <Compile Include="Migrations\201711230538157_dingjin.Designer.cs">
+      <DependentUpon>201711230538157_dingjin.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -186,6 +190,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711210112044_ActionMethodLength.resx">
       <DependentUpon>201711210112044_ActionMethodLength.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711230538157_dingjin.resx">
+      <DependentUpon>201711230538157_dingjin.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
