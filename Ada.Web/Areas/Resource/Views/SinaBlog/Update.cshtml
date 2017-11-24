@@ -1,15 +1,15 @@
 ﻿@using System.Web.Optimization
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
-    ViewBag.Title = "编辑微信";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "微信资源", Value = Url.Action("Index") } };
+    ViewBag.Title = "编辑微博";
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "微博资源", Value = Url.Action("Index") } };
 }
 @Html.Partial("Bread", urls)
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-        @Html.Partial("WeiXinEdit", Model)
+        @Html.Partial("SinaBlogEdit", Model)
         @Html.HiddenFor(d => d.Id)
     }
 </div>
@@ -28,3 +28,5 @@
     </script>
     <script src="@Url.Content("~/Areas/Resource/Scripts/resource.js")"></script>
 }
+
+

@@ -81,7 +81,7 @@
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-
+    @Scripts.Render("~/plugins/peity")
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -90,6 +90,7 @@
             //2.初始化Button的点击事件
             var oButtonInit = new ButtonInit();
             oButtonInit.Init();
+            
         });
         var TableInit = function() {
             var obj = new Object();
@@ -97,6 +98,7 @@
                 $('#table').bootstrapTable({
                 url: '@Url.Action("GetList")',         //请求后台的URL（*）
                 toolbar: '#toolbar',                //工具按钮用哪个容器
+                classes: "table table-no-bordered",
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）
@@ -118,10 +120,17 @@
                 cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
                 //detailView: true,                   //设置为 true 可以显示详细页面模式。
                 //detailFormatter: detailFormatter,
-                mobileResponsive:true,
+                mobileResponsive: true,
+                onLoadSuccess: initPie,
                 columns: [
                     {
                         checkbox: true
+                    },
+                    {
+                        field: 'PurchaseSchedule',
+                        title: '@Html.DisplayNameFor(d=>d.PurchaseSchedule)',
+                        align: "center", valign: "middle",
+                        formatter: formatter.pie
                     },
                     {
                         field: 'Status',
@@ -132,7 +141,7 @@
                     {
                         field: 'OrderNum',
                         title: '@Html.DisplayNameFor(d=>d.OrderNum)',
-                        align: "center", valign: "middle",
+                        align: "center", valign: "middle"
                     },
                     {
                         field: 'LinkManName',

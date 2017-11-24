@@ -4,9 +4,9 @@
 @using Ada.Services.Resource
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
-    ViewBag.Title = "微信资源";
+    ViewBag.Title = "微博资源";
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
-    var adpositions = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("weixin").AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
+    var adpositions = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("sinablog").AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
 }
 @Html.Partial("Bread")
 
@@ -40,7 +40,7 @@
                 <div class="row">
                     <div class="col-sm-2 m-b">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.MediaID, "微信号：", new { @class = "control-label" })
+                            @Html.LabelFor(d => d.MediaID, "微博ID：", new { @class = "control-label" })
                             @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control input-sm" })
                         </div>
                     </div>
@@ -105,9 +105,6 @@
     <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
         <i class="fa fa-plus"></i> 新增
     </a>
-    @*<button id="btn_edit" type="button" class="btn btn-primary btn-outline">
-        <i class="fa fa-pencil"></i> 修改
-    </button>*@
     <button id="btn_delete" type="button" class="btn btn-primary btn-outline">
         <i class="fa fa-trash-o"></i> 删除
     </button>
@@ -174,19 +171,24 @@
                     },
                     {
                         field: 'MediaName',
-                        title: '微信公众号',
+                        title: '微博名称',
                         valign: "middle",
-                        align:  "center"
-                    },
-                    {
-                        field: 'MediaID',
-                        title: '微信号',
-                        valign: "middle",
-                        align: "center"
+                        align: "center",
+                        formatter: function(value, row, index) {
+                            if (value) {
+                                return "<a class='label' href='" + row.MediaLink + "' target='_blank'><i class='fa fa-link'></i> "+value+"</a>";
+                            }
+                        }
                     },
                     {
                         field: 'Area',
                         title: '@Html.DisplayNameFor(d=>d.Area)',
+                        valign: "middle",
+                        align: "center"
+                    },
+                    {
+                        field: 'FansNum',
+                        title: '@Html.DisplayNameFor(d=>d.FansNum)',
                         valign: "middle",
                         align: "center"
                     },
@@ -234,21 +236,6 @@
         var ButtonInit = function () {
             var oInit = new Object();
             oInit.Init = function () {
-
-                @*//编辑
-                $("#btn_edit").click(function () {
-                    var arrselections = $("#table").bootstrapTable('getSelections');
-                    if (arrselections.length > 1) {
-                        swal("操作提醒", "只能选择一行进行编辑", "warning");
-                        return;
-                    }
-                    if (arrselections.length <= 0) {
-                        swal("操作提醒", "请选择有效数据", "warning");
-                        return;
-                    }
-                    window.location.href = "@Url.Action("Update")?id="+arrselections[0].Id;
-
-                });*@
 
                 $("#btn_delete").click(function () {
                     var arrselections = $("#table").bootstrapTable('getSelections');
@@ -330,6 +317,8 @@
         }
     </script>
 }
+
+
 
 
 

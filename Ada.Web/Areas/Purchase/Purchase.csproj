@@ -116,6 +116,7 @@
     <Content Include="Views\OrderDetail\Index.cshtml" />
     <Content Include="Views\OrderDetail\Update.cshtml" />
     <Content Include="Views\OrderDetail\OrderEdit.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

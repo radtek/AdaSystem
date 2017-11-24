@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = "处理订单";
     List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "采购订单", Value = Url.Action("Index") } };
+    var discountBefore = Model.Money + Model.DiscountMoney;
 }
 @Html.Partial("Bread", urls)
 
@@ -28,6 +29,7 @@
                         </div>
                         @Html.Partial("OrderEdit", Model)
                         @Html.HiddenFor(d => d.Id)
+                        @Html.HiddenFor(d => d.DiscountRate)
                     </div>
                 </div>
             </div>
@@ -52,7 +54,7 @@
     <script>
         var linkmanUrl = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})",
             managerUrl = "@Url.Action("GetList", "Manager", new {area = "Admin"})",
-            purchaseBefore =@Model.PurchaseMoney,moneyBefore=@Model.Money;
+            discountRate =@Model.DiscountRate,discountBefore=@discountBefore;
 
     </script>
     <script src="@Url.Content("~/Areas/Purchase/Scripts/order.js")"></script>

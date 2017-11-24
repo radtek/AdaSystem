@@ -59,6 +59,11 @@ $(function () {
         submitHandler: function (form) {
             $('.wrapper.wrapper-content .ibox').children('.ibox-content').toggleClass('sk-loading');
             form.submit();
+        },
+        rules: {
+            PublishLink: {
+                url: true
+            }
         }
     });
 });
@@ -80,64 +85,58 @@ function initData() {
     //计算金额
     var taxinput = $('#Tax'),
         discountinput = $('#DiscountMoney'),
-        bargininput = $('#BargainMoney'),
         purchaseinput = $('#PurchaseMoney'),
         taxmoneyinput = $('#TaxMoney'),
+        discountrateinput = $('#DiscountRate'),
         totalinput = $('#Money');
-    taxinput.add(discountinput).add(bargininput).add(purchaseinput).add(totalinput).on('input propertychange', function () {
+    taxinput.add(discountinput).add(purchaseinput).add(totalinput).on('input propertychange', function () {
         var tax = taxinput.val() || 0,
             discount = discountinput.val() || 0,
-            bargin = bargininput.val() || 0,
             purchase = purchaseinput.val() || 0,
             money = totalinput.val() || 0,
             taxmoney = taxmoneyinput.val() || 0,
             currentid = $(this).attr("id"),
             currentvalue = $(this).val();
         if (currentid == "PurchaseMoney" && !isNaN(currentvalue)) {//无税金额
-            money = Math.toFixMoney(currentvalue * (1 + tax / 100)) - discount;
+            money = Math.toFixMoney(currentvalue * (1 + tax / 100));
             taxmoney = Math.toFixMoney(currentvalue * (tax / 100));
+            discountBefore = Math.toFixMoney(money / (discountRate / 100));
+            discount = Math.toFixMoney(discountBefore - money);
+            discountinput.val(discount);
             taxmoneyinput.val(taxmoney);
             totalinput.val(money);
-            moneyBefore = money;
-            purchaseBefore = currentvalue;
+            //discountBefore = money;
+            
         }
         if (currentid == "Money" && !isNaN(currentvalue)) {//采购金额
-            purchase = Math.toFixMoney(currentvalue / (1 + tax / 100)) - discount;
+            purchase = Math.toFixMoney(currentvalue / (1 + tax / 100));
             taxmoney = Math.toFixMoney(purchase * (tax / 100));
+            discountBefore = Math.toFixMoney(currentvalue / (discountRate / 100));
+            discount = Math.toFixMoney(discountBefore - currentvalue);
+            discountinput.val(discount);
             taxmoneyinput.val(taxmoney);
             purchaseinput.val(purchase);
-            moneyBefore = currentvalue;
-            purchaseBefore = purchase;
         }
-        //if (currentid == "BargainMoney" && !isNaN(currentvalue)) {//定金
-        //    money = Math.toFixMoney(money*1 - discount*1 - currentvalue*1);
-        //    purchase = Math.toFixMoney(purchase*1 - discount*1 - currentvalue*1);
-        //    taxmoney = Math.toFixMoney(purchase * (tax / 100));
-        //    taxmoneyinput.val(taxmoney);
-        //    totalinput.val(money);
-        //    purchaseinput.val(purchase);
-        //}
         if (currentid == "DiscountMoney" && !isNaN(currentvalue)) {//优惠金额
-            money = Math.toFixMoney(moneyBefore*1 - currentvalue*1);
-            purchase = Math.toFixMoney(purchaseBefore*1 - currentvalue*1);
+
+            money = Math.toFixMoney(discountBefore - currentvalue);
+            if (discountBefore != 0) {
+                discountRate = Math.toFixMoney((money / discountBefore) * 100);
+                discountrateinput.val(discountRate);
+            }
+            purchase = Math.toFixMoney(money / (1 + tax / 100));
             taxmoney = Math.toFixMoney(purchase * (tax / 100));
             taxmoneyinput.val(taxmoney);
             totalinput.val(money);
             purchaseinput.val(purchase);
         }
         if (currentid == "Tax" && !isNaN(currentvalue)) {//税率
-            if (!isNaN(purchase)) {
-                money = Math.toFixMoney(purchase * (1 + currentvalue / 100) - discount * 1);
-                totalinput.val(money);
-            } else if (!isNaN(money)) {
-                purchase = Math.toFixMoney(money / (1 + currentvalue / 100) - discount * 1);
+            if (!isNaN(money)) {
+                purchase = Math.toFixMoney(money / (1 + currentvalue / 100));
+                taxmoney = Math.toFixMoney(purchase * (currentvalue / 100));
+                taxmoneyinput.val(taxmoney);
                 purchaseinput.val(purchase);
             }
-            moneyBefore = money;
-            purchaseBefore = purchase;
-            taxmoney = Math.toFixMoney(purchase * (currentvalue / 100));
-            taxmoneyinput.val(taxmoney);
-            
         }
      
     });

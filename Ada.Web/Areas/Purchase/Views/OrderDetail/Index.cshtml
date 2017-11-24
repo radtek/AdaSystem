@@ -69,10 +69,10 @@
     </a>
     <button id="btn_edit" type="button" class="btn btn-primary btn-outline">
         <i class="fa fa-pencil"></i> 修改
-    </button>*@
+    </button>
     <button id="btn_delete" type="button" class="btn btn-primary btn-outline">
         <i class="fa fa-trash-o"></i> 删除
-    </button>
+    </button>*@
 </div>
 
 @section Styles {
@@ -97,6 +97,7 @@
                 $('#table').bootstrapTable({
                 url: '@Url.Action("GetList")',         //请求后台的URL（*）
                 toolbar: '#toolbar',                //工具按钮用哪个容器
+                classes: "table table-no-bordered",
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）
@@ -118,7 +119,8 @@
                 cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
                 //detailView: true,                   //设置为 true 可以显示详细页面模式。
                 //detailFormatter: detailFormatter,
-                mobileResponsive:true,
+                mobileResponsive: true,
+                onLoadSuccess: initTooltip,
                 columns: [
                     {
                         checkbox: true
@@ -186,7 +188,7 @@
                     {
                         field: 'MediaTitle',
                         title: '@Html.DisplayNameFor(d=>d.MediaTitle)',
-                        align: "center", valign: "middle",
+                        align: "center", valign: "middle", formatter: formatter.tooltip
                     },
                     {
                         field: 'PrePublishDate',
@@ -209,7 +211,7 @@
                     {
                         field: 'PublishLink',
                         title: '@Html.DisplayNameFor(d=>d.PublishLink)',
-                        align: "center", valign: "middle",
+                        align: "center", valign: "middle", formatter: formatter.url
                     },
                     {
                         field: 'Money',
@@ -264,7 +266,7 @@
 
                 });*@
 
-                $("#btn_delete").click(function () {
+                @*$("#btn_delete").click(function () {
                     var arrselections = $("#table").bootstrapTable('getSelections');
                     if (arrselections.length > 1) {
                         swal("操作提醒", "只能选择一行进行删除", "warning");
@@ -315,7 +317,7 @@
                             }
                         });
                     });
-                });
+                });*@
                 $("#btn_reset").click(function () {
                     searchFrm.reset($("#searchFrm"));
                 });

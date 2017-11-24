@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -131,5 +132,29 @@ namespace Ada.Core.Tools
             }
             return result;
         }
+        /// <summary>
+        /// 获取新浪微博ID
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public static string GetBlogId(string url)
+        {
+            string result = string.Empty;
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return result;
+            }
+            Match match = Regex.Match(url, @"weibo.com/u/(\d+)", RegexOptions.ECMAScript);
+            result = match.Groups[1].Value;
+            if (string.IsNullOrWhiteSpace(result))
+            {
+                Match match2 = Regex.Match(url, @"www.weibo.com/u/(\d+)", RegexOptions.ECMAScript);
+                result = match2.Groups[1].Value;
+            }
+            return result;
+
+        }
     }
+
+
 }

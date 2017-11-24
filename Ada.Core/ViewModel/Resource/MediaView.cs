@@ -19,7 +19,6 @@ namespace Ada.Core.ViewModel.Resource
         /// 媒体ID
         /// </summary>
         [Display(Name = "媒体ID")]
-        [Required]
         public string MediaID { get; set; }
         /// <summary>
         /// 媒体链接

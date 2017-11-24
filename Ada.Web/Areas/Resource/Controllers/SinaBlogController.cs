@@ -6,20 +6,21 @@ using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Resource;
+using Ada.Core.Tools;
 using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Filter;
 using Ada.Services.Resource;
 
 namespace Resource.Controllers
 {
-    public class WeiXinController : BaseController
+    public class SinaBlogController : BaseController
     {
         private readonly IMediaService _mediaService;
         private readonly IRepository<Media> _repository;
         private readonly IRepository<MediaTag> _mediaTagRepository;
         private readonly IRepository<MediaPrice> _mediaPriceRepository;
         private readonly IMediaTypeService _mediaTypeService;
-        public WeiXinController(IMediaService mediaService,
+        public SinaBlogController(IMediaService mediaService,
             IRepository<Media> repository,
             IMediaTypeService mediaTypeService,
             IRepository<MediaTag> mediaTagRepository,
@@ -38,7 +39,7 @@ namespace Resource.Controllers
         }
         public ActionResult GetList(MediaView viewModel)
         {
-            viewModel.MediaTypeIndex = "weixin";
+            viewModel.MediaTypeIndex = "sinablog";
             var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {
@@ -48,14 +49,14 @@ namespace Resource.Controllers
                     Id = d.Id,
                     MediaName = d.MediaName,
                     MediaID = d.MediaID,
-                    IsAuthenticate = d.IsAuthenticate,
-                    IsOriginal = d.IsOriginal,
-                    IsComment = d.IsComment,
+                    //IsAuthenticate = d.IsAuthenticate,
+                    //IsOriginal = d.IsOriginal,
+                    //IsComment = d.IsComment,
                     FansNum = d.FansNum,
                     ChannelType = d.ChannelType,
-                    LastReadNum = d.LastReadNum,
-                    AvgReadNum = d.AvgReadNum,
-                    PublishFrequency = d.PublishFrequency,
+                    //LastReadNum = d.LastReadNum,
+                    //AvgReadNum = d.AvgReadNum,
+                    //PublishFrequency = d.PublishFrequency,
                     Area = d.Area,
                     LastPushDate = d.LastPushDate,
                     AuthenticateType = d.AuthenticateType,
@@ -68,7 +69,7 @@ namespace Resource.Controllers
                     ApiUpDate = d.ApiUpDate,
                     MediaLink = d.MediaLink,
                     MediaLogo = d.MediaLogo,
-                    MediaQR = d.MediaQR,
+                    //MediaQR = d.MediaQR,
                     LinkManId = d.LinkManId,
                     LinkManName = d.LinkMan.Name,
                     Transactor = d.Transactor,
@@ -80,7 +81,7 @@ namespace Resource.Controllers
         public ActionResult Add()
         {
             MediaView viewModel = new MediaView();
-            var mediaType = _mediaTypeService.GetMediaTypeByCallIndex("weixin");
+            var mediaType = _mediaTypeService.GetMediaTypeByCallIndex("sinablog");
             viewModel.MediaTypeId = mediaType.Id;
             viewModel.Status = Consts.StateNormal;
             viewModel.MediaPrices = mediaType.AdPositions
@@ -93,7 +94,7 @@ namespace Resource.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Add(MediaView viewModel)
         {
-            
+
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
@@ -101,11 +102,11 @@ namespace Resource.Controllers
             }
             //校验ID不能重复
             var temp = _repository.LoadEntities(d =>
-                d.MediaID.Equals(viewModel.MediaID, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
+                d.MediaID.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
                 d.MediaTypeId == viewModel.MediaTypeId).FirstOrDefault();
             if (temp != null)
             {
-                ModelState.AddModelError("message", viewModel.MediaID + "，此微信公众号已存在！");
+                ModelState.AddModelError("message", viewModel.MediaName + "，此微博账号已存在！");
                 return View(viewModel);
             }
             Media entity = new Media();
@@ -117,26 +118,26 @@ namespace Resource.Controllers
             entity.TransactorId = viewModel.TransactorId;
 
 
-            entity.MediaName = viewModel.MediaName;
-            entity.MediaID = viewModel.MediaID;
+            entity.MediaName = viewModel.MediaName.Trim();
             entity.MediaLink = viewModel.MediaLink;
+            entity.MediaID = Utils.GetBlogId(viewModel.MediaLink);
             entity.MediaLogo = viewModel.MediaLogo;
-            entity.MediaQR = viewModel.MediaQR;
+            //entity.MediaQR = viewModel.MediaQR;
 
-            entity.IsAuthenticate = viewModel.IsAuthenticate;
-            entity.IsOriginal = viewModel.IsOriginal;
-            entity.IsComment = viewModel.IsComment;
+            //entity.IsAuthenticate = viewModel.IsAuthenticate;
+            //entity.IsOriginal = viewModel.IsOriginal;
+            //entity.IsComment = viewModel.IsComment;
             entity.FansNum = viewModel.FansNum;
-            entity.LastReadNum = viewModel.LastReadNum;
-            entity.AvgReadNum = viewModel.AvgReadNum;
-            entity.PublishFrequency = viewModel.PublishFrequency;
+            //entity.LastReadNum = viewModel.LastReadNum;
+            //entity.AvgReadNum = viewModel.AvgReadNum;
+            //entity.PublishFrequency = viewModel.PublishFrequency;
             entity.Area = viewModel.Area;
             entity.ChannelType = viewModel.ChannelType;
             //entity.LastPushDate = viewModel.LastPushDate;
-            //entity.AuthenticateType = viewModel.AuthenticateType;
-            //entity.TransmitNum = viewModel.TransmitNum;
-            //entity.CommentNum = viewModel.CommentNum;
-            //entity.LikesNum = viewModel.LikesNum;
+            entity.AuthenticateType = viewModel.AuthenticateType;
+            entity.TransmitNum = viewModel.TransmitNum;
+            entity.CommentNum = viewModel.CommentNum;
+            entity.LikesNum = viewModel.LikesNum;
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
             entity.Status = viewModel.Status;
@@ -182,21 +183,21 @@ namespace Resource.Controllers
             entity.MediaID = item.MediaID;
             entity.MediaLink = item.MediaLink;
             entity.MediaLogo = item.MediaLogo;
-            entity.MediaQR = item.MediaQR;
+            //entity.MediaQR = item.MediaQR;
 
-            entity.IsAuthenticate = item.IsAuthenticate;
-            entity.IsOriginal = item.IsOriginal;
-            entity.IsComment = item.IsComment;
+            //entity.IsAuthenticate = item.IsAuthenticate;
+            //entity.IsOriginal = item.IsOriginal;
+            //entity.IsComment = item.IsComment;
             entity.FansNum = item.FansNum;
-            entity.LastReadNum = item.LastReadNum;
-            entity.AvgReadNum = item.AvgReadNum;
-            entity.PublishFrequency = item.PublishFrequency;
+            //entity.LastReadNum = item.LastReadNum;
+            //entity.AvgReadNum = item.AvgReadNum;
+            //entity.PublishFrequency = item.PublishFrequency;
             entity.Area = item.Area;
             entity.ChannelType = item.ChannelType;
-            //entity.AuthenticateType = item.AuthenticateType;
-            //entity.TransmitNum = item.TransmitNum;
-            //entity.CommentNum = item.CommentNum;
-            //entity.LikesNum = item.LikesNum;
+            entity.AuthenticateType = item.AuthenticateType;
+            entity.TransmitNum = item.TransmitNum;
+            entity.CommentNum = item.CommentNum;
+            entity.LikesNum = item.LikesNum;
             entity.Content = item.Content;
             entity.Remark = item.Remark;
             entity.Status = item.Status;
@@ -232,11 +233,11 @@ namespace Resource.Controllers
             }
             //校验ID不能重复
             var temp = _repository.LoadEntities(d =>
-                d.MediaID.Equals(viewModel.MediaID, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
-                d.MediaTypeId == viewModel.MediaTypeId&&d.Id!=viewModel.Id).FirstOrDefault();
+                d.MediaID.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
+                d.MediaTypeId == viewModel.MediaTypeId && d.Id != viewModel.Id).FirstOrDefault();
             if (temp != null)
             {
-                ModelState.AddModelError("message", viewModel.MediaID + "，此微信公众号已存在！");
+                ModelState.AddModelError("message", viewModel.MediaID + "，此微博账号已存在！");
                 return View(viewModel);
             }
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
@@ -245,27 +246,26 @@ namespace Resource.Controllers
             entity.ModifiedDate = DateTime.Now;
             entity.Transactor = viewModel.Transactor;
             entity.TransactorId = viewModel.TransactorId;
-
-            entity.MediaName = viewModel.MediaName;
-            entity.MediaID = viewModel.MediaID;
+            entity.MediaName = viewModel.MediaName.Trim();
+            entity.MediaID = Utils.GetBlogId(viewModel.MediaLink);
             entity.MediaLink = viewModel.MediaLink;
             entity.MediaLogo = viewModel.MediaLogo;
-            entity.MediaQR = viewModel.MediaQR;
+            //entity.MediaQR = viewModel.MediaQR;
 
-            entity.IsAuthenticate = viewModel.IsAuthenticate;
-            entity.IsOriginal = viewModel.IsOriginal;
-            entity.IsComment = viewModel.IsComment;
+            //entity.IsAuthenticate = viewModel.IsAuthenticate;
+            //entity.IsOriginal = viewModel.IsOriginal;
+            //entity.IsComment = viewModel.IsComment;
             entity.FansNum = viewModel.FansNum;
-            entity.LastReadNum = viewModel.LastReadNum;
-            entity.AvgReadNum = viewModel.AvgReadNum;
-            entity.PublishFrequency = viewModel.PublishFrequency;
+            //entity.LastReadNum = viewModel.LastReadNum;
+            //entity.AvgReadNum = viewModel.AvgReadNum;
+            //entity.PublishFrequency = viewModel.PublishFrequency;
             entity.Area = viewModel.Area;
             entity.ChannelType = viewModel.ChannelType;
-            //entity.LastPushDate = viewModel.LastPushDate;
-            //entity.AuthenticateType = viewModel.AuthenticateType;
-            //entity.TransmitNum = viewModel.TransmitNum;
-            //entity.CommentNum = viewModel.CommentNum;
-            //entity.LikesNum = viewModel.LikesNum;
+            entity.LastPushDate = viewModel.LastPushDate;
+            entity.AuthenticateType = viewModel.AuthenticateType;
+            entity.TransmitNum = viewModel.TransmitNum;
+            entity.CommentNum = viewModel.CommentNum;
+            entity.LikesNum = viewModel.LikesNum;
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
             entity.Status = viewModel.Status;

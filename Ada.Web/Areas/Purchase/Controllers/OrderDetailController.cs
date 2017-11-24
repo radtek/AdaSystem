@@ -86,6 +86,7 @@ namespace Purchase.Controllers
             item.TaxMoney = entity.TaxMoney;
             item.PurchaseMoney = entity.PurchaseMoney;
             item.Money = entity.Money;
+            item.DiscountRate = entity.DiscountRate;
             item.DiscountMoney = entity.DiscountMoney;
             item.Transactor = entity.Transactor;
             item.TransactorId = entity.TransactorId;
@@ -115,15 +116,13 @@ namespace Purchase.Controllers
             entity.TransactorId = viewModel.TransactorId;
             entity.PublishDate = viewModel.PublishDate;
             entity.PublishLink = viewModel.PublishLink;
-
+            entity.DiscountRate = viewModel.DiscountRate;
             entity.Tax = viewModel.Tax;
             entity.TaxMoney = viewModel.TaxMoney;
             entity.PurchaseMoney = viewModel.PurchaseMoney;
             entity.Money = viewModel.Money;
             entity.DiscountMoney = viewModel.DiscountMoney;
             entity.BargainMoney = viewModel.BargainMoney;
-
-           
             entity.Status = viewModel.Status;
             entity.Remark = viewModel.Remark;
             
@@ -131,16 +130,16 @@ namespace Purchase.Controllers
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");
         }
-        [HttpPost]
-        [AdaValidateAntiForgeryToken]
-        public ActionResult Delete(string id)
-        {
-            var entity = _purchaseOrderDetailRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            entity.DeletedBy = CurrentManager.UserName;
-            entity.DeletedById = CurrentManager.Id;
-            entity.DeletedDate = DateTime.Now;
-            _purchaseOrderDetailService.Delete(entity);
-            return Json(new { State = 1, Msg = "删除成功" });
-        }
+        //[HttpPost]
+        //[AdaValidateAntiForgeryToken]
+        //public ActionResult Delete(string id)
+        //{
+        //    var entity = _purchaseOrderDetailRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+        //    entity.DeletedBy = CurrentManager.UserName;
+        //    entity.DeletedById = CurrentManager.Id;
+        //    entity.DeletedDate = DateTime.Now;
+        //    _purchaseOrderDetailService.Delete(entity);
+        //    return Json(new { State = 1, Msg = "删除成功" });
+        //}
     }
 }

@@ -101,6 +101,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\resource.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -109,6 +110,7 @@
     <Compile Include="Controllers\MediaController.cs" />
     <Compile Include="Controllers\MediaTagController.cs" />
     <Compile Include="Controllers\MediaTypeController.cs" />
+    <Compile Include="Controllers\SinaBlogController.cs" />
     <Compile Include="Controllers\WeiXinController.cs" />
     <Compile Include="ResourceAreaRegistration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -125,6 +127,11 @@
     <Content Include="Views\WeiXin\Update.cshtml" />
     <Content Include="Views\MediaTag\Index.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Views\WeiXin\WeiXinEdit.cshtml" />
+    <Content Include="Views\SinaBlog\Index.cshtml" />
+    <Content Include="Views\SinaBlog\Add.cshtml" />
+    <Content Include="Views\SinaBlog\Update.cshtml" />
+    <Content Include="Views\SinaBlog\SinaBlogEdit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

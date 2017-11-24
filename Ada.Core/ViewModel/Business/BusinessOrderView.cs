@@ -160,5 +160,10 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "订单明细")]
         [Required]
         public string OrderDetails { get; set; }
+        /// <summary>
+        /// 采购进度
+        /// </summary>
+        [Display(Name = "采购进度")]
+        public string PurchaseSchedule { get; set; }
     }
 }

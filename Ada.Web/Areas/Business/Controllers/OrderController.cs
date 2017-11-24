@@ -63,11 +63,24 @@ namespace Business.Controllers
                     TotalSellMoney = d.TotalSellMoney,
                     TotalTaxMoney = d.TotalTaxMoney,
                     DiscountMoney = d.TotalDiscountMoney,
-                    AdderBy = d.AddedBy
-
-
+                    AdderBy = d.AddedBy,
+                    PurchaseSchedule = GetPurchaseSchedule(d)
                 })
             }, JsonRequestBehavior.AllowGet);
+        }
+
+        private string GetPurchaseSchedule(BusinessOrder businessOrder)
+        {
+            var count = businessOrder.BusinessOrderDetails.Count;
+            //获取采购订单明细完成情况
+            var purchaseOrder = _purchaseOrderRepository.LoadEntities(d => d.BusinessOrderId == businessOrder.Id)
+                .FirstOrDefault();
+            int finish = 0;
+            if (purchaseOrder!=null)
+            {
+                finish = purchaseOrder.PurchaseOrderDetails.Count(d => d.IsDelete == false && d.Status == Consts.PurchaseStatusSuccess);
+            }
+            return finish + "/" + count;
         }
         public ActionResult Add()
         {
@@ -290,7 +303,7 @@ namespace Business.Controllers
                 purchaseOrderDetail.Transactor = entityBusinessOrderDetail.MediaPrice.Media.Transactor;
                 purchaseOrderDetail.TransactorId = entityBusinessOrderDetail.MediaPrice.Media.TransactorId;
                 purchaseOrderDetail.AuditStatus = Consts.StateLock;
-                purchaseOrderDetail.Status = Consts.StateLock;
+                purchaseOrderDetail.Status = Consts.PurchaseStatusWait;
                 purchaseOrderDetail.LinkMan = entityBusinessOrderDetail.MediaPrice.Media.LinkMan;
                 purchaseOrderDetail.LinkManName = entityBusinessOrderDetail.MediaPrice.Media.LinkMan.Name;
                 purchaseOrderDetail.Tax = 0;
@@ -301,6 +314,7 @@ namespace Business.Controllers
                 purchaseOrderDetail.VerificationMoney = 0;
                 purchaseOrderDetail.DiscountMoney = 0;
                 purchaseOrderDetail.PurchaseMoney = 0;
+                purchaseOrderDetail.DiscountRate = 100;
                 purchaseOrder.PurchaseOrderDetails.Add(purchaseOrderDetail);
             }
             _purchaseOrderService.Add(purchaseOrder);

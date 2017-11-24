@@ -18,7 +18,8 @@ $.fn.serializeObject = function () {
 
 Math.toFixMoney = function (value) {
     var money = value || 0;
-    return Math.round(money * 100) / 100;
+    //return Math.round(money * 100) / 100;
+    return Math.round(money);
 }
 
 
@@ -34,37 +35,66 @@ searchFrm.reset = function (form) {
 }
 
 var formatter = {};
-formatter.userStatus= function(value,row,index) {
-    if (value==1) {
+formatter.userStatus = function(value, row, index) {
+    if (value == 1) {
         return "<span class='label label-primary'>是</span>";
     } else {
         return "<span class='label label-danger'>否</span>";
     }
-}
-formatter.normalStatus = function (value, row, index) {
+};
+formatter.normalStatus = function(value, row, index) {
     if (value == 1) {
         return "<span class='label label-primary'>正常</span>";
     } else {
         return "<span class='label label-danger'>关闭</span>";
     }
-}
-formatter.businessStatus = function (value, row, index) {
+};
+formatter.businessStatus = function(value, row, index) {
     if (value == 1) {
         return "<span class='label label-primary'>正常</span>";
     } else if (value == -1) {
         return "<span class='label label-danger'>作废</span>";
-    }else {
+    } else {
         return "<span class='label label-warning'>待审</span>";
     }
-}
-formatter.purchaseStatus = function (value, row, index) {
+};
+formatter.purchaseStatus = function(value, row, index) {
     if (value == 2) {
-        return "<span class='label label-primary'>已完成</span>";
+        return "<span class='label label-primary'>已确认</span>";
     } else if (value == 1) {
         return "<span class='label label-warning'>已处理</span>";
+    } else if (value == 0) {
+        return "<span class='label'>待响应</span>";
+    } else if (value == 3) {
+        return "<span class='label label-success'>已完成</span>";
     } else {
-        return "<span class='label label-danger'>待响应</span>";
+        return "<span class='label label-danger'>采购失败</span>";
     }
+};
+formatter.url = function(value, row, index) {
+    if (value) {
+        return "<a class='label' href='" + value + "' target='_blank'><i class='fa fa-link'></i> 浏览</a>";
+    }
+};
+formatter.tooltip = function(value, row, index) {
+    if (value) {
+        return '<span class="label label-info" data-toggle="tooltip" data-placement="bottom" title="' +
+            value +
+            '"><i class="fa fa-info-circle"></i> 查看</span>';
+    }
+};
+formatter.pie = function (value, row, index) {
+    return '<span class="pie">'+value+'</span>';
+};
+function initTooltip() {
+    $('[data-toggle="tooltip"]').tooltip();
+}
+
+function initPie() {
+    $("span.pie").peity("pie",
+        {
+            fill: ['#1ab394', '#d7d7d7', '#ffffff']
+        });
 }
 function initChangePwd(url,token) {
     $("#changepwd").click(function() {
