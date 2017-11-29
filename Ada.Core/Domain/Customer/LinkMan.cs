@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core.Domain.Business;
+using Ada.Core.Domain.Finance;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.Domain.Resource;
 
@@ -18,6 +19,8 @@ namespace Ada.Core.Domain.Customer
             Medias=new HashSet<Media>();
             BusinessOrders=new HashSet<BusinessOrder>();
             PurchaseOrderDetails = new HashSet<PurchaseOrderDetail>();
+            BusinessPayees=new HashSet<BusinessPayee>();
+            BillPayments=new HashSet<BillPayment>();
         }
         /// <summary>
         /// 联系人
@@ -100,5 +103,7 @@ namespace Ada.Core.Domain.Customer
         public virtual ICollection<Media> Medias { get; set; }
         public virtual ICollection<BusinessOrder> BusinessOrders { get; set; }
         public virtual ICollection<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
+        public virtual ICollection<BusinessPayee> BusinessPayees { get; set; }
+        public virtual ICollection<BillPayment> BillPayments { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Ada.Core.Domain.Customer;
 using Ada.Core.Domain.Resource;
@@ -10,6 +11,10 @@ namespace Ada.Core.Domain.Purchase
     /// </summary>
     public class PurchaseOrderDetail : BaseEntity
     {
+        public PurchaseOrderDetail()
+        {
+            PurchasePaymentDetails=new HashSet<PurchasePaymentDetail>();
+        }
         /// <summary>
         /// 销售明细单
         /// </summary>
@@ -184,5 +189,7 @@ namespace Ada.Core.Domain.Purchase
         [Display(Name = "采购订单")]
         public string PurchaseOrderId { get; set; }
         public virtual PurchaseOrder PurchaseOrder { get; set; }
+
+        public virtual ICollection<PurchasePaymentDetail> PurchasePaymentDetails { get; set; }
     }
 }
