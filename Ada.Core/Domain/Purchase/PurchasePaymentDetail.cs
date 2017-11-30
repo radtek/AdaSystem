@@ -16,13 +16,13 @@ namespace Ada.Core.Domain.Purchase
         /// 采购订单
         /// </summary>
         [Display(Name = "采购订单")]
-        public string PurchaseReturenOrderDetailId { get; set; }
+        public string PurchaseOrderDetailId { get; set; }
         /// <summary>
         /// 付款申请单
         /// </summary>
         [Display(Name = "付款申请单")]
         public string PurchasePaymentId { get; set; }
         public virtual PurchasePayment PurchasePayment { get; set; }
-        public virtual PurchaseReturenOrderDetail PurchaseReturenOrderDetail { get; set; }
+        public virtual PurchaseOrderDetail PurchaseOrderDetail { get; set; }
     }
 }

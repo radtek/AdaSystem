@@ -61,6 +61,9 @@
     <Compile Include="Mapping\Admin\ManagerActionMap.cs" />
     <Compile Include="Mapping\Admin\ActionMap.cs" />
     <Compile Include="Mapping\Admin\ManagerMap.cs" />
+    <Compile Include="Mapping\Business\BusinessWriteOffMap.cs" />
+    <Compile Include="Mapping\Business\BusinessPaymentMap.cs" />
+    <Compile Include="Mapping\Business\BusinessPayeeMap.cs" />
     <Compile Include="Mapping\Business\BusinessReturnOrderDetailMap.cs" />
     <Compile Include="Mapping\Business\BusinessOrderDetailMap.cs" />
     <Compile Include="Mapping\Business\BusinessReturnOrderMap.cs" />
@@ -68,9 +71,16 @@
     <Compile Include="Mapping\Customer\PayAccountMap.cs" />
     <Compile Include="Mapping\Customer\LinkManMap.cs" />
     <Compile Include="Mapping\Customer\CommpanyMap.cs" />
+    <Compile Include="Mapping\Finance\SettleAccountMap.cs" />
+    <Compile Include="Mapping\Finance\ReceivablesMap.cs" />
+    <Compile Include="Mapping\Finance\IncomeExpendMap.cs" />
+    <Compile Include="Mapping\Finance\BillPaymentDetailMap.cs" />
+    <Compile Include="Mapping\Finance\BillPaymentMap.cs" />
     <Compile Include="Mapping\Log\ManagerLoginLogMap.cs" />
     <Compile Include="Mapping\Log\SystemLogMap.cs" />
     <Compile Include="Mapping\Purchase\PurchaseOrderDetailMap.cs" />
+    <Compile Include="Mapping\Purchase\PurchasePaymentDetailMap.cs" />
+    <Compile Include="Mapping\Purchase\PurchasePaymentMap.cs" />
     <Compile Include="Mapping\Purchase\PurchaseOrderMap.cs" />
     <Compile Include="Mapping\Purchase\PurchaseReturenOrderDetailMap.cs" />
     <Compile Include="Mapping\Purchase\PurchaseReturnOrderMap.cs" />
@@ -135,6 +145,10 @@
     <Compile Include="Migrations\201711230538157_dingjin.Designer.cs">
       <DependentUpon>201711230538157_dingjin.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711300337350_Finance.cs" />
+    <Compile Include="Migrations\201711300337350_Finance.Designer.cs">
+      <DependentUpon>201711300337350_Finance.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -193,6 +207,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711230538157_dingjin.resx">
       <DependentUpon>201711230538157_dingjin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711300337350_Finance.resx">
+      <DependentUpon>201711300337350_Finance.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

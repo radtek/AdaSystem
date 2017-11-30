@@ -1,0 +1,83 @@
+﻿@using Ada.Core.Domain
+@using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Finance
+@using Ada.Services.Finance
+@using Microsoft.Ajax.Utilities
+@model Ada.Core.ViewModel.Finance.ReceivablesView
+@{
+    var settleAccountService = EngineContext.Current.Resolve<ISettleAccountService>();
+    var incomeExpendService = EngineContext.Current.Resolve<IIncomeExpendService>();
+    var settleAccounts = settleAccountService.LoadEntitiesFilter().Select(d => new SelectListItem { Text = d.SettleName, Value = d.Id }).ToList();
+    var incomeExpends = incomeExpendService.LoadEntitiesFilter(new IncomeExpendView() { IsMain = true, SubjectType = Consts.StateNormal }).Select(d => new SelectListItem { Text = d.SubjectName, Value = d.Id }).ToList();
+}
+<div class="form-horizontal">
+
+    <div class="form-group">
+        @Html.LabelFor(d => d.BillNum, Html.DisplayNameFor(d => d.BillNum).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.BillNum, new { @class = "form-control", @readonly = "readonly", placeholder = "自动编码" })
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.BillDate, Html.DisplayNameFor(d => d.BillDate).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            <div class="input-group date">
+                @Html.TextBoxFor(d => d.BillDate, Model.BillDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control", required = "", @readonly = "" })
+                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.IncomeExpendId, Html.DisplayNameFor(d => d.IncomeExpendId).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.DropDownListFor(d => d.IncomeExpendId, incomeExpends, "请选择", new { @class = "form-control", required = "" })
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.SettleAccountId, Html.DisplayNameFor(d => d.SettleAccountId).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.DropDownListFor(d => d.SettleAccountId, settleAccounts, "请选择", new { @class = "form-control", required = "" })
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.AccountBank, Html.DisplayNameFor(d => d.AccountBank).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.AccountBank, new { @class = "form-control", required = "" })
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.AccountName, Html.DisplayNameFor(d => d.AccountName).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.AccountName, new { @class = "form-control", required = "" })
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.AccountNum, Html.DisplayNameFor(d => d.AccountNum).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.AccountNum, new { @class = "form-control", required = "" })
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.Money, Html.DisplayNameFor(d => d.Money).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.Money, new { @class = "form-control", required = "" })
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.TaxMoney, Html.DisplayNameFor(d => d.TaxMoney).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.TaxMoney, new { @class = "form-control" })
+        </div>
+    </div>
+    
+    @Html.HiddenFor(d => d.Id)
+</div>

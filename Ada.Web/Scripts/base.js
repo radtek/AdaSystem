@@ -42,6 +42,13 @@ formatter.userStatus = function(value, row, index) {
         return "<span class='label label-danger'>否</span>";
     }
 };
+formatter.inout = function (value, row, index) {
+    if (value == 1) {
+        return "<span class='label label-primary'>收入</span>";
+    } else {
+        return "<span class='label label-danger'>支出</span>";
+    }
+};
 formatter.normalStatus = function(value, row, index) {
     if (value == 1) {
         return "<span class='label label-primary'>正常</span>";

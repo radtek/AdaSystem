@@ -148,6 +148,9 @@
     <Compile Include="ViewModel\Business\BusinessOrderView.cs" />
     <Compile Include="ViewModel\Customer\LinkManView.cs" />
     <Compile Include="ViewModel\Customer\CommpanyView.cs" />
+    <Compile Include="ViewModel\Finance\IncomeExpendView.cs" />
+    <Compile Include="ViewModel\Finance\ReceivablesView.cs" />
+    <Compile Include="ViewModel\Finance\SettleAccountView.cs" />
     <Compile Include="ViewModel\HttpResultView.cs" />
     <Compile Include="ViewModel\Purchase\PurchaseOrderDetailView.cs" />
     <Compile Include="ViewModel\Resource\MediaPriceView.cs" />

@@ -1,0 +1,47 @@
+﻿
+@model Ada.Core.ViewModel.Finance.IncomeExpendView
+<div class="form-horizontal">
+
+    <div class="form-group">
+        @Html.LabelFor(d => d.SubjectName, Html.DisplayNameFor(d => d.SubjectName).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.SubjectName, new { @class = "form-control", required = "" })
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.SubjectType, Html.DisplayNameFor(d => d.SubjectType).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            <div class="radio radio-info radio-inline">
+                @Html.RadioButtonFor(d => d.SubjectType, 1)
+                <label> 收入 </label>
+            </div>
+            <div class="radio radio-info radio-inline">
+                @Html.RadioButtonFor(d => d.SubjectType, 0)
+                <label> 支出 </label>
+            </div>
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.IsMain, Html.DisplayNameFor(d => d.IsMain).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            <div class="radio radio-info radio-inline">
+                @Html.RadioButtonFor(d => d.IsMain, true)
+                <label> 是 </label>
+            </div>
+            <div class="radio radio-info radio-inline">
+                @Html.RadioButtonFor(d => d.IsMain, false)
+                <label> 否 </label>
+            </div>
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.Taxis, Html.DisplayNameFor(d => d.Taxis).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.Taxis, new { @class = "form-control" })
+        </div>
+    </div>
+    @Html.HiddenFor(d => d.Id)
+</div>

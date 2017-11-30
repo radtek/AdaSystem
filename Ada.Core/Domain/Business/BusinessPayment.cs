@@ -98,6 +98,11 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "经办业务")]
         public string TransactorId { get; set; }
         /// <summary>
+        /// 申请凭证
+        /// </summary>
+        [Display(Name = "申请凭证")]
+        public string Image { get; set; }
+        /// <summary>
         /// 领款单
         /// </summary>
         [Display(Name = "领款单")]
