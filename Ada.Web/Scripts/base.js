@@ -42,6 +42,20 @@ formatter.userStatus = function(value, row, index) {
         return "<span class='label label-danger'>否</span>";
     }
 };
+formatter.verification = function (value, row, index) {
+    if (value == 1) {
+        return "<span class='label label-primary'>已核销</span>";
+    } else {
+        return "<span class='label label-danger'>未核销</span>";
+    }
+};
+formatter.yesorno = function (value, row, index) {
+    if (value == true) {
+        return '<a href="javascript:;"><i class="fa fa-check text-navy"></i></a>';
+    } else {
+        return '<a href="javascript:;"><i class="fa fa-times text-danger"></i></a>';
+    }
+};
 formatter.inout = function (value, row, index) {
     if (value == 1) {
         return "<span class='label label-primary'>收入</span>";

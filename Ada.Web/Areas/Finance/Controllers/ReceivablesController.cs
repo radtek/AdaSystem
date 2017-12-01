@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain.Finance;
+using Ada.Core.ViewModel.Business;
 using Ada.Core.ViewModel.Finance;
 using Ada.Framework.Filter;
 using Ada.Services.Finance;
@@ -44,14 +45,14 @@ namespace Finance.Controllers
                     SettleAccountName = d.SettleAccount.SettleName,
                     BillNum = d.BillNum,
                     BillDate = d.BillDate
-                  
+
                 })
             }, JsonRequestBehavior.AllowGet);
         }
         public ActionResult Add()
         {
             ReceivablesView viewModel = new ReceivablesView();
-            viewModel.BillDate=DateTime.Now;
+            viewModel.BillDate = DateTime.Now;
             viewModel.Money = 0;
             viewModel.TaxMoney = 0;
             return View(viewModel);
@@ -80,8 +81,8 @@ namespace Finance.Controllers
             entity.BalanceMoney = viewModel.Money;
             entity.TaxMoney = viewModel.TaxMoney;
             entity.IncomeExpendId = viewModel.IncomeExpendId;
-            entity.IncomeExpendName = viewModel.IncomeExpendName;
-            entity.SettleAccountName = viewModel.SettleAccountName;
+            //entity.IncomeExpendName = viewModel.IncomeExpendName;
+            //entity.SettleAccountName = viewModel.SettleAccountName;
             entity.SettleAccountId = viewModel.SettleAccountId;
             entity.SettleType = viewModel.SettleType;
             entity.BillNum = IdBuilder.CreateOrderNum("SK");
@@ -110,6 +111,10 @@ namespace Finance.Controllers
             viewModel.BillNum = entity.BillNum;
             viewModel.BillDate = entity.BillDate;
             viewModel.Remark = entity.Remark;
+            if (entity.BusinessPayees.Count>0)
+            {
+                viewModel.BusinessPayees = entity.BusinessPayees.Select(d => new BusinessPayeeView { Transactor = d.Transactor, ClaimDate = d.ClaimDate, Money = d.Money }).ToList();
+            }
             return View(viewModel);
         }
         [HttpPost]
@@ -130,7 +135,10 @@ namespace Finance.Controllers
             entity.AccountName = viewModel.AccountName;
             entity.AccountNum = viewModel.AccountNum;
             entity.Money = viewModel.Money;
-            entity.BalanceMoney = viewModel.Money;
+            if (entity.BusinessPayees.Count<=0)
+            {
+                entity.BalanceMoney = viewModel.Money;
+            }
             entity.TaxMoney = viewModel.TaxMoney;
             entity.IncomeExpendId = viewModel.IncomeExpendId;
             entity.IncomeExpendName = viewModel.IncomeExpendName;

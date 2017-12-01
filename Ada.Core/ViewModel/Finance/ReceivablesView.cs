@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ada.Core.ViewModel.Business;
 
 namespace Ada.Core.ViewModel.Finance
 {
@@ -55,6 +56,16 @@ namespace Ada.Core.ViewModel.Finance
         [Display(Name = "税额")]
         public decimal? TaxMoney { get; set; }
         /// <summary>
+        /// 待领金额 开始
+        /// </summary>
+        [Display(Name = "待领金额")]
+        public decimal? BalanceMoneyMin { get; set; }
+        /// <summary>
+        /// 待领金额 结束
+        /// </summary>
+        [Display(Name = "待领金额")]
+        public decimal? BalanceMoneyMax { get; set; }
+        /// <summary>
         /// 收支项目
         /// </summary>
         [Display(Name = "收支项目")]
@@ -94,5 +105,10 @@ namespace Ada.Core.ViewModel.Finance
         /// </summary>
         [Display(Name = "备注")]
         public string Remark { get; set; }
+        /// <summary>
+        /// 领款明细
+        /// </summary>
+        [Display(Name = "领款明细")]
+        public List<BusinessPayeeView> BusinessPayees { get; set; }
     }
 }

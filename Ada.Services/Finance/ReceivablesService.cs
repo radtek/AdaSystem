@@ -58,6 +58,14 @@ namespace Ada.Services.Finance
             {
                 allList = allList.Where(d => d.SettleAccountName.Contains(viewModel.SettleAccountName));
             }
+            if (viewModel.BalanceMoneyMin!=null)
+            {
+                allList = allList.Where(d => d.BalanceMoney>=viewModel.BalanceMoneyMin);
+            }
+            if (viewModel.BalanceMoneyMax != null)
+            {
+                allList = allList.Where(d => d.BalanceMoney <= viewModel.BalanceMoneyMax);
+            }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;

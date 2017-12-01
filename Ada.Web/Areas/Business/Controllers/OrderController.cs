@@ -6,10 +6,10 @@ using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Business;
+using Ada.Core.Domain.Finance;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Business;
-using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Filter;
 using Ada.Services.Business;
 using Ada.Services.Purchase;
@@ -26,12 +26,15 @@ namespace Business.Controllers
         private readonly IRepository<BusinessOrderDetail> _businessOrderDetailRepository;
         private readonly IRepository<PurchaseOrder> _purchaseOrderRepository;
         private readonly IRepository<MediaType> _mediaTypeRepository;
+
         public OrderController(IBusinessOrderService businessOrderService,
             IRepository<BusinessOrder> repository,
             IRepository<MediaType> mediaTypeRepository,
             IRepository<BusinessOrderDetail> businessOrderDetailRepository,
             IPurchaseOrderService purchaseOrderService,
-            IRepository<PurchaseOrder> purchaseOrderRepository
+            IRepository<PurchaseOrder> purchaseOrderRepository,
+            IRepository<Receivables> receivablesRepository,
+            IBusinessPayeeService businessPayeeService
         )
         {
             _businessOrderService = businessOrderService;
@@ -45,6 +48,7 @@ namespace Business.Controllers
         {
             return View();
         }
+        
         public ActionResult GetList(BusinessOrderView viewModel)
         {
             var result = _businessOrderService.LoadEntitiesFilter(viewModel).ToList();
@@ -68,7 +72,11 @@ namespace Business.Controllers
                 })
             }, JsonRequestBehavior.AllowGet);
         }
-
+        /// <summary>
+        /// 采购进度
+        /// </summary>
+        /// <param name="businessOrder"></param>
+        /// <returns></returns>
         private string GetPurchaseSchedule(BusinessOrder businessOrder)
         {
             var count = businessOrder.BusinessOrderDetails.Count;
@@ -76,7 +84,7 @@ namespace Business.Controllers
             var purchaseOrder = _purchaseOrderRepository.LoadEntities(d => d.BusinessOrderId == businessOrder.Id)
                 .FirstOrDefault();
             int finish = 0;
-            if (purchaseOrder!=null)
+            if (purchaseOrder != null)
             {
                 finish = purchaseOrder.PurchaseOrderDetails.Count(d => d.IsDelete == false && d.Status == Consts.PurchaseStatusSuccess);
             }

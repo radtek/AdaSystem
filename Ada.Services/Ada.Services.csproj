@@ -58,8 +58,10 @@
     <Compile Include="Admin\PermissionService.cs" />
     <Compile Include="Admin\RoleService.cs" />
     <Compile Include="Admin\SystemLogService.cs" />
+    <Compile Include="Business\BusinessPayeeService.cs" />
     <Compile Include="Business\IBusinessOrderService.cs" />
     <Compile Include="Business\BusinessOrderService.cs" />
+    <Compile Include="Business\IBusinessPayeeService.cs" />
     <Compile Include="Finance\IReceivablesService.cs" />
     <Compile Include="Finance\IIncomeExpendService.cs" />
     <Compile Include="Finance\ReceivablesService.cs" />

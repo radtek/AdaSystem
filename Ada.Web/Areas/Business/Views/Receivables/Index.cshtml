@@ -1,0 +1,240 @@
+﻿
+@using System.Web.Optimization
+@model Ada.Core.ViewModel.Finance.ReceivablesView
+@{
+    ViewBag.Title = "销售领款";
+}
+@Html.Partial("Bread")
+
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <table id="table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/select2Styles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/select2")
+    <script type="text/javascript">
+        var linkmanSelect = {};
+        linkmanSelect.url = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})";
+        linkmanSelect.paramsData = function (params) {
+            return {
+                search: params.term, // search term
+                IsBusiness: false
+            };
+        };
+        linkmanSelect.processResults = function (data, params) {
+            var result = $.map(data.rows,
+                function (v, k) {
+                    return { id: v.Id, text: v.Name, commpany: v.CommpanyName };
+                });
+            return {
+                results: result
+            };
+        };
+        linkmanSelect.formatRepo = function (repo) {
+            if (repo.loading) {
+                return repo.text;
+            }
+            return "<p>" + repo.commpany + " 【 " + repo.text + " 】 <p>";
+        };
+        linkmanSelect.formatRepoSelection = function (repo) {
+            $("#LinkManName").val(repo.text);
+            return repo.text;
+        };
+        $.fn.modal.Constructor.prototype.enforceFocus = function () { };
+        $(document).ready(function () {
+            var table = new TableInit();
+            table.Init();
+        });
+        var TableInit = function() {
+            var obj = new Object();
+            obj.Init = function() {
+                $('#table').bootstrapTable({
+                classes: "table table-no-bordered",
+                url: '@Url.Action("GetList", "Receivables", new{area="Finance"})',         //请求后台的URL（*）BalanceMoneyMin
+                //toolbar: '#toolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "desc",                   //排序方式
+                sortName: "Id",
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
+                showColumns: true,                  //是否显示所有的列
+                showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                singleSelect: true,                  //设置True 将禁止多选
+                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
+                //detailView: true,                   //设置为 true 可以显示详细页面模式。
+                //detailFormatter: detailFormatter,
+                queryParams: function(parameters) {
+                    parameters.BalanceMoneyMin = 0.01;
+                    return parameters;
+                },
+                mobileResponsive:true,
+                columns: [
+                    {
+                        checkbox: true
+                    },
+                    {
+                        field: 'BillNum',
+                        title: '@Html.DisplayNameFor(d=>d.BillNum)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'AccountBank',
+                        title: '@Html.DisplayNameFor(d=>d.AccountBank)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'AccountName',
+                        title: '@Html.DisplayNameFor(d=>d.AccountName)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'AccountNum',
+                        title: '@Html.DisplayNameFor(d=>d.AccountNum)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'Money',
+                        title: '@Html.DisplayNameFor(d=>d.Money)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'BalanceMoney',
+                        title: '@Html.DisplayNameFor(d=>d.BalanceMoney)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'TaxMoney',
+                        title: '@Html.DisplayNameFor(d=>d.TaxMoney)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'BillDate',
+                        title: '@Html.DisplayNameFor(d=>d.BillDate)',
+                        align: "center", valign: "middle",
+                        formatter: function(value) {
+                            return  moment(value).format("YYYY-MM-DD");
+                        }
+                    },
+                    {
+                        field: 'Id',
+                        title: '操作',
+                        align: "center", valign: "middle",
+                        formatter: function (value) {
+                            return "<a class='btn btn-success btn-sm' href='javascript:;' onclick=\"initReceived('" + value +"');\");'><i class='fa fa-jpy'></i> 领款</a>";
+                        }
+
+                    }
+                ]
+            });
+            };
+
+            return obj;
+        };
+
+        function initReceived(id) {
+            $("#modalView").load("@Url.Action("ReceivedView")?id="+id,
+                    function () {
+                        $('#modalView .modal').on('shown.bs.modal', function () {
+
+                            initSelect2("LinkManId", linkmanSelect);
+                            $("#modalView form").validate({
+                                rules:{
+                                    Money:{
+                                        range: [1, $("#TotalMoney").val()]
+                                    }
+                                },
+                                submitHandler: function (form) {
+                                    var $form = $(form),
+                                        data = $form.serialize(); //序列化表单数据
+                                    $.ajax({
+                                        type: "post",
+                                        url: form.action,
+                                        data: data,
+                                        success: function (res) {
+                                            if (res.State == 1) {
+                                                $("#table").bootstrapTable('refresh');
+                                                $('#modalView .modal').modal('hide');
+                                                swal({
+                                                    title: "操作成功",
+                                                    text: res.Msg,
+                                                    timer: 2000,
+                                                    type: "success",
+                                                    showConfirmButton: false
+                                                });
+
+                                            } else {
+                                                swal("操作提醒", res.Msg, "warning");
+                                            }
+                                        },
+                                        error: function () {
+                                            swal("操作失败", res.Msg, "error");
+                                        }
+                                    });
+                                }
+                            });
+                        }).on('hidden.bs.modal', function () {
+
+                        });
+                        $('#modalView .modal').modal('show');
+
+                    });
+
+        }
+        function initSelect2(id, opt) {
+            $("#" + id).select2({
+                placeholder: "请输入关键字",
+                language: "zh-CN",
+                ajax: {
+                    url: opt.url,
+                    dataType: 'json',
+                    delay: 250,
+                    data: opt.paramsData,
+                    processResults: opt.processResults,
+                    cache: true,
+                    dropdownParent: $("#modalView .modal")
+                },
+                escapeMarkup: function (markup) { return markup; }, // 字符转义处理
+                minimumInputLength: 1,
+                templateResult: opt.formatRepo, //返回结果回调function formatRepo(repo){return repo.text},这样就可以将返回结果的的text显示到下拉框里，当然你可以return repo.text+"1";等
+                templateSelection: opt.formatRepoSelection //选中项回调function formatRepoSelection(repo) { return repo.text }
+
+            });
+        }
+    </script>
+}
+
+
+
+
+
+
+
+
+
+

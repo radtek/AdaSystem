@@ -4,21 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Ada.Core.Domain.Customer;
-using Ada.Core.Domain.Finance;
 
-namespace Ada.Core.Domain.Business
+namespace Ada.Core.ViewModel.Business
 {
-    /// <summary>
-    /// 业务领款单
-    /// </summary>
-    public class BusinessPayee : BaseEntity
+   public class BusinessPayeeView:BaseView
     {
-        public BusinessPayee()
-        {
-            BusinessPayments=new HashSet<BusinessPayment>();
-            BusinessWriteOffs=new HashSet<BusinessWriteOff>();
-        }
         /// <summary>
         /// 经办业务
         /// </summary>
@@ -29,6 +19,11 @@ namespace Ada.Core.Domain.Business
         /// </summary>
         [Display(Name = "经办业务")]
         public string TransactorId { get; set; }
+        /// <summary>
+        /// 可领金额
+        /// </summary>
+        [Display(Name = "可领金额")]
+        public decimal? TotalMoney { get; set; }
         /// <summary>
         /// 领款金额
         /// </summary>
@@ -50,7 +45,7 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "已核销金额")]
         public decimal? ConfirmVerificationMoney { get; set; }
         /// <summary>
-        /// 核销状态 0 待核销 1 已核销
+        /// 核销状态
         /// </summary>
         [Display(Name = "核销状态")]
         public short? VerificationStatus { get; set; }
@@ -59,7 +54,6 @@ namespace Ada.Core.Domain.Business
         /// </summary>
         [Display(Name = "收款单")]
         public string ReceivablesId { get; set; }
-        public virtual Receivables Receivables { get; set; }
         /// <summary>
         /// 客户名称
         /// </summary>
@@ -70,8 +64,5 @@ namespace Ada.Core.Domain.Business
         /// </summary>
         [Display(Name = "客户名称")]
         public string LinkManName { get; set; }
-        public virtual LinkMan LinkMan { get; set; }
-        public virtual ICollection<BusinessPayment> BusinessPayments { get; set; }
-        public virtual ICollection<BusinessWriteOff> BusinessWriteOffs { get; set; }
     }
 }

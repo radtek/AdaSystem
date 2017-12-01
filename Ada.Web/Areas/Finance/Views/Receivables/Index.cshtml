@@ -174,7 +174,10 @@
                     {
                         field: 'BillDate',
                         title: '@Html.DisplayNameFor(d=>d.BillDate)',
-                        align: "center", valign: "middle"
+                        align: "center", valign: "middle",
+                        formatter: function(value) {
+                            return  moment(value).format("YYYY-MM-DD");
+                        }
                     },
                     {
                         field: 'Id',

@@ -146,6 +146,8 @@
     <Compile Include="ViewModel\Admin\SystemLogView.cs" />
     <Compile Include="ViewModel\BaseView.cs" />
     <Compile Include="ViewModel\Business\BusinessOrderView.cs" />
+    <Compile Include="ViewModel\Business\BusinessPayeeView.cs" />
+    <Compile Include="ViewModel\Business\BusinessPaymentView.cs" />
     <Compile Include="ViewModel\Customer\LinkManView.cs" />
     <Compile Include="ViewModel\Customer\CommpanyView.cs" />
     <Compile Include="ViewModel\Finance\IncomeExpendView.cs" />
