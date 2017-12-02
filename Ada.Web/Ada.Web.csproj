@@ -238,7 +238,9 @@
     <Content Include="Content\plugins\datetimepicker\bootstrap-datetimepicker.css" />
     <Content Include="Content\plugins\datetimepicker\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\plugins\dropzone\basic.css" />
+    <Content Include="Content\plugins\dropzone\basic.min.css" />
     <Content Include="Content\plugins\dropzone\dropzone.css" />
+    <Content Include="Content\plugins\dropzone\dropzone.min.css" />
     <Content Include="Content\plugins\dualListbox\bootstrap-duallistbox.min.css" />
     <Content Include="Content\plugins\footable\fonts\footable.svg" />
     <Content Include="Content\plugins\footable\footable.bootstrap.css" />
@@ -1545,6 +1547,7 @@
     <Content Include="Scripts\plugins\diff_match_patch\README.txt" />
     <Content Include="Scripts\plugins\dotdotdot\jquery.dotdotdot.min.js" />
     <Content Include="Scripts\plugins\dropzone\dropzone.js" />
+    <Content Include="Scripts\plugins\dropzone\dropzone.min.js" />
     <Content Include="Scripts\plugins\dualListbox\jquery.bootstrap-duallistbox.js" />
     <Content Include="Scripts\plugins\easypiechart\easypiechart.js" />
     <Content Include="Scripts\plugins\easypiechart\jquery.easypiechart.js" />

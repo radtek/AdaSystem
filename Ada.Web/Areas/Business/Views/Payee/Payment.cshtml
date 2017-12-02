@@ -82,7 +82,7 @@
                                     {
                                         <div class="radio radio-info radio-inline">
                                             <input type="radio" id="@item.Id" value="@item.Value" name="PaymentType">
-                                            <label for="@item.Id"> @item.Value </label>
+                                            <label for="@item.Id">@item.Value</label>
                                         </div>
                                     }
                                     
@@ -92,7 +92,14 @@
                             <div class="form-group">
                                 @Html.LabelFor(d => d.Image, Html.DisplayNameFor(d => d.Image).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.Image, new { @class = "form-control", required = "" })
+                                    <div class="dropzone" id="myDropzone">
+                                        <div class="dz-message">
+                                            <strong>将文件拖拽到此处</strong>
+                                            <br>或点此打开文件管理器选择文件
+                                        </div>
+                                    </div>
+                                    @*@Html.TextBoxFor(d => d.Image, new { @class = "form-control", required = "" })*@
+                                    @Html.HiddenFor(d=>d.Image)
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -110,6 +117,51 @@
         </div>
     }
 </div>
-@section Styles {
+@section StylesFirst {
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
+    @Styles.Render("~/Content/plugins/dropzone/dropZoneStyles")
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/dropZone")
+
+    <script type="text/javascript">
+        Dropzone.autoDiscover = false;
+        var myDropzone = new Dropzone("#myDropzone", {
+            url: "@Url.Action("UploadImage", "Common",new{area="Admin"})",
+            paramName:"upfile",
+            addRemoveLinks: true,
+            dictRemoveFile: '删除',
+            dictCancelUpload: "取消",
+            maxFiles: 1,
+            maxFilesize: 2,
+            dictFileTooBig:"图片文件太大，当前为{{filesize}}M，最大只能{{maxFilesize}}M",
+            acceptedFiles: ".jpg,.png,.jpeg",
+            dictInvalidFileType: "只允许上传图片类型文件（*.jpg,*.jpge,*.png）",
+            dictMaxFilesExceeded: "只允许上传一张图片",
+            dictResponseError:"上传失败，{{statusCode}}",
+            //sending: function (file, xhr, formData) {//如果你想给上传的文件添加额外（多个文件时会具体到每个文件）,您可以注册发送事件
+            //    formData.append("filesize", file.size);
+            //},
+            success: function (file, response, e) {
+                if (response.State==1) {
+                    if (file.previewElement) {
+                        $(file.previewTemplate).children('.dz-success-mark').css('opacity', '1');
+                    }
+                    $("#Image").val(response.Msg);
+                } else {
+                    $(file.previewTemplate).children('.dz-error-mark').css('opacity', '1');
+                }
+            },
+            removedfile: function(file) {
+                if (file.previewElement != null && file.previewElement.parentNode != null) {
+                    file.previewElement.parentNode.removeChild(file.previewElement);
+                }
+                if (file.status =="success") {//清空上传成功的文件
+                    $("#Image").val("");
+                    //TODO 删除服务器上的文件
+                }
+                return this._updateMaxFilesReachedClass();
+            }
+        });
+    </script>
 }
