@@ -39,7 +39,14 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => d.LinkManName.Contains(viewModel.search));
             }
-           
+            if (!string.IsNullOrWhiteSpace(viewModel.LinkManId))
+            {
+                allList = allList.Where(d => d.LinkManId==viewModel.LinkManId);
+            }
+            if (viewModel.VerificationStatus != null)
+            {
+                allList = allList.Where(d => d.VerificationStatus == viewModel.VerificationStatus);
+            }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;

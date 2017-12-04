@@ -29,6 +29,10 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => d.LinkManName.Contains(viewModel.search));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.LinkManId))
+            {
+                allList = allList.Where(d => d.LinkManId == viewModel.LinkManId);
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.Transactor))
             {
                 allList = allList.Where(d => d.Transactor.Contains(viewModel.Transactor));
@@ -36,6 +40,10 @@ namespace Ada.Services.Business
             if (viewModel.Status!=null)
             {
                 allList = allList.Where(d => d.Status==viewModel.Status);
+            }
+            if (viewModel.VerificationStatus != null)
+            {
+                allList = allList.Where(d => d.VerificationStatus == viewModel.VerificationStatus);
             }
             if (viewModel.AuditStatus != null)
             {
