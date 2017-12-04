@@ -1,0 +1,286 @@
+﻿@using System.Web.Optimization
+
+@model Ada.Core.ViewModel.Business.BusinessWriteOffView
+@{
+    ViewBag.Title = "销售核销";
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "核销明细", Value = Url.Action("Index") } };
+}
+@Html.Partial("Bread", urls)
+
+@*<style>
+    .select2-drop {
+        z-index: 10050 !important;
+    }
+
+    .select2-search-choice-close {
+        margin-top: 0 !important;
+        right: 2px !important;
+        min-height: 10px;
+    }
+
+        .select2-search-choice-close:before {
+            color: black !important;
+        }
+    /*防止select2不会自动失去焦点*/
+    .select2-container {
+        z-index: 16000 !important;
+    }
+
+    .select2-drop-mask {
+        z-index: 15990 !important;
+    }
+
+    .select2-drop-active {
+        z-index: 15995 !important;
+    }
+</style>*@
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+    
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+
+                    <div class="ibox-content">
+                        <div class="sk-spinner sk-spinner-wave">
+                            <div class="sk-rect2"></div>
+                            <div class="sk-rect3"></div>
+                            <div class="sk-rect4"></div>
+                            <div class="sk-rect5"></div>
+                        </div>
+
+                        @using (Html.BeginForm("Add","WriteOff", FormMethod.Post,new{@class= "wizard-big" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <h1>核销对象</h1>
+                            <fieldset>
+                                <h2>请选择客户</h2>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="form-group">
+                                            @*@Html.LabelFor(d=>d.LinkManId, Html.DisplayNameFor(d => d.LinkManId).ToString())*@
+                                            <select class="form-control" required="" name="LinkManId" id="LinkManId">
+                                                <option value="@Model.LinkManId">@Model.LinkManName</option>
+                                            </select>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="text-center">
+                                            <div style="margin-top: 20px">
+                                                <i class="fa fa-sign-in" style="font-size: 180px;color: #e5e5e5 "></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                            <h1>核销款项</h1>
+                            <fieldset>
+                                <h2>请勾选需要核销的款项</h2>
+                                <div class="row">
+                                    <div class="col-lg-12">
+
+                                    </div>
+
+                                </div>
+                            </fieldset>
+
+                            <h1>核销订单</h1>
+                            <fieldset>
+                                <h2>请勾选需要核销的订单</h2>
+                                <div class="row">
+                                    <div class="col-lg-12">
+
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <h1>核销完成</h1>
+                            <fieldset>
+                                <h2>核销信息确认</h2>
+                                <div class="row">
+                                    <div class="col-lg-12 form-horizontal">
+                                        <div class="hr-line-dashed"></div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(d => d.TransactorId, Html.DisplayNameFor(d => d.TransactorId).ToString(), new {@class = "col-sm-4 control-label"})
+                                            <div class="col-sm-8">
+                                                <select class="form-control" required="" name="TransactorId" id="TransactorId">
+                                                    <option value="@Model.TransactorId">@Model.Transactor</option>
+                                                </select>
+                                            </div>
+                                            @Html.HiddenFor(d => d.Transactor)
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    
+</div>
+@section Styles {
+    @Styles.Render("~/plugins/wizardStepsStyles")
+    @Styles.Render("~/plugins/select2Styles")
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/wizardSteps")
+    @Scripts.Render("~/plugins/select2")
+
+    <script type="text/javascript">
+        var linkmanSelect = {}, transactorSelect = {};
+        linkmanSelect.url = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})";
+        linkmanSelect.paramsData = function (params) {
+            return {
+                search: params.term, // search term
+                IsBusiness: false
+            };
+        };
+        linkmanSelect.processResults = function (data, params) {
+            var result = $.map(data.rows,
+                function (v, k) {
+                    return { id: v.Id, text: v.Name, commpany: v.CommpanyName };
+                });
+            return {
+                results: result
+            };
+        };
+        linkmanSelect.formatRepo = function (repo) {
+            if (repo.loading) {
+                return repo.text;
+            }
+            return "<p>" + repo.commpany + " 【 " + repo.text + " 】 <p>";
+        };
+        linkmanSelect.formatRepoSelection = function (repo) {
+            $("#LinkManName").val(repo.text);
+            return repo.text;
+        };
+        transactorSelect.url = "@Url.Action("GetList", "Manager", new {area = "Admin"})";
+        transactorSelect.paramsData = function (params) {
+            return {
+                search: params.term, // search term
+                Status: 1
+            };
+        };
+        transactorSelect.processResults = function (data, params) {
+            var result = $.map(data.rows,
+                function (v, k) {
+                    return { id: v.Id, text: v.UserName };
+                });
+            return {
+                results: result
+            };
+        };
+        transactorSelect.formatRepo = function (repo) {
+            if (repo.loading) {
+                return repo.text;
+            }
+            return repo.text;
+        };
+        transactorSelect.formatRepoSelection = function (repo) {
+            $("#Transactor").val(repo.text);
+            return repo.text;
+        };
+        $(function() {
+
+            $(".wrapper.wrapper-content form").steps({
+                bodyTag: "fieldset",
+                labels: {
+                    cancel: "取消",
+                    finish: "确认核销",
+                    next: "下一步",
+                    previous: "上一步",
+                    loading: "核销中 ..."
+                },
+                onInit: function (event, currentIndex) {
+                    initSelect2("LinkManId", linkmanSelect);
+                    
+                },
+                onStepChanging: function (event, currentIndex, newIndex) {
+                    // Always allow going backward even if the current step contains invalid fields!
+                    if (currentIndex > newIndex) {
+                        return true;
+                    }
+
+                    //// Forbid suppressing "Warning" step if the user is to young
+                    //if (newIndex === 3 && Number($("#age").val()) < 18) {
+                    //    return false;
+                    //}
+
+                    var form = $(this);
+
+                    // Clean up if user went backward before
+                    if (currentIndex < newIndex) {
+                        // To remove error styles
+                        $(".body:eq(" + newIndex + ") label.error", form).remove();
+                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                    }
+
+                    // Disable validation on fields that are disabled or hidden.
+                    form.validate().settings.ignore = ":disabled,:hidden";
+
+                    // Start validation; Prevent going forward if false
+                    return form.valid();
+                },
+                onStepChanged: function (event, currentIndex, priorIndex) {
+                    //// Suppress (skip) "Warning" step if the user is old enough.
+                    if (currentIndex === 3) {
+                        initSelect2("TransactorId", transactorSelect);
+                        //$(this).steps("next");
+                    }
+
+                    //// Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
+                    //if (currentIndex === 2 && priorIndex === 3) {
+                    //    $(this).steps("previous");
+                    //}
+                    
+                },
+                onFinishing: function (event, currentIndex) {
+                    var form = $(this);
+
+                    // Disable validation on fields that are disabled.
+                    // At this point it's recommended to do an overall check (mean ignoring only disabled fields)
+                    form.validate().settings.ignore = ":disabled";
+
+                    // Start validation; Prevent form submission if false
+                    return form.valid();
+                },
+                onFinished: function (event, currentIndex) {
+                    var form = $(this);
+                    $('.wrapper.wrapper-content .ibox').children('.ibox-content').toggleClass('sk-loading');
+                    // Submit form input
+                    form.submit();
+                }
+            }).validate({
+                errorPlacement: function (error, element) {
+                    element.before(error);
+                }
+            });
+        });
+        function initSelect2(id, opt) {
+            $("#" + id).select2({
+                placeholder: "请输入关键字",
+                language: "zh-CN",
+                ajax: {
+                    url: opt.url,
+                    dataType: 'json',
+                    delay: 250,
+                    data: opt.paramsData,
+                    processResults: opt.processResults,
+                    cache: true,
+                    //dropdownParent: $(".ibox-content")
+                },
+                escapeMarkup: function (markup) { return markup; }, // 字符转义处理
+                minimumInputLength: 1,
+                templateResult: opt.formatRepo, //返回结果回调function formatRepo(repo){return repo.text},这样就可以将返回结果的的text显示到下拉框里，当然你可以return repo.text+"1";等
+                templateSelection: opt.formatRepoSelection //选中项回调function formatRepoSelection(repo) { return repo.text }
+
+            });
+        }
+    </script>
+}
+
+

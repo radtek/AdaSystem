@@ -16,6 +16,10 @@ namespace Ada.Core.Domain
         /// 锁定|草稿|关闭|待处理
         /// </summary>
         Locked = 0,
+        /// <summary>
+        /// 失败|拒绝
+        /// </summary>
+        Error = -1
     }
 
     public enum PurchaseStatusEnum

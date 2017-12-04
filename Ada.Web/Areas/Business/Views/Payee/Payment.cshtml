@@ -81,7 +81,15 @@
                                     @foreach (var item in paymentTypes)
                                     {
                                         <div class="radio radio-info radio-inline">
-                                            <input type="radio" id="@item.Id" value="@item.Value" name="PaymentType">
+                                            @if (item.Value==Model.PaymentType)
+                                            {
+                                                <input type="radio" id="@item.Id" value="@item.Value" name="PaymentType" checked="checked">
+                                            }
+                                            else
+                                            {
+                                                <input type="radio" id="@item.Id" value="@item.Value" name="PaymentType">
+                                            }
+                                            
                                             <label for="@item.Id">@item.Value</label>
                                         </div>
                                     }
@@ -94,8 +102,9 @@
                                 <div class="col-sm-10">
                                     <div class="dropzone" id="myDropzone">
                                         <div class="dz-message">
-                                            <strong>将文件拖拽到此处</strong>
-                                            <br>或点此打开文件管理器选择文件
+                                            <strong>将图片拖拽到此处</strong>
+                                            <br>或点此打开文件管理器选择图片
+                                            <br>（注：只支持*.jpg,*.jpge,*.png格式的图片，图片大小最大不超过2M）
                                         </div>
                                     </div>
                                     @*@Html.TextBoxFor(d => d.Image, new { @class = "form-control", required = "" })*@
@@ -162,6 +171,19 @@
                 }
                 return this._updateMaxFilesReachedClass();
             }
+        });
+        $(function() {
+            $(".wrapper.wrapper-content form").validate({
+                submitHandler: function (form) {
+                    $('.wrapper.wrapper-content .ibox').children('.ibox-content').toggleClass('sk-loading');
+                    form.submit();
+                },
+                rules:{
+                    PayMoney:{
+                        range: [1, @Model.TotalMoney]
+                    }
+                }
+            });
         });
     </script>
 }

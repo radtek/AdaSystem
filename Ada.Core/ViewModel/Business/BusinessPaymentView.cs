@@ -43,7 +43,7 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "审核时间")]
         public DateTime? AuditDate { get; set; }
         /// <summary>
-        /// 审核状态
+        /// 审核状态 0 待审核 1同意  -1拒绝
         /// </summary>
         [Display(Name = "审核状态")]
         public short? AuditStatus { get; set; }
@@ -67,6 +67,11 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "申请时间")]
         public DateTime? ApplicationDate { get; set; }
+        /// <summary>
+        /// 可申请金额
+        /// </summary>
+        [Display(Name = "可申请金额")]
+        public decimal? TotalMoney { get; set; }
         /// <summary>
         /// 申请金额
         /// </summary>

@@ -1,0 +1,87 @@
+﻿@model IEnumerable<Ada.Core.ViewModel.Business.BusinessPaymentView>
+
+<div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">请款记录</h4>
+            </div>
+            <div class="modal-body">
+                @if (Model.Any())
+                {
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(d => d.ApplicationNum)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(d => d.PaymentType)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(d => d.AccountBank)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(d => d.AccountName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(d => d.AccountNum)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(d => d.PayMoney)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(d => d.ApplicationDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(d => d.AuditStatus)
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.ApplicationNum</td>
+                                <td>@item.PaymentType</td>
+                                <td>@item.AccountBank</td>
+                                <td>@item.AccountName</td>
+                                <td>@item.AccountNum</td>
+                                <td>@item.PayMoney</td>
+                                <td>@item.ApplicationDate.Value.ToString("yyyy-MM-dd")</td>
+                                @if (item.AuditStatus == 1)
+                                {
+                                    <td><span class='label label-primary'>同意</span></td>
+                                }else if (item.AuditStatus == -1)
+                                {
+                                    <td><span class='label label-danger'>拒绝</span></td>
+                                }
+                                else
+                                {
+                                    <td><span class='label label-warning'>待审</span></td>
+                                }
+                                
+                            </tr>
+                        }
+
+
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p class="text-center"><strong>暂无请款记录</strong></p>
+                }
+                
+
+            </div>
+
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+        </div>
+    </div>
+

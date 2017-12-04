@@ -108,6 +108,7 @@
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\PayeeController.cs" />
     <Compile Include="Controllers\ReceivablesController.cs" />
+    <Compile Include="Controllers\WriteOffController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BusinessAreaRegistration.cs" />
   </ItemGroup>
@@ -125,6 +126,9 @@
     <Content Include="Views\Receivables\Received.cshtml" />
     <Content Include="Views\Payee\Index.cshtml" />
     <Content Include="Views\Payee\Payment.cshtml" />
+    <Content Include="Views\Payee\Payments.cshtml" />
+    <Content Include="Views\WriteOff\Index.cshtml" />
+    <Content Include="Views\WriteOff\Add.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
