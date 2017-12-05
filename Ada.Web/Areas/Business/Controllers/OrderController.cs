@@ -125,7 +125,7 @@ namespace Business.Controllers
             entity.AddedById = CurrentManager.Id;
             entity.AddedDate = DateTime.Now;
             entity.BusinessType = viewModel.BusinessType;
-            entity.ConfirmVerificationMoney = 0;
+            
             entity.LinkManId = viewModel.LinkManId;
             entity.LinkManName = viewModel.LinkManName;
             entity.Transactor = viewModel.Transactor;
@@ -135,7 +135,7 @@ namespace Business.Controllers
             entity.SettlementType = viewModel.SettlementType;
             entity.OrderDate = viewModel.OrderDate;
             entity.TotalDiscountMoney = viewModel.DiscountMoney;
-            entity.VerificationStatus = Consts.StateLock;
+            
             foreach (var businessOrderDetail in orderDetails)
             {
                 businessOrderDetail.Id = IdBuilder.CreateIdNum();
@@ -144,6 +144,9 @@ namespace Business.Controllers
             entity.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);
             entity.TotalMoney = orderDetails.Sum(d => d.Money);
             entity.TotalSellMoney = orderDetails.Sum(d => d.SellMoney);
+            entity.VerificationMoney = entity.TotalMoney;
+            entity.ConfirmVerificationMoney = 0;
+            entity.VerificationStatus = Consts.StateLock;
             _businessOrderService.Add(entity);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
@@ -202,6 +205,7 @@ namespace Business.Controllers
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
                 return View(viewModel);
             }
+            
             var orderDetails = JsonConvert.DeserializeObject<List<BusinessOrderDetail>>(viewModel.OrderDetails);
             if (orderDetails.Count <= 0)
             {
@@ -209,6 +213,11 @@ namespace Business.Controllers
                 return View(viewModel);
             }
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
+            if (entity.VerificationStatus==Consts.StateNormal)
+            {
+                ModelState.AddModelError("message", "该订单已核销，无效修改！");
+                return View(viewModel);
+            }
             entity.ModifiedById = CurrentManager.Id;
             entity.ModifiedBy = CurrentManager.UserName;
             entity.ModifiedDate = DateTime.Now;
@@ -262,6 +271,8 @@ namespace Business.Controllers
             entity.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);
             entity.TotalMoney = orderDetails.Sum(d => d.Money);
             entity.TotalSellMoney = orderDetails.Sum(d => d.SellMoney);
+            entity.VerificationMoney = entity.TotalMoney;
+            entity.ConfirmVerificationMoney = 0;
             _businessOrderService.Update(entity);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");

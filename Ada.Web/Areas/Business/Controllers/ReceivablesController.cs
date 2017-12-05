@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Business;
+using Ada.Core.Domain.Customer;
 using Ada.Core.Domain.Finance;
 using Ada.Core.ViewModel.Business;
 using Ada.Framework.Filter;
@@ -18,13 +19,19 @@ namespace Business.Controllers
 
         private readonly IBusinessPayeeService _businessPayeeService;
         private readonly IRepository<Receivables> _receivablesRepository;
+        private readonly IRepository<PayAccount> _payAccountRepository;
+        private readonly IRepository<LinkMan> _linkManRepository;
         public ReceivablesController(
             IRepository<Receivables> receivablesRepository,
-            IBusinessPayeeService businessPayeeService
+            IBusinessPayeeService businessPayeeService,
+            IRepository<PayAccount> payAccountRepository,
+            IRepository<LinkMan> linkManRepository
         )
         {
             _receivablesRepository = receivablesRepository;
             _businessPayeeService = businessPayeeService;
+            _payAccountRepository = payAccountRepository;
+            _linkManRepository = linkManRepository;
         }
         /// <summary>
         /// 收款记录（领款）
@@ -67,6 +74,30 @@ namespace Business.Controllers
             if (viewModel.Money > receivables.BalanceMoney || viewModel.Money <= 0)
             {
                 return Json(new { State = 0, Msg = "领款金额超出可领金额" });
+            }
+            //校验账号
+            var linkman = _linkManRepository.LoadEntities(d => d.Id == viewModel.LinkManId).FirstOrDefault();
+            if (linkman.PayAccounts.Count > 0)
+            {
+                var payAccount = linkman.PayAccounts
+                    .FirstOrDefault(d => d.AccountName.Equals(receivables.AccountName, StringComparison.CurrentCultureIgnoreCase));
+                if (payAccount == null)
+                {
+                    return Json(new { State = 0, Msg = "客户：[" + viewModel.LinkManName + "]的付款账户中不存在此账户：" + receivables.AccountName + "，请联系BOSS处理！" });
+                }
+            }
+            else
+            {
+                //如果没账号，就新增
+                PayAccount payAccount = new PayAccount();
+                payAccount.Id = IdBuilder.CreateIdNum();
+                payAccount.AccountType = receivables.AccountBank;
+                payAccount.AccountName = receivables.AccountName;
+                payAccount.AccountNum = receivables.AccountNum;
+                payAccount.AddedBy = CurrentManager.UserName;
+                payAccount.AddedById = CurrentManager.Id;
+                payAccount.AddedDate = DateTime.Now;
+                linkman.PayAccounts.Add(payAccount);
             }
             BusinessPayee entity = new BusinessPayee();
             entity.Id = IdBuilder.CreateIdNum();

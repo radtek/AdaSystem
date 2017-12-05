@@ -1,8 +1,8 @@
 ﻿
 @using System.Web.Optimization
-@model Ada.Core.ViewModel.Business.BusinessWriteOffView
+@model Ada.Core.ViewModel.Business.BusinessPaymentView
 @{
-    ViewBag.Title = "核销明细";
+    ViewBag.Title = "销售请款";
 }
 @Html.Partial("Bread")
 
@@ -19,11 +19,6 @@
     </div>
 </div>
 
-<div id="toolbar" class="btn-group">
-    <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
-        <i class="fa fa-plus"></i> 核销
-    </a>
-</div>
 
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
@@ -32,7 +27,6 @@
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
     <script type="text/javascript">
-
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
@@ -42,8 +36,8 @@
             obj.Init = function() {
                 $('#table').bootstrapTable({
                 classes: "table table-no-bordered",
-                url: '@Url.Action("GetList")',         //请求后台的URL（*）
-                toolbar: '#toolbar',                //工具按钮用哪个容器
+                url: '@Url.Action("GetList")',         //请求后台的URL（*）BalanceMoneyMin
+                //toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）
@@ -65,38 +59,53 @@
                 cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
                 //detailView: true,                   //设置为 true 可以显示详细页面模式。
                 //detailFormatter: detailFormatter,
+                queryParams: function(parameters) {
+                    parameters.AuditStatus = 0;
+                    return parameters;
+                },
                 mobileResponsive:true,
                 columns: [
                     {
-                        field: 'LinkManName',
-                        title: '@Html.DisplayNameFor(d=>d.LinkManName)',
+                        field: 'ApplicationNum',
+                        title: '@Html.DisplayNameFor(d=>d.ApplicationNum)',
                         align: "center", valign: "middle"
                     },
                     {
-                        field: 'Money',
-                        title: '@Html.DisplayNameFor(d=>d.Money)',
-                        align: "center", valign: "middle"
-                    },
-
-                    {
-                        field: 'Transactor',
-                        title: '@Html.DisplayNameFor(d=>d.Transactor)',
+                        field: 'LinkmanName',
+                        title: '@Html.DisplayNameFor(d=>d.LinkmanName)',
                         align: "center", valign: "middle"
                     },
                     {
-                        field: 'WriteOffDate',
-                        title: '@Html.DisplayNameFor(d=>d.WriteOffDate)',
+                        field: 'PaymentType',
+                        title: '@Html.DisplayNameFor(d=>d.PaymentType)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'PayMoney',
+                        title: '@Html.DisplayNameFor(d=>d.PayMoney)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'ApplicationDate',
+                        title: '@Html.DisplayNameFor(d=>d.ApplicationDate)',
                         align: "center", valign: "middle",
                         formatter: function(value) {
                             return  moment(value).format("YYYY-MM-DD");
                         }
                     },
                     {
+                        field: 'Transactor',
+                        title: '@Html.DisplayNameFor(d=>d.Transactor)',
+                        align: "center", valign: "middle"
+                    },
+
+                    {
                         field: 'Id',
                         title: '操作',
                         align: "center", valign: "middle",
-                        formatter: function (value) {
-                            return "<a class='btn btn-danger btn-sm' href='javascript:;' onclick=\"cancle('" + value +"');\");'><i class='fa fa-reply'></i> 撤销</a>";
+                        formatter: function (value,row) {
+                            return "<a class='btn btn-success btn-sm' href='@Url.Action("Audit")?id=" + value +"'><i class='fa fa-gavel'></i>  审批</a> " +
+                                "<a class='btn btn-danger btn-sm' href='javascript:;' onclick=\"cancle('" + value +"');\");'><i class='fa fa-trash-o'></i> 删除</a>";
                         }
 
                     }
@@ -107,10 +116,11 @@
             return obj;
         };
 
+        //撤销
         function cancle(id) {
             swal({
                 title: "您确定吗?",
-                text: "确认要撤销此核销记录吗?",
+                text: "确认要删除此申请吗?",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
@@ -149,8 +159,15 @@
                 });
             });
         }
+
     </script>
 }
+
+
+
+
+
+
 
 
 

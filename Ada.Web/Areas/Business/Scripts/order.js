@@ -294,6 +294,7 @@ function showMedia(url) {
                         }
                     ]
                 });
+                //注册选中事件
                 $mediatable.on('check.bs.table check-all.bs.table ' +
                     'uncheck.bs.table uncheck-all.bs.table', function (e, rows) {
                         var ids = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
@@ -307,6 +308,7 @@ function showMedia(url) {
                         selections.rows = _[func](selections.rows, rowarry);
                     });
             }).on('hidden.bs.modal', function () {
+                //重置数据
                 selections.ids = [];
                 selections.rows = [];
                 $mediatable.bootstrapTable('destroy');
@@ -315,12 +317,14 @@ function showMedia(url) {
 
         });
 }
+//保留选中结果
 function responseHandler(res) {
     $.each(res.rows, function (i, row) {
         row.state = $.inArray(row.Id, selections.ids) !== -1;
     });
     return res;
 }
+//切换类型，筛选数据
 function mediasByType(obj, key) {
     $(obj).addClass("active").siblings().removeClass("active");
     $mediatable.bootstrapTable('refresh', { url: mediapriceUrl + '?MediaTypeIndex=' + key });

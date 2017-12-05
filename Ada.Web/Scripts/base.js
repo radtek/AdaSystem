@@ -39,14 +39,14 @@ formatter.userStatus = function(value, row, index) {
     if (value == 1) {
         return "<span class='label label-primary'>是</span>";
     } else {
-        return "<span class='label label-danger'>否</span>";
+        return "<span class='label label-warning'>否</span>";
     }
 };
 formatter.verification = function (value, row, index) {
     if (value == 1) {
         return "<span class='label label-primary'>已核销</span>";
     } else {
-        return "<span class='label label-danger'>未核销</span>";
+        return "<span class='label label-warning'>未核销</span>";
     }
 };
 formatter.yesorno = function (value, row, index) {
@@ -60,14 +60,14 @@ formatter.inout = function (value, row, index) {
     if (value == 1) {
         return "<span class='label label-primary'>收入</span>";
     } else {
-        return "<span class='label label-danger'>支出</span>";
+        return "<span class='label label-warning'>支出</span>";
     }
 };
 formatter.normalStatus = function(value, row, index) {
     if (value == 1) {
         return "<span class='label label-primary'>正常</span>";
     } else {
-        return "<span class='label label-danger'>关闭</span>";
+        return "<span class='label label-warning'>关闭</span>";
     }
 };
 formatter.businessStatus = function(value, row, index) {

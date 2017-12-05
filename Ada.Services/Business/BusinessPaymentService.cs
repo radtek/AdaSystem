@@ -43,6 +43,10 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => d.ApplicationNum.Contains(viewModel.ApplicationNum));
             }
+            if (viewModel.AuditStatus!=null)
+            {
+                allList = allList.Where(d => d.AuditStatus==viewModel.AuditStatus);
+            }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;

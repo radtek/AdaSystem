@@ -47,7 +47,8 @@ namespace Business.Controllers
                     Money = d.Money,
                     ClaimDate = d.ClaimDate,
                     VerificationStatus = d.VerificationStatus,
-                    VerificationMoney = d.VerificationMoney
+                    VerificationMoney = d.VerificationMoney,
+                    PaymentCount = d.BusinessPayments.Count
                 })
             }, JsonRequestBehavior.AllowGet);
         }

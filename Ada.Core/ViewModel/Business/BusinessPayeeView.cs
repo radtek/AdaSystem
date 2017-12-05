@@ -64,5 +64,10 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "客户名称")]
         public string LinkManName { get; set; }
+        /// <summary>
+        /// 请款记录数
+        /// </summary>
+        [Display(Name = "请款记录数")]
+        public int PaymentCount { get; set; }
     }
 }

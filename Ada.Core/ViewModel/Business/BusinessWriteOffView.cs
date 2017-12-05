@@ -23,6 +23,7 @@ namespace Ada.Core.ViewModel.Business
         /// 经办业务
         /// </summary>
         [Display(Name = "经办业务")]
+        [Required]
         public string Transactor { get; set; }
         /// <summary>
         /// 经办业务
@@ -33,11 +34,13 @@ namespace Ada.Core.ViewModel.Business
         /// 销售领款
         /// </summary>
         [Display(Name = "销售领款")]
+        [Required]
         public string Payees { get; set; }
         /// <summary>
         /// 销售订单
         /// </summary>
         [Display(Name = "销售订单")]
+        [Required]
         public string Orders { get; set; }
         /// <summary>
         /// 客户名称
@@ -48,6 +51,17 @@ namespace Ada.Core.ViewModel.Business
         /// 客户名称
         /// </summary>
         [Display(Name = "客户名称")]
+        [Required]
         public string LinkManId { get; set; }
+        /// <summary>
+        /// 领款总额
+        /// </summary>
+        [Display(Name = "领款总额")]
+        public decimal? PayeeMoney { get; set; }
+        /// <summary>
+        /// 订单总额
+        /// </summary>
+        [Display(Name = "订单总额")]
+        public decimal? OrderMoney { get; set; }
     }
 }

@@ -8,7 +8,7 @@
 @Html.Partial("Bread", urls)
 
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
-
+    <p class="bg-danger">@Html.ValidationMessage("message") </p>
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
@@ -24,6 +24,7 @@
                     @using (Html.BeginForm("Add", "WriteOff", FormMethod.Post, new { @class = "wizard-big" }))
                     {
                         @Html.AntiForgeryToken()
+                        
                         <h1>核销对象</h1>
                             <fieldset>
                                 <h4>请选择客户</h4>
@@ -70,7 +71,21 @@
                                     <div class="col-lg-8 form-horizontal">
                                         <div class="hr-line-dashed"></div>
                                         <div class="form-group">
-                                            @Html.LabelFor(d => d.TransactorId, Html.DisplayNameFor(d => d.TransactorId).ToString(), new { @class = "col-sm-4 control-label" })
+                                            @Html.LabelFor(d => d.PayeeMoney, Html.DisplayNameFor(d => d.PayeeMoney).ToString(), new { @class = "col-sm-2 control-label" })
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(d=>d.PayeeMoney, new { @class = "form-control", required = "" ,@readonly=""})
+                                            </div>
+                                        </div>
+                                        <div class="hr-line-dashed"></div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(d => d.OrderMoney, Html.DisplayNameFor(d => d.OrderMoney).ToString(), new { @class = "col-sm-2 control-label" })
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(d => d.OrderMoney, new { @class = "form-control", required = "", @readonly = "" })
+                                            </div>
+                                        </div>
+                                        <div class="hr-line-dashed"></div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(d => d.TransactorId, Html.DisplayNameFor(d => d.TransactorId).ToString(), new {@class = "col-sm-2 control-label"})
                                             <div class="col-sm-8">
                                                 <select class="form-control" required="" name="TransactorId" id="TransactorId">
                                                     <option value="@Model.TransactorId">@Model.Transactor</option>
@@ -78,6 +93,8 @@
                                             </div>
                                             @Html.HiddenFor(d => d.Transactor)
                                         </div>
+                                        @Html.HiddenFor(d => d.Payees)
+                                        @Html.HiddenFor(d => d.Orders)
                                     </div>
                                 </div>
                             </fieldset>
@@ -97,7 +114,7 @@
     @Styles.Render("~/plugins/wizardStepsStyles")
     <style>
         .content.clearfix {
-            height: 410px;
+            height: 420px;
         }
         .wizard > .content > .body ul > li {
             display: inline;
@@ -108,9 +125,21 @@
     @Scripts.Render("~/plugins/wizardSteps")
     @Scripts.Render("~/plugins/select2")
     @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/lodash")
 
     <script type="text/javascript">
-        var linkmanSelect = {}, transactorSelect = {}, isPayeeSelect = false, isOrderSelect;
+        var linkmanSelect = {},
+            transactorSelect = {},
+            isPayeeSelect = false,
+            isOrderSelect = false,
+            payeeSelections = {},
+            orderSelections = {},
+            $payeeTable,
+            $orderTable;
+        payeeSelections.ids = [];
+        payeeSelections.rows = [];
+        orderSelections.ids = [];
+        orderSelections.rows = [];
         linkmanSelect.url = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})";
         linkmanSelect.paramsData = function (params) {
             return {
@@ -137,6 +166,10 @@
             $("#LinkManName").val(repo.text);
             isPayeeSelect = true;
             isOrderSelect = true;
+            payeeSelections.ids = [];
+            payeeSelections.rows = [];
+            orderSelections.ids = [];
+            orderSelections.rows = [];
             return repo.text;
         };
         transactorSelect.url = "@Url.Action("GetList", "Manager", new {area = "Admin"})";
@@ -178,6 +211,8 @@
                 },
                 onInit: function (event, currentIndex) {
                     initSelect2("LinkManId", linkmanSelect);
+                    $payeeTable = $('#payeetable');
+                    $orderTable = $('#ordertable');
                     initPayee();
                     initOrder();
                 },
@@ -211,6 +246,20 @@
                     //// Suppress (skip) "Warning" step if the user is old enough.
                     if (currentIndex === 3) {
                         initSelect2("TransactorId", transactorSelect);
+                        //计算选取总额
+                        var orderMoney = 0,payeeMoney=0;
+                        $.each(orderSelections.rows,
+                            function(k,v) {
+                                orderMoney += v.TotalMoney;
+                            });
+                        $.each(payeeSelections.rows,
+                            function (k, v) {
+                                payeeMoney += v.VerificationMoney;
+                            });
+                        $("#OrderMoney").val(orderMoney);
+                        $("#PayeeMoney").val(payeeMoney);
+                        $("#Payees").val(payeeSelections.ids.join(","));
+                        $("#Orders").val(orderSelections.ids.join(","));
                         //$(this).steps("next");
                     }
                     if (currentIndex === 1 && isPayeeSelect) {
@@ -246,7 +295,20 @@
             }).validate({
                 errorPlacement: function (error, element) {
                     element.before(error);
+                },
+                rules:{
+                    PayeeMoney:{
+                        equalTo: "#OrderMoney",
+                        min:0.01
+                    }                  
+                },
+                messages: {
+                    PayeeMoney: {
+                        equalTo: "领款金额须和订单金额一致",
+                        min: "核销金额须大于0"
+                    }
                 }
+
             });
         });
         function initSelect2(id, opt) {
@@ -270,7 +332,7 @@
         }
         //领款记录
         function initPayee() {
-            $('#payeetable').bootstrapTable({
+            $payeeTable.bootstrapTable({
                 classes: "table table-no-bordered",
                 url: '@Url.Action("GetList", "Payee")',         //请求后台的URL（*）
                 height:360,
@@ -293,8 +355,10 @@
                     parameters.VerificationStatus = 0;
                     return parameters;
                 },
+                responseHandler: payeeResponseHandler,
                 columns: [
                     {
+                        field: 'state',
                         checkbox: true
                     },
                     {
@@ -317,10 +381,11 @@
                     }
                 ]
             });
+            checkOn($payeeTable, payeeSelections);
         }
         //订单列表
          function initOrder() {
-            $('#ordertable').bootstrapTable({
+             $orderTable.bootstrapTable({
                 classes: "table table-no-bordered",
                 url: '@Url.Action("GetList", "Order")',         //请求后台的URL（*）
                 height:360,
@@ -343,8 +408,10 @@
                     parameters.VerificationStatus = 0;
                     return parameters;
                 },
+                responseHandler: orderResponseHandler,
                 columns: [
                     {
+                        field: 'state',
                         checkbox: true
                     },
                     {
@@ -372,7 +439,38 @@
                         }
                     }
                 ]
+             });
+             checkOn($orderTable, orderSelections);
+        }
+        //保留选中结果
+        function payeeResponseHandler(res) {
+            $.each(res.rows, function (i, row) {
+                row.state = $.inArray(row.Id, payeeSelections.ids) !== -1;
             });
+            return res;
+         }
+        //保留选中结果
+        function orderResponseHandler(res) {
+            $.each(res.rows, function (i, row) {
+                row.state = $.inArray(row.Id, orderSelections.ids) !== -1;
+            });
+            return res;
+        }
+
+        //注册选中事件
+        function checkOn($table,selections) {
+            $table.on('check.bs.table check-all.bs.table ' +
+                'uncheck.bs.table uncheck-all.bs.table', function (e, rows) {
+                    var ids = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
+                        return row.Id;
+                    }),
+                        rowarry = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
+                            return row;
+                        }),
+                        func = $.inArray(e.type, ['check', 'check-all']) > -1 ? 'union' : 'difference';
+                    selections.ids = _[func](selections.ids, ids);
+                    selections.rows = _[func](selections.rows, rowarry);
+                });
         }
     </script>
 }

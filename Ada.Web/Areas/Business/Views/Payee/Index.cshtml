@@ -107,8 +107,8 @@
                         field: 'Id',
                         title: '操作',
                         align: "center", valign: "middle",
-                        formatter: function (value) {
-                            return "<a class='btn btn-white btn-sm' href='javascript:;' onclick=\"initPayments('" + value + "');\");'><i class='fa fa-search'></i> 查看</a> " +
+                        formatter: function (value,row) {
+                            return "<a class='btn btn-white btn-sm' href='javascript:;' onclick=\"initPayments('" + value + "');\");'><i class='fa fa-search'></i> 查看[" + row.PaymentCount+"]</a> " +
                                 "<a class='btn btn-success btn-sm' href='@Url.Action("Payment")?id=" + value +"'><i class='fa fa-jpy'></i>  请款</a> " +
                                 "<a class='btn btn-danger btn-sm' href='javascript:;' onclick=\"cancle('" + value +"');\");'><i class='fa fa-reply'></i> 撤销</a>";
                         }

@@ -8,12 +8,12 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0E623520-E2BD-412E-AA22-F8121CB70CB5}</ProjectGuid>
+    <ProjectGuid>{54236A24-E047-42DD-A841-87D6F0BCF0C0}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Finance</RootNamespace>
-    <AssemblyName>Finance</AssemblyName>
+    <RootNamespace>Boss</RootNamespace>
+    <AssemblyName>Boss</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
@@ -104,30 +104,16 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\BusinessPayController.cs" />
-    <Compile Include="Controllers\IncomeExpendController.cs" />
-    <Compile Include="Controllers\ReceivablesController.cs" />
-    <Compile Include="FinanceAreaRegistration.cs" />
-    <Compile Include="Controllers\SettleAccountController.cs" />
+    <Compile Include="BossAreaRegistration.cs" />
+    <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
     <None Include="packages.config" />
-    <Content Include="Views\SettleAccount\Index.cshtml" />
-    <Content Include="Views\SettleAccount\Add.cshtml" />
+    <Content Include="Views\Payment\Audit.cshtml" />
+    <Content Include="Views\Payment\Index.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\SettleAccount\SettleAccountEdit.cshtml" />
-    <Content Include="Views\SettleAccount\Update.cshtml" />
-    <Content Include="Views\IncomeExpend\Index.cshtml" />
-    <Content Include="Views\IncomeExpend\Add.cshtml" />
-    <Content Include="Views\IncomeExpend\Update.cshtml" />
-    <Content Include="Views\IncomeExpend\IncomeExpendEdit.cshtml" />
-    <Content Include="Views\Receivables\Index.cshtml" />
-    <Content Include="Views\Receivables\Add.cshtml" />
-    <Content Include="Views\Receivables\Update.cshtml" />
-    <Content Include="Views\Receivables\ReceivablesEdit.cshtml" />
-    <Content Include="Views\BusinessPay\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -165,9 +151,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>1381</DevelopmentServerPort>
+          <DevelopmentServerPort>21087</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:1381/</IISUrl>
+          <IISUrl>http://localhost:21087/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
