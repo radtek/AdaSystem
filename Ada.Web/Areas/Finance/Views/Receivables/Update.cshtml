@@ -2,7 +2,7 @@
 @model Ada.Core.ViewModel.Finance.ReceivablesView
 @{
     ViewBag.Title = "编辑收款";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "收款单据", Value = Url.Action("Index") } };
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "销售收款", Value = Url.Action("Index") } };
 }
 @Html.Partial("Bread", urls)
 

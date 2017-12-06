@@ -1,0 +1,140 @@
+﻿@using System.Web.Optimization
+@using Ada.Core.Domain
+@using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Finance
+@using Ada.Services.Finance
+@using Microsoft.Ajax.Utilities
+@model BillPaymentView
+@{
+    ViewBag.Title = "销售付款";
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "销售请款", Value = Url.Action("Index") } };
+    var settleAccountService = EngineContext.Current.Resolve<ISettleAccountService>();
+    var incomeExpendService = EngineContext.Current.Resolve<IIncomeExpendService>();
+    var settleAccounts = settleAccountService.LoadEntitiesFilter().Select(d => new { text = d.SettleName, value = d.Id }).ToList();
+    var incomeExpends = incomeExpendService.LoadEntitiesFilter(new IncomeExpendView() { IsMain = true, SubjectType = Consts.StateLock }).Select(d => new { text = d.SubjectName, value = d.Id }).ToList();
+}
+@Html.Partial("Bread", urls)
+
+<div class="wrapper wrapper-content">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <p class="bg-danger">@Html.ValidationMessage("message") </p>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <a class="btn btn-outline btn-default btn-sm" href="@Url.Action("Index")"><i class="fa fa-reply"></i> 返回</a>
+                        <button class="btn btn-primary btn-sm ladda-button" type="submit" data-style="slide-right"><i class="fa fa-floppy-o"></i> 保存</button>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="sk-spinner sk-spinner-wave">
+                            <div class="sk-rect2"></div>
+                            <div class="sk-rect3"></div>
+                            <div class="sk-rect4"></div>
+                            <div class="sk-rect5"></div>
+                        </div>
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.PaymentType, Html.DisplayNameFor(d => d.PaymentType).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(d => d.PaymentType, new { @class = "form-control", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.PayMoney, Html.DisplayNameFor(d => d.PayMoney).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(d => d.PayMoney, new { @class = "form-control", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.BillDate, Html.DisplayNameFor(d => d.BillDate).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        <div class="input-group date">
+                                            @Html.TextBoxFor(d => d.BillDate, Model.BillDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control", required = "", @readonly = "" })
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.AccountBank, Html.DisplayNameFor(d => d.AccountBank).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(d => d.AccountBank, new { @class = "form-control", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.AccountName, Html.DisplayNameFor(d => d.AccountName).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(d => d.AccountName, new { @class = "form-control", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.AccountNum, Html.DisplayNameFor(d => d.AccountNum).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(d => d.AccountNum, new { @class = "form-control", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.Image, Html.DisplayNameFor(d => d.Image).ToString(), new { @class = "col-sm-1 control-label" })
+                                    <div class="col-sm-10">
+                                        <div class="dropzone" id="myDropzone">
+                                            <div class="dz-message">
+                                                <strong>将图片拖拽到此处</strong>
+                                                <br>或点此打开文件管理器选择图片
+                                                <br>（注：只支持*.jpg,*.jpge,*.png格式的图片，图片大小最大不超过2M）
+                                            </div>
+                                        </div>
+                                        @Html.HiddenFor(d => d.Image)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div id="toolbar" class="btn-group">
+                                        <button id="btn_add" type="button" class="btn btn-primary btn-outline">
+                                            <i class="fa fa-plus"></i> 添加结算账户
+                                        </button>
+                                    </div>
+                                    <table id="table"></table>
+                                    @Html.HiddenFor(d => d.PayDetails)
+                                </div>
+                            </div>
+                            @Html.HiddenFor(d => d.RequestNum)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section StylesFirst {
+    @Styles.Render("~/Content/plugins/dropzone/dropZoneStyles")
+}
+@section Styles {
+    @Styles.Render("~/plugins/dateTimePickerStyle")
+    @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/bootstrapEditTableStyle")
+
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/dateTimePickerScript")
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/bootstrapEditTableScript")
+    @Scripts.Render("~/plugins/dropZone")
+    <script>
+        var payData =@Html.Raw(string.IsNullOrWhiteSpace(Model.PayDetails)?"[]": Model.PayDetails),
+            uploadapi = "@Url.Action("UploadImage", "Common",new{area="Admin"})",
+            paymoney =@Model.PayMoney,
+            incomeExpends =@Html.Raw(Json.Encode(incomeExpends)),
+            settleAccounts=@Html.Raw(Json.Encode(settleAccounts)),
+            $table = $('#table');
+    </script>
+    <script src="@Url.Content("~/Areas/Finance/Scripts/pay.js")"></script>
+}

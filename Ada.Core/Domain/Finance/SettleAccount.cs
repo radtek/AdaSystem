@@ -38,10 +38,15 @@ namespace Ada.Core.Domain.Finance
         [Display(Name = "开户号")]
         public string AccountNum { get; set; }
         /// <summary>
-        /// 账户金额
+        /// 初始金额
         /// </summary>
-        [Display(Name = "账户金额")]
+        [Display(Name = "初始金额")]
         public decimal? Money { get; set; }
+        /// <summary>
+        /// 税率%
+        /// </summary>
+        [Display(Name = "税率%")]
+        public decimal? Tax { get; set; }
         public virtual ICollection<BillPaymentDetail> BillPaymentDetails { get; set; }
         public virtual ICollection<Receivables> Receivableses { get; set; }
     }

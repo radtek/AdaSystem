@@ -37,13 +37,17 @@ namespace Finance.Controllers
                     AccountBank = d.AccountBank,
                     AccountName = d.AccountName,
                     AccountNum = d.AccountNum,
-                    Money = d.Money
+                    Money = d.Money,
+                    Tax = d.Tax
                 })
             }, JsonRequestBehavior.AllowGet);
         }
         public ActionResult Add()
         {
-            return View();
+            SettleAccountView viewModel=new SettleAccountView();
+            viewModel.Money = 0;
+            viewModel.Tax = 0;
+            return View(viewModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -65,6 +69,7 @@ namespace Finance.Controllers
             entity.AccountBank = viewModel.AccountBank;
             entity.AccountNum = viewModel.AccountNum;
             entity.Money = viewModel.Money;
+            entity.Tax = viewModel.Tax;
             _settleAccountService.Add(entity);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
@@ -78,6 +83,8 @@ namespace Finance.Controllers
             viewModel.SettleName = entity.SettleName;
             viewModel.AccountBank = entity.AccountBank;
             viewModel.AccountNum = entity.AccountNum;
+            viewModel.Money = entity.Money;
+            viewModel.Tax = entity.Tax;
             return View(viewModel);
         }
         [HttpPost]
@@ -99,6 +106,7 @@ namespace Finance.Controllers
             entity.AccountBank = viewModel.AccountBank;
             entity.AccountNum = viewModel.AccountNum;
             entity.Money = viewModel.Money;
+            entity.Tax = viewModel.Tax;
             _settleAccountService.Update(entity);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");

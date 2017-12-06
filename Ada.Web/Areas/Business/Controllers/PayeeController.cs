@@ -75,7 +75,8 @@ namespace Business.Controllers
                 PayMoney = d.PayMoney,
                 AuditStatus = d.AuditStatus,
                 PaymentType = d.PaymentType,
-                ApplicationDate = d.ApplicationDate
+                ApplicationDate = d.ApplicationDate,
+                Status = d.Status
 
             });
             return PartialView("Payments", payments);

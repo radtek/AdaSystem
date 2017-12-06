@@ -149,6 +149,10 @@
     <Compile Include="Migrations\201711300337350_Finance.Designer.cs">
       <DependentUpon>201711300337350_Finance.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712060436541_SettleAccount.cs" />
+    <Compile Include="Migrations\201712060436541_SettleAccount.Designer.cs">
+      <DependentUpon>201712060436541_SettleAccount.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -210,6 +214,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711300337350_Finance.resx">
       <DependentUpon>201711300337350_Finance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712060436541_SettleAccount.resx">
+      <DependentUpon>201712060436541_SettleAccount.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

@@ -12,14 +12,21 @@ using Ada.Services.Finance;
 
 namespace Finance.Controllers
 {
+    /// <summary>
+    /// 销售收款
+    /// </summary>
     public class ReceivablesController : BaseController
     {
         private readonly IReceivablesService _receivablesService;
         private readonly IRepository<Receivables> _repository;
-        public ReceivablesController(IReceivablesService receivablesService, IRepository<Receivables> repository)
+        private readonly IRepository<SettleAccount> _settleAccountrepository;
+        public ReceivablesController(IReceivablesService receivablesService, 
+            IRepository<Receivables> repository,
+            IRepository<SettleAccount> settleAccountrepository)
         {
             _receivablesService = receivablesService;
             _repository = repository;
+            _settleAccountrepository = settleAccountrepository;
         }
         public ActionResult Index()
         {
@@ -54,7 +61,6 @@ namespace Finance.Controllers
             ReceivablesView viewModel = new ReceivablesView();
             viewModel.BillDate = DateTime.Now;
             viewModel.Money = 0;
-            viewModel.TaxMoney = 0;
             return View(viewModel);
         }
         [HttpPost]
@@ -79,7 +85,10 @@ namespace Finance.Controllers
             entity.TransactorId = CurrentManager.Id;
             entity.Money = viewModel.Money;
             entity.BalanceMoney = viewModel.Money;
-            entity.TaxMoney = viewModel.TaxMoney;
+            var account= _settleAccountrepository.LoadEntities(d => d.Id == viewModel.SettleAccountId).FirstOrDefault();
+            var tax = account.Tax ?? 0;
+            decimal taxMoney = (decimal)viewModel.Money * tax / 100;
+            entity.TaxMoney = Math.Round(taxMoney);
             entity.IncomeExpendId = viewModel.IncomeExpendId;
             //entity.IncomeExpendName = viewModel.IncomeExpendName;
             //entity.SettleAccountName = viewModel.SettleAccountName;
@@ -139,7 +148,10 @@ namespace Finance.Controllers
             {
                 entity.BalanceMoney = viewModel.Money;
             }
-            entity.TaxMoney = viewModel.TaxMoney;
+            var account = _settleAccountrepository.LoadEntities(d => d.Id == viewModel.SettleAccountId).FirstOrDefault();
+            var tax = account.Tax ?? 0;
+            decimal taxMoney = (decimal)viewModel.Money * tax / 100;
+            entity.TaxMoney = Math.Round(taxMoney);
             entity.IncomeExpendId = viewModel.IncomeExpendId;
             entity.IncomeExpendName = viewModel.IncomeExpendName;
             entity.SettleAccountName = viewModel.SettleAccountName;
