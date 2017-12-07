@@ -81,6 +81,11 @@ namespace Ada.Core.ViewModel.Finance
         [Display(Name = "付款凭证")]
         public string Image { get; set; }
         /// <summary>
+        /// 付款凭证
+        /// </summary>
+        [Display(Name = "付款凭证")]
+        public string ThumbnailImage { get; set; }
+        /// <summary>
         /// 结算账户
         /// </summary>
         [Display(Name = "结算账户")]

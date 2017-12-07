@@ -12,6 +12,7 @@
     var incomeExpendService = EngineContext.Current.Resolve<IIncomeExpendService>();
     var settleAccounts = settleAccountService.LoadEntitiesFilter().Select(d => new { text = d.SettleName, value = d.Id }).ToList();
     var incomeExpends = incomeExpendService.LoadEntitiesFilter(new IncomeExpendView() { IsMain = true, SubjectType = Consts.StateLock }).Select(d => new { text = d.SubjectName, value = d.Id }).ToList();
+    var thumbimage = string.IsNullOrWhiteSpace(Model.ThumbnailImage) ? "" : Model.ThumbnailImage;
 }
 @Html.Partial("Bread", urls)
 
@@ -91,6 +92,7 @@
                                             </div>
                                         </div>
                                         @Html.HiddenFor(d => d.Image)
+                                        @Html.HiddenFor(d => d.ThumbnailImage)
                                     </div>
                                 </div>
                             </div>
@@ -129,12 +131,13 @@
     @Scripts.Render("~/plugins/bootstrapEditTableScript")
     @Scripts.Render("~/plugins/dropZone")
     <script>
-        var payData =@Html.Raw(string.IsNullOrWhiteSpace(Model.PayDetails)?"[]": Model.PayDetails),
+        var payData = @Html.Raw(string.IsNullOrWhiteSpace(Model.PayDetails)?"[]": Model.PayDetails),
             uploadapi = "@Url.Action("UploadImage", "Common",new{area="Admin"})",
-            paymoney =0,
-            incomeExpends =@Html.Raw(Json.Encode(incomeExpends)),
-            settleAccounts=@Html.Raw(Json.Encode(settleAccounts)),
-            $table = $('#table');
+            paymoney = 0,
+            incomeExpends = @Html.Raw(Json.Encode(incomeExpends)),
+            settleAccounts = @Html.Raw(Json.Encode(settleAccounts)),
+            $table = $('#table'),
+            thumbimage = '@thumbimage';
     </script>
     <script src="@Url.Content("~/Areas/Finance/Scripts/pay.js")"></script>
 }

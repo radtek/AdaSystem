@@ -106,6 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\OrderDetailController.cs" />
+    <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="PurchaseAreaRegistration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -117,6 +118,9 @@
     <Content Include="Views\OrderDetail\Update.cshtml" />
     <Content Include="Views\OrderDetail\OrderEdit.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Views\Payment\Index.cshtml" />
+    <Content Include="Views\Payment\Add.cshtml" />
+    <Content Include="Views\Payment\OrderDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

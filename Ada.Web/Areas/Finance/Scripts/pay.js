@@ -39,11 +39,29 @@ var myDropzone = new Dropzone("#myDropzone", {
         }
         if (file.status == "success") {//清空上传成功的文件
             $("#Image").val("");
+            this.options.maxFiles = 1;
             //TODO 删除服务器上的文件
         }
         return this._updateMaxFilesReachedClass();
+    },
+    init: function () {
+        if (typeof thumbimage != "undefined") {
+            if (thumbimage) {
+                var mockFile = {
+                    name: "付款凭证",
+                    size: 6,
+                    status: "success"
+                };
+                this.emit("addedfile", mockFile);
+                this.emit("thumbnail", mockFile, thumbimage);
+                this.emit("complete", mockFile);
+                this.options.maxFiles = this.options.maxFiles - 1;
+            }
+        }
     }
 });
+
+
 $(function () {
     initData();
     $(".wrapper.wrapper-content form").validate({

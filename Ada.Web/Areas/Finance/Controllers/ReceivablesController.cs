@@ -168,6 +168,10 @@ namespace Finance.Controllers
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (entity.BusinessPayees.Count>0)
+            {
+                return Json(new { State = 0, Msg = "此单据已被领款，无法删除" });
+            }
             entity.DeletedBy = CurrentManager.UserName;
             entity.DeletedById = CurrentManager.Id;
             entity.DeletedDate = DateTime.Now;

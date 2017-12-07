@@ -1,62 +1,12 @@
 ﻿
 @using System.Web.Optimization
-@model Ada.Core.ViewModel.Finance.ReceivablesView
+@model Ada.Core.ViewModel.Purchase.PurchasePaymentView
 @{
-    ViewBag.Title = "销售收款";
+    ViewBag.Title = "采购请款";
 }
 @Html.Partial("Bread")
 
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
-    
-    <div class="ibox collapsed">
-        <div class="ibox-title">
-            <h5>高级筛选</h5>
-            <div class="ibox-tools">
-                <a class="collapse-link">
-                    <i class="fa fa-chevron-up"></i>
-                </a>
-            </div>
-        </div>
-        <div class="ibox-content">
-            <form id="searchFrm" onSubmit="javascript:searchFrm.search(this, event);">
-                
-                <div class="row">
-                    
-                    <div class="col-sm-2 m-b">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.BillNum, Html.DisplayNameFor(d => d.BillNum) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.BillNum, new { @class = "form-control input-sm" })
-                        </div>
-                    </div>
-                    
-                    <div class="col-sm-2 m-b">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.IncomeExpendName, Html.DisplayNameFor(d => d.IncomeExpendName) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.IncomeExpendName, new { @class = "form-control input-sm" })
-                        </div>
-                    </div>
-                    <div class="col-sm-2 m-b">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.SettleAccountName, Html.DisplayNameFor(d => d.SettleAccountName) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.SettleAccountName, new { @class = "form-control input-sm" })
-                        </div>
-                    </div>
-                </div>
-
-                <div class="hr-line-dashed"></div>
-                <div class="row">
-                    <div class="col-sm-12 text-center">
-                        <div class="form-group">
-                            <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 搜索</button>
-                            <button class="btn btn-warning" type="button" id="btn_reset"><i class="fa fa-repeat"></i> 重置</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-
-        </div>
-    </div>
-    
 
     <div class="row">
         <div class="col-lg-12">
@@ -68,10 +18,9 @@
         </div>
     </div>
 </div>
-
 <div id="toolbar" class="btn-group">
     <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
-        <i class="fa fa-plus"></i> 新增
+        <i class="fa fa-plus"></i> 请款
     </a>
 </div>
 
@@ -82,20 +31,16 @@
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
     <script type="text/javascript">
-
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
-            //2.初始化Button的点击事件
-            var oButtonInit = new ButtonInit();
-            oButtonInit.Init();
         });
         var TableInit = function() {
             var obj = new Object();
             obj.Init = function() {
                 $('#table').bootstrapTable({
                 classes: "table table-no-bordered",
-                url: '@Url.Action("GetList")',         //请求后台的URL（*）
+                url: '@Url.Action("GetList")',         //请求后台的URL（*）BalanceMoneyMin
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
@@ -118,14 +63,29 @@
                 cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
                 //detailView: true,                   //设置为 true 可以显示详细页面模式。
                 //detailFormatter: detailFormatter,
+                //queryParams: function(parameters) {
+                //    parameters.BalanceMoneyMin = 0.01;
+                //    return parameters;
+                //},
                 mobileResponsive:true,
                 columns: [
+                    //{
+                    //    checkbox: true,
+                    //    align: "center", valign: "middle"
+                    //},
                     {
-                        checkbox: true
+                        field: 'ApplicationNum',
+                        title: '@Html.DisplayNameFor(d=>d.ApplicationNum)',
+                        align: "center", valign: "middle"
                     },
                     {
-                        field: 'BillNum',
-                        title: '@Html.DisplayNameFor(d=>d.BillNum)',
+                        field: 'LinkManName',
+                        title: '@Html.DisplayNameFor(d=>d.LinkManName)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'PaymentType',
+                        title: '@Html.DisplayNameFor(d=>d.PaymentType)',
                         align: "center", valign: "middle"
                     },
                     {
@@ -144,45 +104,37 @@
                         align: "center", valign: "middle"
                     },
                     {
-                        field: 'IncomeExpendName',
-                        title: '@Html.DisplayNameFor(d=>d.IncomeExpendName)',
+                        field: 'PayMoney',
+                        title: '@Html.DisplayNameFor(d=>d.PayMoney)',
                         align: "center", valign: "middle"
                     },
                     {
-                        field: 'SettleAccountName',
-                        title: '@Html.DisplayNameFor(d=>d.SettleAccountName)',
-                        align: "center", valign: "middle"
-                    },
-                    {
-                        field: 'Money',
-                        title: '@Html.DisplayNameFor(d=>d.Money)',
-                        align: "center", valign: "middle"
-                    },
-                    {
-                        field: 'BalanceMoney',
-                        title: '@Html.DisplayNameFor(d=>d.BalanceMoney)',
-                        align: "center", valign: "middle"
-                    },
-                    {
-                        field: 'TaxMoney',
-                        title: '@Html.DisplayNameFor(d=>d.TaxMoney)',
-                        align: "center", valign: "middle"
-                    },
-                    {
-                        field: 'BillDate',
-                        title: '@Html.DisplayNameFor(d=>d.BillDate)',
+                        field: 'ApplicationDate',
+                        title: '@Html.DisplayNameFor(d=>d.ApplicationDate)',
                         align: "center", valign: "middle",
                         formatter: function(value) {
                             return  moment(value).format("YYYY-MM-DD");
                         }
                     },
                     {
+                        field: 'AuditStatus',
+                        title: '@Html.DisplayNameFor(d=>d.AuditStatus)',
+                        align: "center", valign: "middle",
+                        formatter: formatter.auditStatus
+                    },
+                    {
+                        field: 'Status',
+                        title: '@Html.DisplayNameFor(d=>d.Status)',
+                        align: "center", valign: "middle",
+                        formatter: formatter.payStatus
+                    },
+                    {
                         field: 'Id',
                         title: '操作',
                         align: "center", valign: "middle",
-                        formatter: function (value) {
-                            return "<a class='btn btn-success btn-sm' href='@Url.Action("Update")?id=" + value + "');'><i class='fa fa-pencil'></i> 编辑</a> " +
-                                "<a class='btn btn-danger btn-sm' href='javascript:;' onclick=\"cancle('" + value +"');\");'><i class='fa fa-trash-o'></i> 删除</a>";
+                        formatter: function (value,row) {
+                            return "<a class='btn btn-white btn-sm' href='javascript:;' onclick=\"initPayments('" + value + "');\");'><i class='fa fa-search'></i> 明细</a> " +
+                                "<a class='btn btn-danger btn-sm' href='javascript:;' onclick=\"cancle('" + value +"');\");'><i class='fa fa-reply'></i> 撤销</a>";
                         }
 
                     }
@@ -192,20 +144,19 @@
 
             return obj;
         };
-        var ButtonInit = function () {
-            var oInit = new Object();
-            oInit.Init = function () {
-                $("#btn_reset").click(function () {
-                    searchFrm.reset($("#searchFrm"));
-                });
-            };
-            return oInit;
-        };
+
+        function initPayments(id) {
+            $("#modalView").load("@Url.Action("Payments")?id="+id,
+                    function () {
+                        $('#modalView .modal').modal('show');
+                    });
+
+        }
         //撤销
         function cancle(id) {
             swal({
                 title: "您确定吗?",
-                text: "确认要删除此单据吗?",
+                text: "确认要撤销此单据吗?",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
@@ -244,8 +195,15 @@
                 });
             });
         }
+
     </script>
 }
+
+
+
+
+
+
 
 
 

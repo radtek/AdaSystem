@@ -72,11 +72,11 @@ formatter.normalStatus = function(value, row, index) {
 };
 formatter.businessStatus = function(value, row, index) {
     if (value == 1) {
-        return "<span class='label label-primary'>正常</span>";
+        return "<span class='label label-primary'>已下单</span>";
     } else if (value == -1) {
-        return "<span class='label label-danger'>作废</span>";
+        return "<span class='label label-danger'>已作废</span>";
     } else {
-        return "<span class='label label-warning'>待审</span>";
+        return "<span class='label'>待处理</span>";
     }
 };
 formatter.auditStatus = function (value, row, index) {
@@ -85,7 +85,14 @@ formatter.auditStatus = function (value, row, index) {
     } else if (value == -1) {
         return "<span class='label label-danger'>拒绝</span>";
     } else {
-        return "<span class='label label-warning'>待审</span>";
+        return "<span class='label'>待审</span>";
+    }
+};
+formatter.payStatus = function (value, row, index) {
+    if (value == 1) {
+        return "<span class='label label-primary'>已付</span>";
+    }else {
+        return "<span class='label'>待付</span>";
     }
 };
 formatter.purchaseStatus = function(value, row, index) {

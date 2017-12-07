@@ -135,6 +135,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\Encrypt.cs" />
     <Compile Include="Tools\SerializeHelper.cs" />
+    <Compile Include="Tools\Thumbnail.cs" />
     <Compile Include="Tools\Utils.cs" />
     <Compile Include="ViewModel\Admin\ActionView.cs" />
     <Compile Include="ViewModel\Admin\ManagerView.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="ViewModel\Finance\SettleAccountView.cs" />
     <Compile Include="ViewModel\HttpResultView.cs" />
     <Compile Include="ViewModel\Purchase\PurchaseOrderDetailView.cs" />
+    <Compile Include="ViewModel\Purchase\PurchasePaymentView.cs" />
     <Compile Include="ViewModel\Resource\MediaPriceView.cs" />
     <Compile Include="ViewModel\Resource\MediaTagView.cs" />
     <Compile Include="ViewModel\Resource\MediaTypeView.cs" />

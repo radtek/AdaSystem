@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Hosting;
 
 namespace Ada.Core.Tools
 {
@@ -66,6 +68,7 @@ namespace Ada.Core.Tools
         }
         #endregion
 
+        #region 时间转换字符串
         public static string ToRead(DateTime src)
         {
             return ToRead(src as DateTime?);
@@ -132,6 +135,9 @@ namespace Ada.Core.Tools
             }
             return result;
         }
+        #endregion
+
+        #region 获取新浪微博ID
         /// <summary>
         /// 获取新浪微博ID
         /// </summary>
@@ -153,7 +159,49 @@ namespace Ada.Core.Tools
             }
             return result;
 
+        } 
+        #endregion
+
+        #region 获得当前绝对路径
+        /// <summary>
+        /// 获得当前绝对路径
+        /// </summary>
+        /// <param name="strPath">指定的路径</param>
+        /// <returns>绝对路径</returns>
+        public static string GetMapPath(string strPath)
+        {
+            if (strPath.ToLower().StartsWith("http://"))
+            {
+                return strPath;
+            }
+            if (HttpContext.Current != null)
+            {
+                return HttpContext.Current.Server.MapPath(strPath);
+            }
+            return MapPath(strPath);
         }
+        #endregion
+
+        #region 虚拟路径转物理路径
+        /// <summary>
+        /// 虚拟路径转物理路径
+        /// </summary>
+        /// <param name="path">虚拟路径格式 "~/bin"</param>
+        /// <returns>物理路径格式 E.g. "c:\inetpub\wwwroot\bin"</returns>
+        public static string MapPath(string path)
+        {
+            if (HostingEnvironment.IsHosted)
+            {
+                //hosted
+                return HostingEnvironment.MapPath(path);
+            }
+
+            //not hosted. For example, run in unit tests
+            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            path = path.Replace("~/", "").TrimStart('/').Replace('/', '\\');
+            return Path.Combine(baseDirectory, path);
+        }
+        #endregion
     }
 
 

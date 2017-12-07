@@ -8,6 +8,7 @@ using Ada.Core.Domain;
 using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Finance;
 using Ada.Core.Domain.Purchase;
+using Ada.Core.Tools;
 using Ada.Core.ViewModel.Finance;
 using Ada.Framework.Filter;
 using Ada.Services.Finance;
@@ -73,6 +74,7 @@ namespace Finance.Controllers
             entity.AccountName = item.AccountName;
             entity.AccountNum = item.AccountNum;
             entity.Image = item.Image;
+            entity.ThumbnailImage = Thumbnail.MakeThumbnailImageToBase64(Utils.GetMapPath(item.Image));
             var paydetails = item.BillPaymentDetails.Where(d => d.IsDelete == false).Select(d => new
             {
                 d.Id,
@@ -93,7 +95,6 @@ namespace Finance.Controllers
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
                 return View(viewModel);
             }
-
             var payDetails = JsonConvert.DeserializeObject<List<BillPaymentDetail>>(viewModel.PayDetails);
             if (payDetails.Count <= 0)
             {
@@ -130,12 +131,12 @@ namespace Finance.Controllers
             decimal? paymoney = 0;
             if (entity.RequestType==Consts.StateNormal)//销售付款单据
             {
-                var payment = _businessPaymentRepository.LoadEntities(d => d.ApplicationNum == viewModel.RequestNum).FirstOrDefault();
+                var payment = _businessPaymentRepository.LoadEntities(d => d.ApplicationNum == entity.RequestNum).FirstOrDefault();
                 paymoney = payment.PayMoney;
             }
             if (entity.RequestType == Consts.StateLock)//媒介付款单据
             {
-                var payment = _purchasePaymentRepository.LoadEntities(d => d.ApplicationNum == viewModel.RequestNum).FirstOrDefault();
+                var payment = _purchasePaymentRepository.LoadEntities(d => d.ApplicationNum == entity.RequestNum).FirstOrDefault();
                 paymoney = payment.PayMoney;
             }
             if (money > paymoney)
@@ -156,8 +157,17 @@ namespace Finance.Controllers
             entity.DeletedById = CurrentManager.Id;
             entity.DeletedDate = DateTime.Now;
             //请款单据恢复
-
-            //_billPaymentService.Delete(entity);
+            if (entity.RequestType == Consts.StateNormal)//销售付款单据
+            {
+                var payment = _businessPaymentRepository.LoadEntities(d => d.ApplicationNum == entity.RequestNum).FirstOrDefault();
+                payment.Status=Consts.StateLock;
+            }
+            if (entity.RequestType == Consts.StateLock)//媒介付款单据
+            {
+                var payment = _purchasePaymentRepository.LoadEntities(d => d.ApplicationNum == entity.RequestNum).FirstOrDefault();
+                payment.Status=Consts.StateLock;
+            }
+            _billPaymentService.Delete(entity);
             return Json(new { State = 1, Msg = "删除成功" });
         }
     }

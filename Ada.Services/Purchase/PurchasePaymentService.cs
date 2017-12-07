@@ -11,31 +11,23 @@ using Ada.Core.ViewModel.Purchase;
 
 namespace Ada.Services.Purchase
 {
-    public class PurchaseOrderDetailService : IPurchaseOrderDetailService
+    public class PurchasePaymentService : IPurchasePaymentService
     {
         private readonly IDbContext _dbContext;
-        private readonly IRepository<PurchaseOrderDetail> _repository;
-        public PurchaseOrderDetailService(IDbContext dbContext,
-            IRepository<PurchaseOrderDetail> repository)
+        private readonly IRepository<PurchasePayment> _repository;
+        public PurchasePaymentService(IDbContext dbContext,
+            IRepository<PurchasePayment> repository)
         {
             _dbContext = dbContext;
             _repository = repository;
         }
-        public IQueryable<PurchaseOrderDetail> LoadEntitiesFilter(PurchaseOrderDetailView viewModel)
+        public IQueryable<PurchasePayment> LoadEntitiesFilter(PurchasePaymentView viewModel)
         {
             var allList = _repository.LoadEntities(d => d.IsDelete == false);
             //条件过滤
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.MediaName.Contains(viewModel.search));
-            }
-            if (!string.IsNullOrWhiteSpace(viewModel.LinkManName))
-            {
-                allList = allList.Where(d => d.LinkManName.Contains(viewModel.LinkManName));
-            }
-            if (!string.IsNullOrWhiteSpace(viewModel.LinkManId))
-            {
-                allList = allList.Where(d => d.LinkManId.Contains(viewModel.LinkManId));
+                allList = allList.Where(d => d.LinkManName.Contains(viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.Transactor))
             {
@@ -61,19 +53,19 @@ namespace Ada.Services.Purchase
             return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
         }
 
-        public void Add(PurchaseOrderDetail entity)
+        public void Add(PurchasePayment entity)
         {
             _repository.Add(entity);
             _dbContext.SaveChanges();
         }
 
-        public void Update(PurchaseOrderDetail entity)
+        public void Update(PurchasePayment entity)
         {
             _repository.Update(entity);
             _dbContext.SaveChanges();
         }
 
-        public void Delete(PurchaseOrderDetail entity)
+        public void Delete(PurchasePayment entity)
         {
             _repository.Delete(entity);
             _dbContext.SaveChanges();
