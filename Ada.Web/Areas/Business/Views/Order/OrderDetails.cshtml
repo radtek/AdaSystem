@@ -1,0 +1,126 @@
+﻿@using Microsoft.Ajax.Utilities
+@model IEnumerable<Ada.Core.ViewModel.Business.BusinessOrderDetailView>
+
+    <div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">销售明细</h4>
+                </div>
+                <div class="modal-body">
+                    @if (Model.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(d => d.MediaTypeName)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(d => d.MediaName)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(d => d.AdPositionName)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(d => d.MediaTitle)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(d => d.PrePublishDate)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(d => d.Money)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(d => d.PublishDate)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(d => d.PublishLink)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(d => d.PurchaseStatus)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(d => d.MediaByPurchase)
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.MediaTypeName</td>
+                                            <td>@item.MediaName</td>
+                                            <td>@item.AdPositionName</td>
+                                            <td>
+                                                <span class="label label-info" data-toggle="tooltip" data-placement="bottom" title="@item.MediaTitle">
+                                                    <i class="fa fa-info-circle"></i>查看
+                                                </span>
+                                            </td>
+                                            
+                                            <td>@item.PrePublishDate.IfNotNull(d=>d.Value.ToString("yyyy-MM-dd"))</td>
+                                            <td>@item.Money</td>
+                                            <td>@item.PublishDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"))</td>
+                                            @if (!string.IsNullOrWhiteSpace(item.PublishLink))
+                                            {
+                                                <td>
+                                                    <a class='label' href='@item.PublishLink' target='_blank'><i class='fa fa-link'></i> 浏览</a>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td></td>
+                                            }
+                                            
+                                            @if (item.PurchaseStatus!=null)
+                                                        {
+                                                            switch (item.PurchaseStatus)
+                                                            {
+                                                                case 0:
+                                                                    <td><span class='label'>待响应</span></td>
+                                                                    break;
+                                                                case 1:
+                                                                    <td><span class='label label-warning'>已处理</span></td>
+                                                                    break;
+                                                                case 2:
+                                                                    <td><span class='label label-info'>已确认</span></td>
+                                                                    break;
+                                                                case 3:
+                                                                    <td><span class='label label-primary'>已完成</span></td>
+                                                                    break;
+                                                                case -1:
+                                                                    <td><span class='label label-danger'>采购失败</span></td>
+                                                                    break;
+                                                            }
+                                            }
+                                            else
+                                            {
+                                                <td></td>
+                                            }
+                                            <td>@item.MediaByPurchase</td>
+                                        </tr>
+                                    }
+
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    }
+                    else
+                    {
+                        <p class="text-center"><strong>暂无请款记录</strong></p>
+                    }
+
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>

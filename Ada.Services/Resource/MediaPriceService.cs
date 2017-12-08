@@ -24,9 +24,13 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.Media.MediaType.CallIndex == viewModel.MediaTypeIndex);
             }
-            if (!string.IsNullOrWhiteSpace(viewModel.search))
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaName))
             {
-                allList = allList.Where(d => d.Media.MediaName.Contains(viewModel.search));
+                allList = allList.Where(d => d.Media.MediaName.Contains(viewModel.MediaName));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
+            {
+                allList = allList.Where(d => d.AdPositionName==viewModel.AdPositionName);
             }
             allList = allList.Distinct();
             viewModel.total = allList.Count();

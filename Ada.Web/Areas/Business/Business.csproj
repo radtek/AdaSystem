@@ -130,6 +130,7 @@
     <Content Include="Views\Payee\Payments.cshtml" />
     <Content Include="Views\WriteOff\Index.cshtml" />
     <Content Include="Views\WriteOff\Add.cshtml" />
+    <Content Include="Views\Order\OrderDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

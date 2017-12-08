@@ -57,8 +57,6 @@ namespace Purchase.Controllers
                     PublishLink = d.PublishLink,
                     Transactor = d.Transactor,
                     OrderDate = d.PurchaseOrder.OrderDate
-
-
                 })
             }, JsonRequestBehavior.AllowGet);
         }

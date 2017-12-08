@@ -34,5 +34,10 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "广告位")]
         public List<string> AdPositions { get; set; }
+        /// <summary>
+        /// 排序
+        /// </summary>
+        [Display(Name = "排序")]
+        public int? Taxis { get; set; }
     }
 }

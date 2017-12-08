@@ -25,6 +25,7 @@ namespace Business.Controllers
         private readonly IRepository<BusinessOrder> _repository;
         private readonly IRepository<BusinessOrderDetail> _businessOrderDetailRepository;
         private readonly IRepository<PurchaseOrder> _purchaseOrderRepository;
+        private readonly IRepository<PurchaseOrderDetail> _purchaseOrderDetailRepository;
         private readonly IRepository<MediaType> _mediaTypeRepository;
 
         public OrderController(IBusinessOrderService businessOrderService,
@@ -34,7 +35,8 @@ namespace Business.Controllers
             IPurchaseOrderService purchaseOrderService,
             IRepository<PurchaseOrder> purchaseOrderRepository,
             IRepository<Receivables> receivablesRepository,
-            IBusinessPayeeService businessPayeeService
+            IBusinessPayeeService businessPayeeService,
+            IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository
         )
         {
             _businessOrderService = businessOrderService;
@@ -43,6 +45,7 @@ namespace Business.Controllers
             _businessOrderDetailRepository = businessOrderDetailRepository;
             _purchaseOrderService = purchaseOrderService;
             _purchaseOrderRepository = purchaseOrderRepository;
+            _purchaseOrderDetailRepository = purchaseOrderDetailRepository;
         }
         public ActionResult Index()
         {
@@ -68,7 +71,8 @@ namespace Business.Controllers
                     TotalTaxMoney = d.TotalTaxMoney,
                     DiscountMoney = d.TotalDiscountMoney,
                     AdderBy = d.AddedBy,
-                    PurchaseSchedule = GetPurchaseSchedule(d)
+                    PurchaseSchedule = GetPurchaseSchedule(d),
+                    OrderDetailCount = d.BusinessOrderDetails.Count
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -89,6 +93,29 @@ namespace Business.Controllers
                 finish = purchaseOrder.PurchaseOrderDetails.Count(d => d.IsDelete == false && d.Status == Consts.PurchaseStatusSuccess);
             }
             return finish + "/" + count;
+        }
+        public ActionResult Details(string id)
+        {
+            var item = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            var details = item.BusinessOrderDetails.Select(d => new BusinessOrderDetailView()
+            {
+                Money = d.Money,
+                PrePublishDate = d.PrePublishDate,
+                MediaTitle = d.MediaTitle,
+                MediaTypeName = d.MediaTypeName,
+                MediaName = d.MediaName,
+                MediaByPurchase = d.MediaByPurchase,
+                AdPositionName = d.AdPositionName,
+                PublishLink = GetPurchaseOrderDetail(d.Id)?.PublishLink,
+                PublishDate = GetPurchaseOrderDetail(d.Id)?.PublishDate,
+                PurchaseStatus = GetPurchaseOrderDetail(d.Id)?.Status,
+            });
+            return PartialView("OrderDetails", details);
+        }
+
+        private PurchaseOrderDetail GetPurchaseOrderDetail(string id)
+        {
+          return _purchaseOrderDetailRepository.LoadEntities(d => d.BusinessOrderDetailId == id).FirstOrDefault();
         }
         public ActionResult Add()
         {
@@ -119,7 +146,7 @@ namespace Business.Controllers
             BusinessOrder entity = new BusinessOrder();
             entity.Id = IdBuilder.CreateIdNum();
             entity.OrderNum = IdBuilder.CreateOrderNum("XD");
-            entity.Status = Consts.StateLock;
+            entity.Status = Consts.StateLock;//待处理
             entity.AuditStatus = Consts.StateLock;
             entity.AddedBy = CurrentManager.UserName;
             entity.AddedById = CurrentManager.Id;
@@ -155,7 +182,7 @@ namespace Business.Controllers
         public ActionResult SelectMedia()
         {
             //媒体类型
-            var mediaTypes = _mediaTypeRepository.LoadEntities(d => d.IsDelete == false).ToList();
+            var mediaTypes = _mediaTypeRepository.LoadEntities(d => d.IsDelete == false).OrderBy(d=>d.Taxis).ToList();
             return PartialView("SelectMedia", mediaTypes);
         }
         public ActionResult Update(string id)
@@ -175,6 +202,7 @@ namespace Business.Controllers
             entity.DiscountMoney = item.TotalDiscountMoney;
             entity.OrderDate = item.OrderDate;
             entity.Remark = item.Remark;
+            entity.Status = item.Status;
             var orderDetails = item.BusinessOrderDetails.Where(d => d.IsDelete == false).Select(d => new
             {
                 d.Id,
@@ -282,11 +310,15 @@ namespace Business.Controllers
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            entity.DeletedBy = CurrentManager.UserName;
-            entity.DeletedById = CurrentManager.Id;
-            entity.DeletedDate = DateTime.Now;
-            _businessOrderService.Delete(entity);
-            return Json(new { State = 1, Msg = "删除成功" });
+            if (entity.Status==Consts.StateLock)
+            {
+                entity.DeletedBy = CurrentManager.UserName;
+                entity.DeletedById = CurrentManager.Id;
+                entity.DeletedDate = DateTime.Now;
+                _businessOrderService.Delete(entity);
+                return Json(new { State = 1, Msg = "删除成功" });
+            }
+            return Json(new { State = 0, Msg = "此订单状态无法删除" });
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
@@ -336,6 +368,7 @@ namespace Business.Controllers
                 purchaseOrderDetail.DiscountRate = 100;
                 purchaseOrder.PurchaseOrderDetails.Add(purchaseOrderDetail);
             }
+            entity.Status = Consts.StateNormal;//已下单
             _purchaseOrderService.Add(purchaseOrder);
             return Json(new { State = 1, Msg = "转换成功" });
         }

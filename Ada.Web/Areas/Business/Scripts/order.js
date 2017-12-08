@@ -1,5 +1,6 @@
 ﻿var $mediatable,
     $table = $('#table'),
+    key,
     selections = {},
     linkmanSelect = {},
     transactorSelect = {};
@@ -86,8 +87,10 @@ function initData() {
     });
     initSelect2("LinkManId", linkmanSelect);
     initSelect2("TransactorId", transactorSelect);
+    var isvisible = $("#Status").val() == 0 ? true : false;
     $table.bootstrapTable({
         data: orderData,
+        toolbar: '#toolbar',
         classes:"table table-no-bordered",
         columns: [
             {
@@ -197,7 +200,8 @@ function initData() {
                 title: '操作',
                 align: "center", valign: "middle",
                 events: operateEvents,
-                formatter: operateFormatter
+                formatter: operateFormatter,
+                visible: isvisible
 
             }
 
@@ -245,9 +249,13 @@ function showMedia(url) {
     $("#modalView").load(url,
         function () {
             //初始化
+            initMediaData($(this).find(".nav-tabs .active"));
             $('#modalView .modal').on('shown.bs.modal', function () {
                 $mediatable = $('#mediaTable');
                 $mediatable.bootstrapTable({
+                    url: mediapriceUrl,
+                    toolbar: '#mediatoolbar',
+                    classes: "table table-no-bordered",
                     cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                     pagination: true,                   //是否显示分页（*）
                     sortable: true,                     //是否启用排序
@@ -256,13 +264,20 @@ function showMedia(url) {
                     sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
                     pageNumber: 1,                       //初始化加载第一页，默认第一页
                     pageSize: 10,                       //每页的记录行数（*）
-                    search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
-                    strictSearch: true,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
+                    // search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                    //strictSearch: true,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
                     //showColumns: true,                  //是否显示所有的列
-                    showRefresh: true,                  //是否显示刷新按钮
+                    //showRefresh: true,                  //是否显示刷新按钮
                     clickToSelect: true,                //是否启用点击选中行
                     uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
                     responseHandler: responseHandler,
+                    mobileResponsive: true,
+                    queryParams: function(parameters) {
+                        parameters.MediaTypeIndex = key;
+                        parameters.AdPositionName = $("#AdPositionName").val();
+                        parameters.MediaName = $("#MediaName").val();
+                        return parameters;
+                    },
                     columns: [
                         {
                             field: 'state',
@@ -317,6 +332,22 @@ function showMedia(url) {
 
         });
 }
+//初始化媒体选择参数
+function initMediaData($obj, isrefresh) {
+    key = $obj.attr("data-key");
+    var arrposition = $obj.attr("data-value");
+    var options = JSON.parse(arrposition);
+    var $positionSelect = $("#AdPositionName");
+    $positionSelect.empty();
+    $.each(options,
+        function (k, v) {
+            $positionSelect.append('<option value="' + v + '">' + v + '</option>');
+        });
+    if (isrefresh) {
+        $mediatable.bootstrapTable('refresh');
+    }
+}
+
 //保留选中结果
 function responseHandler(res) {
     $.each(res.rows, function (i, row) {
@@ -365,33 +396,37 @@ function operateFormatter(value, row, index) {
 }
 //获取选中数据，插入
 function confirmData() {
-    if (selections.rows.length > 0) {
-        $table.bootstrapTable('append', getData());
+    var temp = getData();
+    if (temp.length > 0) {
+        $table.bootstrapTable('append', temp);
     }
     $('#modalView .modal').modal('hide');
 }
-
+//过滤重复数据
 function getData() {
-    var temp = [];
-    var tax = $("#Tax").val();
-    var now = moment().add(10,"days").format('YYYY-MM-DD');
+    var temp = [],tax = $("#Tax").val(),now = moment().add(10, "days").format('YYYY-MM-DD');
+    var tableData = $table.bootstrapTable('getData');
     $.each(selections.rows,
         function (k, v) {
-            temp.push({
-                MediaTypeName: v.TypeName,
-                MediaPriceId: v.Id,
-                MediaName: v.MediaName,
-                AdPositionName: v.AdPositionName,
-                TaxMoney: 0,
-                Tax: tax,
-                Money: 0,
-                SellMoney: 0,
-                MediaTitle: "",
-                PrePublishDate: now,
-                Remark: "",
-                MediaByPurchase: v.Transactor,
-                CostMoney: v.PurchasePrice
-            });
+            var index = _.findIndex(tableData, { 'MediaPriceId': v.Id });
+            if (index<0) {
+                temp.push({
+                    MediaTypeName: v.TypeName,
+                    MediaPriceId: v.Id,
+                    MediaName: v.MediaName,
+                    AdPositionName: v.AdPositionName,
+                    TaxMoney: 0,
+                    Tax: tax,
+                    Money: 0,
+                    SellMoney: 0,
+                    MediaTitle: "",
+                    PrePublishDate: now,
+                    Remark: "",
+                    MediaByPurchase: v.Transactor,
+                    CostMoney: v.PurchasePrice
+                });
+            }
+            
         });
     return temp;
 }

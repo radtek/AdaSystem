@@ -118,9 +118,9 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "作废时间")]
         public DateTime? CancelDate { get; set; }
         /// <summary>
-        /// 联系客户
+        /// 客户名称
         /// </summary>
-        [Display(Name = "联系客户")]
+        [Display(Name = "客户名称")]
         [Required]
         public string LinkManName { get; set; }
         /// <summary>
@@ -129,9 +129,9 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "结算方式")]
         public string SettlementType { get; set; }
         /// <summary>
-        /// 联系客户
+        /// 客户名称
         /// </summary>
-        [Display(Name = "联系客户")]
+        [Display(Name = "客户名称")]
         public string LinkManId { get; set; }
         /// <summary>
         /// 创建人员
@@ -165,5 +165,10 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "采购进度")]
         public string PurchaseSchedule { get; set; }
+        /// <summary>
+        /// 订单明细数
+        /// </summary>
+        [Display(Name = "订单明细数")]
+        public int OrderDetailCount { get; set; }
     }
 }

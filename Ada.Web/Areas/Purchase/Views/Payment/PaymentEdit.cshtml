@@ -1,0 +1,99 @@
+﻿@using Ada.Core.Infrastructure
+@using Ada.Services.Admin
+@using Microsoft.Ajax.Utilities
+@model Ada.Core.ViewModel.Purchase.PurchasePaymentView
+    @{
+        var fieldService = EngineContext.Current.Resolve<IFieldService>();
+        var paymentTypes = fieldService.GetFieldsByKey("PurchasePaymentType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    }
+<div class="sk-spinner sk-spinner-wave">
+    <div class="sk-rect2"></div>
+    <div class="sk-rect3"></div>
+    <div class="sk-rect4"></div>
+    <div class="sk-rect5"></div>
+</div>
+<div class="form-horizontal">
+    <div class="row">
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.ApplicationNum, Html.DisplayNameFor(d => d.ApplicationNum).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.ApplicationNum, new { @class = "form-control", @readonly = "", placeholder = "自动编码" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.PaymentType, Html.DisplayNameFor(d => d.PaymentType).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.DropDownListFor(d => d.PaymentType, paymentTypes, new { @class = "form-control", required = "" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.ApplicationDate, Html.DisplayNameFor(d => d.ApplicationDate).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                <div class="input-group date">
+                    @Html.TextBoxFor(d => d.ApplicationDate, Model.ApplicationDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control", required = "", @readonly = "" })
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.AccountBank, Html.DisplayNameFor(d => d.AccountBank).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.AccountBank, new { @class = "form-control", required = "" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.AccountName, Html.DisplayNameFor(d => d.AccountName).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.AccountName, new { @class = "form-control", required = "" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.AccountNum, Html.DisplayNameFor(d => d.AccountNum).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.AccountNum, new { @class = "form-control", required = "" })
+            </div>
+        </div>
+
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.LinkManId, Html.DisplayNameFor(d => d.LinkManId).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                <select class="form-control" required="" name="LinkManId" id="LinkManId">
+                    <option value="@Model.LinkManId">@Model.LinkManName</option>
+                </select>
+                @Html.HiddenFor(d => d.LinkManName)
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.PayMoney, Html.DisplayNameFor(d => d.PayMoney).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.PayMoney, new { @class = "form-control", required = "" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.TransactorId, Html.DisplayNameFor(d => d.TransactorId).ToString(), new { @class = "col-sm-4 control-label", required = "" })
+            <div class="col-sm-8">
+                <select class="form-control" required="" name="TransactorId" id="TransactorId">
+                    <option value="@Model.TransactorId">@Model.Transactor</option>
+                </select>
+                @Html.HiddenFor(d => d.Transactor)
+            </div>
+        </div>
+
+    </div>
+
+    <div class="hr-line-dashed"></div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="toolbar" class="btn-group">
+                <button id="btn_add" type="button" class="btn btn-primary btn-outline">
+                    <i class="fa fa-plus"></i> 添加请款订单
+                </button>
+            </div>
+            <table id="table"></table>
+            @Html.HiddenFor(d => d.Details)
+        </div>
+    </div>
+    @Html.HiddenFor(d => d.Id)
+</div>

@@ -1,5 +1,5 @@
 ﻿@model List<Ada.Core.Domain.Resource.MediaType>
-<div class="modal fade" aria-hidden="true">
+@*<div class="modal fade" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -29,6 +29,19 @@
                         <table id="mediaTable">
                         </table>
                     </div>
+                    <div id="mediatoolbar">
+                        <div class="form-inline" role="form">
+                            <div class="form-group">
+                                <span>广告位: </span>
+                                <input name="offset" class="form-control" type="number" value="0">
+                            </div>
+                            <div class="form-group">
+                                <span>媒体名称: </span>
+                                <input name="limit" class="form-control" type="number" value="5">
+                            </div>
+                            <button id="ok" type="submit" class="btn btn-default">搜索</button>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -37,5 +50,93 @@
                 <button type="button" class="btn btn-primary" onclick="confirmData();">确定</button>
             </div>
         </div>
+    </div>
+</div>*@
+
+
+<div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">选择媒体</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="tabs-container">
+                            <div class="tabs-left">
+                                <ul class="nav nav-tabs">
+                                    @foreach (var item in Model)
+                                    {
+                                        if (item.CallIndex == "weixin")
+                                        {
+                                            <li class="active" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))' data-key="@item.CallIndex" onclick="initMediaData($(this),true);">
+                                                <a data-toggle="tab" href="#tab">@item.TypeName</a>
+                                            </li>
+
+                                        }
+                                        else
+                                        {
+                                            <li class="" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))' data-key="@item.CallIndex" onclick="initMediaData($(this),true);">
+                                                <a data-toggle="tab" href="#tab">@item.TypeName</a>
+                                            </li>
+                                        }
+                                        @*<a class="list-group-item" href="javascript:;" onclick="mediasByType(this,'@item.CallIndex');">
+                                            <h5 class="list-group-item-heading">@item.TypeName</h5>
+                                        </a>*@
+                                    }
+                                    
+                                    
+                                </ul>
+                                <div class="tab-content ">
+                                    <div id="tab" class="tab-pane active">
+                                        <div class="panel-body">
+                                            <table id="mediaTable">
+                                            </table>
+                                            <div id="mediatoolbar">
+                                                <div class="form-inline" role="form">
+                                                    <div class="form-group">
+                                                        <label>广告位: </label>
+                                                        <select name="AdPositionName" class="form-control" id="AdPositionName">
+                                                        </select>
+                                                        
+                                                    </div>
+                                                    @*<div class="form-group">
+                                                        <label>媒体名称: </label>
+                                                        <input name="MediaName" class="form-control" type="text" value="" id="MediaName">
+                                                    </div>*@
+                                                    <div class="form-group">
+                                                        <label>媒体名称: </label>
+                                                        <div class="input-group">
+                                                            <input class="form-control" type="text" value="" id="MediaName"><span class="input-group-btn">
+                                                                <button type="button" class="btn btn-primary" onclick="$mediatable.bootstrapTable('refresh');">
+                                                                    <i class='fa fa-search'></i>
+                                                                </button>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    @*<button type="button" class="btn btn-primary" onclick="$mediatable.bootstrapTable('refresh');">搜索</button>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="confirmData();">确定</button>
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+        
     </div>
 </div>

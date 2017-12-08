@@ -102,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\order.js" />
+    <Content Include="Scripts\payment.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +122,8 @@
     <Content Include="Views\Payment\Index.cshtml" />
     <Content Include="Views\Payment\Add.cshtml" />
     <Content Include="Views\Payment\OrderDetails.cshtml" />
+    <Content Include="Views\Payment\Update.cshtml" />
+    <Content Include="Views\Payment\PaymentEdit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

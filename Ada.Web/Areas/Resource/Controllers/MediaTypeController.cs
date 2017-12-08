@@ -37,7 +37,8 @@ namespace Resource.Controllers
                 {
                     Id = d.Id,
                     TypeName = d.TypeName,
-                    CallIndex = d.CallIndex
+                    CallIndex = d.CallIndex,
+                    Taxis = d.Taxis
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -61,7 +62,7 @@ namespace Resource.Controllers
             entity.AddedDate = DateTime.Now;
             entity.TypeName = viewModel.TypeName;
             entity.CallIndex = viewModel.CallIndex;
-
+            entity.Taxis = viewModel.Taxis;
             _mediaTypeService.Add(entity,viewModel.AdPositions);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
@@ -73,6 +74,7 @@ namespace Resource.Controllers
             entity.Id = item.Id;
             entity.CallIndex = item.CallIndex;
             entity.TypeName = item.TypeName;
+            entity.Taxis = item.Taxis;
             entity.AdPositions = item.AdPositions.Select(d => d.Name).ToList();
             return View(entity);
         }
@@ -91,6 +93,7 @@ namespace Resource.Controllers
             entity.ModifiedDate = DateTime.Now;
             entity.TypeName = viewModel.TypeName;
             entity.CallIndex = viewModel.CallIndex;
+            entity.Taxis = viewModel.Taxis;
             _mediaTypeService.Update(entity,viewModel.AdPositions);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");

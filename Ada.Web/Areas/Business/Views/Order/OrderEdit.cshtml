@@ -84,15 +84,15 @@
     <div class="hr-line-dashed"></div>
     <div class="row">
         <div class="col-lg-12">
-            <div class="form-group">
-                <div class="col-sm-10">
-                    <button type="button" class="btn btn-warning btn-sm" onclick="showMedia('@Url.Action("SelectMedia")');">
-                        <i class="fa fa-plus"></i> 添加销售明细
-                    </button>
-                </div>
+            <div id="toolbar" class="btn-group">
+                <a class="btn btn-primary btn-outline" href="javascript:showMedia('@Url.Action("SelectMedia")');">
+                    <i class="fa fa-plus"></i> 添加媒体资源
+                </a>
             </div>
             <table id="table"></table>
             @Html.HiddenFor(d => d.OrderDetails)
+            @Html.HiddenFor(d=>d.Id)
+            @Html.HiddenFor(d=>d.Status)
         </div>
     </div>
 </div>

@@ -33,9 +33,9 @@ namespace Ada.Services.Resource
             string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
             if (order == "desc")
             {
-                return allList.OrderByDescending(d => d.Id).Skip(offset).Take(rows);
+                return allList.OrderByDescending(d => d.Taxis).Skip(offset).Take(rows);
             }
-            return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
+            return allList.OrderBy(d => d.Taxis).Skip(offset).Take(rows);
         }
         public void Add(MediaType entity, List<string> adPositions = null)
         {
