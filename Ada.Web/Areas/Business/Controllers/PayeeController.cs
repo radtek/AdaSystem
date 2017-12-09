@@ -91,6 +91,11 @@ namespace Business.Controllers
                 return View(viewModel);
             }
             var entity = _repository.LoadEntities(d => d.Id == viewModel.BusinessPayeeId).FirstOrDefault();
+            if (entity.VerificationStatus==Consts.StateNormal)
+            {
+                ModelState.AddModelError("message", "此款项已核销，无法请款");
+                return View(viewModel);
+            }
             var temp = entity.BusinessPayments.Sum(d => d.PayMoney);
             //校验金额不能超出领款金额
             if (viewModel.PayMoney > entity.Money-temp)

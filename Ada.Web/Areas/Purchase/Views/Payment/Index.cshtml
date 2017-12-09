@@ -74,8 +74,8 @@
                     //    align: "center", valign: "middle"
                     //},
                     {
-                        field: 'ApplicationNum',
-                        title: '@Html.DisplayNameFor(d=>d.ApplicationNum)',
+                        field: 'BillNum',
+                        title: '@Html.DisplayNameFor(d=>d.BillNum)',
                         align: "center", valign: "middle"
                     },
                     {
@@ -84,43 +84,17 @@
                         align: "center", valign: "middle"
                     },
                     {
-                        field: 'PaymentType',
-                        title: '@Html.DisplayNameFor(d=>d.PaymentType)',
-                        align: "center", valign: "middle"
-                    },
-                    {
-                        field: 'AccountBank',
-                        title: '@Html.DisplayNameFor(d=>d.AccountBank)',
-                        align: "center", valign: "middle"
-                    },
-                    {
-                        field: 'AccountName',
-                        title: '@Html.DisplayNameFor(d=>d.AccountName)',
-                        align: "center", valign: "middle"
-                    },
-                    {
-                        field: 'AccountNum',
-                        title: '@Html.DisplayNameFor(d=>d.AccountNum)',
-                        align: "center", valign: "middle"
-                    },
-                    {
                         field: 'PayMoney',
                         title: '@Html.DisplayNameFor(d=>d.PayMoney)',
                         align: "center", valign: "middle"
                     },
                     {
-                        field: 'ApplicationDate',
-                        title: '@Html.DisplayNameFor(d=>d.ApplicationDate)',
+                        field: 'BillDate',
+                        title: '@Html.DisplayNameFor(d=>d.BillDate)',
                         align: "center", valign: "middle",
                         formatter: function(value) {
                             return  moment(value).format("YYYY-MM-DD");
                         }
-                    },
-                    {
-                        field: 'AuditStatus',
-                        title: '@Html.DisplayNameFor(d=>d.AuditStatus)',
-                        align: "center", valign: "middle",
-                        formatter: formatter.auditStatus
                     },
                     {
                         field: 'Status',

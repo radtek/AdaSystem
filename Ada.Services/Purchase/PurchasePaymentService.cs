@@ -36,15 +36,7 @@ namespace Ada.Services.Purchase
             {
                 allList = allList.Where(d => d.Transactor.Contains(viewModel.Transactor));
             }
-            if (viewModel.Status != null)
-            {
-                allList = allList.Where(d => d.Status == viewModel.Status);
-            }
-            if (viewModel.AuditStatus != null)
-            {
-                allList = allList.Where(d => d.AuditStatus == viewModel.AuditStatus);
-            }
-            
+
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;

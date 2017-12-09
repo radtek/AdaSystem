@@ -79,6 +79,7 @@
     <Compile Include="Mapping\Log\ManagerLoginLogMap.cs" />
     <Compile Include="Mapping\Log\SystemLogMap.cs" />
     <Compile Include="Mapping\Purchase\PurchaseOrderDetailMap.cs" />
+    <Compile Include="Mapping\Purchase\PurchasePaymentOrderDetailMap.cs" />
     <Compile Include="Mapping\Purchase\PurchasePaymentDetailMap.cs" />
     <Compile Include="Mapping\Purchase\PurchasePaymentMap.cs" />
     <Compile Include="Mapping\Purchase\PurchaseOrderMap.cs" />
@@ -153,6 +154,10 @@
     <Compile Include="Migrations\201712060436541_SettleAccount.Designer.cs">
       <DependentUpon>201712060436541_SettleAccount.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712090932508_PurchasePayment.cs" />
+    <Compile Include="Migrations\201712090932508_PurchasePayment.Designer.cs">
+      <DependentUpon>201712090932508_PurchasePayment.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -217,6 +222,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712060436541_SettleAccount.resx">
       <DependentUpon>201712060436541_SettleAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712090932508_PurchasePayment.resx">
+      <DependentUpon>201712090932508_PurchasePayment.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

@@ -113,6 +113,7 @@
     <Compile Include="Domain\Purchase\PurchaseOrderDetail.cs" />
     <Compile Include="Domain\Purchase\PurchasePayment.cs" />
     <Compile Include="Domain\Purchase\PurchasePaymentDetail.cs" />
+    <Compile Include="Domain\Purchase\PurchasePaymentOrderDetail.cs" />
     <Compile Include="Domain\Purchase\PurchaseReturenOrderDetail.cs" />
     <Compile Include="Domain\Purchase\PurchaseReturnOrder.cs" />
     <Compile Include="Domain\Resource\Media.cs" />

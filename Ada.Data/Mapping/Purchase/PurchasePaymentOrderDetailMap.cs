@@ -9,19 +9,16 @@ using Ada.Core.Domain.Purchase;
 
 namespace Ada.Data.Mapping.Purchase
 {
-    public class PurchasePaymentMap : EntityTypeConfiguration<PurchasePayment>
+    public class PurchasePaymentOrderDetailMap : EntityTypeConfiguration<PurchasePaymentOrderDetail>
     {
-        public PurchasePaymentMap()
+        public PurchasePaymentOrderDetailMap()
         {
             //配置主键
             HasKey(s => s.Id);
             //配置字段
-            Property(s => s.LinkManName).HasMaxLength(32);
-            Property(s => s.LinkManId).HasMaxLength(32);
-            Property(s => s.BillNum).HasMaxLength(32);
-            Property(s => s.Transactor).HasMaxLength(32);
-            Property(s => s.TransactorId).HasMaxLength(32);
-           
+            Property(s => s.PurchaseOrderDetailId).HasMaxLength(32);
+            Property(s => s.PurchasePaymentId).HasMaxLength(32);
+            
 
 
             //Property(s => s.AddedDate);
@@ -39,8 +36,9 @@ namespace Ada.Data.Mapping.Purchase
             Property(s => s.Remark).HasMaxLength(1024);
 
             //配置表
-            ToTable("PurchasePayment");
-            HasRequired(s => s.LinkMan).WithMany(s => s.PurchasePayments).HasForeignKey(s => s.LinkManId).WillCascadeOnDelete(false);
+            ToTable("PurchasePaymentOrderDetail");
+            HasRequired(s => s.PurchaseOrderDetail).WithMany(s => s.PurchasePaymentOrderDetails).HasForeignKey(s => s.PurchaseOrderDetailId).WillCascadeOnDelete(false);
+            HasRequired(s => s.PurchasePayment).WithMany(s => s.PurchasePaymentOrderDetails).HasForeignKey(s => s.PurchasePaymentId).WillCascadeOnDelete(false);
         }
     }
 }

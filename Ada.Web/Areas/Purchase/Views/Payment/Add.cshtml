@@ -1,8 +1,12 @@
 ﻿@using System.Web.Optimization
+@using Ada.Core.Infrastructure
+@using Ada.Services.Admin
 @model Ada.Core.ViewModel.Purchase.PurchasePaymentView
 @{
     ViewBag.Title = "申请付款";
     List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "采购请款", Value = Url.Action("Index") } };
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var paymentTypes = fieldService.GetFieldsByKey("PurchasePaymentType").Select(d => new { text = d.Text, value = d.Value });
 }
 @Html.Partial("Bread", urls)
 
@@ -30,15 +34,19 @@
 @section Styles {
     @Styles.Render("~/plugins/dateTimePickerStyle")
     @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/bootstrapEditTableStyle")
     @Styles.Render("~/plugins/select2Styles")
 }
 @section Scripts {
     @Scripts.Render("~/plugins/dateTimePickerScript")
     @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/bootstrapEditTableScript")
     @Scripts.Render("~/plugins/select2")
     @Scripts.Render("~/plugins/lodash")
     <script>
-        var orders = @Html.Raw(string.IsNullOrWhiteSpace(Model.Details)?"[]": Model.Details),
+        var orders = @Html.Raw(string.IsNullOrWhiteSpace(Model.OrderDetails) ?"[]": Model.OrderDetails),
+            pays = @Html.Raw(string.IsNullOrWhiteSpace(Model.PayDetails) ?"[]": Model.PayDetails),
+            paymentTypes = @Html.Raw(Json.Encode(paymentTypes)),
             orderdetail = "@Url.Action("OrderDetails")",
             orderapi = "@Url.Action("GetList", "OrderDetail")",
             linkmanUrl = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})",

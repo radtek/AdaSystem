@@ -16,10 +16,15 @@ namespace Ada.Data.Mapping.Purchase
             //配置主键
             HasKey(s => s.Id);
             //配置字段
-            Property(s => s.PurchaseOrderDetailId).HasMaxLength(32);
+            Property(s => s.AuditBy).HasMaxLength(32);
+            Property(s => s.AuditById).HasMaxLength(32);
+            Property(s => s.CancelBy).HasMaxLength(32);
+            Property(s => s.CancelById).HasMaxLength(32);
             Property(s => s.PurchasePaymentId).HasMaxLength(32);
-            
-
+            Property(s => s.PaymentType).HasMaxLength(32);
+            Property(s => s.AccountBank).HasMaxLength(32);
+            Property(s => s.AccountName).HasMaxLength(32);
+            Property(s => s.AccountNum).HasMaxLength(32);
 
             //Property(s => s.AddedDate);
             Property(s => s.AddedBy).HasMaxLength(32);
@@ -37,7 +42,6 @@ namespace Ada.Data.Mapping.Purchase
 
             //配置表
             ToTable("PurchasePaymentDetail");
-            HasRequired(s => s.PurchaseOrderDetail).WithMany(s => s.PurchasePaymentDetails).HasForeignKey(s => s.PurchaseOrderDetailId).WillCascadeOnDelete(false);
             HasRequired(s => s.PurchasePayment).WithMany(s => s.PurchasePaymentDetails).HasForeignKey(s => s.PurchasePaymentId).WillCascadeOnDelete(false);
         }
     }

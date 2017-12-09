@@ -1,4 +1,4 @@
-﻿var $ordertable, $table = $('#table'),
+﻿var $ordertable, $table = $('#table'), $paytable = $('#paytable'),
     selections = {},
     linkmanSelect = {},
     transactorSelect = {};
@@ -154,6 +154,98 @@ function initData() {
     });
     $("#btn_add").click(function () {
         showOrder();
+    });
+    //付款明细
+    $paytable.bootstrapTable({
+        data: pays,
+        classes: "table table-no-bordered",
+        columns: [
+            {
+                field: 'PaymentType',
+                title: '付款性质',
+                align: "center", valign: "middle",
+                editable: {
+                    mode: "inline",
+                    emptytext: '请选择',
+                    type: 'select',
+                    source: paymentTypes
+                },
+                footerFormatter: function () {
+                    return "合计";
+                }
+            },
+            {
+                field: 'AccountBank',
+                title: '开户行',
+                align: "center", valign: "middle",
+                editable: {
+                    mode: "inline",
+                    emptytext: '请输入'
+                }
+
+            },
+            {
+                field: 'AccountName',
+                title: '开户名',
+                align: "center", valign: "middle",
+                editable: {
+                    mode: "inline",
+                    emptytext: '请输入'
+                }
+            },
+            {
+                field: 'AccountNum',
+                title: '开户号',
+                align: "center", valign: "middle",
+                editable: {
+                    mode: "inline",
+                    emptytext: '请输入'
+                }
+            },
+            {
+                field: 'PayMoney',
+                title: '申请金额',
+                align: "center", valign: "middle",
+                editable: {
+                    mode: "inline",
+                    emptytext: '请输入',
+                    validate: function (value) {
+                        if (isNaN(value)) {
+                            return '请输入有效的金额';
+                        }
+                    }
+                },
+                footerFormatter: sumFormatter
+            }
+            ,
+            {
+                field: 'operate',
+                title: '操作',
+                align: "center", valign: "middle",
+                events: operateEvents,
+                formatter: operateFormatter
+
+            }
+
+        ],
+        formatNoMatches: function () {  //没有匹配的结果
+            return '请先付款信息';
+        },
+        showFooter: true
+    });
+    $("#paybtn_add").click(function () {
+        var randomId = 100 + ~~(Math.random() * 100);
+        $paytable.bootstrapTable('insertRow', {
+            index: 0,
+            row: {
+                Id: randomId,
+                PaymentType: "",
+                AccountBank: "",
+                AccountName: "",
+                AccountNum: "",
+                PayMoney: 0
+            }
+        });
     });
 }
 //保留选中结果

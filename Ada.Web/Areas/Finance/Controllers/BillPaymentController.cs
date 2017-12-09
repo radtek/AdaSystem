@@ -136,7 +136,7 @@ namespace Finance.Controllers
             }
             if (entity.RequestType == Consts.StateLock)//媒介付款单据
             {
-                var payment = _purchasePaymentRepository.LoadEntities(d => d.ApplicationNum == entity.RequestNum).FirstOrDefault();
+                var payment = _purchasePaymentRepository.LoadEntities(d => d.BillNum == entity.RequestNum).FirstOrDefault();
                 paymoney = payment.PayMoney;
             }
             if (money > paymoney)
@@ -164,7 +164,7 @@ namespace Finance.Controllers
             }
             if (entity.RequestType == Consts.StateLock)//媒介付款单据
             {
-                var payment = _purchasePaymentRepository.LoadEntities(d => d.ApplicationNum == entity.RequestNum).FirstOrDefault();
+                var payment = _purchasePaymentRepository.LoadEntities(d => d.BillNum == entity.RequestNum).FirstOrDefault();
                 payment.Status=Consts.StateLock;
             }
             _billPaymentService.Delete(entity);
