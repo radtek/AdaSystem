@@ -4,7 +4,7 @@
 @model Ada.Core.ViewModel.Purchase.PurchasePaymentView
 @{
     ViewBag.Title = "申请付款";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "采购请款", Value = Url.Action("Index") } };
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "媒介请款", Value = Url.Action("Index") } };
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var paymentTypes = fieldService.GetFieldsByKey("PurchasePaymentType").Select(d => new { text = d.Text, value = d.Value });
 }

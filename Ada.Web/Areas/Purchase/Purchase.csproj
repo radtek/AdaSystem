@@ -124,6 +124,7 @@
     <Content Include="Views\Payment\OrderDetails.cshtml" />
     <Content Include="Views\Payment\Update.cshtml" />
     <Content Include="Views\Payment\PaymentEdit.cshtml" />
+    <Content Include="Views\Payment\PaymentDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

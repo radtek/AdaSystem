@@ -1,8 +1,7 @@
-﻿
-@using System.Web.Optimization
-@model Ada.Core.ViewModel.Business.BusinessPaymentView
+﻿@using System.Web.Optimization
+@model Ada.Core.ViewModel.Purchase.PurchasePaymentDetailView
 @{
-    ViewBag.Title = "销售请款";
+    ViewBag.Title = "媒介请款";
 }
 @Html.Partial("Bread")
 
@@ -18,24 +17,7 @@
         </div>
     </div>
 </div>
-<div id="toolbar">
-    <div class="form-inline" role="form">
-        <div class="form-group">
-            @*<label>审核状态: </label>*@
-            <div class="input-group">
-                <select name="AuditStatus" class="form-control" id="AuditStatus">
-                    <option value="0">待审</option>
-                    <option value="1">同意</option>
-                </select>
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-primary" onclick="$('#table').bootstrapTable('refresh');">
-                        <i class='fa fa-search'></i>
-                    </button>
-                </span>
-            </div>                                        
-        </div>
-    </div>
-</div>
+
 
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
@@ -53,8 +35,8 @@
             obj.Init = function() {
                 $('#table').bootstrapTable({
                 classes: "table table-no-bordered",
-                url: '@Url.Action("GetList")',         //请求后台的URL（*）BalanceMoneyMin
-                toolbar: '#toolbar',                //工具按钮用哪个容器
+                url: '@Url.Action("GetList", "PurchasePayment", new{area="Boss"})',         //请求后台的URL（*）BalanceMoneyMin
+                //toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）
@@ -77,25 +59,15 @@
                 //detailView: true,                   //设置为 true 可以显示详细页面模式。
                 //detailFormatter: detailFormatter,
                 queryParams: function(parameters) {
-                    parameters.AuditStatus = $("#AuditStatus").val();
+                    parameters.AuditStatus = 1;
+                    parameters.Status = 0;
                     return parameters;
                 },
                 mobileResponsive:true,
                 columns: [
                     {
-                        field: 'ApplicationNum',
-                        title: '@Html.DisplayNameFor(d=>d.ApplicationNum)',
-                        align: "center", valign: "middle"
-                    },
-                    {
-                        field: 'AuditStatus',
-                        title: '@Html.DisplayNameFor(d=>d.AuditStatus)',
-                        align: "center", valign: "middle",
-                        formatter: formatter.auditStatus
-                    },
-                    {
-                        field: 'LinkmanName',
-                        title: '@Html.DisplayNameFor(d=>d.LinkmanName)',
+                        field: 'BillNum',
+                        title: '@Html.DisplayNameFor(d=>d.BillNum)',
                         align: "center", valign: "middle"
                     },
                     {
@@ -109,8 +81,8 @@
                         align: "center", valign: "middle"
                     },
                     {
-                        field: 'ApplicationDate',
-                        title: '@Html.DisplayNameFor(d=>d.ApplicationDate)',
+                        field: 'BillDate',
+                        title: '@Html.DisplayNameFor(d=>d.BillDate)',
                         align: "center", valign: "middle",
                         formatter: function(value) {
                             return  moment(value).format("YYYY-MM-DD");
@@ -127,8 +99,7 @@
                         title: '操作',
                         align: "center", valign: "middle",
                         formatter: function (value,row) {
-                            return "<a class='btn btn-success btn-sm' href='@Url.Action("Audit")?id=" + value +"'><i class='fa fa-gavel'></i>  审批</a> " +
-                                "<a class='btn btn-danger btn-sm' href='javascript:;' onclick=\"cancle('" + value +"');\");'><i class='fa fa-trash-o'></i> 删除</a>";
+                            return "<a class='btn btn-success btn-sm' href='@Url.Action("Pay")?id=" + value +"'><i class='fa fa-jpy'></i>  付款</a> ";
                         }
 
                     }
@@ -139,63 +110,8 @@
             return obj;
         };
 
-        //撤销
-        function cancle(id) {
-            swal({
-                title: "您确定吗?",
-                text: "确认要删除此申请吗?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                closeOnConfirm: false
-            }, function () {
-                $.ajax({
-                    type: "post",
-                    headers: {
-                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                    },
-                    url: "@Url.Action("Delete")",
-                    data: { "id": id },
-                    success: function (data) {
-                        if (data.State == 1) {
-                            $("#table").bootstrapTable('refresh');
-                            swal({
-                                title: "操作成功",
-                                text: data.Msg,
-                                timer: 2000,
-                                type:"success",
-                                showConfirmButton: false
-                            });
 
-                        } else {
-                            swal("操作提醒", data.Msg, "warning");
-                        }
-                    },
-                    error: function () {
-                        swal("操作失败", data.Msg, "error");
-                    },
-                    complete: function () {
-
-                    }
-                });
-            });
-        }
 
     </script>
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 

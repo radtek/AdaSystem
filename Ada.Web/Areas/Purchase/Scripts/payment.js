@@ -28,6 +28,7 @@ linkmanSelect.formatRepo = function (repo) {
 };
 linkmanSelect.formatRepoSelection = function (repo) {
     $("#LinkManName").val(repo.text);
+    $table.add($paytable).bootstrapTable('removeAll');
     return repo.text;
 };
 
@@ -59,7 +60,7 @@ transactorSelect.formatRepoSelection = function (repo) {
 };
 window.operateEvents = {
     'click .remove': function (e, value, row, index) {
-        $table.bootstrapTable('remove', {
+        $table.add($paytable).bootstrapTable('remove', {
             field: 'Id',
             values: [row.Id]
         });
@@ -314,8 +315,9 @@ function sumFormatter(data) {
 }
 //订单数据加载到表单
 function setTableData() {
-    var tableData = $table.bootstrapTable('getData');
-    $("#Details").val(JSON.stringify(tableData));
+    var tableData = $table.bootstrapTable('getData'), paytableData = $paytable.bootstrapTable('getData');
+    $("#OrderDetails").val(JSON.stringify(tableData));
+    $("#PayDetails").val(JSON.stringify(paytableData));
 }
 //显示采购订单模态窗口
 function showOrder() {
@@ -346,6 +348,7 @@ function showOrder() {
                         responseHandler: responseHandler,
                         queryParams: function (parameters) {
                             parameters.LinkManId = linkman;
+                            parameters.IsPayment = false;
                             return parameters;
                         },
                         columns: [

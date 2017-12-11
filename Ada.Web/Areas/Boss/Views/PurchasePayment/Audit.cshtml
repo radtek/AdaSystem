@@ -1,0 +1,298 @@
+﻿@using System.Web.Optimization
+@using Ada.Core.Domain.Customer
+@using Ada.Core.Domain.Purchase
+@model Ada.Core.ViewModel.Purchase.PurchasePaymentDetailView
+@{
+    ViewBag.Title = "审批请款";
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "媒介请款", Value = Url.Action("Index") } };
+    LinkMan linkMan = ViewBag.LinkMan;
+    List<PurchasePaymentOrderDetail> details = ViewBag.OrderDetail;
+    List<PurchasePaymentDetail> paydetails = ViewBag.PayDetail;
+}
+@Html.Partial("Bread", urls)
+
+
+<div class="wrapper wrapper-content">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <!-- The Gallery as lightbox dialog, should be a child element of the document body -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="tabs-container">
+                    <p class="bg-danger">@Html.ValidationMessage("message") </p>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#tab-1"> 申请信息</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-2"> 订单明细</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-3"> 付款明细</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-4"> 供应商信息</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.PaymentType, Html.DisplayNameFor(d => d.PaymentType).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.PaymentType, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.AccountBank, Html.DisplayNameFor(d => d.AccountBank).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.AccountBank, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.AccountName, Html.DisplayNameFor(d => d.AccountName).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.AccountName, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.AccountNum, Html.DisplayNameFor(d => d.AccountNum).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.AccountNum, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.PayMoney, Html.DisplayNameFor(d => d.PayMoney).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.PayMoney, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                 
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.AuditStatus, Html.DisplayNameFor(d => d.AuditStatus).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            <div class="radio radio-info radio-inline">
+                                                @Html.RadioButtonFor(d => d.AuditStatus, 1)
+                                                <label> 同意 </label>
+                                            </div>
+                                            <div class="radio radio-info radio-inline">
+                                                @Html.RadioButtonFor(d => d.AuditStatus, 0)
+                                                <label> 拒绝 </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <div class="col-sm-4 col-sm-offset-2">
+                                            <a class="btn btn-outline btn-default" href="@Url.Action("Index")"><i class="fa fa-reply"></i> 返回</a>
+                                            <button class="btn btn-primary" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
+                                        </div>
+                                    </div>
+                                    @Html.HiddenFor(d => d.Id)
+                                </div>
+
+                            </div>
+                        </div>
+                    <div id="tab-2" class="tab-pane">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>
+                                                    媒体类型
+                                                </th>
+                                                <th>
+                                                    媒体名称
+                                                </th>
+                                                <th>
+                                                    广告位
+                                                </th>
+                                                <th>
+                                                    成本金额
+                                                </th>
+                                                <th>
+                                                    采购金额
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach (var item in details)
+                                            {
+                                                <tr>
+                                                    <td>@item.PurchaseOrderDetail.MediaTypeName</td>
+                                                    <td>@item.PurchaseOrderDetail.MediaName</td>
+                                                    <td>@item.PurchaseOrderDetail.AdPositionName</td>
+                                                    <td>@item.PurchaseOrderDetail.CostMoney</td>
+                                                    <td>@item.PurchaseOrderDetail.Money</td>
+                                                </tr>
+                                            }
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td>合计</td>
+                                                <td>@details.Sum(d => d.PurchaseOrderDetail.CostMoney)</td>
+                                                <td>@details.Sum(d => d.PurchaseOrderDetail.Money)</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <div id="tab-3" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            付款性质
+                                                        </th>
+                                                        <th>
+                                                            开户行
+                                                        </th>
+                                                        <th>
+                                                            开户名
+                                                        </th>
+                                                        <th>
+                                                            开户号
+                                                        </th>
+                                                        <th>
+                                                            申请金额
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in paydetails)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.PaymentType</td>
+                                                            <td>@item.AccountBank</td>
+                                                            <td>@item.AccountName</td>
+                                                            <td>@item.AccountNum</td>
+                                                            <td>@item.PayMoney</td>
+                                                        </tr>
+                                                    }
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>合计</td>
+                                                        <td>@paydetails.Sum(d => d.PayMoney)</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab-4" class="tab-pane">
+                            <div class="panel-body">
+                                <h3 class="text-center">供应商基本信息</h3>
+                                <div class="hr-line-dashed"></div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="form-horizontal">
+                                            <div class="form-group col-md-4">
+                                                <label class="col-sm-4 control-label">公司名称</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.Commpany.Name" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="col-sm-4 control-label">所在城市</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.Commpany.City" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="col-sm-4 control-label">联系人</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.Name" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="col-sm-4 control-label">微信</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.WeiXin" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="col-sm-4 control-label">QQ</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.QQ" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="col-sm-4 control-label">电话</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.Phone" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <caption class="text-center">
+                                                    <h3>供应商账户信息</h3>
+                                                </caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            账户类型
+                                                        </th>
+                                                        <th>
+                                                            账户名称
+                                                        </th>
+                                                        <th>
+                                                            账户账号
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in linkMan.PayAccounts)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.AccountType</td>
+                                                            <td>@item.AccountName</td>
+                                                            <td>@item.AccountNum</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section StylesFirst {
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+}
+
+
+
+

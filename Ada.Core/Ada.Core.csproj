@@ -160,6 +160,7 @@
     <Compile Include="ViewModel\Finance\SettleAccountView.cs" />
     <Compile Include="ViewModel\HttpResultView.cs" />
     <Compile Include="ViewModel\Purchase\PurchaseOrderDetailView.cs" />
+    <Compile Include="ViewModel\Purchase\PurchasePaymentDetailView.cs" />
     <Compile Include="ViewModel\Purchase\PurchasePaymentView.cs" />
     <Compile Include="ViewModel\Resource\MediaPriceView.cs" />
     <Compile Include="ViewModel\Resource\MediaTagView.cs" />

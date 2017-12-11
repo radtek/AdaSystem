@@ -1,8 +1,8 @@
 ﻿
 @using System.Web.Optimization
-@model Ada.Core.ViewModel.Business.BusinessPaymentView
+@model Ada.Core.ViewModel.Purchase.PurchasePaymentDetailView
 @{
-    ViewBag.Title = "销售请款";
+    ViewBag.Title = "媒介请款";
 }
 @Html.Partial("Bread")
 
@@ -32,7 +32,7 @@
                         <i class='fa fa-search'></i>
                     </button>
                 </span>
-            </div>                                        
+            </div>
         </div>
     </div>
 </div>
@@ -83,8 +83,8 @@
                 mobileResponsive:true,
                 columns: [
                     {
-                        field: 'ApplicationNum',
-                        title: '@Html.DisplayNameFor(d=>d.ApplicationNum)',
+                        field: 'BillNum',
+                        title: '@Html.DisplayNameFor(d=>d.BillNum)',
                         align: "center", valign: "middle"
                     },
                     {
@@ -94,8 +94,8 @@
                         formatter: formatter.auditStatus
                     },
                     {
-                        field: 'LinkmanName',
-                        title: '@Html.DisplayNameFor(d=>d.LinkmanName)',
+                        field: 'LinkManName',
+                        title: '@Html.DisplayNameFor(d=>d.LinkManName)',
                         align: "center", valign: "middle"
                     },
                     {
@@ -109,8 +109,8 @@
                         align: "center", valign: "middle"
                     },
                     {
-                        field: 'ApplicationDate',
-                        title: '@Html.DisplayNameFor(d=>d.ApplicationDate)',
+                        field: 'BillDate',
+                        title: '@Html.DisplayNameFor(d=>d.BillDate)',
                         align: "center", valign: "middle",
                         formatter: function(value) {
                             return  moment(value).format("YYYY-MM-DD");
@@ -185,6 +185,8 @@
 
     </script>
 }
+
+
 
 
 

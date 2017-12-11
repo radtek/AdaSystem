@@ -16,13 +16,16 @@ namespace Ada.Services.Purchase
         private readonly IDbContext _dbContext;
         private readonly IRepository<PurchasePayment> _repository;
         private readonly IRepository<PurchasePaymentDetail> _purchasePaymentDetailRepository;
+        private readonly IRepository<PurchasePaymentOrderDetail> _purchasePaymentOrderDetailRepository;
         public PurchasePaymentService(IDbContext dbContext,
             IRepository<PurchasePayment> repository,
-            IRepository<PurchasePaymentDetail> purchasePaymentDetailRepository)
+            IRepository<PurchasePaymentDetail> purchasePaymentDetailRepository,
+            IRepository<PurchasePaymentOrderDetail> purchasePaymentOrderDetailRepository)
         {
             _dbContext = dbContext;
             _repository = repository;
             _purchasePaymentDetailRepository = purchasePaymentDetailRepository;
+            _purchasePaymentOrderDetailRepository = purchasePaymentOrderDetailRepository;
         }
         public IQueryable<PurchasePayment> LoadEntitiesFilter(PurchasePaymentView viewModel)
         {
@@ -63,6 +66,7 @@ namespace Ada.Services.Purchase
         public void Delete(PurchasePayment entity)
         {
             _purchasePaymentDetailRepository.Remove(entity.PurchasePaymentDetails);
+            _purchasePaymentOrderDetailRepository.Remove(entity.PurchasePaymentOrderDetails);
             _repository.Remove(entity);
             _dbContext.SaveChanges();
         }

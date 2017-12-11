@@ -2,7 +2,7 @@
 @using System.Web.Optimization
 @model Ada.Core.ViewModel.Purchase.PurchaseOrderDetailView
 @{
-    ViewBag.Title = "采购订单";
+    ViewBag.Title = "媒介订单";
 }
 @Html.Partial("Bread")
 
@@ -127,8 +127,8 @@
                         align: "center", valign: "middle",
                     },
                     {
-                        field: 'BusinessBy',
-                        title: '@Html.DisplayNameFor(d=>d.BusinessBy)',
+                        field: 'LinkManName',
+                        title: '@Html.DisplayNameFor(d=>d.LinkManName)',
                         align: "center", valign: "middle",
                     },
                     {
@@ -205,6 +205,11 @@
                     {
                         field: 'Money',
                         title: '@Html.DisplayNameFor(d=>d.Money)',
+                        align: "center", valign: "middle",
+                    },
+                    {
+                        field: 'BusinessBy',
+                        title: '@Html.DisplayNameFor(d=>d.BusinessBy)',
                         align: "center", valign: "middle",
                     },
                     {

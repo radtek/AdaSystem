@@ -2,6 +2,7 @@
 @using Microsoft.Ajax.Utilities
 @model Ada.Core.ViewModel.Purchase.PurchasePaymentView
 
+
 <div class="sk-spinner sk-spinner-wave">
     <div class="sk-rect2"></div>
     <div class="sk-rect3"></div>
@@ -19,10 +20,18 @@
         <div class="form-group col-md-3">
             @Html.LabelFor(d => d.LinkManId, Html.DisplayNameFor(d => d.LinkManId).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
-                <select class="form-control" required="" name="LinkManId" id="LinkManId">
-                    <option value="@Model.LinkManId">@Model.LinkManName</option>
-                </select>
-                @Html.HiddenFor(d => d.LinkManName)
+                @if (Model.IsDisable == true || Model.IsDisable == null)
+                {
+                    <select class="form-control" required="" name="LinkManId" id="LinkManId">
+                        <option value="@Model.LinkManId">@Model.LinkManName</option>
+                    </select>
+                    @Html.HiddenFor(d => d.LinkManName)
+                }
+                else
+                {
+                    @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control", @readonly = ""})
+                }
+                
             </div>
         </div>
         <div class="form-group col-md-3">
@@ -61,9 +70,13 @@
     <div class="row">
         <div class="col-lg-12">
             <div id="toolbar" class="btn-group">
-                <button id="btn_add" type="button" class="btn btn-primary btn-outline">
-                    <i class="fa fa-plus"></i> 添加请款订单
-                </button>
+                @if (Model.IsDisable == true||Model.IsDisable==null)
+                {
+                    <button id="btn_add" type="button" class="btn btn-primary btn-outline">
+                        <i class="fa fa-plus"></i> 添加请款订单
+                    </button>
+                }
+                
             </div>
             <table id="table"></table>
             @Html.HiddenFor(d => d.OrderDetails)

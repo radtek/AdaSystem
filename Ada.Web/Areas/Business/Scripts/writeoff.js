@@ -3,13 +3,13 @@
     isPayeeSelect = false,
     isOrderSelect = false,
     payeeSelections = {},
-    orderSelections = {},
+    //orderSelections = {},
     $payeeTable,
     $orderTable;
 payeeSelections.ids = [];
 payeeSelections.rows = [];
-orderSelections.ids = [];
-orderSelections.rows = [];
+//orderSelections.ids = [];
+//orderSelections.rows = [];
 linkmanSelect.url = linkmanapi;
 linkmanSelect.paramsData = function (params) {
     return {
@@ -38,8 +38,9 @@ linkmanSelect.formatRepoSelection = function (repo) {
     isOrderSelect = true;
     payeeSelections.ids = [];
     payeeSelections.rows = [];
-    orderSelections.ids = [];
-    orderSelections.rows = [];
+    //orderSelections.ids = [];
+    //orderSelections.rows = [];
+
     return repo.text;
 };
 transactorSelect.url = transactorapi;
@@ -117,10 +118,15 @@ $(function () {
                 initSelect2("TransactorId", transactorSelect);
                 //计算选取总额
                 var orderMoney = 0, payeeMoney = 0;
-                $.each(orderSelections.rows,
-                    function (k, v) {
-                        orderMoney += v.TotalMoney;
-                    });
+                //$.each(orderSelections.rows,
+                //    function (k, v) {
+                //        orderMoney += v.TotalMoney;
+                //    });
+                var rows = $orderTable.bootstrapTable("getSelections");
+                if (rows.length>0) {
+                    orderMoney = rows[0].TotalMoney;
+                    $("#Orders").val(rows[0].Id);
+                }
                 $.each(payeeSelections.rows,
                     function (k, v) {
                         payeeMoney += v.VerificationMoney;
@@ -128,7 +134,8 @@ $(function () {
                 $("#OrderMoney").val(orderMoney);
                 $("#PayeeMoney").val(payeeMoney);
                 $("#Payees").val(payeeSelections.ids.join(","));
-                $("#Orders").val(orderSelections.ids.join(","));
+                //$("#Orders").val(orderSelections.ids.join(","));
+                
                 //$(this).steps("next");
             }
             if (currentIndex === 1 && isPayeeSelect) {
@@ -277,7 +284,7 @@ function initOrder() {
             parameters.VerificationStatus = 0;
             return parameters;
         },
-        responseHandler: orderResponseHandler,
+        //responseHandler: orderResponseHandler,
         columns: [
             {
                 field: 'state',
@@ -309,7 +316,7 @@ function initOrder() {
             }
         ]
     });
-    checkOn($orderTable, orderSelections);
+    //checkOn($orderTable, orderSelections);
 }
 //保留选中结果
 function payeeResponseHandler(res) {
@@ -318,13 +325,13 @@ function payeeResponseHandler(res) {
     });
     return res;
 }
-//保留选中结果
-function orderResponseHandler(res) {
-    $.each(res.rows, function (i, row) {
-        row.state = $.inArray(row.Id, orderSelections.ids) !== -1;
-    });
-    return res;
-}
+////保留选中结果
+//function orderResponseHandler(res) {
+//    $.each(res.rows, function (i, row) {
+//        row.state = $.inArray(row.Id, orderSelections.ids) !== -1;
+//    });
+//    return res;
+//}
 
 //注册选中事件
 function checkOn($table, selections) {

@@ -5,8 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
-using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Finance;
+using Ada.Core.Domain.Purchase;
 using Ada.Core.ViewModel.Finance;
 using Ada.Framework.Filter;
 using Ada.Services.Finance;
@@ -15,13 +15,13 @@ using Newtonsoft.Json;
 namespace Finance.Controllers
 {
     /// <summary>
-    /// 销售请款
+    /// 采购请款
     /// </summary>
-    public class BusinessPayController : BaseController
+    public class PurchasePayController : BaseController
     {
         private readonly IBillPaymentService _billPaymentService;
-        private readonly IRepository<BusinessPayment> _repository;
-        public BusinessPayController(IBillPaymentService billPaymentService, IRepository<BusinessPayment> repository)
+        private readonly IRepository<PurchasePaymentDetail> _repository;
+        public PurchasePayController(IBillPaymentService billPaymentService, IRepository<PurchasePaymentDetail> repository)
         {
             _billPaymentService = billPaymentService;
             _repository = repository;
@@ -40,7 +40,7 @@ namespace Finance.Controllers
             viewModel.AccountName = payment.AccountName;
             viewModel.AccountNum = payment.AccountNum;
             viewModel.PayMoney = payment.PayMoney;
-            viewModel.RequestNum = payment.ApplicationNum;
+            viewModel.RequestNum = id;
             viewModel.PaymentType = payment.PaymentType;
             return View(viewModel);
         }
@@ -59,7 +59,7 @@ namespace Finance.Controllers
                 ModelState.AddModelError("message", "请录入结算账户！");
                 return View(viewModel);
             }
-            var payment = _repository.LoadEntities(d => d.ApplicationNum == viewModel.RequestNum).FirstOrDefault();
+            var payment = _repository.LoadEntities(d => d.Id == viewModel.RequestNum).FirstOrDefault();
             BillPayment entity = new BillPayment();
             entity.Id = IdBuilder.CreateIdNum();
             entity.AddedBy = CurrentManager.UserName;
@@ -72,11 +72,11 @@ namespace Finance.Controllers
             entity.BillDate = viewModel.BillDate;
             entity.BillNum = IdBuilder.CreateOrderNum("FK");
             entity.Image = viewModel.Image;
-            entity.LinkManId = payment.BusinessPayee.LinkManId;
-            entity.LinkManName = payment.BusinessPayee.LinkManName;
+            entity.LinkManId = payment.PurchasePayment.LinkManId;
+            entity.LinkManName = payment.PurchasePayment.LinkManName;
             entity.PaymentType = viewModel.PaymentType;
-            entity.RequestNum = viewModel.RequestNum;
-            entity.RequestType = Consts.StateNormal;//销售付款单
+            entity.RequestNum = viewModel.RequestNum;//这里是申请的ID号
+            entity.RequestType = Consts.StateLock;//采购付款单
             decimal? money = 0;
             foreach (var billPaymentDetail in payDetails)
             {

@@ -25,18 +25,18 @@ namespace Finance.Controllers
         private readonly IRepository<BillPayment> _repository;
         private readonly IRepository<BillPaymentDetail> _billPaymentDetailrepository;
         private readonly IRepository<BusinessPayment> _businessPaymentRepository;
-        private readonly IRepository<PurchasePayment> _purchasePaymentRepository;
+        private readonly IRepository<PurchasePaymentDetail> _purchasePaymentDetailRepository;
         public BillPaymentController(IBillPaymentService billPaymentService, 
             IRepository<BillPayment> repository,
             IRepository<BillPaymentDetail> billPaymentDetailrepository,
             IRepository<BusinessPayment> businessPaymentRepository,
-            IRepository<PurchasePayment> purchasePaymentRepository)
+            IRepository<PurchasePaymentDetail> purchasePaymentDetailRepository)
         {
             _billPaymentService = billPaymentService;
             _repository = repository;
             _billPaymentDetailrepository = billPaymentDetailrepository;
             _businessPaymentRepository = businessPaymentRepository;
-            _purchasePaymentRepository = purchasePaymentRepository;
+            _purchasePaymentDetailRepository = purchasePaymentDetailRepository;
         }
         public ActionResult Index()
         {
@@ -136,7 +136,7 @@ namespace Finance.Controllers
             }
             if (entity.RequestType == Consts.StateLock)//媒介付款单据
             {
-                var payment = _purchasePaymentRepository.LoadEntities(d => d.BillNum == entity.RequestNum).FirstOrDefault();
+                var payment = _purchasePaymentDetailRepository.LoadEntities(d => d.Id == entity.RequestNum).FirstOrDefault();
                 paymoney = payment.PayMoney;
             }
             if (money > paymoney)
@@ -164,7 +164,7 @@ namespace Finance.Controllers
             }
             if (entity.RequestType == Consts.StateLock)//媒介付款单据
             {
-                var payment = _purchasePaymentRepository.LoadEntities(d => d.BillNum == entity.RequestNum).FirstOrDefault();
+                var payment = _purchasePaymentDetailRepository.LoadEntities(d => d.Id == entity.RequestNum).FirstOrDefault();
                 payment.Status=Consts.StateLock;
             }
             _billPaymentService.Delete(entity);

@@ -32,9 +32,9 @@
                                     <th>
                                         @Html.DisplayNameFor(d => d.PayMoney)
                                     </th>
-                                    <th>
+                                    @*<th>
                                         @Html.DisplayNameFor(d => d.ApplicationDate)
-                                    </th>
+                                    </th>*@
                                     <th>
                                         @Html.DisplayNameFor(d => d.AuditStatus)
                                     </th>
@@ -53,7 +53,7 @@
                                         <td>@item.AccountName</td>
                                         <td>@item.AccountNum</td>
                                         <td>@item.PayMoney</td>
-                                        <td>@item.ApplicationDate.Value.ToString("yyyy-MM-dd")</td>
+                                        @*<td>@item.ApplicationDate.Value.ToString("yyyy-MM-dd")</td>*@
                                         @if (item.AuditStatus == 1)
                                         {
                                             <td><span class='label label-primary'>同意</span></td>

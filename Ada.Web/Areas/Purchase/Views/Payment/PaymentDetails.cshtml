@@ -1,0 +1,147 @@
+﻿@model Ada.Core.Domain.Purchase.PurchasePayment
+
+<div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">请款记录</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <caption class="text-center">
+                                <h3 class="text-center">付款明细</h3>
+                            </caption>
+                            <thead>
+                            <tr>
+                                <th>
+                                    付款性质
+                                </th>
+                                <th>
+                                    开户行
+                                </th>
+                                <th>
+                                    开户名
+                                </th>
+                                <th>
+                                    开户号
+                                </th>
+                                <th>
+                                    申请金额
+                                </th>
+
+                                <th>
+                                    审批状态
+                                </th>
+                                <th>
+                                    付款状态
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var item in Model.PurchasePaymentDetails)
+                            {
+                                <tr>
+                                    <td>@item.PaymentType</td>
+                                    <td>@item.AccountBank</td>
+                                    <td>@item.AccountName</td>
+                                    <td>@item.AccountNum</td>
+                                    <td>@item.PayMoney</td>
+                                    @if (item.AuditStatus == 1)
+                                    {
+                                        <td><span class='label label-primary'>同意</span></td>
+                                    }
+                                    else if (item.AuditStatus == -1)
+                                    {
+                                        <td><span class='label label-danger'>拒绝</span></td>
+                                    }
+                                    else
+                                    {
+                                        <td><span class='label'>待审</span></td>
+                                    }
+                                    @if (item.Status == 1)
+                                    {
+                                        <td><span class='label label-primary'>已付</span></td>
+                                    }
+                                    else
+                                    {
+                                        <td><span class='label'>待付</span></td>
+                                    }
+
+                                </tr>
+                            }
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>合计</td>
+                                <td>@Model.PurchasePaymentDetails.Sum(d => d.PayMoney)</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="hr-line-dashed"></div>
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <caption class="text-center">
+                                <h3 class="text-center">订单明细</h3>
+                            </caption>
+                            <thead>
+                            <tr>
+                                <th>
+                                    媒体类型
+                                </th>
+                                <th>
+                                    媒体名称
+                                </th>
+                                <th>
+                                    广告位
+                                </th>
+                                <th>
+                                    成本金额
+                                </th>
+                                <th>
+                                    采购金额
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var item in Model.PurchasePaymentOrderDetails)
+                            {
+                                <tr>
+                                    <td>@item.PurchaseOrderDetail.MediaTypeName</td>
+                                    <td>@item.PurchaseOrderDetail.MediaName</td>
+                                    <td>@item.PurchaseOrderDetail.AdPositionName</td>
+                                    <td>@item.PurchaseOrderDetail.CostMoney</td>
+                                    <td>@item.PurchaseOrderDetail.Money</td>
+                                </tr>
+                            }
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>合计</td>
+                                <td>@Model.PurchasePaymentOrderDetails.Sum(d => d.PurchaseOrderDetail.CostMoney)</td>
+                                <td>@Model.PurchasePaymentOrderDetails.Sum(d => d.PurchaseOrderDetail.Money)</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

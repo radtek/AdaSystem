@@ -3,7 +3,7 @@
 @model Ada.Core.ViewModel.Purchase.PurchaseOrderDetailView
 @{
     ViewBag.Title = "处理订单";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "采购订单", Value = Url.Action("Index") } };
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "媒介订单", Value = Url.Action("Index") } };
     var discountBefore = Model.Money + Model.DiscountMoney;
 }
 @Html.Partial("Bread", urls)

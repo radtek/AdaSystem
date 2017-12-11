@@ -49,7 +49,10 @@ namespace Ada.Services.Purchase
             {
                 allList = allList.Where(d => d.AuditStatus == viewModel.AuditStatus);
             }
-            
+            if (viewModel.IsPayment==false)//过滤没有请款的
+            {
+                allList = allList.Where(d => d.PurchasePaymentOrderDetails.Count==0);
+            }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;

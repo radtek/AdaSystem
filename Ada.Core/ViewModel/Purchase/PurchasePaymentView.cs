@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ada.Core.ViewModel.Purchase
 {
-  public  class PurchasePaymentView:BaseView
+    public class PurchasePaymentView : BaseView
     {
         /// <summary>
         /// 供应商
@@ -33,7 +33,7 @@ namespace Ada.Core.ViewModel.Purchase
         /// 付款状态
         /// </summary>
         [Display(Name = "付款状态")]
-        public short? Status { get; set; }
+        public string Status { get; set; }
         /// <summary>
         /// 经办媒介
         /// </summary>
@@ -47,7 +47,7 @@ namespace Ada.Core.ViewModel.Purchase
         /// <summary>
         /// 付款金额
         /// </summary>
-        [Display(Name = "付款金额")]
+        [Display(Name = "申请金额")]
         public decimal? PayMoney { get; set; }
         /// <summary>
         /// 订单明细
@@ -59,5 +59,10 @@ namespace Ada.Core.ViewModel.Purchase
         /// </summary>
         [Display(Name = "付款明细")]
         public string PayDetails { get; set; }
+        /// <summary>
+        /// 是否显示 根据审核状态来判断
+        /// </summary>
+        [Display(Name = "是否显示")]
+        public bool? IsDisable { get; set; }
     }
 }

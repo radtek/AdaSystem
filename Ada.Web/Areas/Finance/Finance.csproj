@@ -108,6 +108,7 @@
     <Compile Include="Controllers\BillPaymentController.cs" />
     <Compile Include="Controllers\BusinessPayController.cs" />
     <Compile Include="Controllers\IncomeExpendController.cs" />
+    <Compile Include="Controllers\PurchasePayController.cs" />
     <Compile Include="Controllers\ReceivablesController.cs" />
     <Compile Include="FinanceAreaRegistration.cs" />
     <Compile Include="Controllers\SettleAccountController.cs" />
@@ -133,6 +134,9 @@
     <Content Include="Views\BusinessPay\Pay.cshtml" />
     <Content Include="Views\BillPayment\Index.cshtml" />
     <Content Include="Views\BillPayment\Update.cshtml" />
+    <Content Include="Views\PurchasePay\Index.cshtml" />
+    <Content Include="Views\PurchasePay\Pay.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

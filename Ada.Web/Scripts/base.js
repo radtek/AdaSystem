@@ -99,7 +99,7 @@ formatter.purchaseStatus = function(value, row, index) {
     if (value == 2) {
         return "<span class='label label-primary'>已确认</span>";
     } else if (value == 1) {
-        return "<span class='label label-warning'>已处理</span>";
+        return "<span class='label label-warning'>正处理</span>";
     } else if (value == 0) {
         return "<span class='label'>待响应</span>";
     } else if (value == 3) {
