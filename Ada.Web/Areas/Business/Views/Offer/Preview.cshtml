@@ -1,0 +1,164 @@
+﻿@using System.Web.Optimization
+@model Ada.Core.Domain.Business.BusinessOffer
+@{
+    //Layout = "~/Views/Shared/_Layout_Home.cshtml";
+    ViewBag.Title = "报价预览";
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "销售报价", Value = Url.Action("Index") } };
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-8">
+        <h2>@ViewBag.Title</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index","Home",new{area= "Dashboards" })">工作台</a>
+            </li>
+            @if (Model != null)
+        {
+            foreach (var item in urls)
+            {
+                <li>
+                    <a href="@item.Value">@item.Text</a>
+                </li>
+        }
+    }
+            <li class="active">
+                <strong>@ViewBag.Title</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-4">
+        <div class="title-action m-r-xl">
+            <button type="button" class="btn btn-primary" onclick="toPdf();"><i class="fa fa-file-pdf-o"></i> 导出为PDF</button>
+        </div>
+    </div>
+</div>
+<div class="row" id="offer">
+    @*<div class="col-lg-8 col-lg-offset-2">*@
+        <div class="col-lg-12">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="ibox-content p-xl">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h4>报价公司:</h4>
+                        <address>
+                            <strong>江西微广联合文化传播有限公司</strong><br>
+                            @Model.Transactor<br>
+                            江西省吉安市吉安县亿都家具城30幢3楼<br>
+                            <abbr title="Phone">联系电话:</abbr> 0796-88888888
+                        </address>
+                    </div>
+
+                    <div class="col-sm-6 text-right">
+                        <h4>报价编号.</h4>
+                        <h4 class="text-navy">@Model.OfferNum</h4>
+                        <span>客户信息:</span>
+                        <address>
+                            <strong>@Model.LinkMan.Commpany.Name</strong><br>
+                            @Model.LinkMan.Name<br>
+                            @Model.LinkMan.Address<br>
+                            <abbr title="Phone">联系电话:</abbr> @Model.LinkMan.Phone
+                        </address>
+                        <p>
+                            <span><strong>报价日期:</strong> @Model.OfferDate.Value.ToString("yyyy年MM月dd日")</span><br/>
+                            @*<span><strong>Due Date:</strong> March 24, 2014</span>*@
+                        </p>
+                    </div>
+                </div>
+
+                <div class="table-responsive m-t">
+                    <table class="table invoice-table">
+                        <thead>
+                        <tr>
+                            <th>媒体类型</th>
+                            <th>媒体名称</th>
+                            <th>广告位</th>
+                            <th class="hidden-xs">报价金额</th>
+                            <th class="hidden-xs">税额</th>
+                            <th>总金额</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model.BusinessOfferDetails)
+                        {
+                            <tr>
+                                <td><strong>@item.MediaPrice.Media.MediaType.TypeName</strong></td>
+                                <td><strong>@item.MediaPrice.Media.MediaName</strong></td>
+                                <td><strong>@item.MediaPrice.AdPositionName</strong></td>
+                                <td class="hidden-xs">¥@item.SellMoney</td>
+                                <td class="hidden-xs">¥@item.TaxMoney</td>
+                                <td>¥@item.Money</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div><!-- /table-responsive -->
+
+                <table class="table invoice-total">
+                    <tbody>
+                    <tr>
+                        <td><strong>总报价金额 :</strong></td>
+                        <td>¥@Model.TotalSellMoney</td>
+                    </tr>
+                    <tr>
+                        <td><strong>总税额 :</strong></td>
+                        <td>¥@Model.TotalTaxMoney</td>
+                    </tr>
+                    <tr>
+                        <td><strong>优惠金额 :</strong></td>
+                        <td>¥@Model.DiscountMoney</td>
+                    </tr>
+                    <tr>
+                        <td><strong>总金额 :</strong></td>
+                        <td>¥@Model.TotalMoney</td>
+                    </tr>
+                    </tbody>
+                </table>
+                @*<div class="text-right">
+                        <button class="btn btn-primary"><i class="fa fa-dollar"></i> 导出为PDF</button>
+                    </div>*@
+
+                <div class="well m-t">
+                    <strong>报价说明：</strong><br/>
+                    1.以上报价有效期为：@Model.ValidDays 天，逾期请再次联系。<br/>
+                    2.如有任何疑问请及时联系，谢谢。
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/plugins/html2canvas")
+    <script type="text/javascript">
+        function toPdf() {
+            html2canvas(document.getElementById('offer'), {
+                onrendered: function(canvas){
+                    var base64 = canvas.toDataURL();
+                    $.ajax({
+                        type: "post",
+                        headers: {
+                            '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                        },
+                        url: "@Url.Action("ToPdf")",
+                        data: { upfile: base64,offer:"@Model.OfferNum"},
+                        success: function (data) {
+                            if (data.State == 1) {
+                                window.location.href = "@Url.Action("DownPdf")?path=" + data.Msg;
+
+                            } else {
+                                swal("操作提醒", data.Msg, "warning");
+                            }
+                        },
+                        error: function () {
+                            swal("操作失败", data.Msg, "error");
+                        },
+                        complete: function () {
+
+                        }
+                    });
+                }
+            });
+            
+        }
+    </script>
+}

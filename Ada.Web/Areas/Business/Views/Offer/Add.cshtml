@@ -1,0 +1,55 @@
+﻿@using System.Web.Optimization
+@model Ada.Core.ViewModel.Business.BusinessOfferView
+@{
+    ViewBag.Title = "新增报价";
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "销售报价", Value = Url.Action("Index") } };
+}
+@Html.Partial("Bread", urls)
+
+<div class="wrapper wrapper-content">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <p class="bg-danger">@Html.ValidationMessage("message") </p>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <a class="btn btn-outline btn-default btn-sm" href="@Url.Action("Index")"><i class="fa fa-reply"></i> 返回</a>
+                        <button class="btn btn-primary btn-sm ladda-button" type="submit" data-style="slide-right"><i class="fa fa-floppy-o"></i> 保存</button>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="sk-spinner sk-spinner-wave">
+                            <div class="sk-rect2"></div>
+                            <div class="sk-rect3"></div>
+                            <div class="sk-rect4"></div>
+                            <div class="sk-rect5"></div>
+                        </div>
+                        @Html.Partial("OfferEdit", Model)
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/dateTimePickerStyle")
+    @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/select2Styles")
+
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/dateTimePickerScript")
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/select2")
+    @Scripts.Render("~/plugins/lodash")
+    <script>
+        var linkmanUrl = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})",
+            managerUrl = "@Url.Action("GetList", "Manager", new {area = "Admin"})",
+            mediapriceUrl = "@Url.Action("GetMediaPrices", "Media", new { area = "Resource" })",
+            details =@Html.Raw(string.IsNullOrWhiteSpace(Model.Details)?"[]": Model.Details);
+
+    </script>
+    <script src="@Url.Content("~/Areas/Business/Scripts/offer.js")"></script>
+}

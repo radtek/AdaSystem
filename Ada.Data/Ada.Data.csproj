@@ -61,6 +61,8 @@
     <Compile Include="Mapping\Admin\ManagerActionMap.cs" />
     <Compile Include="Mapping\Admin\ActionMap.cs" />
     <Compile Include="Mapping\Admin\ManagerMap.cs" />
+    <Compile Include="Mapping\Business\BusinessOfferDetailMap.cs" />
+    <Compile Include="Mapping\Business\BusinessOfferMap.cs" />
     <Compile Include="Mapping\Business\BusinessWriteOffMap.cs" />
     <Compile Include="Mapping\Business\BusinessPaymentMap.cs" />
     <Compile Include="Mapping\Business\BusinessPayeeMap.cs" />
@@ -68,6 +70,7 @@
     <Compile Include="Mapping\Business\BusinessOrderDetailMap.cs" />
     <Compile Include="Mapping\Business\BusinessReturnOrderMap.cs" />
     <Compile Include="Mapping\Business\BusinessOrderMap.cs" />
+    <Compile Include="Mapping\Customer\FollowUpMap.cs" />
     <Compile Include="Mapping\Customer\PayAccountMap.cs" />
     <Compile Include="Mapping\Customer\LinkManMap.cs" />
     <Compile Include="Mapping\Customer\CommpanyMap.cs" />
@@ -76,6 +79,7 @@
     <Compile Include="Mapping\Finance\IncomeExpendMap.cs" />
     <Compile Include="Mapping\Finance\BillPaymentDetailMap.cs" />
     <Compile Include="Mapping\Finance\BillPaymentMap.cs" />
+    <Compile Include="Mapping\Log\WorkLogMap.cs" />
     <Compile Include="Mapping\Log\ManagerLoginLogMap.cs" />
     <Compile Include="Mapping\Log\SystemLogMap.cs" />
     <Compile Include="Mapping\Purchase\PurchaseOrderDetailMap.cs" />
@@ -158,6 +162,14 @@
     <Compile Include="Migrations\201712090932508_PurchasePayment.Designer.cs">
       <DependentUpon>201712090932508_PurchasePayment.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712120338122_20171212OfferLog.cs" />
+    <Compile Include="Migrations\201712120338122_20171212OfferLog.Designer.cs">
+      <DependentUpon>201712120338122_20171212OfferLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712120809138_OfferType.cs" />
+    <Compile Include="Migrations\201712120809138_OfferType.Designer.cs">
+      <DependentUpon>201712120809138_OfferType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -225,6 +237,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712090932508_PurchasePayment.resx">
       <DependentUpon>201712090932508_PurchasePayment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712120338122_20171212OfferLog.resx">
+      <DependentUpon>201712120338122_20171212OfferLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712120809138_OfferType.resx">
+      <DependentUpon>201712120809138_OfferType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

@@ -88,6 +88,7 @@
     <Compile Include="Domain\Admin\FieldType.cs" />
     <Compile Include="Domain\Admin\Manager.cs" />
     <Compile Include="Domain\Admin\ManagerAction.cs" />
+    <Compile Include="Domain\Business\BusinessOfferDetail.cs" />
     <Compile Include="Domain\Business\BusinessOrder.cs" />
     <Compile Include="Domain\Business\BusinessOrderDetail.cs" />
     <Compile Include="Domain\Business\BusinessPayee.cs" />
@@ -97,7 +98,9 @@
     <Compile Include="Domain\Business\BusinessWriteOff.cs" />
     <Compile Include="Domain\Customer\Commpany.cs" />
     <Compile Include="Domain\Customer\LinkMan.cs" />
+    <Compile Include="Domain\Business\BusinessOffer.cs" />
     <Compile Include="Domain\Customer\PayAccount.cs" />
+    <Compile Include="Domain\Customer\FollowUp.cs" />
     <Compile Include="Domain\Finance\BillPayment.cs" />
     <Compile Include="Domain\Finance\BillPaymentDetail.cs" />
     <Compile Include="Domain\Finance\IncomeExpend.cs" />
@@ -109,6 +112,7 @@
     <Compile Include="Domain\Admin\Role.cs" />
     <Compile Include="Domain\Consts.cs" />
     <Compile Include="Domain\Log\SystemLog.cs" />
+    <Compile Include="Domain\Log\WorkLog.cs" />
     <Compile Include="Domain\Purchase\PurchaseOrder.cs" />
     <Compile Include="Domain\Purchase\PurchaseOrderDetail.cs" />
     <Compile Include="Domain\Purchase\PurchasePayment.cs" />
@@ -147,6 +151,7 @@
     <Compile Include="ViewModel\Admin\RoleView.cs" />
     <Compile Include="ViewModel\Admin\SystemLogView.cs" />
     <Compile Include="ViewModel\BaseView.cs" />
+    <Compile Include="ViewModel\Business\BusinessOfferView.cs" />
     <Compile Include="ViewModel\Business\BusinessOrderDetailView.cs" />
     <Compile Include="ViewModel\Business\BusinessOrderView.cs" />
     <Compile Include="ViewModel\Business\BusinessPayeeView.cs" />

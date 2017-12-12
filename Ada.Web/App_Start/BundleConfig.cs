@@ -497,6 +497,9 @@ namespace Ada.Web
             // lodash
             bundles.Add(new ScriptBundle("~/plugins/lodash").Include(
                 "~/Scripts/plugins/lodash/lodash.min.js"));
+            // html2canvas
+            bundles.Add(new ScriptBundle("~/plugins/html2canvas").Include(
+                "~/Scripts/plugins/html2canvas/html2canvas.js"));
         }
     }
 }

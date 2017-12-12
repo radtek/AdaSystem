@@ -2,11 +2,11 @@
 @using Ada.Core.Infrastructure
 @using Ada.Services.Admin
 @using Microsoft.Ajax.Utilities
-@model Ada.Core.ViewModel.Business.BusinessOrderView
+
+@model Ada.Core.ViewModel.Business.BusinessOfferView
 @{
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
-    var businessTypes = fieldService.GetFieldsByKey("BusinessType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
-    var settlementTypes = fieldService.GetFieldsByKey("SettlementType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var offTypes = fieldService.GetFieldsByKey("OfferType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 <div class="form-horizontal">
     <div class="row">
@@ -20,15 +20,19 @@
             </div>
         </div>
         <div class="form-group col-md-4">
-            @Html.LabelFor(d => d.OrderNum, Html.DisplayNameFor(d => d.OrderNum).ToString(), new { @class = "col-sm-4 control-label" })
+            @Html.LabelFor(d => d.OfferNum, Html.DisplayNameFor(d => d.OfferNum).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
-                @Html.TextBoxFor(d => d.OrderNum, new { @class = "form-control", placeholder = "自动编码", @readonly = "readonly" })
+                @Html.TextBoxFor(d => d.OfferNum, new { @class = "form-control", placeholder = "自动编码", @readonly = "readonly" })
             </div>
         </div>
         <div class="form-group col-md-4">
-            @Html.LabelFor(d => d.BusinessType, Html.DisplayNameFor(d => d.BusinessType).ToString(), new { @class = "col-sm-4 control-label" })
+            @Html.LabelFor(d => d.OfferDate, Html.DisplayNameFor(d => d.OfferDate).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
-                @Html.DropDownListFor(d => d.BusinessType, businessTypes, new { @class = "form-control" })
+                <div class="input-group date">
+                    @Html.TextBoxFor(d => d.OfferDate, Model.OfferDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control", required = "", @readonly = "" })
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                </div>
             </div>
         </div>
         <div class="form-group col-md-4">
@@ -37,22 +41,10 @@
                 @Html.TextBoxFor(d => d.Tax, new { @class = "form-control" })
             </div>
         </div>
-        @*<div class="form-group col-md-4">
-            @Html.LabelFor(d => d.DiscountRate, Html.DisplayNameFor(d => d.DiscountRate).ToString(), new { @class = "col-sm-4 control-label" })
-            <div class="col-sm-8">
-                @Html.TextBoxFor(d => d.DiscountRate, new { @class = "form-control" })
-            </div>
-        </div>*@
         <div class="form-group col-md-4">
             @Html.LabelFor(d => d.DiscountMoney, Html.DisplayNameFor(d => d.DiscountMoney).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
                 @Html.TextBoxFor(d => d.DiscountMoney, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-group col-md-4">
-            @Html.LabelFor(d => d.SettlementType, Html.DisplayNameFor(d => d.SettlementType).ToString(), new { @class = "col-sm-4 control-label" })
-            <div class="col-sm-8">
-                @Html.DropDownListFor(d => d.SettlementType, settlementTypes, new { @class = "form-control" })
             </div>
         </div>
         <div class="form-group col-md-4">
@@ -64,15 +56,16 @@
                 @Html.HiddenFor(d => d.Transactor)
             </div>
         </div>
-
         <div class="form-group col-md-4">
-            @Html.LabelFor(d => d.OrderDate, Html.DisplayNameFor(d => d.OrderDate).ToString(), new { @class = "col-sm-4 control-label" })
+            @Html.LabelFor(d => d.OfferType, Html.DisplayNameFor(d => d.OfferType).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
-                <div class="input-group date">
-                    @Html.TextBoxFor(d => d.OrderDate, Model.OrderDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control", required = "", @readonly = "" })
-                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                </div>
+                @Html.DropDownListFor(d => d.OfferType, offTypes, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.ValidDays, Html.DisplayNameFor(d => d.ValidDays).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.ValidDays, new { @class = "form-control" })
             </div>
         </div>
         <div class="form-group col-md-4">
@@ -86,18 +79,13 @@
     <div class="row">
         <div class="col-lg-12">
             <div id="toolbar" class="btn-group">
-                @if (Model.Status==Consts.StateLock||Model.Status==null)
-                {
-                    <a class="btn btn-primary btn-outline" href="javascript:showMedia('@Url.Action("SelectMedia")');">
-                        <i class="fa fa-plus"></i> 添加媒体资源
-                    </a>
-                }
-                
+                <a class="btn btn-primary btn-outline" href="javascript:showMedia('@Url.Action("SelectMedia","Order")');">
+                    <i class="fa fa-plus"></i> 添加媒体资源
+                </a>
             </div>
             <table id="table"></table>
-            @Html.HiddenFor(d => d.OrderDetails)
-            @Html.HiddenFor(d=>d.Id)
-            @Html.HiddenFor(d=>d.Status)
+            @Html.HiddenFor(d => d.Details)
+            @Html.HiddenFor(d => d.Id)
         </div>
     </div>
 </div>

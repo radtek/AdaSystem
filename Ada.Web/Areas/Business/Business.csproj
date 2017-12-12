@@ -47,6 +47,9 @@
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="itextsharp, Version=5.5.12.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\iTextSharp.5.5.12\lib\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.8.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -101,11 +104,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\offer.js" />
     <Content Include="Scripts\order.js" />
     <Content Include="Scripts\writeoff.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\OfferController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\PayeeController.cs" />
     <Compile Include="Controllers\ReceivablesController.cs" />
@@ -119,7 +124,7 @@
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Order\Add.cshtml" />
-    <Content Include="Views\Order\SelectMedia.cshtml" />
+    <Content Include="Views\Shared\SelectMedia.cshtml" />
     <Content Include="Views\Order\OrderEdit.cshtml" />
     <Content Include="Views\Order\Update.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
@@ -131,6 +136,10 @@
     <Content Include="Views\WriteOff\Index.cshtml" />
     <Content Include="Views\WriteOff\Add.cshtml" />
     <Content Include="Views\Order\OrderDetails.cshtml" />
+    <Content Include="Views\Offer\Index.cshtml" />
+    <Content Include="Views\Offer\Add.cshtml" />
+    <Content Include="Views\Offer\OfferEdit.cshtml" />
+    <Content Include="Views\Offer\Preview.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

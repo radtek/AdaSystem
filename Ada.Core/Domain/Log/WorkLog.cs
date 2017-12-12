@@ -21,13 +21,13 @@ namespace Ada.Core.Domain.Log
         /// <summary>
         /// 工作主题
         /// </summary>
-        [Display(Name = "工作主题")]
+        [Display(Name = "日志主题")]
         public string Title { get; set; }
 
         /// <summary>
         /// 工作内容
         /// </summary>
-        [Display(Name = "工作内容")]
+        [Display(Name = "日志内容")]
         public string Content { get; set; }
 
         /// <summary>

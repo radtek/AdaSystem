@@ -22,6 +22,8 @@ namespace Ada.Core.Domain.Customer
             BusinessPayees=new HashSet<BusinessPayee>();
             BillPayments=new HashSet<BillPayment>();
             PurchasePayments=new HashSet<PurchasePayment>();
+            FollowUps=new HashSet<FollowUp>();
+            BusinessOffers=new HashSet<BusinessOffer>();
         }
         /// <summary>
         /// 联系人
@@ -107,5 +109,7 @@ namespace Ada.Core.Domain.Customer
         public virtual ICollection<BusinessPayee> BusinessPayees { get; set; }
         public virtual ICollection<BillPayment> BillPayments { get; set; }
         public virtual ICollection<PurchasePayment> PurchasePayments { get; set; }
+        public virtual ICollection<FollowUp> FollowUps { get; set; }
+        public virtual ICollection<BusinessOffer> BusinessOffers { get; set; }
     }
 }
