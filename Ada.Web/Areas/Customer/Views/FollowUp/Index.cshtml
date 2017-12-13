@@ -1,46 +1,11 @@
 ﻿
 @using System.Web.Optimization
-@model Ada.Core.ViewModel.Customer.LinkManView
+@model Ada.Core.ViewModel.Customer.FollowUpView
 @{
-    ViewBag.Title = "客户信息";
+    ViewBag.Title = "客户跟进";
 }
 @Html.Partial("Bread")
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
-    @*<div class="ibox collapsed">
-        <div class="ibox-title">
-            <h5>高级筛选</h5>
-            <div class="ibox-tools">
-                <a class="collapse-link">
-                    <i class="fa fa-chevron-up"></i>
-                </a>
-            </div>
-        </div>
-        <div class="ibox-content">
-            <form class="form-inline" id="searchFrm" onSubmit="javascript:searchFrm.search(this,event);">
-                <div class="row">
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.CommpanyName, Html.DisplayNameFor(d => d.CommpanyName) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.CommpanyName, new { @class = "form-control input-sm" })
-                        </div>
-                    </div>
-
-
-                </div>
-                <div class="hr-line-dashed"></div>
-                <div class="row">
-                    <div class="col-sm-12 text-center">
-                        <div class="form-group">
-                            <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 搜索</button>
-                            <button class="btn btn-warning" type="button" id="btn_reset"><i class="fa fa-repeat"></i> 重置</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-
-        </div>
-    </div>*@
-
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
@@ -52,12 +17,6 @@
     </div>
 
 
-</div>
-
-<div id="toolbar" class="btn-group">
-    <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
-        <i class="fa fa-plus"></i> 新增
-    </a>
 </div>
 
 @section Styles {
@@ -78,7 +37,7 @@
                 $('#table').bootstrapTable({
                     classes: "table table-no-bordered",
                     url: '@Url.Action("GetList")', //请求后台的URL（*）
-                    toolbar: '#toolbar', //工具按钮用哪个容器
+                    //toolbar: '#toolbar', //工具按钮用哪个容器
                     striped: true, //是否显示行间隔色
                     cache: false, //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                     pagination: true, //是否显示分页（*）
@@ -101,45 +60,47 @@
                     //detailView: true,                   //设置为 true 可以显示详细页面模式。
                     //detailFormatter: detailFormatter,
                     mobileResponsive: true,
-                    queryParams: function(parameters) {
-                        parameters.IsBusiness = false;
-                        return parameters;
-                    },
+                    //queryParams: function(parameters) {
+                    //    parameters.IsBusiness = false;
+                    //    return parameters;
+                    //},
+                    onLoadSuccess: initTooltip,
                     columns: [
-                        
+
                         {
-                            field: 'CommpanyName',
-                            title: '@Html.DisplayNameFor(d => d.CommpanyName)',
+                            field: 'CompanyName',
+                            title: '@Html.DisplayNameFor(d => d.CompanyName)',
                             align: "center", valign: "middle"
                         },
                         {
-                            field: 'Name',
-                            title: '@Html.DisplayNameFor(d => d.Name)',
+                            field: 'LinkManName',
+                            title: '@Html.DisplayNameFor(d => d.LinkManName)',
                             align: "center", valign: "middle"
                         },
                         {
-                            field: 'LinkManType',
-                            title: '@Html.DisplayNameFor(d => d.LinkManType)',
+                            field: 'FollowUpWay',
+                            title: '@Html.DisplayNameFor(d => d.FollowUpWay)',
                             align: "center", valign: "middle"
                         },
                         {
-                            field: 'Status',
-                            title: '@Html.DisplayNameFor(d => d.Status)',
-                            align: "center", valign: "middle"
+                            field: 'Content',
+                            title: '@Html.DisplayNameFor(d => d.Content)',
+                            align: "center", valign: "middle",
+                            formatter:formatter.tooltip
                         },
                         {
-                            field: 'Phone',
-                            title: '@Html.DisplayNameFor(d => d.Phone)',
-                            align: "center", valign: "middle"
+                            field: 'NextTime',
+                            title: '@Html.DisplayNameFor(d => d.NextTime)',
+                            align: "center", valign: "middle",
+                            formatter: function(value) {
+                                if (value) {
+                                    return moment(value).format("YYYY-MM-DD");
+                                }
+                            }
                         },
                         {
-                            field: 'WeiXin',
-                            title: '@Html.DisplayNameFor(d => d.WeiXin)',
-                            align: "center", valign: "middle"
-                        },
-                        {
-                            field: 'QQ',
-                            title: '@Html.DisplayNameFor(d => d.QQ)',
+                            field: 'Transactor',
+                            title: '@Html.DisplayNameFor(d => d.Transactor)',
                             align: "center", valign: "middle"
                         },
                         {
@@ -148,12 +109,7 @@
                             align: "center",
                             valign: "middle",
                             formatter: function(value, row) {
-                                return "<a class='btn btn-primary btn-sm' href='@Url.Action("FollowUp")?id=" +
-                                    value +
-                                    "'><i class='fa fa-phone'></i>  跟进</a> "+"<a class='btn btn-success btn-sm' href='@Url.Action("Update")?id=" +
-                                    value +
-                                    "'><i class='fa fa-pencil'></i>  编辑</a> " +
-                                    "<a class='btn btn-danger btn-sm' href='javascript:;' onclick=\"cancle('" +
+                                return "<a class='btn btn-danger btn-sm' href='javascript:;' onclick=\"cancle('" +
                                     value +
                                     "');\");'><i class='fa fa-trash-o'></i> 删除</a>";
                             }
@@ -209,6 +165,7 @@
         }
 </script>
 }
+
 
 
 

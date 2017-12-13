@@ -17,13 +17,15 @@ namespace Customer.Controllers
     public class ClientLinkManController : BaseController
     {
         private readonly ILinkManService _linkManService;
+        private readonly IFollowUpService _followUpService;
         private readonly IRepository<LinkMan> _repository;
         public ClientLinkManController(ILinkManService linkManService,
-            IRepository<LinkMan> repository
+            IRepository<LinkMan> repository, IFollowUpService followUpService
         )
         {
             _linkManService = linkManService;
             _repository = repository;
+            _followUpService = followUpService;
         }
         public ActionResult Index()
         {
@@ -142,6 +144,40 @@ namespace Customer.Controllers
             _linkManService.Delete(entity);
             return Json(new { State = 1, Msg = "删除成功" });
         }
-
+        public ActionResult FollowUp(string id)
+        {
+            var item = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            FollowUpView viewModel = new FollowUpView();
+            viewModel.LinkManId = id;
+            viewModel.CompanyName = item.Commpany.Name;
+            viewModel.LinkManName = item.Name;
+            viewModel.Transactor = CurrentManager.UserName;
+            viewModel.TransactorId = CurrentManager.Id;
+            return View(viewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult FollowUp(FollowUpView viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
+                return View(viewModel);
+            }
+            FollowUp entity = new FollowUp();
+            entity.AddedById = CurrentManager.Id;
+            entity.AddedBy = CurrentManager.UserName;
+            entity.AddedDate = DateTime.Now;
+            entity.Content = viewModel.Content;
+            entity.FollowUpWay = viewModel.FollowUpWay;
+            entity.LinkManId = viewModel.LinkManId;
+            entity.NextTime = viewModel.NextTime;
+            entity.Transactor = viewModel.Transactor;
+            entity.TransactorId = viewModel.TransactorId;
+            entity.Id = IdBuilder.CreateIdNum();
+            _followUpService.Add(entity);
+            TempData["Msg"] = "跟进成功";
+            return RedirectToAction("Index");
+        }
     }
 }

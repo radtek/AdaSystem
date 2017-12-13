@@ -1,46 +1,11 @@
 ﻿
 @using System.Web.Optimization
-@model Ada.Core.ViewModel.Customer.LinkManView
+@model Ada.Core.ViewModel.WorkLog.WorkLogView
 @{
-    ViewBag.Title = "客户信息";
+    ViewBag.Title = "工作日志";
 }
 @Html.Partial("Bread")
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
-    @*<div class="ibox collapsed">
-        <div class="ibox-title">
-            <h5>高级筛选</h5>
-            <div class="ibox-tools">
-                <a class="collapse-link">
-                    <i class="fa fa-chevron-up"></i>
-                </a>
-            </div>
-        </div>
-        <div class="ibox-content">
-            <form class="form-inline" id="searchFrm" onSubmit="javascript:searchFrm.search(this,event);">
-                <div class="row">
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.CommpanyName, Html.DisplayNameFor(d => d.CommpanyName) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.CommpanyName, new { @class = "form-control input-sm" })
-                        </div>
-                    </div>
-
-
-                </div>
-                <div class="hr-line-dashed"></div>
-                <div class="row">
-                    <div class="col-sm-12 text-center">
-                        <div class="form-group">
-                            <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 搜索</button>
-                            <button class="btn btn-warning" type="button" id="btn_reset"><i class="fa fa-repeat"></i> 重置</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-
-        </div>
-    </div>*@
-
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
@@ -50,13 +15,11 @@
             </div>
         </div>
     </div>
-
-
 </div>
 
 <div id="toolbar" class="btn-group">
     <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
-        <i class="fa fa-plus"></i> 新增
+        <i class="fa fa-plus"></i> 新增日志
     </a>
 </div>
 
@@ -101,45 +64,53 @@
                     //detailView: true,                   //设置为 true 可以显示详细页面模式。
                     //detailFormatter: detailFormatter,
                     mobileResponsive: true,
-                    queryParams: function(parameters) {
-                        parameters.IsBusiness = false;
-                        return parameters;
-                    },
+                    //queryParams: function(parameters) {
+                    //    parameters.IsBusiness = false;
+                    //    return parameters;
+                    //},
+                    onLoadSuccess: initTooltip,
                     columns: [
-                        
+
                         {
-                            field: 'CommpanyName',
-                            title: '@Html.DisplayNameFor(d => d.CommpanyName)',
+                            field: 'Title',
+                            title: '@Html.DisplayNameFor(d => d.Title)',
                             align: "center", valign: "middle"
                         },
                         {
-                            field: 'Name',
-                            title: '@Html.DisplayNameFor(d => d.Name)',
-                            align: "center", valign: "middle"
+                            field: 'Content',
+                            title: '@Html.DisplayNameFor(d => d.Content)',
+                            align: "center", valign: "middle",
+                            formatter: formatter.tooltip
                         },
                         {
-                            field: 'LinkManType',
-                            title: '@Html.DisplayNameFor(d => d.LinkManType)',
-                            align: "center", valign: "middle"
+                            field: 'Manager',
+                            title: '@Html.DisplayNameFor(d => d.Manager)',
+                            align: "center", valign: "middle",
+                            formatter: formatter.tooltip
                         },
                         {
-                            field: 'Status',
-                            title: '@Html.DisplayNameFor(d => d.Status)',
-                            align: "center", valign: "middle"
+                            field: 'Director',
+                            title: '@Html.DisplayNameFor(d => d.Director)',
+                            align: "center", valign: "middle",
+                            formatter: formatter.tooltip
                         },
                         {
-                            field: 'Phone',
-                            title: '@Html.DisplayNameFor(d => d.Phone)',
-                            align: "center", valign: "middle"
+                            field: 'Boss',
+                            title: '@Html.DisplayNameFor(d => d.Boss)',
+                            align: "center", valign: "middle",
+                            formatter: formatter.tooltip
                         },
                         {
-                            field: 'WeiXin',
-                            title: '@Html.DisplayNameFor(d => d.WeiXin)',
-                            align: "center", valign: "middle"
+                            field: 'Date',
+                            title: '@Html.DisplayNameFor(d => d.Date)',
+                            align: "center", valign: "middle",
+                            formatter: function (value) {
+                                return moment(value).format("YYYY-MM-DD");
+                            }
                         },
                         {
-                            field: 'QQ',
-                            title: '@Html.DisplayNameFor(d => d.QQ)',
+                            field: 'Transactor',
+                            title: '@Html.DisplayNameFor(d => d.Transactor)',
                             align: "center", valign: "middle"
                         },
                         {
@@ -148,12 +119,8 @@
                             align: "center",
                             valign: "middle",
                             formatter: function(value, row) {
-                                return "<a class='btn btn-primary btn-sm' href='@Url.Action("FollowUp")?id=" +
-                                    value +
-                                    "'><i class='fa fa-phone'></i>  跟进</a> "+"<a class='btn btn-success btn-sm' href='@Url.Action("Update")?id=" +
-                                    value +
-                                    "'><i class='fa fa-pencil'></i>  编辑</a> " +
-                                    "<a class='btn btn-danger btn-sm' href='javascript:;' onclick=\"cancle('" +
+                                return "<a class='btn btn-success btn-sm' href='@Url.Action("Update")?id=" + value +"'><i class='fa fa-gavel'></i>  审批</a> " +
+                                "<a class='btn btn-danger btn-sm' href='javascript:;' onclick=\"cancle('" +
                                     value +
                                     "');\");'><i class='fa fa-trash-o'></i> 删除</a>";
                             }
@@ -209,6 +176,7 @@
         }
 </script>
 }
+
 
 
 

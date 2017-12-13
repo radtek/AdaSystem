@@ -16,6 +16,7 @@ namespace Ada.Core.Domain.Finance
         {
             BillPaymentDetails=new HashSet<BillPaymentDetail>();
             Receivableses=new HashSet<Receivables>();
+            ExpenseDetails=new HashSet<ExpenseDetail>();
         }
         /// <summary>
         /// 科目名称
@@ -45,5 +46,6 @@ namespace Ada.Core.Domain.Finance
 
         public virtual ICollection<BillPaymentDetail> BillPaymentDetails { get; set; }
         public virtual ICollection<Receivables> Receivableses { get; set; }
+        public virtual ICollection<ExpenseDetail> ExpenseDetails { get; set; }
     }
 }

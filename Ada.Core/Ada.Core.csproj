@@ -101,7 +101,9 @@
     <Compile Include="Domain\Business\BusinessOffer.cs" />
     <Compile Include="Domain\Customer\PayAccount.cs" />
     <Compile Include="Domain\Customer\FollowUp.cs" />
+    <Compile Include="Domain\Finance\Expense.cs" />
     <Compile Include="Domain\Finance\BillPayment.cs" />
+    <Compile Include="Domain\Finance\ExpenseDetail.cs" />
     <Compile Include="Domain\Finance\BillPaymentDetail.cs" />
     <Compile Include="Domain\Finance\IncomeExpend.cs" />
     <Compile Include="Domain\Finance\Receivables.cs" />
@@ -161,6 +163,7 @@
     <Compile Include="ViewModel\Customer\LinkManView.cs" />
     <Compile Include="ViewModel\Customer\CommpanyView.cs" />
     <Compile Include="ViewModel\Finance\BillPaymentView.cs" />
+    <Compile Include="ViewModel\Finance\ExpenseView.cs" />
     <Compile Include="ViewModel\Finance\IncomeExpendView.cs" />
     <Compile Include="ViewModel\Finance\ReceivablesView.cs" />
     <Compile Include="ViewModel\Finance\SettleAccountView.cs" />
@@ -173,6 +176,7 @@
     <Compile Include="ViewModel\Resource\MediaTypeView.cs" />
     <Compile Include="ViewModel\Resource\MediaView.cs" />
     <Compile Include="ViewModel\TreeView.cs" />
+    <Compile Include="ViewModel\WorkLog\WorkLogView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

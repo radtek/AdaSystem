@@ -68,7 +68,11 @@
     <Compile Include="Business\IBusinessWriteOffService.cs" />
     <Compile Include="Business\IBusinessPaymentService.cs" />
     <Compile Include="Business\IBusinessPayeeService.cs" />
+    <Compile Include="Customer\FollowUpService.cs" />
+    <Compile Include="Customer\IFollowUpService.cs" />
+    <Compile Include="Finance\ExpenseService.cs" />
     <Compile Include="Finance\BillPaymentService.cs" />
+    <Compile Include="Finance\IExpenseService.cs" />
     <Compile Include="Finance\IBillPaymentService.cs" />
     <Compile Include="Finance\IReceivablesService.cs" />
     <Compile Include="Finance\IIncomeExpendService.cs" />
@@ -97,6 +101,8 @@
     <Compile Include="Resource\IMediaTypeService.cs" />
     <Compile Include="Resource\IMediaService.cs" />
     <Compile Include="Resource\MediaService.cs" />
+    <Compile Include="WorkLog\WorkLogService.cs" />
+    <Compile Include="WorkLog\IWorkLogService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ada.Core\Ada.Core.csproj">
@@ -107,5 +113,6 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
