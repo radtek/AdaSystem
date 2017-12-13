@@ -11,22 +11,21 @@ using Ada.Services.Customer;
 
 namespace Customer.Controllers
 {
-    public class LinkManController : BaseController
+    /// <summary>
+    /// 客户联系人
+    /// </summary>
+    public class ClientLinkManController : BaseController
     {
         private readonly ILinkManService _linkManService;
         private readonly IRepository<LinkMan> _repository;
-        public LinkManController(ILinkManService linkManService,
+        public ClientLinkManController(ILinkManService linkManService,
             IRepository<LinkMan> repository
-           )
+        )
         {
             _linkManService = linkManService;
             _repository = repository;
         }
-        public ActionResult Business()
-        {
-            return View();
-        }
-        public ActionResult Custom()
+        public ActionResult Index()
         {
             return View();
         }
@@ -52,32 +51,20 @@ namespace Customer.Controllers
                 })
             }, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult AddBusiness()
+        public ActionResult Add()
         {
-            return View();
+            LinkManView viewModel = new LinkManView();
+            viewModel.IsBusiness = false;
+            return View(viewModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddBusiness(LinkManView viewModel)
-        {
-            return Add(viewModel,"Business");
-        }
-        public ActionResult AddCustom()
-        {
-            return View();
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AddCustom(LinkManView viewModel)
-        {
-            return Add(viewModel, "Custom");
-        }
-        private ActionResult Add(LinkManView viewModel,string returnView)
+        public ActionResult Add(LinkManView viewModel)
         {
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
-                return View();
+                return View(viewModel);
             }
             LinkMan entity = new LinkMan();
             entity.Id = IdBuilder.CreateIdNum();
@@ -96,9 +83,9 @@ namespace Customer.Controllers
             entity.Status = viewModel.Status;
             _linkManService.Add(entity);
             TempData["Msg"] = "添加成功";
-            return RedirectToAction(returnView);
+            return RedirectToAction("Index");
         }
-        public ActionResult UpdateBusiness(string id)
+        public ActionResult Update(string id)
         {
             var item = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             LinkManView entity = new LinkManView();
@@ -114,39 +101,12 @@ namespace Customer.Controllers
             entity.Status = item.Status;
             entity.CommpanyId = item.CommpanyId;
             entity.CommpanyName = item.Commpany.Name;
+            entity.IsBusiness = item.Commpany.IsBusiness;
             return View(entity);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult UpdateBusiness(LinkManView viewModel)
-        {
-            return Update(viewModel, "Business");
-        }
-        public ActionResult UpdateCustom(string id)
-        {
-            var item = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            LinkManView entity = new LinkManView();
-            entity.Id = item.Id;
-            entity.Name = item.Name;
-            entity.Address = item.Address;
-            entity.WorkName = item.WorkName;
-            entity.LinkManType = item.LinkManType;
-            entity.QQ = item.QQ;
-            entity.Phone = item.Phone;
-            entity.WeiXin = item.WeiXin;
-            entity.Sex = item.Sex;
-            entity.Status = item.Status;
-            entity.CommpanyId = item.CommpanyId;
-            entity.CommpanyName = item.Commpany.Name;
-            return View(entity);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult UpdateCustom(LinkManView viewModel)
-        {
-            return Update(viewModel, "Custom");
-        }
-        private ActionResult Update(LinkManView viewModel,string returnView)
+        public ActionResult Update(LinkManView viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -169,7 +129,7 @@ namespace Customer.Controllers
             entity.CommpanyId = viewModel.CommpanyId;
             _linkManService.Update(entity);
             TempData["Msg"] = "更新成功";
-            return RedirectToAction(returnView);
+            return RedirectToAction("Index");
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
@@ -182,5 +142,6 @@ namespace Customer.Controllers
             _linkManService.Delete(entity);
             return Json(new { State = 1, Msg = "删除成功" });
         }
+
     }
 }

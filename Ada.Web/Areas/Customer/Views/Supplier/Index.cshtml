@@ -1,0 +1,169 @@
+﻿
+@using System.Web.Optimization
+@model Ada.Core.ViewModel.Customer.CommpanyView
+@{
+    ViewBag.Title = "商家公司";
+}
+@Html.Partial("Bread")
+
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <table id="table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div id="toolbar" class="btn-group">
+    <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
+        <i class="fa fa-plus"></i> 新增
+    </a>
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/bootstrapTableStyle")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+<script type="text/javascript">
+
+        $(document).ready(function () {
+            var table = new TableInit();
+            table.Init();
+            ////2.初始化Button的点击事件
+            //var oButtonInit = new ButtonInit();
+            //oButtonInit.Init();
+
+
+        });
+        var TableInit = function() {
+            var obj = new Object();
+            obj.Init = function() {
+                $('#table').bootstrapTable({
+                url: '@Url.Action("GetList")',         //请求后台的URL（*）
+                classes: "table table-no-bordered",
+                toolbar: '#toolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "desc",                   //排序方式
+                sortName: "Id",
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
+                showColumns: true,                  //是否显示所有的列
+                showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                singleSelect: true,                  //设置True 将禁止多选
+                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
+                //detailView: true,                   //设置为 true 可以显示详细页面模式。
+                //detailFormatter: detailFormatter,
+                mobileResponsive: true,
+                queryParams: function (parameters) {
+                    parameters.IsBusiness = true;
+                    return parameters;
+                },
+                columns: [
+                    {
+                        field: 'Name',
+                        title: '@Html.DisplayNameFor(d=>d.Name)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'City',
+                        title: '@Html.DisplayNameFor(d=>d.City)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'CommpanyType',
+                        title: '@Html.DisplayNameFor(d=>d.CommpanyType)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'CommpanyGrade',
+                        title: '@Html.DisplayNameFor(d=>d.CommpanyGrade)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'Address',
+                        title: '@Html.DisplayNameFor(d=>d.Address)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                    field: 'Id',
+                    title: '操作',
+                    align: "center", valign: "middle",
+                    formatter: function (value,row) {
+                        return "<a class='btn btn-success btn-sm' href='@Url.Action("Update")?id=" + value +"'><i class='fa fa-pencil'></i>  编辑</a> " +
+                            "<a class='btn btn-danger btn-sm' href='javascript:;' onclick=\"cancle('" + value +"');\");'><i class='fa fa-trash-o'></i> 删除</a>";
+                    }
+
+                }
+                ]
+            });
+            };
+
+            return obj;
+        };
+        //撤销
+        function cancle(id) {
+            swal({
+                title: "您确定吗?",
+                text: "确认要删除此数据吗?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    type: "post",
+                    headers: {
+                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                    },
+                    url: "@Url.Action("Delete")",
+                    data: { "id": id },
+                    success: function (data) {
+                        if (data.State == 1) {
+                            $("#table").bootstrapTable('refresh');
+                            swal({
+                                title: "操作成功",
+                                text: data.Msg,
+                                timer: 2000,
+                                type:"success",
+                                showConfirmButton: false
+                            });
+
+                        } else {
+                            swal("操作提醒", data.Msg, "warning");
+                        }
+                    },
+                    error: function () {
+                        swal("操作失败", data.Msg, "error");
+                    },
+                    complete: function () {
+
+                    }
+                });
+            });
+        }
+
+</script>
+}
+
+
+

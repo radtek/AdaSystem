@@ -4,31 +4,28 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
-using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Customer;
-using Ada.Core.ViewModel.Admin;
 using Ada.Core.ViewModel.Customer;
 using Ada.Framework.Filter;
 using Ada.Services.Customer;
 
 namespace Customer.Controllers
 {
-    public class CommpanyController : BaseController
+    /// <summary>
+    /// 供应商
+    /// </summary>
+    public class SupplierController : BaseController
     {
         private readonly ICommpanyService _commpanyService;
         private readonly IRepository<Commpany> _repository;
-        public CommpanyController(ICommpanyService commpanyService,
-            IRepository<Commpany> repository
-           )
+
+        public SupplierController(ICommpanyService commpanyService,
+            IRepository<Commpany> repository)
         {
             _commpanyService = commpanyService;
             _repository = repository;
         }
-        public ActionResult Business()
-        {
-            return View();
-        }
-        public ActionResult Custom()
+        public ActionResult Index()
         {
             return View();
         }
@@ -49,43 +46,30 @@ namespace Customer.Controllers
                 })
             }, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult AddCustom()
+        public ActionResult Add()
         {
-            return View();
+            CommpanyView viewModel = new CommpanyView();
+            viewModel.IsBusiness = true;
+            return View(viewModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddCustom(CommpanyView viewModel)
-        {
-            return Add(viewModel, "Custom");
-        }
-        public ActionResult AddBusiness()
-        {
-            return View();
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AddBusiness(CommpanyView viewModel)
-        {
-            return Add(viewModel, "Business");
-        }
-
-        private ActionResult Add(CommpanyView viewModel,string returnView)
+        public ActionResult Add(CommpanyView viewModel)
         {
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
-                return View();
+                return View(viewModel);
             }
             //校验公司名称唯一
 
             var temp = _repository.LoadEntities(d =>
                 d.Name.Equals(viewModel.Name, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
                 d.IsBusiness == viewModel.IsBusiness).FirstOrDefault();
-            if (temp!=null)
+            if (temp != null)
             {
-                ModelState.AddModelError("message", viewModel.Name+ "，此公司已存在！");
-                return View();
+                ModelState.AddModelError("message", viewModel.Name + "，此公司已存在！");
+                return View(viewModel);
             }
             Commpany commpany = new Commpany
             {
@@ -99,13 +83,13 @@ namespace Customer.Controllers
                 CommpanyType = viewModel.CommpanyType,
                 CommpanyGrade = viewModel.CommpanyGrade,
                 Phone = viewModel.Phone,
-                IsBusiness = viewModel.IsBusiness
+                IsBusiness = true
             };
             _commpanyService.Add(commpany);
             TempData["Msg"] = "添加成功";
-            return RedirectToAction(returnView);
+            return RedirectToAction("Index");
         }
-        public ActionResult UpdateCustom(string id)
+        public ActionResult Update(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             CommpanyView item = new CommpanyView
@@ -116,40 +100,16 @@ namespace Customer.Controllers
                 CommpanyGrade = entity.CommpanyGrade,
                 City = entity.City,
                 Address = entity.Address,
-                Phone = entity.Phone
+                Phone = entity.Phone,
+                IsBusiness = entity.IsBusiness
             };
             return View(item);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult UpdateCustom(CommpanyView viewModel)
+        public ActionResult Update(CommpanyView viewModel)
         {
 
-            return Update(viewModel, "Custom");
-        }
-        public ActionResult UpdateBusiness(string id)
-        {
-            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            CommpanyView item = new CommpanyView
-            {
-                Id = entity.Id,
-                Name = entity.Name.Trim(),
-                CommpanyType = entity.CommpanyType,
-                CommpanyGrade = entity.CommpanyGrade,
-                City = entity.City,
-                Address = entity.Address,
-                Phone = entity.Phone
-            };
-            return View(item);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult UpdateBusiness(CommpanyView viewModel)
-        {
-            return Update(viewModel, "Business");
-        }
-        private ActionResult Update(CommpanyView viewModel, string returnView)
-        {
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
@@ -158,11 +118,11 @@ namespace Customer.Controllers
             //校验公司名称唯一
             var temp = _repository.LoadEntities(d =>
                 d.Name.Equals(viewModel.Name, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
-                d.IsBusiness == viewModel.IsBusiness&&d.Id!=viewModel.Id).FirstOrDefault();
+                d.IsBusiness == viewModel.IsBusiness && d.Id != viewModel.Id).FirstOrDefault();
             if (temp != null)
             {
                 ModelState.AddModelError("message", viewModel.Name + "，此公司已存在！");
-                return View();
+                return View(viewModel);
             }
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
             entity.ModifiedById = CurrentManager.Id;
@@ -176,9 +136,8 @@ namespace Customer.Controllers
             entity.Phone = viewModel.Phone;
             _commpanyService.Update(entity);
             TempData["Msg"] = "更新成功";
-            return RedirectToAction(returnView);
+            return RedirectToAction("Index");
         }
-
         [HttpPost]
         [AdaValidateAntiForgeryToken]
         public ActionResult Delete(string id)

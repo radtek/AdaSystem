@@ -1,0 +1,75 @@
+﻿@using Ada.Core.Infrastructure
+@using Ada.Services.Admin
+@model Ada.Core.ViewModel.Customer.LinkManView
+@{
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var linkManTypes = fieldService.GetFieldsByKey("LinkManType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var linkManStatus = fieldService.GetFieldsByKey("LinkManStatus").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+}
+<div class="form-horizontal">
+    <div class="form-group">
+        @Html.LabelFor(d => d.CommpanyId, Html.DisplayNameFor(d => d.CommpanyId).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            <select class="form-control" required="" name="CommpanyId" id="CommpanyId">
+                <option value="@Model.CommpanyId">@Model.CommpanyName</option>
+            </select>
+            @Html.HiddenFor(d => d.CommpanyName)
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.Name, Html.DisplayNameFor(d => d.Name).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.Name, new { @class = "form-control", required = "" })
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.WorkName, Html.DisplayNameFor(d => d.WorkName).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.WorkName, new { @class = "form-control" })
+        </div>
+    </div>
+    
+    @if (!Model.IsBusiness)
+    {
+        <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            @Html.LabelFor(d => d.LinkManType, Html.DisplayNameFor(d => d.LinkManType).ToString(), new { @class = "col-sm-2 control-label" })
+            <div class="col-sm-10">
+                @Html.DropDownListFor(d => d.LinkManType, linkManTypes, "请选择", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status).ToString(), new { @class = "col-sm-2 control-label" })
+            <div class="col-sm-10">
+                @Html.DropDownListFor(d => d.Status, linkManStatus, "请选择", new { @class = "form-control" })
+            </div>
+        </div>
+    }
+    
+
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.Phone, Html.DisplayNameFor(d => d.Phone).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.Phone, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.WeiXin, Html.DisplayNameFor(d => d.WeiXin).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.WeiXin, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.QQ, Html.DisplayNameFor(d => d.QQ).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.QQ, new { @class = "form-control" })
+        </div>
+    </div>
+    @Html.HiddenFor(d=>d.Id)
+</div>

@@ -157,6 +157,7 @@
     <Compile Include="ViewModel\Business\BusinessPayeeView.cs" />
     <Compile Include="ViewModel\Business\BusinessPaymentView.cs" />
     <Compile Include="ViewModel\Business\BusinessWriteOffView.cs" />
+    <Compile Include="ViewModel\Customer\FollowUpView.cs" />
     <Compile Include="ViewModel\Customer\LinkManView.cs" />
     <Compile Include="ViewModel\Customer\CommpanyView.cs" />
     <Compile Include="ViewModel\Finance\BillPaymentView.cs" />
