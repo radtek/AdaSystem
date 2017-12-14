@@ -101,6 +101,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\manager.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +128,9 @@
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Views\Menu\Index.cshtml" />
     <Content Include="Views\Field\Index.cshtml" />
+    <Content Include="Views\Manager\ManagerEdit.cshtml" />
+    <Content Include="Views\Manager\Add.cshtml" />
+    <Content Include="Views\Manager\Update.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,0 +1,29 @@
+﻿@using System.Web.Optimization
+@model Ada.Core.ViewModel.Admin.ManagerView
+@{
+    ViewBag.Title = "编辑用户";
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "用户管理", Value = Url.Action("Index") } };
+}
+@Html.Partial("Bread", urls)
+<div class="wrapper wrapper-content">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col-lg-12">
+                <p class="bg-danger">@Html.ValidationMessage("message") </p>
+                @Html.Partial("ManagerEdit", Model)
+            </div>
+        </div>
+    }
+</div>
+@section Styles {
+    @Styles.Render("~/plugins/jsTreeStyles")
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/jsTree")
+    <script src="@Url.Content("~/Areas/Admin/Scripts/manager.js")"></script>
+}
+

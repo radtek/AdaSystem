@@ -5,42 +5,9 @@
 @model ManagerView
 @{
     ViewBag.Title = "用户管理";
-    List<TreeView> organizations = ViewBag.Organizations;
-    List<TreeView> actions = ViewBag.Actions;
-    IEnumerable<RoleView> roles = ViewBag.Roles;
 }
 @Html.Partial("Bread")
 
-@helper TreeHelper(List<TreeView> list, bool showBtn = false)
-{
-if (list.Count > 0)
-{
-        <ul>
-            @foreach (var item in list)
-            {
-                <li class="jstree-open" id="@item.Id">
-                    <span>@item.Text</span>
-                    @if (showBtn)
-                    {
-                        <div class="btn-group m-l-xs m-b-4px">
-                            <button data-toggle="dropdown" class="btn btn-success btn-xs dropdown-toggle">
-                                <span class="action @item.Id" ispass="" data-value="@item.Id">选择</span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a href="javascript:;" onclick="seletAction('@item.Id','允许');">允许</a></li>
-                                <li><a href="javascript:;" onclick="seletAction('@item.Id','拒绝');">拒绝</a></li>
-                                <li class="divider"></li>
-                                <li><a href="javascript:;" onclick="seletAction('@item.Id','选择');">清除</a></li>
-                            </ul>
-                        </div>
-                    }
-                    @TreeHelper(item.Children, showBtn)
-                </li>
-            }
-        </ul>
-}
-}
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -55,184 +22,28 @@ if (list.Count > 0)
 </div>
 
 <div id="toolbar" class="btn-group">
-    <button type="button" class="btn btn-primary btn-outline" onclick="add();">
-        <i class="fa fa-plus"></i> 新增人员
-    </button>
+    <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
+        <i class="fa fa-plus"></i> 新增用户
+    </a>
 </div>
 
-<div class="modal inmodal" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
-    @using (Html.BeginForm("AddOrUpdate", "Manager"))
-    {
-        <div class="modal-dialog">
-            <div class="modal-content animated fadeIn">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h5 class="modal-title"><span></span>用户</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="tabs-container">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#tab-1">用户信息</a></li>
-                            <li class=""><a data-toggle="tab" href="#tab-2">角色分配</a></li>
-                            <li class=""><a data-toggle="tab" href="#tab-3">机构组织</a></li>
-                            <li class=""><a data-toggle="tab" href="#tab-4">特殊权限</a></li>
-                        </ul>
-                        <div class="tab-content">
-                            <div id="tab-1" class="tab-pane active">
-                                <div class="panel-body form-horizontal">
-                                    <div class="form-group">
-                                        @Html.LabelFor(d => d.UserName, Html.DisplayNameFor(d => d.UserName).ToString(), new { @class = "col-sm-2 control-label" })
-                                        <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.UserName, new { @class = "form-control" })
-                                        </div>
-                                    </div>
-                                    <div class="hr-line-dashed"></div>
-                                    <div class="form-group">
-                                        @Html.LabelFor(d => d.Password, Html.DisplayNameFor(d => d.Password).ToString(), new { @class = "col-sm-2 control-label" })
-                                        <div class="col-sm-10">
-                                            @Html.PasswordFor(d => d.Password, new { @class = "form-control" })
-                                        </div>
-                                    </div>
-                                    <div class="hr-line-dashed"></div>
-                                    <div class="form-group">
-                                        @Html.LabelFor(d => d.RealName, Html.DisplayNameFor(d => d.RealName).ToString(), new { @class = "col-sm-2 control-label" })
-                                        <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.RealName, new { @class = "form-control" })
-                                        </div>
-                                    </div>
-                                    <div class="hr-line-dashed"></div>
-                                    <div class="form-group">
-                                        @Html.LabelFor(d => d.Phone, Html.DisplayNameFor(d => d.Phone).ToString(), new { @class = "col-sm-2 control-label" })
-                                        <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.Phone, new { @class = "form-control" })
-                                        </div>
-                                    </div>
-                                    <div class="hr-line-dashed"></div>
-                                    <div class="form-group">
 
-                                        @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status).ToString(), new { @class = "col-sm-2 control-label" })
-                                        <div class="col-sm-10">
-                                            <div class="checkbox checkbox-info">
-                                                <input id="Status" type="checkbox" name="Status" value="1">
-                                                <label for="Status">
-                                                    <strong>是</strong>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @Html.HiddenFor(d => d.Id)
-                                    @Html.HiddenFor(d => d.OrganizationIds)
-                                    @Html.HiddenFor(d => d.ActionIds)
-
-                                </div>
-                            </div>
-                            <div id="tab-2" class="tab-pane">
-                                <div class="panel-body">
-
-                                    <div class="form-group">
-                                        @foreach (var item in roles)
-                                        {
-                                            <div class="checkbox checkbox-info">
-                                                <input id="@item.Id" name="RoleIds" type="checkbox" value="@item.Id">
-                                                <label for="@item.Id">
-                                                    <strong>@item.RoleName</strong>
-                                                </label>
-                                            </div>
-
-                                        }
-
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div id="tab-3" class="tab-pane">
-                                <div class="panel-body">
-
-                                    <div class="row">
-                                        <div id="jstree">
-                                            @TreeHelper(organizations)
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div id="tab-4" class="tab-pane">
-                                <div class="panel-body content600">
-
-                                    <div class="row">
-                                        <div id="jstree_action">
-                                            @TreeHelper(actions, true)
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                    <button type="submit" class="ladda-button btn btn-primary" data-style="zoom-in">提交</button>
-                </div>
-            </div>
-        </div>
-    }
-</div>
 
 
 
 @section Styles {
-    @Styles.Render("~/plugins/jsTreeStyles")
-    @Styles.Render("~/plugins/laddaStyles")
-    @Styles.Render("~/plugins/awesomeCheckboxStyles")
     @Styles.Render("~/plugins/bootstrapTableStyle")
 }
 
 @section Scripts {
-    @Scripts.Render("~/plugins/jsTree")
-    @Scripts.Render("~/plugins/ladda")
-    @Scripts.Render("~/plugins/formFill")
     @Scripts.Render("~/plugins/bootstrapTableScript")
 
-    <script type="text/javascript">
-        
-        $(document).ready(function () {
+<script type="text/javascript">
 
-            $('#jstree').jstree({
-                'core': {
-                    'check_callback': true
-                },
-                'plugins': ['types', 'checkbox'],
-                'types': {
-                    'default': {
-                        'icon': 'fa fa-folder'
-                    }
-                },
-                "checkbox" : {
-                    "keep_selected_style": false,
-                    //"tie_selection": false
-                    "three_state": false
-                }
-            });
-            $('#jstree_action').jstree({
-                'core': {
-                    'check_callback': true
-                },
-                'plugins': ['types'],
-                'types': {
-                    'default': {
-                        'icon': 'fa fa-folder'
-                    }
-                }
-            });
+        $(document).ready(function () {
             //1.初始化Table
             var oTable = new TableInit();
             oTable.Init();
-            //2.初始化Button的点击事件
-            var oButtonInit = new ButtonInit();
-            oButtonInit.Init();
 
         });
 
@@ -266,9 +77,12 @@ if (list.Count > 0)
                     cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
                     //detailView: true,                   //设置为 true 可以显示详细页面模式。
                     //detailFormatter: detailFormatter,
-                    mobileResponsive:true,
+                    mobileResponsive: true,
+                    formatSearch: function() {
+                        return "@Html.DisplayNameFor(d => d.UserName)";
+                    },
                     columns: [
-                        
+
                         {
                             field: 'UserName',
                             title: '@Html.DisplayNameFor(d=>d.UserName)',
@@ -315,7 +129,7 @@ if (list.Count > 0)
                             title: '操作',
                             align: "center", valign: "middle",
                             formatter: function (value,row) {
-                                return "<button class='btn btn-success btn-sm' onclick=\"update('" + value +"');\"><i class='fa fa-pencil'></i>  编辑</button> " +
+                                return "<a class='btn btn-success btn-sm' href='@Url.Action("Update")?id=" + value +"'><i class='fa fa-pencil'></i>  编辑</a> " +
                                     "<button class='btn btn-danger btn-sm' onclick=\"cancle('" + value +"');\"><i class='fa fa-trash-o'></i> 删除</button>";
                             }
 
@@ -326,172 +140,6 @@ if (list.Count > 0)
             return oTableInit;
         };
 
-        var ButtonInit = function () {
-            var oInit = new Object();
-            oInit.Init = function () {
-                var actions = $(".action");
-                var roles = $("input[name='RoleIds']");
-                //表单提交
-                var subBtn = $('.ladda-button').ladda();
-                $("#modal form").validate({
-                    rules: {
-                        UserName: {
-                            required: true
-                        },
-                        Password: {
-                            required: true
-                        }
-                    },
-                    messages: {
-                        UserName: {
-                            required: "此为必填项"
-                        },
-                        Password: {
-                            required: "此为必填项"
-                        }
-                    },
-                    submitHandler: function (form) {
-                        var arry = $('#jstree').jstree("get_checked");
-                        $("#OrganizationIds").val(arry.join(','));
-                        //特殊权限处理
-                        var actionArry = [];
-                        $.each(actions,
-                            function(k, v) {
-                                var ispass = $(v).attr("ispass");
-                                if (ispass) {
-                                    var id = $(v).attr("data-value");
-                                    actionArry.push(id + "^" + ispass);
-                                }
-                            });
-                        $("#ActionIds").val(actionArry.join(','));
-                        var $form = $(form),
-                            data = $form.serialize(); //序列化表单数据
-                        $.ajax({
-                            type: "post",
-                            headers: {
-                                '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                            },
-                            beforeSend: function() {
-                                subBtn.ladda('start');
-                            },
-                            url: form.action,
-                            data: data,
-                            success: function (res) {
-                                if (res.State == 1) {
-                                    $('#modal').modal('hide');
-                                    $("#table").bootstrapTable('refresh');
-                                    swal({
-                                        title: "操作成功",
-                                        text: res.Msg,
-                                        timer: 2000,
-                                        type:"success",
-                                        showConfirmButton: false
-                                    });
-
-                                } else {
-                                    swal("操作提醒", res.Msg, "warning");
-                                }
-                            },
-                            error: function () {
-                                swal("操作失败", res.Msg, "error");
-                            },
-                            complete: function () {
-                                subBtn.ladda('stop');
-                            }
-                        });
-                    }
-                });
-
-            };
-            return oInit;
-        };
-
-        function seletAction(id, text) {
-            var classname = "btn-success";
-            var ispass = "";
-            if (text=="允许") {
-                classname = "btn-primary";
-                ispass = "true";
-            }
-            if (text=="拒绝") {
-                classname = "btn-danger";
-                ispass = "false";
-            }
-            $("." + id).text(text).attr("ispass",ispass).parent().removeClass('btn-success btn-danger btn-primary').addClass(classname);
-        }
-
-        function clearAction(actions) {
-            $.each(actions,
-                function(k, v) {
-                    $(v).text("选择").attr("ispass", "").parent().removeClass('btn-success btn-danger btn-primary')
-                        .addClass("btn-success");
-                });
-        }
-
-        function resetAction(ids) {
-            var arry = ids.split(',');
-            $.each(arry,
-                function(k, v) {
-                    var temp = v.split('^');
-                    var text = "拒绝";
-                    var classname = "btn-danger";
-                    if (temp[1]=="true") {
-                        text = "允许";
-                        classname = "btn-primary";
-                    }
-                    $("." + temp[0]).text(text).attr("ispass", temp[1]).parent().removeClass('btn-success btn-danger btn-primary').addClass(classname);
-                });
-        }
-
-        function add() {
-            var roles = $("input[name='RoleIds']");
-            var actions = $(".action");
-            $('#modal form')[0].reset();
-            //清空check
-            roles.removeAttr("checked");
-            $('#jstree').jstree("uncheck_all");
-            //清空权限
-            clearAction(actions);
-            $("#Id").val("");
-            $(".modal-title span").text("添加");
-            $('#modal').modal('show');
-        }
-        function update(id) {
-            var roles = $("input[name='RoleIds']");
-            var actions = $(".action");
-            
-            $.getJSON("@Url.Action("GetEntity")", { id: id, r: Date.now()},
-                function(data) {
-                    //清空check
-                    roles.removeAttr("checked");
-                    $('#jstree').jstree("uncheck_all");
-                    //清空权限
-                    clearAction(actions);
-                    //check选中
-                    if (data.OrganizationIds) {
-                        var ids = data.OrganizationIds.split(",");
-                        $('#jstree').jstree("check_node", ids);
-                    }
-                    var roleIds = data.RoleIds;
-                    if (roleIds) {
-                        $.each(roles,
-                            function(k, v) {
-                                var result = $.inArray($(v).val(), roleIds);
-                                if (result>=0) {
-                                    $(v).attr("checked", true);
-                                }
-                            });
-                    }
-                    delete data.RoleIds;
-                    //权限选中
-                    if (data.ActionIds) {
-                        resetAction(data.ActionIds);
-                    }
-                    $('#modal form').autofill(data);
-                    $(".modal-title span").text("编辑");
-                    $('#modal').modal('show');
-                });
-        }
 
         function cancle(id) {
             swal({
@@ -536,5 +184,5 @@ if (list.Count > 0)
                 });
             });
         }
-    </script>
+</script>
 }

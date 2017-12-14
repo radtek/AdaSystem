@@ -39,14 +39,28 @@ namespace Admin.Controllers
         }
         public ActionResult Index()
         {
-            var roles = _roleRepository.LoadEntities(d => d.IsDelete == false).ToList();
-            ViewBag.Roles = roles.Select(d => new RoleView() { Id = d.Id, RoleName = d.RoleName });
-            var organizations = _organizationRepository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis)
-                .ToList();
-            ViewBag.Organizations = GetTree(null, organizations);
-            var actions = _actionRepository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis).ToList();
-            ViewBag.Actions = GetTree(null, actions);
             return View();
+        }
+        public ActionResult GetList(ManagerView viewModel)
+        {
+            var result = _managerService.LoadEntitiesFilter(viewModel).ToList();
+            return Json(new
+            {
+                viewModel.total,
+                rows = result.Select(d => new ManagerView
+                {
+                    Id = d.Id,
+                    UserName = d.UserName,
+                    Password = Encrypt.Decode(d.Password),
+                    Phone = d.Phone,
+                    Status = d.Status,
+                    RealName = d.RealName,
+                    AddDate = d.AddedDate?.ToString("yyyy年MM月dd日") ?? "",
+                    Roles = d.Roles.Count > 0 ? string.Join(",", d.Roles.Select(r => r.RoleName)) : "",
+                    Organizations = d.Organizations.Count > 0 ? string.Join(" → ", d.Organizations.Select(r => r.OrganizationName)) : "",
+                    LastLoginDate = d.ManagerLoginLogs.OrderByDescending(l => l.LoginTime).FirstOrDefault() == null ? "" : Utils.ToRead(d.ManagerLoginLogs.OrderByDescending(l => l.LoginTime).FirstOrDefault().LoginTime)
+                })
+            }, JsonRequestBehavior.AllowGet);
         }
         private List<TreeView> GetTree(string parentId, List<Organization> list)
         {
@@ -80,110 +94,127 @@ namespace Admin.Controllers
             });
             return treeViews;
         }
-        public ActionResult GetEntity(string id)
+
+        private void InitViewModel(ManagerView viewModel)
         {
-            var d = _managerRepository.LoadEntities(m => m.Id == id).FirstOrDefault();
-            return Json(new ManagerView
-            {
-                Id = d.Id,
-                UserName = d.UserName,
-                Password = Encrypt.Decode(d.Password),
-                Phone = d.Phone,
-                Status = d.Status,
-                RealName = d.RealName,
-                AddDate = d.AddedDate?.ToString("yyyy年MM月dd日") ?? "",
-                RoleIds = d.Roles.Count > 0 ? d.Roles.Select(r => r.Id).ToList() : null,
-                OrganizationIds = d.Organizations.Count > 0 ? string.Join(",", d.Organizations.Select(r => r.Id)) : null,
-                ActionIds = d.ManagerActions.Count > 0 ? SetActionIds(d.ManagerActions) : null
-            }, JsonRequestBehavior.AllowGet);
+            var roles = _roleRepository.LoadEntities(d => d.IsDelete == false).ToList();
+            viewModel.RoleList = roles.Select(d => new RoleView() { Id = d.Id, RoleName = d.RoleName });
+            var organizations = _organizationRepository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis)
+                .ToList();
+            viewModel.OrganizationList = GetTree(null, organizations);
+            var actions = _actionRepository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis).ToList();
+            viewModel.ActionList = GetTree(null, actions);
+            viewModel.RoleIds = new List<string>();
         }
-        public ActionResult GetList(ManagerView viewModel)
+        public ActionResult Add()
         {
-            var result = _managerService.LoadEntitiesFilter(viewModel).ToList();
-            return Json(new
-            {
-                viewModel.total,
-                rows = result.Select(d => new ManagerView
-                {
-                    Id = d.Id,
-                    UserName = d.UserName,
-                    Password = Encrypt.Decode(d.Password),
-                    Phone = d.Phone,
-                    Status = d.Status,
-                    RealName = d.RealName,
-                    AddDate = d.AddedDate?.ToString("yyyy年MM月dd日") ?? "",
-                    Roles = d.Roles.Count > 0 ? string.Join(",", d.Roles.Select(r => r.RoleName)) : "",
-                    Organizations = d.Organizations.Count > 0 ? string.Join(" → ", d.Organizations.Select(r => r.OrganizationName)) : "",
-                    LastLoginDate = d.ManagerLoginLogs.OrderByDescending(l => l.LoginTime).FirstOrDefault() == null ? "" : Utils.ToRead(d.ManagerLoginLogs.OrderByDescending(l => l.LoginTime).FirstOrDefault().LoginTime)
-                })
-            }, JsonRequestBehavior.AllowGet);
+            ManagerView viewModel = new ManagerView();
+            InitViewModel(viewModel);
+            return View(viewModel);
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
-        public ActionResult AddOrUpdate(ManagerView viewModel)
+        [ValidateAntiForgeryToken]
+        public ActionResult Add(ManagerView viewModel)
         {
             if (!ModelState.IsValid)
             {
-                return Json(new { State = 0, Msg = "请核对输入的用户信息是否正确" });
+                ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
+                InitViewModel(viewModel);
+                return View(viewModel);
             }
-            var msg = string.Empty;
             var organizationIds = string.IsNullOrWhiteSpace(viewModel.OrganizationIds)
                 ? null
                 : viewModel.OrganizationIds.Split(',').ToList();
             var actionIds = string.IsNullOrWhiteSpace(viewModel.ActionIds)
                 ? null
                 : viewModel.ActionIds.Split(',').ToList();
-            if (!string.IsNullOrWhiteSpace(viewModel.Id))
+            //校验唯一性
+            var temp = _managerRepository
+                .LoadEntities(d => d.UserName.Equals(viewModel.UserName, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false)
+                .FirstOrDefault();
+            if (temp != null)
             {
-                //校验唯一性
-                var temp = _managerRepository
-                    .LoadEntities(d => d.UserName.Equals(viewModel.UserName, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false && d.Id != viewModel.Id)
-                    .FirstOrDefault();
-                if (temp != null)
-                {
-                    return Json(new { State = 0, Msg = "用户名：" + viewModel.UserName + "，已被占用！" });
-                }
-                var manager = _managerRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
-                manager.UserName = viewModel.UserName;
-                manager.RealName = viewModel.RealName;
-                manager.Phone = viewModel.Phone;
-                manager.Status = viewModel.Status;
-                manager.Password = Encrypt.Encode(viewModel.Password);
-                manager.ModifiedById = CurrentManager.Id;
-                manager.ModifiedBy = CurrentManager.UserName;
-                manager.ModifiedDate = DateTime.Now;
-                _managerService.AddOrUpdate(manager, false, viewModel.RoleIds, organizationIds, actionIds);
-                msg = "更新成功";
-               
+                ModelState.AddModelError("message", "用户名：" + viewModel.UserName + "，已被占用！");
+                InitViewModel(viewModel);
+                return View(viewModel);
             }
-            else
+            var manager = new Manager()
             {
-                //校验唯一性
-                var temp = _managerRepository
-                      .LoadEntities(d => d.UserName.Equals(viewModel.UserName, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false)
-                      .FirstOrDefault();
-                if (temp != null)
-                {
-                    return Json(new { State = 0, Msg = "用户名：" + viewModel.UserName + "，已被占用！" });
-                }
-                var manager = new Manager()
-                {
-                    UserName = viewModel.UserName,
-                    RealName = viewModel.RealName,
-                    Phone = viewModel.Phone,
-                    Status = viewModel.Status,
-                    Password = Encrypt.Encode(viewModel.Password),
-                    Id = IdBuilder.CreateIdNum(),
-                    AddedBy = CurrentManager.UserName,
-                    AddedById = CurrentManager.Id,
-                    AddedDate = DateTime.Now
-                };
-                _managerService.AddOrUpdate(manager, true, viewModel.RoleIds, organizationIds, actionIds);
-                msg = "添加成功";
-            }
-
-            return Json(new { State = 1, Msg = msg });
+                UserName = viewModel.UserName,
+                RealName = viewModel.RealName,
+                Phone = viewModel.Phone,
+                Status = viewModel.Status,
+                Password = Encrypt.Encode(viewModel.Password),
+                Id = IdBuilder.CreateIdNum(),
+                AddedBy = CurrentManager.UserName,
+                AddedById = CurrentManager.Id,
+                AddedDate = DateTime.Now
+            };
+            _managerService.AddOrUpdate(manager, true, viewModel.RoleIds, organizationIds, actionIds);
+            TempData["Msg"] = "添加成功";
+            return RedirectToAction("Index");
         }
+        public ActionResult Update(string id)
+        {
+            ManagerView viewModel = new ManagerView();
+            InitViewModel(viewModel);
+            var manager = _managerRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            viewModel.UserName = manager.UserName;
+            viewModel.Phone = manager.Phone;
+            viewModel.Password = Encrypt.Decode(manager.Password);
+            viewModel.Status = manager.Status;
+            viewModel.RealName = manager.RealName;
+            viewModel.Roles = string.Join(",", manager.Roles.Select(r => r.Id));
+            viewModel.OrganizationIds = manager.Organizations.Count > 0
+                ? string.Join(",", manager.Organizations.Select(r => r.Id))
+                : "";
+            viewModel.ActionIds = manager.ManagerActions.Count > 0 ? SetActionIds(manager.ManagerActions) : "";
+            return View(viewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(ManagerView viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
+                InitViewModel(viewModel);
+                return View(viewModel);
+            }
+            //校验唯一性
+            var temp = _managerRepository
+                .LoadEntities(d => d.UserName.Equals(viewModel.UserName, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false && d.Id != viewModel.Id)
+                .FirstOrDefault();
+            if (temp != null)
+            {
+                ModelState.AddModelError("message", "用户名：" + viewModel.UserName + "，已被占用！");
+                InitViewModel(viewModel);
+                return View(viewModel);
+            }
+            var organizationIds = string.IsNullOrWhiteSpace(viewModel.OrganizationIds)
+                ? null
+                : viewModel.OrganizationIds.Split(',').ToList();
+            var actionIds = string.IsNullOrWhiteSpace(viewModel.ActionIds)
+                ? null
+                : viewModel.ActionIds.Split(',').ToList();
+            
+            var manager = _managerRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
+            manager.UserName = viewModel.UserName;
+            manager.RealName = viewModel.RealName;
+            manager.Phone = viewModel.Phone;
+            manager.Status = viewModel.Status;
+            manager.Password = Encrypt.Encode(viewModel.Password);
+            manager.ModifiedById = CurrentManager.Id;
+            manager.ModifiedBy = CurrentManager.UserName;
+            manager.ModifiedDate = DateTime.Now;
+            _managerService.AddOrUpdate(manager, false, viewModel.RoleIds, organizationIds, actionIds);
+            TempData["Msg"] = "更新成功";
+            return RedirectToAction("Index");
+        }
+        
+
+        
+        
         [HttpPost]
         [AdaValidateAntiForgeryToken]
         public ActionResult Delete(string id)

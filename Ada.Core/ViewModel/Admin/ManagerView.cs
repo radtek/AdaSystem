@@ -85,5 +85,20 @@ namespace Ada.Core.ViewModel.Admin
         /// </summary>
         [Display(Name = "相片")]
         public string Image { get; set; }
+        /// <summary>
+        /// 角色集合
+        /// </summary>
+        [Display(Name = "角色集合")]
+        public IEnumerable<RoleView> RoleList { get; set; }
+        /// <summary>
+        /// 权限集合
+        /// </summary>
+        [Display(Name = "权限集合")]
+        public List<TreeView> ActionList { get; set; }
+        /// <summary>
+        /// 机构组织集合
+        /// </summary>
+        [Display(Name = "机构组织集合")]
+        public List<TreeView> OrganizationList { get; set; }
     }
 }

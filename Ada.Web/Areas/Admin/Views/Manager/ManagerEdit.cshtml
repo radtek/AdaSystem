@@ -1,0 +1,165 @@
+﻿@using Ada.Core.Domain
+@using Ada.Core.ViewModel
+@model Ada.Core.ViewModel.Admin.ManagerView
+@helper TreeHelper(List<TreeView> list, bool showBtn = false)
+    {
+        if (list.Count > 0)
+        {
+            <ul>
+                @foreach (var item in list)
+                {
+                    <li class="jstree-open" id="@item.Id">
+                        <span>@item.Text</span>
+                        @if (showBtn)
+                        {
+                            <div class="btn-group m-l-xs m-b-4px">
+                                <button data-toggle="dropdown" class="btn btn-success btn-xs dropdown-toggle">
+                                    <span class="action @item.Id" ispass="" data-value="@item.Id">选择</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:;" onclick="seletAction('@item.Id','允许');">允许</a></li>
+                                    <li><a href="javascript:;" onclick="seletAction('@item.Id','拒绝');">拒绝</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="javascript:;" onclick="seletAction('@item.Id','选择');">清除</a></li>
+                                </ul>
+                            </div>
+                        }
+                        @TreeHelper(item.Children, showBtn)
+                    </li>
+                }
+            </ul>
+        }
+}
+<div class="tabs-container">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1">用户信息</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-2">角色分配</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-3">机构组织</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-4">特殊权限</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="tab-1" class="tab-pane active">
+            <div class="panel-body">
+
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.UserName, Html.DisplayNameFor(d => d.UserName).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.UserName, new { @class = "form-control", required = "" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Password, Html.DisplayNameFor(d => d.Password).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            <input type="password" name="Password" value="@Model.Password" class="form-control" required="" />
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.RealName, Html.DisplayNameFor(d => d.RealName).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.RealName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Phone, Html.DisplayNameFor(d => d.Phone).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.Phone, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+
+                        @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            <div class="checkbox checkbox-info">
+                                @if (Model.Status == Consts.StateNormal)
+                                {
+                                    <input id="Status" type="checkbox" name="Status" value="1" checked="checked">
+                                }
+                                else
+                                {
+                                    <input id="Status" type="checkbox" name="Status" value="1">
+                                }
+                                <label for="Status">
+                                    <strong>是</strong>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-2">
+                            <a class="btn btn-outline btn-default" href="@Url.Action("Index")"><i class="fa fa-reply"></i> 返回</a>
+                            <button class="btn btn-primary" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
+                        </div>
+                    </div>
+                    @Html.HiddenFor(d => d.Id)
+                    @Html.HiddenFor(d => d.OrganizationIds)
+                    @Html.HiddenFor(d => d.ActionIds)
+                    @Html.HiddenFor(d => d.Roles)
+                </div>
+            </div>
+        </div>
+        <div id="tab-2" class="tab-pane">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group col-md-6">
+                            @foreach (var item in Model.RoleList)
+                            {
+                                <div class="checkbox checkbox-info">
+                                    @if (!string.IsNullOrWhiteSpace(Model.Roles))
+                                    {
+                                        if (Model.Roles.Contains(item.Id))
+                                         {
+                                             <input id="@item.Id" name="RoleIds" type="checkbox" value="@item.Id" checked="checked">
+                                         }
+                                        else
+                                        {
+                                             <input id="@item.Id" name="RoleIds" type="checkbox" value="@item.Id">
+                                        }
+                                    }
+                                    else
+                                    {
+                                    <input id="@item.Id" name="RoleIds" type="checkbox" value="@item.Id">
+                                    }
+                                    
+                                    <label for="@item.Id">
+                                        <strong>@item.RoleName</strong>
+                                    </label>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tab-3" class="tab-pane">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="jstree">
+                            @TreeHelper(Model.OrganizationList)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tab-4" class="tab-pane">
+            <div class="panel-body content600">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="jstree_action">
+                            @TreeHelper(Model.ActionList, true)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

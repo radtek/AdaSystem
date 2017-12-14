@@ -72,21 +72,9 @@ namespace Ada.Core.Domain.Admin
         /// </summary>
         [Display(Name = "过期时间")]
         public System.DateTime? ExpireTime { get; set; }
-        /// <summary>
-        /// 机构组织
-        /// </summary>
         public virtual ICollection<Organization> Organizations { get; set; }
-        /// <summary>
-        /// 角色
-        /// </summary>
         public virtual ICollection<Role> Roles { get; set; }
-        /// <summary>
-        /// 权限
-        /// </summary>
         public virtual ICollection<ManagerAction> ManagerActions { get; set; }
-        /// <summary>
-        /// 权限
-        /// </summary>
         public virtual ICollection<ManagerLoginLog> ManagerLoginLogs { get; set; }
     }
 }
