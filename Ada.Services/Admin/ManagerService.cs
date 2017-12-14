@@ -137,10 +137,10 @@ namespace Ada.Services.Admin
         /// <summary>
         /// 删除
         /// </summary>
-        /// <param name="entities"></param>
-        public void Delete(IEnumerable<Manager> entities)
+        /// <param name="entity"></param>
+        public void Delete(Manager entity)
         {
-            _managerRepository.Delete(entities);
+            _managerRepository.Delete(entity);
             _dbContext.SaveChanges();
         }
         /// <summary>

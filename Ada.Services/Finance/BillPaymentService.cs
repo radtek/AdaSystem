@@ -63,5 +63,9 @@ namespace Ada.Services.Finance
             }
             return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
         }
+        public BillPayment GetByRequestNum(string requestNum)
+        {
+           return _repository.LoadEntities(d=>d.RequestNum==requestNum).FirstOrDefault();
+        }
     }
 }

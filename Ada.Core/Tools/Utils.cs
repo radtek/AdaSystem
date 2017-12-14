@@ -170,6 +170,10 @@ namespace Ada.Core.Tools
         /// <returns>绝对路径</returns>
         public static string GetMapPath(string strPath)
         {
+            if (string.IsNullOrWhiteSpace(strPath))
+            {
+                return "";
+            }
             if (strPath.ToLower().StartsWith("http://"))
             {
                 return strPath;

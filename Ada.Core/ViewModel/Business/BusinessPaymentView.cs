@@ -122,5 +122,15 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "备注")]
         public string Remark { get; set; }
+        /// <summary>
+        /// 付款凭证
+        /// </summary>
+        [Display(Name = "付款凭证")]
+        public string PayImage { get; set; }
+        /// <summary>
+        /// 审核提醒
+        /// </summary>
+        [Display(Name = "审核提醒")]
+        public string WarningMsg { get; set; }
     }
 }

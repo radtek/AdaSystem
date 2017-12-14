@@ -23,6 +23,10 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="tabs-container">
+                    @if (!string.IsNullOrWhiteSpace(Model.WarningMsg))
+                    {
+                        <p class="bg-warning p-xs b-r-sm"> <strong>@Model.WarningMsg</strong></p>
+                    }
                     <p class="bg-danger">@Html.ValidationMessage("message") </p>
                     <ul class="nav nav-tabs">
                         <li class="active"><a data-toggle="tab" href="#tab-1"> 申请信息</a></li>
@@ -69,7 +73,7 @@
                                             @Html.TextBoxFor(d => d.PayMoney, new { @class = "form-control", @readonly = "readonly" })
                                         </div>
                                     </div>
-                                 
+
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
                                         @Html.LabelFor(d => d.AuditStatus, Html.DisplayNameFor(d => d.AuditStatus).ToString(), new { @class = "col-sm-2 control-label" })
@@ -96,56 +100,56 @@
 
                             </div>
                         </div>
-                    <div id="tab-2" class="tab-pane">
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped">
-                                            <thead>
-                                            <tr>
-                                                <th>
-                                                    媒体类型
-                                                </th>
-                                                <th>
-                                                    媒体名称
-                                                </th>
-                                                <th>
-                                                    广告位
-                                                </th>
-                                                <th>
-                                                    成本金额
-                                                </th>
-                                                <th>
-                                                    采购金额
-                                                </th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            @foreach (var item in details)
-                                            {
-                                                <tr>
-                                                    <td>@item.PurchaseOrderDetail.MediaTypeName</td>
-                                                    <td>@item.PurchaseOrderDetail.MediaName</td>
-                                                    <td>@item.PurchaseOrderDetail.AdPositionName</td>
-                                                    <td>@item.PurchaseOrderDetail.CostMoney</td>
-                                                    <td>@item.PurchaseOrderDetail.Money</td>
-                                                </tr>
-                                            }
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td>合计</td>
-                                                <td>@details.Sum(d => d.PurchaseOrderDetail.CostMoney)</td>
-                                                <td>@details.Sum(d => d.PurchaseOrderDetail.Money)</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
+                        <div id="tab-2" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            媒体类型
+                                                        </th>
+                                                        <th>
+                                                            媒体名称
+                                                        </th>
+                                                        <th>
+                                                            广告位
+                                                        </th>
+                                                        <th>
+                                                            成本金额
+                                                        </th>
+                                                        <th>
+                                                            采购金额
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in details)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.PurchaseOrderDetail.MediaTypeName</td>
+                                                            <td>@item.PurchaseOrderDetail.MediaName</td>
+                                                            <td>@item.PurchaseOrderDetail.AdPositionName</td>
+                                                            <td>@item.PurchaseOrderDetail.CostMoney</td>
+                                                            <td>@item.PurchaseOrderDetail.Money</td>
+                                                        </tr>
+                                                    }
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>合计</td>
+                                                        <td>@details.Sum(d => d.PurchaseOrderDetail.CostMoney)</td>
+                                                        <td>@details.Sum(d => d.PurchaseOrderDetail.Money)</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                         <div id="tab-3" class="tab-pane">
                             <div class="panel-body">
                                 <div class="row">

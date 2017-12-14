@@ -88,6 +88,6 @@ namespace Ada.Core.ViewModel.Customer
         /// 是否供应商
         /// </summary>
         [Display(Name = "是否供应商")]
-        public bool IsBusiness { get; set; }
+        public bool? IsBusiness { get; set; }
     }
 }

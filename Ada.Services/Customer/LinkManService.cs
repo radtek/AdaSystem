@@ -19,6 +19,10 @@ namespace Ada.Services.Customer
         {
             var allList = _repository.LoadEntities(d => d.IsDelete == false);
             //条件过滤
+            if (viewModel.IsBusiness!=null)
+            {
+                allList = allList.Where(d => d.Commpany.IsBusiness == viewModel.IsBusiness);
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
                 allList = allList.Where(d => d.Name.Contains(viewModel.search));
@@ -27,7 +31,6 @@ namespace Ada.Services.Customer
             {
                 allList = allList.Where(d => d.Commpany.Name.Contains(viewModel.CommpanyName));
             }
-            allList = allList.Where(d => d.Commpany.IsBusiness==viewModel.IsBusiness);
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;

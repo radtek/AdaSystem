@@ -74,6 +74,8 @@
     <Compile Include="Mapping\Customer\PayAccountMap.cs" />
     <Compile Include="Mapping\Customer\LinkManMap.cs" />
     <Compile Include="Mapping\Customer\CommpanyMap.cs" />
+    <Compile Include="Mapping\Finance\ExpenseDetailMap.cs" />
+    <Compile Include="Mapping\Finance\ExpenseMap.cs" />
     <Compile Include="Mapping\Finance\SettleAccountMap.cs" />
     <Compile Include="Mapping\Finance\ReceivablesMap.cs" />
     <Compile Include="Mapping\Finance\IncomeExpendMap.cs" />
@@ -170,6 +172,14 @@
     <Compile Include="Migrations\201712120809138_OfferType.Designer.cs">
       <DependentUpon>201712120809138_OfferType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712140108399_UpdateD.cs" />
+    <Compile Include="Migrations\201712140108399_UpdateD.Designer.cs">
+      <DependentUpon>201712140108399_UpdateD.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712140111272_UpdateExpense.cs" />
+    <Compile Include="Migrations\201712140111272_UpdateExpense.Designer.cs">
+      <DependentUpon>201712140111272_UpdateExpense.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -243,6 +253,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712120809138_OfferType.resx">
       <DependentUpon>201712120809138_OfferType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712140108399_UpdateD.resx">
+      <DependentUpon>201712140108399_UpdateD.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712140111272_UpdateExpense.resx">
+      <DependentUpon>201712140111272_UpdateExpense.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

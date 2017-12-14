@@ -20,12 +20,14 @@ namespace Finance.Controllers
     {
         private readonly IExpenseService _expenseService;
         private readonly IRepository<Expense> _repository;
-
+        private readonly IRepository<ExpenseDetail> _expenseDetailrepository;
         public ExpenseInController(IExpenseService expenseService,
-            IRepository<Expense> repository)
+            IRepository<Expense> repository,
+            IRepository<ExpenseDetail> expenseDetailrepository)
         {
             _expenseService = expenseService;
             _repository = repository;
+            _expenseDetailrepository = expenseDetailrepository;
 
         }
         public ActionResult Index()
@@ -49,7 +51,8 @@ namespace Finance.Controllers
                     Employe = d.Employe,
                     BillNum = d.BillNum,
                     BillDate = d.BillDate,
-                    Money = d.ExpenseDetails.Sum(e=>e.Money)
+                    Money = d.ExpenseDetails.Sum(e => e.Money),
+                    IncomeExpends = string.Join(",",d.ExpenseDetails.Select(e=>e.IncomeExpend.SubjectName).Distinct())
 
                 })
             }, JsonRequestBehavior.AllowGet);
@@ -58,7 +61,6 @@ namespace Finance.Controllers
         {
             ExpenseView viewModel = new ExpenseView();
             viewModel.BillDate = DateTime.Now;
-            viewModel.Money = 0;
             viewModel.IsIncom = true;
             return View(viewModel);
         }
@@ -71,7 +73,7 @@ namespace Finance.Controllers
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
                 return View(viewModel);
             }
-            var payDetails = JsonConvert.DeserializeObject<List<ExpenseDetail>>(viewModel.Details);
+            var payDetails = JsonConvert.DeserializeObject<List<ExpenseDetail>>(viewModel.PayDetails);
             if (payDetails.Count <= 0)
             {
                 ModelState.AddModelError("message", "请录入结算账户！");
@@ -85,13 +87,13 @@ namespace Finance.Controllers
             entity.AccountBank = viewModel.AccountBank;
             entity.AccountName = viewModel.AccountName;
             entity.AccountNum = viewModel.AccountNum;
-            entity.Transactor = viewModel.Transactor;
-            entity.TransactorId = viewModel.TransactorId;
+            entity.Transactor = CurrentManager.UserName;
+            entity.TransactorId = CurrentManager.Id;
             entity.Employe = viewModel.Employe;
             entity.EmployerId = viewModel.EmployerId;
             entity.LinkManName = viewModel.LinkManName;
             entity.LinkManId = viewModel.LinkManId;
-            entity.IsIncom = true;
+            entity.IsIncom = viewModel.IsIncom;
             entity.Image = viewModel.Image;
             entity.BillNum = IdBuilder.CreateOrderNum("SR");
             entity.BillDate = viewModel.BillDate;
@@ -111,7 +113,7 @@ namespace Finance.Controllers
             }
             _expenseService.Add(entity);
             TempData["Msg"] = "添加成功";
-            return RedirectToAction("Index");
+            return viewModel.IsIncom ? RedirectToAction("Index") : RedirectToAction("Index","ExpenseOut");
         }
         public ActionResult Update(string id)
         {
@@ -123,16 +125,22 @@ namespace Finance.Controllers
             viewModel.AccountNum = entity.AccountNum;
             viewModel.BillNum = entity.BillNum;
             viewModel.BillDate = entity.BillDate;
+            viewModel.LinkManName = entity.LinkManName;
+            viewModel.LinkManId = entity.LinkManId;
+            viewModel.Employe = entity.Employe;
+            viewModel.EmployerId = entity.EmployerId;
             viewModel.Remark = entity.Remark;
+            viewModel.Image = entity.Image;
             viewModel.ThumbnailImage = Thumbnail.MakeThumbnailImageToBase64(Utils.GetMapPath(entity.Image));
-            var paydetails = entity.ExpenseDetails.Where(d => d.IsDelete == false).Select(d => new
+            var paydetails = entity.ExpenseDetails.Select(d => new
             {
                 d.Id,
                 d.SettleAccountId,
                 d.IncomeExpendId,
                 d.Money
             });
-            viewModel.Details = JsonConvert.SerializeObject(paydetails);
+            viewModel.IsIncom = (bool) entity.IsIncom;
+            viewModel.PayDetails = JsonConvert.SerializeObject(paydetails);
             return View(viewModel);
         }
         [HttpPost]
@@ -144,7 +152,12 @@ namespace Finance.Controllers
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
                 return View(viewModel);
             }
-
+            var payDetails = JsonConvert.DeserializeObject<List<ExpenseDetail>>(viewModel.PayDetails);
+            if (payDetails.Count <= 0)
+            {
+                ModelState.AddModelError("message", "请录入结算账户！");
+                return View(viewModel);
+            }
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
             entity.ModifiedBy = CurrentManager.UserName;
             entity.ModifiedById = CurrentManager.Id;
@@ -152,19 +165,30 @@ namespace Finance.Controllers
             entity.AccountBank = viewModel.AccountBank;
             entity.AccountName = viewModel.AccountName;
             entity.AccountNum = viewModel.AccountNum;
-            entity.Transactor = viewModel.Transactor;
-            entity.TransactorId = viewModel.TransactorId;
             entity.Employe = viewModel.Employe;
             entity.EmployerId = viewModel.EmployerId;
             entity.LinkManName = viewModel.LinkManName;
             entity.LinkManId = viewModel.LinkManId;
             entity.Image = viewModel.Image;
-
+            _expenseDetailrepository.Remove(entity.ExpenseDetails);
+            foreach (var detail in payDetails)
+            {
+                if (string.IsNullOrWhiteSpace(detail.IncomeExpendId) && string.IsNullOrWhiteSpace(detail.SettleAccountId))
+                {
+                    ModelState.AddModelError("message", "收入项目或结算账户不能为空！");
+                    return View(viewModel);
+                }
+                detail.Id = IdBuilder.CreateIdNum();
+                detail.AddedBy = CurrentManager.UserName;
+                detail.AddedById = CurrentManager.Id;
+                detail.AddedDate = DateTime.Now;
+                entity.ExpenseDetails.Add(detail);
+            }
             entity.BillDate = viewModel.BillDate;
             entity.Remark = viewModel.Remark;
             _expenseService.Update(entity);
             TempData["Msg"] = "更新成功";
-            return RedirectToAction("Index");
+            return viewModel.IsIncom ? RedirectToAction("Index") : RedirectToAction("Index", "ExpenseOut");
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]

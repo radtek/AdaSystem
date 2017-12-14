@@ -103,6 +103,11 @@ namespace Ada.Core.ViewModel.Finance
         /// 结算明细
         /// </summary>
         [Display(Name = "结算明细")]
-        public string Details { get; set; }
+        public string PayDetails { get; set; }
+        /// <summary>
+        /// 费用项目
+        /// </summary>
+        [Display(Name = "费用项目")]
+        public string IncomeExpends { get; set; }
     }
 }

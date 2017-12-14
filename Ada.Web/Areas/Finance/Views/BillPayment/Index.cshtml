@@ -6,7 +6,7 @@
 }
 @Html.Partial("Bread")
 
-<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+<div class="wrapper wrapper-content">
 
     <div class="row">
         <div class="col-lg-12">
@@ -17,17 +17,28 @@
             </div>
         </div>
     </div>
+    <div id="blueimp-gallery" class="blueimp-gallery">
+        <div class="slides"></div>
+        <h3 class="title"></h3>
+        <a class="prev">‹</a>
+        <a class="next">›</a>
+        <a class="close">×</a>
+        <a class="play-pause"></a>
+        <ol class="indicator"></ol>
+    </div>
 </div>
 
 
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/Content/plugins/blueimp/css/")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-    <script type="text/javascript">
-        $(document).ready(function () {
+    @Scripts.Render("~/plugins/lightboxGallery")
+<script type="text/javascript">
+    $(document).ready(function () {
             var table = new TableInit();
             table.Init();
         });
@@ -90,6 +101,12 @@
                         field: 'PayMoney',
                         title: '付款金额',
                         align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'Image',
+                        title: '@Html.DisplayNameFor(d=>d.Image)',
+                        align: "center", valign: "middle",
+                        formatter: formatter.image
                     },
                     {
                         field: 'BillDate',
@@ -166,7 +183,7 @@
             });
         }
 
-    </script>
+</script>
 }
 
 

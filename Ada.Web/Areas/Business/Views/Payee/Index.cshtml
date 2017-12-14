@@ -17,15 +17,26 @@
             </div>
         </div>
     </div>
+    <div id="blueimp-gallery" class="blueimp-gallery">
+        <div class="slides"></div>
+        <h3 class="title"></h3>
+        <a class="prev">‹</a>
+        <a class="next">›</a>
+        <a class="close">×</a>
+        <a class="play-pause"></a>
+        <ol class="indicator"></ol>
+    </div>
 </div>
 
 
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/Content/plugins/blueimp/css/")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/lightboxGallery")
     <script type="text/javascript">
         $(document).ready(function () {
             var table = new TableInit();

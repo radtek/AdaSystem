@@ -20,6 +20,10 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="tabs-container">
+                    @if (!string.IsNullOrWhiteSpace(Model.WarningMsg))
+                    {
+                        <p class="bg-warning p-xs b-r-sm"> <strong>@Model.WarningMsg</strong></p>
+                    }
                     <p class="bg-danger">@Html.ValidationMessage("message") </p>
                     <ul class="nav nav-tabs">
                         <li class="active"><a data-toggle="tab" href="#tab-1"> 申请信息</a></li>
@@ -76,7 +80,7 @@
                                             {
                                                 <div class="lightBoxGallery">
                                                     <a href="@Model.Image" title="申请凭证" data-gallery="">
-                                                        <img src="@Model.Image" style="width: 100px; height: 100px;">
+                                                        <img src="@Model.Image" style="width: 100px;">
                                                     </a>
                                                     <div id="blueimp-gallery" class="blueimp-gallery">
                                                         <div class="slides"></div>
@@ -89,7 +93,7 @@
                                                     </div>
                                                 </div>
                                             }
-                                            
+
                                         </div>
                                     </div>
                                     <div class="hr-line-dashed"></div>
@@ -121,6 +125,7 @@
                                         </div>
                                     </div>
                                     @Html.HiddenFor(d => d.Id)
+                                    @Html.HiddenFor(d => d.Image)
                                 </div>
 
                             </div>

@@ -32,17 +32,17 @@ namespace Ada.Data.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
-            var manager = context.Set<Manager>().FirstOrDefault(d => d.UserName == "adaxiong" && d.IsDelete == false);
-            if (manager==null)
-            {
-                context.Set<Manager>().Add(new Manager()
-                {
-                    Id = IdBuilder.CreateIdNum(),
-                    UserName = "adaxiong",
-                    Password = Encrypt.Encode("123456"),
-                    Status = Consts.StateNormal
-                });
-            }
+            //var manager = context.Set<Manager>().FirstOrDefault(d => d.UserName == "adaxiong" && d.IsDelete == false);
+            //if (manager==null)
+            //{
+            //    context.Set<Manager>().Add(new Manager()
+            //    {
+            //        Id = IdBuilder.CreateIdNum(),
+            //        UserName = "adaxiong",
+            //        Password = Encrypt.Encode("123456"),
+            //        Status = Consts.StateNormal
+            //    });
+            //}
             
         }
     }

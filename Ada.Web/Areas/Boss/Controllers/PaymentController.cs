@@ -10,6 +10,7 @@ using Ada.Core.Domain.Customer;
 using Ada.Core.ViewModel.Business;
 using Ada.Framework.Filter;
 using Ada.Services.Business;
+using Ada.Services.Finance;
 
 namespace Boss.Controllers
 {
@@ -20,11 +21,13 @@ namespace Boss.Controllers
     {
         private readonly IBusinessPaymentService _businessPaymentService;
         private readonly IRepository<BusinessPayment> _repository;
+        private readonly IBillPaymentService _billPaymentService;
 
-        public PaymentController(IBusinessPaymentService businessPaymentService, IRepository<BusinessPayment> repository)
+        public PaymentController(IBusinessPaymentService businessPaymentService, IRepository<BusinessPayment> repository, IBillPaymentService billPaymentService)
         {
             _businessPaymentService = businessPaymentService;
             _repository = repository;
+            _billPaymentService = billPaymentService;
         }
         public ActionResult Index()
         {
@@ -55,7 +58,7 @@ namespace Boss.Controllers
         public ActionResult Audit(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            BusinessPaymentView viewModel=new BusinessPaymentView();
+            BusinessPaymentView viewModel = new BusinessPaymentView();
             viewModel.Transactor = entity.Transactor;
             viewModel.Id = entity.Id;
             viewModel.ApplicationDate = entity.ApplicationDate;
@@ -69,6 +72,14 @@ namespace Boss.Controllers
             viewModel.Image = entity.Image;
             viewModel.Remark = entity.Remark;
             ViewBag.LinkMan = entity.BusinessPayee.LinkMan;
+            var account = entity.BusinessPayee.LinkMan.PayAccounts.FirstOrDefault(d =>
+                d.AccountName.Equals(viewModel.AccountName, StringComparison.CurrentCultureIgnoreCase) &&
+                d.AccountNum.Equals(viewModel.AccountNum, StringComparison.CurrentCultureIgnoreCase)
+                && d.IsDelete == false);
+            if (account==null)
+            {
+                viewModel.WarningMsg = "注：此请款账户不在相应客户的账户列表中。";
+            }
             return View(viewModel);
         }
         [HttpPost]
@@ -80,26 +91,37 @@ namespace Boss.Controllers
             entity.AuditStatus = viewModel.AuditStatus;
             entity.AuditBy = CurrentManager.UserName;
             entity.AuditById = CurrentManager.Id;
-            entity.AuditDate=DateTime.Now;
+            entity.AuditDate = DateTime.Now;
             //通过就增加客户账户信息
-            if (entity.AuditStatus==Consts.StateNormal)
+            if (entity.AuditStatus == Consts.StateNormal)
             {
                 //判断是否增加账户
                 var account = entity.BusinessPayee.LinkMan.PayAccounts.FirstOrDefault(d =>
                     d.AccountName.Equals(viewModel.AccountName, StringComparison.CurrentCultureIgnoreCase) &&
                     d.AccountNum.Equals(viewModel.AccountNum, StringComparison.CurrentCultureIgnoreCase)
                     && d.IsDelete == false);
-                if (account==null)
+                if (account == null)
                 {
-                    PayAccount payAccount=new PayAccount();
+                    PayAccount payAccount = new PayAccount();
                     payAccount.Id = IdBuilder.CreateIdNum();
                     payAccount.AccountName = viewModel.AccountName;
                     payAccount.AccountNum = viewModel.AccountNum;
                     payAccount.AccountType = viewModel.AccountBank;
                     payAccount.AddedBy = CurrentManager.UserName;
                     payAccount.AddedById = CurrentManager.Id;
-                    payAccount.AddedDate=DateTime.Now;
+                    payAccount.AddedDate = DateTime.Now;
                     entity.BusinessPayee.LinkMan.PayAccounts.Add(payAccount);
+                }
+            }
+            else
+            {
+                //判断是否已经付款了
+                var bill = _billPaymentService.GetByRequestNum(entity.ApplicationNum);
+                if (bill != null)
+                {
+                    ModelState.AddModelError("message", "此申请，已生成了付款单！");
+                    ViewBag.LinkMan = entity.BusinessPayee.LinkMan;
+                    return View(viewModel);
                 }
             }
             _businessPaymentService.Update(entity);
@@ -111,7 +133,7 @@ namespace Boss.Controllers
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            if (entity.Status==Consts.StateNormal)
+            if (entity.Status == Consts.StateNormal)
             {
                 return Json(new { State = 0, Msg = "此申请已付款，无法删除" });
             }

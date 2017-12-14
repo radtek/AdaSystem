@@ -33,8 +33,8 @@
                                         @Html.DisplayNameFor(d => d.PayMoney)
                                     </th>
                                     @*<th>
-                                        @Html.DisplayNameFor(d => d.ApplicationDate)
-                                    </th>*@
+                                            @Html.DisplayNameFor(d => d.ApplicationDate)
+                                        </th>*@
                                     <th>
                                         @Html.DisplayNameFor(d => d.AuditStatus)
                                     </th>
@@ -68,7 +68,24 @@
                                         }
                                         @if (item.Status == 1)
                                         {
-                                            <td><span class='label label-primary'>已付</span></td>
+                                            <td>
+                                                @if (string.IsNullOrWhiteSpace(item.PayImage))
+                                                {
+                                                    <span class='label label-primary'>已付</span>
+                                                }
+                                                else
+                                                {
+                                                    <div class="lightBoxGallery">
+                                                        <a href="@item.PayImage" title="付款凭证" data-gallery="">
+                                                            <span class='label label-primary'>
+                                                                <i class="fa fa-picture-o"></i> 已付
+                                                            </span>
+                                                        </a>
+                                                    </div> 
+                                                }
+                                                
+
+                                            </td>
                                         }
                                         else
                                         {
@@ -82,21 +99,21 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                 }
                 else
                 {
                     <p class="text-center"><strong>暂无请款记录</strong></p>
                 }
-                
+
 
             </div>
 
-            
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
             </div>
         </div>
-        </div>
     </div>
+</div>
 

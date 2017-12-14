@@ -123,6 +123,11 @@ formatter.tooltip = function(value, row, index) {
 formatter.pie = function (value, row, index) {
     return '<span class="pie">'+value+'</span>';
 };
+formatter.image = function (value, row, index) {
+    if (value) {
+        return '<div class="lightBoxGallery"><a href="' + value + '" title="预览图片" data-gallery=""><i class="fa fa-picture-o"></i></a></div>';
+    }
+};
 function initTooltip() {
     $('[data-toggle="tooltip"]').tooltip();
 }

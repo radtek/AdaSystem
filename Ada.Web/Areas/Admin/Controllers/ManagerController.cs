@@ -186,23 +186,17 @@ namespace Admin.Controllers
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
-        public ActionResult Delete()
+        public ActionResult Delete(string id)
         {
-            var ids = Request["Ids"].Split(',');
-            List<Manager> list = new List<Manager>();
-            foreach (var id in ids)
+            if (id == CurrentManager.Id)
             {
-                if (id == CurrentManager.Id)
-                {
-                    return Json(new { State = 0, Msg = "不能删除当前账号，如需删除，请登陆其他账户进行操作。" });
-                }
-                var manager = _managerRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
-                manager.DeletedById = CurrentManager.Id;
-                manager.DeletedBy = CurrentManager.UserName;
-                manager.DeletedDate = DateTime.Now;
-                list.Add(manager);
+                return Json(new { State = 0, Msg = "不能删除当前账号，如需删除，请登陆其他账户进行操作。" });
             }
-            _managerService.Delete(list);
+            var manager = _managerRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            manager.DeletedById = CurrentManager.Id;
+            manager.DeletedBy = CurrentManager.UserName;
+            manager.DeletedDate = DateTime.Now;
+            _managerService.Delete(manager);
             return Json(new { State = 1, Msg = "删除成功" });
         }
        

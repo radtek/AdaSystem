@@ -1,0 +1,60 @@
+﻿@using System.Web.Optimization
+@using Ada.Core.Domain
+@using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Finance
+@using Ada.Services.Finance
+@model ExpenseView
+@{
+    ViewBag.Title ="新增收入";
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "其他收入", Value = Url.Action("Index") } };
+    var settleAccountService = EngineContext.Current.Resolve<ISettleAccountService>();
+    var incomeExpendService = EngineContext.Current.Resolve<IIncomeExpendService>();
+    var settleAccounts = settleAccountService.LoadEntitiesFilter().Select(d => new { text = d.SettleName, value = d.Id }).ToList();
+    var incomeExpends = incomeExpendService.LoadEntitiesFilter(new IncomeExpendView() { IsMain = false, SubjectType = Model.IsIncom?Consts.StateNormal:Consts.StateLock }).Select(d => new { text = d.SubjectName, value = d.Id }).ToList();
+    var thumbimage = string.IsNullOrWhiteSpace(Model.ThumbnailImage) ? "" : Model.ThumbnailImage;
+}
+@Html.Partial("Bread", urls)
+
+<div class="wrapper wrapper-content">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <p class="bg-danger">@Html.ValidationMessage("message") </p>
+        @Html.Partial("ExpenseEdit",Model)
+    }
+</div>
+@section StylesFirst {
+    @Styles.Render("~/Content/plugins/dropzone/dropZoneStyles")
+}
+@section Styles {
+    @Styles.Render("~/plugins/dateTimePickerStyle")
+    @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/bootstrapEditTableStyle")
+    @Styles.Render("~/plugins/select2Styles")
+
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/dateTimePickerScript")
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/bootstrapEditTableScript")
+    @Scripts.Render("~/plugins/dropZone")
+    @Scripts.Render("~/plugins/select2")
+<script>
+    var payData = @Html.Raw(string.IsNullOrWhiteSpace(Model.PayDetails) ?"[]": Model.PayDetails),
+        uploadapi = "@Url.Action("UploadImage", "Common",new{area="Admin"})",
+        linkmanUrl = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})",
+        managerUrl = "@Url.Action("GetList", "Manager", new {area = "Admin"})",
+        $linkman = $("#LinkManId"),
+        $manager = $("#EmployerId"),
+        $linkmanVal = $("#LinkManName"),
+        $managerVal = $("#Employe"),
+        incomeExpends = @Html.Raw(Json.Encode(incomeExpends)),
+        settleAccounts = @Html.Raw(Json.Encode(settleAccounts)),
+        $table = $('#table'),
+        paymoney=0,
+        thumbimage = '@thumbimage';
+</script>
+    <script src="@Url.Content("~/Areas/Finance/Scripts/pay.js")"></script>
+    <script src="@Url.Content("~/Areas/Finance/Scripts/select2init.js")"></script>
+}
+

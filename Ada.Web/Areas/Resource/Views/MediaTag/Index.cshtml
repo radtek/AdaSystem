@@ -22,12 +22,6 @@
     <button id="btn_add" class="btn btn-primary btn-outline" type="button">
         <i class="fa fa-plus"></i> 新增
     </button>
-    <button id="btn_edit" type="button" class="btn btn-primary btn-outline">
-        <i class="fa fa-pencil"></i> 修改
-    </button>
-    <button id="btn_delete" type="button" class="btn btn-primary btn-outline">
-        <i class="fa fa-trash-o"></i> 删除
-    </button>
 </div>
 <div class="modal inmodal" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
     @using (Html.BeginForm("AddOrUpdate","MediaTag"))
@@ -71,7 +65,7 @@
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/formFill")
-    <script type="text/javascript">
+<script type="text/javascript">
 
         $(document).ready(function () {
             var table = new TableInit();
@@ -84,7 +78,8 @@
             var obj = new Object();
             obj.Init = function() {
                 $('#table').bootstrapTable({
-                url: '@Url.Action("GetList")',         //请求后台的URL（*）
+                    url: '@Url.Action("GetList")',         //请求后台的URL（*）
+                    classes: "table table-no-bordered",
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
@@ -110,17 +105,24 @@
                 mobileResponsive:true,
                 columns: [
                     {
-                        checkbox: true
-                    },
-                    {
                         field: 'TagName',
                         title: '@Html.DisplayNameFor(d=>d.TagName)',
-                        align:"center"
+                        align: "center", valign: "middle",
                     },
                     {
                         field: 'Taxis',
                         title: '@Html.DisplayNameFor(d=>d.Taxis)',
-                        align: "center"
+                        align: "center", valign: "middle",
+                    },
+                    {
+                        field: 'Id',
+                        title: '操作',
+                        align: "center", valign: "middle",
+                        formatter: function (value,row) {
+                            return '<a class="btn btn-success btn-sm" href="javascript:;" onclick=\'update(' + JSON.stringify(row) +');\'><i class="fa fa-pencil"></i>  编辑</a> ' +
+                                "<a class='btn btn-danger btn-sm' href='javascript:;' onclick=\"cancle('" + value +"');\"><i class='fa fa-trash-o'></i> 删除</a>";
+                        }
+
                     }
                 ]
             });
@@ -138,74 +140,7 @@
                     $(".modal-title span").text("添加");
                     $('#modal').modal('show');
                 });
-                //编辑
-                $("#btn_edit").click(function () {
-                    var arrselections = $("#table").bootstrapTable('getSelections');
-                    if (arrselections.length > 1) {
-                        swal("操作提醒", "只能选择一行进行编辑", "warning");
-                        return;
-                    }
-                    if (arrselections.length <= 0) {
-                        swal("操作提醒", "请选择有效数据", "warning");
-                        return;
-                    }
-                    $("#modal form").autofill(arrselections[0]);
-                    $(".modal-title span").text("编辑");
-                    $('#modal').modal('show');
-                });
 
-                $("#btn_delete").click(function () {
-                    var arrselections = $("#table").bootstrapTable('getSelections');
-                    if (arrselections.length > 1) {
-                        swal("操作提醒", "只能选择一行进行删除", "warning");
-                        return;
-                    }
-                    if (arrselections.length <= 0) {
-                        swal("操作提醒", "请选择有效数据", "warning");
-                        return;
-                    }
-
-                    swal({
-                        title: "您确定吗?",
-                        text: "确认要删除选择的数据吗?",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "确定",
-                        cancelButtonText: "取消",
-                        closeOnConfirm: false
-                    }, function () {
-                        $.ajax({
-                            type: "post",
-                            headers: {
-                                '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                            },
-                            url: "@Url.Action("Delete")",
-                            data: { "id": arrselections[0].Id },
-                            success: function (data) {
-                                if (data.State == 1) {
-                                    $("#table").bootstrapTable('refresh');
-                                    swal({
-                                        title: "操作成功",
-                                        text: data.Msg,
-                                        timer: 2000,
-                                        type:"success",
-                                        showConfirmButton: false
-                                    });
-
-                                } else {
-                                    swal("操作提醒", data.Msg, "warning");
-                                }
-                            },
-                            error: function () {
-                                swal("操作失败", data.Msg, "error");
-                            },
-                            complete: function () {
-
-                            }
-                        });
-                    });
-                });
 
                 //表单提交
                 $("#modal form").validate({
@@ -251,7 +186,7 @@
                                 swal("操作失败", res.Msg, "error");
                             },
                             complete: function () {
-                                
+
                             }
                         });
                     }
@@ -259,7 +194,58 @@
             };
             return oInit;
         };
-    </script>
+
+
+
+        function update(row) {
+            $("#modal form").autofill(row);
+            $(".modal-title span").text("编辑");
+            $('#modal').modal('show');
+        }
+
+        function cancle(id) {
+            swal({
+                title: "您确定吗?",
+                text: "确认要删除选择的数据吗?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    type: "post",
+                    headers: {
+                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                    },
+                    url: "@Url.Action("Delete")",
+                    data: { id: id},
+                    success: function (data) {
+                        if (data.State == 1) {
+                            $("#table").bootstrapTable('refresh');
+                            swal({
+                                title: "操作成功",
+                                text: data.Msg,
+                                timer: 2000,
+                                type:"success",
+                                showConfirmButton: false
+                            });
+
+                        } else {
+                            swal("操作提醒", data.Msg, "warning");
+                        }
+                    },
+                    error: function () {
+                        swal("操作失败", data.Msg, "error");
+                    },
+                    complete: function () {
+
+                    }
+                });
+            });
+        }
+</script>
 }
 
 

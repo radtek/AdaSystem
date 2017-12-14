@@ -110,5 +110,10 @@ namespace Ada.Core.ViewModel.Purchase
         /// </summary>
         [Display(Name = "付款申请单")]
         public string PurchasePaymentId { get; set; }
+        /// <summary>
+        /// 审核提醒
+        /// </summary>
+        [Display(Name = "审核提醒")]
+        public string WarningMsg { get; set; }
     }
 }

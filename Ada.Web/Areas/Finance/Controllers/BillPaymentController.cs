@@ -58,7 +58,8 @@ namespace Finance.Controllers
                     PayMoney = d.BillPaymentDetails.Sum(b=>b.Money),
                     BillNum = d.BillNum,
                     PaymentType = d.PaymentType,
-                    BillDate = d.BillDate
+                    BillDate = d.BillDate,
+                    Image = d.Image
                 })
             }, JsonRequestBehavior.AllowGet);
         }

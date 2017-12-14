@@ -1,5 +1,9 @@
-﻿@model Ada.Core.Domain.Purchase.PurchasePayment
-
+﻿@using Ada.Core.Infrastructure
+@using Ada.Services.Finance
+@model Ada.Core.Domain.Purchase.PurchasePayment
+@{
+    var billService = EngineContext.Current.Resolve<IBillPaymentService>();
+}
 <div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -64,7 +68,27 @@
                                     }
                                     @if (item.Status == 1)
                                     {
-                                        <td><span class='label label-primary'>已付</span></td>
+                                        <td>
+                                            @{
+                                                var image = billService.GetByRequestNum(item.Id)?.Image;
+                                                if (string.IsNullOrWhiteSpace(image))
+                                                 {
+                                                     <span class='label label-primary'>已付</span>
+                                                 }
+                                                 else
+                                                 {
+                                                     <div class="lightBoxGallery">
+                                                         <a href="@image" title="付款凭证" data-gallery="">
+                                                             <span class='label label-primary'>
+                                                                 <i class="fa fa-picture-o"></i> 已付
+                                                             </span>
+                                                         </a>
+                                                     </div>
+                                                 }
+                                            }
+                                            
+
+                                        </td>
                                     }
                                     else
                                     {

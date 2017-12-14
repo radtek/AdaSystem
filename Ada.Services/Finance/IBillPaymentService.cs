@@ -15,5 +15,6 @@ namespace Ada.Services.Finance
         void Update(BillPayment entity);
         void Delete(BillPayment entity);
         IQueryable<BillPayment> LoadEntitiesFilter(BillPaymentView viewModel);
+        BillPayment GetByRequestNum(string requestNum);
     }
 }

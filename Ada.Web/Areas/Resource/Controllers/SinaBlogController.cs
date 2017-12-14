@@ -85,7 +85,7 @@ namespace Resource.Controllers
             viewModel.MediaTypeId = mediaType.Id;
             viewModel.Status = Consts.StateNormal;
             viewModel.MediaPrices = mediaType.AdPositions
-                .Select(d => new MediaPriceView() { AdPositionName = d.Name, PurchasePrice = 0, AdPositionId = d.Id }).ToList();
+                .Select(d => new MediaPriceView() { AdPositionName = d.Name, PurchasePrice = 0, AdPositionId = d.Id,PriceDate = DateTime.Now}).ToList();
             viewModel.Transactor = CurrentManager.UserName;
             viewModel.TransactorId = CurrentManager.Id;
             return View(viewModel);

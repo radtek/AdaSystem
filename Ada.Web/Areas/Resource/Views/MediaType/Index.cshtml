@@ -22,12 +22,6 @@
     <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
         <i class="fa fa-plus"></i> 新增
     </a>
-    <button id="btn_edit" type="button" class="btn btn-primary btn-outline">
-        <i class="fa fa-pencil"></i> 修改
-    </button>
-    <button id="btn_delete" type="button" class="btn btn-primary btn-outline">
-        <i class="fa fa-trash-o"></i> 删除
-    </button>
 </div>
 
 @section Styles {
@@ -36,20 +30,18 @@
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-    <script type="text/javascript">
+<script type="text/javascript">
 
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
-            //2.初始化Button的点击事件
-            var oButtonInit = new ButtonInit();
-            oButtonInit.Init();
         });
         var TableInit = function() {
             var obj = new Object();
             obj.Init = function() {
                 $('#table').bootstrapTable({
-                url: '@Url.Action("GetList")',         //请求后台的URL（*）
+                    classes: "table table-no-bordered",
+                    url: '@Url.Action("GetList")',         //请求后台的URL（*）
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
@@ -59,7 +51,7 @@
                 sortName: "Id",
                 sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
                 pageNumber: 1,                       //初始化加载第一页，默认第一页
-                pageSize: 10,                       //每页的记录行数（*）
+                pageSize: 50,                       //每页的记录行数（*）
                 search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
                 strictSearch: true,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
                 showColumns: true,                  //是否显示所有的列
@@ -75,22 +67,29 @@
                 mobileResponsive:true,
                 columns: [
                     {
-                        checkbox: true
-                    },
-                    {
                         field: 'TypeName',
                         title: '@Html.DisplayNameFor(d=>d.TypeName)',
-                        align:"center"
+                        align: "center", valign: "middle"
                     },
                     {
                         field: 'CallIndex',
                         title: '@Html.DisplayNameFor(d=>d.CallIndex)',
-                        align: "center"
+                        align: "center", valign: "middle"
                     },
                     {
                         field: 'Taxis',
                         title: '@Html.DisplayNameFor(d=>d.Taxis)',
-                        align: "center"
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'Id',
+                        title: '操作',
+                        align: "center", valign: "middle",
+                        formatter: function (value,row) {
+                            return "<a class='btn btn-success btn-sm' href='@Url.Action("Update")?id=" + value +"'><i class='fa fa-pencil'></i>  编辑</a> " +
+                                "<a class='btn btn-danger btn-sm' href='javascript:;' onclick=\"cancle('" + value +"');\");'><i class='fa fa-trash-o'></i> 删除</a>";
+                        }
+
                     }
                 ]
             });
@@ -98,81 +97,50 @@
 
             return obj;
         };
-        var ButtonInit = function () {
-            var oInit = new Object();
-            oInit.Init = function () {
+        //撤销
+        function cancle(id) {
+            swal({
+                title: "您确定吗?",
+                text: "确认要删除此数据吗?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    type: "post",
+                    headers: {
+                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                    },
+                    url: "@Url.Action("Delete")",
+                    data: { "id": id },
+                    success: function (data) {
+                        if (data.State == 1) {
+                            $("#table").bootstrapTable('refresh');
+                            swal({
+                                title: "操作成功",
+                                text: data.Msg,
+                                timer: 2000,
+                                type:"success",
+                                showConfirmButton: false
+                            });
 
-                //编辑
-                $("#btn_edit").click(function () {
-                    var arrselections = $("#table").bootstrapTable('getSelections');
-                    if (arrselections.length > 1) {
-                        swal("操作提醒", "只能选择一行进行编辑", "warning");
-                        return;
-                    }
-                    if (arrselections.length <= 0) {
-                        swal("操作提醒", "请选择有效数据", "warning");
-                        return;
-                    }
-                    window.location.href = "@Url.Action("Update")?id="+arrselections[0].Id;
+                        } else {
+                            swal("操作提醒", data.Msg, "warning");
+                        }
+                    },
+                    error: function () {
+                        swal("操作失败", data.Msg, "error");
+                    },
+                    complete: function () {
 
+                    }
                 });
-
-                $("#btn_delete").click(function () {
-                    var arrselections = $("#table").bootstrapTable('getSelections');
-                    if (arrselections.length > 1) {
-                        swal("操作提醒", "只能选择一行进行删除", "warning");
-                        return;
-                    }
-                    if (arrselections.length <= 0) {
-                        swal("操作提醒", "请选择有效数据", "warning");
-                        return;
-                    }
-
-                    swal({
-                        title: "您确定吗?",
-                        text: "确认要删除选择的数据吗?",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "确定",
-                        cancelButtonText: "取消",
-                        closeOnConfirm: false
-                    }, function () {
-                        $.ajax({
-                            type: "post",
-                            headers: {
-                                '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                            },
-                            url: "@Url.Action("Delete")",
-                            data: { "id": arrselections[0].Id },
-                            success: function (data) {
-                                if (data.State == 1) {
-                                    $("#table").bootstrapTable('refresh');
-                                    swal({
-                                        title: "操作成功",
-                                        text: data.Msg,
-                                        timer: 2000,
-                                        type:"success",
-                                        showConfirmButton: false
-                                    });
-
-                                } else {
-                                    swal("操作提醒", data.Msg, "warning");
-                                }
-                            },
-                            error: function () {
-                                swal("操作失败", data.Msg, "error");
-                            },
-                            complete: function () {
-
-                            }
-                        });
-                    });
-                });
-            };
-            return oInit;
-        };
-    </script>
+            });
+        }
+</script>
 }
 
 

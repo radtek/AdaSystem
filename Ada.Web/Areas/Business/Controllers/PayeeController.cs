@@ -6,9 +6,11 @@ using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Business;
+using Ada.Core.Domain.Finance;
 using Ada.Core.ViewModel.Business;
 using Ada.Framework.Filter;
 using Ada.Services.Business;
+using Ada.Services.Finance;
 
 namespace Business.Controllers
 {
@@ -21,13 +23,16 @@ namespace Business.Controllers
         private readonly IBusinessPayeeService _businessPayeeService;
         private readonly IBusinessPaymentService _businessPaymentService;
         private readonly IRepository<BusinessPayee> _repository;
+        private readonly IBillPaymentService _billPaymentService;
         public PayeeController(IBusinessPayeeService businessPayeeService,
             IRepository<BusinessPayee> repository,
-            IBusinessPaymentService businessPaymentService)
+            IBusinessPaymentService businessPaymentService,
+            IBillPaymentService billPaymentService)
         {
             _businessPayeeService = businessPayeeService;
             _repository = repository;
             _businessPaymentService = businessPaymentService;
+            _billPaymentService = billPaymentService;
         }
         public ActionResult Index()
         {
@@ -76,11 +81,13 @@ namespace Business.Controllers
                 AuditStatus = d.AuditStatus,
                 PaymentType = d.PaymentType,
                 ApplicationDate = d.ApplicationDate,
-                Status = d.Status
+                Status = d.Status,
+                PayImage = _billPaymentService.GetByRequestNum(d.ApplicationNum)?.Image
 
             });
             return PartialView("Payments", payments);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Payment(BusinessPaymentView viewModel)

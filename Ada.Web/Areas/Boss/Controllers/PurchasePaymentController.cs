@@ -9,6 +9,7 @@ using Ada.Core.Domain.Customer;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.ViewModel.Purchase;
 using Ada.Framework.Filter;
+using Ada.Services.Finance;
 using Ada.Services.Purchase;
 
 namespace Boss.Controllers
@@ -17,11 +18,12 @@ namespace Boss.Controllers
     {
         private readonly IPurchasePaymentDetailService _purchasePaymentDetailService;
         private readonly IRepository<PurchasePaymentDetail> _repository;
-
-        public PurchasePaymentController(IPurchasePaymentDetailService purchasePaymentDetailService, IRepository<PurchasePaymentDetail> repository)
+        private readonly IBillPaymentService _billPaymentService;
+        public PurchasePaymentController(IPurchasePaymentDetailService purchasePaymentDetailService, IRepository<PurchasePaymentDetail> repository, IBillPaymentService billPaymentService)
         {
             _purchasePaymentDetailService = purchasePaymentDetailService;
             _repository = repository;
+            _billPaymentService = billPaymentService;
         }
         public ActionResult Index()
         {
@@ -65,6 +67,14 @@ namespace Boss.Controllers
             ViewBag.LinkMan = entity.PurchasePayment.LinkMan;
             ViewBag.OrderDetail = entity.PurchasePayment.PurchasePaymentOrderDetails.ToList();
             ViewBag.PayDetail = entity.PurchasePayment.PurchasePaymentDetails.ToList();
+            var account = entity.PurchasePayment.LinkMan.PayAccounts.FirstOrDefault(d =>
+                d.AccountName.Equals(viewModel.AccountName, StringComparison.CurrentCultureIgnoreCase) &&
+                d.AccountNum.Equals(viewModel.AccountNum, StringComparison.CurrentCultureIgnoreCase)
+                && d.IsDelete == false);
+            if (account == null)
+            {
+                viewModel.WarningMsg = "注：此请款账户不在相应供应商的账户列表中。";
+            }
             return View(viewModel);
         }
         [HttpPost]
@@ -95,6 +105,19 @@ namespace Boss.Controllers
                     payAccount.AddedById = CurrentManager.Id;
                     payAccount.AddedDate = DateTime.Now;
                     entity.PurchasePayment.LinkMan.PayAccounts.Add(payAccount);
+                }
+            }
+            else
+            {
+                //判断是否已经付款了
+                var bill = _billPaymentService.GetByRequestNum(entity.Id);
+                if (bill != null)
+                {
+                    ModelState.AddModelError("message", "此申请，已生成了付款单！");
+                    ViewBag.LinkMan = entity.PurchasePayment.LinkMan;
+                    ViewBag.OrderDetail = entity.PurchasePayment.PurchasePaymentOrderDetails.ToList();
+                    ViewBag.PayDetail = entity.PurchasePayment.PurchasePaymentDetails.ToList();
+                    return View(viewModel);
                 }
             }
             _purchasePaymentDetailService.Update(entity);

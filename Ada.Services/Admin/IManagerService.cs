@@ -26,11 +26,12 @@ namespace Ada.Services.Admin
         /// <param name="organizationIds">机构组织IDS</param>
         /// <param name="actionIds">功能权限IDS</param>
         void AddOrUpdate(Manager entity, bool isAdd, List<string> roleIds, List<string> organizationIds, List<string> actionIds);
+
         /// <summary>
         /// 删除
         /// </summary>
-        /// <param name="entities">集合</param>
-        void Delete(IEnumerable<Manager> entities);
+        /// <param name="entity"></param>
+        void Delete(Manager entity);
         /// <summary>
         /// 修改
         /// </summary>
