@@ -213,7 +213,7 @@ if (list.Count > 0)
                 "checkbox" : {
                     "keep_selected_style": false,
                     //"tie_selection": false
-                    //"three_state": false
+                    "three_state": false
                 }
             });
             $('#jstree_action').jstree({
@@ -329,7 +329,8 @@ if (list.Count > 0)
         var ButtonInit = function () {
             var oInit = new Object();
             oInit.Init = function () {
-               
+                var actions = $(".action");
+                var roles = $("input[name='RoleIds']");
                 //表单提交
                 var subBtn = $('.ladda-button').ladda();
                 $("#modal form").validate({
@@ -458,11 +459,11 @@ if (list.Count > 0)
         function update(id) {
             var roles = $("input[name='RoleIds']");
             var actions = $(".action");
-            roles.removeAttr("checked");
+            
             $.getJSON("@Url.Action("GetEntity")", { id: id, r: Date.now()},
                 function(data) {
                     //清空check
-                    
+                    roles.removeAttr("checked");
                     $('#jstree').jstree("uncheck_all");
                     //清空权限
                     clearAction(actions);
