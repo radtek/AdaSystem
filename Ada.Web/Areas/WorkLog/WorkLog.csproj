@@ -115,6 +115,7 @@
     <Content Include="Views\Daily\Add.cshtml" />
     <Content Include="Views\Daily\Update.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
