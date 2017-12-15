@@ -19,6 +19,10 @@ namespace Ada.Services.Customer
         {
             var allList = _repository.LoadEntities(d => d.IsDelete == false);
             //条件过滤
+            if (viewModel.Managers != null && viewModel.Managers.Count > 0)
+            {
+                allList = allList.Where(d => viewModel.Managers.Contains(d.TransactorId));
+            }
             if (viewModel.IsBusiness!=null)
             {
                 allList = allList.Where(d => d.Commpany.IsBusiness == viewModel.IsBusiness);

@@ -34,6 +34,10 @@ namespace Ada.Services.Resource
         public IQueryable<Media> LoadEntitiesFilter(MediaView viewModel)
         {
             var allList = _repository.LoadEntities(d => d.IsDelete == false);
+            if (viewModel.Managers != null && viewModel.Managers.Count > 0)
+            {
+                allList = allList.Where(d => viewModel.Managers.Contains(d.TransactorId));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeIndex))
             {
                 allList = allList.Where(d => d.MediaType.CallIndex == viewModel.MediaTypeIndex);

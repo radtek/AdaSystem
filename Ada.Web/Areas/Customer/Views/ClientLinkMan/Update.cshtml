@@ -37,6 +37,7 @@
 }
 @section Scripts {
     @Scripts.Render("~/plugins/select2")
+    <script src="@Url.Content("~/Areas/Customer/Scripts/transactor.js")"></script>
     <script>
         $(function() {
             $("#CommpanyId").select2({

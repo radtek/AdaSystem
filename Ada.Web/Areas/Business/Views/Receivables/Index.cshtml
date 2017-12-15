@@ -93,6 +93,9 @@
                     parameters.BalanceMoneyMin = 0.01;
                     return parameters;
                 },
+                formatSearch: function() {
+                    return "@Html.DisplayNameFor(d => d.AccountName)";
+                },
                 mobileResponsive:true,
                 columns: [
                     {

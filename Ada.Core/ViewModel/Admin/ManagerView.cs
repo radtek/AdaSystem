@@ -100,5 +100,15 @@ namespace Ada.Core.ViewModel.Admin
         /// </summary>
         [Display(Name = "机构组织集合")]
         public List<TreeView> OrganizationList { get; set; }
+        /// <summary>
+        /// 当前角色
+        /// </summary>
+        [Display(Name = "当前角色")]
+        public string RoleId { get; set; }
+        /// <summary>
+        /// 当前角色
+        /// </summary>
+        [Display(Name = "当前角色")]
+        public string RoleName { get; set; }
     }
 }

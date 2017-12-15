@@ -10,8 +10,9 @@ namespace Ada.Services.Admin
 {
     public interface IPermissionService : IDependency
     {
-        bool Authorize(Core.Domain.Admin.Action action, string managerId);
-        List<MenuView> AuthorizeMenu(string managerId);
+        bool Authorize(Core.Domain.Admin.Action action, string managerId, string roleId="");
+        List<MenuView> AuthorizeMenu(string managerId, string roleId="");
+        List<string> AuthorizeData(string managerId, string roleId);
     }
 
 }

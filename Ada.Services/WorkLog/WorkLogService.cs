@@ -38,6 +38,14 @@ namespace Ada.Services.WorkLog
         {
             var allList = _repository.LoadEntities(d => d.IsDelete == false);
             //条件过滤
+            if (viewModel.Managers != null && viewModel.Managers.Count > 0)
+            {
+                allList = allList.Where(d => viewModel.Managers.Contains(d.TransactorId));
+            }
+            if (viewModel.Managers != null && viewModel.Managers.Count > 0)
+            {
+                allList = allList.Where(d => viewModel.Managers.Contains(d.TransactorId));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
                 allList = allList.Where(d => d.Transactor.Contains(viewModel.search));

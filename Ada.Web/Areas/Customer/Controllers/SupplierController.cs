@@ -42,7 +42,8 @@ namespace Customer.Controllers
                     CommpanyType = d.CommpanyType,
                     CommpanyGrade = d.CommpanyGrade,
                     City = d.City,
-                    Address = d.Address
+                    Address = d.Address,
+                    Transactor = d.Transactor
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -50,6 +51,8 @@ namespace Customer.Controllers
         {
             CommpanyView viewModel = new CommpanyView();
             viewModel.IsBusiness = true;
+            viewModel.Transactor = CurrentManager.UserName;
+            viewModel.TransactorId = CurrentManager.Id;
             return View(viewModel);
         }
         [HttpPost]
@@ -83,7 +86,9 @@ namespace Customer.Controllers
                 CommpanyType = viewModel.CommpanyType,
                 CommpanyGrade = viewModel.CommpanyGrade,
                 Phone = viewModel.Phone,
-                IsBusiness = true
+                IsBusiness = true,
+                Transactor = viewModel.Transactor,
+                TransactorId = viewModel.TransactorId
             };
             _commpanyService.Add(commpany);
             TempData["Msg"] = "添加成功";
@@ -101,7 +106,9 @@ namespace Customer.Controllers
                 City = entity.City,
                 Address = entity.Address,
                 Phone = entity.Phone,
-                IsBusiness = entity.IsBusiness
+                IsBusiness = entity.IsBusiness,
+                Transactor = entity.Transactor,
+                TransactorId = entity.TransactorId
             };
             return View(item);
         }
@@ -134,6 +141,8 @@ namespace Customer.Controllers
             entity.CommpanyType = viewModel.CommpanyType;
             entity.CommpanyGrade = viewModel.CommpanyGrade;
             entity.Phone = viewModel.Phone;
+            entity.Transactor = viewModel.Transactor;
+            entity.TransactorId = viewModel.TransactorId;
             _commpanyService.Update(entity);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");

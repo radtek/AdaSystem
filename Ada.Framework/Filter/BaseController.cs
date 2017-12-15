@@ -63,19 +63,19 @@ namespace Ada.Framework.Filter
             CurrentManager.Image = manager.Image;//更新头像
             ViewBag.CurrentManager = CurrentManager;
             //用户登录日志
-            var loginLogs= _cacheManager.Get("LoginLog" + CurrentManager.Id, c =>
-            {
-                c.Monitor(_signals.When("LoginLog" + CurrentManager.Id + ".Changed"));
-                return manager.ManagerLoginLogs.OrderByDescending(d => d.Id).Take(5).ToList();
-            });
+            var loginLogs = _cacheManager.Get("LoginLog" + CurrentManager.Id, c =>
+             {
+                 c.Monitor(_signals.When("LoginLog" + CurrentManager.Id + ".Changed"));
+                 return manager.ManagerLoginLogs.OrderByDescending(d => d.Id).Take(5).ToList();
+             });
             ViewBag.CurrentManagerLoginLog = loginLogs;
             //ViewBag.CurrentManagerLoginLog = manager.ManagerLoginLogs.OrderByDescending(d=>d.Id).Take(5).ToList();
             //用户菜单
-            var menus=_cacheManager.Get("Menu" + CurrentManager.Id, c =>
-            {
-                c.Monitor(_signals.When("Menu" + CurrentManager.Id + ".Changed"));
-                return _permissionService.AuthorizeMenu(CurrentManager.Id);
-            });
+            var menus = _cacheManager.Get("Menu" + CurrentManager.Id + CurrentManager.RoleId, c =>
+                {
+                    c.Monitor(_signals.When("Menu" + CurrentManager.Id + CurrentManager.RoleId + ".Changed"));
+                    return _permissionService.AuthorizeMenu(CurrentManager.Id, CurrentManager.RoleId);
+                });
             ViewBag.Menus = menus;
             //ViewBag.Menus = _permissionService.AuthorizeMenu(CurrentManager.Id);
             //////后门，用于调试
@@ -92,7 +92,7 @@ namespace Ada.Framework.Filter
                     HttpMethod = Request.HttpMethod
                 };
             //校验权限
-            var hasPermission = _permissionService.Authorize(actionRecord, CurrentManager.Id);
+            var hasPermission = _permissionService.Authorize(actionRecord, CurrentManager.Id, CurrentManager.RoleId);
             //1.根据获取的URL地址与请求的方式查询权限表。
             if (!hasPermission)
             {
@@ -102,8 +102,8 @@ namespace Ada.Framework.Filter
                 filterContext.Result = Error(isAjax, new HttpResultView() { HttpCode = 401, Msg = "您无此功能的操作权限！请联系管理员处理" });
             }
 
-            
-            
+
+
         }
         private ActionResult Error(bool isAjax, HttpResultView httpResultView)
         {
@@ -118,16 +118,29 @@ namespace Ada.Framework.Filter
             };
             return result;
         }
-
+        /// <summary>
+        /// 清除菜单缓存
+        /// </summary>
+        /// <param name="key"></param>
         public void ClearCacheByManagers(string key)
         {
             var managers = _repository.LoadEntities(d => d.IsDelete == false).ToList();
             foreach (var manager in managers)
             {
-                _signals.Trigger(key + manager.Id + ".Changed");
+                foreach (var managerRole in manager.Roles)
+                {
+                    _signals.Trigger(key + manager.Id + managerRole.Id + ".Changed");
+                }
+
             }
-            
+
         }
-        
+        /// <summary>
+        /// 获取数据范围
+        /// </summary>
+        public List<string> PremissionData()
+        {
+            return _permissionService.AuthorizeData(CurrentManager.Id, CurrentManager.RoleId);
+        }
     }
 }

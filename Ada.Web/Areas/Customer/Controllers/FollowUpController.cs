@@ -26,6 +26,7 @@ namespace Customer.Controllers
         }
         public ActionResult GetList(FollowUpView viewModel)
         {
+            viewModel.Managers = PremissionData();
             var result = _followUpService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {

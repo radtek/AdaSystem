@@ -40,6 +40,7 @@ namespace Business.Controllers
         }
         public ActionResult GetList(BusinessPayeeView viewModel)
         {
+            viewModel.Managers = PremissionData();
             var result = _businessPayeeService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {

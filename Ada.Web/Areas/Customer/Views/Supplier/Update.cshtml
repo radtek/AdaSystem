@@ -1,4 +1,5 @@
-﻿@model Ada.Core.ViewModel.Customer.CommpanyView
+﻿@using System.Web.Optimization
+@model Ada.Core.ViewModel.Customer.CommpanyView
 @{
     ViewBag.Title = "编辑公司";
     List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "商家公司", Value = Url.Action("Index") } };
@@ -30,3 +31,10 @@
         </div>
     }
 </div>
+@section Styles {
+    @Styles.Render("~/plugins/select2Styles")
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/select2")
+    <script src="@Url.Content("~/Areas/Customer/Scripts/transactor.js")"></script>
+}

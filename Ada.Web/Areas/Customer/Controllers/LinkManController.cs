@@ -19,6 +19,7 @@ namespace Customer.Controllers
         }
         public ActionResult GetList(LinkManView viewModel)
         {
+            viewModel.Managers = PremissionData();
             var result = _linkManService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {

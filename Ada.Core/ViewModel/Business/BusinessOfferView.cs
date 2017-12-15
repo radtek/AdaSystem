@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Ada.Core.ViewModel.Business
 {
+    /// <summary>
+    /// 报价
+    /// </summary>
    public class BusinessOfferView:BaseView
     {
         /// <summary>

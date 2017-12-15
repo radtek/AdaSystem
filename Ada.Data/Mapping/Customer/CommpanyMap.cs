@@ -23,6 +23,8 @@ namespace Ada.Data.Mapping.Customer
             Property(s => s.Address).HasMaxLength(128);
             Property(s => s.Phone).HasMaxLength(64);
             Property(s => s.IsBusiness).IsRequired();
+            Property(s => s.Transactor).HasMaxLength(32);
+            Property(s => s.TransactorId).HasMaxLength(32);
 
             Property(s => s.AddedDate);
             Property(s => s.AddedBy).HasMaxLength(32);

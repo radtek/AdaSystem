@@ -140,6 +140,7 @@
     <Content Include="Views\Offer\Add.cshtml" />
     <Content Include="Views\Offer\OfferEdit.cshtml" />
     <Content Include="Views\Offer\Preview.cshtml" />
+    <Content Include="Views\WriteOff\Detail.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -32,6 +32,10 @@ namespace Ada.Services.Admin
         {
             var allList = _managerRepository.LoadEntities(d => d.IsDelete == false);
             //条件过滤
+            if (viewModel.Managers != null && viewModel.Managers.Count > 0)
+            {
+                allList = allList.Where(d => viewModel.Managers.Contains(d.Id));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
                 allList = allList.Where(d => d.UserName.Contains(viewModel.search));
@@ -133,7 +137,7 @@ namespace Ada.Services.Admin
             }
             _dbContext.SaveChanges();
         }
-        
+
         /// <summary>
         /// 删除
         /// </summary>

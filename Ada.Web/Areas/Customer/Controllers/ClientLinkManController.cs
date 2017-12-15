@@ -33,6 +33,7 @@ namespace Customer.Controllers
         }
         public ActionResult GetList(LinkManView viewModel)
         {
+            viewModel.Managers = PremissionData();
             var result = _linkManService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {
@@ -49,7 +50,8 @@ namespace Customer.Controllers
                     Sex = d.Sex,
                     Status = d.Status,
                     Address = d.Address,
-                    CommpanyName = d.Commpany.Name
+                    CommpanyName = d.Commpany.Name,
+                    Transactor = d.Transactor
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -57,6 +59,8 @@ namespace Customer.Controllers
         {
             LinkManView viewModel = new LinkManView();
             viewModel.IsBusiness = false;
+            viewModel.Transactor = CurrentManager.UserName;
+            viewModel.TransactorId = CurrentManager.Id;
             return View(viewModel);
         }
         [HttpPost]
@@ -83,6 +87,8 @@ namespace Customer.Controllers
             entity.WeiXin = viewModel.WeiXin;
             entity.Sex = viewModel.Sex;
             entity.Status = viewModel.Status;
+            entity.Transactor = viewModel.Transactor;
+            entity.TransactorId = viewModel.TransactorId;
             _linkManService.Add(entity);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
@@ -104,6 +110,8 @@ namespace Customer.Controllers
             entity.CommpanyId = item.CommpanyId;
             entity.CommpanyName = item.Commpany.Name;
             entity.IsBusiness = item.Commpany.IsBusiness;
+            entity.Transactor = item.Transactor;
+            entity.TransactorId = item.TransactorId;
             return View(entity);
         }
         [HttpPost]
@@ -129,6 +137,8 @@ namespace Customer.Controllers
             entity.Sex = viewModel.Sex;
             entity.Status = viewModel.Status;
             entity.CommpanyId = viewModel.CommpanyId;
+            entity.Transactor = viewModel.Transactor;
+            entity.TransactorId = viewModel.TransactorId;
             _linkManService.Update(entity);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");

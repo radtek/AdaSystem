@@ -25,7 +25,7 @@
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-    <script type="text/javascript">
+<script type="text/javascript">
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
@@ -63,11 +63,19 @@
                     parameters.Status = 0;
                     return parameters;
                 },
+                formatSearch: function() {
+                    return "@Html.DisplayNameFor(d => d.LinkManName)";
+                },
                 mobileResponsive:true,
                 columns: [
                     {
                         field: 'BillNum',
                         title: '@Html.DisplayNameFor(d=>d.BillNum)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'LinkManName',
+                        title: '@Html.DisplayNameFor(d=>d.LinkManName)',
                         align: "center", valign: "middle"
                     },
                     {
@@ -80,6 +88,7 @@
                         title: '@Html.DisplayNameFor(d=>d.PayMoney)',
                         align: "center", valign: "middle"
                     },
+                    
                     {
                         field: 'BillDate',
                         title: '@Html.DisplayNameFor(d=>d.BillDate)',
@@ -112,6 +121,6 @@
 
 
 
-    </script>
+</script>
 }
 

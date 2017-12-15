@@ -25,6 +25,7 @@ namespace WorkLog.Controllers
         }
         public ActionResult GetList(WorkLogView viewModel)
         {
+            viewModel.Managers = PremissionData();
             var result = _workLogService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {

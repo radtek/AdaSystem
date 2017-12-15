@@ -79,7 +79,7 @@
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-    <script type="text/javascript">
+<script type="text/javascript">
         $(document).ready(function () {
             //1.初始化Table
             var oTable = new TableInit();
@@ -120,7 +120,10 @@
                     cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
                     detailView: true,                   //设置为 true 可以显示详细页面模式。
                     detailFormatter: detailFormatter,
-                    mobileResponsive:true,
+                    mobileResponsive: true,
+                    formatSearch: function() {
+                        return "@Html.DisplayNameFor(d => d.Message)";
+                    },
                     columns: [
                         {
                         checkbox: true
@@ -164,7 +167,7 @@
         var ButtonInit = function () {
             var oInit = new Object();
             oInit.Init = function () {
-               
+
 
                 $("#btn_delete").click(function () {
                     var arrselections = $("#table").bootstrapTable('getSelections');
@@ -233,5 +236,5 @@
             return "<div class='table-detail-name'>@Html.DisplayNameFor(d=>d.Exception)：</div><div class='table-detail-value'>" + row.Exception +"</div>";
         }
 
-    </script>
+</script>
 }

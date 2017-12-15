@@ -105,6 +105,7 @@ namespace Ada.Core.ViewModel.Purchase
         /// 采购状态
         /// </summary>
         [Display(Name = "采购状态")]
+        [Required]
         public short? Status { get; set; }
         /// <summary>
         /// 经办媒介

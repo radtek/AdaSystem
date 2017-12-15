@@ -1,0 +1,111 @@
+﻿
+@model Ada.Core.Domain.Business.BusinessWriteOff
+
+<div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">核销明细</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <caption class="text-center">
+                                <h3 class="text-center">款项明细</h3>
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th>
+                                        客户名称
+                                    </th>
+                                    <th>
+                                        领款金额
+                                    </th>
+                                    <th>
+                                        领款日期
+                                    </th>
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.BusinessPayees)
+                                {
+                                    <tr>
+                                        <td>@item.LinkManName</td>
+                                        <td>@item.Money</td>
+                                        <td>@item.ClaimDate</td>
+                                        
+
+                                    </tr>
+                                }
+                                <tr>
+                                    <td>合计</td>
+                                    <td>@Model.BusinessPayees.Sum(d=>d.Money)</td>
+                                    <td></td>
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <caption class="text-center">
+                                <h3 class="text-center">订单明细</h3>
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th>
+                                        客户名称
+                                    </th>
+                                    <th>
+                                        订单编号
+                                    </th>
+                                    <th>
+                                        订单日期
+                                    </th>
+                                    <th>
+                                        销售金额
+                                    </th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.BusinessOrders)
+                                {
+                                    <tr>
+                                        <td>@item.LinkManName</td>
+                                        <td>@item.OrderNum</td>
+                                        <td>@item.OrderDate.Value.ToString("yyyy-MM-dd")</td>
+                                        <td>@item.TotalMoney</td>
+                                        
+                                    </tr>
+                                }
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>合计</td>
+                                    <td>@Model.BusinessOrders.Sum(d => d.TotalMoney)</td>
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

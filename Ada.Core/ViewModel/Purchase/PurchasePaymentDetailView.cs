@@ -7,8 +7,12 @@ using System.Threading.Tasks;
 
 namespace Ada.Core.ViewModel.Purchase
 {
+    /// <summary>
+    /// 请款单
+    /// </summary>
   public  class PurchasePaymentDetailView : BaseView
     {
+        
         /// <summary>
         /// 供应商
         /// </summary>

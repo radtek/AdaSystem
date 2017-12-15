@@ -37,5 +37,9 @@ namespace Ada.Core.ViewModel
         /// 操作
         /// </summary>
         public string Id { get; set; }
+        /// <summary>
+        /// 经办人
+        /// </summary>
+        public List<string> Managers { get; set; }
     }
 }

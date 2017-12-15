@@ -43,6 +43,13 @@ namespace Ada.Web.Controllers
                 ModelState.AddModelError("message", "用户名或密码有误");
                 return View();
             }
+            if (manager.Roles.Count==0)
+            {
+                ModelState.AddModelError("message", "未分配角色，请联系管理员");
+                return View();
+            }
+            //根据角色级别排序，获取最高的那个
+            var role = manager.Roles.OrderBy(d => d.RoleGrade).FirstOrDefault();
             //记录日志
             manager.ManagerLoginLogs.Add(new ManagerLoginLog()
             {
@@ -59,6 +66,9 @@ namespace Ada.Web.Controllers
                 RealName = manager.RealName,
                 Image = manager.Image,
                 UserName = manager.UserName,
+                RoleId = role.Id,
+                RoleName = role.RoleName,
+                RoleList = manager.Roles.Select(d=>new RoleView(){Id = d.Id,RoleName = d.RoleName}),
                 Roles = manager.Roles.Count > 0 ? string.Join(",", manager.Roles.Select(d => d.RoleName)) : "",
                 Organizations = manager.Organizations.Count > 0 ? String.Join("-", manager.Organizations.Select(d => d.OrganizationName)) : ""
             };

@@ -64,10 +64,9 @@
                     //detailView: true,                   //设置为 true 可以显示详细页面模式。
                     //detailFormatter: detailFormatter,
                     mobileResponsive: true,
-                    //queryParams: function(parameters) {
-                    //    parameters.IsBusiness = false;
-                    //    return parameters;
-                    //},
+                    formatSearch: function() {
+                        return "@Html.DisplayNameFor(d => d.Transactor)";
+                    },
                     onLoadSuccess: initTooltip,
                     columns: [
 

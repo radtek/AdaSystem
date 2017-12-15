@@ -43,6 +43,7 @@ namespace Admin.Controllers
         }
         public ActionResult GetList(ManagerView viewModel)
         {
+            viewModel.Managers = PremissionData();
             var result = _managerService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {
@@ -299,7 +300,23 @@ namespace Admin.Controllers
             }
 
         }
-
+        /// <summary>
+        /// 切换角色
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult ChangeRole(string id)
+        {
+            var role= CurrentManager.RoleList.FirstOrDefault(d => d.Id == id);
+            CurrentManager.RoleName = role.RoleName;
+            CurrentManager.RoleId = role.Id;
+            if (Session["LoginManager"]==null)
+            {
+                return RedirectToAction("Index", "Login", new {area = ""});
+            }
+            Session["LoginManager"] = SerializeHelper.SerializeToString(CurrentManager);
+            return RedirectToAction("Index", "Home", new { area = "Dashboards" });
+        }
         private string SetActionIds(IEnumerable<ManagerAction> list)
         {
             List<string> temp = new List<string>();

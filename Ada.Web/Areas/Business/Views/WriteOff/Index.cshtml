@@ -65,6 +65,9 @@
                 cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
                 //detailView: true,                   //设置为 true 可以显示详细页面模式。
                 //detailFormatter: detailFormatter,
+                formatSearch: function() {
+                    return "@Html.DisplayNameFor(d => d.LinkManName)";
+                },
                 mobileResponsive:true,
                 columns: [
                     {
@@ -96,7 +99,8 @@
                         title: '操作',
                         align: "center", valign: "middle",
                         formatter: function (value) {
-                            return "<a class='btn btn-danger btn-sm' href='javascript:;' onclick=\"cancle('" + value +"');\");'><i class='fa fa-reply'></i> 撤销</a>";
+                            return "<a class='btn btn-white btn-sm' href='javascript:;' onclick=\"initDetail('" + value + "');\");'><i class='fa fa-search'></i> 明细</a> " +
+                            "<a class='btn btn-danger btn-sm' href='javascript:;' onclick=\"cancle('" + value + "');\");'><i class='fa fa-reply'></i> 撤销</a>";
                         }
 
                     }
@@ -106,7 +110,13 @@
 
             return obj;
         };
+        function initDetail(id) {
+            $("#modalView").load("@Url.Action("Detail")?id="+id,
+                function () {
+                    $('#modalView .modal').modal('show');
+                });
 
+        }
         function cancle(id) {
             swal({
                 title: "您确定吗?",

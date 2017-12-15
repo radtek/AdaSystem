@@ -31,6 +31,7 @@ namespace Purchase.Controllers
         }
         public ActionResult GetList(PurchaseOrderDetailView viewModel)
         {
+            viewModel.Managers = PremissionData();
             var result = _purchaseOrderDetailService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {
@@ -88,8 +89,11 @@ namespace Purchase.Controllers
             item.DiscountMoney = entity.DiscountMoney;
             item.Transactor = entity.Transactor;
             item.TransactorId = entity.TransactorId;
-            item.Status = entity.Status;
-            item.BargainMoney = entity.BargainMoney;
+            item.BusinessBy = entity.PurchaseOrder.BusinessBy;
+            item.PrePublishDate = GetBusinessOrderDetail(entity.BusinessOrderDetailId).PrePublishDate;
+            item.MediaTitle = GetBusinessOrderDetail(entity.BusinessOrderDetailId).MediaTitle;
+            //item.Status = entity.Status;
+            //item.BargainMoney = entity.BargainMoney;
             //item.OrderDate = entity.PurchaseOrder.OrderDate;
             return View(item);
         }
@@ -120,7 +124,7 @@ namespace Purchase.Controllers
             entity.PurchaseMoney = viewModel.PurchaseMoney;
             entity.Money = viewModel.Money;
             entity.DiscountMoney = viewModel.DiscountMoney;
-            entity.BargainMoney = viewModel.BargainMoney;
+            //entity.BargainMoney = viewModel.BargainMoney;
             entity.Status = viewModel.Status;
             entity.Remark = viewModel.Remark;
             

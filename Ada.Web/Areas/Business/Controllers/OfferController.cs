@@ -17,6 +17,9 @@ using Newtonsoft.Json;
 
 namespace Business.Controllers
 {
+    /// <summary>
+    /// 报价
+    /// </summary>
     public class OfferController : BaseController
     {
         private readonly IBusinessOfferService _businessOfferService;
@@ -32,6 +35,7 @@ namespace Business.Controllers
         }
         public ActionResult GetList(BusinessOfferView viewModel)
         {
+            viewModel.Managers = PremissionData();
             var result = _businessOfferService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {

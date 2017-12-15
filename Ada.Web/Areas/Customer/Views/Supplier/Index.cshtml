@@ -76,6 +76,9 @@
                     parameters.IsBusiness = true;
                     return parameters;
                 },
+                formatSearch: function() {
+                    return "@Html.DisplayNameFor(d => d.Name)";
+                },
                 columns: [
                     {
                         field: 'Name',
@@ -100,6 +103,11 @@
                     {
                         field: 'Address',
                         title: '@Html.DisplayNameFor(d=>d.Address)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'Transactor',
+                        title: '@Html.DisplayNameFor(d=>d.Transactor)',
                         align: "center", valign: "middle"
                     },
                     {

@@ -38,6 +38,7 @@ namespace Purchase.Controllers
         }
         public ActionResult GetList(PurchasePaymentView viewModel)
         {
+            viewModel.Managers = PremissionData();
             var result = _purchasePaymentService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {

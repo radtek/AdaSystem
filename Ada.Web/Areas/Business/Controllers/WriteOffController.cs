@@ -12,6 +12,9 @@ using Ada.Services.Business;
 
 namespace Business.Controllers
 {
+    /// <summary>
+    /// 核销
+    /// </summary>
     public class WriteOffController : BaseController
     {
         private readonly IBusinessWriteOffService _businessWriteOffService;
@@ -34,6 +37,7 @@ namespace Business.Controllers
         }
         public ActionResult GetList(BusinessWriteOffView viewModel)
         {
+            viewModel.Managers = PremissionData();
             var result = _businessWriteOffService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {
@@ -47,6 +51,11 @@ namespace Business.Controllers
                     WriteOffDate = d.WriteOffDate
                 })
             }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult Detail(string id)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            return PartialView("Detail",entity);
         }
         public ActionResult Add()
         {

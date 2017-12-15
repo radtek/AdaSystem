@@ -28,10 +28,8 @@ namespace Ada.Services.Admin
         /// <summary>
         /// 请求权限
         /// </summary>
-        /// <param name="action"></param>
-        /// <param name="managerId"></param>
         /// <returns></returns>
-        public virtual bool Authorize(Core.Domain.Admin.Action action, string managerId)
+        public virtual bool Authorize(Core.Domain.Admin.Action action, string managerId, string roleId = "")
         {
             //请求权限
             var currentUrlAction = _actionRepository.LoadEntities(a => a.Area.Equals(action.Area, StringComparison.CurrentCultureIgnoreCase) &&
@@ -39,13 +37,13 @@ namespace Ada.Services.Admin
                                                                        a.MethodName.Equals(action.MethodName, StringComparison.CurrentCultureIgnoreCase) &&
                                                                        a.HttpMethod.Equals(action.HttpMethod, StringComparison.CurrentCultureIgnoreCase) &&
                                                                        a.IsDelete == false).FirstOrDefault();
-            if (currentUrlAction==null)
+            if (currentUrlAction == null)
             {
                 return false;
             }
             //2.校验用户特殊权限
             var managerActions = from a in _managerActionRepository.LoadEntities(u => u.IsDelete == false)
-                where a.ActionInfoId == currentUrlAction.Id && a.ManagerId == managerId
+                                 where a.ActionInfoId == currentUrlAction.Id && a.ManagerId == managerId
                                  select a;
             var tempUserAction = managerActions.FirstOrDefault();
             if (tempUserAction != null)
@@ -58,49 +56,68 @@ namespace Ada.Services.Admin
             //TODO 3.校验（用户/部门）角色权限  这里只做了用户
             var manager = _managerRepository.LoadEntities(d => d.Id == managerId).FirstOrDefault();
             //获取当前用户所有角色对应的权限
-            var tempRoleActions = from r in manager.Roles
-                from a in r.Actions
-                where a.Id == currentUrlAction.Id
-                select a;
-            if (!tempRoleActions.Any())
+            IEnumerable<Core.Domain.Admin.Action> tempRoleActions;
+            if (string.IsNullOrWhiteSpace(roleId))
             {
-                return false;
+                tempRoleActions = from r in manager.Roles
+                                  from a in r.Actions
+                                  where a.Id == currentUrlAction.Id
+                                  select a;
             }
-            return true;
+            else
+            {
+                var role = manager.Roles.FirstOrDefault(d => d.Id == roleId);
+                tempRoleActions = from a in role.Actions
+                                  where a.Id == currentUrlAction.Id
+                                  select a;
+            }
+
+            return tempRoleActions.Any();
         }
         /// <summary>
-        /// 菜单权限
+        /// 菜单权限（当前用户）
         /// </summary>
-        /// <param name="managerId"></param>
         /// <returns></returns>
-        public List<MenuView> AuthorizeMenu(string managerId)
+        public List<MenuView> AuthorizeMenu(string managerId,string roleId="")
         {
             var allMenus = _menuRepository.LoadEntities(d => d.IsDelete == false && d.IsVisable != true).ToList();
-            var manager= _managerRepository.LoadEntities(d => d.Id == managerId).FirstOrDefault();
+            var manager = _managerRepository.LoadEntities(d => d.Id == managerId).FirstOrDefault();
             //拿到了角色对应的权限的id
-            var allRoleActionIds = (from r in manager.Roles
-                from a in r.Actions
-                where a.IsDelete == false && r.IsDelete == false
-                select a.Id).ToList();
+            List<string> allRoleActionIds;
+            if (string.IsNullOrWhiteSpace(roleId))
+            {
+                allRoleActionIds = (from r in manager.Roles
+                    from a in r.Actions
+                    where a.IsDelete == false && r.IsDelete == false
+                    select a.Id).ToList();
+            }
+            else
+            {
+                var role = manager.Roles.FirstOrDefault(d => d.Id == roleId);
+                allRoleActionIds = (from a in role.Actions
+                    where a.IsDelete == false && role.IsDelete == false
+                    select a.Id).ToList();
+            }
+             
             //拿到了当前用户所有的允许的特殊权限
             var allUserActionIsPass = (from r in manager.ManagerActions
-                where r.IsPass
-                select r.ActionInfoId).ToList();
+                                       where r.IsPass
+                                       select r.ActionInfoId).ToList();
             //合并起来的所有的都被允许的。
             allRoleActionIds.AddRange(allUserActionIsPass);
             //去掉不允许的
             var allNotPassUserActions = (from r in manager.ManagerActions
-                where r.IsPass == false
-                select r.ActionInfoId).ToList();
+                                         where r.IsPass == false
+                                         select r.ActionInfoId).ToList();
             var result = (from a in allRoleActionIds
-                where !allNotPassUserActions.Contains(a)
-                select a).ToList();
+                          where !allNotPassUserActions.Contains(a)
+                          select a).ToList();
             //拿到当前用户所有的权限Id
             result = result.Distinct().ToList();
             //获取权限对应的菜单数据
             var allMenuData = (from m in allMenus
-                where result.Contains(m.ActionId)
-                select m).ToList();
+                               where result.Contains(m.ActionId)
+                               select m).ToList();
             List<Menu> list = new List<Menu>();
             foreach (var menuInfo in allMenuData)
             {
@@ -129,6 +146,37 @@ namespace Ada.Services.Admin
                 Taxis = d.Taxis
             }).OrderBy(d => d.Taxis).ToList();
         }
+
+        public List<string> AuthorizeData(string managerId, string roleId)
+        {
+            var manager = _managerRepository.LoadEntities(d => d.Id == managerId).FirstOrDefault();
+            var allManager = _managerRepository.LoadEntities(d => d.IsDelete == false);
+            //获取当前角色的数据范围  9:全部 0：个人 1：部门
+            var role = manager.Roles.FirstOrDefault(d => d.Id == roleId);
+            List<string> managerIds=new List<string>();
+            if (role.DataRange==null)
+            {
+                managerIds.Add(managerId);
+            }
+            if (role.DataRange==0)
+            {
+                managerIds.Add(managerId);
+            }
+            if (role.DataRange==1)
+            {
+                foreach (var managerOrganization in manager.Organizations)
+                {
+                    var managerOrgId = managerOrganization.Id;
+                    var managers = (from m in allManager
+                        from o in m.Organizations
+                        where o.TreePath.Contains(managerOrgId)
+                        select m).Select(d=>d.Id).ToList();
+                    managerIds.AddRange(managers);
+                }
+            }
+            return managerIds;
+        }
+
 
         private Url GetUrl(string actionId)
         {

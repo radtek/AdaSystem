@@ -180,6 +180,14 @@
     <Compile Include="Migrations\201712140111272_UpdateExpense.Designer.cs">
       <DependentUpon>201712140111272_UpdateExpense.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712150343026_RoleUpdate20171215.cs" />
+    <Compile Include="Migrations\201712150343026_RoleUpdate20171215.Designer.cs">
+      <DependentUpon>201712150343026_RoleUpdate20171215.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712150647475_CustomerUpdate20171215.cs" />
+    <Compile Include="Migrations\201712150647475_CustomerUpdate20171215.Designer.cs">
+      <DependentUpon>201712150647475_CustomerUpdate20171215.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -259,6 +267,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712140111272_UpdateExpense.resx">
       <DependentUpon>201712140111272_UpdateExpense.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712150343026_RoleUpdate20171215.resx">
+      <DependentUpon>201712150343026_RoleUpdate20171215.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712150647475_CustomerUpdate20171215.resx">
+      <DependentUpon>201712150647475_CustomerUpdate20171215.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

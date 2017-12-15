@@ -80,6 +80,9 @@
                     parameters.AuditStatus = $("#AuditStatus").val();
                     return parameters;
                 },
+                formatSearch: function() {
+                    return "@Html.DisplayNameFor(d => d.Transactor)";
+                },
                 mobileResponsive:true,
                 columns: [
                     {

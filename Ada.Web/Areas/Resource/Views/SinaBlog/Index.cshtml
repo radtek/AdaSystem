@@ -153,6 +153,9 @@
                 cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
                 //detailView: true,                   //设置为 true 可以显示详细页面模式。
                 //detailFormatter: detailFormatter,
+                    formatSearch: function() {
+                        return "@Html.DisplayNameFor(d => d.MediaName)";
+                    },
                 mobileResponsive:true,
                 onLoadSuccess: initTooltip,
                 columns: [

@@ -17,20 +17,26 @@
           <a data-toggle="dropdown" class="dropdown-toggle" href="#">
             <span class="clear">
               <span class="block m-t-xs">
-                <strong class="font-bold">@manager.UserName</strong>
+                <strong class="font-bold">@manager.UserName</strong> [@manager.Organizations]
               </span>
 
-              <span class="text-muted text-xs block">@manager.Roles <b class="caret"></b></span>
+              <span class="text-muted text-xs block">@manager.RoleName <b class="caret"></b></span>
             </span>
           </a>
           <ul class="dropdown-menu animated fadeInRight m-t-xs">
-            @*<li><a href="@Url.Action("Profile", "AppViews")">Profile</a></li>
-              <li><a href="@Url.Action("Contacts", "AppViews")">Contacts</a></li>*@
+              @*<li><a href="@Url.Action("Profile", "AppViews")">Profile</a></li>
+        <li><a href="@Url.Action("Contacts", "AppViews")">Contacts</a></li>*@
               @*<li><a href="#modal-changepwd" data-toggle="modal">修改密码</a></li>*@
-              <li><a href="javascript:;" id="changepwd">修改密码</a></li>
-            <li><a href="javascript:;" id="changeimage">修改头像</a></li>
-            <li class="divider"></li>
-            <li><a href="@Url.Action("Quit", "Login",new{area=""})">退出</a></li>
+              <li class="divider"></li>
+              @foreach (var item in manager.RoleList)
+              {
+                <li><a href="@Url.Action("ChangeRole","Manager",new{area="Admin",id=item.Id})"><i class="fa fa-caret-square-o-right"></i> @item.RoleName</a></li>
+              }
+              <li class="divider"></li>
+              <li><a href="javascript:;" id="changepwd"><i class="fa fa-pencil-square-o"></i> 修改密码</a></li>
+              <li><a href="javascript:;" id="changeimage"><i class="fa fa-picture-o"></i> 修改头像</a></li>
+              <li class="divider"></li>
+              <li><a href="@Url.Action("Quit", "Login",new{area=""})"><i class="fa fa-sign-out"></i> 退出</a></li>
           </ul>
         </div>
         <div class="logo-element">
@@ -92,9 +98,9 @@
 
         }
       }
-      <li class="special_link @Html.IsSelected(controller: "Default")">
+      @*<li class="special_link @Html.IsSelected(controller: "Default")">
         <a href="@Url.Action("Index", "Default",new{area=""})" target="_blank"><i class="fa fa-star"></i> <span class="nav-label">江西微广</span></a>
-      </li>
+      </li>*@
 
     </ul>
   </div>

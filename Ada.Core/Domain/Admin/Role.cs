@@ -20,7 +20,16 @@ namespace Ada.Core.Domain.Admin
         /// </summary>
         [Display(Name = "角色名称")]
         public string RoleName { get; set; }
-
+        /// <summary>
+        /// 角色级别
+        /// </summary>
+        [Display(Name = "角色级别")]
+        public short? RoleGrade { get; set; }
+        /// <summary>
+        /// 数据范围
+        /// </summary>
+        [Display(Name = "数据范围")]
+        public short? DataRange { get; set; }
         /// <summary>
         /// 角色类型
         /// </summary>

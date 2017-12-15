@@ -30,7 +30,14 @@ namespace Admin.Controllers
             var actions = _actionRepository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis).ToList();
             ViewBag.Actions = GetTree(null, actions);
             var roles = _roleRepository.LoadEntities(d => d.IsDelete == false).ToList();
-            ViewBag.Roles = roles.Select(d => new RoleView() { Id = d.Id, RoleName = d.RoleName, RoleType = d.RoleType });
+            ViewBag.Roles = roles.Select(d => new RoleView()
+            {
+                Id = d.Id,
+                RoleName = d.RoleName,
+                RoleType = d.RoleType,
+                RoleGrade = d.RoleGrade,
+                DataRange = d.DataRange
+            }).OrderBy(d=>d.RoleGrade);
             return View();
         }
         private List<TreeView> GetTree(string parentId, List<Action> actions)
@@ -57,7 +64,9 @@ namespace Admin.Controllers
                 Id = role.Id,
                 RoleName = role.RoleName,
                 RoleType = role.RoleType,
-                ActionIds = string.Join(",",role.Actions.Select(d=>d.Id))
+                RoleGrade = role.RoleGrade,
+                DataRange = role.DataRange,
+                ActionIds = string.Join(",", role.Actions.Select(d => d.Id))
 
             }, JsonRequestBehavior.AllowGet);
         }
@@ -70,6 +79,9 @@ namespace Admin.Controllers
                 var role = _roleRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
                 role.RoleName = viewModel.RoleName;
                 role.RoleType = viewModel.RoleType;
+                role.DataRange = viewModel.DataRange;
+                role.RoleGrade = viewModel.RoleGrade;
+
                 role.ModifiedBy = CurrentManager.UserName;
                 role.ModifiedById = CurrentManager.Id;
                 role.ModifiedDate = DateTime.Now;
@@ -82,6 +94,8 @@ namespace Admin.Controllers
                 {
                     RoleName = viewModel.RoleName,
                     RoleType = viewModel.RoleType,
+                    DataRange = viewModel.DataRange,
+                    RoleGrade = viewModel.RoleGrade,
                     Id = IdBuilder.CreateIdNum(),
                     AddedBy = CurrentManager.UserName,
                     AddedById = CurrentManager.Id,

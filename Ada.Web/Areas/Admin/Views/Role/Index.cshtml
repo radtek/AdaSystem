@@ -6,6 +6,12 @@
     ViewBag.Title = "角色管理";
     List<TreeView> actions = ViewBag.Actions;
     IEnumerable<RoleView> roles = ViewBag.Roles;
+    IEnumerable<SelectListItem> dataRange=new List<SelectListItem>()
+    {
+        new SelectListItem(){Text = "所有数据",Value = "9"},
+        new SelectListItem(){Text = "个人数据",Value = "0"},
+        new SelectListItem(){Text = "所在部门",Value = "1"}
+    };
 }
 @Html.Partial("Bread")
 
@@ -37,6 +43,8 @@
                         <thead>
                             <tr>
                                 <th data-align="center" data-valign="middle">@Html.DisplayNameFor(d => d.RoleName)</th>
+                                <th data-align="center" data-valign="middle">@Html.DisplayNameFor(d => d.RoleGrade)</th>
+                                <th data-align="center" data-valign="middle">@Html.DisplayNameFor(d => d.DataRange)</th>
                                 <th data-align="center" data-valign="middle">
                                     @Html.DisplayNameFor(d => d.Id)
                                 </th>
@@ -45,14 +53,28 @@
                         <tbody>
                             @foreach (var item in roles)
                             {
-                                <tr>
-                                    <td>@item.RoleName</td>
-                                    <td>
-                                        <button class='btn btn-success btn-sm' type="button" onclick="update('@item.Id','@Url.Action("GetEntity")');"><i class='fa fa-pencil'></i>  编辑</button>
-                                        <button class='btn btn-danger btn-sm' type="button" onclick="del('@item.Id','@item.RoleName','@Url.Action("Delete")');"><i class='fa fa-trash-o'></i>  删除</button>
-                                    </td>
+                            <tr>
+                                <td>@item.RoleName</td>
+                                <td>@item.RoleGrade</td>
+                                
+                                    @if (item.DataRange == 9)
+                                    {
+                                        <td>所有数据</td>
+                                    }else if (item.DataRange == 1)
+                                    {
+                                        <td>所在部门</td>
+                                    }
+                                    else
+                                    {
+                                        <td>个人数据</td>
+                                    }
 
-                                </tr>
+                                <td>
+                                    <button class='btn btn-success btn-sm' type="button" onclick="update('@item.Id','@Url.Action("GetEntity")');"><i class='fa fa-pencil'></i>  编辑</button>
+                                    <button class='btn btn-danger btn-sm' type="button" onclick="del('@item.Id','@item.RoleName','@Url.Action("Delete")');"><i class='fa fa-trash-o'></i>  删除</button>
+                                </td>
+
+                            </tr>
                             }
 
                         </tbody>
@@ -92,6 +114,19 @@
                                             @Html.TextBoxFor(d => d.RoleName, new { @class = "form-control", required = "" })
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.RoleGrade, Html.DisplayNameFor(d => d.RoleGrade).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.RoleGrade, new { @class = "form-control", required = "" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.DataRange, Html.DisplayNameFor(d => d.DataRange).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.DropDownListFor(d => d.DataRange, dataRange, new { @class = "form-control", required = "" })
+                                        </div>
+                                    </div>
+
                                     @Html.HiddenFor(d => d.Id)
                                     @Html.HiddenFor(d => d.ActionIds)
                                 </div>
@@ -130,32 +165,32 @@
 
 
 @section Styles {
-    @Styles.Render("~/plugins/bootstrapTableStyle")
+                                        @Styles.Render("~/plugins/bootstrapTableStyle")
     @Styles.Render("~/plugins/jsTreeStyles")
 }
 
-@section Scripts {
-    @Scripts.Render("~/plugins/bootstrapTableScript")
+                                    @section Scripts {
+                                        @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/jsTree")
     @Scripts.Render("~/plugins/formFill")
     <script type="text/javascript">
         $(document).ready(function () {
-            var tree = $('#jstree');
-            tree.jstree({
-                'core': {
-                    'check_callback': true
-                },
+                                            var tree = $('#jstree');
+                                            tree.jstree({
+                                                'core': {
+                                                    'check_callback': true
+                                                },
                 'plugins': ['types', 'checkbox'],
                 'types': {
-                    'default': {
-                        'icon': 'fa fa-folder'
-                    }
-                },
+                                            'default': {
+                                                'icon': 'fa fa-folder'
+                                            }
+                                        },
                 "checkbox": {
-                    "keep_selected_style": false,
+                                            "keep_selected_style": false,
                     "three_state": false
                 }
-            });
+                                    });
         });
         //新增
         function add() {

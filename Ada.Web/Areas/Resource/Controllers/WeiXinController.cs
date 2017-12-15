@@ -39,6 +39,7 @@ namespace Resource.Controllers
         public ActionResult GetList(MediaView viewModel)
         {
             viewModel.MediaTypeIndex = "weixin";
+            viewModel.Managers = PremissionData();
             var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {

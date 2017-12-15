@@ -46,6 +46,16 @@ namespace Ada.Core.Domain.Customer
         [Display(Name = "联系电话")]
         public string Phone { get; set; }
         /// <summary>
+        /// 经办人员
+        /// </summary>
+        [Display(Name = "经办人员")]
+        public string Transactor { get; set; }
+        /// <summary>
+        /// 经办人员
+        /// </summary>
+        [Display(Name = "经办人员")]
+        public string TransactorId { get; set; }
+        /// <summary>
         /// QQ
         /// </summary>
         [Display(Name = "QQ")]

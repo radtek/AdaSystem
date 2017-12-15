@@ -21,6 +21,16 @@ namespace Ada.Core.ViewModel.Admin
         [Display(Name = "角色类型")]
         public string RoleType { get; set; }
         /// <summary>
+        /// 角色级别
+        /// </summary>
+        [Display(Name = "角色级别")]
+        public short? RoleGrade { get; set; }
+        /// <summary>
+        /// 数据范围
+        /// </summary>
+        [Display(Name = "数据范围")]
+        public short? DataRange { get; set; }
+        /// <summary>
         /// 操作
         /// </summary>
         [Display(Name = "操作")]

@@ -54,6 +54,7 @@ namespace Business.Controllers
         
         public ActionResult GetList(BusinessOrderView viewModel)
         {
+            viewModel.Managers = PremissionData();
             var result = _businessOrderService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {
@@ -169,7 +170,7 @@ namespace Business.Controllers
                 entity.BusinessOrderDetails.Add(businessOrderDetail);
             }
             entity.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);
-            entity.TotalMoney = orderDetails.Sum(d => d.Money);
+            entity.TotalMoney = orderDetails.Sum(d => d.Money)-viewModel.DiscountMoney;
             entity.TotalSellMoney = orderDetails.Sum(d => d.SellMoney);
             entity.VerificationMoney = entity.TotalMoney;
             entity.ConfirmVerificationMoney = 0;
@@ -297,7 +298,7 @@ namespace Business.Controllers
                 }
             }
             entity.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);
-            entity.TotalMoney = orderDetails.Sum(d => d.Money);
+            entity.TotalMoney = orderDetails.Sum(d => d.Money)-viewModel.DiscountMoney;
             entity.TotalSellMoney = orderDetails.Sum(d => d.SellMoney);
             entity.VerificationMoney = entity.TotalMoney;
             entity.ConfirmVerificationMoney = 0;
