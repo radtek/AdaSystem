@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2003
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ada.Core", "Ada.Core\Ada.Core.csproj", "{1E0B290A-3337-43C9-9CE9-BFB8CE741DBA}"
 EndProject
@@ -34,6 +34,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Boss", "Ada.Web\Areas\Boss\Boss.csproj", "{54236A24-E047-42DD-A841-87D6F0BCF0C0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkLog", "Ada.Web\Areas\WorkLog\WorkLog.csproj", "{5662C2ED-9864-4768-882F-3B1A7F1F15EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuartzTask", "Ada.Web\Areas\QuartzTask\QuartzTask.csproj", "{F1BFD8D3-1DAD-42C7-8D9A-3172EAC6CE7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,6 +103,10 @@ Global
 		{5662C2ED-9864-4768-882F-3B1A7F1F15EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5662C2ED-9864-4768-882F-3B1A7F1F15EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5662C2ED-9864-4768-882F-3B1A7F1F15EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1BFD8D3-1DAD-42C7-8D9A-3172EAC6CE7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1BFD8D3-1DAD-42C7-8D9A-3172EAC6CE7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1BFD8D3-1DAD-42C7-8D9A-3172EAC6CE7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1BFD8D3-1DAD-42C7-8D9A-3172EAC6CE7E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,6 +121,7 @@ Global
 		{0E623520-E2BD-412E-AA22-F8121CB70CB5} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
 		{54236A24-E047-42DD-A841-87D6F0BCF0C0} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
 		{5662C2ED-9864-4768-882F-3B1A7F1F15EF} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
+		{F1BFD8D3-1DAD-42C7-8D9A-3172EAC6CE7E} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AB64B513-252F-4F91-A011-A6FD97731889}

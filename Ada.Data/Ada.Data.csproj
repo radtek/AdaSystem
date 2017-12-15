@@ -91,6 +91,7 @@
     <Compile Include="Mapping\Purchase\PurchaseOrderMap.cs" />
     <Compile Include="Mapping\Purchase\PurchaseReturenOrderDetailMap.cs" />
     <Compile Include="Mapping\Purchase\PurchaseReturnOrderMap.cs" />
+    <Compile Include="Mapping\QuartzTask\JobMap.cs" />
     <Compile Include="Mapping\Resource\MediaPriceMap.cs" />
     <Compile Include="Mapping\Resource\MediaMap.cs" />
     <Compile Include="Mapping\Resource\MediaTagMap.cs" />
@@ -188,6 +189,10 @@
     <Compile Include="Migrations\201712150647475_CustomerUpdate20171215.Designer.cs">
       <DependentUpon>201712150647475_CustomerUpdate20171215.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712151550469_Quartz.cs" />
+    <Compile Include="Migrations\201712151550469_Quartz.Designer.cs">
+      <DependentUpon>201712151550469_Quartz.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -273,6 +278,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712150647475_CustomerUpdate20171215.resx">
       <DependentUpon>201712150647475_CustomerUpdate20171215.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712151550469_Quartz.resx">
+      <DependentUpon>201712151550469_Quartz.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

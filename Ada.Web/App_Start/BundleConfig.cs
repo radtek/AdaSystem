@@ -58,11 +58,9 @@ namespace Ada.Web
             // Video responsible
             bundles.Add(new ScriptBundle("~/plugins/videoResponsible").Include(
                       "~/Scripts/plugins/video/responsible-video.js"));
-
             // Lightbox gallery css styles
-            bundles.Add(new StyleBundle("~/Content/plugins/blueimp/css/").Include(
-                      "~/Content/plugins/blueimp/css/blueimp-gallery.min.css"));
-
+            bundles.Add(new StyleBundle("~/plugins/blueimp").Include(
+                      "~/Content/plugins/blueimp/css/blueimp-gallery.min.css",new CssRewriteUrlTransform()));
             // Lightbox gallery
             bundles.Add(new ScriptBundle("~/plugins/lightboxGallery").Include(
                       "~/Scripts/plugins/blueimp/jquery.blueimp-gallery.min.js"));
