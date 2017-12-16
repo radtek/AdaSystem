@@ -28,6 +28,7 @@ namespace Ada.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             GlobalFilters.Filters.Add(new AdaExceptionAttribute());
+            AppStart.Register();
         }
     }
 }

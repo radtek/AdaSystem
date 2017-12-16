@@ -129,6 +129,7 @@
     <Compile Include="Domain\Resource\MediaTag.cs" />
     <Compile Include="Domain\Resource\MediaType.cs" />
     <Compile Include="Domain\StatusEnum.cs" />
+    <Compile Include="IAppStart.cs" />
     <Compile Include="ICacheStorageProvider.cs" />
     <Compile Include="IDbContext.cs" />
     <Compile Include="IdBuilder.cs" />

@@ -235,6 +235,7 @@
     <Content Include="Content\plugins\datapicker\datepicker3.css" />
     <Content Include="Content\plugins\dataTables\datatables.min.css" />
     <Content Include="Content\plugins\daterangepicker\daterangepicker-bs3.css" />
+    <Content Include="Content\plugins\daterangepicker\daterangepicker.css" />
     <Content Include="Content\plugins\datetimepicker\bootstrap-datetimepicker.css" />
     <Content Include="Content\plugins\datetimepicker\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\plugins\dropzone\basic.css" />
@@ -1694,6 +1695,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\AppStart.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\DefaultController.cs" />

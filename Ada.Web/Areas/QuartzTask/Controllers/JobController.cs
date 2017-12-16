@@ -92,9 +92,10 @@ namespace QuartzTask.Controllers
             entity.JobType = item.JobType;
             entity.TriggerName = item.TriggerName;
             entity.Cron = item.Cron;
-            entity.TriggerState = item.TriggerState;
+            //entity.TriggerState = item.TriggerState;
             entity.StartTime = item.StartTime;
             entity.EndTime = item.EndTime;
+            entity.Remark = item.Remark;
             return View(entity);
         }
         [HttpPost]
@@ -115,9 +116,10 @@ namespace QuartzTask.Controllers
             entity.JobType = viewModel.JobType;
             entity.TriggerName = viewModel.TriggerName;
             entity.Cron = viewModel.Cron;
-            entity.TriggerState = viewModel.TriggerState;
+            //entity.TriggerState = viewModel.TriggerState;
             entity.StartTime = viewModel.StartTime;
             entity.EndTime = viewModel.EndTime;
+            entity.Remark = viewModel.Remark;
             _jobService.Update(entity);
             TempData["Msg"] = "操作成功";
             return RedirectToAction("Index");
@@ -127,6 +129,10 @@ namespace QuartzTask.Controllers
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (entity.TriggerState!="None")
+            {
+                return Json(new { State = 0, Msg = "此任务未处于关闭状态，请先关闭任务，再进行删除！" });
+            }
             _jobService.Delete(entity);
             return Json(new { State = 1, Msg = "删除成功" });
         }

@@ -41,7 +41,7 @@ namespace QuartzTask.Models
             JobDataMap jobDataMap = jobDetail.JobDataMap;
             jobDataMap.Put("任务描述", entity.Remark);
             var triggerKey=new TriggerKey(entity.TriggerName,entity.GroupName);
-            DateTimeOffset startRunTime = DateBuilder.NextGivenMinuteDate(entity.StartTime, 1);
+            DateTimeOffset startRunTime = DateBuilder.NextGivenSecondDate(entity.StartTime, 1);
             DateTimeOffset endRunTime = DateBuilder.NextGivenSecondDate(entity.EndTime, 1);
             ITrigger trigger = TriggerBuilder.Create().StartAt(startRunTime).EndAt(endRunTime).WithIdentity(triggerKey).WithCronSchedule(entity.Cron).Build();
             _scheduler.ScheduleJob(jobDetail, trigger);
@@ -52,6 +52,7 @@ namespace QuartzTask.Models
         {
             var jobKey = new JobKey(entity.JobName, entity.GroupName);
             _scheduler.DeleteJob(jobKey);
+            
         }
     }
 }

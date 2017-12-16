@@ -1,10 +1,8 @@
-﻿
-@using QuartzTask.Models
+﻿@using System.Web.Optimization
 @model Ada.Core.ViewModel.QuartzTask.JobView
 @{
     ViewBag.Title = "新建任务";
     List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "计划任务", Value = Url.Action("Index") } };
-    IEnumerable<SelectListItem> jobTypes = JobHelper.GetJobs().Select(d => new SelectListItem() {Text = d, Value = d});
 }
 @Html.Partial("Bread", urls)
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -12,70 +10,68 @@
     {
         @Html.AntiForgeryToken()
         <p class="bg-danger">@Html.ValidationMessage("message") </p>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox">
-                    <div class="ibox-title">
-                        <a class="btn btn-outline btn-default btn-sm" href="@Url.Action("Index")"><i class="fa fa-reply"></i> 返回</a>
-                        <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
-                    </div>
-                    <div class="ibox-content">
-                        <div class="sk-spinner sk-spinner-wave">
-                            <div class="sk-rect2"></div>
-                            <div class="sk-rect3"></div>
-                            <div class="sk-rect4"></div>
-                            <div class="sk-rect5"></div>
-                        </div>
-                        <div class="form-horizontal">
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.GroupName, Html.DisplayNameFor(d => d.GroupName).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.GroupName, new { @class = "form-control", required = "" })
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.JobName, Html.DisplayNameFor(d => d.JobName).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.JobName, new { @class = "form-control", required = "" })
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.JobType, Html.DisplayNameFor(d => d.JobType).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.DropDownListFor(d => d.JobType, jobTypes, new { @class = "form-control", required = "" })
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.TriggerName, Html.DisplayNameFor(d => d.TriggerName).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.TriggerName, new { @class = "form-control", required = "" })
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.Cron, Html.DisplayNameFor(d => d.Cron).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.Cron, new { @class = "form-control", required = "" })
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextAreaFor(d => d.Remark, new { @class = "form-control" })
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @Html.Partial("JobEdit")
     }
 </div>
+@section Styles {
+    @Styles.Render("~/plugins/dateRangeStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/dateRange")
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#StartAndEnd').daterangepicker({
+                timePicker: true,
+                timePicker24Hour: true,
+                //timePickerSeconds: true,
+                //timePickerIncrement: 30,
+                opens: "center",
+                linkedCalendars: false,
+                locale: {
+                    format: 'YYYY-MM-DD HH:mm',
+                    separator: " 至 ",
+                    applyLabel: "确认",
+                    cancelLabel: "取消",
+                    fromLabel: "从",
+                    toLabel: "到",
+                    customRangeLabel: "自定义",
+                    weekLabel: "周",
+                    daysOfWeek: [
+                        "日",
+                        "一",
+                        "二",
+                        "三",
+                        "四",
+                        "五",
+                        "六"
+                    ],
+                    monthNames: [
+                        "一月",
+                        "二月",
+                        "三月",
+                        "四月",
+                        "五月",
+                        "六月",
+                        "七月",
+                        "八月",
+                        "九月",
+                        "十月",
+                        "十一月",
+                        "十二月"
+                    ],
+                    firstDay: 1
+                }
+            },
+                function(start,end,label) {
+                    $("#StartTime").val(start.format('YYYY-MM-DD HH:mm'));
+                    $("#EndTime").val(end.format('YYYY-MM-DD HH:mm'));
+                });
+        });
+
+    </script>
+}
 
 
 

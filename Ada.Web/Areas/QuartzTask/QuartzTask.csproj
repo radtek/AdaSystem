@@ -47,6 +47,9 @@
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac, Version=4.6.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Autofac.4.6.2\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
@@ -66,6 +69,9 @@
     <Reference Include="Quartz, Version=2.6.1.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Quartz.2.6.1\lib\net40\Quartz.dll</HintPath>
     </Reference>
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -118,6 +124,7 @@
   <ItemGroup>
     <Compile Include="Controllers\JobController.cs" />
     <Compile Include="Jobs\TestJob.cs" />
+    <Compile Include="Models\AppStartLoad.cs" />
     <Compile Include="Models\IQuartzService.cs" />
     <Compile Include="Models\JobHelper.cs" />
     <Compile Include="Models\QuartzService.cs" />
@@ -134,6 +141,7 @@
     <Content Include="Views\Job\Add.cshtml" />
     <Content Include="Views\Job\Update.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Job\JobEdit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

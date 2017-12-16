@@ -27,7 +27,7 @@ namespace Ada.Framework
             //获取所有程序集
             var assemblys = BuildManager.GetReferencedAssemblies().Cast<Assembly>().ToArray();
             builder.RegisterControllers(assemblys);//注册控制器
-            builder.RegisterAssemblyModules(assemblys);//所有继承module中的类都会被注册
+           
             var dependencyType = typeof(IDependency);
             var singletonType = typeof(ISingleDependency);
             //注册依赖
@@ -38,6 +38,7 @@ namespace Ada.Framework
             builder.RegisterAssemblyTypes(assemblys)
                 .Where(t => singletonType.IsAssignableFrom(t) && t != singletonType && !t.IsAbstract)
                 .AsImplementedInterfaces().SingleInstance();
+            builder.RegisterAssemblyModules(assemblys);//所有继承module中的类都会被注册
         }
     }
 }

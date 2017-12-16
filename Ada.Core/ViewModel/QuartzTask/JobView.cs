@@ -30,9 +30,9 @@ namespace Ada.Core.ViewModel.QuartzTask
         [Display(Name = "触发器名称")]
         public string TriggerName { get; set; }
         /// <summary>
-        /// 执行计划
+        /// 执行计划（Cron表达式）
         /// </summary>
-        [Display(Name = "执行计划")]
+        [Display(Name = "执行计划（Cron表达式）")]
         public string Cron { get; set; }
         /// <summary>
         /// 执行状态
@@ -84,5 +84,10 @@ namespace Ada.Core.ViewModel.QuartzTask
         /// </summary>
         [Display(Name = "令牌")]
         public string Token { get; set; }
+        /// <summary>
+        /// 起始时间
+        /// </summary>
+        [Display(Name = "起始时间")]
+        public string StartAndEnd { get; set; }
     }
 }
