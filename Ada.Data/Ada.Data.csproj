@@ -193,6 +193,14 @@
     <Compile Include="Migrations\201712151550469_Quartz.Designer.cs">
       <DependentUpon>201712151550469_Quartz.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712170559416_MediaUpdate20171217.cs" />
+    <Compile Include="Migrations\201712170559416_MediaUpdate20171217.Designer.cs">
+      <DependentUpon>201712170559416_MediaUpdate20171217.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712170621314_MediaUpdate201712171421.cs" />
+    <Compile Include="Migrations\201712170621314_MediaUpdate201712171421.Designer.cs">
+      <DependentUpon>201712170621314_MediaUpdate201712171421.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -281,6 +289,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712151550469_Quartz.resx">
       <DependentUpon>201712151550469_Quartz.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712170559416_MediaUpdate20171217.resx">
+      <DependentUpon>201712170559416_MediaUpdate20171217.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712170621314_MediaUpdate201712171421.resx">
+      <DependentUpon>201712170621314_MediaUpdate201712171421.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

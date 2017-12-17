@@ -121,10 +121,10 @@ if (list.Count > 0)
                             @Html.LabelFor(d => d.HttpMethod, Html.DisplayNameFor(d => d.HttpMethod).ToString(), new { @class = "col-sm-2 control-label" })
                             <div class="col-sm-10">
                                 @Html.DropDownListFor(d => d.HttpMethod, new List<SelectListItem>()
-                            {
-                                new SelectListItem() {Text = "GET", Value = "GET"},
-                                new SelectListItem() {Text = "POST", Value = "POST"}
-                            }, new { @class = "form-control" })
+                        {
+                            new SelectListItem() {Text = "GET", Value = "GET"},
+                            new SelectListItem() {Text = "POST", Value = "POST"}
+                        }, new { @class = "form-control" })
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -167,6 +167,18 @@ if (list.Count > 0)
                                 <div class="checkbox checkbox-info">
                                     <input id="IsMenu" type="checkbox" name="IsMenu" value="true">
                                     <label for="IsMenu">
+                                        <strong>是</strong>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group hidden" id="curd">
+                            @Html.LabelFor(d => d.IsCURD, Html.DisplayNameFor(d => d.IsCURD).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                <div class="checkbox checkbox-info">
+                                    <input id="IsCURD" type="checkbox" name="IsCURD" value="true">
+                                    <label for="IsCURD">
                                         <strong>是</strong>
                                     </label>
                                 </div>
@@ -237,6 +249,9 @@ if (list.Count > 0)
             $('#modal form')[0].reset();
             if (parentId) {
                 $("#ParentId").val(parentId);
+                $("#curd").addClass("hidden");
+            } else {
+                $("#curd").removeClass("hidden");
             }
             $("#Id").val("");
             $(".modal-title").text("添加功能权限");
@@ -248,6 +263,7 @@ if (list.Count > 0)
                 function(data) {
                     $("form").autofill(data);
                     $(".modal-title").text("编辑功能权限");
+                    $("#curd").addClass("hidden");
                     $('#modal').modal('show');
                 });
         }

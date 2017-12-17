@@ -1,15 +1,17 @@
 ﻿@using System.Web.Optimization
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
-    ViewBag.Title = "编辑微博";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "微博资源", Value = Url.Action("Index") } };
+    ViewBag.Title = "编辑网红";
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "网红资源", Value = Url.Action("Index") } };
 }
 @Html.Partial("Bread", urls)
+
+
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-        @Html.Partial("SinaBlogEdit", Model)
+        @Html.Partial("WebCastEdit", Model)
     }
 </div>
 

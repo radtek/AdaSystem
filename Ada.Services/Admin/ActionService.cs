@@ -21,6 +21,7 @@ namespace Ada.Services.Admin
         }
         public void Add(Action action)
         {
+
             _repository.Add(action);
             _dbContext.SaveChanges();
         }

@@ -72,6 +72,11 @@ namespace Ada.Core.ViewModel.Admin
         /// </summary>
         [Display(Name = "是否菜单")]
         public bool? IsMenu { get; set; }
+        /// <summary>
+        /// 是否同时添加常用权限
+        /// </summary>
+        [Display(Name = "常用权限")]
+        public bool? IsCURD { get; set; }
     }
 
     

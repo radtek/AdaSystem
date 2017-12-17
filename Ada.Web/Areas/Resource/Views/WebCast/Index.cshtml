@@ -4,9 +4,9 @@
 @using Ada.Services.Resource
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
-    ViewBag.Title = "微博资源";
+    ViewBag.Title = "网红资源";
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
-    var adpositions = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("sinablog").AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
+    var adpositions = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("webcast").AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
 }
 @Html.Partial("Bread")
 
@@ -38,12 +38,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-2 m-b">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.MediaID, "微博ID：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control input-sm" })
-                        </div>
-                    </div>
+                    
                     <div class="col-sm-2 m-b">
                         <div class="form-group">
                             @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName) + "：", new { @class = "control-label" })
@@ -154,7 +149,7 @@
                 //detailView: true,                   //设置为 true 可以显示详细页面模式。
                 //detailFormatter: detailFormatter,
                     formatSearch: function() {
-                        return "微博名称";
+                        return "网红名称";
                     },
                 mobileResponsive:true,
                 onLoadSuccess: initTooltip,
@@ -168,7 +163,7 @@
                     },
                     {
                         field: 'MediaName',
-                        title: '微博名称',
+                        title: '网红名称',
                         valign: "middle",
                         align: "center",
                         formatter: function(value, row, index) {
@@ -176,6 +171,18 @@
                                 return "<a class='label' href='" + row.MediaLink + "' target='_blank'><i class='fa fa-link'></i> "+value+"</a>";
                             }
                         }
+                    },
+                    {
+                        field: 'Sex',
+                        title: '@Html.DisplayNameFor(d=>d.Sex)',
+                        valign: "middle",
+                        align: "center"
+                    },
+                    {
+                        field: 'Platform',
+                        title: '@Html.DisplayNameFor(d=>d.Platform)',
+                        valign: "middle",
+                        align: "center"
                     },
                     {
                         field: 'Area',
@@ -306,6 +313,7 @@
         }
 </script>
 }
+
 
 
 

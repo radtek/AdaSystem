@@ -113,6 +113,41 @@ namespace Admin.Controllers
                     AddedById = CurrentManager.Id,
                     AddedDate = DateTime.Now
                 };
+                if (!string.IsNullOrWhiteSpace(action.ParentId))
+                {
+                    if (actionView.IsCURD==true)
+                    {
+                        var addpage = new Action
+                        {
+                            ActionName = "新增页面",
+                            Area = actionView.Area,
+                            ControllerName = actionView.ControllerName,
+                            HttpMethod = "GET",
+                            MethodName = "Add",
+                            Taxis = 1,
+                            ParentId = action.Id,
+                            Id = IdBuilder.CreateIdNum(),
+                            AddedBy = CurrentManager.UserName,
+                            AddedById = CurrentManager.Id,
+                            AddedDate = DateTime.Now
+                        };
+                        var add = new Action
+                        {
+                            ActionName = "新增数据",
+                            Area = actionView.Area,
+                            ControllerName = actionView.ControllerName,
+                            HttpMethod = "POST",
+                            MethodName = "Add",
+                            Taxis = 1,
+                            ParentId = action.Id,
+                            IsButton = true,
+                            Id = IdBuilder.CreateIdNum(),
+                            AddedBy = CurrentManager.UserName,
+                            AddedById = CurrentManager.Id,
+                            AddedDate = DateTime.Now
+                        };
+                    }
+                }
                 _actionService.Add(action);
                 TempData["Msg"] = "添加成功";
             }

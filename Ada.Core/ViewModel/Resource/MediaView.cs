@@ -222,6 +222,16 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "经办媒介")]
         public string TransactorId { get; set; }
+        /// <summary>
+        /// 平台
+        /// </summary>
+        [Display(Name = "平台")]
+        public string Platform { get; set; }
+        /// <summary>
+        /// 性别
+        /// </summary>
+        [Display(Name = "性别")]
+        public string Sex { get; set; }
     }
 
 }
