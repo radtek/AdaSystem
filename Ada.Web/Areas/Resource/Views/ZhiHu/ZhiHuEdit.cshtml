@@ -1,26 +1,23 @@
-﻿@using Ada.Core.Infrastructure
-@using Ada.Services.Admin
+﻿
+@using Ada.Core.Infrastructure
 @using Ada.Services.Resource
 @using Microsoft.Ajax.Utilities
 @model Ada.Core.ViewModel.Resource.MediaView
-    @{
-        var fieldService = EngineContext.Current.Resolve<IFieldService>();
-        var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
-        var channelTypes = fieldService.GetFieldsByKey("ChannelType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
-    }
+@{
+    var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
+}
+
 <div class="row">
     <div class="col-lg-12">
         <div class="tabs-container">
             <p class="bg-danger">@Html.ValidationMessage("message") </p>
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#tab-1"> 基本信息</a></li>
-                <li class=""><a data-toggle="tab" href="#tab-2"> 媒体数据</a></li>
-                <li class=""><a data-toggle="tab" href="#tab-3"> 媒体价格</a></li>
+                <li class=""><a data-toggle="tab" href="#tab-2"> 媒体价格</a></li>
             </ul>
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane active">
                     <div class="panel-body">
-
                         <fieldset class="form-horizontal">
                             <div class="form-group">
                                 @Html.LabelFor(d => d.LinkManId, Html.DisplayNameFor(d => d.LinkManId).ToString(), new { @class = "col-sm-2 control-label" })
@@ -32,46 +29,42 @@
                                 @Html.HiddenFor(d => d.LinkManName)
                             </div>
                             <div class="form-group">
-                                @Html.LabelFor(d => d.MediaName, "微信公众号", new { @class = "col-sm-2 control-label" })
+                                @Html.LabelFor(d => d.MediaName, "知乎名称", new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
                                     @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control", required = "" })
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.LabelFor(d => d.MediaID, "微信号", new { @class = "col-sm-2 control-label" })
+                                @Html.LabelFor(d => d.MediaID, "知乎ID", new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
                                     @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control", required = "" })
                                 </div>
                             </div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.MediaLink, Html.DisplayNameFor(d => d.MediaLink).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.MediaLink, new { @class = "form-control" })
-                                </div>
-                            </div>
+
                             <div class="form-group">
                                 @Html.LabelFor(d => d.Area, Html.DisplayNameFor(d => d.Area).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
                                     @Html.TextBoxFor(d => d.Area, new { @class = "form-control" })
                                 </div>
                             </div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.ChannelType, Html.DisplayNameFor(d => d.ChannelType).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.DropDownListFor(d => d.ChannelType, channelTypes, "请选择", new { @class = "form-control" })
-                                </div>
-                            </div>
+
                             <div class="form-group">
                                 @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
                                     @foreach (var item in tags)
-            {
-                var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
-                        <div class="checkbox checkbox-success checkbox-inline">
-                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
-                            <label for="@item.Id">@item.TagName</label>
-                        </div>
-}
+                                    {
+                                        var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
+                                        <div class="checkbox checkbox-success checkbox-inline">
+                                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
+                                            <label for="@item.Id">@item.TagName</label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.FansNum, Html.DisplayNameFor(d => d.FansNum).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.FansNum, new { @class = "form-control" })
                                 </div>
                             </div>
                             <div class="form-group">
@@ -121,79 +114,8 @@
 
                     </div>
                 </div>
+
                 <div id="tab-2" class="tab-pane">
-                    <div class="panel-body">
-
-                        <fieldset class="form-horizontal">
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.FansNum, Html.DisplayNameFor(d => d.FansNum).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.FansNum, new { @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.LastReadNum, Html.DisplayNameFor(d => d.LastReadNum).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.LastReadNum, new { @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.AvgReadNum, Html.DisplayNameFor(d => d.AvgReadNum).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.AvgReadNum, new { @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.PublishFrequency, Html.DisplayNameFor(d => d.PublishFrequency).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.PublishFrequency, new { @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.IsAuthenticate, Html.DisplayNameFor(d => d.IsAuthenticate).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    <div class="radio radio-info radio-inline">
-                                        @Html.RadioButtonFor(d => d.IsAuthenticate, true)
-                                        <label> 是 </label>
-                                    </div>
-                                    <div class="radio radio-info radio-inline">
-                                        @Html.RadioButtonFor(d => d.IsAuthenticate, false)
-                                        <label> 否 </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.IsOriginal, Html.DisplayNameFor(d => d.IsOriginal).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    <div class="radio radio-info radio-inline">
-                                        @Html.RadioButtonFor(d => d.IsOriginal, true)
-                                        <label> 是 </label>
-                                    </div>
-                                    <div class="radio radio-info radio-inline">
-                                        @Html.RadioButtonFor(d => d.IsOriginal, false)
-                                        <label> 否 </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.IsComment, Html.DisplayNameFor(d => d.IsComment).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    <div class="radio radio-info radio-inline">
-                                        @Html.RadioButtonFor(d => d.IsComment, true)
-                                        <label> 是 </label>
-                                    </div>
-                                    <div class="radio radio-info radio-inline">
-                                        @Html.RadioButtonFor(d => d.IsComment, false)
-                                        <label> 否 </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-
-
-                    </div>
-                </div>
-                <div id="tab-3" class="tab-pane">
                     <div class="panel-body">
                         <div class="table-responsive">
                             <table class="table table-bordered">
@@ -220,7 +142,7 @@
                                             <td>
                                                 @Html.HiddenFor(d => d.MediaPrices[i].Id)
                                                 @Html.HiddenFor(d => d.MediaPrices[i].AdPositionId)
-                                                @Html.TextBoxFor(d => d.MediaPrices[i].AdPositionName, new {@class = "form-control", @readonly = "readonly"})
+                                                @Html.TextBoxFor(d => d.MediaPrices[i].AdPositionName, new { @class = "form-control", @readonly = "readonly" })
                                             </td>
                                             <td>
                                                 @Html.TextBoxFor(d => d.MediaPrices[i].PurchasePrice, new { @class = "form-control", placeholder = "¥0.00" })
@@ -230,7 +152,7 @@
                                                     <span class="input-group-addon">
                                                         <i class="fa fa-calendar"></i>
                                                     </span>
-                                                    @Html.TextBoxFor(d => d.MediaPrices[i].PriceDate,Model.MediaPrices[i].PriceDate.IfNotNull(d=>d.Value.ToString("yyyy年MM月dd日")) ,new { @class = "form-control" })
+                                                    @Html.TextBoxFor(d => d.MediaPrices[i].PriceDate, Model.MediaPrices[i].PriceDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control" })
                                                 </div>
                                             </td>
                                             <td>
@@ -252,8 +174,10 @@
 
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 </div>
+
 

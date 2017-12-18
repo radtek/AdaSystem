@@ -168,7 +168,14 @@
                         align: "center",
                         formatter: function(value, row, index) {
                             if (value) {
-                                return "<a class='label' href='" + row.MediaLink + "' target='_blank'><i class='fa fa-link'></i> "+value+"</a>";
+                                if (row.MediaLink) {
+                                    return "<a class='label' href='" + row.MediaLink + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
+                                } else {
+                                    return value;
+                                }
+
+                            } else {
+                                return value;
                             }
                         }
                     },

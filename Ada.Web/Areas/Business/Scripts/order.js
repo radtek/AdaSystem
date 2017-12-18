@@ -288,11 +288,11 @@ function showMedia(url) {
                             title: '媒体名称',
                             align: "center"
                         },
-                        {
-                            field: 'MediaID',
-                            title: '媒体ID',
-                            align: "center"
-                        },
+                        //{
+                        //    field: 'MediaID',
+                        //    title: '媒体ID',
+                        //    align: "center"
+                        //},
                         {
                             field: 'MediaTagStr',
                             title: '媒体分类',

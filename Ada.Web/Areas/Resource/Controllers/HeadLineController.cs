@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Resource;
-using Ada.Core.Tools;
 using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Filter;
 using Ada.Services.Resource;
@@ -14,16 +13,16 @@ using Ada.Services.Resource;
 namespace Resource.Controllers
 {
     /// <summary>
-    /// 网络直播 网红
+    /// 头条
     /// </summary>
-    public class WebCastController : BaseController
+    public class HeadLineController : BaseController
     {
         private readonly IMediaService _mediaService;
         private readonly IRepository<Media> _repository;
         private readonly IRepository<MediaTag> _mediaTagRepository;
         private readonly IRepository<MediaPrice> _mediaPriceRepository;
         private readonly IMediaTypeService _mediaTypeService;
-        public WebCastController(IMediaService mediaService,
+        public HeadLineController(IMediaService mediaService,
             IRepository<Media> repository,
             IMediaTypeService mediaTypeService,
             IRepository<MediaTag> mediaTagRepository,
@@ -42,7 +41,7 @@ namespace Resource.Controllers
         }
         public ActionResult GetList(MediaView viewModel)
         {
-            viewModel.MediaTypeIndex = "webcast";
+            viewModel.MediaTypeIndex = "headline";
             viewModel.Managers = PremissionData();
             var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
@@ -53,10 +52,9 @@ namespace Resource.Controllers
                     Id = d.Id,
                     MediaName = d.MediaName,
                     MediaLink = d.MediaLink,
-                    Sex = d.Sex,
+                    IsAuthenticate = d.IsAuthenticate,
                     Platform = d.Platform,
                     FansNum = d.FansNum,
-                    Area = d.Area,
                     Content = d.Content,
                     Remark = d.Remark,
                     Status = d.Status,
@@ -77,7 +75,7 @@ namespace Resource.Controllers
         public ActionResult Add()
         {
             MediaView viewModel = new MediaView();
-            var mediaType = _mediaTypeService.GetMediaTypeByCallIndex("webcast");
+            var mediaType = _mediaTypeService.GetMediaTypeByCallIndex("headline");
             viewModel.MediaTypeId = mediaType.Id;
             viewModel.Status = Consts.StateNormal;
             viewModel.MediaPrices = mediaType.AdPositions
@@ -108,7 +106,7 @@ namespace Resource.Controllers
                 d.MediaTypeId == viewModel.MediaTypeId).FirstOrDefault();
             if (temp != null)
             {
-                ModelState.AddModelError("message", viewModel.MediaName + "，此网红已存在！");
+                ModelState.AddModelError("message", viewModel.MediaName + "，此头条已存在！");
                 return View(viewModel);
             }
             Media entity = new Media();
@@ -122,10 +120,9 @@ namespace Resource.Controllers
 
             entity.MediaName = viewModel.MediaName.Trim();
             entity.MediaLink = viewModel.MediaLink;
-            entity.Sex = viewModel.Sex;
+            entity.IsAuthenticate = viewModel.IsAuthenticate;
             entity.Platform = viewModel.Platform;
             entity.FansNum = viewModel.FansNum;
-            entity.Area = viewModel.Area;
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
             entity.Status = viewModel.Status;
@@ -150,15 +147,15 @@ namespace Resource.Controllers
                 entity.MediaPrices.Add(price);
             }
             //媒体分类
-            if (viewModel.MediaTagIds != null)
+            if (viewModel.MediaTagIds!=null)
             {
-                entity.MediaTags.Clear();
                 foreach (var viewModelMediaTagId in viewModel.MediaTagIds)
                 {
                     var tag = _mediaTagRepository.LoadEntities(d => d.Id == viewModelMediaTagId).FirstOrDefault();
                     entity.MediaTags.Add(tag);
                 }
             }
+            
             _mediaService.Add(entity);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
@@ -172,10 +169,9 @@ namespace Resource.Controllers
             entity.TransactorId = item.TransactorId;
             entity.MediaName = item.MediaName;
             entity.MediaLink = item.MediaLink;
-            entity.Sex = item.Sex;
+            entity.IsAuthenticate = item.IsAuthenticate;
             entity.Platform = item.Platform;
             entity.FansNum = item.FansNum;
-            entity.Area = item.Area;
             entity.Content = item.Content;
             entity.Remark = item.Remark;
             entity.Status = item.Status;
@@ -216,7 +212,7 @@ namespace Resource.Controllers
                 d.MediaTypeId == viewModel.MediaTypeId && d.Id != viewModel.Id).FirstOrDefault();
             if (temp != null)
             {
-                ModelState.AddModelError("message", viewModel.MediaName + "，此网红已存在！");
+                ModelState.AddModelError("message", viewModel.MediaName + "，此头条已存在！");
                 return View(viewModel);
             }
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
@@ -227,10 +223,9 @@ namespace Resource.Controllers
             entity.TransactorId = viewModel.TransactorId;
             entity.MediaName = viewModel.MediaName.Trim();
             entity.MediaLink = viewModel.MediaLink;
-            entity.Sex = viewModel.Sex;
+            entity.IsAuthenticate = viewModel.IsAuthenticate;
             entity.Platform = viewModel.Platform;
             entity.FansNum = viewModel.FansNum;
-            entity.Area = viewModel.Area;
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
             entity.Status = viewModel.Status;

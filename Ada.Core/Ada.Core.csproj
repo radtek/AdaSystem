@@ -147,6 +147,7 @@
     <Compile Include="Tools\Thumbnail.cs" />
     <Compile Include="Tools\Utils.cs" />
     <Compile Include="ViewModel\Admin\ActionView.cs" />
+    <Compile Include="ViewModel\Admin\ManagerLoginLogView.cs" />
     <Compile Include="ViewModel\Admin\ManagerView.cs" />
     <Compile Include="ViewModel\Admin\MenuView.cs" />
     <Compile Include="ViewModel\Admin\OrganizationView.cs" />

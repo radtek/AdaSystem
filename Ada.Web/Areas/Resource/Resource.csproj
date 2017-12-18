@@ -108,12 +108,15 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\HeadLineController.cs" />
     <Compile Include="Controllers\MediaController.cs" />
     <Compile Include="Controllers\MediaTagController.cs" />
     <Compile Include="Controllers\MediaTypeController.cs" />
+    <Compile Include="Controllers\RedBookController.cs" />
     <Compile Include="Controllers\SinaBlogController.cs" />
     <Compile Include="Controllers\WebCastController.cs" />
     <Compile Include="Controllers\WeiXinController.cs" />
+    <Compile Include="Controllers\ZhiHuController.cs" />
     <Compile Include="ResourceAreaRegistration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -138,6 +141,18 @@
     <Content Include="Views\WebCast\Add.cshtml" />
     <Content Include="Views\WebCast\Update.cshtml" />
     <Content Include="Views\WebCast\WebCastEdit.cshtml" />
+    <Content Include="Views\HeadLine\Index.cshtml" />
+    <Content Include="Views\HeadLine\Add.cshtml" />
+    <Content Include="Views\HeadLine\Update.cshtml" />
+    <Content Include="Views\HeadLine\HeadLineEdit.cshtml" />
+    <Content Include="Views\ZhiHu\Index.cshtml" />
+    <Content Include="Views\ZhiHu\Add.cshtml" />
+    <Content Include="Views\ZhiHu\Update.cshtml" />
+    <Content Include="Views\ZhiHu\ZhiHuEdit.cshtml" />
+    <Content Include="Views\RedBook\Index.cshtml" />
+    <Content Include="Views\RedBook\Add.cshtml" />
+    <Content Include="Views\RedBook\Update.cshtml" />
+    <Content Include="Views\RedBook\RedBookEdit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

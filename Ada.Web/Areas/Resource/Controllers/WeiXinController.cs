@@ -162,10 +162,13 @@ namespace Resource.Controllers
                 entity.MediaPrices.Add(price);
             }
             //媒体分类
-            foreach (var viewModelMediaTagId in viewModel.MediaTagIds)
+            if (viewModel.MediaTagIds != null)
             {
-                var tag = _mediaTagRepository.LoadEntities(d => d.Id == viewModelMediaTagId).FirstOrDefault();
-                entity.MediaTags.Add(tag);
+                foreach (var viewModelMediaTagId in viewModel.MediaTagIds)
+                {
+                    var tag = _mediaTagRepository.LoadEntities(d => d.Id == viewModelMediaTagId).FirstOrDefault();
+                    entity.MediaTags.Add(tag);
+                }
             }
             _mediaService.Add(entity);
             TempData["Msg"] = "添加成功";
@@ -277,11 +280,14 @@ namespace Resource.Controllers
             //联系人
             entity.LinkManId = viewModel.LinkManId;
             //标签
-            entity.MediaTags.Clear();
-            foreach (var viewModelMediaTagId in viewModel.MediaTagIds)
+            if (viewModel.MediaTagIds != null)
             {
-                var tag = _mediaTagRepository.LoadEntities(d => d.Id == viewModelMediaTagId).FirstOrDefault();
-                entity.MediaTags.Add(tag);
+                entity.MediaTags.Clear();
+                foreach (var viewModelMediaTagId in viewModel.MediaTagIds)
+                {
+                    var tag = _mediaTagRepository.LoadEntities(d => d.Id == viewModelMediaTagId).FirstOrDefault();
+                    entity.MediaTags.Add(tag);
+                }
             }
             //价格
             foreach (var viewModelMediaPrice in viewModel.MediaPrices)

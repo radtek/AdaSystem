@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Resource;
-using Ada.Core.Tools;
 using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Filter;
 using Ada.Services.Resource;
@@ -14,16 +13,16 @@ using Ada.Services.Resource;
 namespace Resource.Controllers
 {
     /// <summary>
-    /// 网络直播 网红
+    /// 小红书
     /// </summary>
-    public class WebCastController : BaseController
+    public class RedBookController : BaseController
     {
         private readonly IMediaService _mediaService;
         private readonly IRepository<Media> _repository;
         private readonly IRepository<MediaTag> _mediaTagRepository;
         private readonly IRepository<MediaPrice> _mediaPriceRepository;
         private readonly IMediaTypeService _mediaTypeService;
-        public WebCastController(IMediaService mediaService,
+        public RedBookController(IMediaService mediaService,
             IRepository<Media> repository,
             IMediaTypeService mediaTypeService,
             IRepository<MediaTag> mediaTagRepository,
@@ -42,7 +41,7 @@ namespace Resource.Controllers
         }
         public ActionResult GetList(MediaView viewModel)
         {
-            viewModel.MediaTypeIndex = "webcast";
+            viewModel.MediaTypeIndex = "redbook";
             viewModel.Managers = PremissionData();
             var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
@@ -53,8 +52,7 @@ namespace Resource.Controllers
                     Id = d.Id,
                     MediaName = d.MediaName,
                     MediaLink = d.MediaLink,
-                    Sex = d.Sex,
-                    Platform = d.Platform,
+                    LikesNum = d.LikesNum,
                     FansNum = d.FansNum,
                     Area = d.Area,
                     Content = d.Content,
@@ -77,7 +75,7 @@ namespace Resource.Controllers
         public ActionResult Add()
         {
             MediaView viewModel = new MediaView();
-            var mediaType = _mediaTypeService.GetMediaTypeByCallIndex("webcast");
+            var mediaType = _mediaTypeService.GetMediaTypeByCallIndex("redbook");
             viewModel.MediaTypeId = mediaType.Id;
             viewModel.Status = Consts.StateNormal;
             viewModel.MediaPrices = mediaType.AdPositions
@@ -108,7 +106,7 @@ namespace Resource.Controllers
                 d.MediaTypeId == viewModel.MediaTypeId).FirstOrDefault();
             if (temp != null)
             {
-                ModelState.AddModelError("message", viewModel.MediaName + "，此网红已存在！");
+                ModelState.AddModelError("message", viewModel.MediaName + "，此小红书已存在！");
                 return View(viewModel);
             }
             Media entity = new Media();
@@ -122,8 +120,7 @@ namespace Resource.Controllers
 
             entity.MediaName = viewModel.MediaName.Trim();
             entity.MediaLink = viewModel.MediaLink;
-            entity.Sex = viewModel.Sex;
-            entity.Platform = viewModel.Platform;
+            entity.LikesNum = viewModel.LikesNum;
             entity.FansNum = viewModel.FansNum;
             entity.Area = viewModel.Area;
             entity.Content = viewModel.Content;
@@ -172,8 +169,7 @@ namespace Resource.Controllers
             entity.TransactorId = item.TransactorId;
             entity.MediaName = item.MediaName;
             entity.MediaLink = item.MediaLink;
-            entity.Sex = item.Sex;
-            entity.Platform = item.Platform;
+            entity.LikesNum = item.LikesNum;
             entity.FansNum = item.FansNum;
             entity.Area = item.Area;
             entity.Content = item.Content;
@@ -216,7 +212,7 @@ namespace Resource.Controllers
                 d.MediaTypeId == viewModel.MediaTypeId && d.Id != viewModel.Id).FirstOrDefault();
             if (temp != null)
             {
-                ModelState.AddModelError("message", viewModel.MediaName + "，此网红已存在！");
+                ModelState.AddModelError("message", viewModel.MediaName + "，此小红书已存在！");
                 return View(viewModel);
             }
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
@@ -227,8 +223,7 @@ namespace Resource.Controllers
             entity.TransactorId = viewModel.TransactorId;
             entity.MediaName = viewModel.MediaName.Trim();
             entity.MediaLink = viewModel.MediaLink;
-            entity.Sex = viewModel.Sex;
-            entity.Platform = viewModel.Platform;
+            entity.LikesNum = viewModel.LikesNum;
             entity.FansNum = viewModel.FansNum;
             entity.Area = viewModel.Area;
             entity.Content = viewModel.Content;

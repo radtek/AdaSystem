@@ -84,7 +84,7 @@ namespace Ada.Web.Controllers
         {
             Session.Abandon();
             Response.Cookies.Add(new HttpCookie("ASP.NET_SessionId", string.Empty) { HttpOnly = true });
-            return RedirectToAction("Index", "Default", new { area = "" });
+            return RedirectToAction("Index", "Login", new { area = "" });
         }
 
     }

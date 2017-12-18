@@ -37,7 +37,7 @@ namespace Ada.Core.ViewModel.Admin
         [Display(Name = "请求方法")]
         public string HttpMethod { get; set; }
         /// <summary>
-        /// 方法
+        /// 外部链接
         /// </summary>
         [Display(Name = "外部链接")]
         public string LinkUrl { get; set; }

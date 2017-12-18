@@ -7,7 +7,7 @@
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
     var sexs = fieldService.GetFieldsByKey("Sex").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
-    
+    var platforms = fieldService.GetFieldsByKey("LivePlatform").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 
 <div class="row">
@@ -34,13 +34,13 @@
                             <div class="form-group">
                                 @Html.LabelFor(d => d.MediaName, "网红名称", new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
+                                    @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control", required = "" })
                                 </div>
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(d => d.Platform, Html.DisplayNameFor(d => d.Platform).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.Platform, new { @class = "form-control" })
+                                    @Html.DropDownListFor(d => d.Platform, platforms,"请选择", new { @class = "form-control" })
                                 </div>
                             </div>
                             <div class="form-group">

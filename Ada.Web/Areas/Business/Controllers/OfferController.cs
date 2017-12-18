@@ -112,6 +112,61 @@ namespace Business.Controllers
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
         }
+        public ActionResult Update(string id)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            BusinessOfferView viewModel = new BusinessOfferView();
+            viewModel.Tax = entity.Tax;
+            viewModel.DiscountMoney = entity.DiscountMoney;
+            viewModel.ValidDays = entity.ValidDays;
+            viewModel.OfferDate = entity.OfferDate;
+            viewModel.Transactor = entity.Transactor;
+            viewModel.TransactorId = entity.TransactorId;
+            viewModel.Id = id;
+            return View(viewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(BusinessOfferView viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
+                return View(viewModel);
+            }
+            var details = JsonConvert.DeserializeObject<List<BusinessOfferDetail>>(viewModel.Details);
+            if (details.Count <= 0)
+            {
+                ModelState.AddModelError("message", "请录入媒体资源！");
+                return View(viewModel);
+            }
+            BusinessOffer entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
+            entity.OfferDate = viewModel.OfferDate;
+            entity.ValidDays = viewModel.ValidDays;
+            entity.ModifiedBy = CurrentManager.UserName;
+            entity.ModifiedById = CurrentManager.Id;
+            entity.ModifiedDate = DateTime.Now;
+            entity.OfferType = viewModel.OfferType;
+            entity.Remark = viewModel.Remark;
+            entity.LinkManId = viewModel.LinkManId;
+            entity.Transactor = viewModel.Transactor;
+            entity.TransactorId = viewModel.TransactorId;
+            entity.Tax = viewModel.Tax;
+            entity.DiscountRate = viewModel.DiscountRate;
+            entity.DiscountMoney = viewModel.DiscountMoney;
+            foreach (var item in details)
+            {
+                item.Id = IdBuilder.CreateIdNum();
+                entity.BusinessOfferDetails.Add(item);
+            }
+            entity.TotalTaxMoney = details.Sum(d => d.TaxMoney);
+            entity.TotalMoney = details.Sum(d => d.Money) - viewModel.DiscountMoney;
+            entity.TotalSellMoney = details.Sum(d => d.SellMoney);
+
+            _businessOfferService.Add(entity);
+            TempData["Msg"] = "添加成功";
+            return RedirectToAction("Index");
+        }
         /// <summary>
         /// 预览
         /// </summary>

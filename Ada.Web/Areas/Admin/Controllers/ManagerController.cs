@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
+using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel;
@@ -58,10 +59,32 @@ namespace Admin.Controllers
                     RealName = d.RealName,
                     AddDate = d.AddedDate?.ToString("yyyy年MM月dd日") ?? "",
                     Roles = d.Roles.Count > 0 ? string.Join(",", d.Roles.Select(r => r.RoleName)) : "",
-                    Organizations = d.Organizations.Count > 0 ? string.Join(" → ", d.Organizations.Select(r => r.OrganizationName)) : "",
+                    Organizations = GetOrganization(d),
                     LastLoginDate = d.ManagerLoginLogs.OrderByDescending(l => l.LoginTime).FirstOrDefault() == null ? "" : Utils.ToRead(d.ManagerLoginLogs.OrderByDescending(l => l.LoginTime).FirstOrDefault().LoginTime)
                 })
             }, JsonRequestBehavior.AllowGet);
+        }
+
+        private string GetOrganization(Manager manager)
+        {
+            List<string> names=new List<string>();
+            foreach (var organization in manager.Organizations)
+            {
+                List<string> list = new List<string>();
+                var arry = organization.TreePath.Trim('/').Split('/');
+                foreach (var s in arry)
+                {
+                    var temp = _organizationRepository.LoadEntities(d => d.Id == s).FirstOrDefault();
+                    if (temp.Level!=1)
+                    {
+                        list.Add(temp.OrganizationName);
+                    }
+                }
+                var str = string.Join(" → ", list);
+                names.Add(str);
+            }
+            return string.Join(",", names);
+
         }
         private List<TreeView> GetTree(string parentId, List<Organization> list)
         {
@@ -111,6 +134,7 @@ namespace Admin.Controllers
         {
             ManagerView viewModel = new ManagerView();
             InitViewModel(viewModel);
+            viewModel.Status = Consts.StateNormal;
             return View(viewModel);
         }
         [HttpPost]

@@ -52,12 +52,14 @@
     <Compile Include="Admin\IPermissionService.cs" />
     <Compile Include="Admin\IRoleService.cs" />
     <Compile Include="Admin\ISystemLogService.cs" />
+    <Compile Include="Admin\IManagerLoginLogService.cs" />
     <Compile Include="Admin\ManagerService.cs" />
     <Compile Include="Admin\MenuService .cs" />
     <Compile Include="Admin\OrganizationService.cs" />
     <Compile Include="Admin\PermissionService.cs" />
     <Compile Include="Admin\RoleService.cs" />
     <Compile Include="Admin\SystemLogService.cs" />
+    <Compile Include="Admin\ManagerLoginLogService.cs" />
     <Compile Include="Business\BusinessOfferService.cs" />
     <Compile Include="Business\BusinessWriteOffService.cs" />
     <Compile Include="Business\BusinessPaymentService.cs" />

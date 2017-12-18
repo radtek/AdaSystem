@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Ada.Core.Tools;
 using Ada.Core.ViewModel;
+using Ada.Core.ViewModel.Admin;
 using log4net;
 
 namespace Ada.Framework.Filter
@@ -24,7 +26,14 @@ namespace Ada.Framework.Filter
             var area = (string)filterContext.RouteData.Values["area"];
             var httpmethod = filterContext.HttpContext.Request.HttpMethod;
             ILog logger = LogManager.GetLogger($"{httpmethod}  {area}/{controller}/{action}");//MethodBase.GetCurrentMethod().DeclaringType
-            logger.Error("系统异常", ex);
+            var managerSession= filterContext.HttpContext.Session["LoginManager"];
+            string errMsg = "系统异常";
+            if (managerSession!=null)
+            {
+                var manager = SerializeHelper.DeserializeToObject<ManagerView>(managerSession.ToString());
+                errMsg += "，产生的用户：" + manager.UserName+" ["+manager.RoleName+"]";
+            }
+            logger.Error(errMsg, ex);
             //跳转到错误页面.
             if (filterContext.HttpContext.Request.IsAjaxRequest())
             {
