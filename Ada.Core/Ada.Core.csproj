@@ -96,6 +96,8 @@
     <Compile Include="Domain\Business\BusinessReturnOrderDetail.cs" />
     <Compile Include="Domain\Business\BusinessReturnOrder.cs" />
     <Compile Include="Domain\Business\BusinessWriteOff.cs" />
+    <Compile Include="Domain\Business\BusinessInvoice.cs" />
+    <Compile Include="Domain\Business\BusinessInvoiceDetail.cs" />
     <Compile Include="Domain\Customer\Commpany.cs" />
     <Compile Include="Domain\Customer\LinkMan.cs" />
     <Compile Include="Domain\Business\BusinessOffer.cs" />
@@ -156,6 +158,7 @@
     <Compile Include="ViewModel\Admin\RoleView.cs" />
     <Compile Include="ViewModel\Admin\SystemLogView.cs" />
     <Compile Include="ViewModel\BaseView.cs" />
+    <Compile Include="ViewModel\Business\BusinessInvoiceView.cs" />
     <Compile Include="ViewModel\Business\BusinessOfferView.cs" />
     <Compile Include="ViewModel\Business\BusinessOrderDetailView.cs" />
     <Compile Include="ViewModel\Business\BusinessOrderView.cs" />

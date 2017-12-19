@@ -127,7 +127,11 @@ namespace Purchase.Controllers
             //entity.BargainMoney = viewModel.BargainMoney;
             entity.Status = viewModel.Status;
             entity.Remark = viewModel.Remark;
-            
+            if (viewModel.PurchaseMoney>entity.CostMoney)
+            {
+                ModelState.AddModelError("message", "无税金额大于成本金额");
+                return View(viewModel);
+            }
             _purchaseOrderDetailService.Update(entity);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");

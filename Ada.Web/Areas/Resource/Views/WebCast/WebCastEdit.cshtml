@@ -6,6 +6,8 @@
 @{
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
+    var mediaTypeService = EngineContext.Current.Resolve<IMediaTypeService>();
+    var prices = mediaTypeService.GetMediaTypeByCallIndex("webcast").AdPositions.ToList();
     var sexs = fieldService.GetFieldsByKey("Sex").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var platforms = fieldService.GetFieldsByKey("LivePlatform").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
@@ -32,17 +34,18 @@
                                 @Html.HiddenFor(d => d.LinkManName)
                             </div>
                             <div class="form-group">
+                                @Html.LabelFor(d => d.Platform, Html.DisplayNameFor(d => d.Platform).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(d => d.Platform, platforms, "请选择", new { @class = "form-control", required = "" })
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 @Html.LabelFor(d => d.MediaName, "网红名称", new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
                                     @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control", required = "" })
                                 </div>
                             </div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.Platform, Html.DisplayNameFor(d => d.Platform).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.DropDownListFor(d => d.Platform, platforms,"请选择", new { @class = "form-control" })
-                                </div>
-                            </div>
+
                             <div class="form-group">
                                 @Html.LabelFor(d => d.MediaLink, Html.DisplayNameFor(d => d.MediaLink).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
@@ -65,13 +68,13 @@
                                 @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
                                     @foreach (var item in tags)
-            {
-                var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
-                        <div class="checkbox checkbox-success checkbox-inline">
-                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
-                            <label for="@item.Id">@item.TagName</label>
-                        </div>
-}
+                                    {
+                                        var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
+                                        <div class="checkbox checkbox-success checkbox-inline">
+                                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
+                                            <label for="@item.Id">@item.TagName</label>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                             <div class="form-group">
@@ -127,7 +130,7 @@
 
                     </div>
                 </div>
-                
+
                 <div id="tab-2" class="tab-pane">
                     <div class="panel-body">
                         <div class="table-responsive">
@@ -149,23 +152,38 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @for (int i = 0; i < Model.MediaPrices.Count; i++)
+                                    @for (int i = 0; i < prices.Count; i++)
                                     {
                                         <tr>
+                                            @{
+                                                var price = Model.MediaPrices?.FirstOrDefault(d => d.AdPositionName == prices[i].Name);
+                                                var id = price == null ? "" : price.Id;
+                                                var purchasePrice = price == null ? 0 : price.PurchasePrice;
+                                                var priceDate = DateTime.Now.ToString("yyyy年MM月dd日");
+                                                if (price?.PriceDate != null)
+                                                {
+                                                    priceDate = price.PriceDate.Value.ToString("yyyy年MM月dd日");
+                                                }
+                                                var invalidDate = "";
+                                                if (price?.InvalidDate != null)
+                                                {
+                                                    invalidDate = price.InvalidDate.Value.ToString("yyyy年MM月dd日");
+                                                }
+                                            }
                                             <td>
-                                                @Html.HiddenFor(d => d.MediaPrices[i].Id)
-                                                @Html.HiddenFor(d => d.MediaPrices[i].AdPositionId)
-                                                @Html.TextBoxFor(d => d.MediaPrices[i].AdPositionName, new { @class = "form-control", @readonly = "readonly" })
+                                                <input name="MediaPrices[@i].Id" type="hidden" value="@id" />
+                                                <input name="MediaPrices[@i].AdPositionId" type="hidden" value="@prices[i].Id" />
+                                                <input class="form-control" name="MediaPrices[@i].AdPositionName" readonly="readonly" type="text" value="@prices[i].Name" />
                                             </td>
                                             <td>
-                                                @Html.TextBoxFor(d => d.MediaPrices[i].PurchasePrice, new { @class = "form-control", placeholder = "¥0.00" })
+                                                <input class="form-control" name="MediaPrices[@i].PurchasePrice" placeholder="¥0.00" type="text" value="@purchasePrice" />
                                             </td>
                                             <td>
                                                 <div class="input-group date">
                                                     <span class="input-group-addon">
                                                         <i class="fa fa-calendar"></i>
                                                     </span>
-                                                    @Html.TextBoxFor(d => d.MediaPrices[i].PriceDate, Model.MediaPrices[i].PriceDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control" })
+                                                    <input class="form-control" name="MediaPrices[@i].PriceDate" type="text" value="@priceDate" />
                                                 </div>
                                             </td>
                                             <td>
@@ -173,13 +191,11 @@
                                                     <span class="input-group-addon">
                                                         <i class="fa fa-calendar"></i>
                                                     </span>
-                                                    @Html.TextBoxFor(d => d.MediaPrices[i].InvalidDate, Model.MediaPrices[i].InvalidDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control" })
+                                                    <input class="form-control" name="MediaPrices[@i].InvalidDate" type="text" value="@invalidDate" />
                                                 </div>
                                             </td>
                                         </tr>
                                     }
-
-
                                 </tbody>
 
                             </table>

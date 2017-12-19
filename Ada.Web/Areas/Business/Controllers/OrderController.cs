@@ -73,7 +73,8 @@ namespace Business.Controllers
                     DiscountMoney = d.TotalDiscountMoney,
                     AdderBy = d.AddedBy,
                     PurchaseSchedule = GetPurchaseSchedule(d),
-                    OrderDetailCount = d.BusinessOrderDetails.Count
+                    OrderDetailCount = d.BusinessOrderDetails.Count,
+                    Remark = d.Remark
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -153,7 +154,7 @@ namespace Business.Controllers
             entity.AddedById = CurrentManager.Id;
             entity.AddedDate = DateTime.Now;
             entity.BusinessType = viewModel.BusinessType;
-            
+            entity.Remark = viewModel.Remark;
             entity.LinkManId = viewModel.LinkManId;
             entity.LinkManName = viewModel.LinkManName;
             entity.Transactor = viewModel.Transactor;
@@ -260,6 +261,7 @@ namespace Business.Controllers
             entity.SettlementType = viewModel.SettlementType;
             entity.OrderDate = viewModel.OrderDate;
             entity.TotalDiscountMoney = viewModel.DiscountMoney;
+            entity.Remark = viewModel.Remark;
             //删除已剔除的
             var ids = orderDetails.Select(d => d.Id).ToList();
             foreach (var entityBusinessOrderDetail in entity.BusinessOrderDetails)

@@ -150,9 +150,9 @@ namespace Ada.Core.ViewModel.Business
         [Required]
         public DateTime? OrderDate { get; set; }
         /// <summary>
-        /// 备注
+        /// 项目摘要
         /// </summary>
-        [Display(Name = "备注")]
+        [Display(Name = "项目摘要")]
         public string Remark { get; set; }
         /// <summary>
         /// 订单明细

@@ -18,6 +18,7 @@ namespace Ada.Core.Domain.Business
         {
             BusinessOrderDetails = new HashSet<BusinessOrderDetail>();
             BusinessWriteOffs=new HashSet<BusinessWriteOff>();
+            BusinessInvoiceDetails = new HashSet<BusinessInvoiceDetail>();
         }
         /// <summary>
         /// 销售类型
@@ -148,5 +149,6 @@ namespace Ada.Core.Domain.Business
         public virtual LinkMan LinkMan { get; set; }
         public virtual ICollection<BusinessOrderDetail> BusinessOrderDetails { get; set; }
         public virtual ICollection<BusinessWriteOff> BusinessWriteOffs { get; set; }
+        public virtual ICollection<BusinessInvoiceDetail> BusinessInvoiceDetails { get; set; }
     }
 }

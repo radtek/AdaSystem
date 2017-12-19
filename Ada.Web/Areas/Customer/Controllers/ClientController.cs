@@ -31,6 +31,7 @@ namespace Customer.Controllers
         }
         public ActionResult GetList(CommpanyView viewModel)
         {
+            viewModel.Managers = PremissionData();
             var result = _commpanyService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {
@@ -152,6 +153,10 @@ namespace Customer.Controllers
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (entity.LinkMans.Count(d => d.IsDelete == false) > 0)
+            {
+                return Json(new { State = 0, Msg = "该公司下还有其他联系人信息，无法删除" });
+            }
             entity.DeletedBy = CurrentManager.UserName;
             entity.DeletedById = CurrentManager.Id;
             entity.DeletedDate = DateTime.Now;

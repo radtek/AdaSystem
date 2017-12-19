@@ -61,6 +61,8 @@
     <Compile Include="Mapping\Admin\ManagerActionMap.cs" />
     <Compile Include="Mapping\Admin\ActionMap.cs" />
     <Compile Include="Mapping\Admin\ManagerMap.cs" />
+    <Compile Include="Mapping\Business\BusinessInvoiceDetailMap.cs" />
+    <Compile Include="Mapping\Business\BusinessInvoiceMap.cs" />
     <Compile Include="Mapping\Business\BusinessOfferDetailMap.cs" />
     <Compile Include="Mapping\Business\BusinessOfferMap.cs" />
     <Compile Include="Mapping\Business\BusinessWriteOffMap.cs" />
@@ -201,6 +203,10 @@
     <Compile Include="Migrations\201712170621314_MediaUpdate201712171421.Designer.cs">
       <DependentUpon>201712170621314_MediaUpdate201712171421.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712190949596_BusinessInvoice.cs" />
+    <Compile Include="Migrations\201712190949596_BusinessInvoice.Designer.cs">
+      <DependentUpon>201712190949596_BusinessInvoice.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -295,6 +301,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712170621314_MediaUpdate201712171421.resx">
       <DependentUpon>201712170621314_MediaUpdate201712171421.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712190949596_BusinessInvoice.resx">
+      <DependentUpon>201712190949596_BusinessInvoice.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

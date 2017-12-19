@@ -9,19 +9,29 @@ using Ada.Core.ViewModel.Business;
 
 namespace Ada.Services.Business
 {
-    public class BusinessOrderService : IBusinessOrderService
+    public class BusinessInvoiceService : IBusinessInvoiceService
     {
         private readonly IDbContext _dbContext;
-        private readonly IRepository<BusinessOrder> _repository;
-        public BusinessOrderService(IDbContext dbContext,
-            IRepository<BusinessOrder> repository)
+        private readonly IRepository<BusinessInvoice> _repository;
+        public BusinessInvoiceService(IDbContext dbContext,
+            IRepository<BusinessInvoice> repository)
         {
             _dbContext = dbContext;
             _repository = repository;
         }
+        public void Add(BusinessInvoice entity)
+        {
+            _repository.Add(entity);
+            _dbContext.SaveChanges();
+        }
 
+        public void Delete(BusinessInvoice entity)
+        {
+            _repository.Remove(entity);
+            _dbContext.SaveChanges();
+        }
 
-        public IQueryable<BusinessOrder> LoadEntitiesFilter(BusinessOrderView viewModel)
+        public IQueryable<BusinessInvoice> LoadEntitiesFilter(BusinessInvoiceView viewModel)
         {
             var allList = _repository.LoadEntities(d => d.IsDelete == false);
             //条件过滤
@@ -31,15 +41,7 @@ namespace Ada.Services.Business
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.LinkManName.Contains(viewModel.search));
-            }
-            if (!string.IsNullOrWhiteSpace(viewModel.LinkManId))
-            {
-                allList = allList.Where(d => d.LinkManId == viewModel.LinkManId);
-            }
-            if (!string.IsNullOrWhiteSpace(viewModel.Remark))
-            {
-                allList = allList.Where(d => d.Remark.Contains(viewModel.Remark));
+                allList = allList.Where(d => d.Company.Contains(viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.Transactor))
             {
@@ -49,17 +51,9 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => d.Status==viewModel.Status);
             }
-            if (viewModel.VerificationStatus != null)
+            if (viewModel.MoneyStatus != null)
             {
-                allList = allList.Where(d => d.VerificationStatus == viewModel.VerificationStatus);
-            }
-            if (viewModel.AuditStatus != null)
-            {
-                allList = allList.Where(d => d.AuditStatus == viewModel.AuditStatus);
-            }
-            if (!string.IsNullOrWhiteSpace(viewModel.OrderNum))
-            {
-                allList = allList.Where(d => d.OrderNum == viewModel.OrderNum);
+                allList = allList.Where(d => d.MoneyStatus == viewModel.MoneyStatus);
             }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
@@ -71,21 +65,11 @@ namespace Ada.Services.Business
             }
             return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
         }
-        public void Add(BusinessOrder entity)
-        {
-            _repository.Add(entity);
-            _dbContext.SaveChanges();
-        }
 
-        public void Update(BusinessOrder entity)
+        public void Update(BusinessInvoice entity)
         {
+
             _repository.Update(entity);
-            _dbContext.SaveChanges();
-        }
-
-        public void Delete(BusinessOrder entity)
-        {
-            _repository.Delete(entity);
             _dbContext.SaveChanges();
         }
     }

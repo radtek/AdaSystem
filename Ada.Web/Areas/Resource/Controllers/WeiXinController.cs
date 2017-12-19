@@ -81,11 +81,7 @@ namespace Resource.Controllers
         public ActionResult Add()
         {
             MediaView viewModel = new MediaView();
-            var mediaType = _mediaTypeService.GetMediaTypeByCallIndex("weixin");
-            viewModel.MediaTypeId = mediaType.Id;
             viewModel.Status = Consts.StateNormal;
-            viewModel.MediaPrices = mediaType.AdPositions
-                .Select(d => new MediaPriceView() { AdPositionName = d.Name, PurchasePrice = 0, AdPositionId = d.Id, PriceDate = DateTime.Now }).ToList();
             viewModel.Transactor = CurrentManager.UserName;
             viewModel.TransactorId = CurrentManager.Id;
             return View(viewModel);
@@ -146,7 +142,8 @@ namespace Resource.Controllers
             entity.IsSlide = viewModel.IsSlide;
             entity.IsRecommend = viewModel.IsRecommend;
 
-            entity.MediaTypeId = viewModel.MediaTypeId;
+            var mediaType = _mediaTypeService.GetMediaTypeByCallIndex("weixin");
+            entity.MediaTypeId = mediaType.Id;
             entity.LinkManId = viewModel.LinkManId;
             //媒体价格
             foreach (var viewModelMediaPrice in viewModel.MediaPrices)
@@ -292,11 +289,24 @@ namespace Resource.Controllers
             //价格
             foreach (var viewModelMediaPrice in viewModel.MediaPrices)
             {
-                var price = _mediaPriceRepository.LoadEntities(d => d.Id == viewModelMediaPrice.Id).FirstOrDefault();
-                price.InvalidDate = viewModelMediaPrice.InvalidDate;
-                price.PriceDate = viewModelMediaPrice.PriceDate;
-                price.PurchasePrice = viewModelMediaPrice.PurchasePrice;
-                //TODO 出售价格
+                if (string.IsNullOrWhiteSpace(viewModelMediaPrice.Id))
+                {
+                    MediaPrice price = new MediaPrice();
+                    price.Id = IdBuilder.CreateIdNum();
+                    price.AdPositionId = viewModelMediaPrice.AdPositionId;
+                    price.AdPositionName = viewModelMediaPrice.AdPositionName;
+                    price.InvalidDate = viewModelMediaPrice.InvalidDate;
+                    price.PurchasePrice = viewModelMediaPrice.PurchasePrice;
+                    price.PriceDate = viewModelMediaPrice.PriceDate;
+                    entity.MediaPrices.Add(price);
+                }
+                else
+                {
+                    var price = _mediaPriceRepository.LoadEntities(d => d.Id == viewModelMediaPrice.Id).FirstOrDefault();
+                    price.InvalidDate = viewModelMediaPrice.InvalidDate;
+                    price.PriceDate = viewModelMediaPrice.PriceDate;
+                    price.PurchasePrice = viewModelMediaPrice.PurchasePrice;
+                }
             }
             _mediaService.Update(entity);
             TempData["Msg"] = "更新成功";
