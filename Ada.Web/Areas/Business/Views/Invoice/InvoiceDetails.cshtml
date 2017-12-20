@@ -1,0 +1,58 @@
+﻿
+@model Ada.Core.Domain.Business.BusinessInvoice
+
+<div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">发票详情</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>
+                                    订单编号
+                                </th>
+                                <th>
+                                    项目摘要
+                                </th>
+                                <th>
+                                    开票金额
+                                </th>
+                                
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var item in Model.BusinessInvoiceDetails)
+                            {
+                                <tr>
+                                    <td>@item.BusinessOrder.OrderNum</td>
+                                    <td>@item.BusinessOrder.Remark</td>
+                                    <td>@item.InvoiceMoney</td>
+                                    
+                                </tr>
+                            }
+                            <tr>
+                                <td></td>
+                                <td>合计</td>
+                                <td>@Model.TotalMoney</td>
+                               
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

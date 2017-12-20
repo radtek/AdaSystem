@@ -95,6 +95,13 @@ formatter.payStatus = function (value, row, index) {
         return "<span class='label'>待付</span>";
     }
 };
+formatter.invoiceStatus = function (value, row, index) {
+    if (value == 1) {
+        return "<span class='label label-primary'>已开</span>";
+    } else {
+        return "<span class='label'>待开</span>";
+    }
+};
 formatter.purchaseStatus = function(value, row, index) {
     if (value == 2) {
         return "<span class='label label-primary'>已确认</span>";

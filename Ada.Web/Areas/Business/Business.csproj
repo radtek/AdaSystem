@@ -106,6 +106,7 @@
   <ItemGroup>
     <Content Include="Scripts\offer.js" />
     <Content Include="Scripts\order.js" />
+    <Content Include="Scripts\invoice.js" />
     <Content Include="Scripts\writeoff.js" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -121,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
+    <Content Include="Views\Invoice\InvoiceDetails.cshtml" />
     <None Include="packages.config" />
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
@@ -142,6 +144,11 @@
     <Content Include="Views\Offer\OfferEdit.cshtml" />
     <Content Include="Views\Offer\Preview.cshtml" />
     <Content Include="Views\WriteOff\Detail.cshtml" />
+    <Content Include="Views\Invoice\Index.cshtml" />
+    <Content Include="Views\Invoice\Add.cshtml" />
+    <Content Include="Views\Invoice\OrderDetails.cshtml" />
+    <Content Include="Views\Invoice\InvoiceEdit.cshtml" />
+    <Content Include="Views\Invoice\Update.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -151,7 +158,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="Views\Invoice\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Ada.Core\Ada.Core.csproj">

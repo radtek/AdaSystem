@@ -1,0 +1,113 @@
+﻿
+@using Ada.Core.Infrastructure
+@using Ada.Services.Admin
+@model Ada.Core.ViewModel.Business.BusinessInvoiceView
+@{
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var invoiceTitles = fieldService.GetFieldsByKey("InvoiceTitle").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var invoiceTypes = fieldService.GetFieldsByKey("InvoiceType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+}
+
+<div class="sk-spinner sk-spinner-wave">
+    <div class="sk-rect2"></div>
+    <div class="sk-rect3"></div>
+    <div class="sk-rect4"></div>
+    <div class="sk-rect5"></div>
+</div>
+<div class="form-horizontal">
+    <div class="row">
+
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.LinkManId, Html.DisplayNameFor(d => d.LinkManId).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                <select class="form-control" required="" name="LinkManId" id="LinkManId">
+                    <option value="@Model.LinkManId">@Model.LinkManName</option>
+                </select>
+                @Html.HiddenFor(d => d.LinkManName)
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.TransactorId, Html.DisplayNameFor(d => d.TransactorId).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                <select class="form-control" required="" name="TransactorId" id="TransactorId">
+                    <option value="@Model.TransactorId">@Model.Transactor</option>
+                </select>
+                @Html.HiddenFor(d => d.Transactor)
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.TotalMoney, Html.DisplayNameFor(d => d.TotalMoney).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.TotalMoney, new { @class = "form-control", @readonly = "" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.InvoiceTitle, Html.DisplayNameFor(d => d.InvoiceTitle).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.DropDownListFor(d => d.InvoiceTitle, invoiceTitles, new { @class = "form-control", required = "" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.InvoiceType, Html.DisplayNameFor(d => d.InvoiceType).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.DropDownListFor(d => d.InvoiceType, invoiceTypes, new { @class = "form-control", required = "" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.Company, Html.DisplayNameFor(d => d.Company).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.Company, new { @class = "form-control", required = "" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.TaxNum, Html.DisplayNameFor(d => d.TaxNum).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.TaxNum, new { @class = "form-control", required = "" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.Address, Html.DisplayNameFor(d => d.Address).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.Address, new { @class = "form-control", required = "" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.Bank, Html.DisplayNameFor(d => d.Bank).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.Bank, new { @class = "form-control", required = "" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.BankNum, Html.DisplayNameFor(d => d.BankNum).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.BankNum, new { @class = "form-control", required = "" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.Phone, Html.DisplayNameFor(d => d.Phone).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.Phone, new { @class = "form-control", required = "" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.Remark, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+   
+    <div class="hr-line-dashed"></div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="toolbar" class="btn-group">
+                <button id="btn_add" type="button" class="btn btn-primary btn-outline">
+                    <i class="fa fa-plus"></i> 添加相关销售订单
+                </button>
+            </div>
+            <table id="table"></table>
+            @Html.HiddenFor(d => d.OrderDetails)
+        </div>
+    </div>
+    @Html.HiddenFor(d => d.Id)
+</div>

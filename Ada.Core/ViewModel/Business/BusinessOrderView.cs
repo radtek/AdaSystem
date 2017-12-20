@@ -166,9 +166,14 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "采购进度")]
         public string PurchaseSchedule { get; set; }
         /// <summary>
-        /// 订单明细数
+        /// 订单明细数IsInvoice
         /// </summary>
         [Display(Name = "订单明细数")]
         public int OrderDetailCount { get; set; }
+        /// <summary>
+        /// 是否开票
+        /// </summary>
+        [Display(Name = "是否开票")]
+        public bool? IsInvoice { get; set; }
     }
 }

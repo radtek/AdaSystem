@@ -207,6 +207,18 @@
     <Compile Include="Migrations\201712190949596_BusinessInvoice.Designer.cs">
       <DependentUpon>201712190949596_BusinessInvoice.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712200302007_InvoiceUpdate20171220.cs" />
+    <Compile Include="Migrations\201712200302007_InvoiceUpdate20171220.Designer.cs">
+      <DependentUpon>201712200302007_InvoiceUpdate20171220.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712200343393_InvoiceUpdate201712201143.cs" />
+    <Compile Include="Migrations\201712200343393_InvoiceUpdate201712201143.Designer.cs">
+      <DependentUpon>201712200343393_InvoiceUpdate201712201143.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712200538116_InvoiceUpdate201712201337.cs" />
+    <Compile Include="Migrations\201712200538116_InvoiceUpdate201712201337.Designer.cs">
+      <DependentUpon>201712200538116_InvoiceUpdate201712201337.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -304,6 +316,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712190949596_BusinessInvoice.resx">
       <DependentUpon>201712190949596_BusinessInvoice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712200302007_InvoiceUpdate20171220.resx">
+      <DependentUpon>201712200302007_InvoiceUpdate20171220.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712200343393_InvoiceUpdate201712201143.resx">
+      <DependentUpon>201712200343393_InvoiceUpdate201712201143.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712200538116_InvoiceUpdate201712201337.resx">
+      <DependentUpon>201712200538116_InvoiceUpdate201712201337.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

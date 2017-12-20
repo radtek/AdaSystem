@@ -70,9 +70,54 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "经办人")]
         public string TransactorId { get; set; }
         /// <summary>
-        /// 付款金额
+        /// 客户名称
+        /// </summary>
+        [Display(Name = "客户名称")]
+        public string LinkManId { get; set; }
+        /// <summary>
+        /// 客户名称
+        /// </summary>
+        [Display(Name = "客户名称")]
+        public string LinkManName { get; set; }
+        /// <summary>
+        /// 开票金额
         /// </summary>
         [Display(Name = "发票金额")]
         public decimal? TotalMoney { get; set; }
+        /// <summary>
+        /// 申请日期
+        /// </summary>
+        [Display(Name = "申请日期")]
+        public DateTime? AddedDate { get; set; }
+        /// <summary>
+        /// 开票明细
+        /// </summary>
+        [Display(Name = "开票明细")]
+        public string OrderDetails { get; set; }
+        /// <summary>
+        /// 开票内容
+        /// </summary>
+        [Display(Name = "开票内容")]
+        public string Remark { get; set; }
+        /// <summary>
+        /// 开票日期
+        /// </summary>
+        [Display(Name = "开票日期")]
+        public DateTime? InvoiceTime { get; set; }
+        /// <summary>
+        /// 到款日期
+        /// </summary>
+        [Display(Name = "到款日期")]
+        public DateTime? PayTime { get; set; }
+        /// <summary>
+        /// 收款单号
+        /// </summary>
+        [Display(Name = "收款单号")]
+        public string ReceivableNum { get; set; }
+        /// <summary>
+        /// 发票号
+        /// </summary>
+        [Display(Name = "发票号")]
+        public string InvoiceNum { get; set; }
     }
 }

@@ -61,6 +61,10 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => d.OrderNum == viewModel.OrderNum);
             }
+            if (viewModel.IsInvoice == false)
+            {
+                allList = allList.Where(d => d.BusinessInvoiceDetails.Count==0);
+            }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;

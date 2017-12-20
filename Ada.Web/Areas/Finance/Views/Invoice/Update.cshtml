@@ -1,0 +1,226 @@
+﻿@using System.Web.Optimization
+@using Microsoft.Ajax.Utilities
+@model Ada.Core.ViewModel.Business.BusinessInvoiceView
+@{
+    ViewBag.Title = "处理发票";
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "销售开票", Value = Url.Action("Index") } };
+}
+@Html.Partial("Bread", urls)
+
+
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="tabs-container">
+                    <p class="bg-danger">@Html.ValidationMessage("message") </p>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#tab-1"> 开票信息</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-2"> 处理发票</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="panel-body">
+                                
+                                <div class="form-horizontal">
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.InvoiceTitle, Html.DisplayNameFor(d => d.InvoiceTitle).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.InvoiceTitle, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.InvoiceType, Html.DisplayNameFor(d => d.InvoiceType).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.InvoiceType, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Address, Html.DisplayNameFor(d => d.Address).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Address, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Bank, Html.DisplayNameFor(d => d.Bank).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Bank, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.BankNum, Html.DisplayNameFor(d => d.BankNum).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.BankNum, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Company, Html.DisplayNameFor(d => d.Company).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Company, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Phone, Html.DisplayNameFor(d => d.Phone).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Phone, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.TaxNum, Html.DisplayNameFor(d => d.TaxNum).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.TaxNum, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.TotalMoney, Html.DisplayNameFor(d => d.TotalMoney).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.TotalMoney, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Remark, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                
+                            </div>
+                        </div>
+                        <div id="tab-2" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.InvoiceNum, Html.DisplayNameFor(d => d.InvoiceNum).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.InvoiceNum, new { @class = "form-control", required = "" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            <div class="radio radio-info radio-inline">
+                                                @Html.RadioButtonFor(d => d.Status, 1)
+                                                <label> 已开 </label>
+                                            </div>
+                                            <div class="radio radio-info radio-inline">
+                                                @Html.RadioButtonFor(d => d.Status, 0)
+                                                <label> 待开 </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.InvoiceTime, Html.DisplayNameFor(d => d.InvoiceTime).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-4">
+                                            <div class="input-group date">
+                                                @Html.TextBoxFor(d => d.InvoiceTime, Model.InvoiceTime.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control", @readonly = "" })
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.MoneyStatus, Html.DisplayNameFor(d => d.MoneyStatus).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            <div class="radio radio-info radio-inline">
+                                                @Html.RadioButtonFor(d => d.MoneyStatus, 1)
+                                                <label> 已收款 </label>
+                                            </div>
+                                            <div class="radio radio-info radio-inline">
+                                                @Html.RadioButtonFor(d => d.MoneyStatus, 0)
+                                                <label> 未收款 </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.PayTime, Html.DisplayNameFor(d => d.PayTime).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-4">
+                                            <div class="input-group date">
+                                                @Html.TextBoxFor(d => d.PayTime, Model.PayTime.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control", @readonly = "" })
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.ReceivableNum, Html.DisplayNameFor(d => d.ReceivableNum).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.ReceivableNum, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <div class="col-sm-4 col-sm-offset-2">
+                                            <a class="btn btn-outline btn-default" href="@Url.Action("Index")"><i class="fa fa-reply"></i> 返回</a>
+                                            <button class="btn btn-primary" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
+                                        </div>
+                                    </div>
+                                    @Html.HiddenFor(d => d.Id)
+                                </div>
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/dateTimePickerStyle")
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/dateTimePickerScript")
+    <script>
+        $(function() {
+            $('.input-group.date').datetimepicker({
+                language: 'zh-CN',
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                minView: 2,
+                forceParse: 0,
+                format: "yyyy年mm月dd日"
+            });
+        });
+    </script>
+}
+

@@ -38,6 +38,11 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "纳税识别号")]
         public string TaxNum { get; set; }
         /// <summary>
+        /// 发票号
+        /// </summary>
+        [Display(Name = "发票号")]
+        public string InvoiceNum { get; set; }
+        /// <summary>
         /// 注册地址
         /// </summary>
         [Display(Name = "注册地址")]
@@ -63,10 +68,25 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "发票状态")]
         public short? Status { get; set; }
         /// <summary>
+        /// 开票日期
+        /// </summary>
+        [Display(Name = "开票日期")]
+        public DateTime? InvoiceTime { get; set; }
+        /// <summary>
         /// 到款状态
         /// </summary>
         [Display(Name = "到款状态")]
         public short? MoneyStatus { get; set; }
+        /// <summary>
+        /// 到款日期
+        /// </summary>
+        [Display(Name = "到款日期")]
+        public DateTime? PayTime { get; set; }
+        /// <summary>
+        /// 收款单号
+        /// </summary>
+        [Display(Name = "收款单号")]
+        public string ReceivableNum { get; set; }
         /// <summary>
         /// 经办人
         /// </summary>
@@ -78,10 +98,21 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "经办人")]
         public string TransactorId { get; set; }
         /// <summary>
-        /// 付款金额
+        /// 开票金额
         /// </summary>
-        [Display(Name = "发票金额")]
+        [Display(Name = "开票金额")]
         public decimal? TotalMoney { get; set; }
+        /// <summary>
+        /// 联系客户
+        /// </summary>
+        [Display(Name = "联系客户")]
+        public string LinkManName { get; set; }
+        /// <summary>
+        /// 联系客户
+        /// </summary>
+        [Display(Name = "联系客户")]
+        public string LinkManId { get; set; }
+        public virtual LinkMan LinkMan { get; set; }
 
         public virtual ICollection<BusinessInvoiceDetail> BusinessInvoiceDetails { get; set; }
     }
