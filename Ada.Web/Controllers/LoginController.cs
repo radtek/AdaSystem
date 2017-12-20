@@ -28,6 +28,10 @@ namespace Ada.Web.Controllers
         }
         public ActionResult Index()
         {
+            if (Session["LoginManager"] != null)
+            {
+                return RedirectToAction("Index", "Home", new { area = "Dashboards" });
+            }
             return View();
         }
         [HttpPost]
@@ -56,7 +60,8 @@ namespace Ada.Web.Controllers
                 Id = IdBuilder.CreateIdNum(),
                 IpAddress = Utils.GetIpAddress(),
                 LoginTime = DateTime.Now,
-                WebInfo = Request.UserAgent
+                WebInfo = Request.UserAgent,
+                Remark = "成功"
             });
             _dbContext.SaveChanges();
             ManagerView managerView = new ManagerView()
@@ -73,7 +78,7 @@ namespace Ada.Web.Controllers
                 Organizations = manager.Organizations.Count > 0 ? String.Join("-", manager.Organizations.Select(d => d.OrganizationName)) : ""
             };
             Session["LoginManager"] = SerializeHelper.SerializeToString(managerView);
-            //清空缓存
+            //清空登陆日志缓存
             _signals.Trigger("LoginLog" + managerView.Id + ".Changed");
 
             return RedirectToAction("Index", "Home", new { area = "Dashboards" });
