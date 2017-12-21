@@ -1,0 +1,210 @@
+﻿@using System.Web.Optimization
+@using Ada.Core
+@using Ada.Core.Domain.Resource
+@using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Resource
+@using Microsoft.Ajax.Utilities
+@model List<Media>
+@{
+    ViewBag.Title = "媒体查询";
+    var repository = EngineContext.Current.Resolve<IRepository<MediaType>>();
+    var mediaTypes = repository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis).ToList();
+    MediaView view = ViewBag.ViewModel;
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index","Home",new{area= "Dashboards" })">工作台</a>
+            </li>
+            <li class="active">
+                <strong>@ViewBag.Title</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+
+    <div class="ibox-content m-b-sm border-bottom">
+        <div class="row">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label">媒体类型</label>
+                        <select name="MediaTypeId" class="form-control" id="MediaTypeId">
+                            <option value="">请选择</option>
+                            @foreach (var item in mediaTypes)
+                            {
+                                if (item.Id == view.MediaTypeId)
+                                {
+                                    <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))' selected="selected">@item.TypeName</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))'>@item.TypeName</option>
+                                }
+
+                            }
+                        </select>
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label">广告位</label>
+                        <select name="AdPositionName" class="form-control" id="AdPositionName">
+                            @if (string.IsNullOrWhiteSpace(view.AdPositionName))
+                            {
+                                <option value="">不限</option>
+                            }
+                            else
+                            {
+                                <option value="@view.AdPositionName" selected="selected">@view.AdPositionName</option>
+                            }
+
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label">价格范围：</label>
+                        <div class="input-daterange input-group">
+                            <input class="form-control" name="PriceStart" type="number" value="@view.PriceStart" />
+                            <span class="input-group-addon">至</span>
+                            <input class="form-control" name="PriceEnd" type="number" value="@view.PriceEnd" />
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label">媒体名称</label>
+                        <textarea class="form-control" cols="20" name="MediaNames" placeholder="多个媒体查询，请用逗号隔开" rows="4">@view.MediaNames</textarea>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label">媒体ID</label>
+                        <textarea class="form-control" cols="20" name="MediaIDs" placeholder="多个ID查询，请用逗号隔开" rows="4">@view.MediaIDs</textarea>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 开始搜索</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="sk-spinner sk-spinner-wave">
+                        <div class="sk-rect2"></div>
+                        <div class="sk-rect3"></div>
+                        <div class="sk-rect4"></div>
+                        <div class="sk-rect5"></div>
+                    </div>
+                    @Html.ValidationMessage("message")
+                    @if (Model != null)
+                    {
+                        <div class="hr-line-dashed"></div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+
+                                    <th>媒体类型</th>
+                                    <th>媒体名称</th>
+                                    <th data-breakpoints="xs sm">粉丝数</th>
+                                    <th data-breakpoints="xs">媒体价格</th>
+                                    <th data-breakpoints="all" data-title="媒体内容">媒体内容</th>
+                                    <th data-breakpoints="xs sm">经办媒介</th>
+                                    <th data-breakpoints="all" data-title="媒体备注">备注</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+
+                                        <td>@item.MediaType.TypeName</td>
+                                        <td>@item.MediaName</td>
+                                        <td>@item.FansNum</td>
+                                        <td>
+                                            @foreach (var price in item.MediaPrices)
+                                            {
+                                                var str = price.AdPositionName + "：¥ " + price.PurchasePrice + "　　价格有效期至：" + price.InvalidDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"));
+                                                <div class="p-xxs bg-info">@str</div>
+                                            }
+                                        </td>
+                                        <td>@item.Content</td>
+                                        <td>@item.Transactor</td>
+                                        <td>@item.Remark</td>
+                                    </tr>
+                                }
+
+
+                            </tbody>
+                        </table>
+
+                    }
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/footableV3Styles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/footableV3")
+    <script type="text/javascript">
+        $(function() {
+            @if (Model != null)
+            {
+                <text>
+                    $('.table').footable();
+                </text>
+            }
+            $(".wrapper.wrapper-content form").validate({
+                submitHandler: function(form) {
+                    $('.row .ibox').children('.ibox-content').toggleClass('sk-loading');
+                    form.submit();
+                }
+                    });
+            $("#MediaTypeId").change(function () {
+                var $adpostion = $("#AdPositionName");
+                $adpostion.empty();
+                if ($(this).val()) {
+                    var selectdata = $(this).find('option:selected').attr("data-value");
+                    var arr = JSON.parse(selectdata);
+                    $adpostion.append("<option value=''>不限</option>");
+                    $.each(arr,
+                        function(k, v) {
+                            $adpostion.append("<option value='" + v + "'>" + v + "</option>");
+                        });
+                } else {
+                    $adpostion.append("<option value=''>不限</option>");
+                }
+            });
+        });
+    </script>
+}

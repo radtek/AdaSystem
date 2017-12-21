@@ -110,7 +110,7 @@
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
         $(document).ready(function () {
             var table = new TableInit();
@@ -162,6 +162,12 @@
                         align: "center"
                     },
                     {
+                        field: 'Platform',
+                        title: '@Html.DisplayNameFor(d=>d.Platform)',
+                        valign: "middle",
+                        align: "center"
+                    },
+                    {
                         field: 'MediaName',
                         title: '头条名称',
                         valign: "middle",
@@ -173,7 +179,7 @@
                                 } else {
                                     return value;
                                 }
-                                
+
                             } else {
                                 return value;
                             }
@@ -185,12 +191,7 @@
                         valign: "middle",
                         align: "center"
                     },*@
-                    {
-                        field: 'Platform',
-                        title: '@Html.DisplayNameFor(d=>d.Platform)',
-                        valign: "middle",
-                        align: "center"
-                    },
+
                     {
                         field: 'FansNum',
                         title: '@Html.DisplayNameFor(d=>d.FansNum)',
@@ -312,7 +313,7 @@
                 });
             });
         }
-    </script>
+</script>
 }
 
 

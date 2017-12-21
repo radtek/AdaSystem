@@ -232,6 +232,16 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "性别")]
         public string Sex { get; set; }
+        /// <summary>
+        /// 媒体名称集合
+        /// </summary>
+        [Display(Name = "媒体名称集合")]
+        public string MediaNames { get; set; }
+        /// <summary>
+        /// 媒体ID集合
+        /// </summary>
+        [Display(Name = "媒体ID集合")]
+        public string MediaIDs { get; set; }
     }
 
 }

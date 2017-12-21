@@ -112,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\InvoiceController.cs" />
+    <Compile Include="Controllers\MediasController.cs" />
     <Compile Include="Controllers\OfferController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\PayeeController.cs" />
@@ -149,6 +150,7 @@
     <Content Include="Views\Invoice\OrderDetails.cshtml" />
     <Content Include="Views\Invoice\InvoiceEdit.cshtml" />
     <Content Include="Views\Invoice\Update.cshtml" />
+    <Content Include="Views\Medias\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
