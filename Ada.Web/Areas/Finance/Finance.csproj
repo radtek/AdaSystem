@@ -112,6 +112,7 @@
     <Compile Include="Controllers\ExpenseOutController.cs" />
     <Compile Include="Controllers\IncomeExpendController.cs" />
     <Compile Include="Controllers\InvoiceController.cs" />
+    <Compile Include="Controllers\PurchaseInvoiceController.cs" />
     <Compile Include="Controllers\PurchasePayController.cs" />
     <Compile Include="Controllers\ReceivablesController.cs" />
     <Compile Include="FinanceAreaRegistration.cs" />
@@ -150,6 +151,8 @@
     <Content Include="Views\ExpenseOut\Update.cshtml" />
     <Content Include="Views\Invoice\Index.cshtml" />
     <Content Include="Views\Invoice\Update.cshtml" />
+    <Content Include="Views\PurchaseInvoice\Index.cshtml" />
+    <Content Include="Views\PurchaseInvoice\Update.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

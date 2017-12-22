@@ -1,5 +1,6 @@
 ﻿@using Ada.Core.Domain
 @using Ada.Core.ViewModel
+@using Microsoft.Ajax.Utilities
 @model Ada.Core.ViewModel.Admin.ManagerView
 @helper TreeHelper(List<TreeView> list, bool showBtn = false)
     {
@@ -33,10 +34,11 @@
 }
 <div class="tabs-container">
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#tab-1">用户信息</a></li>
-        <li class=""><a data-toggle="tab" href="#tab-2">角色分配</a></li>
-        <li class=""><a data-toggle="tab" href="#tab-3">机构组织</a></li>
-        <li class=""><a data-toggle="tab" href="#tab-4">特殊权限</a></li>
+        <li class="active"><a data-toggle="tab" href="#tab-1">登陆信息</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-2">基本信息</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-3">角色分配</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-4">机构组织</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-5">特殊权限</a></li>
     </ul>
     <div class="tab-content">
         <div id="tab-1" class="tab-pane active">
@@ -54,20 +56,6 @@
                         @Html.LabelFor(d => d.Password, Html.DisplayNameFor(d => d.Password).ToString(), new { @class = "col-sm-2 control-label" })
                         <div class="col-sm-10">
                             <input type="password" name="Password" value="@Model.Password" class="form-control" required="" />
-                        </div>
-                    </div>
-                    <div class="hr-line-dashed"></div>
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.RealName, Html.DisplayNameFor(d => d.RealName).ToString(), new { @class = "col-sm-2 control-label" })
-                        <div class="col-sm-10">
-                            @Html.TextBoxFor(d => d.RealName, new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="hr-line-dashed"></div>
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.Phone, Html.DisplayNameFor(d => d.Phone).ToString(), new { @class = "col-sm-2 control-label" })
-                        <div class="col-sm-10">
-                            @Html.TextBoxFor(d => d.Phone, new { @class = "form-control" })
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
@@ -106,6 +94,87 @@
         </div>
         <div id="tab-2" class="tab-pane">
             <div class="panel-body">
+
+                <div class="form-horizontal">
+
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.RealName, Html.DisplayNameFor(d => d.RealName).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.RealName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Phone, Html.DisplayNameFor(d => d.Phone).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.Phone, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.IdCard, Html.DisplayNameFor(d => d.IdCard).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.IdCard, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Birthday, Html.DisplayNameFor(d => d.Birthday).ToString(), new {@class = "col-sm-2 control-label"})
+                        <div class="col-sm-10">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="input-group date">
+                                        @Html.TextBoxFor(d => d.Birthday, Model.Birthday.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new {@class = "form-control", @readonly = ""})
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="radio radio-info radio-inline">
+                                        @Html.RadioButtonFor(d => d.IsLunar, false)
+                                        <label> 阳历 </label>
+                                    </div>
+                                    <div class="radio radio-info radio-inline">
+                                        @Html.RadioButtonFor(d => d.IsLunar, true)
+                                        <label> 农历 </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.EntryDate, Html.DisplayNameFor(d => d.EntryDate).ToString(), new {@class = "col-sm-2 control-label"})
+                        <div class="col-sm-4">
+                            <div class="input-group date">
+                                @Html.TextBoxFor(d => d.EntryDate, Model.EntryDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new {@class = "form-control", @readonly = ""})
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.QuitDate, Html.DisplayNameFor(d => d.QuitDate).ToString(), new {@class = "col-sm-2 control-label"})
+                        <div class="col-sm-4">
+                            <div class="input-group date">
+                                @Html.TextBoxFor(d => d.QuitDate, Model.QuitDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new {@class = "form-control", @readonly = ""})
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-3" class="tab-pane">
+            <div class="panel-body">
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="form-group col-md-6">
@@ -139,7 +208,7 @@
                 </div>
             </div>
         </div>
-        <div id="tab-3" class="tab-pane">
+        <div id="tab-4" class="tab-pane">
             <div class="panel-body">
                 <div class="row">
                     <div class="col-lg-12">
@@ -150,7 +219,7 @@
                 </div>
             </div>
         </div>
-        <div id="tab-4" class="tab-pane">
+        <div id="tab-5" class="tab-pane">
             <div class="panel-body content600">
                 <div class="row">
                     <div class="col-lg-12">

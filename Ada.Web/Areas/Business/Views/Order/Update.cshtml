@@ -1,5 +1,6 @@
 ﻿
 @using System.Web.Optimization
+@using Ada.Core.Domain
 @model Ada.Core.ViewModel.Business.BusinessOrderView
 @{
     ViewBag.Title = "编辑销售订单";
@@ -18,7 +19,7 @@
                     <div class="ibox-title">
                         <a class="btn btn-outline btn-default btn-sm" href="@Url.Action("Index")"><i class="fa fa-reply"></i> 返回</a>
                         <button class="btn btn-success btn-sm" type="submit" data-style="slide-right"><i class="fa fa-floppy-o"></i> 保存</button>
-                        <button class="btn btn-info btn-sm" type="button" onclick="transOrder('@Model.Id');"><i class="fa fa-floppy-o"></i> 转成采购订单</button>
+                        @*<button class="btn btn-info btn-sm" type="button" onclick="transOrder('@Model.Id');"><i class="fa fa-floppy-o"></i> 转成采购订单</button>*@
                     </div>
                     <div class="ibox-content">
                         <div class="sk-spinner sk-spinner-wave">
@@ -34,6 +35,17 @@
             </div>
         </div>
     }
+    <div id="toolbar" class="btn-group">
+        @if (Model.Status==Consts.StateLock||Model.Status==null)
+        {
+            <a class="btn btn-primary btn-outline" href="javascript:showMedia('@Url.Action("SelectMedia")');">
+                <i class="fa fa-plus"></i> 添加媒体资源
+            </a>
+        }
+        <a class="btn btn-primary btn-outline" href="javascript:transOrder();">
+            <i class="fa fa-arrow-circle-right"></i> 转成采购订单
+        </a>
+    </div>
 </div>
 
 @section Styles {
@@ -58,7 +70,17 @@
     </script>
     <script src="@Url.Content("~/Areas/Business/Scripts/order.js")"></script>
     <script>
-        function transOrder(id) {
+        function transOrder() {
+            var arrselections = $table.bootstrapTable('getSelections');
+            if (arrselections.length <= 0) {
+                swal("操作提醒", "请选择有效数据", "warning");
+                return;
+            }
+            var arr = [];
+            $.each(arrselections,
+                function(k, v) {
+                    arr.push(v.Id);
+                });
             swal({
                 title: "您确定吗?",
                 text: "确认要转成采购订单吗?",
@@ -75,7 +97,7 @@
                         '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
                     },
                     url: "@Url.Action("TransformPurchaseOrder")",
-                    data: { "id": id },
+                    data: { ids: arr.join(',') ,id:'@Model.Id'},
                     success: function (data) {
                         if (data.State == 1) {
                             swal({

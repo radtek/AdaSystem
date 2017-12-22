@@ -168,6 +168,7 @@ namespace Business.Controllers
             foreach (var businessOrderDetail in orderDetails)
             {
                 businessOrderDetail.Id = IdBuilder.CreateIdNum();
+                businessOrderDetail.Status = Consts.StateLock;//待转采购
                 entity.BusinessOrderDetails.Add(businessOrderDetail);
             }
             entity.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);
@@ -220,7 +221,8 @@ namespace Business.Controllers
                 d.MediaPriceId,
                 d.Remark,
                 d.CostMoney,
-                d.MediaByPurchase
+                d.MediaByPurchase,
+                d.Status
             });
             entity.OrderDetails = JsonConvert.SerializeObject(orderDetails);
 
@@ -277,6 +279,7 @@ namespace Business.Controllers
                 if (string.IsNullOrWhiteSpace(businessOrderDetail.Id))
                 {
                     businessOrderDetail.Id = IdBuilder.CreateIdNum();
+                    entity.Status = Consts.StateLock;
                     entity.BusinessOrderDetails.Add(businessOrderDetail);
                 }
                 else
@@ -325,25 +328,28 @@ namespace Business.Controllers
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
-        public ActionResult TransformPurchaseOrder(string id)
+        public ActionResult TransformPurchaseOrder(string id,string ids)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            var temp = _purchaseOrderRepository.LoadEntities(d => d.BusinessOrderId == id && d.IsDelete == false).FirstOrDefault();
-            if (temp != null)
+            var purchaseOrder = _purchaseOrderRepository.LoadEntities(d => d.BusinessOrderId == id && d.IsDelete == false).FirstOrDefault();
+            if (purchaseOrder == null)
             {
-                return Json(new { State = 0, Msg = "此订单已转采购，无需重复操作" });
+                purchaseOrder = new PurchaseOrder();
+                purchaseOrder.Id = IdBuilder.CreateIdNum();
+                purchaseOrder.BusinessOrderId = entity.Id;
+                purchaseOrder.BusinessBy = entity.Transactor;
+                purchaseOrder.BusinessById = entity.TransactorId;
+                purchaseOrder.OrderDate = DateTime.Now;
+                purchaseOrder.TotalMoney = 0;
+                purchaseOrder.OrderNum = IdBuilder.CreateOrderNum("CD");
+                purchaseOrder.Status = Consts.StateLock;
             }
-            PurchaseOrder purchaseOrder = new PurchaseOrder();
-            purchaseOrder.Id = IdBuilder.CreateIdNum();
-            purchaseOrder.BusinessOrderId = entity.Id;
-            purchaseOrder.BusinessBy = entity.Transactor;
-            purchaseOrder.BusinessById = entity.TransactorId;
-            purchaseOrder.OrderDate = DateTime.Now;
-            purchaseOrder.TotalMoney = 0;
-            purchaseOrder.OrderNum = IdBuilder.CreateOrderNum("CD");
-            purchaseOrder.Status = Consts.StateLock;
-            foreach (var entityBusinessOrderDetail in entity.BusinessOrderDetails)
+
+            var arr = ids.Split(',');
+            foreach (var orderid in arr)
             {
+                var entityBusinessOrderDetail=  _businessOrderDetailRepository.LoadEntities(d => d.Id == orderid).FirstOrDefault();
+                entityBusinessOrderDetail.Status = Consts.StateNormal;//已转采购
                 PurchaseOrderDetail purchaseOrderDetail = new PurchaseOrderDetail();
                 purchaseOrderDetail.Id = IdBuilder.CreateIdNum();
                 purchaseOrderDetail.BusinessOrderDetailId = entityBusinessOrderDetail.Id;
@@ -371,7 +377,7 @@ namespace Business.Controllers
                 purchaseOrderDetail.DiscountRate = 100;
                 purchaseOrder.PurchaseOrderDetails.Add(purchaseOrderDetail);
             }
-            entity.Status = Consts.StateNormal;//已下单
+            //entity.Status = Consts.StateNormal;//已下单
             _purchaseOrderService.Add(purchaseOrder);
             return Json(new { State = 1, Msg = "转换成功" });
         }

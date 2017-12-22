@@ -1189,6 +1189,8 @@
     <Content Include="Scripts\plugins\bootstrap-table\extensions\editable\bootstrap-table-editable.min.js" />
     <Content Include="Scripts\plugins\bootstrap-table\extensions\export\bootstrap-table-export.js" />
     <Content Include="Scripts\plugins\bootstrap-table\extensions\export\bootstrap-table-export.min.js" />
+    <Content Include="Scripts\plugins\bootstrap-table\extensions\export\tableExport.js" />
+    <Content Include="Scripts\plugins\bootstrap-table\extensions\export\tableExport.min.js" />
     <Content Include="Scripts\plugins\bootstrap-table\extensions\filter-control\bootstrap-table-filter-control.css" />
     <Content Include="Scripts\plugins\bootstrap-table\extensions\filter-control\bootstrap-table-filter-control.js" />
     <Content Include="Scripts\plugins\bootstrap-table\extensions\filter-control\bootstrap-table-filter-control.min.js" />

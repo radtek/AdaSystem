@@ -19,11 +19,28 @@
 </div>
 @section Styles {
     @Styles.Render("~/plugins/jsTreeStyles")
+    @Styles.Render("~/plugins/dateTimePickerStyle")
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/jsTree")
+    @Scripts.Render("~/plugins/dateTimePickerScript")
     <script src="@Url.Content("~/Areas/Admin/Scripts/manager.js")"></script>
+    <script>
+        $(function () {
+            $('.input-group.date').datetimepicker({
+                language: 'zh-CN',
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                minView: 2,
+                forceParse: 0,
+                format: "yyyy年mm月dd日"
+            });
+        });
+    </script>
 }
 

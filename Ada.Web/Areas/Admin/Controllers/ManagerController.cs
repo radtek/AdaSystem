@@ -55,6 +55,7 @@ namespace Admin.Controllers
                     UserName = d.UserName,
                     Password = Encrypt.Decode(d.Password),
                     Phone = d.Phone,
+                    Image = d.Image,
                     Status = d.Status,
                     RealName = d.RealName,
                     AddDate = d.AddedDate?.ToString("yyyy年MM月dd日") ?? "",
@@ -135,6 +136,7 @@ namespace Admin.Controllers
             ManagerView viewModel = new ManagerView();
             InitViewModel(viewModel);
             viewModel.Status = Consts.StateNormal;
+            viewModel.IsLunar = false;
             return View(viewModel);
         }
         [HttpPost]
@@ -169,6 +171,11 @@ namespace Admin.Controllers
                 RealName = viewModel.RealName,
                 Phone = viewModel.Phone,
                 Status = viewModel.Status,
+                IsLunar = viewModel.IsLunar,
+                IdCard = viewModel.IdCard,
+                Birthday = viewModel.Birthday,
+                EntryDate = viewModel.EntryDate,
+                QuitDate = viewModel.QuitDate,
                 Password = Encrypt.Encode(viewModel.Password),
                 Id = IdBuilder.CreateIdNum(),
                 AddedBy = CurrentManager.UserName,
@@ -188,6 +195,11 @@ namespace Admin.Controllers
             viewModel.Phone = manager.Phone;
             viewModel.Password = Encrypt.Decode(manager.Password);
             viewModel.Status = manager.Status;
+            viewModel.IdCard = manager.IdCard;
+            viewModel.EntryDate = manager.EntryDate;
+            viewModel.QuitDate = manager.QuitDate;
+            viewModel.Birthday = manager.Birthday;
+            viewModel.IsLunar = manager.IsLunar ?? false;
             viewModel.RealName = manager.RealName;
             viewModel.Roles = string.Join(",", manager.Roles.Select(r => r.Id));
             viewModel.OrganizationIds = manager.Organizations.Count > 0
@@ -228,6 +240,11 @@ namespace Admin.Controllers
             manager.RealName = viewModel.RealName;
             manager.Phone = viewModel.Phone;
             manager.Status = viewModel.Status;
+            manager.IdCard = viewModel.IdCard;
+            manager.Birthday = viewModel.Birthday;
+            manager.IsLunar = viewModel.IsLunar;
+            manager.EntryDate = viewModel.EntryDate;
+            manager.QuitDate = viewModel.QuitDate;
             manager.Password = Encrypt.Encode(viewModel.Password);
             manager.ModifiedById = CurrentManager.Id;
             manager.ModifiedBy = CurrentManager.UserName;

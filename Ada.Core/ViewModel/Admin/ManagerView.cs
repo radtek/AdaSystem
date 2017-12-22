@@ -110,5 +110,30 @@ namespace Ada.Core.ViewModel.Admin
         /// </summary>
         [Display(Name = "当前角色")]
         public string RoleName { get; set; }
+        /// <summary>
+        /// 生日
+        /// </summary>
+        [Display(Name = "生日")]
+        public DateTime? Birthday { get; set; }
+        /// <summary>
+        /// 是否农历
+        /// </summary>
+        [Display(Name = "是否农历")]
+        public bool? IsLunar { get; set; }
+        /// <summary>
+        /// 身份证
+        /// </summary>
+        [Display(Name = "身份证")]
+        public string IdCard { get; set; }
+        /// <summary>
+        /// 入职日期
+        /// </summary>
+        [Display(Name = "入职日期")]
+        public DateTime? EntryDate { get; set; }
+        /// <summary>
+        /// 离职日期
+        /// </summary>
+        [Display(Name = "离职日期")]
+        public DateTime? QuitDate { get; set; }
     }
 }

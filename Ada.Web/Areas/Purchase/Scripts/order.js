@@ -83,63 +83,63 @@ function initData() {
     initSelect2("LinkManId", linkmanSelect);
     initSelect2("TransactorId", transactorSelect);
     //计算金额
-    var taxinput = $('#Tax'),
-        discountinput = $('#DiscountMoney'),
-        purchaseinput = $('#PurchaseMoney'),
-        taxmoneyinput = $('#TaxMoney'),
-        discountrateinput = $('#DiscountRate'),
-        totalinput = $('#Money');
-    taxinput.add(discountinput).add(purchaseinput).add(totalinput).on('input propertychange', function () {
-        var tax = taxinput.val() || 0,
-            discount = discountinput.val() || 0,
-            purchase = purchaseinput.val() || 0,
-            money = totalinput.val() || 0,
-            taxmoney = taxmoneyinput.val() || 0,
-            currentid = $(this).attr("id"),
-            currentvalue = $(this).val();
-        if (currentid == "PurchaseMoney" && !isNaN(currentvalue)) {//无税金额
-            money = Math.toFixMoney(currentvalue * (1 + tax / 100));
-            taxmoney = Math.toFixMoney(currentvalue * (tax / 100));
-            discountBefore = Math.toFixMoney(money / (discountRate / 100));
-            discount = Math.toFixMoney(discountBefore - money);
-            discountinput.val(discount);
-            taxmoneyinput.val(taxmoney);
-            totalinput.val(money);
-            //discountBefore = money;
+    //var taxinput = $('#Tax'),
+    //    discountinput = $('#DiscountMoney'),
+    //    purchaseinput = $('#PurchaseMoney'),
+    //    taxmoneyinput = $('#TaxMoney'),
+    //    discountrateinput = $('#DiscountRate'),
+    //    totalinput = $('#Money');
+    //taxinput.add(discountinput).add(purchaseinput).add(totalinput).on('input propertychange', function () {
+    //    var tax = taxinput.val() || 0,
+    //        discount = discountinput.val() || 0,
+    //        purchase = purchaseinput.val() || 0,
+    //        money = totalinput.val() || 0,
+    //        taxmoney = taxmoneyinput.val() || 0,
+    //        currentid = $(this).attr("id"),
+    //        currentvalue = $(this).val();
+    //    if (currentid == "PurchaseMoney" && !isNaN(currentvalue)) {//无税金额
+    //        money = Math.toFixMoney(currentvalue * (1 + tax / 100));
+    //        taxmoney = Math.toFixMoney(currentvalue * (tax / 100));
+    //        discountBefore = Math.toFixMoney(money / (discountRate / 100));
+    //        discount = Math.toFixMoney(discountBefore - money);
+    //        discountinput.val(discount);
+    //        taxmoneyinput.val(taxmoney);
+    //        totalinput.val(money);
+    //        //discountBefore = money;
             
-        }
-        if (currentid == "Money" && !isNaN(currentvalue)) {//采购金额
-            purchase = Math.toFixMoney(currentvalue / (1 + tax / 100));
-            taxmoney = Math.toFixMoney(purchase * (tax / 100));
-            discountBefore = Math.toFixMoney(currentvalue / (discountRate / 100));
-            discount = Math.toFixMoney(discountBefore - currentvalue);
-            discountinput.val(discount);
-            taxmoneyinput.val(taxmoney);
-            purchaseinput.val(purchase);
-        }
-        if (currentid == "DiscountMoney" && !isNaN(currentvalue)) {//优惠金额
+    //    }
+    //    if (currentid == "Money" && !isNaN(currentvalue)) {//采购金额
+    //        purchase = Math.toFixMoney(currentvalue / (1 + tax / 100));
+    //        taxmoney = Math.toFixMoney(purchase * (tax / 100));
+    //        discountBefore = Math.toFixMoney(currentvalue / (discountRate / 100));
+    //        discount = Math.toFixMoney(discountBefore - currentvalue);
+    //        discountinput.val(discount);
+    //        taxmoneyinput.val(taxmoney);
+    //        purchaseinput.val(purchase);
+    //    }
+    //    if (currentid == "DiscountMoney" && !isNaN(currentvalue)) {//优惠金额
 
-            money = Math.toFixMoney(discountBefore - currentvalue);
-            if (discountBefore != 0) {
-                discountRate = Math.toFixMoney((money / discountBefore) * 100);
-                discountrateinput.val(discountRate);
-            }
-            purchase = Math.toFixMoney(money / (1 + tax / 100));
-            taxmoney = Math.toFixMoney(purchase * (tax / 100));
-            taxmoneyinput.val(taxmoney);
-            totalinput.val(money);
-            purchaseinput.val(purchase);
-        }
-        if (currentid == "Tax" && !isNaN(currentvalue)) {//税率
-            if (!isNaN(money)) {
-                purchase = Math.toFixMoney(money / (1 + currentvalue / 100));
-                taxmoney = Math.toFixMoney(purchase * (currentvalue / 100));
-                taxmoneyinput.val(taxmoney);
-                purchaseinput.val(purchase);
-            }
-        }
+    //        money = Math.toFixMoney(discountBefore - currentvalue);
+    //        if (discountBefore != 0) {
+    //            discountRate = Math.toFixMoney((money / discountBefore) * 100);
+    //            discountrateinput.val(discountRate);
+    //        }
+    //        purchase = Math.toFixMoney(money / (1 + tax / 100));
+    //        taxmoney = Math.toFixMoney(purchase * (tax / 100));
+    //        taxmoneyinput.val(taxmoney);
+    //        totalinput.val(money);
+    //        purchaseinput.val(purchase);
+    //    }
+    //    if (currentid == "Tax" && !isNaN(currentvalue)) {//税率
+    //        if (!isNaN(money)) {
+    //            purchase = Math.toFixMoney(money / (1 + currentvalue / 100));
+    //            taxmoney = Math.toFixMoney(purchase * (currentvalue / 100));
+    //            taxmoneyinput.val(taxmoney);
+    //            purchaseinput.val(purchase);
+    //        }
+    //    }
      
-    });
+    //});
 }
 
 //初始化下拉查找控件

@@ -48,6 +48,7 @@ namespace Business.Controllers
                     TotalMoney = d.TotalMoney,
                     Transactor = d.Transactor,
                     Status = d.Status,
+                    Remark = d.Remark,
                     OfferDate = d.OfferDate,
                     TotalSellMoney = d.TotalSellMoney,
                     TotalTaxMoney = d.TotalTaxMoney,

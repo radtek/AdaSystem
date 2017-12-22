@@ -2,7 +2,7 @@
 @using System.Web.Optimization
 @model Ada.Core.ViewModel.Purchase.PurchasePaymentView
 @{
-    ViewBag.Title = "媒介请款";
+    ViewBag.Title = "媒介发票";
 }
 @Html.Partial("Bread")
 
@@ -17,30 +17,15 @@
             </div>
         </div>
     </div>
-    <div id="blueimp-gallery" class="blueimp-gallery">
-        <div class="slides"></div>
-        <h3 class="title"></h3>
-        <a class="prev">‹</a>
-        <a class="next">›</a>
-        <a class="close">×</a>
-        <a class="play-pause"></a>
-        <ol class="indicator"></ol>
-    </div>
 </div>
-<div id="toolbar" class="btn-group">
-    <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
-        <i class="fa fa-plus"></i> 请款
-    </a>
-</div>
+
 
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
-    @Styles.Render("~/plugins/blueimp")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-    @Scripts.Render("~/plugins/lightboxGallery")
 <script type="text/javascript">
         $(document).ready(function () {
             var table = new TableInit();
@@ -51,8 +36,8 @@
             obj.Init = function() {
                 $('#table').bootstrapTable({
                 classes: "table table-no-bordered",
-                url: '@Url.Action("GetList")',         //请求后台的URL（*）BalanceMoneyMin
-                toolbar: '#toolbar',                //工具按钮用哪个容器
+                url: '@Url.Action("GetList", "Payment",new{area= "Purchase" })',         //请求后台的URL（*）BalanceMoneyMin
+                //toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）
@@ -74,22 +59,19 @@
                 cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
                 //detailView: true,                   //设置为 true 可以显示详细页面模式。
                 //detailFormatter: detailFormatter,
-                //queryParams: function(parameters) {
-                //    parameters.BalanceMoneyMin = 0.01;
-                //    return parameters;
-                //},
+                queryParams: function(parameters) {
+                    parameters.IsInvoice = true;
+                    return parameters;
+                },
                 formatSearch: function() {
                     return "@Html.DisplayNameFor(d => d.LinkManName)";
                 },
                 mobileResponsive:true,
                 columns: [
-                    //{
-                    //    checkbox: true,
-                    //    align: "center", valign: "middle"
-                    //},
+
                     {
                         field: 'BillNum',
-                        title: '@Html.DisplayNameFor(d=>d.BillNum)',
+                        title: '请款单据号',
                         align: "center", valign: "middle"
                     },
                     {
@@ -98,15 +80,19 @@
                         align: "center", valign: "middle"
                     },
                     {
-                        field: 'PayMoney',
-                        title: '@Html.DisplayNameFor(d=>d.PayMoney)',
-                        align: "center", valign: "middle"
+                        field: 'BillDate',
+                        title: '请款日期',
+                        align: "center", valign: "middle",
+                        formatter: function(value) {
+                            return  moment(value).format("YYYY-MM-DD");
+                        }
                     },
                     {
-                        field: 'DiscountMoney',
-                        title: '@Html.DisplayNameFor(d=>d.DiscountMoney)',
+                        field: 'InvoiceTitle',
+                        title: '@Html.DisplayNameFor(d=>d.InvoiceTitle)',
                         align: "center", valign: "middle"
                     },
+
                     {
                         field: 'Tax',
                         title: '@Html.DisplayNameFor(d=>d.Tax)',
@@ -114,31 +100,49 @@
                     },
                     {
                         field: 'RequstMoney',
-                        title: '@Html.DisplayNameFor(d=>d.RequstMoney)',
+                        title: '付款金额',
+                        align: "center", valign: "middle"
+                    },
+
+                    {
+                        field: 'InvoiceNum',
+                        title: '@Html.DisplayNameFor(d=>d.InvoiceNum)',
                         align: "center", valign: "middle"
                     },
                     {
-                        field: 'BillDate',
-                        title: '@Html.DisplayNameFor(d=>d.BillDate)',
+                        field: 'InvoiceDate',
+                        title: '@Html.DisplayNameFor(d=>d.InvoiceDate)',
                         align: "center", valign: "middle",
-                        formatter: function(value) {
-                            return  moment(value).format("YYYY-MM-DD");
+                        formatter: function (value) {
+                            if (value) {
+                                return  moment(value).format("YYYY-MM-DD");
+                            }
+
                         }
                     },
-                    @*{
-                        field: 'Status',
-                        title: '@Html.DisplayNameFor(d=>d.Status)',
+                    {
+                        field: 'InvoiceStauts',
+                        title: '@Html.DisplayNameFor(d=>d.InvoiceStauts)',
                         align: "center", valign: "middle",
-                        formatter: formatter.payStatus
-                    },*@
+                        formatter: function(value) {
+                            if (value) {
+                                return "<span class='label label-primary'>已收票</span>";
+                            } else {
+                                return "<span class='label'>未到票</span>";
+                            }
+                        }
+                    },
+                    {
+                        field: 'Transactor',
+                        title: '@Html.DisplayNameFor(d=>d.Transactor)',
+                        align: "center", valign: "middle"
+                    },
                     {
                         field: 'Id',
                         title: '操作',
                         align: "center", valign: "middle",
                         formatter: function (value,row) {
-                            return "<a class='btn btn-white btn-sm' href='javascript:;' onclick=\"initPayments('" + value + "');\");'><i class='fa fa-search'></i> 明细</a> " +
-                                    "<a class='btn btn-success btn-sm' href='@Url.Action("Update")?id=" + value + "'><i class='fa fa-pencil'></i>  编辑</a> " +
-                                    "<a class='btn btn-danger btn-sm' href='javascript:;' onclick=\"cancle('" + value +"');\");'><i class='fa fa-reply'></i> 撤销</a>";
+                            return "<a class='btn btn-success btn-sm' href='@Url.Action("Update")?id=" + value + "'><i class='fa fa-pencil'></i>  处理</a> ";
                         }
 
                     }
@@ -149,59 +153,12 @@
             return obj;
         };
 
-        function initPayments(id) {
-            $("#modalView").load("@Url.Action("PaymentDetails")?id="+id,
-                    function () {
-                        $('#modalView .modal').modal('show');
-                    });
 
-        }
-        //撤销
-        function cancle(id) {
-            swal({
-                title: "您确定吗?",
-                text: "确认要撤销此单据吗?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                closeOnConfirm: false
-            }, function () {
-                $.ajax({
-                    type: "post",
-                    headers: {
-                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                    },
-                    url: "@Url.Action("Delete")",
-                    data: { "id": id },
-                    success: function (data) {
-                        if (data.State == 1) {
-                            $("#table").bootstrapTable('refresh');
-                            swal({
-                                title: "操作成功",
-                                text: data.Msg,
-                                timer: 2000,
-                                type:"success",
-                                showConfirmButton: false
-                            });
 
-                        } else {
-                            swal("操作提醒", data.Msg, "warning");
-                        }
-                    },
-                    error: function () {
-                        swal("操作失败", data.Msg, "error");
-                    },
-                    complete: function () {
-
-                    }
-                });
-            });
-        }
 
 </script>
 }
+
 
 
 

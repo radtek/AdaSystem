@@ -82,7 +82,18 @@
                         return "@Html.DisplayNameFor(d => d.UserName)";
                     },
                     columns: [
-
+                        {
+                            field: 'UserName',
+                            align: "right", valign: "middle",
+                            formatter: function (value, row) {
+                                if (row.Image) {
+                                    return '<img alt="'+value+'" class="img-circle" src="' + row.Image + '" style="width: 38px; height: 38px;"/>';
+                                } else {
+                                    return '<img alt="' + value + '" class="img-circle" src="/Images/noheader.png" style="width: 38px; height: 38px;"/>';
+                                }
+                                
+                            }
+                        },
                         {
                             field: 'UserName',
                             title: '@Html.DisplayNameFor(d=>d.UserName)',

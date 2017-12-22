@@ -86,15 +86,7 @@
     <div class="hr-line-dashed"></div>
     <div class="row">
         <div class="col-lg-12">
-            <div id="toolbar" class="btn-group">
-                @if (Model.Status==Consts.StateLock||Model.Status==null)
-                {
-                    <a class="btn btn-primary btn-outline" href="javascript:showMedia('@Url.Action("SelectMedia")');">
-                        <i class="fa fa-plus"></i> 添加媒体资源
-                    </a>
-                }
-                
-            </div>
+            
             <table id="table"></table>
             @Html.HiddenFor(d => d.OrderDetails)
             @Html.HiddenFor(d=>d.Id)

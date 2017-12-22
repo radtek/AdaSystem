@@ -20,17 +20,20 @@ namespace Purchase.Controllers
     {
         private readonly IPurchasePaymentService _purchasePaymentService;
         private readonly IRepository<PurchasePayment> _repository;
+        private readonly IRepository<PurchaseOrderDetail> _purchaseOrderDetailrepository;
         private readonly IRepository<PurchasePaymentDetail> _purchasePaymentDetailRepository;
         private readonly IRepository<PurchasePaymentOrderDetail> _purchasePaymentOrderDetailRepository;
         public PaymentController(IPurchasePaymentService purchasePaymentService,
             IRepository<PurchasePayment> repository,
             IRepository<PurchasePaymentDetail> purchasePaymentDetailRepository,
-            IRepository<PurchasePaymentOrderDetail> purchasePaymentOrderDetailRepository)
+            IRepository<PurchasePaymentOrderDetail> purchasePaymentOrderDetailRepository,
+            IRepository<PurchaseOrderDetail> purchaseOrderDetailrepository)
         {
             _purchasePaymentService = purchasePaymentService;
             _repository = repository;
             _purchasePaymentDetailRepository = purchasePaymentDetailRepository;
             _purchasePaymentOrderDetailRepository = purchasePaymentOrderDetailRepository;
+            _purchaseOrderDetailrepository = purchaseOrderDetailrepository;
         }
         public ActionResult Index()
         {
@@ -51,7 +54,16 @@ namespace Purchase.Controllers
                     Transactor = d.Transactor,
                     BillDate = d.BillDate,
                     BillNum = d.BillNum,
-                    PayMoney = d.PurchasePaymentDetails.Sum(m => m.PayMoney)
+                    PayMoney = d.PayMoney,
+                    Tax = d.Tax,
+                    DiscountMoney = d.DiscountMoney,
+                    RequstMoney = d.PurchasePaymentDetails.Sum(m=>m.PayMoney),
+                    InvoiceTitle = d.InvoiceTitle,
+                    InvoiceStauts = d.InvoiceStauts,
+                    InvoiceDate = d.InvoiceDate,
+                    InvoiceNum = d.InvoiceNum,
+                    IsInvoice = d.IsInvoice
+
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -62,6 +74,9 @@ namespace Purchase.Controllers
             viewModel.Transactor = CurrentManager.UserName;
             viewModel.TransactorId = CurrentManager.Id;
             viewModel.PayMoney = 0;
+            viewModel.Tax = 0;
+            viewModel.IsInvoice = false;
+            viewModel.DiscountMoney = 0;
             return View(viewModel);
         }
 
@@ -103,6 +118,19 @@ namespace Purchase.Controllers
             payment.Transactor = viewModel.Transactor;
             payment.TransactorId = viewModel.TransactorId;
             payment.Status = Consts.StateLock;//待付款
+            payment.IsInvoice = viewModel.IsInvoice;
+            if (payment.IsInvoice==true)
+            {
+                if (string.IsNullOrWhiteSpace(viewModel.InvoiceTitle))
+                {
+                    ModelState.AddModelError("message", "请填写开票公司");
+                    return View(viewModel);
+                }
+            }
+            payment.InvoiceTitle = viewModel.InvoiceTitle;
+            payment.InvoiceStauts = false;
+            payment.Tax = viewModel.Tax ?? 0;
+            payment.DiscountMoney = viewModel.DiscountMoney ?? 0;
             payment.LinkManName = viewModel.LinkManName;
             payment.LinkManId = viewModel.LinkManId;
             decimal? ordermoney = 0;
@@ -130,11 +158,17 @@ namespace Purchase.Controllers
                 orderDetail.AddedById = CurrentManager.Id;
                 orderDetail.AddedDate = DateTime.Now;
                 payment.PurchasePaymentOrderDetails.Add(orderDetail);
-                ordermoney += item.CostMoney;
+                //更新订单金额
+                var order = _purchaseOrderDetailrepository.LoadEntities(d => d.Id == item.Id).FirstOrDefault();
+                order.Tax = item.Tax;
+                order.TaxMoney = item.TaxMoney;
+                order.PurchaseMoney = item.PurchaseMoney;
+                order.Money = item.Money;
+                ordermoney += item.Money;
             }
-            if (paymoney > ordermoney)
+            if (paymoney > ordermoney - payment.DiscountMoney)
             {
-                ModelState.AddModelError("message", "申请付款金额超出成本金额");
+                ModelState.AddModelError("message", "申请付款金额超出订单总额");
                 return View(viewModel);
             }
             payment.AddedBy = CurrentManager.UserName;
@@ -142,6 +176,8 @@ namespace Purchase.Controllers
             payment.AddedDate = DateTime.Now;
             payment.BillNum = IdBuilder.CreateOrderNum("QK");
             payment.BillDate = viewModel.BillDate;
+            payment.PayMoney = ordermoney;
+            payment.TaxMoney = details.Sum(d => d.TaxMoney);
             _purchasePaymentService.Add(payment);
             TempData["Msg"] = "申请成功";
             return RedirectToAction("Index");
@@ -157,6 +193,10 @@ namespace Purchase.Controllers
             viewModel.LinkManId = entity.LinkManId;
             viewModel.LinkManName = entity.LinkManName;
             viewModel.BillNum = entity.BillNum;
+            viewModel.IsInvoice = entity.IsInvoice;
+            viewModel.InvoiceTitle = entity.InvoiceTitle;
+            viewModel.DiscountMoney = entity.DiscountMoney;
+            viewModel.Tax = entity.Tax;
             viewModel.Id = id;
             List<PurchaseOrderDetail> details = entity.PurchasePaymentOrderDetails.Select(d => d.PurchaseOrderDetail).ToList();
             viewModel.IsDisable = entity.PurchasePaymentDetails.Count(d => d.AuditStatus == Consts.StateNormal) == 0;
@@ -167,7 +207,10 @@ namespace Purchase.Controllers
                 d.MediaName,
                 d.MediaTypeName,
                 d.Money,
-                d.AdPositionName
+                d.AdPositionName,
+                d.Tax,
+                d.PurchaseMoney,
+                d.TaxMoney
             }));
             var paydetails = entity.PurchasePaymentDetails.Select(d => new
             {
@@ -203,19 +246,32 @@ namespace Purchase.Controllers
                 ModelState.AddModelError("message", "请款付款信息不能为空");
                 return View(viewModel);
             }
+            if (viewModel.IsInvoice == true)
+            {
+                if (string.IsNullOrWhiteSpace(viewModel.InvoiceTitle))
+                {
+                    ModelState.AddModelError("message", "请填写开票公司");
+                    return View(viewModel);
+                }
+            }
             PurchasePayment payment = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
             payment.Transactor = viewModel.Transactor;
             payment.TransactorId = viewModel.TransactorId;
+            payment.IsInvoice = viewModel.IsInvoice;
+            payment.InvoiceTitle = viewModel.InvoiceTitle;
             decimal? ordermoney;
             decimal? paymoney = 0;
             //如果审核了，以下信息就不作更新
-            if (payment.PurchasePaymentDetails.Count(d => d.AuditStatus == Consts.StateNormal) == 0)
+            if (payment.PurchasePaymentDetails.Count(d => d.AuditStatus == Consts.StateNormal) == 0)//未审核
             {
                 decimal? money = 0;
                 payment.LinkManName = viewModel.LinkManName;
                 payment.LinkManId = viewModel.LinkManId;
                 payment.BillDate = viewModel.BillDate;
-                //清空明细，重新增加
+                payment.Tax = viewModel.Tax ?? 0;
+                payment.DiscountMoney = viewModel.DiscountMoney ?? 0;
+                
+                //订单明细
                 _purchasePaymentOrderDetailRepository.Remove(payment.PurchasePaymentOrderDetails);
                 foreach (var item in orderdetails)
                 {
@@ -226,9 +282,18 @@ namespace Purchase.Controllers
                     orderDetail.AddedById = CurrentManager.Id;
                     orderDetail.AddedDate = DateTime.Now;
                     payment.PurchasePaymentOrderDetails.Add(orderDetail);
-                    money += item.CostMoney;
+                    //更新订单金额
+                    var order = _purchaseOrderDetailrepository.LoadEntities(d => d.Id == item.Id).FirstOrDefault();
+                    order.Tax = item.Tax;
+                    order.TaxMoney = item.TaxMoney;
+                    order.PurchaseMoney = item.PurchaseMoney;
+                    order.Money = item.Money;
+                    money += item.Money;
                 }
-                ordermoney = money;
+                payment.PayMoney = money;
+                payment.TaxMoney = orderdetails.Sum(d => d.TaxMoney);
+                ordermoney = money - payment.DiscountMoney;
+                //付款明细
                 _purchasePaymentDetailRepository.Remove(payment.PurchasePaymentDetails);
                 foreach (var item in paydetails)
                 {
@@ -242,11 +307,11 @@ namespace Purchase.Controllers
                     paymoney += item.PayMoney;
                 }
             }
-            else
+            else//已审核
             {
                 paymoney = payment.PurchasePaymentDetails.Where(d => d.AuditStatus == Consts.StateNormal).Sum(d => d.PayMoney);//审核通过的金额
-                ordermoney = payment.PurchasePaymentOrderDetails.Sum(d => d.PurchaseOrderDetail.CostMoney);
-                //只增加
+                ordermoney = payment.PurchasePaymentOrderDetails.Sum(d => d.PurchaseOrderDetail.Money) - payment.DiscountMoney;
+                //只增加付款明细
                 foreach (var item in paydetails)
                 {
                     var temp = _purchasePaymentDetailRepository.LoadEntities(d => d.Id == item.Id).FirstOrDefault();
@@ -278,7 +343,7 @@ namespace Purchase.Controllers
             }
             if (paymoney > ordermoney)
             {
-                ModelState.AddModelError("message", "申请付款金额超出成本金额");
+                ModelState.AddModelError("message", "申请付款金额超出订单总额");
                 return View(viewModel);
             }
             payment.ModifiedBy = CurrentManager.UserName;

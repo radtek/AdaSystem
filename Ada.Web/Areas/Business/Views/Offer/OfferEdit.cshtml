@@ -11,6 +11,12 @@
 <div class="form-horizontal">
     <div class="row">
         <div class="form-group col-md-4">
+            @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(d => d.Remark, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group col-md-4">
             @Html.LabelFor(d => d.LinkManId, Html.DisplayNameFor(d => d.LinkManId).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
                 <select class="form-control" required="" name="LinkManId" id="LinkManId">
@@ -68,12 +74,7 @@
                 @Html.TextBoxFor(d => d.ValidDays, new { @class = "form-control" })
             </div>
         </div>
-        <div class="form-group col-md-4">
-            @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "col-sm-4 control-label" })
-            <div class="col-sm-8">
-                @Html.TextBoxFor(d => d.Remark, new { @class = "form-control" })
-            </div>
-        </div>
+
     </div>
     <div class="hr-line-dashed"></div>
     <div class="row">

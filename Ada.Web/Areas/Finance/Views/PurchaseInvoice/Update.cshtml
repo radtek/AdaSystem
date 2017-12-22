@@ -1,0 +1,279 @@
+﻿@using System.Web.Optimization
+@using Ada.Core.Infrastructure
+@using Ada.Services.Finance
+@using Microsoft.Ajax.Utilities
+@model Ada.Core.Domain.Purchase.PurchasePayment
+@{
+    ViewBag.Title = "处理发票";
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "媒介发票", Value = Url.Action("Index") } };
+    var billService = EngineContext.Current.Resolve<IBillPaymentService>();
+}
+@Html.Partial("Bread", urls)
+
+
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="tabs-container">
+                    <p class="bg-danger">@Html.ValidationMessage("message") </p>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#tab-1"> 订单信息</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-2"> 付款信息</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-3"> 处理发票</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            媒体类型
+                                                        </th>
+                                                        <th>
+                                                            媒体名称
+                                                        </th>
+                                                        <th>
+                                                            广告位
+                                                        </th>
+                                                        <th>
+                                                            成本金额
+                                                        </th>
+                                                        <th>
+                                                            税率%
+                                                        </th>
+                                                        <th>
+                                                            税额
+                                                        </th>
+                                                        <th>
+                                                            采购金额
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.PurchasePaymentOrderDetails)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.PurchaseOrderDetail.MediaTypeName</td>
+                                                            <td>@item.PurchaseOrderDetail.MediaName</td>
+                                                            <td>@item.PurchaseOrderDetail.AdPositionName</td>
+                                                            <td>@item.PurchaseOrderDetail.CostMoney</td>
+                                                            <td>@item.PurchaseOrderDetail.Tax</td>
+                                                            <td>@item.PurchaseOrderDetail.TaxMoney</td>
+                                                            <td>@item.PurchaseOrderDetail.Money</td>
+                                                        </tr>
+                                                    }
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>合计</td>
+                                                        <td>@Model.PurchasePaymentOrderDetails.Sum(d => d.PurchaseOrderDetail.CostMoney)</td>
+                                                        <td></td>
+                                                        <td>@Model.PurchasePaymentOrderDetails.Sum(d => d.PurchaseOrderDetail.TaxMoney)</td>
+                                                        <td>@Model.PurchasePaymentOrderDetails.Sum(d => d.PurchaseOrderDetail.Money)</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+                        <div id="tab-2" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            付款性质
+                                                        </th>
+                                                        <th>
+                                                            开户行
+                                                        </th>
+                                                        <th>
+                                                            开户名
+                                                        </th>
+                                                        <th>
+                                                            开户号
+                                                        </th>
+                                                        <th>
+                                                            付款金额
+                                                        </th>
+                                                        <th>
+                                                            付款凭证
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.PurchasePaymentDetails)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.PaymentType</td>
+                                                            <td>@item.AccountBank</td>
+                                                            <td>@item.AccountName</td>
+                                                            <td>@item.AccountNum</td>
+                                                            <td>@item.PayMoney</td>
+                                                            <td>
+                                                                @{
+                                                                    var image = billService.GetByRequestNum(item.Id)?.Image;
+
+                                                                }
+                                                                @if (string.IsNullOrWhiteSpace(image))
+                                                                {
+                                                                    <span>暂无凭证</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="lightBoxGallery text-left">
+                                                                        <a href="@image" title="付款凭证" data-gallery="">
+                                                                            <i class="fa fa-picture-o"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                }
+
+
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>合计</td>
+                                                        <td>@Model.PurchasePaymentDetails.Sum(d => d.PayMoney)</td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div id="tab-3" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.InvoiceTitle, Html.DisplayNameFor(d => d.InvoiceTitle).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.InvoiceTitle, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.InvoiceNum, Html.DisplayNameFor(d => d.InvoiceNum).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.InvoiceNum, new { @class = "form-control", required = "" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.InvoiceStauts, Html.DisplayNameFor(d => d.InvoiceStauts).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            <div class="radio radio-info radio-inline">
+                                                @Html.RadioButtonFor(d => d.InvoiceStauts, false)
+                                                <label> 未到票 </label>
+                                            </div>
+                                            <div class="radio radio-info radio-inline">
+                                                @Html.RadioButtonFor(d => d.InvoiceStauts, true)
+                                                <label> 已收票 </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.InvoiceDate, Html.DisplayNameFor(d => d.InvoiceDate).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-4">
+                                            <div class="input-group date">
+                                                @Html.TextBoxFor(d => d.InvoiceDate, Model.InvoiceDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control", @readonly = "" })
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <div class="col-sm-4 col-sm-offset-2">
+                                            <a class="btn btn-outline btn-default" href="@Url.Action("Index")"><i class="fa fa-reply"></i> 返回</a>
+                                            <button class="btn btn-primary" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
+                                        </div>
+                                    </div>
+                                    @Html.HiddenFor(d => d.Id)
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div id="blueimp-gallery" class="blueimp-gallery">
+    <div class="slides"></div>
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+</div>
+@section Styles {
+    @Styles.Render("~/plugins/dateTimePickerStyle")
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+    @Styles.Render("~/plugins/blueimp")
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/dateTimePickerScript")
+    @Scripts.Render("~/plugins/lightboxGallery")
+    <script>
+        $(function () {
+            $('.input-group.date').datetimepicker({
+                language: 'zh-CN',
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                minView: 2,
+                forceParse: 0,
+                format: "yyyy年mm月dd日"
+            });
+        });
+    </script>
+}
+
+

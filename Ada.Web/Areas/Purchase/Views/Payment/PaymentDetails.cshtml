@@ -119,23 +119,29 @@
                                 <h3 class="text-center">订单明细</h3>
                             </caption>
                             <thead>
-                            <tr>
-                                <th>
-                                    媒体类型
-                                </th>
-                                <th>
-                                    媒体名称
-                                </th>
-                                <th>
-                                    广告位
-                                </th>
-                                <th>
-                                    成本金额
-                                </th>
-                                <th>
-                                    采购金额
-                                </th>
-                            </tr>
+                                <tr>
+                                    <th>
+                                        媒体类型
+                                    </th>
+                                    <th>
+                                        媒体名称
+                                    </th>
+                                    <th>
+                                        广告位
+                                    </th>
+                                    <th>
+                                        成本金额
+                                    </th>
+                                    <th>
+                                        税率
+                                    </th>
+                                    <th>
+                                        税额
+                                    </th>
+                                    <th>
+                                        采购金额
+                                    </th>
+                                </tr>
                             </thead>
                             <tbody>
                             @foreach (var item in Model.PurchasePaymentOrderDetails)
@@ -145,16 +151,20 @@
                                     <td>@item.PurchaseOrderDetail.MediaName</td>
                                     <td>@item.PurchaseOrderDetail.AdPositionName</td>
                                     <td>@item.PurchaseOrderDetail.CostMoney</td>
+                                    <td>@item.PurchaseOrderDetail.Tax</td>
+                                    <td>@item.PurchaseOrderDetail.TaxMoney</td>
                                     <td>@item.PurchaseOrderDetail.Money</td>
                                 </tr>
                             }
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td>合计</td>
-                                <td>@Model.PurchasePaymentOrderDetails.Sum(d => d.PurchaseOrderDetail.CostMoney)</td>
-                                <td>@Model.PurchasePaymentOrderDetails.Sum(d => d.PurchaseOrderDetail.Money)</td>
-                            </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>合计</td>
+                                    <td>@Model.PurchasePaymentOrderDetails.Sum(d => d.PurchaseOrderDetail.CostMoney)</td>
+                                    <td></td>
+                                    <td>@Model.TaxMoney</td>
+                                    <td>@Model.PurchasePaymentOrderDetails.Sum(d => d.PurchaseOrderDetail.Money)</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

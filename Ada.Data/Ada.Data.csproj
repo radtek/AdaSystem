@@ -219,6 +219,18 @@
     <Compile Include="Migrations\201712200538116_InvoiceUpdate201712201337.Designer.cs">
       <DependentUpon>201712200538116_InvoiceUpdate201712201337.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712220058260_PurchasePaymentUpdate20171222.cs" />
+    <Compile Include="Migrations\201712220058260_PurchasePaymentUpdate20171222.Designer.cs">
+      <DependentUpon>201712220058260_PurchasePaymentUpdate20171222.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712220130115_PurchasePaymentUpdate20171222929.cs" />
+    <Compile Include="Migrations\201712220130115_PurchasePaymentUpdate20171222929.Designer.cs">
+      <DependentUpon>201712220130115_PurchasePaymentUpdate20171222929.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712220405430_ManagerUpdate.cs" />
+    <Compile Include="Migrations\201712220405430_ManagerUpdate.Designer.cs">
+      <DependentUpon>201712220405430_ManagerUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -325,6 +337,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712200538116_InvoiceUpdate201712201337.resx">
       <DependentUpon>201712200538116_InvoiceUpdate201712201337.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712220058260_PurchasePaymentUpdate20171222.resx">
+      <DependentUpon>201712220058260_PurchasePaymentUpdate20171222.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712220130115_PurchasePaymentUpdate20171222929.resx">
+      <DependentUpon>201712220130115_PurchasePaymentUpdate20171222929.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712220405430_ManagerUpdate.resx">
+      <DependentUpon>201712220405430_ManagerUpdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

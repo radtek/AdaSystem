@@ -80,6 +80,11 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "经办媒介")]
         public string MediaByPurchase { get; set; }
         /// <summary>
+        /// 订单状态
+        /// </summary>
+        [Display(Name = "订单状态")]
+        public short? Status { get; set; }
+        /// <summary>
         /// 媒体名称
         /// </summary>
         [Display(Name = "媒体名称")]

@@ -119,5 +119,25 @@ namespace Ada.Core.ViewModel.Purchase
         /// </summary>
         [Display(Name = "审核提醒")]
         public string WarningMsg { get; set; }
+        /// <summary>
+        /// 是否开票
+        /// </summary>
+        [Display(Name = "是否开票")]
+        public bool? IsInvoice { get; set; }
+        /// <summary>
+        /// 开票公司
+        /// </summary>
+        [Display(Name = "开票公司")]
+        public string InvoiceTitle { get; set; }
+        /// <summary>
+        /// 订单总额
+        /// </summary>
+        [Display(Name = "订单总额")]
+        public decimal? OrderMoney { get; set; }
+        /// <summary>
+        /// 优惠金额
+        /// </summary>
+        [Display(Name = "优惠金额")]
+        public decimal? DiscountMoney { get; set; }
     }
 }

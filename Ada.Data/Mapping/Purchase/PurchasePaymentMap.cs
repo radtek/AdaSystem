@@ -21,7 +21,8 @@ namespace Ada.Data.Mapping.Purchase
             Property(s => s.BillNum).HasMaxLength(32);
             Property(s => s.Transactor).HasMaxLength(32);
             Property(s => s.TransactorId).HasMaxLength(32);
-           
+            Property(s => s.InvoiceNum).HasMaxLength(32);
+            Property(s => s.InvoiceTitle).HasMaxLength(32);
 
 
             //Property(s => s.AddedDate);

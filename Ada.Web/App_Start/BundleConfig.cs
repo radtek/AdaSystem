@@ -486,6 +486,10 @@ namespace Ada.Web
             bundles.Add(new ScriptBundle("~/plugins/bootstrapEditTableScript").Include(
                 "~/Scripts/plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js",
                 "~/Scripts/plugins/bootstrap-table/extensions/editable/bootstrap-editable.min.js"));
+            //Bootstrap Table Export
+            bundles.Add(new ScriptBundle("~/plugins/bootstrapTableExport").Include(
+                "~/Scripts/plugins/bootstrap-table/extensions/export/bootstrap-table-export.min.js",
+                "~/Scripts/plugins/bootstrap-table/extensions/export/tableExport.min.js"));
             //Bootstrap DateTime Picker
             bundles.Add(new StyleBundle("~/plugins/dateTimePickerStyle").Include(
                 "~/Content/plugins/datetimepicker/bootstrap-datetimepicker.min.css"));

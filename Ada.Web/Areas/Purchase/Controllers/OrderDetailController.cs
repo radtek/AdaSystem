@@ -81,12 +81,12 @@ namespace Purchase.Controllers
             item.CostMoney = entity.CostMoney;
             item.PublishDate = entity.PublishDate;
             item.PublishLink = entity.PublishLink;
-            item.Tax = entity.Tax;
-            item.TaxMoney = entity.TaxMoney;
-            item.PurchaseMoney = entity.PurchaseMoney;
-            item.Money = entity.Money;
-            item.DiscountRate = entity.DiscountRate;
-            item.DiscountMoney = entity.DiscountMoney;
+            //item.Tax = entity.Tax;
+            //item.TaxMoney = entity.TaxMoney;
+            //item.PurchaseMoney = entity.PurchaseMoney;
+            //item.Money = entity.Money;
+            //item.DiscountRate = entity.DiscountRate;
+            //item.DiscountMoney = entity.DiscountMoney;
             item.Transactor = entity.Transactor;
             item.TransactorId = entity.TransactorId;
             item.BusinessBy = entity.PurchaseOrder.BusinessBy;
@@ -118,20 +118,16 @@ namespace Purchase.Controllers
             entity.TransactorId = viewModel.TransactorId;
             entity.PublishDate = viewModel.PublishDate;
             entity.PublishLink = viewModel.PublishLink;
-            entity.DiscountRate = viewModel.DiscountRate;
-            entity.Tax = viewModel.Tax;
-            entity.TaxMoney = viewModel.TaxMoney;
-            entity.PurchaseMoney = viewModel.PurchaseMoney;
-            entity.Money = viewModel.Money;
-            entity.DiscountMoney = viewModel.DiscountMoney;
+            //entity.DiscountRate = viewModel.DiscountRate;
+            //entity.Tax = viewModel.Tax;
+            //entity.TaxMoney = viewModel.TaxMoney;
+            //entity.PurchaseMoney = viewModel.PurchaseMoney;
+            //entity.Money = viewModel.Money;
+            //entity.DiscountMoney = viewModel.DiscountMoney;
             //entity.BargainMoney = viewModel.BargainMoney;
+            entity.CostMoney = viewModel.CostMoney;
             entity.Status = viewModel.Status;
             entity.Remark = viewModel.Remark;
-            if (viewModel.PurchaseMoney>entity.CostMoney)
-            {
-                ModelState.AddModelError("message", "无税金额大于成本金额");
-                return View(viewModel);
-            }
             _purchaseOrderDetailService.Update(entity);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");

@@ -42,6 +42,9 @@ namespace Finance.Controllers
             viewModel.PayMoney = payment.PayMoney;
             viewModel.RequestNum = id;
             viewModel.PaymentType = payment.PaymentType;
+            viewModel.IsInvoice = payment.PurchasePayment.IsInvoice;
+            viewModel.InvoiceTitle = payment.PurchasePayment.InvoiceTitle;
+
             return View(viewModel);
         }
         [HttpPost]

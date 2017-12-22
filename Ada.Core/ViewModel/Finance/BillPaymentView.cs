@@ -95,5 +95,15 @@ namespace Ada.Core.ViewModel.Finance
         /// </summary>
         [Display(Name = "申请金额")]
         public decimal? PayMoney { get; set; }
+        /// <summary>
+        /// 是否开票
+        /// </summary>
+        [Display(Name = "是否开票")]
+        public bool? IsInvoice { get; set; }
+        /// <summary>
+        /// 开票公司
+        /// </summary>
+        [Display(Name = "开票公司")]
+        public string InvoiceTitle { get; set; }
     }
 }

@@ -70,12 +70,11 @@
                 mobileResponsive: true,
                 columns: [
 
-                    @*{
-                        field: 'Status',
-                        title: '@Html.DisplayNameFor(d=>d.Status)',
-                        align: "center", valign: "middle",
-                        formatter: formatter.businessStatus
-                    },*@
+                    {
+                        field: 'Remark',
+                        title: '@Html.DisplayNameFor(d=>d.Remark)',
+                        align: "center", valign: "middle"
+                    },
                     {
                         field: 'OfferNum',
                         title: '@Html.DisplayNameFor(d=>d.OfferNum)',

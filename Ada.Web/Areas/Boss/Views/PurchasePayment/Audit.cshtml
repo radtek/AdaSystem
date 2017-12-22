@@ -73,7 +73,30 @@
                                             @Html.TextBoxFor(d => d.PayMoney, new { @class = "form-control", @readonly = "readonly" })
                                         </div>
                                     </div>
-
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.OrderMoney, Html.DisplayNameFor(d => d.OrderMoney).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.OrderMoney, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.DiscountMoney, Html.DisplayNameFor(d => d.DiscountMoney).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.DiscountMoney, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    @if (Model.IsInvoice == true)
+                                    {
+                                        <div class="hr-line-dashed"></div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(d => d.InvoiceTitle, Html.DisplayNameFor(d => d.InvoiceTitle).ToString(), new { @class = "col-sm-2 control-label" })
+                                            <div class="col-sm-10">
+                                                @Html.TextBoxFor(d => d.InvoiceTitle, new { @class = "form-control", @readonly = "readonly" })
+                                            </div>
+                                        </div>
+                                    }
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
                                         @Html.LabelFor(d => d.AuditStatus, Html.DisplayNameFor(d => d.AuditStatus).ToString(), new { @class = "col-sm-2 control-label" })
@@ -121,6 +144,12 @@
                                                             成本金额
                                                         </th>
                                                         <th>
+                                                            税率%
+                                                        </th>
+                                                        <th>
+                                                            税额
+                                                        </th>
+                                                        <th>
                                                             采购金额
                                                         </th>
                                                     </tr>
@@ -128,19 +157,23 @@
                                                 <tbody>
                                                     @foreach (var item in details)
                                                     {
-                                                        <tr>
-                                                            <td>@item.PurchaseOrderDetail.MediaTypeName</td>
-                                                            <td>@item.PurchaseOrderDetail.MediaName</td>
-                                                            <td>@item.PurchaseOrderDetail.AdPositionName</td>
-                                                            <td>@item.PurchaseOrderDetail.CostMoney</td>
-                                                            <td>@item.PurchaseOrderDetail.Money</td>
-                                                        </tr>
+                                                    <tr>
+                                                        <td>@item.PurchaseOrderDetail.MediaTypeName</td>
+                                                        <td>@item.PurchaseOrderDetail.MediaName</td>
+                                                        <td>@item.PurchaseOrderDetail.AdPositionName</td>
+                                                        <td>@item.PurchaseOrderDetail.CostMoney</td>
+                                                        <td>@item.PurchaseOrderDetail.Tax</td>
+                                                        <td>@item.PurchaseOrderDetail.TaxMoney</td>
+                                                        <td>@item.PurchaseOrderDetail.Money</td>
+                                                    </tr>
                                                     }
                                                     <tr>
                                                         <td></td>
                                                         <td></td>
                                                         <td>合计</td>
                                                         <td>@details.Sum(d => d.PurchaseOrderDetail.CostMoney)</td>
+                                                        <td></td>
+                                                        <td>@details.Sum(d => d.PurchaseOrderDetail.TaxMoney)</td>
                                                         <td>@details.Sum(d => d.PurchaseOrderDetail.Money)</td>
                                                     </tr>
                                                 </tbody>

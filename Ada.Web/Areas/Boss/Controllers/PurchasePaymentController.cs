@@ -64,6 +64,10 @@ namespace Boss.Controllers
             viewModel.PaymentType = entity.PaymentType;
             viewModel.PayMoney = entity.PayMoney;
             viewModel.AuditStatus = entity.AuditStatus;
+            viewModel.IsInvoice = entity.PurchasePayment.IsInvoice;
+            viewModel.InvoiceTitle = entity.PurchasePayment.InvoiceTitle;
+            viewModel.OrderMoney = entity.PurchasePayment.PayMoney;
+            viewModel.DiscountMoney = entity.PurchasePayment.DiscountMoney;
             ViewBag.LinkMan = entity.PurchasePayment.LinkMan;
             ViewBag.OrderDetail = entity.PurchasePayment.PurchasePaymentOrderDetails.ToList();
             ViewBag.PayDetail = entity.PurchasePayment.PurchasePaymentDetails.ToList();

@@ -84,9 +84,9 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "联系客户")]
         public string LinkManName { get; set; }
         /// <summary>
-        /// 备注
+        /// 报价摘要
         /// </summary>
-        [Display(Name = "备注")]
+        [Display(Name = "报价摘要")]
         public string Remark { get; set; }
         /// <summary>
         /// 资源明细

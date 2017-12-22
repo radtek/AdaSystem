@@ -94,5 +94,10 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "采购状态")]
         public short? PurchaseStatus { get; set; }
+        /// <summary>
+        /// 订单状态
+        /// </summary>
+        [Display(Name = "订单状态")]
+        public short? Status { get; set; }
     }
 }

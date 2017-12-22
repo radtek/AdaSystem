@@ -68,7 +68,6 @@ window.operateEvents = {
 };
 $(function () {
     initData();
-
     $(".wrapper.wrapper-content form").validate({
         submitHandler: function (form) {
             setTableData();
@@ -132,12 +131,50 @@ function initData() {
                 footerFormatter: sumFormatter
             },
             {
+                field: 'PurchaseMoney',
+                title: '无税金额',
+                align: "center", valign: "middle",
+                editable: {
+                    mode: "inline", emptytext: '请输入', validate: function (value) {
+                        if (isNaN(value)) {
+                            return '请输入有效的金额';
+                        }
+                        var index = $(this).parents('tr[data-index]').data('index'),
+                            data = $table.bootstrapTable('getData'),
+                            row = data[index];
+                        if (value > row.CostMoney) {
+                            return '不能超出成本价格';
+                        }
+                    }
+                },
+                footerFormatter: sumFormatter
+            },
+            {
                 field: 'Money',
                 title: '采购金额',
                 align: "center", valign: "middle",
+                //editable: {
+                //    mode: "inline",
+                //    emptytext: '请输入',
+                //    validate: function (value) {
+                //        if (isNaN(value)) {
+                //            return '请输入有效的金额';
+                //        }
+                //    }
+                //},
                 footerFormatter: sumFormatter
-            }
-            ,
+            },
+            {
+                field: 'Tax',
+                title: '税率%',
+                align: "center", valign: "middle"
+            },
+            {
+                field: 'TaxMoney',
+                title: '税额',
+                align: "center", valign: "middle",
+                footerFormatter: sumFormatter
+            },
             {
                 field: 'operate',
                 title: '操作',
@@ -150,6 +187,17 @@ function initData() {
         ],
         formatNoMatches: function () {  //没有匹配的结果
             return '请先添加订单';
+        },
+        onEditableSave: function (field, row, oldValue, $el) {
+            var index = $($el).parents('tr[data-index]').data('index');
+            if (row.PurchaseMoney && field == "PurchaseMoney") {
+                row.Money = Math.toFixMoney(row.PurchaseMoney * (1 + row.Tax / 100));//乘以税率
+            }
+            if (row.Money && field == "Money") {
+                row.PurchaseMoney = Math.toFixMoney(row.Money / (1 + row.Tax / 100));
+            }
+            row.TaxMoney = Math.toFixMoney(row.PurchaseMoney * (row.Tax / 100));
+            $table.bootstrapTable('updateRow', { index: index, row: row });
         },
         showFooter: true
     });
@@ -248,6 +296,28 @@ function initData() {
             }
         });
     });
+    //税率变动事件
+    $('#Tax').on('input propertychange', function () {
+        var tax = $(this).val();
+        //更新表格数据
+        if (tax.trim() != "" && !isNaN(tax)) {
+            var temp = $table.bootstrapTable('getData');
+            if (temp.length > 0) {
+                $.each(temp,
+                    function (k, v) {
+                        if (v.PurchaseMoney) {
+                            v.Money = Math.toFixMoney(v.PurchaseMoney * (1 + tax / 100));//乘以税率
+                        } else if (v.Money) {
+                            v.PurchaseMoney = Math.toFixMoney(v.Money / (1 + tax / 100));
+                        }
+                        v.TaxMoney = Math.toFixMoney(v.PurchaseMoney * (tax / 100));
+                        v.Tax = tax;
+                    });
+                $table.bootstrapTable('load', temp);
+            }
+        }
+    });
+
 }
 //保留选中结果
 function responseHandler(res) {
@@ -299,6 +369,10 @@ function getData() {
         function (k, v) {
             var index = _.findIndex(tableData, { 'Id': v.Id });
             if (index < 0) {
+                v.Tax = $("#Tax").val() || 0;
+                v.PurchaseMoney = v.CostMoney;
+                v.Money = Math.toFixMoney(v.CostMoney * (1 + v.Tax / 100));//乘以税率
+                v.TaxMoney = Math.toFixMoney(v.CostMoney * (v.Tax  / 100));
                 temp.push(v);
             }
 
@@ -311,7 +385,11 @@ function sumFormatter(data) {
     var total_sum = data.reduce(function (sum, row) {
         return (sum) * 1 + (row[field] || 0) * 1;
     }, 0);
-    return Math.toFixMoney(total_sum);
+    var result = Math.toFixMoney(total_sum);
+    if (field =="Money") {
+        $("#PayMoney").val(result);
+    }
+    return result;
 }
 //订单数据加载到表单
 function setTableData() {
@@ -374,8 +452,8 @@ function showOrder() {
                                 align: "center", valign: "middle"
                             },
                             {
-                                field: 'Money',
-                                title: '采购金额',
+                                field: 'CostMoney',
+                                title: '采购成本',
                                 align: "center", valign: "middle"
                             }
                         ]

@@ -45,10 +45,15 @@ namespace Ada.Core.ViewModel.Purchase
         [Display(Name = "经办媒介")]
         public string TransactorId { get; set; }
         /// <summary>
-        /// 付款金额
+        /// 订单总额
         /// </summary>
-        [Display(Name = "申请金额")]
+        [Display(Name = "订单总额")]
         public decimal? PayMoney { get; set; }
+        /// <summary>
+        /// 已申请金额
+        /// </summary>
+        [Display(Name = "已申请金额")]
+        public decimal? RequstMoney { get; set; }
         /// <summary>
         /// 订单明细
         /// </summary>
@@ -64,5 +69,45 @@ namespace Ada.Core.ViewModel.Purchase
         /// </summary>
         [Display(Name = "是否显示")]
         public bool? IsDisable { get; set; }
+        /// <summary>
+        /// 税率%
+        /// </summary>
+        [Display(Name = "税率%")]
+        public decimal? Tax { get; set; }
+        /// <summary>
+        /// 税额
+        /// </summary>
+        [Display(Name = "税额")]
+        public decimal? TaxMoney { get; set; }
+        /// <summary>
+        /// 优惠金额
+        /// </summary>
+        [Display(Name = "优惠金额")]
+        public decimal? DiscountMoney { get; set; }
+        /// <summary>
+        /// 发票状态
+        /// </summary>
+        [Display(Name = "发票状态")]
+        public bool? InvoiceStauts { get; set; }
+        /// <summary>
+        /// 是否开票
+        /// </summary>
+        [Display(Name = "是否开票")]
+        public bool? IsInvoice { get; set; }
+        /// <summary>
+        /// 到票日期
+        /// </summary>
+        [Display(Name = "到票日期")]
+        public DateTime? InvoiceDate { get; set; }
+        /// <summary>
+        /// 发票号
+        /// </summary>
+        [Display(Name = "发票号")]
+        public string InvoiceNum { get; set; }
+        /// <summary>
+        /// 开票公司
+        /// </summary>
+        [Display(Name = "开票公司")]
+        public string InvoiceTitle { get; set; }
     }
 }

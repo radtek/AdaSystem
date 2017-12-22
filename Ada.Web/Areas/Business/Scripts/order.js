@@ -91,8 +91,19 @@ function initData() {
     $table.bootstrapTable({
         data: orderData,
         toolbar: '#toolbar',
-        classes:"table table-no-bordered",
+        classes: "table table-no-bordered",
+        clickToSelect: true,
         columns: [
+            {
+                checkbox: true,
+                //formatter: function(value,row,index) {
+                //    if (index === 2) {
+                //        return {
+                //            disabled: true
+                //        };
+                //    }
+                //}
+            },
             {
                 field: 'MediaTypeName',
                 title: '媒体类型',
