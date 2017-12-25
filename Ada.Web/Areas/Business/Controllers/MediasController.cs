@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -9,6 +10,11 @@ using Ada.Core.Domain;
 using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Filter;
+using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using DataTable = System.Data.DataTable;
 
 namespace Business.Controllers
 {
@@ -28,6 +34,8 @@ namespace Business.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(MediaView viewModel)
         {
+            //var search = Request.Form["Submit.Search"];
+            var export = Request.Form["Submit.Export"];
             ViewBag.ViewModel = viewModel;
             if (string.IsNullOrWhiteSpace(viewModel.MediaTypeId))
             {
@@ -94,9 +102,52 @@ namespace Business.Controllers
                 ModelState.AddModelError("message", "没有查询到相关媒体信息！");
                 return View();
             }
+
+            if (export == "export")
+            {
+                JArray jObjects = new JArray();
+                foreach (var media in result)
+                {
+                    var jo = new JObject();
+                    jo.Add("媒体类型", media.MediaType.TypeName);
+                    if (!string.IsNullOrWhiteSpace(media.Platform))
+                    {
+                        jo.Add("平台", media.Platform);
+                    }
+                    jo.Add("媒体名称", media.MediaName);
+                    if (!string.IsNullOrWhiteSpace(media.MediaID))
+                    {
+                        jo.Add("媒体ID", media.MediaID);
+                    }
+                    jo.Add("粉丝数", media.FansNum ?? 0);
+                    foreach (var mediaMediaPrice in media.MediaPrices)
+                    {
+                        jo.Add(mediaMediaPrice.AdPositionName, mediaMediaPrice.PurchasePrice);
+                        //jo.Add(mediaMediaPrice.AdPositionName + "更新日期", mediaMediaPrice.PriceDate);
+                        //jo.Add(mediaMediaPrice.AdPositionName + "失效日期", mediaMediaPrice.InvalidDate);
+                    }
+                    jObjects.Add(jo);
+                }
+
+                var dt = JsonConvert.DeserializeObject<DataTable>(jObjects.ToString());
+                byte[] bytes;
+                using (var workbook = new XLWorkbook())
+                {
+                    workbook.Worksheets.Add(dt, "江西微广");
+                    using (var ms = new MemoryStream())
+                    {
+                        workbook.SaveAs(ms);
+                        bytes = ms.ToArray();
+                    }
+                }
+                return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表.xlsx");
+            }
             ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + result.Count + "条。注：查询结果最多显示50条");
             return View(result);
+
+
         }
+
     }
 
 

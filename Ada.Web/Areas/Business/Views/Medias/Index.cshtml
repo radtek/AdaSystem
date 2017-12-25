@@ -97,7 +97,8 @@
                 </div>
                 <div class="col-sm-12">
                     <div class="form-group">
-                        <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 开始搜索</button>
+                        <button class="btn btn-primary" name="Submit.Search" value="search" type="submit"><i class="fa fa-search"></i> 开始搜索</button>
+                        <button class="btn btn-white" name="Submit.Export" value="export" type="submit"><i class="fa fa-download"></i> 导出数据</button>
                     </div>
                 </div>
             }
@@ -184,12 +185,12 @@
                     $('.table').footable();
                 </text>
             }
-            $(".wrapper.wrapper-content form").validate({
-                submitHandler: function(form) {
-                    $('.row .ibox').children('.ibox-content').toggleClass('sk-loading');
-                    form.submit();
-                }
-                    });
+            //$(".wrapper.wrapper-content form").validate({
+            //    submitHandler: function(form) {
+            //        $('.row .ibox').children('.ibox-content').toggleClass('sk-loading');
+            //        form.submit();
+            //    }
+            //        });
             $("#MediaTypeId").change(function () {
                 var $adpostion = $("#AdPositionName");
                 $adpostion.empty();
