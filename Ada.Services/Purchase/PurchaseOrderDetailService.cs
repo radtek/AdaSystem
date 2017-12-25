@@ -82,7 +82,7 @@ namespace Ada.Services.Purchase
 
         public void Delete(PurchaseOrderDetail entity)
         {
-            _repository.Delete(entity);
+            _repository.Remove(entity);
             _dbContext.SaveChanges();
         }
     }

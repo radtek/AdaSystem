@@ -46,6 +46,10 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.MediaName.Contains(viewModel.search));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaID))
+            {
+                allList = allList.Where(d => d.MediaID.Contains(viewModel.MediaID));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.LinkManName))
             {
                 allList = allList.Where(d => d.LinkMan.Name.Contains(viewModel.LinkManName));
@@ -108,9 +112,9 @@ namespace Ada.Services.Resource
             string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
             if (order == "desc")
             {
-                return allList.OrderByDescending(d => d.Id).Skip(offset).Take(rows);
+                return allList.OrderByDescending(d => d.LinkManId).Skip(offset).Take(rows);
             }
-            return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
+            return allList.OrderBy(d => d.LinkManId).Skip(offset).Take(rows);
         }
 
         public void Update(Media entity)

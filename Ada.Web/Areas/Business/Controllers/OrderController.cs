@@ -27,7 +27,7 @@ namespace Business.Controllers
         private readonly IRepository<PurchaseOrder> _purchaseOrderRepository;
         private readonly IRepository<PurchaseOrderDetail> _purchaseOrderDetailRepository;
         private readonly IRepository<MediaType> _mediaTypeRepository;
-
+        private readonly IRepository<MediaPrice> _mediaPriceRepository;
         public OrderController(IBusinessOrderService businessOrderService,
             IRepository<BusinessOrder> repository,
             IRepository<MediaType> mediaTypeRepository,
@@ -36,7 +36,8 @@ namespace Business.Controllers
             IRepository<PurchaseOrder> purchaseOrderRepository,
             IRepository<Receivables> receivablesRepository,
             IBusinessPayeeService businessPayeeService,
-            IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository
+            IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository,
+            IRepository<MediaPrice> mediaPriceRepository
         )
         {
             _businessOrderService = businessOrderService;
@@ -46,6 +47,7 @@ namespace Business.Controllers
             _purchaseOrderService = purchaseOrderService;
             _purchaseOrderRepository = purchaseOrderRepository;
             _purchaseOrderDetailRepository = purchaseOrderDetailRepository;
+            _mediaPriceRepository = mediaPriceRepository;
         }
         public ActionResult Index()
         {
@@ -74,6 +76,7 @@ namespace Business.Controllers
                     AdderBy = d.AddedBy,
                     PurchaseSchedule = GetPurchaseSchedule(d),
                     OrderDetailCount = d.BusinessOrderDetails.Count,
+                    OrderSchedule = d.BusinessOrderDetails.Count(o => o.Status == Consts.StateNormal) + "/" + d.BusinessOrderDetails.Count,
                     Remark = d.Remark
                 })
             }, JsonRequestBehavior.AllowGet);
@@ -179,7 +182,7 @@ namespace Business.Controllers
             entity.VerificationStatus = Consts.StateLock;
             _businessOrderService.Add(entity);
             TempData["Msg"] = "添加成功";
-            return RedirectToAction("Index");
+            return RedirectToAction("Update", new { id = entity.Id });
         }
 
         public ActionResult SelectMedia()
@@ -222,7 +225,7 @@ namespace Business.Controllers
                 d.Remark,
                 d.CostMoney,
                 d.MediaByPurchase,
-                Status=d.Status ?? Consts.StateLock
+                Status = d.Status ?? Consts.StateLock
             });
             entity.OrderDetails = JsonConvert.SerializeObject(orderDetails);
 
@@ -279,7 +282,7 @@ namespace Business.Controllers
                 if (string.IsNullOrWhiteSpace(businessOrderDetail.Id))
                 {
                     businessOrderDetail.Id = IdBuilder.CreateIdNum();
-                    entity.Status = Consts.StateLock;
+                    businessOrderDetail.Status = Consts.StateLock;
                     entity.BusinessOrderDetails.Add(businessOrderDetail);
                 }
                 else
@@ -287,23 +290,20 @@ namespace Business.Controllers
                     //更新
                     var detail = _businessOrderDetailRepository.LoadEntities(d => d.Id == businessOrderDetail.Id)
                         .FirstOrDefault();
-                    if (detail.Status==Consts.StateLock)//转采购的就不能修改了
-                    {
-                        detail.MediaPriceId = businessOrderDetail.MediaPriceId;
-                        detail.MediaTitle = businessOrderDetail.MediaTitle;
-                        detail.PrePublishDate = businessOrderDetail.PrePublishDate;
-                        detail.Money = businessOrderDetail.Money;
-                        detail.SellMoney = businessOrderDetail.SellMoney;
-                        detail.Tax = businessOrderDetail.Tax;
-                        detail.TaxMoney = businessOrderDetail.TaxMoney;
-                        detail.AdPositionName = businessOrderDetail.AdPositionName;
-                        detail.MediaName = businessOrderDetail.MediaName;
-                        detail.MediaTypeName = businessOrderDetail.MediaTypeName;
-                        detail.Remark = businessOrderDetail.Remark;
-                        detail.CostMoney = businessOrderDetail.CostMoney;
-                        detail.MediaByPurchase = businessOrderDetail.MediaByPurchase;
-                    }
-                    
+                    detail.MediaPriceId = businessOrderDetail.MediaPriceId;
+                    detail.MediaTitle = businessOrderDetail.MediaTitle;
+                    detail.PrePublishDate = businessOrderDetail.PrePublishDate;
+                    detail.Money = businessOrderDetail.Money;
+                    detail.SellMoney = businessOrderDetail.SellMoney;
+                    detail.Tax = businessOrderDetail.Tax;
+                    detail.TaxMoney = businessOrderDetail.TaxMoney;
+                    detail.AdPositionName = businessOrderDetail.AdPositionName;
+                    detail.MediaName = businessOrderDetail.MediaName;
+                    detail.MediaTypeName = businessOrderDetail.MediaTypeName;
+                    detail.Remark = businessOrderDetail.Remark;
+                    detail.CostMoney = businessOrderDetail.CostMoney;
+                    detail.MediaByPurchase = businessOrderDetail.MediaByPurchase;
+
                 }
             }
             entity.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);
@@ -313,7 +313,7 @@ namespace Business.Controllers
             entity.ConfirmVerificationMoney = 0;
             _businessOrderService.Update(entity);
             TempData["Msg"] = "更新成功";
-            return RedirectToAction("Index");
+            return RedirectToAction("Update", new { id = entity.Id });
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
@@ -332,10 +332,21 @@ namespace Business.Controllers
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
-        public ActionResult TransformPurchaseOrder(string id, string ids)
+        public ActionResult TransformPurchaseOrder(string id)
         {
+            var details = Request["rows"];
+            if (string.IsNullOrWhiteSpace(details))
+            {
+                return Json(new { State = 0, Msg = "请先选择要转换的订单." });
+            }
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (entity.VerificationStatus == Consts.StateNormal)
+            {
+                return Json(new { State = 0, Msg = "该项目订单已核销，无法转换" });
+            }
+            entity.Status = Consts.StateNormal;//已下单
             var purchaseOrder = _purchaseOrderRepository.LoadEntities(d => d.BusinessOrderId == id && d.IsDelete == false).FirstOrDefault();
+            bool isAdd = false;
             if (purchaseOrder == null)
             {
                 purchaseOrder = new PurchaseOrder();
@@ -347,29 +358,47 @@ namespace Business.Controllers
                 purchaseOrder.TotalMoney = 0;
                 purchaseOrder.OrderNum = IdBuilder.CreateOrderNum("CD");
                 purchaseOrder.Status = Consts.StateLock;
+                isAdd = true;
             }
-
-            var arr = ids.Split(',');
-            foreach (var orderid in arr)
+            var orderDetails = JsonConvert.DeserializeObject<List<BusinessOrderDetail>>(details);
+            foreach (var order in orderDetails)
             {
-                var entityBusinessOrderDetail = _businessOrderDetailRepository.LoadEntities(d => d.Id == orderid).FirstOrDefault();
-                entityBusinessOrderDetail.Status = Consts.StateNormal;//已转采购
+                if (string.IsNullOrWhiteSpace(order.Id))
+                {
+                    order.Id = IdBuilder.CreateIdNum();
+                    order.Status = Consts.StateNormal;
+                    entity.BusinessOrderDetails.Add(order);
+                    entity.TotalTaxMoney = entity.TotalTaxMoney + order.TaxMoney;
+                    entity.TotalMoney = entity.TotalMoney + order.Money;
+                    entity.TotalSellMoney = entity.TotalSellMoney + order.SellMoney;
+                    entity.VerificationMoney = entity.TotalMoney;
+                }
+                else
+                {
+                    var temp = _businessOrderDetailRepository.LoadEntities(d => d.Id == order.Id).FirstOrDefault();
+                    if (temp.Status == Consts.StateNormal)
+                    {
+                        continue;
+                    }
+                    temp.Status = Consts.StateNormal;//已转采购
+                }
                 PurchaseOrderDetail purchaseOrderDetail = new PurchaseOrderDetail();
                 purchaseOrderDetail.Id = IdBuilder.CreateIdNum();
-                purchaseOrderDetail.BusinessOrderDetailId = entityBusinessOrderDetail.Id;
-                purchaseOrderDetail.CostMoney = entityBusinessOrderDetail.CostMoney;
+                purchaseOrderDetail.BusinessOrderDetailId = order.Id;
+                purchaseOrderDetail.CostMoney = order.CostMoney;
                 purchaseOrderDetail.VerificationStatus = Consts.StateLock;
-                purchaseOrderDetail.AdPositionName = entityBusinessOrderDetail.AdPositionName;
-                purchaseOrderDetail.MediaTitle = entityBusinessOrderDetail.MediaTitle;
-                purchaseOrderDetail.MediaName = entityBusinessOrderDetail.MediaName;
-                purchaseOrderDetail.MediaTypeName = entityBusinessOrderDetail.MediaTypeName;
-                purchaseOrderDetail.MediaPrice = entityBusinessOrderDetail.MediaPrice;
-                purchaseOrderDetail.Transactor = entityBusinessOrderDetail.MediaPrice.Media.Transactor;
-                purchaseOrderDetail.TransactorId = entityBusinessOrderDetail.MediaPrice.Media.TransactorId;
+                purchaseOrderDetail.AdPositionName = order.AdPositionName;
+                purchaseOrderDetail.MediaTitle = order.MediaTitle;
+                purchaseOrderDetail.MediaName = order.MediaName;
+                purchaseOrderDetail.MediaTypeName = order.MediaTypeName;
+                purchaseOrderDetail.MediaPriceId = order.MediaPriceId;
                 purchaseOrderDetail.AuditStatus = Consts.StateLock;
                 purchaseOrderDetail.Status = Consts.PurchaseStatusWait;
-                purchaseOrderDetail.LinkMan = entityBusinessOrderDetail.MediaPrice.Media.LinkMan;
-                purchaseOrderDetail.LinkManName = entityBusinessOrderDetail.MediaPrice.Media.LinkMan.Name;
+                var price = _mediaPriceRepository.LoadEntities(d => d.Id == order.MediaPriceId).FirstOrDefault();
+                purchaseOrderDetail.Transactor = price.Media.Transactor;
+                purchaseOrderDetail.TransactorId = price.Media.TransactorId;
+                purchaseOrderDetail.LinkMan = price.Media.LinkMan;
+                purchaseOrderDetail.LinkManName = price.Media.LinkMan.Name;
                 purchaseOrderDetail.Tax = 0;
                 purchaseOrderDetail.TaxMoney = 0;
                 purchaseOrderDetail.BargainMoney = 0;
@@ -381,8 +410,16 @@ namespace Business.Controllers
                 purchaseOrderDetail.DiscountRate = 100;
                 purchaseOrder.PurchaseOrderDetails.Add(purchaseOrderDetail);
             }
-            entity.Status = Consts.StateNormal;//已下单
-            _purchaseOrderService.Add(purchaseOrder);
+
+            if (isAdd)
+            {
+                _purchaseOrderService.Add(purchaseOrder);
+            }
+            else
+            {
+                _purchaseOrderService.Update(purchaseOrder);
+            }
+
             return Json(new { State = 1, Msg = "转换成功" });
         }
 

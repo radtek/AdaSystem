@@ -213,5 +213,10 @@ namespace Ada.Core.ViewModel.Purchase
         /// </summary>
         [Display(Name = "是否请款")]
         public bool? IsPayment { get; set; }
+        /// <summary>
+        /// 销售备注
+        /// </summary>
+        [Display(Name = "销售备注")]
+        public string BusinessRemark { get; set; }
     }
 }

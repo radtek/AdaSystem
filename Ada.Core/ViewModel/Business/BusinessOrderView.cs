@@ -175,5 +175,10 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "是否开票")]
         public bool? IsInvoice { get; set; }
+        /// <summary>
+        /// 转单情况
+        /// </summary>
+        [Display(Name = "转单情况")]
+        public string OrderSchedule { get; set; }
     }
 }

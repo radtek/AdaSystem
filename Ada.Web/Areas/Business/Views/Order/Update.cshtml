@@ -36,12 +36,9 @@
         </div>
     }
     <div id="toolbar" class="btn-group">
-        @if (Model.Status==Consts.StateLock||Model.Status==null)
-        {
-            <a class="btn btn-primary btn-outline" href="javascript:showMedia('@Url.Action("SelectMedia")');">
-                <i class="fa fa-plus"></i> 添加媒体资源
-            </a>
-        }
+        <a class="btn btn-primary btn-outline" href="javascript:showMedia('@Url.Action("SelectMedia")');">
+            <i class="fa fa-plus"></i> 添加媒体资源
+        </a>
         <a class="btn btn-primary btn-outline" href="javascript:transOrder();">
             <i class="fa fa-arrow-circle-right"></i> 转成采购订单
         </a>
@@ -76,11 +73,6 @@
                 swal("操作提醒", "请选择有效数据", "warning");
                 return;
             }
-            var arr = [];
-            $.each(arrselections,
-                function(k, v) {
-                    arr.push(v.Id);
-                });
             swal({
                 title: "您确定吗?",
                 text: "确认要转成采购订单吗?",
@@ -97,16 +89,22 @@
                         '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
                     },
                     url: "@Url.Action("TransformPurchaseOrder")",
-                    data: { ids: arr.join(',') ,id:'@Model.Id'},
+                    data: { rows: JSON.stringify(arrselections) ,id:'@Model.Id'},
                     success: function (data) {
                         if (data.State == 1) {
                             swal({
                                 title: "操作成功",
                                 text: data.Msg,
-                                timer: 2000,
+                                //timer: 2000,
                                 type:"success",
-                                showConfirmButton: false
-                            });
+                                //showConfirmButton: false
+                            },
+                                function (isConfirm) {
+                                    if (isConfirm) {
+                                        window.location.reload();
+                                    }
+                                    
+                                });
 
                         } else {
                             swal("操作提醒", data.Msg, "warning");

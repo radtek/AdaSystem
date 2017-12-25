@@ -147,11 +147,12 @@
                         align: "center", valign: "middle",
                         formatter: formatter.pie
                     },
+                   
                     {
-                        field: 'Status',
-                        title: '@Html.DisplayNameFor(d=>d.Status)',
+                        field: 'OrderSchedule',
+                        title: '@Html.DisplayNameFor(d=>d.OrderSchedule)',
                         align: "center", valign: "middle",
-                        formatter: formatter.businessStatus
+                        formatter: formatter.pie
                     },
                     {
                         field: 'OrderNum',
@@ -187,6 +188,12 @@
                         formatter: function(value) {
                           return  moment(value).format("YYYY-MM-DD");
                         }
+                    },
+                    {
+                        field: 'Status',
+                        title: '@Html.DisplayNameFor(d=>d.Status)',
+                        align: "center", valign: "middle",
+                        formatter: formatter.businessStatus
                     },
                     {
                         field: 'Id',

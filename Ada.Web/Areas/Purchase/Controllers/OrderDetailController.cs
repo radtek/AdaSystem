@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
+using Ada.Core.Domain;
 using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.ViewModel.Purchase;
@@ -71,7 +72,7 @@ namespace Purchase.Controllers
         public ActionResult Update(string id)
         {
             var entity = _purchaseOrderDetailRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            PurchaseOrderDetailView item=new PurchaseOrderDetailView();
+            PurchaseOrderDetailView item = new PurchaseOrderDetailView();
             item.Id = entity.Id;
             item.LinkManId = entity.LinkManId;
             item.LinkManName = entity.LinkManName;
@@ -92,6 +93,7 @@ namespace Purchase.Controllers
             item.BusinessBy = entity.PurchaseOrder.BusinessBy;
             item.PrePublishDate = GetBusinessOrderDetail(entity.BusinessOrderDetailId).PrePublishDate;
             item.MediaTitle = GetBusinessOrderDetail(entity.BusinessOrderDetailId).MediaTitle;
+            item.BusinessRemark = GetBusinessOrderDetail(entity.BusinessOrderDetailId).Remark;
             //item.Status = entity.Status;
             //item.BargainMoney = entity.BargainMoney;
             //item.OrderDate = entity.PurchaseOrder.OrderDate;
@@ -106,7 +108,14 @@ namespace Purchase.Controllers
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
                 return View(viewModel);
             }
+
             var entity = _purchaseOrderDetailRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
+            var businessOrderDetail = GetBusinessOrderDetail(entity.BusinessOrderDetailId);
+            //if (businessOrderDetail.BusinessOrder.VerificationStatus==Consts.StateNormal)
+            //{
+            //    ModelState.AddModelError("message", "此销售订单已核销，无需再进行处理");
+            //    return View(viewModel);
+            //}
             entity.ModifiedById = CurrentManager.Id;
             entity.ModifiedBy = CurrentManager.UserName;
             entity.ModifiedDate = DateTime.Now;
@@ -125,23 +134,47 @@ namespace Purchase.Controllers
             //entity.Money = viewModel.Money;
             //entity.DiscountMoney = viewModel.DiscountMoney;
             //entity.BargainMoney = viewModel.BargainMoney;
+            if (entity.CostMoney != viewModel.CostMoney)
+            {
+                //更新成本金额
+                businessOrderDetail.CostMoney = viewModel.CostMoney;
+            }
             entity.CostMoney = viewModel.CostMoney;
+
             entity.Status = viewModel.Status;
             entity.Remark = viewModel.Remark;
             _purchaseOrderDetailService.Update(entity);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");
         }
-        //[HttpPost]
-        //[AdaValidateAntiForgeryToken]
-        //public ActionResult Delete(string id)
-        //{
-        //    var entity = _purchaseOrderDetailRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
-        //    entity.DeletedBy = CurrentManager.UserName;
-        //    entity.DeletedById = CurrentManager.Id;
-        //    entity.DeletedDate = DateTime.Now;
-        //    _purchaseOrderDetailService.Delete(entity);
-        //    return Json(new { State = 1, Msg = "删除成功" });
-        //}
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult Delete(string id)
+        {
+            var entity = _purchaseOrderDetailRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            var businessOrder = GetBusinessOrderDetail(entity.BusinessOrderDetailId);
+            //是否已经核销
+            if (businessOrder.BusinessOrder.VerificationStatus==Consts.StateNormal)
+            {
+                return Json(new { State = 0, Msg = "此销售订单已核销，无法删除" });
+            }
+            //是否已经付款
+            if (entity.PurchasePaymentOrderDetails.Count>0)
+            {
+                return Json(new { State = 0, Msg = "此采购订单已请款，无法删除" });
+            }
+            //entity.DeletedBy = CurrentManager.UserName;
+            //entity.DeletedById = CurrentManager.Id;
+            //entity.DeletedDate = DateTime.Now;
+            businessOrder.BusinessOrder.TotalMoney = businessOrder.BusinessOrder.TotalMoney - businessOrder.Money;
+            businessOrder.BusinessOrder.TotalSellMoney =
+                businessOrder.BusinessOrder.TotalSellMoney - businessOrder.SellMoney;
+            businessOrder.BusinessOrder.TotalTaxMoney =
+                businessOrder.BusinessOrder.TotalTaxMoney - businessOrder.TaxMoney;
+            businessOrder.BusinessOrder.VerificationMoney = businessOrder.BusinessOrder.TotalMoney;
+            _businessOrderDetailRepository.Remove(businessOrder);
+            _purchaseOrderDetailService.Delete(entity);
+            return Json(new { State = 1, Msg = "删除成功" });
+        }
     }
 }

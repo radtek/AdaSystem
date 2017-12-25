@@ -231,6 +231,10 @@
     <Compile Include="Migrations\201712220405430_ManagerUpdate.Designer.cs">
       <DependentUpon>201712220405430_ManagerUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712250119557_BusinessOrderUpdate.cs" />
+    <Compile Include="Migrations\201712250119557_BusinessOrderUpdate.Designer.cs">
+      <DependentUpon>201712250119557_BusinessOrderUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -346,6 +350,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712220405430_ManagerUpdate.resx">
       <DependentUpon>201712220405430_ManagerUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712250119557_BusinessOrderUpdate.resx">
+      <DependentUpon>201712250119557_BusinessOrderUpdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

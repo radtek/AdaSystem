@@ -19,8 +19,6 @@
                     <div class="ibox-title">
                         <a class="btn btn-outline btn-default btn-sm" href="@Url.Action("Index")"><i class="fa fa-reply"></i> 返回</a>
                         <button class="btn btn-primary btn-sm ladda-button" type="submit"  data-style="slide-right"><i class="fa fa-floppy-o"></i> 保存</button>
-                      
-
                     </div>
                     <div class="ibox-content">
                         <div class="sk-spinner sk-spinner-wave">
@@ -36,12 +34,10 @@
         </div>
     }
     <div id="toolbar" class="btn-group">
-        @if (Model.Status==Consts.StateLock||Model.Status==null)
-        {
-            <a class="btn btn-primary btn-outline" href="javascript:showMedia('@Url.Action("SelectMedia")');">
-                <i class="fa fa-plus"></i> 添加媒体资源
-            </a>
-        }
+        <a class="btn btn-primary btn-outline" href="javascript:showMedia('@Url.Action("SelectMedia")');">
+            <i class="fa fa-plus"></i> 添加媒体资源
+        </a>
+       
     </div>
 </div>
 
