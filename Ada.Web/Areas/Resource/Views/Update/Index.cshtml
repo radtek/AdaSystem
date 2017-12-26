@@ -57,13 +57,13 @@
         <div class="col-sm-6">
             <div class="form-group">
                 @Html.LabelFor(d => d.MediaNames, Html.DisplayNameFor(d => d.MediaNames).ToString(), new { @class = "control-label" })
-                @Html.TextAreaFor(d => d.MediaNames, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开" })
+                @Html.TextAreaFor(d => d.MediaNames, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
             </div>
         </div>
         <div class="col-sm-6">
             <div class="form-group">
                 @Html.LabelFor(d => d.MediaIDs, Html.DisplayNameFor(d => d.MediaIDs).ToString(), new { @class = "control-label" })
-                @Html.TextAreaFor(d => d.MediaIDs, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开" })
+                @Html.TextAreaFor(d => d.MediaIDs, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
             </div>
         </div>
         <div class="col-sm-12">

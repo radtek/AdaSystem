@@ -14,6 +14,7 @@ namespace Ada.Core.Domain.Resource
         {
             MediaTags=new HashSet<MediaTag>();
             MediaPrices=new HashSet<MediaPrice>();
+            MediaGroups=new HashSet<MediaGroup>();
         }
         /// <summary>
         /// 媒体名称
@@ -184,5 +185,6 @@ namespace Ada.Core.Domain.Resource
         public virtual LinkMan LinkMan { get; set; }
         public virtual ICollection<MediaTag> MediaTags { get; set; }
         public virtual ICollection<MediaPrice> MediaPrices { get; set; }
+        public virtual ICollection<MediaGroup> MediaGroups { get; set; }
     }
 }

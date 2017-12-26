@@ -126,6 +126,7 @@
     <Compile Include="Domain\Purchase\PurchaseReturnOrder.cs" />
     <Compile Include="Domain\QuartzTask\Job.cs" />
     <Compile Include="Domain\Resource\Media.cs" />
+    <Compile Include="Domain\Resource\MediaGroup.cs" />
     <Compile Include="Domain\Resource\MediaPrice.cs" />
     <Compile Include="Domain\Resource\AdPosition.cs" />
     <Compile Include="Domain\Resource\MediaTag.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="ViewModel\Purchase\PurchasePaymentDetailView.cs" />
     <Compile Include="ViewModel\Purchase\PurchasePaymentView.cs" />
     <Compile Include="ViewModel\QuartzTask\JobView.cs" />
+    <Compile Include="ViewModel\Resource\MediaGroupView.cs" />
     <Compile Include="ViewModel\Resource\MediaPriceView.cs" />
     <Compile Include="ViewModel\Resource\MediaTagView.cs" />
     <Compile Include="ViewModel\Resource\MediaTypeView.cs" />

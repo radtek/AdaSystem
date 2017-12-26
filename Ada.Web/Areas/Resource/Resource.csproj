@@ -141,6 +141,7 @@
   <ItemGroup>
     <Compile Include="Controllers\HeadLineController.cs" />
     <Compile Include="Controllers\MediaController.cs" />
+    <Compile Include="Controllers\MediaGroupController.cs" />
     <Compile Include="Controllers\MediaTagController.cs" />
     <Compile Include="Controllers\MediaTypeController.cs" />
     <Compile Include="Controllers\RedBookController.cs" />
@@ -186,6 +187,8 @@
     <Content Include="Views\RedBook\Update.cshtml" />
     <Content Include="Views\RedBook\RedBookEdit.cshtml" />
     <Content Include="Views\Update\Index.cshtml" />
+    <Content Include="Views\MediaGroup\Index.cshtml" />
+    <Content Include="Views\MediaGroup\Add.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

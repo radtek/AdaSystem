@@ -1,0 +1,140 @@
+﻿
+@using System.Web.Optimization
+@model Ada.Core.ViewModel.Resource.MediaGroupView
+@{
+    ViewBag.Title = "添加分组";
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "媒体分组", Value = Url.Action("Index") } };
+}
+@Html.Partial("Bread", urls)
+
+
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <p class="bg-danger">@Html.ValidationMessage("message") </p>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <a class="btn btn-outline btn-default btn-sm" href="@Url.Action("Index")"><i class="fa fa-reply"></i> 返回</a>
+                        <button class="btn btn-primary btn-sm" type="submit" data-style="slide-right"><i class="fa fa-floppy-o"></i> 保存</button>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="sk-spinner sk-spinner-wave">
+                            <div class="sk-rect2"></div>
+                            <div class="sk-rect3"></div>
+                            <div class="sk-rect4"></div>
+                            <div class="sk-rect5"></div>
+                        </div>
+                        @*@Html.Partial("MediaGroupEdit", Model)*@
+                        <div class="form-horizontal">
+
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.GroupName, Html.DisplayNameFor(d => d.GroupName).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.GroupName, new { @class = "form-control", required = "" })
+                                </div>
+                            </div>
+
+
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.MediaData, Html.DisplayNameFor(d => d.MediaData).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    <select class="form-control" id="Medias" multiple="multiple">
+                                        @*<option value="X1712200915090039" selected="selected">喻听话</option>
+                    <option value="X1712200914030033" selected="selected">张佳玮</option>*@
+                                    </select>
+                                </div>
+
+                            </div>
+                            @Html.HiddenFor(d => d.MediaData)
+                            @Html.HiddenFor(d => d.Id)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/select2Styles")
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/select2")
+    <script>
+        $(function () {
+           
+            $("#Medias").select2({
+                placeholder: "请选择",
+                language: "zh-CN",
+                //tags: true,
+                //tokenSeparators: ,
+                //allowClear: true,
+                ajax: {
+                    url: "@Url.Action("GetMedias","Media")",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term, // search term
+                        };
+                    },
+                    processResults: function (data, params) {
+                        var result = $.map(data.rows,
+                            function (v, k) {
+                                return { id: v.Id, text: v.MediaName, typename: v.TypeName };
+                            });
+                        return {
+                            results: result
+                        };
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) { return markup; }, // 字符转义处理
+                templateResult:
+                    formatRepo, //返回结果回调function formatRepo(repo){return repo.text},这样就可以将返回结果的的text显示到下拉框里，当然你可以return repo.text+"1";等
+                templateSelection: formatRepoSelection //选中项回调function formatRepoSelection(repo) { return repo.text }
+
+            });
+            var data =@Html.Raw(Model.MediaData);
+            $.each(data,
+                function(k, v) {
+                    var newOption = new Option(v.text, v.id, true, true);
+                    $('#Medias').append(newOption).trigger('change');
+                });
+            
+            $(".wrapper.wrapper-content form").validate({
+                submitHandler: function (form) {
+                    //$('.wrapper.wrapper-content .ibox').children('.ibox-content').toggleClass('sk-loading');
+                    //form.submit();
+                    var res = $("#Medias").select2("data");
+                    var arr = [];
+                    $.each(res,
+                        function(k, v) {
+                            arr.push({
+                                id: v.id,
+                                text: v.text
+                            });
+                        });
+                    $("#MediaData").val(JSON.stringify(arr));
+                    form.submit();
+                }
+            });
+        });
+        function formatRepo(repo) {
+            if (repo.loading) {
+                return repo.text;
+            }
+            return "<p>" + repo.text + " 【 " + repo.typename + " 】 <p>";
+        }
+
+        function formatRepoSelection(repo) {
+            //$("#LinkManName").val(repo.text);
+            return repo.text;
+        }
+    </script>
+}

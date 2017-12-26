@@ -96,6 +96,7 @@
     <Compile Include="Mapping\QuartzTask\JobMap.cs" />
     <Compile Include="Mapping\Resource\MediaPriceMap.cs" />
     <Compile Include="Mapping\Resource\MediaMap.cs" />
+    <Compile Include="Mapping\Resource\MediaGroupMap.cs" />
     <Compile Include="Mapping\Resource\MediaTagMap.cs" />
     <Compile Include="Mapping\Resource\AdPositionMap.cs" />
     <Compile Include="Mapping\Resource\MediaTypeMap.cs" />
@@ -235,6 +236,10 @@
     <Compile Include="Migrations\201712250119557_BusinessOrderUpdate.Designer.cs">
       <DependentUpon>201712250119557_BusinessOrderUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712261331410_MediaGroup.cs" />
+    <Compile Include="Migrations\201712261331410_MediaGroup.Designer.cs">
+      <DependentUpon>201712261331410_MediaGroup.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -353,6 +358,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712250119557_BusinessOrderUpdate.resx">
       <DependentUpon>201712250119557_BusinessOrderUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712261331410_MediaGroup.resx">
+      <DependentUpon>201712261331410_MediaGroup.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

@@ -54,7 +54,7 @@ namespace Resource.Controllers
             //找到没有的
             if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
             {
-                var names = viewModel.MediaNames.Trim().Replace("\r\n", ",").Replace("，", ",").Split(',').ToList();
+                var names = viewModel.MediaNames.Split(',').ToList();
                 foreach (var name in names)
                 {
                     if (result.All(d => d.MediaName != name))
@@ -68,7 +68,7 @@ namespace Resource.Controllers
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
             {
-                var ids = viewModel.MediaIDs.Trim().Replace("\r\n", ",").Replace("，", ",").Split(',').ToList();
+                var ids = viewModel.MediaIDs.Split(',').ToList();
                 foreach (var id in ids)
                 {
                     if (result.All(d => d.MediaID != id))
@@ -163,9 +163,13 @@ namespace Resource.Controllers
             {
                 IRow row = sheet.GetRow(i);
                 var id = row.GetCell(0).StringCellValue;
+                if (string.IsNullOrWhiteSpace(id) || id == "不存在的资源")
+                {
+                    continue;
+                }
                 for (int j = 0; j < adpostionNames.Count; j++)
                 {
-                    
+
                     var name = adpostionNames[j];
                     var mediaPrice = _mediaPriceRepository
                         .LoadEntities(d => d.MediaId == id && d.AdPositionName == name).FirstOrDefault();
@@ -179,7 +183,6 @@ namespace Resource.Controllers
                     mediaPrice.Media.FansNum = fansNum;
                 }
             }
-
             _dbContext.SaveChanges();
             return Json(new { State = 1, Msg = "导入成功" });
         }

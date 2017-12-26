@@ -10,6 +10,7 @@ using Ada.Core.Domain;
 using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Filter;
+using Ada.Services.Resource;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Newtonsoft.Json;
@@ -20,10 +21,10 @@ namespace Business.Controllers
 {
     public class MediasController : BaseController
     {
-        private readonly IRepository<Media> _mediaRepository;
-        public MediasController(IRepository<Media> mediaRepository)
+        private readonly IMediaService _mediaService;
+        public MediasController(IMediaService mediaService)
         {
-            _mediaRepository = mediaRepository;
+            _mediaService = mediaService;
         }
         public ActionResult Index()
         {
@@ -34,7 +35,6 @@ namespace Business.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(MediaView viewModel)
         {
-            //var search = Request.Form["Submit.Search"];
             var export = Request.Form["Submit.Export"];
             ViewBag.ViewModel = viewModel;
             if (string.IsNullOrWhiteSpace(viewModel.MediaTypeId))
@@ -44,60 +44,11 @@ namespace Business.Controllers
             }
             Stopwatch watcher = new Stopwatch();
             watcher.Start();
-            var allList = _mediaRepository.LoadEntities(d => d.IsDelete == false && d.MediaTypeId == viewModel.MediaTypeId && d.Status == Consts.StateNormal);
-            if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
-            {
-                var mediaNames = viewModel.MediaNames.Replace("，", ",").Split(',').ToList();
-                allList = allList.Where(d => mediaNames.Contains(d.MediaName));
-            }
-            if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
-            {
-                var mediaIDs = viewModel.MediaIDs.Replace("，", ",").Split(',').ToList();
-                allList = allList.Where(d => mediaIDs.Contains(d.MediaID));
-            }
-            if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
-            {
-                allList = from m in allList
-                          from p in m.MediaPrices
-                          where p.AdPositionName == viewModel.AdPositionName
-                          select m;
-                if (viewModel.PriceStart != null)
-                {
-                    allList = from m in allList
-                              from p in m.MediaPrices
-                              where p.PurchasePrice >= viewModel.PriceStart && p.AdPositionName == viewModel.AdPositionName
-                              select m;
-                }
-                if (viewModel.PriceEnd != null)
-                {
-                    allList = from m in allList
-                              from p in m.MediaPrices
-                              where p.PurchasePrice <= viewModel.PriceEnd && p.AdPositionName == viewModel.AdPositionName
-                              select m;
-                }
-
-            }
-            else
-            {
-                if (viewModel.PriceStart != null)
-                {
-                    allList = from m in allList
-                              from p in m.MediaPrices
-                              where p.PurchasePrice >= viewModel.PriceStart
-                              select m;
-                }
-                if (viewModel.PriceEnd != null)
-                {
-                    allList = from m in allList
-                              from p in m.MediaPrices
-                              where p.PurchasePrice <= viewModel.PriceEnd
-                              select m;
-                }
-            }
-
-            var result = allList.OrderByDescending(d => d.Id).Take(50).ToList();
+            viewModel.Status = Consts.StateNormal;
+            viewModel.limit = 50;
+            var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
             watcher.Stop();
-            if (!allList.Any())
+            if (!result.Any())
             {
                 ModelState.AddModelError("message", "没有查询到相关媒体信息！");
                 return View();
@@ -105,11 +56,40 @@ namespace Business.Controllers
 
             if (export == "export")
             {
+                //找到没有的
+                if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
+                {
+                    var names = viewModel.MediaNames.Split(',').ToList();
+                    foreach (var name in names)
+                    {
+                        if (result.All(d => d.MediaName != name))
+                        {
+                            result.Add(new Media
+                            {
+                                MediaName = name
+                            });
+                        }
+                    }
+                }
+                if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
+                {
+                    var ids = viewModel.MediaIDs.Split(',').ToList();
+                    foreach (var id in ids)
+                    {
+                        if (result.All(d => d.MediaID != id))
+                        {
+                            result.Add(new Media
+                            {
+                                MediaID = id
+                            });
+                        }
+                    }
+                }
                 JArray jObjects = new JArray();
                 foreach (var media in result)
                 {
                     var jo = new JObject();
-                    jo.Add("媒体类型", media.MediaType.TypeName);
+                    jo.Add("媒体类型", media.MediaType == null ? "不存在的资源" : media.MediaType.TypeName);
                     if (!string.IsNullOrWhiteSpace(media.Platform))
                     {
                         jo.Add("平台", media.Platform);
@@ -128,7 +108,6 @@ namespace Business.Controllers
                     }
                     jObjects.Add(jo);
                 }
-
                 var dt = JsonConvert.DeserializeObject<DataTable>(jObjects.ToString());
                 byte[] bytes;
                 using (var workbook = new XLWorkbook())
@@ -140,7 +119,7 @@ namespace Business.Controllers
                         bytes = ms.ToArray();
                     }
                 }
-                return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表.xlsx");
+                return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
             }
             ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + result.Count + "条。注：查询结果最多显示50条");
             return View(result);

@@ -12,10 +12,11 @@ namespace Resource.Controllers
     public class MediaController : BaseController
     {
         private readonly IMediaPriceService _mediaPriceService;
-
-        public MediaController(IMediaPriceService mediaPriceService)
+        private readonly IMediaService _mediaService;
+        public MediaController(IMediaPriceService mediaPriceService, IMediaService mediaService)
         {
             _mediaPriceService = mediaPriceService;
+            _mediaService = mediaService;
         }
         public ActionResult GetMediaPrices(MediaView viewModel)
         {
@@ -34,6 +35,20 @@ namespace Resource.Controllers
                     d.Media.Transactor,
                     MediaTagStr = string.Join(",", d.Media.MediaTags.Select(t => t.TagName)),
                     
+                })
+            }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GetMedias(MediaView viewModel)
+        {
+            var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
+            return Json(new
+            {
+                viewModel.total,
+                rows = result.Select(d => new
+                {
+                    d.Id,
+                    d.MediaName,
+                    d.MediaType.TypeName,
                 })
             }, JsonRequestBehavior.AllowGet);
         }
