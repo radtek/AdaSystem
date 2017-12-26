@@ -42,6 +42,10 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.MediaType.CallIndex == viewModel.MediaTypeIndex);
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeId))
+            {
+                allList = allList.Where(d => d.MediaTypeId == viewModel.MediaTypeId);
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
                 allList = allList.Where(d => d.MediaName.Contains(viewModel.search));
@@ -50,6 +54,10 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.MediaID.Contains(viewModel.MediaID));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.LinkManId))
+            {
+                allList = allList.Where(d => d.LinkManId==viewModel.LinkManId);
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.LinkManName))
             {
                 allList = allList.Where(d => d.LinkMan.Name.Contains(viewModel.LinkManName));
@@ -57,6 +65,16 @@ namespace Ada.Services.Resource
             if (!string.IsNullOrWhiteSpace(viewModel.AddedBy))
             {
                 allList = allList.Where(d => d.AddedBy==viewModel.AddedBy);
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
+            {
+                var mediaNames = viewModel.MediaNames.Trim().Replace("\r\n",",").Replace("，", ",").Split(',').ToList();
+                allList = allList.Where(d => mediaNames.Contains(d.MediaName));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
+            {
+                var mediaIDs = viewModel.MediaIDs.Trim().Replace("\r\n", ",").Replace("，", ",").Split(',').ToList();
+                allList = allList.Where(d => mediaIDs.Contains(d.MediaID));
             }
             if (viewModel.MediaTagIds != null)
             {

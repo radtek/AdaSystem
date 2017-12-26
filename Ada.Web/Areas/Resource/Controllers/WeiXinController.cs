@@ -98,7 +98,7 @@ namespace Resource.Controllers
             }
             //校验ID不能重复
             var temp = _repository.LoadEntities(d =>
-                d.MediaID.Equals(viewModel.MediaID, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
+                d.MediaID.Equals(viewModel.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
                 d.MediaTypeId == viewModel.MediaTypeId).FirstOrDefault();
             if (temp != null)
             {
@@ -114,8 +114,8 @@ namespace Resource.Controllers
             entity.TransactorId = viewModel.TransactorId;
 
 
-            entity.MediaName = viewModel.MediaName;
-            entity.MediaID = viewModel.MediaID;
+            entity.MediaName = viewModel.MediaName.Trim();
+            entity.MediaID = viewModel.MediaID.Trim();
             entity.MediaLink = viewModel.MediaLink;
             entity.MediaLogo = viewModel.MediaLogo;
             entity.MediaQR = viewModel.MediaQR;
@@ -233,7 +233,7 @@ namespace Resource.Controllers
             }
             //校验ID不能重复
             var temp = _repository.LoadEntities(d =>
-                d.MediaID.Equals(viewModel.MediaID, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
+                d.MediaID.Equals(viewModel.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
                 d.MediaTypeId == viewModel.MediaTypeId&&d.Id!=viewModel.Id).FirstOrDefault();
             if (temp != null)
             {
@@ -247,8 +247,8 @@ namespace Resource.Controllers
             entity.Transactor = viewModel.Transactor;
             entity.TransactorId = viewModel.TransactorId;
 
-            entity.MediaName = viewModel.MediaName;
-            entity.MediaID = viewModel.MediaID;
+            entity.MediaName = viewModel.MediaName.Trim();
+            entity.MediaID = viewModel.MediaID.Trim();
             entity.MediaLink = viewModel.MediaLink;
             entity.MediaLogo = viewModel.MediaLogo;
             entity.MediaQR = viewModel.MediaQR;

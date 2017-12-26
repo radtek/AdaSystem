@@ -1,0 +1,258 @@
+﻿@using System.Web.Optimization
+@using Ada.Core
+@using Ada.Core.Domain.Resource
+@using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Resource
+@model MediaView
+@{
+    ViewBag.Title = "资源更新";
+    var repository = EngineContext.Current.Resolve<IRepository<MediaType>>();
+    var mediaTypes = repository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis).Select(d => new SelectListItem() { Text = d.TypeName, Value = d.Id }).ToList();
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index","Home",new{area= "Dashboards" })">工作台</a>
+            </li>
+            <li class="active">
+                <strong>@ViewBag.Title</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+    <p class="bg-danger">@Html.ValidationMessage("message") </p>
+    <div class="ibox-content">
+        <div class="row">
+            @using (Html.BeginForm("Export", "Update"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="col-sm-4">
+            <div class="form-group">
+                @Html.LabelFor(d => d.MediaTypeId, Html.DisplayNameFor(d => d.MediaTypeId).ToString(), new { @class = "control-label" })
+                @Html.DropDownListFor(d => d.MediaTypeId, mediaTypes, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                @Html.LabelFor(d => d.LinkManId, Html.DisplayNameFor(d => d.LinkManId).ToString(), new { @class = "control-label" })
+                @*<select class="form-control" name="LinkManId" id="LinkManId">
+                 <option value="@Model.LinkManId">@Model.LinkManName</option>
+             </select>
+            @Html.HiddenFor(d=>d.LinkManName)*@
+                @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                @Html.LabelFor(d => d.limit, "导出记录数", new { @class = "control-label" })
+                @Html.TextBoxFor(d => d.limit, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(d => d.MediaNames, Html.DisplayNameFor(d => d.MediaNames).ToString(), new { @class = "control-label" })
+                @Html.TextAreaFor(d => d.MediaNames, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开" })
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(d => d.MediaIDs, Html.DisplayNameFor(d => d.MediaIDs).ToString(), new { @class = "control-label" })
+                @Html.TextAreaFor(d => d.MediaIDs, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开" })
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit"><i class="fa fa-download"></i> 导出数据</button>
+                <button class="btn btn-white" type="button" data-toggle="modal" data-target="#uploadModal"><i class="fa fa-upload"></i> 更新导入</button>
+            </div>
+        </div>
+       
+        <div class="col-sm-12">
+            <div class="alert alert-warning">
+                <strong>注意事项：</strong>导出导入的文件后缀名为[.xlsx]，导入资源的文件一定为导出资源的文件，其他文件排版格式会出错。
+            </div>
+
+        </div>
+}
+
+        </div>
+
+    </div>
+
+
+    <div class="modal inmodal" id="uploadModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">导入更新媒体资源</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>导入文件</label>
+                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                            <div class="form-control" data-trigger="fileinput">
+                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                <span class="fileinput-filename"></span>
+                            </div>
+                            <span class="input-group-addon btn btn-default btn-file">
+                                <span class="fileinput-new">选择</span>
+                                <span class="fileinput-exists">更换</span>
+                                <input type="file" name="upfile" id="upfile" />
+                            </span>
+                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">移除</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <button type="button" class="ladda-button btn btn-primary" onclick="upLoadFile();" data-style="zoom-in">导入</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@section Styles {
+    @Styles.Render("~/plugins/jasnyBootstrapStyles")
+    @Styles.Render("~/plugins/laddaStyles")
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/jasnyBootstrap")
+    @Scripts.Render("~/plugins/ladda")
+    <script>
+        $(function() {
+            $('.modal').on('shown.bs.modal', function () {
+
+            }).on('hidden.bs.modal', function () {
+                $('.fileinput').fileinput("clear");
+            });
+        });
+
+        function upLoadFile() {
+            var fileObj = document.getElementById("upfile").files[0]; // js 获取文件对象
+            if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
+                swal("操作失败", "请选择文件", "warning");
+                return;
+            }
+            if (!checkFileExt(fileObj.name)) {
+                swal("操作失败", "只支持xlsx后缀文件", "warning");
+                return;
+            }
+            var formFile = new FormData();
+            formFile.append("upfile", fileObj); //加入文件对象
+            var data = formFile;
+            var subBtn = $('.ladda-button').ladda();
+            $.ajax({
+                url: "@Url.Action("Import")",
+                data: data,
+                type: "Post",
+                dataType: "json",
+                cache: false, //上传文件无需缓存
+                processData: false, //用于对data参数进行序列化处理 这里必须false
+                contentType: false, //必须
+                success: function(result) {
+                    if (result.State==1) {
+                        swal({
+                            title: "操作成功",
+                            text: data.Msg,
+                            timer: 2000,
+                            type:"success",
+                            showConfirmButton: false
+                        });
+                    } else {
+                        swal("操作失败", result.Msg, "error");
+                    }
+                },
+                error: function () {
+                    swal("操作失败", "系统错误", "error");
+                },
+                beforeSend: function() {
+                    subBtn.ladda('start');
+                },
+                complete: function () {
+                    subBtn.ladda('stop');
+                }
+            });
+        }
+        function checkFileExt(filename)
+        {
+            var flag = false; //状态
+            var arr = ["xlsx"];
+            //取出上传文件的扩展名
+            var index = filename.lastIndexOf(".");
+            var ext = filename.substr(index+1);
+            //循环比较
+            for(var i=0;i<arr.length;i++)
+            {
+                if(ext == arr[i])
+                {
+                    flag = true; //一旦找到合适的，立即退出循环
+                    break;
+                }
+            }
+            return flag;
+        }
+    </script>
+}
+@*@section Styles {
+        @Styles.Render("~/plugins/select2Styles")
+    }
+
+    @section Scripts {
+        @Scripts.Render("~/plugins/select2")
+        <script type="text/javascript">
+            $(function () {
+                $("#LinkManId").select2({
+                    placeholder: "请选择",
+                    language: "zh-CN",
+                    allowClear: true,
+                    ajax: {
+                        url: "@Url.Action("GetList", "LinkMan", new {area = "Customer"})",
+                        dataType: 'json',
+                        delay: 250,
+                        data: function (params) {
+                            return {
+                                search: params.term, // search term
+                                IsBusiness: true
+                            };
+                        },
+                        processResults: function (data, params) {
+                            var result = $.map(data.rows,
+                                function (v, k) {
+                                    return { id: v.Id, text: v.Name, commpany: v.CommpanyName };
+                                });
+                            return {
+                                results: result
+                            };
+                        },
+                        cache: true
+                    },
+                    escapeMarkup: function (markup) { return markup; }, // 字符转义处理
+                    minimumInputLength: 1,
+                    templateResult:
+                        formatRepo, //返回结果回调function formatRepo(repo){return repo.text},这样就可以将返回结果的的text显示到下拉框里，当然你可以return repo.text+"1";等
+                    templateSelection: formatRepoSelection //选中项回调function formatRepoSelection(repo) { return repo.text }
+
+                });
+        });
+            function formatRepo(repo) {
+                if (repo.loading) {
+                    return repo.text;
+                }
+                return "<p>" + repo.commpany + " 【 " + repo.text + " 】 <p>";
+            }
+
+            function formatRepoSelection(repo) {
+                ////$("#LinkManName").val(repo.text);
+                return repo.text;
+            }
+        </script>
+    }*@
+
