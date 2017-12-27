@@ -172,6 +172,31 @@ namespace Ada.Core.Domain.Resource
         [Display(Name = "性别")]
         public string Sex { get; set; }
         /// <summary>
+        /// 客户端
+        /// </summary>
+        [Display(Name = "客户端")]
+        public string Client { get; set; }
+        /// <summary>
+        /// 收录效果
+        /// </summary>
+        [Display(Name = "收录效果")]
+        public string SEO { get; set; }
+        /// <summary>
+        /// 出稿速度
+        /// </summary>
+        [Display(Name = "出稿速度")]
+        public string Efficiency { get; set; }
+        /// <summary>
+        /// 资源类型
+        /// </summary>
+        [Display(Name = "资源类型")]
+        public string ResourceType { get; set; }
+        /// <summary>
+        /// 媒体频道
+        /// </summary>
+        [Display(Name = "媒体频道")]
+        public string Channel { get; set; }
+        /// <summary>
         /// 媒体类型
         /// </summary>
         [Display(Name = "媒体类型")]

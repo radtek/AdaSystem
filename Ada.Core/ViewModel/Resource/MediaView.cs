@@ -167,6 +167,11 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "媒体分类")]
         public List<MediaTagView> MediaTags { get; set; }
         /// <summary>
+        /// 媒体组
+        /// </summary>
+        [Display(Name = "媒体组")]
+        public List<MediaGroupView> MediaGroups { get; set; }
+        /// <summary>
         /// 媒体分类
         /// </summary>
         [Display(Name = "媒体分类")]
@@ -186,6 +191,11 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "媒体类别")]
         public string MediaTypeIndex { get; set; }
+        /// <summary>
+        /// 媒体类别
+        /// </summary>
+        [Display(Name = "媒体类别")]
+        public string MediaTypeName { get; set; }
         /// <summary>
         /// 渠道类型
         /// </summary>
@@ -242,6 +252,31 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "媒体ID集合")]
         public string MediaIDs { get; set; }
+        /// <summary>
+        /// 客户端
+        /// </summary>
+        [Display(Name = "客户端")]
+        public string Client { get; set; }
+        /// <summary>
+        /// 收录效果
+        /// </summary>
+        [Display(Name = "收录效果")]
+        public string SEO { get; set; }
+        /// <summary>
+        /// 出稿速度
+        /// </summary>
+        [Display(Name = "出稿速度")]
+        public string Efficiency { get; set; }
+        /// <summary>
+        /// 资源类型
+        /// </summary>
+        [Display(Name = "资源类型")]
+        public string ResourceType { get; set; }
+        /// <summary>
+        /// 媒体频道
+        /// </summary>
+        [Display(Name = "媒体频道")]
+        public string Channel { get; set; }
     }
 
 }

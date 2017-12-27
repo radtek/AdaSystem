@@ -4,9 +4,9 @@
 @using Ada.Services.Resource
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
-    ViewBag.Title = "知乎资源";
+    ViewBag.Title = "网站资源";
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
-    var adpositions = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("zhihu").AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
+    var adpositions = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("website").AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
 }
 @Html.Partial("Bread")
 
@@ -110,7 +110,8 @@
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
     <script src="@Url.Content("~/Areas/Resource/Scripts/index.js")"></script>
-<script type="text/javascript">
+
+    <script type="text/javascript">
 
         $(document).ready(function () {
             var table = new TableInit();
@@ -149,7 +150,7 @@
                 //detailView: true,                   //设置为 true 可以显示详细页面模式。
                 //detailFormatter: detailFormatter,
                     formatSearch: function() {
-                        return "知乎名称";
+                        return "门户名称";
                     },
                 mobileResponsive:true,
                 onLoadSuccess: initTooltip,
@@ -161,23 +162,26 @@
                         formatter: formatter.normalStatus,
                         align: "center"
                     },
+
                     {
                         field: 'MediaName',
-                        title: '知乎名称',
+                        title: '@Html.DisplayNameFor(d=>d.MediaName)',
                         valign: "middle",
                         align: "center",
                         formatter: function(value, row, index) {
                             if (value) {
-                                if (row.MediaID) {
-                                    return "<a class='label' href='https://www.zhihu.com/people/" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> "+value+"</a>";
+                                if (row.MediaLink) {
+                                    return "<a class='label' href='" + row.MediaLink + "' target='_blank'><i class='fa fa-link'></i> " + value + "-" + row.Client + "-" + row.Channel + "</a>";
                                 } else {
-                                    return value;
+                                    return value + "-" + row.Client + "-" + row.Channel;
                                 }
                             } else {
-                                return value;
+                                return "";
                             }
                         }
                     },
+
+
                     {
                         field: 'Area',
                         title: '@Html.DisplayNameFor(d=>d.Area)',
@@ -185,8 +189,14 @@
                         align: "center"
                     },
                     {
-                        field: 'FansNum',
-                        title: '@Html.DisplayNameFor(d=>d.FansNum)',
+                        field: 'ResourceType',
+                        title: '@Html.DisplayNameFor(d=>d.ResourceType)',
+                        valign: "middle",
+                        align: "center"
+                    },
+                    {
+                        field: 'Efficiency',
+                        title: '@Html.DisplayNameFor(d=>d.Efficiency)',
                         valign: "middle",
                         align: "center"
                     },
@@ -260,7 +270,7 @@
             return oInit;
         };
 
-       
+
         //撤销
         function cancle(id) {
             swal({
@@ -304,7 +314,7 @@
                 });
             });
         }
-</script>
+    </script>
 }
 
 

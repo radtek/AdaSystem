@@ -62,9 +62,9 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.LinkMan.Name.Contains(viewModel.LinkManName));
             }
-            if (!string.IsNullOrWhiteSpace(viewModel.AddedBy))
+            if (!string.IsNullOrWhiteSpace(viewModel.Transactor))
             {
-                allList = allList.Where(d => d.AddedBy == viewModel.AddedBy);
+                allList = allList.Where(d => d.Transactor == viewModel.Transactor);
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
             {

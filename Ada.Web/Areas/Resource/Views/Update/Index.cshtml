@@ -32,13 +32,13 @@
             @using (Html.BeginForm("Export", "Update"))
     {
         @Html.AntiForgeryToken()
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <div class="form-group">
                 @Html.LabelFor(d => d.MediaTypeId, Html.DisplayNameFor(d => d.MediaTypeId).ToString(), new { @class = "control-label" })
                 @Html.DropDownListFor(d => d.MediaTypeId, mediaTypes, new { @class = "form-control" })
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <div class="form-group">
                 @Html.LabelFor(d => d.LinkManId, Html.DisplayNameFor(d => d.LinkManId).ToString(), new { @class = "control-label" })
                 @*<select class="form-control" name="LinkManId" id="LinkManId">
@@ -48,10 +48,16 @@
                 @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control" })
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <div class="form-group">
                 @Html.LabelFor(d => d.limit, "导出记录数", new { @class = "control-label" })
                 @Html.TextBoxFor(d => d.limit, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor).ToString(), new { @class = "control-label" })
+                @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control" })
             </div>
         </div>
         <div class="col-sm-6">
@@ -72,7 +78,7 @@
                 <button class="btn btn-white" type="button" data-toggle="modal" data-target="#uploadModal"><i class="fa fa-upload"></i> 更新导入</button>
             </div>
         </div>
-       
+
         <div class="col-sm-12">
             <div class="alert alert-warning">
                 <strong>注意事项：</strong>导出导入的文件后缀名为[.xlsx]，导入资源的文件一定为导出资源的文件，其他文件排版格式会出错。

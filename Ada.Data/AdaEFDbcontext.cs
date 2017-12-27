@@ -18,7 +18,7 @@ namespace Ada.Data
         {
             //Enable-Migrations 开启数据迁移
             //对 Configuration.cs 修改 AutomaticMigrationsEnabled = true; AutomaticMigrationDataLossAllowed = false;//不允许数据丢失
-            //Add-Migration UserProfile 对某一实体类进行数据更新
+            //Add-Migration UserProfile 对某一实体类进行数据更新  -Force 重新迁移
             //Update-Database -Verbose 更新数据库
         }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

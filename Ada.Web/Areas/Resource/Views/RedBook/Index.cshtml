@@ -109,7 +109,7 @@
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -173,14 +173,14 @@
                                 } else {
                                     return value;
                                 }
-                                
+
                             } else {
                                 return value;
                             }
                         }
                     },
-                 
-                   
+
+
                     {
                         field: 'Area',
                         title: '@Html.DisplayNameFor(d=>d.Area)',
@@ -223,6 +223,13 @@
                         align: "center", valign: "middle", formatter: formatter.tooltip
                     },
                     {
+                        field: 'MediaGroups',
+                        title: '@Html.DisplayNameFor(d=>d.MediaGroups)',
+                        valign: "middle",
+                        formatter: formatterGroup,
+                        align: "center"
+                    },
+                    {
                         field: 'LinkManName',
                         title: '@Html.DisplayNameFor(d=>d.LinkManName)',
                         valign: "middle",
@@ -262,15 +269,7 @@
             return oInit;
         };
 
-        function formatterPrice(value, row, index) {
-            var result = "";
-            $.each(value,
-                function(k, v) {
-                    result += "<span class='label label-info'>" + v.AdPositionName + "：" + (v.PurchasePrice == 0 ? "不接单" : v.PurchasePrice) + "　　价格有效期至：" + (v.InvalidDate?moment(v.InvalidDate).format("YYYY-MM-DD"):"") +"</span><br/>";
-                });
-            return result;
 
-        }
         //撤销
         function cancle(id) {
             swal({

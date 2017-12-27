@@ -64,6 +64,7 @@ namespace Resource.Controllers
                     LinkManName = d.LinkMan.Name,
                     Transactor = d.Transactor,
                     MediaTagStr = string.Join(",", d.MediaTags.Select(t => t.TagName)),
+                    MediaGroups = d.MediaGroups.Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
                     MediaPrices = d.MediaPrices.Select(p => new MediaPriceView()
                     {
                         AdPositionName = p.AdPositionName,

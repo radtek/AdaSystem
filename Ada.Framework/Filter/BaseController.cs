@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +16,9 @@ using Ada.Framework.Caching;
 using Ada.Framework.Services;
 using Ada.Services.Admin;
 using Autofac;
+using ClosedXML.Excel;
 using log4net;
+using Newtonsoft.Json;
 using Action = Ada.Core.Domain.Admin.Action;
 
 namespace Ada.Framework.Filter
@@ -141,6 +145,26 @@ namespace Ada.Framework.Filter
         public List<string> PremissionData()
         {
             return _permissionService.AuthorizeData(CurrentManager.Id, CurrentManager.RoleId);
+        }
+        /// <summary>
+        /// 导出数据
+        /// </summary>
+        /// <param name="jsonStr"></param>
+        /// <returns></returns>
+        public byte[] ExportData(string jsonStr)
+        {
+            var dt = JsonConvert.DeserializeObject<DataTable>(jsonStr);
+            byte[] bytes;
+            using (var workbook = new XLWorkbook())
+            {
+                workbook.Worksheets.Add(dt, "江西微广");
+                using (var ms = new MemoryStream())
+                {
+                    workbook.SaveAs(ms);
+                    bytes = ms.ToArray();
+                }
+            }
+            return bytes;
         }
     }
 }

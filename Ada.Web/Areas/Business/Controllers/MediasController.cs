@@ -45,7 +45,7 @@ namespace Business.Controllers
             Stopwatch watcher = new Stopwatch();
             watcher.Start();
             viewModel.Status = Consts.StateNormal;
-            viewModel.limit = 50;
+            viewModel.limit = 100;
             var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
             watcher.Stop();
             if (!result.Any())
@@ -95,6 +95,14 @@ namespace Business.Controllers
                         jo.Add("平台", media.Platform);
                     }
                     jo.Add("媒体名称", media.MediaName);
+                    if (!string.IsNullOrWhiteSpace(media.Client))
+                    {
+                        jo.Add("客户端", media.Client);
+                    }
+                    if (!string.IsNullOrWhiteSpace(media.Channel))
+                    {
+                        jo.Add("媒体频道", media.Channel);
+                    }
                     if (!string.IsNullOrWhiteSpace(media.MediaID))
                     {
                         jo.Add("媒体ID", media.MediaID);
@@ -108,20 +116,21 @@ namespace Business.Controllers
                     }
                     jObjects.Add(jo);
                 }
-                var dt = JsonConvert.DeserializeObject<DataTable>(jObjects.ToString());
-                byte[] bytes;
-                using (var workbook = new XLWorkbook())
-                {
-                    workbook.Worksheets.Add(dt, "江西微广");
-                    using (var ms = new MemoryStream())
-                    {
-                        workbook.SaveAs(ms);
-                        bytes = ms.ToArray();
-                    }
-                }
-                return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
+                //var dt = JsonConvert.DeserializeObject<DataTable>(jObjects.ToString());
+                //byte[] bytes;
+                //using (var workbook = new XLWorkbook())
+                //{
+                //    workbook.Worksheets.Add(dt, "江西微广");
+                //    using (var ms = new MemoryStream())
+                //    {
+                //        workbook.SaveAs(ms);
+                //        bytes = ms.ToArray();
+                //    }
+                //}
+
+                return File(ExportData(jObjects.ToString()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
             }
-            ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + result.Count + "条。注：查询结果最多显示50条");
+            ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + result.Count + "条。注：查询结果最多显示100条");
             return View(result);
 
 

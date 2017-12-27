@@ -29,7 +29,7 @@
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-    <script type="text/javascript">
+<script type="text/javascript">
 
         $(document).ready(function() {
             var table = new TableInit();
@@ -74,6 +74,21 @@
                             field: 'GroupName',
                             title: '@Html.DisplayNameFor(d => d.GroupName)',
                             align: "center", valign: "middle"
+                        },
+                        {
+                            field: 'MediaViews',
+                            title: '@Html.DisplayNameFor(d=>d.MediaViews)',
+                            valign: "middle",
+                            formatter: function(value) {
+                                var result = "";
+                                $.each(value,
+                                    function(k, v) {
+                                        result += '<div class="bg-info">【' + v.MediaTypeName + '】' + v.MediaName+'</div>';
+                                    });
+                                return result;
+                            },
+                            width:"25%"
+                            //align: "center"
                         },
                         {
                             field: 'Id',
@@ -136,7 +151,7 @@
                 });
             });
         }
-    </script>
+</script>
 }
 
 

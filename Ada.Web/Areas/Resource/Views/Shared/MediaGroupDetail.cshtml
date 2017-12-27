@@ -1,0 +1,55 @@
+﻿@using Microsoft.Ajax.Utilities
+@model Ada.Core.Domain.Resource.MediaGroup
+
+<div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">媒体组【@Model.GroupName】详情</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>媒体类型</th>
+                                <th>媒体名称</th>
+                                <th>粉丝数</th>
+                                <th>媒体价格</th>
+                                <th>媒体备注</th>
+                                <th>经办媒介</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Medias)
+                            {
+                                <tr>
+                                    <td>@item.MediaType.TypeName</td>
+                                    <td>@item.MediaName</td>
+                                    <td>@item.FansNum</td>
+                                    <td>
+                                        @foreach (var price in item.MediaPrices)
+                                        {
+                                            var str = price.AdPositionName + "：¥ " + price.PurchasePrice + "　　有效期至：" + price.InvalidDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"));
+                                            <div class="bg-info">@str</div>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="label label-info" data-toggle="tooltip" data-placement="bottom" title="@item.Remark">
+                                            <i class="fa fa-info-circle"></i> 查看
+                                        </span>
+                                    </td>
+                                    <td>@item.Transactor</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>

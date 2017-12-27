@@ -15,15 +15,20 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "媒体组名")]
         public string GroupName { get; set; }
-        ///// <summary>
-        ///// 媒体资源
-        ///// </summary>
-        //[Display(Name = "媒体资源")]
-        //public List<string> Medias { get; set; }
+        /// <summary>
+        /// 媒体资源
+        /// </summary>
+        [Display(Name = "媒体资源")]
+        public List<string> Medias { get; set; }
         /// <summary>
         /// 媒体资源
         /// </summary>
         [Display(Name = "媒体资源")]
         public string MediaData { get; set; }
+        /// <summary>
+        /// 媒体资源
+        /// </summary>
+        [Display(Name = "媒体资源")]
+        public List<MediaView> MediaViews { get; set; }
     }
 }

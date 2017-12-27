@@ -2,7 +2,7 @@
 @using System.Web.Optimization
 @model Ada.Core.ViewModel.Resource.MediaGroupView
 @{
-    ViewBag.Title = "添加分组";
+    ViewBag.Title = "编辑分组";
     List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "媒体分组", Value = Url.Action("Index") } };
 }
 @Html.Partial("Bread", urls)
@@ -36,7 +36,7 @@
     @Scripts.Render("~/plugins/select2")
     <script>
         $(function () {
-           
+
             $("#Medias").select2({
                 placeholder: "请选择",
                 language: "zh-CN",
@@ -73,7 +73,7 @@
                     var newOption = new Option(v.text, v.id, true, true);
                     $('#Medias').append(newOption).trigger('change');
                 });
-            
+
             $(".wrapper.wrapper-content form").validate({
                 submitHandler: function (form) {
                     $('.wrapper.wrapper-content .ibox').children('.ibox-content').toggleClass('sk-loading');

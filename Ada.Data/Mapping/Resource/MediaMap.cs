@@ -44,6 +44,11 @@ namespace Ada.Data.Mapping.Resource
             Property(s => s.TransactorId).HasMaxLength(32);
             Property(s => s.Platform).HasMaxLength(32);
             Property(s => s.Sex).HasMaxLength(16);
+            Property(s => s.Client).HasMaxLength(32);
+            Property(s => s.SEO).HasMaxLength(32);
+            Property(s => s.Efficiency).HasMaxLength(32);
+            Property(s => s.ResourceType).HasMaxLength(32);
+            Property(s => s.Channel).HasMaxLength(32);
 
             Property(s => s.AddedDate);
             Property(s => s.AddedBy).HasMaxLength(32);

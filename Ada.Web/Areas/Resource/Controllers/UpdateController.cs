@@ -88,7 +88,12 @@ namespace Resource.Controllers
                 jo.Add("结算人", media.LinkMan?.Name);
                 jo.Add("媒体类型", media.MediaType?.TypeName);
                 jo.Add("平台", media.Platform);
-                jo.Add("媒体名称", media.MediaName);
+                string website = string.Empty;
+                if (!string.IsNullOrWhiteSpace(media.Client) && !string.IsNullOrWhiteSpace(media.Channel))
+                {
+                    website = "-" + media.Client + "-" + media.Channel;
+                }
+                jo.Add("媒体名称", media.MediaName + website);
                 jo.Add("媒体ID", media.MediaID);
                 jo.Add("粉丝数", media.FansNum ?? 0);
                 foreach (var mediaMediaPrice in media.MediaPrices)

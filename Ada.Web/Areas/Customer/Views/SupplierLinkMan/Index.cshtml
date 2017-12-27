@@ -21,6 +21,9 @@
     <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
         <i class="fa fa-plus"></i> 新增
     </a>
+    <a class="btn btn-primary btn-outline" href="@Url.Action("Export")">
+        <i class="fa fa-download"></i> 导出
+    </a>
 </div>
 
 @section Styles {
@@ -29,7 +32,7 @@
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-<script type="text/javascript">
+    <script type="text/javascript">
 
         $(document).ready(function() {
             var table = new TableInit();
@@ -68,10 +71,16 @@
                         parameters.IsBusiness = true;
                         return parameters;
                     },
+                    
                     formatSearch: function() {
                         return "@Html.DisplayNameFor(d => d.Name)";
                     },
                     columns: [
+                        {
+                            field: 'Id',
+                            title: '主键',
+                            align: "center", valign: "middle"
+                        },
                         {
                             field: 'CommpanyName',
                             title: '@Html.DisplayNameFor(d => d.CommpanyName)',
@@ -165,7 +174,7 @@
                 });
             });
         }
-</script>
+    </script>
 }
 
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
@@ -8,6 +10,7 @@ using Ada.Core.Domain.Customer;
 using Ada.Core.ViewModel.Customer;
 using Ada.Framework.Filter;
 using Ada.Services.Customer;
+using Newtonsoft.Json;
 
 namespace Customer.Controllers
 {
@@ -152,5 +155,34 @@ namespace Customer.Controllers
             _linkManService.Delete(entity);
             return Json(new { State = 1, Msg = "删除成功" });
         }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public ActionResult Export(LinkManView viewModel)
+        {
+            viewModel.Managers = PremissionData();
+            viewModel.limit = 1000;
+            viewModel.IsBusiness = true;
+            var result = _linkManService.LoadEntitiesFilter(viewModel).ToList();
+            var json = JsonConvert.SerializeObject(result.Select(d => new
+            {
+                主键 = d.Id,
+                公司名称=d.Commpany.Name,
+                结算人=d.Name,
+                经办媒介=d.Transactor
+            }));
+            return File(ExportData(json), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
+        }
+
+        //private string GetTypeName(Type type, string propertyName)
+        //{
+            
+        //    var property = type.GetProperty(propertyName);
+        //    if (property==null)
+        //    {
+        //        return propertyName;
+        //    }
+        //    var attribute = property.GetCustomAttribute<DisplayAttribute>();
+        //    return attribute.Name;
+        //}
     }
 }

@@ -13,16 +13,16 @@ using Ada.Services.Resource;
 namespace Resource.Controllers
 {
     /// <summary>
-    /// 小红书
+    /// 网站资源
     /// </summary>
-    public class RedBookController : BaseController
+    public class WebSiteController : BaseController
     {
         private readonly IMediaService _mediaService;
         private readonly IRepository<Media> _repository;
         private readonly IRepository<MediaTag> _mediaTagRepository;
         private readonly IRepository<MediaPrice> _mediaPriceRepository;
         private readonly IMediaTypeService _mediaTypeService;
-        public RedBookController(IMediaService mediaService,
+        public WebSiteController(IMediaService mediaService,
             IRepository<Media> repository,
             IMediaTypeService mediaTypeService,
             IRepository<MediaTag> mediaTagRepository,
@@ -41,7 +41,7 @@ namespace Resource.Controllers
         }
         public ActionResult GetList(MediaView viewModel)
         {
-            viewModel.MediaTypeIndex = "redbook";
+            viewModel.MediaTypeIndex = "website";
             viewModel.Managers = PremissionData();
             var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
@@ -52,8 +52,11 @@ namespace Resource.Controllers
                     Id = d.Id,
                     MediaName = d.MediaName,
                     MediaLink = d.MediaLink,
-                    LikesNum = d.LikesNum,
-                    FansNum = d.FansNum,
+                    Client = d.Client,
+                    SEO = d.SEO,
+                    Efficiency = d.Efficiency,
+                    ResourceType = d.ResourceType,
+                    Channel = d.Channel,
                     Area = d.Area,
                     Content = d.Content,
                     Remark = d.Remark,
@@ -61,8 +64,8 @@ namespace Resource.Controllers
                     LinkManId = d.LinkManId,
                     LinkManName = d.LinkMan.Name,
                     Transactor = d.Transactor,
-                    MediaGroups = d.MediaGroups.Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
                     MediaTagStr = string.Join(",", d.MediaTags.Select(t => t.TagName)),
+                    MediaGroups = d.MediaGroups.Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
                     MediaPrices = d.MediaPrices.Select(p => new MediaPriceView()
                     {
                         AdPositionName = p.AdPositionName,
@@ -93,11 +96,14 @@ namespace Resource.Controllers
             }
             //校验ID不能重复
             var temp = _repository.LoadEntities(d =>
-                d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
+                d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
+                d.Client.Equals(viewModel.Client, StringComparison.CurrentCultureIgnoreCase) &&
+                d.Channel.Equals(viewModel.Channel, StringComparison.CurrentCultureIgnoreCase) &&
+                d.IsDelete == false &&
                 d.MediaTypeId == viewModel.MediaTypeId).FirstOrDefault();
             if (temp != null)
             {
-                ModelState.AddModelError("message", viewModel.MediaName + "，此小红书已存在！");
+                ModelState.AddModelError("message", viewModel.MediaName + "，此网站资源已存在！");
                 return View(viewModel);
             }
             Media entity = new Media();
@@ -111,8 +117,12 @@ namespace Resource.Controllers
 
             entity.MediaName = viewModel.MediaName.Trim();
             entity.MediaLink = viewModel.MediaLink;
-            entity.LikesNum = viewModel.LikesNum;
-            entity.FansNum = viewModel.FansNum;
+            entity.Client = viewModel.Client;
+            entity.SEO = viewModel.SEO;
+            entity.Efficiency = viewModel.Efficiency;
+            entity.ResourceType = viewModel.ResourceType;
+            entity.Channel = viewModel.Channel;
+
             entity.Area = viewModel.Area;
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
@@ -123,7 +133,7 @@ namespace Resource.Controllers
             entity.IsSlide = viewModel.IsSlide;
             entity.IsRecommend = viewModel.IsRecommend;
 
-            var mediaType = _mediaTypeService.GetMediaTypeByCallIndex("redbook");
+            var mediaType = _mediaTypeService.GetMediaTypeByCallIndex("website");
             entity.MediaTypeId = mediaType.Id;
             entity.LinkManId = viewModel.LinkManId;
             //媒体价格
@@ -161,8 +171,11 @@ namespace Resource.Controllers
             entity.TransactorId = item.TransactorId;
             entity.MediaName = item.MediaName;
             entity.MediaLink = item.MediaLink;
-            entity.LikesNum = item.LikesNum;
-            entity.FansNum = item.FansNum;
+            entity.Client = item.Client;
+            entity.SEO = item.SEO;
+            entity.Efficiency = item.Efficiency;
+            entity.ResourceType = item.ResourceType;
+            entity.Channel = item.Channel;
             entity.Area = item.Area;
             entity.Content = item.Content;
             entity.Remark = item.Remark;
@@ -200,11 +213,15 @@ namespace Resource.Controllers
             }
             //校验ID不能重复
             var temp = _repository.LoadEntities(d =>
-                d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
-                d.MediaTypeId == viewModel.MediaTypeId && d.Id != viewModel.Id).FirstOrDefault();
+                d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
+                d.Client.Equals(viewModel.Client, StringComparison.CurrentCultureIgnoreCase) &&
+                d.Channel.Equals(viewModel.Channel, StringComparison.CurrentCultureIgnoreCase) &&
+                d.IsDelete == false &&
+                d.MediaTypeId == viewModel.MediaTypeId &&
+                d.Id != viewModel.Id).FirstOrDefault();
             if (temp != null)
             {
-                ModelState.AddModelError("message", viewModel.MediaName + "，此小红书已存在！");
+                ModelState.AddModelError("message", viewModel.MediaName + "，此网站资源已存在！");
                 return View(viewModel);
             }
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
@@ -215,8 +232,11 @@ namespace Resource.Controllers
             entity.TransactorId = viewModel.TransactorId;
             entity.MediaName = viewModel.MediaName.Trim();
             entity.MediaLink = viewModel.MediaLink;
-            entity.LikesNum = viewModel.LikesNum;
-            entity.FansNum = viewModel.FansNum;
+            entity.Client = viewModel.Client;
+            entity.SEO = viewModel.SEO;
+            entity.Efficiency = viewModel.Efficiency;
+            entity.ResourceType = viewModel.ResourceType;
+            entity.Channel = viewModel.Channel;
             entity.Area = viewModel.Area;
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;

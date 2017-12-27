@@ -132,6 +132,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\index.js" />
     <Content Include="Scripts\resource.js" />
     <Content Include="Scripts\transactor.js" />
     <Content Include="Web.config">
@@ -148,6 +149,7 @@
     <Compile Include="Controllers\SinaBlogController.cs" />
     <Compile Include="Controllers\UpdateController.cs" />
     <Compile Include="Controllers\WebCastController.cs" />
+    <Compile Include="Controllers\WebSiteController.cs" />
     <Compile Include="Controllers\WeiXinController.cs" />
     <Compile Include="Controllers\ZhiHuController.cs" />
     <Compile Include="ResourceAreaRegistration.cs" />
@@ -189,6 +191,13 @@
     <Content Include="Views\Update\Index.cshtml" />
     <Content Include="Views\MediaGroup\Index.cshtml" />
     <Content Include="Views\MediaGroup\Add.cshtml" />
+    <Content Include="Views\MediaGroup\MediaGroupEdit.cshtml" />
+    <Content Include="Views\MediaGroup\Update.cshtml" />
+    <Content Include="Views\Shared\MediaGroupDetail.cshtml" />
+    <Content Include="Views\WebSite\Index.cshtml" />
+    <Content Include="Views\WebSite\Add.cshtml" />
+    <Content Include="Views\WebSite\Update.cshtml" />
+    <Content Include="Views\WebSite\WebSiteEdit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
