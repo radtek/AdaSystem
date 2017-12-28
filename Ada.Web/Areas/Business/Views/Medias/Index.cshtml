@@ -3,12 +3,14 @@
 @using Ada.Core.Domain.Resource
 @using Ada.Core.Infrastructure
 @using Ada.Core.ViewModel.Resource
+@using Ada.Services.Resource
 @using Microsoft.Ajax.Utilities
 @model List<Media>
 @{
     ViewBag.Title = "媒体查询";
     var repository = EngineContext.Current.Resolve<IRepository<MediaType>>();
     var mediaTypes = repository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis).ToList();
+    var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
     MediaView view = ViewBag.ViewModel;
 }
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -83,6 +85,24 @@
 
                     </div>
                 </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label">媒体分类</label>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @foreach (var item in tags)
+                                {
+                                    var isChecked = view.MediaTagIds == null ? "" : view.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
+                                        <label for="@item.Id">@item.TagName</label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label class="control-label">媒体名称</label>
@@ -124,34 +144,52 @@
                         <table class="table">
                             <thead>
                                 <tr>
-
                                     <th>媒体类型</th>
                                     <th>媒体名称</th>
+                                    <th data-breakpoints="xs sm">媒体分类</th>
                                     <th data-breakpoints="xs sm">粉丝数</th>
                                     <th data-breakpoints="xs">媒体价格</th>
                                     <th data-breakpoints="all" data-title="媒体内容">媒体内容</th>
+                                    <th data-breakpoints="all" data-title="媒体备注">媒体备注</th>
                                     <th data-breakpoints="xs sm">经办媒介</th>
-                                    <th data-breakpoints="all" data-title="媒体备注">备注</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-
                                         <td>@item.MediaType.TypeName</td>
-                                        <td>@item.MediaName</td>
+                                        @if (item.MediaType.CallIndex == "website")
+                                        {
+                                            var medianame = item.MediaName + "-" + item.Client + "-" + item.Channel;
+                                            <td>@medianame</td>
+                                        }
+                                        else if (item.MediaType.CallIndex == "weixin")
+                                        {
+                                            var medianame = item.MediaName + " [ " + item.MediaID + " ]";
+                                            <td>@medianame</td>
+                                        }
+                                        else if (item.MediaType.CallIndex == "headline" || item.MediaType.CallIndex == "webcast")
+                                        {
+                                            var medianame = "[ " + item.Platform + " ] " + item.MediaName;
+                                            <td>@medianame</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@item.MediaName</td>
+                                        }
+                                        <td>@string.Join(",",item.MediaTags.Select(d=>d.TagName))</td>
                                         <td>@item.FansNum</td>
                                         <td>
                                             @foreach (var price in item.MediaPrices)
                                             {
-                                                var str = price.AdPositionName + "：¥ " + price.PurchasePrice + "　　价格有效期至：" + price.InvalidDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"));
-                                                <div class="p-xxs bg-info">@str</div>
+                                                var str = price.AdPositionName + "：¥ " + price.PurchasePrice + "　　有效期至：" + price.InvalidDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"));
+                                                <div class="bg-info">@str</div>
                                             }
                                         </td>
                                         <td>@item.Content</td>
-                                        <td>@item.Transactor</td>
                                         <td>@item.Remark</td>
+                                        <td>@item.Transactor</td>
                                     </tr>
                                 }
 
@@ -172,6 +210,7 @@
 </div>
 
 @section Styles {
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
     @Styles.Render("~/plugins/footableV3Styles")
 }
 

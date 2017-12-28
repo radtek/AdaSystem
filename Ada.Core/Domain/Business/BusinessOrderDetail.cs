@@ -53,6 +53,21 @@ namespace Ada.Core.Domain.Business
         /// </summary>
         [Display(Name = "无税金额")]
         public decimal? SellMoney { get; set; }
+        /// <summary>
+        /// 未核销金额
+        /// </summary>
+        [Display(Name = "未核销金额")]
+        public decimal? VerificationMoney { get; set; }
+        /// <summary>
+        /// 已核销金额
+        /// </summary>
+        [Display(Name = "已核销金额")]
+        public decimal? ConfirmVerificationMoney { get; set; }
+        /// <summary>
+        /// 核销状态
+        /// </summary>
+        [Display(Name = "核销状态")]
+        public short? VerificationStatus { get; set; }
 
         /// <summary>
         /// 预出刊日期

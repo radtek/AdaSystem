@@ -244,6 +244,10 @@
     <Compile Include="Migrations\201712270422059_MediaUpdate20171227.Designer.cs">
       <DependentUpon>201712270422059_MediaUpdate20171227.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712280340283_OrderDetailUpdate20171228.cs" />
+    <Compile Include="Migrations\201712280340283_OrderDetailUpdate20171228.Designer.cs">
+      <DependentUpon>201712280340283_OrderDetailUpdate20171228.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -368,6 +372,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712270422059_MediaUpdate20171227.resx">
       <DependentUpon>201712270422059_MediaUpdate20171227.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712280340283_OrderDetailUpdate20171228.resx">
+      <DependentUpon>201712280340283_OrderDetailUpdate20171228.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

@@ -68,13 +68,13 @@ namespace Ada.Services.Resource
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
             {
-                viewModel.MediaNames = viewModel.MediaNames.Trim().Replace("\r\n", ",").Replace("，", ",");
+                viewModel.MediaNames = viewModel.MediaNames.Trim().Replace("\r\n", ",").Replace("，", ",").Replace(" ",",");
                 var mediaNames = viewModel.MediaNames.Split(',').ToList();
                 allList = allList.Where(d => mediaNames.Contains(d.MediaName));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
             {
-                viewModel.MediaIDs = viewModel.MediaIDs.Trim().Replace("\r\n", ",").Replace("，", ",");
+                viewModel.MediaIDs = viewModel.MediaIDs.Trim().Replace("\r\n", ",").Replace("，", ",").Replace(" ", ",");
                 var mediaIDs = viewModel.MediaIDs.Split(',').ToList();
                 allList = allList.Where(d => mediaIDs.Contains(d.MediaID));
             }

@@ -107,27 +107,40 @@ namespace Business.Controllers
                     {
                         jo.Add("媒体ID", media.MediaID);
                     }
+                    if (!string.IsNullOrWhiteSpace(media.Sex))
+                    {
+                        jo.Add("性别", media.Sex);
+                    }
                     jo.Add("粉丝数", media.FansNum ?? 0);
+                    if (!string.IsNullOrWhiteSpace(media.Area))
+                    {
+                        jo.Add("地区", media.Area);
+                    }
+                    if (!string.IsNullOrWhiteSpace(media.ResourceType))
+                    {
+                        jo.Add("资源类型", media.ResourceType);
+                    }
+                    if (!string.IsNullOrWhiteSpace(media.Efficiency))
+                    {
+                        jo.Add("出稿速度", media.Efficiency);
+                    }
+                    if (!string.IsNullOrWhiteSpace(media.SEO))
+                    {
+                        jo.Add("收录效果", media.SEO);
+                    }
+                
                     foreach (var mediaMediaPrice in media.MediaPrices)
                     {
                         jo.Add(mediaMediaPrice.AdPositionName, mediaMediaPrice.PurchasePrice);
                         //jo.Add(mediaMediaPrice.AdPositionName + "更新日期", mediaMediaPrice.PriceDate);
                         //jo.Add(mediaMediaPrice.AdPositionName + "失效日期", mediaMediaPrice.InvalidDate);
                     }
+                    if (!string.IsNullOrWhiteSpace(media.Remark))
+                    {
+                        jo.Add("备注说明", media.Remark);
+                    }
                     jObjects.Add(jo);
                 }
-                //var dt = JsonConvert.DeserializeObject<DataTable>(jObjects.ToString());
-                //byte[] bytes;
-                //using (var workbook = new XLWorkbook())
-                //{
-                //    workbook.Worksheets.Add(dt, "江西微广");
-                //    using (var ms = new MemoryStream())
-                //    {
-                //        workbook.SaveAs(ms);
-                //        bytes = ms.ToArray();
-                //    }
-                //}
-
                 return File(ExportData(jObjects.ToString()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
             }
             ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + result.Count + "条。注：查询结果最多显示100条");

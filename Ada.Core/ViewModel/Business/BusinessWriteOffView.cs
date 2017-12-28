@@ -37,6 +37,12 @@ namespace Ada.Core.ViewModel.Business
         [Required]
         public string Payees { get; set; }
         /// <summary>
+        /// 订单编号
+        /// </summary>
+        [Display(Name = "订单编号")]
+        [Required]
+        public string OrderNum { get; set; }
+        /// <summary>
         /// 销售订单
         /// </summary>
         [Display(Name = "销售订单")]

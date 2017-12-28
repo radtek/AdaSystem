@@ -35,14 +35,17 @@
             </div>
         </div>
     }
-    <div id="toolbar" class="btn-group">
-        <a class="btn btn-primary btn-outline" href="javascript:showMedia('@Url.Action("SelectMedia")');">
-            <i class="fa fa-plus"></i> 添加媒体资源
-        </a>
-        <a class="btn btn-primary btn-outline" href="javascript:transOrder();">
-            <i class="fa fa-arrow-circle-right"></i> 转成采购订单
-        </a>
-    </div>
+        <div id="toolbar" class="btn-group">
+            <a class="btn btn-primary btn-outline" href="javascript:showMedia('@Url.Action("SelectMedia")');">
+                <i class="fa fa-plus"></i> 添加媒体
+            </a>
+            <a class="btn btn-primary btn-outline" href="javascript:transOrder();">
+                <i class="fa fa-arrow-circle-right"></i> 转为采购
+            </a>
+            <a class="btn btn-primary btn-outline" href="javascript:deleteRow();">
+                <i class="fa fa-trash-o"></i> 删除订单
+            </a>
+        </div>
 </div>
 
 @section Styles {

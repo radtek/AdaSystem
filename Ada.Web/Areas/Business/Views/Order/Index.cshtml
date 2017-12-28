@@ -82,7 +82,7 @@
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/peity")
-    <script type="text/javascript">
+<script type="text/javascript">
 
         $(document).ready(function () {
             var table = new TableInit();
@@ -90,7 +90,7 @@
             //2.初始化Button的点击事件
             var oButtonInit = new ButtonInit();
             oButtonInit.Init();
-            
+
         });
         var TableInit = function() {
             var obj = new Object();
@@ -130,6 +130,11 @@
                         checkbox: true
                     },
                     {
+                        field: 'OrderNum',
+                        title: '@Html.DisplayNameFor(d=>d.OrderNum)',
+                        align: "center", valign: "middle"
+                    },
+                    {
                         field: 'Remark',
                         title: '@Html.DisplayNameFor(d=>d.Remark)',
                         align: "center", valign: "middle",
@@ -147,18 +152,14 @@
                         align: "center", valign: "middle",
                         formatter: formatter.pie
                     },
-                   
+
                     {
                         field: 'OrderSchedule',
                         title: '@Html.DisplayNameFor(d=>d.OrderSchedule)',
                         align: "center", valign: "middle",
                         formatter: formatter.pie
                     },
-                    {
-                        field: 'OrderNum',
-                        title: '@Html.DisplayNameFor(d=>d.OrderNum)',
-                        align: "center", valign: "middle"
-                    },
+
                     {
                         field: 'TotalMoney',
                         title: '@Html.DisplayNameFor(d=>d.TotalMoney)',
@@ -300,7 +301,7 @@
                 });
 
         }
-    </script>
+</script>
 }
 
 

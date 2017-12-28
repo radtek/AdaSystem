@@ -85,9 +85,12 @@ function initData() {
         forceParse: 0,
         format: "yyyy年mm月dd日"
     });
-    initSelect2("LinkManId", linkmanSelect);
+    
     initSelect2("TransactorId", transactorSelect);
     var isvisible = $("#Status").val() == 0 ? true : false;
+    if (isvisible) {
+        initSelect2("LinkManId", linkmanSelect);
+    }
     $table.bootstrapTable({
         data: orderData,
         toolbar: '#toolbar',
@@ -96,7 +99,7 @@ function initData() {
         columns: [
             {
                 checkbox: true,
-                formatter: function(value,row,index) {
+                formatter: function (value, row, index) {
                     if (row.Status === 1) {
                         return {
                             disabled: true
@@ -238,7 +241,7 @@ function initData() {
         //更新表格数据
         if (tax.trim() != "" && !isNaN(tax)) {
             var temp = $table.bootstrapTable('getData');
-            if (temp.length>0) {
+            if (temp.length > 0) {
                 $.each(temp,
                     function (k, v) {
                         if (v.SellMoney) {
@@ -251,7 +254,7 @@ function initData() {
                     });
                 $table.bootstrapTable('load', temp);
             }
-            
+
         }
 
     });
@@ -283,10 +286,10 @@ function showMedia(url) {
                     uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
                     responseHandler: responseHandler,
                     mobileResponsive: true,
-                    queryParams: function(parameters) {
+                    queryParams: function (parameters) {
                         parameters.MediaTypeIndex = key;
                         parameters.AdPositionName = $("#AdPositionName").val();
-                        parameters.MediaName = $("#MediaName").val();
+                        parameters.MediaNames = $("#MediaName").val();
                         return parameters;
                     },
                     columns: [
@@ -398,6 +401,21 @@ window.operateEvents = {
         });
     }
 };
+
+function deleteRow() {
+    var rows = $table.bootstrapTable("getSelections");
+    if (rows.length > 0) {
+        var arr = [];
+        $.each(rows,
+            function(k, v) {
+                arr.push(v.MediaPriceId);
+            });
+        $table.bootstrapTable('remove', {
+            field: 'MediaPriceId',
+            values: arr
+        });
+    }
+}
 function operateFormatter(value, row, index) {
     return [
         '<a class="remove" href="javascript:void(0)" title="Remove">',
@@ -415,12 +433,12 @@ function confirmData() {
 }
 //过滤重复数据
 function getData() {
-    var temp = [],tax = $("#Tax").val(),now = moment().add(10, "days").format('YYYY-MM-DD');
+    var temp = [], tax = $("#Tax").val(), now = moment().add(10, "days").format('YYYY-MM-DD');
     var tableData = $table.bootstrapTable('getData');
     $.each(selections.rows,
         function (k, v) {
             var index = _.findIndex(tableData, { 'MediaPriceId': v.Id });
-            if (index<0) {
+            if (index < 0) {
                 temp.push({
                     MediaTypeName: v.TypeName,
                     MediaPriceId: v.Id,
@@ -437,7 +455,7 @@ function getData() {
                     CostMoney: v.PurchasePrice
                 });
             }
-            
+
         });
     return temp;
 }

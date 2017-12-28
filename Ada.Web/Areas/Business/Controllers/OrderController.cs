@@ -156,30 +156,33 @@ namespace Business.Controllers
             entity.AddedBy = CurrentManager.UserName;
             entity.AddedById = CurrentManager.Id;
             entity.AddedDate = DateTime.Now;
-            entity.BusinessType = viewModel.BusinessType;
+            //entity.BusinessType = viewModel.BusinessType;
             entity.Remark = viewModel.Remark;
             entity.LinkManId = viewModel.LinkManId;
             entity.LinkManName = viewModel.LinkManName;
             entity.Transactor = viewModel.Transactor;
             entity.TransactorId = viewModel.TransactorId;
             entity.Tax = viewModel.Tax;
-            entity.DiscountRate = viewModel.DiscountRate;
-            entity.SettlementType = viewModel.SettlementType;
+            //entity.DiscountRate = viewModel.DiscountRate;
+            //entity.SettlementType = viewModel.SettlementType;
             entity.OrderDate = viewModel.OrderDate;
-            entity.TotalDiscountMoney = viewModel.DiscountMoney;
+            //entity.TotalDiscountMoney = viewModel.DiscountMoney;
 
             foreach (var businessOrderDetail in orderDetails)
             {
                 businessOrderDetail.Id = IdBuilder.CreateIdNum();
                 businessOrderDetail.Status = Consts.StateLock;//待转采购
+                businessOrderDetail.VerificationStatus = Consts.StateLock;
+                businessOrderDetail.VerificationMoney = businessOrderDetail.Money;
+                businessOrderDetail.ConfirmVerificationMoney = 0;
                 entity.BusinessOrderDetails.Add(businessOrderDetail);
             }
             entity.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);
-            entity.TotalMoney = orderDetails.Sum(d => d.Money) - viewModel.DiscountMoney;
+            entity.TotalMoney = orderDetails.Sum(d => d.Money);
             entity.TotalSellMoney = orderDetails.Sum(d => d.SellMoney);
-            entity.VerificationMoney = entity.TotalMoney;
-            entity.ConfirmVerificationMoney = 0;
-            entity.VerificationStatus = Consts.StateLock;
+            //entity.VerificationMoney = entity.TotalMoney;
+            //entity.ConfirmVerificationMoney = 0;
+            //entity.VerificationStatus = Consts.StateLock;
             _businessOrderService.Add(entity);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Update", new { id = entity.Id });
@@ -197,15 +200,15 @@ namespace Business.Controllers
             BusinessOrderView entity = new BusinessOrderView();
             entity.Id = item.Id;
             entity.OrderNum = item.OrderNum;
-            entity.BusinessType = item.BusinessType;
+            //entity.BusinessType = item.BusinessType;
             entity.LinkManId = item.LinkManId;
             entity.LinkManName = item.LinkManName;
             entity.Transactor = item.Transactor;
             entity.TransactorId = item.TransactorId;
             entity.Tax = item.Tax;
-            entity.DiscountRate = item.DiscountRate;
-            entity.SettlementType = item.SettlementType;
-            entity.DiscountMoney = item.TotalDiscountMoney;
+            //entity.DiscountRate = item.DiscountRate;
+            //entity.SettlementType = item.SettlementType;
+            //entity.DiscountMoney = item.TotalDiscountMoney;
             entity.OrderDate = item.OrderDate;
             entity.Remark = item.Remark;
             entity.Status = item.Status;
@@ -256,16 +259,16 @@ namespace Business.Controllers
             entity.ModifiedById = CurrentManager.Id;
             entity.ModifiedBy = CurrentManager.UserName;
             entity.ModifiedDate = DateTime.Now;
-            entity.BusinessType = viewModel.BusinessType;
+            //entity.BusinessType = viewModel.BusinessType;
             entity.LinkManId = viewModel.LinkManId;
             entity.LinkManName = viewModel.LinkManName;
             entity.Transactor = viewModel.Transactor;
             entity.TransactorId = viewModel.TransactorId;
             entity.Tax = viewModel.Tax;
-            entity.DiscountRate = viewModel.DiscountRate;
-            entity.SettlementType = viewModel.SettlementType;
+            //entity.DiscountRate = viewModel.DiscountRate;
+            //entity.SettlementType = viewModel.SettlementType;
             entity.OrderDate = viewModel.OrderDate;
-            entity.TotalDiscountMoney = viewModel.DiscountMoney;
+            //entity.TotalDiscountMoney = viewModel.DiscountMoney;
             entity.Remark = viewModel.Remark;
             //删除已剔除的
             var ids = orderDetails.Select(d => d.Id).ToList();
@@ -283,34 +286,43 @@ namespace Business.Controllers
                 {
                     businessOrderDetail.Id = IdBuilder.CreateIdNum();
                     businessOrderDetail.Status = Consts.StateLock;
+                    businessOrderDetail.VerificationStatus = Consts.StateLock;
+                    businessOrderDetail.VerificationMoney = businessOrderDetail.Money;
+                    businessOrderDetail.ConfirmVerificationMoney = 0;
                     entity.BusinessOrderDetails.Add(businessOrderDetail);
                 }
                 else
                 {
-                    //更新
+                    //未核销的更新
                     var detail = _businessOrderDetailRepository.LoadEntities(d => d.Id == businessOrderDetail.Id)
                         .FirstOrDefault();
-                    detail.MediaPriceId = businessOrderDetail.MediaPriceId;
-                    detail.MediaTitle = businessOrderDetail.MediaTitle;
-                    detail.PrePublishDate = businessOrderDetail.PrePublishDate;
-                    detail.Money = businessOrderDetail.Money;
-                    detail.SellMoney = businessOrderDetail.SellMoney;
-                    detail.Tax = businessOrderDetail.Tax;
-                    detail.TaxMoney = businessOrderDetail.TaxMoney;
-                    detail.AdPositionName = businessOrderDetail.AdPositionName;
-                    detail.MediaName = businessOrderDetail.MediaName;
-                    detail.MediaTypeName = businessOrderDetail.MediaTypeName;
-                    detail.Remark = businessOrderDetail.Remark;
-                    detail.CostMoney = businessOrderDetail.CostMoney;
-                    detail.MediaByPurchase = businessOrderDetail.MediaByPurchase;
+                    if (detail.VerificationStatus!=Consts.StateNormal)
+                    {
+                        detail.MediaPriceId = businessOrderDetail.MediaPriceId;
+                        detail.MediaTitle = businessOrderDetail.MediaTitle;
+                        detail.PrePublishDate = businessOrderDetail.PrePublishDate;
+                        detail.Money = businessOrderDetail.Money;
+                        detail.SellMoney = businessOrderDetail.SellMoney;
+                        detail.Tax = businessOrderDetail.Tax;
+                        detail.TaxMoney = businessOrderDetail.TaxMoney;
+                        detail.AdPositionName = businessOrderDetail.AdPositionName;
+                        detail.MediaName = businessOrderDetail.MediaName;
+                        detail.MediaTypeName = businessOrderDetail.MediaTypeName;
+                        detail.Remark = businessOrderDetail.Remark;
+                        detail.CostMoney = businessOrderDetail.CostMoney;
+                        detail.MediaByPurchase = businessOrderDetail.MediaByPurchase;
+                        detail.VerificationMoney = businessOrderDetail.Money;
+                        detail.ConfirmVerificationMoney = 0;
+                    }
+                    
 
                 }
             }
             entity.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);
-            entity.TotalMoney = orderDetails.Sum(d => d.Money) - viewModel.DiscountMoney;
+            entity.TotalMoney = orderDetails.Sum(d => d.Money);
             entity.TotalSellMoney = orderDetails.Sum(d => d.SellMoney);
-            entity.VerificationMoney = entity.TotalMoney;
-            entity.ConfirmVerificationMoney = 0;
+            //entity.VerificationMoney = entity.TotalMoney;
+            //entity.ConfirmVerificationMoney = 0;
             _businessOrderService.Update(entity);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Update", new { id = entity.Id });
@@ -367,11 +379,14 @@ namespace Business.Controllers
                 {
                     order.Id = IdBuilder.CreateIdNum();
                     order.Status = Consts.StateNormal;
+                    order.VerificationStatus = Consts.StateLock;
+                    order.VerificationMoney = order.Money;
+                    order.ConfirmVerificationMoney = 0;
                     entity.BusinessOrderDetails.Add(order);
                     entity.TotalTaxMoney = entity.TotalTaxMoney + order.TaxMoney;
                     entity.TotalMoney = entity.TotalMoney + order.Money;
                     entity.TotalSellMoney = entity.TotalSellMoney + order.SellMoney;
-                    entity.VerificationMoney = entity.TotalMoney;
+                    //entity.VerificationMoney = entity.TotalMoney;
                 }
                 else
                 {
