@@ -73,10 +73,10 @@ namespace Business.Controllers
                     Transactor = d.Transactor,
                     Status = d.Status ?? Consts.StateLock,
                     OrderDate = d.OrderDate,
-                    TotalSellMoney = d.TotalSellMoney,
-                    TotalTaxMoney = d.TotalTaxMoney,
-                    DiscountMoney = d.TotalDiscountMoney,
-                    AdderBy = d.AddedBy,
+                    TotalSellMoney = d.BusinessOrderDetails.Sum(o => o.SellMoney),
+                    TotalTaxMoney = d.BusinessOrderDetails.Sum(o => o.TaxMoney),
+                    //DiscountMoney = d.TotalDiscountMoney,
+                    //AdderBy = d.AddedBy,
                     PurchaseSchedule = GetPurchaseSchedule(d),
                     OrderDetailCount = d.BusinessOrderDetails.Count,
                     OrderSchedule = d.BusinessOrderDetails.Count(o => o.Status == Consts.StateNormal) + "/" + d.BusinessOrderDetails.Count,
@@ -202,9 +202,9 @@ namespace Business.Controllers
                 businessOrderDetail.AuditStatus = Consts.StateLock;
                 entity.BusinessOrderDetails.Add(businessOrderDetail);
             }
-            entity.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);
-            entity.TotalMoney = orderDetails.Sum(d => d.Money);
-            entity.TotalSellMoney = orderDetails.Sum(d => d.SellMoney);
+            //entity.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);
+            //entity.TotalMoney = orderDetails.Sum(d => d.Money);
+            //entity.TotalSellMoney = orderDetails.Sum(d => d.SellMoney);
             //entity.VerificationMoney = entity.TotalMoney;
             //entity.ConfirmVerificationMoney = 0;
             //entity.VerificationStatus = Consts.StateLock;
@@ -360,9 +360,9 @@ namespace Business.Controllers
                     .FirstOrDefault();
                 _businessOrderDetailRepository.Remove(temp);
             }
-            entity.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);
-            entity.TotalMoney = orderDetails.Sum(d => d.Money);
-            entity.TotalSellMoney = orderDetails.Sum(d => d.SellMoney);
+            //entity.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);
+            //entity.TotalMoney = orderDetails.Sum(d => d.Money);
+            //entity.TotalSellMoney = orderDetails.Sum(d => d.SellMoney);
             //entity.VerificationMoney = entity.TotalMoney;
             //entity.ConfirmVerificationMoney = 0;
             _businessOrderService.Update(entity);
@@ -452,9 +452,9 @@ namespace Business.Controllers
                     order.VerificationMoney = order.Money;
                     order.ConfirmVerificationMoney = 0;
                     entity.BusinessOrderDetails.Add(order);
-                    entity.TotalTaxMoney = entity.TotalTaxMoney + order.TaxMoney;
-                    entity.TotalMoney = entity.TotalMoney + order.Money;
-                    entity.TotalSellMoney = entity.TotalSellMoney + order.SellMoney;
+                    //entity.TotalTaxMoney = entity.TotalTaxMoney + order.TaxMoney;
+                    //entity.TotalMoney = entity.TotalMoney + order.Money;
+                    //entity.TotalSellMoney = entity.TotalSellMoney + order.SellMoney;
                     //entity.VerificationMoney = entity.TotalMoney;
                     costMoney += order.CostMoney;
                     sellMoney += order.SellMoney;
@@ -490,7 +490,7 @@ namespace Business.Controllers
                 purchaseOrderDetail.MediaName = order.MediaName;
                 purchaseOrderDetail.MediaTypeName = order.MediaTypeName;
                 purchaseOrderDetail.MediaPriceId = order.MediaPriceId;
-                purchaseOrderDetail.AuditStatus = Consts.StateLock;
+                purchaseOrderDetail.AuditStatus = Consts.StateNormal;
                 purchaseOrderDetail.Status = Consts.PurchaseStatusWait;
                 var price = _mediaPriceRepository.LoadEntities(d => d.Id == order.MediaPriceId).FirstOrDefault();
                 purchaseOrderDetail.Transactor = price.Media.Transactor;

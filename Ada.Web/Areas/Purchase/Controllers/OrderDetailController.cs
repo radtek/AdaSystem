@@ -91,9 +91,11 @@ namespace Purchase.Controllers
             item.Transactor = entity.Transactor;
             item.TransactorId = entity.TransactorId;
             item.BusinessBy = entity.PurchaseOrder.BusinessBy;
-            item.PrePublishDate = GetBusinessOrderDetail(entity.BusinessOrderDetailId).PrePublishDate;
-            item.MediaTitle = GetBusinessOrderDetail(entity.BusinessOrderDetailId).MediaTitle;
-            item.BusinessRemark = GetBusinessOrderDetail(entity.BusinessOrderDetailId).Remark;
+            var businessOrder = GetBusinessOrderDetail(entity.BusinessOrderDetailId);
+            item.PrePublishDate = businessOrder.PrePublishDate;
+            item.MediaTitle = businessOrder.MediaTitle;
+            item.BusinessRemark = businessOrder.Remark;
+            item.AuditStatus = entity.AuditStatus;
             //item.Status = entity.Status;
             //item.BargainMoney = entity.BargainMoney;
             //item.OrderDate = entity.PurchaseOrder.OrderDate;
@@ -110,7 +112,7 @@ namespace Purchase.Controllers
             }
 
             var entity = _purchaseOrderDetailRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
-            var businessOrderDetail = GetBusinessOrderDetail(entity.BusinessOrderDetailId);
+            //var businessOrderDetail = GetBusinessOrderDetail(entity.BusinessOrderDetailId);
             //if (businessOrderDetail.BusinessOrder.VerificationStatus==Consts.StateNormal)
             //{
             //    ModelState.AddModelError("message", "此销售订单已核销，无需再进行处理");
@@ -134,11 +136,11 @@ namespace Purchase.Controllers
             //entity.Money = viewModel.Money;
             //entity.DiscountMoney = viewModel.DiscountMoney;
             //entity.BargainMoney = viewModel.BargainMoney;
-            if (entity.CostMoney != viewModel.CostMoney)
-            {
-                //更新成本金额
-                businessOrderDetail.CostMoney = viewModel.CostMoney;
-            }
+            //if (entity.CostMoney != viewModel.CostMoney)
+            //{
+            //    //更新成本金额
+            //    businessOrderDetail.CostMoney = viewModel.CostMoney;
+            //}
             entity.CostMoney = viewModel.CostMoney;
 
             entity.Status = viewModel.Status;
@@ -154,7 +156,7 @@ namespace Purchase.Controllers
             var entity = _purchaseOrderDetailRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
             var businessOrder = GetBusinessOrderDetail(entity.BusinessOrderDetailId);
             //是否已经核销
-            if (businessOrder.BusinessOrder.VerificationStatus==Consts.StateNormal)
+            if (businessOrder.VerificationStatus==Consts.StateNormal)
             {
                 return Json(new { State = 0, Msg = "此销售订单已核销，无法删除" });
             }
@@ -166,15 +168,35 @@ namespace Purchase.Controllers
             //entity.DeletedBy = CurrentManager.UserName;
             //entity.DeletedById = CurrentManager.Id;
             //entity.DeletedDate = DateTime.Now;
-            businessOrder.BusinessOrder.TotalMoney = businessOrder.BusinessOrder.TotalMoney - businessOrder.Money;
-            businessOrder.BusinessOrder.TotalSellMoney =
-                businessOrder.BusinessOrder.TotalSellMoney - businessOrder.SellMoney;
-            businessOrder.BusinessOrder.TotalTaxMoney =
-                businessOrder.BusinessOrder.TotalTaxMoney - businessOrder.TaxMoney;
-            businessOrder.BusinessOrder.VerificationMoney = businessOrder.BusinessOrder.TotalMoney;
+            //businessOrder.BusinessOrder.TotalMoney = businessOrder.BusinessOrder.TotalMoney - businessOrder.Money;
+            //businessOrder.BusinessOrder.TotalSellMoney =
+            //    businessOrder.BusinessOrder.TotalSellMoney - businessOrder.SellMoney;
+            //businessOrder.BusinessOrder.TotalTaxMoney =
+            //    businessOrder.BusinessOrder.TotalTaxMoney - businessOrder.TaxMoney;
+            //businessOrder.BusinessOrder.VerificationMoney = businessOrder.BusinessOrder.TotalMoney;
             _businessOrderDetailRepository.Remove(businessOrder);
             _purchaseOrderDetailService.Delete(entity);
             return Json(new { State = 1, Msg = "删除成功" });
+        }
+        /// <summary>
+        /// 审核
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Audit(string id)
+        {
+            var entity = _purchaseOrderDetailRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (entity.AuditStatus == null || entity.AuditStatus == Consts.StateLock)
+            {
+                entity.AuditStatus = Consts.StateNormal;
+            }
+            else
+            {
+                entity.AuditStatus = Consts.StateLock;
+            }
+            _purchaseOrderDetailService.Update(entity);
+            TempData["Msg"] = "操作成功";
+            return RedirectToAction("Update", new { id });
         }
     }
 }

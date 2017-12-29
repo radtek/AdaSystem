@@ -109,5 +109,25 @@ namespace Ada.Core.ViewModel.Purchase
         /// </summary>
         [Display(Name = "开票公司")]
         public string InvoiceTitle { get; set; }
+        /// <summary>
+        /// 审核人
+        /// </summary>
+        [Display(Name = "审核人")]
+        public string AuditBy { get; set; }
+        /// <summary>
+        /// 审核人
+        /// </summary>
+        [Display(Name = "审核人")]
+        public string AuditById { get; set; }
+        /// <summary>
+        /// 审核时间
+        /// </summary>
+        [Display(Name = "审核时间")]
+        public DateTime? AuditDate { get; set; }
+        /// <summary>
+        /// 审核状态
+        /// </summary>
+        [Display(Name = "审核状态")]
+        public short? AuditStatus { get; set; }
     }
 }

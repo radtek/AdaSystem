@@ -29,6 +29,8 @@ namespace Ada.Data.Mapping.Business
             Property(s => s.LinkManId).HasMaxLength(32);
             Property(s => s.ReceivableNum).HasMaxLength(32);
             Property(s => s.InvoiceNum).HasMaxLength(32);
+            Property(s => s.AuditBy).HasMaxLength(32);
+            Property(s => s.AuditById).HasMaxLength(32);
 
             Property(s => s.AddedBy).HasMaxLength(32);
             Property(s => s.AddedById).HasMaxLength(32);

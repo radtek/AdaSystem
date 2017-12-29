@@ -28,6 +28,11 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "本次开票金额")]
         public decimal? InvoiceMoney { get; set; }
         /// <summary>
+        /// 审核状态
+        /// </summary>
+        [Display(Name = "审核状态")]
+        public short? AuditStatus { get; set; }
+        /// <summary>
         /// 销售发票
         /// </summary>
         [Display(Name = "销售发票")]

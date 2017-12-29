@@ -119,5 +119,25 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "发票号")]
         public string InvoiceNum { get; set; }
+        /// <summary>
+        /// 审核人
+        /// </summary>
+        [Display(Name = "审核人")]
+        public string AuditBy { get; set; }
+        /// <summary>
+        /// 审核人
+        /// </summary>
+        [Display(Name = "审核人")]
+        public string AuditById { get; set; }
+        /// <summary>
+        /// 审核时间
+        /// </summary>
+        [Display(Name = "审核时间")]
+        public DateTime? AuditDate { get; set; }
+        /// <summary>
+        /// 审核状态
+        /// </summary>
+        [Display(Name = "审核状态")]
+        public short? AuditStatus { get; set; }
     }
 }

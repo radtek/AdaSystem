@@ -80,8 +80,10 @@ function initData() {
         forceParse: 0,
         format: "yyyy年mm月dd日"
     });
-    initSelect2("LinkManId", linkmanSelect);
-    initSelect2("TransactorId", transactorSelect);
+    if (!isReadonly) {
+        initSelect2("LinkManId", linkmanSelect);
+        initSelect2("TransactorId", transactorSelect);
+    }
     //计算金额
     //var taxinput = $('#Tax'),
     //    discountinput = $('#DiscountMoney'),

@@ -18,6 +18,11 @@ namespace Ada.Core.Domain.Purchase
         [Display(Name = "采购订单")]
         public string PurchaseOrderDetailId { get; set; }
         /// <summary>
+        /// 审核状态
+        /// </summary>
+        [Display(Name = "审核状态")]
+        public short? AuditStatus { get; set; }
+        /// <summary>
         /// 付款申请单
         /// </summary>
         [Display(Name = "付款申请单")]
