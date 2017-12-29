@@ -34,11 +34,11 @@ namespace Ada.Data.Mapping.Business
 
             //配置表
             ToTable("BusinessWriteOff");
-            HasMany(s => s.BusinessOrders).
+            HasMany(s => s.BusinessOrderDetails).
                 WithMany(s => s.BusinessWriteOffs)
-                .Map(s => s.ToTable("BusinessOrderWriteOff").
+                .Map(s => s.ToTable("BusinessOrderDetailWriteOff").
                     MapLeftKey("BusinessWriteOffId").
-                    MapRightKey("BusinessOrderId"));
+                    MapRightKey("BusinessOrderDetailId"));
             HasMany(s => s.BusinessPayees).
                 WithMany(s => s.BusinessWriteOffs)
                 .Map(s => s.ToTable("BusinessPayeeWriteOff").

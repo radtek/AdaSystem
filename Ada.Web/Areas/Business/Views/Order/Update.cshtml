@@ -19,7 +19,21 @@
                     <div class="ibox-title">
                         <a class="btn btn-outline btn-default btn-sm" href="@Url.Action("Index")"><i class="fa fa-reply"></i> 返回</a>
                         <button class="btn btn-success btn-sm" type="submit" data-style="slide-right"><i class="fa fa-floppy-o"></i> 保存</button>
-                        @*<button class="btn btn-info btn-sm" type="button" onclick="transOrder('@Model.Id');"><i class="fa fa-floppy-o"></i> 转成采购订单</button>*@
+
+                        @if (Model.AuditStatus == Consts.StateNormal)
+                        {
+                            <a class="btn btn-warning btn-sm pull-right" href="@Url.Action("Audit", new {id = Model.Id})">
+                                <i class="fa fa-unlock"></i> <span>弃审</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-primary btn-sm pull-right" href="@Url.Action("Audit", new {id = Model.Id})">
+                                <i class="fa fa-lock"></i> <span>审核</span>
+                            </a>
+                        }
+
+
                     </div>
                     <div class="ibox-content">
                         <div class="sk-spinner sk-spinner-wave">
@@ -35,17 +49,17 @@
             </div>
         </div>
     }
-        <div id="toolbar" class="btn-group">
-            <a class="btn btn-primary btn-outline" href="javascript:showMedia('@Url.Action("SelectMedia")');">
-                <i class="fa fa-plus"></i> 添加媒体
-            </a>
-            <a class="btn btn-primary btn-outline" href="javascript:transOrder();">
-                <i class="fa fa-arrow-circle-right"></i> 转为采购
-            </a>
-            <a class="btn btn-primary btn-outline" href="javascript:deleteRow();">
-                <i class="fa fa-trash-o"></i> 删除订单
-            </a>
-        </div>
+    <div id="toolbar" class="btn-group">
+        <a class="btn btn-primary btn-outline" href="javascript:showMedia('@Url.Action("SelectMedia")');">
+            <i class="fa fa-plus"></i> 添加媒体
+        </a>
+        <a class="btn btn-primary btn-outline" href="javascript:transOrder();">
+            <i class="fa fa-arrow-circle-right"></i> 转为采购
+        </a>
+        <a class="btn btn-primary btn-outline" href="javascript:deleteRow();">
+            <i class="fa fa-trash-o"></i> 删除订单
+        </a>
+    </div>
 </div>
 
 @section Styles {
@@ -65,8 +79,8 @@
         var linkmanUrl = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})",
             managerUrl = "@Url.Action("GetList", "Manager", new {area = "Admin"})",
             mediapriceUrl = "@Url.Action("GetMediaPrices", "Media", new { area = "Resource" })",
-            orderData =@Html.Raw(string.IsNullOrWhiteSpace(Model.OrderDetails)?"[]": Model.OrderDetails);
-
+            orderData =@Html.Raw(string.IsNullOrWhiteSpace(Model.OrderDetails)?"[]": Model.OrderDetails),
+            isReadonly = @Model.AuditStatus;
     </script>
     <script src="@Url.Content("~/Areas/Business/Scripts/order.js")"></script>
     <script>
@@ -106,7 +120,7 @@
                                     if (isConfirm) {
                                         window.location.reload();
                                     }
-                                    
+
                                 });
 
                         } else {

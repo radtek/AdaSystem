@@ -39,10 +39,10 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => viewModel.Managers.Contains(d.TransactorId));
             }
-            if (!string.IsNullOrWhiteSpace(viewModel.search))
-            {
-                allList = allList.Where(d => d.BusinessOrders.FirstOrDefault().LinkManName.Contains(viewModel.search));
-            }
+            //if (!string.IsNullOrWhiteSpace(viewModel.search))
+            //{
+            //    allList = allList.Where(d => d.BusinessOrders.FirstOrDefault().LinkManName.Contains(viewModel.search));
+            //}
             
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;

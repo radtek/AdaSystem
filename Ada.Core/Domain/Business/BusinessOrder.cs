@@ -17,7 +17,6 @@ namespace Ada.Core.Domain.Business
         public BusinessOrder()
         {
             BusinessOrderDetails = new HashSet<BusinessOrderDetail>();
-            BusinessWriteOffs=new HashSet<BusinessWriteOff>();
             BusinessInvoiceDetails = new HashSet<BusinessInvoiceDetail>();
         }
         /// <summary>
@@ -148,7 +147,6 @@ namespace Ada.Core.Domain.Business
         public string LinkManId { get; set; }
         public virtual LinkMan LinkMan { get; set; }
         public virtual ICollection<BusinessOrderDetail> BusinessOrderDetails { get; set; }
-        public virtual ICollection<BusinessWriteOff> BusinessWriteOffs { get; set; }
         public virtual ICollection<BusinessInvoiceDetail> BusinessInvoiceDetails { get; set; }
     }
 }

@@ -18,7 +18,7 @@
         <div class="form-group col-md-4">
             @Html.LabelFor(d => d.LinkManId, Html.DisplayNameFor(d => d.LinkManId).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
-                @if (Model.Status == Consts.StateNormal)
+                @if (Model.AuditStatus == Consts.StateNormal)
                 {
                     @Html.TextBoxFor(d => d.LinkManName, new { @readonly = "readonly", @class = "form-control" })
                     @Html.HiddenFor(d => d.LinkManId)
@@ -49,7 +49,8 @@
         <div class="form-group col-md-4">
             @Html.LabelFor(d => d.Tax, Html.DisplayNameFor(d => d.Tax).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
-                @Html.TextBoxFor(d => d.Tax, new { @class = "form-control" })
+                @(Model.AuditStatus == Consts.StateNormal ? Html.TextBoxFor(d => d.Tax, new { @class = "form-control", @readonly = "readonly" }) : Html.TextBoxFor(d => d.Tax, new { @class = "form-control" }))
+
             </div>
         </div>
         @*<div class="form-group col-md-4">
@@ -73,10 +74,19 @@
         <div class="form-group col-md-4">
             @Html.LabelFor(d => d.TransactorId, Html.DisplayNameFor(d => d.TransactorId).ToString(), new { @class = "col-sm-4 control-label", required = "" })
             <div class="col-sm-8">
-                <select class="form-control" name="TransactorId" id="TransactorId">
-                    <option value="@Model.TransactorId">@Model.Transactor</option>
-                </select>
-                @Html.HiddenFor(d => d.Transactor)
+
+                @if (Model.AuditStatus == Consts.StateNormal)
+                {
+                    @Html.TextBoxFor(d => d.Transactor, new { @readonly = "readonly", @class = "form-control" })
+                    @Html.HiddenFor(d => d.TransactorId)
+                }
+                else
+                {
+                    <select class="form-control" name="TransactorId" id="TransactorId">
+                        <option value="@Model.TransactorId">@Model.Transactor</option>
+                    </select>
+                    @Html.HiddenFor(d => d.Transactor)
+                }
             </div>
         </div>
 
@@ -100,6 +110,7 @@
             @Html.HiddenFor(d => d.OrderDetails)
             @Html.HiddenFor(d => d.Id)
             @Html.HiddenFor(d => d.Status)
+            @Html.HiddenFor(d => d.AuditStatus)
         </div>
     </div>
 

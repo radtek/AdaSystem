@@ -60,14 +60,14 @@ namespace Ada.Core.ViewModel.Business
         [Required]
         public string LinkManId { get; set; }
         /// <summary>
-        /// 领款总额
+        /// 领款核销总额
         /// </summary>
-        [Display(Name = "领款总额")]
+        [Display(Name = "领款核销总额")]
         public decimal? PayeeMoney { get; set; }
         /// <summary>
-        /// 订单总额
+        /// 订单核销总额
         /// </summary>
-        [Display(Name = "订单总额")]
+        [Display(Name = "订单核销总额")]
         public decimal? OrderMoney { get; set; }
     }
 }

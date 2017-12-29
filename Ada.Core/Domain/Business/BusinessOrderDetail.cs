@@ -13,6 +13,10 @@ namespace Ada.Core.Domain.Business
     /// </summary>
     public class BusinessOrderDetail : BaseEntity
     {
+        public BusinessOrderDetail()
+        {
+            BusinessWriteOffs=new HashSet<BusinessWriteOff>();
+        }
         /// <summary>
         /// 税额
         /// </summary>
@@ -68,6 +72,11 @@ namespace Ada.Core.Domain.Business
         /// </summary>
         [Display(Name = "核销状态")]
         public short? VerificationStatus { get; set; }
+        /// <summary>
+        /// 审核状态
+        /// </summary>
+        [Display(Name = "审核状态")]
+        public short? AuditStatus { get; set; }
 
         /// <summary>
         /// 预出刊日期
@@ -111,5 +120,6 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "销售订单")]
         public string BusinessOrderId { get; set; }
         public virtual BusinessOrder BusinessOrder { get; set; }
+        public virtual ICollection<BusinessWriteOff> BusinessWriteOffs { get; set; }
     }
 }

@@ -19,16 +19,16 @@ namespace Business.Controllers
     {
         private readonly IBusinessWriteOffService _businessWriteOffService;
         private readonly IRepository<BusinessWriteOff> _repository;
-        private readonly IRepository<BusinessOrder> _businessOrderrepository;
+        private readonly IRepository<BusinessOrderDetail> _businessOrderDetailRepository;
         private readonly IRepository<BusinessPayee> _businessPayeerepository;
         public WriteOffController(IBusinessWriteOffService businessWriteOffService,
             IRepository<BusinessWriteOff> repository,
-            IRepository<BusinessOrder> businessOrderrepository,
+            IRepository<BusinessOrderDetail> businessOrderDetailRepository,
             IRepository<BusinessPayee> businessPayeerepository)
         {
             _businessWriteOffService = businessWriteOffService;
             _repository = repository;
-            _businessOrderrepository = businessOrderrepository;
+            _businessOrderDetailRepository = businessOrderDetailRepository;
             _businessPayeerepository = businessPayeerepository;
         }
         public ActionResult Index()
@@ -45,7 +45,8 @@ namespace Business.Controllers
                 rows = result.Select(d => new BusinessWriteOffView
                 {
                     Id = d.Id,
-                    LinkManName = d.BusinessOrders.FirstOrDefault()?.LinkManName,
+                    LinkManName = d.BusinessOrderDetails.FirstOrDefault()?.BusinessOrder.LinkManName,
+                    OrderNum = d.BusinessOrderDetails.FirstOrDefault()?.BusinessOrder.OrderNum,
                     Transactor = d.Transactor,
                     Money = d.Money,
                     WriteOffDate = d.WriteOffDate
@@ -55,7 +56,7 @@ namespace Business.Controllers
         public ActionResult Detail(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            return PartialView("Detail",entity);
+            return PartialView("Detail", entity);
         }
         public ActionResult Add()
         {
@@ -92,35 +93,28 @@ namespace Business.Controllers
             decimal? payeeMoney = 0;
             foreach (var orderId in orderIds)
             {
-                var order = _businessOrderrepository.LoadEntities(d => d.Id == orderId).FirstOrDefault();
+                var order = _businessOrderDetailRepository.LoadEntities(d => d.Id == orderId).FirstOrDefault();
                 orderMoney += order.VerificationMoney;
-                businessWriteOff.BusinessOrders.Add(order);
                 order.VerificationStatus = Consts.StateNormal;
                 order.ConfirmVerificationMoney = order.VerificationMoney;
                 order.VerificationMoney = 0;
+                businessWriteOff.BusinessOrderDetails.Add(order);
             }
             foreach (var payeeId in payeeIds)
             {
                 var payee = _businessPayeerepository.LoadEntities(d => d.Id == payeeId).FirstOrDefault();
-                if (payee.BusinessPayments.Count>0)
-                {
-                    //校验，请款是否都审核通过了
-                    if (payee.BusinessPayments.Count(d => d.AuditStatus != Consts.StateNormal)>0)
-                    {
-                        ModelState.AddModelError("message", "销账款项中存在请款还未审核通过的，请审核通过后再进行核销！");
-                        return View(viewModel);
-                    }
-                }
-                payeeMoney += payee.VerificationMoney;
-                businessWriteOff.BusinessPayees.Add(payee);
+                var verificaitonMoney = payee.Money - payee.BusinessPayments.Where(d => d.AuditStatus == Consts.StateNormal)
+                    .Sum(d => d.PayMoney);
+                payeeMoney += verificaitonMoney;
                 payee.VerificationStatus = Consts.StateNormal;
-                payee.ConfirmVerificationMoney = payee.VerificationMoney;
+                payee.ConfirmVerificationMoney = verificaitonMoney;
                 payee.VerificationMoney = 0;
+                businessWriteOff.BusinessPayees.Add(payee);
             }
             //校验金额
-            if (orderMoney!=payeeMoney)
+            if (orderMoney != payeeMoney)
             {
-                ModelState.AddModelError("message", "核销款项和订单金额不一致！");
+                ModelState.AddModelError("message", "核销金额不一致！");
                 return View(viewModel);
             }
             businessWriteOff.Money = orderMoney;
@@ -134,7 +128,7 @@ namespace Business.Controllers
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             //状态金额恢复
-            foreach (var entityBusinessOrder in entity.BusinessOrders)
+            foreach (var entityBusinessOrder in entity.BusinessOrderDetails)
             {
                 entityBusinessOrder.VerificationStatus = Consts.StateLock;
                 entityBusinessOrder.VerificationMoney = entityBusinessOrder.ConfirmVerificationMoney;
@@ -146,9 +140,9 @@ namespace Business.Controllers
                 entityBusinessPayee.VerificationMoney = entityBusinessPayee.ConfirmVerificationMoney;
                 entityBusinessPayee.ConfirmVerificationMoney = 0;
             }
-            entity.BusinessOrders.Clear();
+            entity.BusinessOrderDetails.Clear();
             entity.BusinessPayees.Clear();
-           _businessWriteOffService.Delete(entity);//物理删除
+            _businessWriteOffService.Delete(entity);//物理删除
             return Json(new { State = 1, Msg = "撤销成功" });
         }
     }

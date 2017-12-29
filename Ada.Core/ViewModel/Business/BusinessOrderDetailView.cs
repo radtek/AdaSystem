@@ -65,6 +65,11 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "核销状态")]
         public short? VerificationStatus { get; set; }
         /// <summary>
+        /// 审核状态
+        /// </summary>
+        [Display(Name = "审核状态")]
+        public short? AuditStatus { get; set; }
+        /// <summary>
         /// 出刊日期
         /// </summary>
         [Display(Name = "出刊日期")]
@@ -114,5 +119,10 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "订单状态")]
         public short? Status { get; set; }
+        /// <summary>
+        /// 订单编号
+        /// </summary>
+        [Display(Name = "订单编号")]
+        public string OrderNum { get; set; }
     }
 }

@@ -86,10 +86,12 @@ function initData() {
         format: "yyyy年mm月dd日"
     });
     
-    initSelect2("TransactorId", transactorSelect);
+    
     var isvisible = $("#Status").val() == 0 ? true : false;
-    if (isvisible) {
+   
+    if (!isReadonly) {
         initSelect2("LinkManId", linkmanSelect);
+        initSelect2("TransactorId", transactorSelect);
     }
     $table.bootstrapTable({
         data: orderData,
@@ -299,8 +301,24 @@ function showMedia(url) {
                         },
                         {
                             field: 'MediaName',
-                            title: '媒体名称',
-                            align: "center"
+                            title: '媒体信息',
+                            align: "center",
+                            formatter: function (v, r, i) {
+                                var str = v;
+                                switch (key) {
+                                    case "website":
+                                        str = v + "-" + r.Client + "-" + r.Channel;
+                                        break;
+                                    case "weixin":
+                                        str = v + " [ " + r.MediaID + " ]";
+                                        break;
+                                    case "headline":
+                                    case "webcast":
+                                        str = "[ " + r.Platform + " ] " + v;
+                                        break;
+                                }
+                                return str;
+                            }
                         },
                         //{
                         //    field: 'MediaID',
@@ -414,6 +432,8 @@ function deleteRow() {
             field: 'MediaPriceId',
             values: arr
         });
+    } else {
+        swal("操作提醒", "请选择要删除的数据", "warning");
     }
 }
 function operateFormatter(value, row, index) {

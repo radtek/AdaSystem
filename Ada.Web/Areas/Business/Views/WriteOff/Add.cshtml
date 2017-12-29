@@ -66,7 +66,7 @@
                             </fieldset>
                             <h1>核销完成</h1>
                             <fieldset>
-                                <h4>核销信息确认</h4>
+                                <h2>核销信息确认</h2>
                                 <div class="row">
                                     <div class="col-lg-8 form-horizontal">
                                         <div class="hr-line-dashed"></div>
@@ -127,7 +127,7 @@
         var linkmanapi = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})",
             transactorapi="@Url.Action("GetList", "Manager", new {area = "Admin"})",
             payeeapi = '@Url.Action("GetList", "Payee")',
-            orderapi = '@Url.Action("GetList", "Order")';
+            orderapi = '@Url.Action("GetDetails", "Order")';
     </script>
     <script src="@Url.Content("~/Areas/Business/Scripts/writeoff.js")"></script>
 }

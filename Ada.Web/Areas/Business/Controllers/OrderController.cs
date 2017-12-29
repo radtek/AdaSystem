@@ -21,6 +21,7 @@ namespace Business.Controllers
     public class OrderController : BaseController
     {
         private readonly IBusinessOrderService _businessOrderService;
+        private readonly IBusinessOrderDetailService _businessOrderDetailService;
         private readonly IPurchaseOrderService _purchaseOrderService;
         private readonly IRepository<BusinessOrder> _repository;
         private readonly IRepository<BusinessOrderDetail> _businessOrderDetailRepository;
@@ -37,7 +38,8 @@ namespace Business.Controllers
             IRepository<Receivables> receivablesRepository,
             IBusinessPayeeService businessPayeeService,
             IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository,
-            IRepository<MediaPrice> mediaPriceRepository
+            IRepository<MediaPrice> mediaPriceRepository,
+            IBusinessOrderDetailService businessOrderDetailService
         )
         {
             _businessOrderService = businessOrderService;
@@ -48,6 +50,7 @@ namespace Business.Controllers
             _purchaseOrderRepository = purchaseOrderRepository;
             _purchaseOrderDetailRepository = purchaseOrderDetailRepository;
             _mediaPriceRepository = mediaPriceRepository;
+            _businessOrderDetailService = businessOrderDetailService;
         }
         public ActionResult Index()
         {
@@ -78,6 +81,25 @@ namespace Business.Controllers
                     OrderDetailCount = d.BusinessOrderDetails.Count,
                     OrderSchedule = d.BusinessOrderDetails.Count(o => o.Status == Consts.StateNormal) + "/" + d.BusinessOrderDetails.Count,
                     Remark = d.Remark
+                })
+            }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GetDetails(BusinessOrderDetailView viewModel)
+        {
+            viewModel.Managers = PremissionData();
+            var result = _businessOrderDetailService.LoadEntitiesFilter(viewModel).ToList();
+            return Json(new
+            {
+                viewModel.total,
+                rows = result.Select(d => new BusinessOrderDetailView
+                {
+                    Id = d.Id,
+                    VerificationMoney = d.VerificationMoney,
+                    MediaName = d.MediaName,
+                    MediaTypeName = d.MediaTypeName,
+                    AdPositionName = d.AdPositionName,
+                    Money = d.Money
+
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -131,6 +153,8 @@ namespace Business.Controllers
             viewModel.OrderDate = DateTime.Now;
             viewModel.Transactor = CurrentManager.UserName;
             viewModel.TransactorId = CurrentManager.Id;
+            viewModel.AuditStatus = Consts.StateLock;
+            viewModel.Status = Consts.StateLock;
             return View(viewModel);
         }
         [HttpPost]
@@ -175,6 +199,7 @@ namespace Business.Controllers
                 businessOrderDetail.VerificationStatus = Consts.StateLock;
                 businessOrderDetail.VerificationMoney = businessOrderDetail.Money;
                 businessOrderDetail.ConfirmVerificationMoney = 0;
+                businessOrderDetail.AuditStatus = Consts.StateLock;
                 entity.BusinessOrderDetails.Add(businessOrderDetail);
             }
             entity.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);
@@ -212,6 +237,7 @@ namespace Business.Controllers
             entity.OrderDate = item.OrderDate;
             entity.Remark = item.Remark;
             entity.Status = item.Status;
+            entity.AuditStatus = item.AuditStatus;
             var orderDetails = item.BusinessOrderDetails.Where(d => d.IsDelete == false).Select(d => new
             {
                 d.Id,
@@ -251,11 +277,6 @@ namespace Business.Controllers
                 return View(viewModel);
             }
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
-            if (entity.VerificationStatus == Consts.StateNormal)
-            {
-                ModelState.AddModelError("message", "该订单已核销，无效修改！");
-                return View(viewModel);
-            }
             entity.ModifiedById = CurrentManager.Id;
             entity.ModifiedBy = CurrentManager.UserName;
             entity.ModifiedDate = DateTime.Now;
@@ -270,22 +291,26 @@ namespace Business.Controllers
             entity.OrderDate = viewModel.OrderDate;
             //entity.TotalDiscountMoney = viewModel.DiscountMoney;
             entity.Remark = viewModel.Remark;
-            //删除已剔除的
+            //找到已删除的
             var ids = orderDetails.Select(d => d.Id).ToList();
+            List<string> deleteIds = new List<string>();
             foreach (var entityBusinessOrderDetail in entity.BusinessOrderDetails)
             {
                 if (!ids.Contains(entityBusinessOrderDetail.Id))
                 {
-                    entityBusinessOrderDetail.IsDelete = true;
+                    deleteIds.Add(entityBusinessOrderDetail.Id);
                 }
             }
             //更新，增加
+            decimal? costMoney = 0;
+            decimal? sellMoney = 0;
             foreach (var businessOrderDetail in orderDetails)
             {
                 if (string.IsNullOrWhiteSpace(businessOrderDetail.Id))
                 {
                     businessOrderDetail.Id = IdBuilder.CreateIdNum();
                     businessOrderDetail.Status = Consts.StateLock;
+                    businessOrderDetail.AuditStatus = Consts.StateLock;
                     businessOrderDetail.VerificationStatus = Consts.StateLock;
                     businessOrderDetail.VerificationMoney = businessOrderDetail.Money;
                     businessOrderDetail.ConfirmVerificationMoney = 0;
@@ -296,7 +321,7 @@ namespace Business.Controllers
                     //未核销的更新
                     var detail = _businessOrderDetailRepository.LoadEntities(d => d.Id == businessOrderDetail.Id)
                         .FirstOrDefault();
-                    if (detail.VerificationStatus!=Consts.StateNormal)
+                    if (detail.VerificationStatus != Consts.StateNormal && detail.AuditStatus == Consts.StateLock)
                     {
                         detail.MediaPriceId = businessOrderDetail.MediaPriceId;
                         detail.MediaTitle = businessOrderDetail.MediaTitle;
@@ -314,9 +339,26 @@ namespace Business.Controllers
                         detail.VerificationMoney = businessOrderDetail.Money;
                         detail.ConfirmVerificationMoney = 0;
                     }
-                    
-
+                    //已下单的金额校验
+                    if (detail.Status == Consts.StateNormal)
+                    {
+                        costMoney += detail.CostMoney;
+                        sellMoney += detail.SellMoney;
+                    }
                 }
+            }
+
+            if (sellMoney <= costMoney && sellMoney > 0 && costMoney > 0)
+            {
+                ModelState.AddModelError("message", "不能低于成本金额！");
+                return View(viewModel);
+            }
+            //删除
+            foreach (var deleteId in deleteIds)
+            {
+                var temp = _businessOrderDetailRepository.LoadEntities(d => d.Id == deleteId)
+                    .FirstOrDefault();
+                _businessOrderDetailRepository.Remove(temp);
             }
             entity.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);
             entity.TotalMoney = orderDetails.Sum(d => d.Money);
@@ -342,6 +384,32 @@ namespace Business.Controllers
             }
             return Json(new { State = 0, Msg = "此订单状态无法删除" });
         }
+        /// <summary>
+        /// 审核
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Audit(string id)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (entity.AuditStatus == null || entity.AuditStatus == Consts.StateLock)
+            {
+                entity.AuditStatus = Consts.StateNormal;
+
+            }
+            else
+            {
+                entity.AuditStatus = Consts.StateLock;
+            }
+            //已下单的都审核
+            foreach (var entityBusinessOrderDetail in entity.BusinessOrderDetails.Where(d => d.Status == Consts.StateNormal))
+            {
+                entityBusinessOrderDetail.AuditStatus = entity.AuditStatus;
+            }
+            _businessOrderService.Update(entity);
+            TempData["Msg"] = "操作成功";
+            return RedirectToAction("Update", new { id });
+        }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
         public ActionResult TransformPurchaseOrder(string id)
@@ -352,11 +420,8 @@ namespace Business.Controllers
                 return Json(new { State = 0, Msg = "请先选择要转换的订单." });
             }
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            if (entity.VerificationStatus == Consts.StateNormal)
-            {
-                return Json(new { State = 0, Msg = "该项目订单已核销，无法转换" });
-            }
             entity.Status = Consts.StateNormal;//已下单
+            entity.AuditStatus = Consts.StateNormal;//审核通过
             var purchaseOrder = _purchaseOrderRepository.LoadEntities(d => d.BusinessOrderId == id && d.IsDelete == false).FirstOrDefault();
             bool isAdd = false;
             if (purchaseOrder == null)
@@ -373,6 +438,9 @@ namespace Business.Controllers
                 isAdd = true;
             }
             var orderDetails = JsonConvert.DeserializeObject<List<BusinessOrderDetail>>(details);
+            var detailsTemp = entity.BusinessOrderDetails.Where(d => d.Status == Consts.StateNormal).ToList();
+            var costMoney = detailsTemp.Sum(d => d.CostMoney);
+            var sellMoney = detailsTemp.Sum(d => d.SellMoney);
             foreach (var order in orderDetails)
             {
                 if (string.IsNullOrWhiteSpace(order.Id))
@@ -380,6 +448,7 @@ namespace Business.Controllers
                     order.Id = IdBuilder.CreateIdNum();
                     order.Status = Consts.StateNormal;
                     order.VerificationStatus = Consts.StateLock;
+                    order.AuditStatus = Consts.StateNormal;
                     order.VerificationMoney = order.Money;
                     order.ConfirmVerificationMoney = 0;
                     entity.BusinessOrderDetails.Add(order);
@@ -387,6 +456,8 @@ namespace Business.Controllers
                     entity.TotalMoney = entity.TotalMoney + order.Money;
                     entity.TotalSellMoney = entity.TotalSellMoney + order.SellMoney;
                     //entity.VerificationMoney = entity.TotalMoney;
+                    costMoney += order.CostMoney;
+                    sellMoney += order.SellMoney;
                 }
                 else
                 {
@@ -395,7 +466,19 @@ namespace Business.Controllers
                     {
                         continue;
                     }
+                    temp.MediaTitle = order.MediaTitle;
+                    temp.PrePublishDate = order.PrePublishDate;
+                    temp.Money = order.Money;
+                    temp.SellMoney = order.SellMoney;
+                    temp.Tax = order.Tax;
+                    temp.TaxMoney = order.TaxMoney;
+                    temp.Remark = order.Remark;
+                    temp.VerificationMoney = order.Money;
+                    temp.ConfirmVerificationMoney = 0;
                     temp.Status = Consts.StateNormal;//已转采购
+                    temp.AuditStatus = Consts.StateNormal;//审核通过
+                    costMoney += temp.CostMoney;
+                    sellMoney += temp.SellMoney;
                 }
                 PurchaseOrderDetail purchaseOrderDetail = new PurchaseOrderDetail();
                 purchaseOrderDetail.Id = IdBuilder.CreateIdNum();
@@ -424,6 +507,11 @@ namespace Business.Controllers
                 purchaseOrderDetail.PurchaseMoney = 0;
                 purchaseOrderDetail.DiscountRate = 100;
                 purchaseOrder.PurchaseOrderDetails.Add(purchaseOrderDetail);
+            }
+            //校验金额
+            if (sellMoney <= costMoney)
+            {
+                return Json(new { State = 0, Msg = "不能低于成本金额" });
             }
 
             if (isAdd)

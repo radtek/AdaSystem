@@ -27,7 +27,10 @@
                                     <th>
                                         领款日期
                                     </th>
-                                   
+                                    <th>
+                                        核销金额
+                                    </th>
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -37,15 +40,14 @@
                                         <td>@item.LinkManName</td>
                                         <td>@item.Money</td>
                                         <td>@item.ClaimDate</td>
-                                        
-
+                                        <td>@item.ConfirmVerificationMoney</td>
                                     </tr>
                                 }
                                 <tr>
                                     <td>合计</td>
                                     <td>@Model.BusinessPayees.Sum(d=>d.Money)</td>
                                     <td></td>
-                                    
+                                    <td>@Model.BusinessPayees.Sum(d => d.ConfirmVerificationMoney)</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -62,13 +64,13 @@
                             <thead>
                                 <tr>
                                     <th>
-                                        客户名称
+                                        媒体类型
                                     </th>
                                     <th>
-                                        订单编号
+                                        媒体名称
                                     </th>
                                     <th>
-                                        订单日期
+                                        广告位
                                     </th>
                                     <th>
                                         销售金额
@@ -77,13 +79,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.BusinessOrders)
+                                @foreach (var item in Model.BusinessOrderDetails)
                                 {
                                     <tr>
-                                        <td>@item.LinkManName</td>
-                                        <td>@item.OrderNum</td>
-                                        <td>@item.OrderDate.Value.ToString("yyyy-MM-dd")</td>
-                                        <td>@item.TotalMoney</td>
+                                        <td>@item.MediaTypeName</td>
+                                        <td>@item.MediaName</td>
+                                        <td>@item.AdPositionName</td>
+                                        <td>@item.Money</td>
                                         
                                     </tr>
                                 }
@@ -91,7 +93,7 @@
                                     <td></td>
                                     <td></td>
                                     <td>合计</td>
-                                    <td>@Model.BusinessOrders.Sum(d => d.TotalMoney)</td>
+                                    <td>@Model.BusinessOrderDetails.Sum(d => d.Money)</td>
                                     
                                 </tr>
                             </tbody>

@@ -53,7 +53,7 @@ namespace Business.Controllers
                     Money = d.Money,
                     ClaimDate = d.ClaimDate,
                     VerificationStatus = d.VerificationStatus,
-                    VerificationMoney = d.VerificationMoney,
+                    VerificationMoney = d.Money - d.BusinessPayments.Where(p => p.AuditStatus == Consts.StateNormal).Sum(p => p.PayMoney),
                     PaymentCount = d.BusinessPayments.Count
                 })
             }, JsonRequestBehavior.AllowGet);
@@ -66,7 +66,7 @@ namespace Business.Controllers
             viewModel.PayMoney = 0;
             viewModel.LinkmanName = entity.LinkManName;
             var temp = entity.BusinessPayments.Sum(d => d.PayMoney);
-            viewModel.TotalMoney = entity.Money-temp;
+            viewModel.TotalMoney = entity.Money - temp;
             return View(viewModel);
         }
         public ActionResult Payments(string id)
@@ -99,14 +99,14 @@ namespace Business.Controllers
                 return View(viewModel);
             }
             var entity = _repository.LoadEntities(d => d.Id == viewModel.BusinessPayeeId).FirstOrDefault();
-            if (entity.VerificationStatus==Consts.StateNormal)
+            if (entity.VerificationStatus == Consts.StateNormal)
             {
                 ModelState.AddModelError("message", "此款项已核销，无法请款");
                 return View(viewModel);
             }
             var temp = entity.BusinessPayments.Sum(d => d.PayMoney);
             //校验金额不能超出领款金额
-            if (viewModel.PayMoney > entity.Money-temp)
+            if (viewModel.PayMoney > entity.Money - temp)
             {
                 ModelState.AddModelError("message", "申请金额超出领款金额");
                 return View(viewModel);
@@ -131,6 +131,7 @@ namespace Business.Controllers
             payment.AddedDate = DateTime.Now;
             payment.ApplicationNum = IdBuilder.CreateOrderNum("QK");
             _businessPaymentService.Add(payment);
+
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
         }

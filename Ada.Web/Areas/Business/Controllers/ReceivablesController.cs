@@ -14,6 +14,9 @@ using Ada.Services.Business;
 
 namespace Business.Controllers
 {
+    /// <summary>
+    /// 领款
+    /// </summary>
     public class ReceivablesController : BaseController
     {
 

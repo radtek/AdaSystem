@@ -3,13 +3,13 @@
     isPayeeSelect = false,
     isOrderSelect = false,
     payeeSelections = {},
-    //orderSelections = {},
+    orderSelections = {},
     $payeeTable,
     $orderTable;
 payeeSelections.ids = [];
 payeeSelections.rows = [];
-//orderSelections.ids = [];
-//orderSelections.rows = [];
+orderSelections.ids = [];
+orderSelections.rows = [];
 linkmanSelect.url = linkmanapi;
 linkmanSelect.paramsData = function (params) {
     return {
@@ -38,8 +38,8 @@ linkmanSelect.formatRepoSelection = function (repo) {
     isOrderSelect = true;
     payeeSelections.ids = [];
     payeeSelections.rows = [];
-    //orderSelections.ids = [];
-    //orderSelections.rows = [];
+    orderSelections.ids = [];
+    orderSelections.rows = [];
 
     return repo.text;
 };
@@ -118,15 +118,10 @@ $(function () {
                 initSelect2("TransactorId", transactorSelect);
                 //计算选取总额
                 var orderMoney = 0, payeeMoney = 0;
-                //$.each(orderSelections.rows,
-                //    function (k, v) {
-                //        orderMoney += v.TotalMoney;
-                //    });
-                var rows = $orderTable.bootstrapTable("getSelections");
-                if (rows.length>0) {
-                    orderMoney = rows[0].TotalMoney;
-                    $("#Orders").val(rows[0].Id);
-                }
+                $.each(orderSelections.rows,
+                    function (k, v) {
+                        orderMoney += v.VerificationMoney;
+                    });
                 $.each(payeeSelections.rows,
                     function (k, v) {
                         payeeMoney += v.VerificationMoney;
@@ -134,7 +129,7 @@ $(function () {
                 $("#OrderMoney").val(orderMoney);
                 $("#PayeeMoney").val(payeeMoney);
                 $("#Payees").val(payeeSelections.ids.join(","));
-                //$("#Orders").val(orderSelections.ids.join(","));
+                $("#Orders").val(orderSelections.ids.join(","));
                 
                 //$(this).steps("next");
             }
@@ -180,7 +175,7 @@ $(function () {
         },
         messages: {
             PayeeMoney: {
-                equalTo: "领款金额须和订单金额不一致",
+                equalTo: "核销金额不一致",
                 min: "核销金额须大于0"
             }
         }
@@ -276,47 +271,50 @@ function initOrder() {
         pageSize: 7,                       //每页的记录行数（*）
         pageList: [7, 15, 50],
         clickToSelect: true,                //是否启用点击选中行
-        singleSelect: true,                  //设置True 将禁止多选
+        //singleSelect: true,                  //设置True 将禁止多选
         uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
         mobileResponsive: true,
         queryParams: function (parameters) {
-            parameters.LinkManId = $("#LinkManId").val();
-            parameters.VerificationStatus = 0;
+            parameters.OrderNum = $("#OrderNum").val();
+            //parameters.VerificationStatus = 0;
+            parameters.Status = 1;
             return parameters;
         },
-        //responseHandler: orderResponseHandler,
+        responseHandler: orderResponseHandler,
         columns: [
             {
                 field: 'state',
                 checkbox: true
             },
             {
-                field: 'OrderNum',
-                title: '订单编号',
+                field: 'MediaTypeName',
+                title: '媒体类型',
                 align: "center", valign: "middle"
             },
             {
-                field: 'LinkManName',
-                title: '客户名称',
+                field: 'MediaName',
+                title: '媒体名称',
                 align: "center", valign: "middle"
             },
             {
-                field: 'TotalMoney',
+                field: 'AdPositionName',
+                title: '广告位',
+                align: "center", valign: "middle"
+            },
+            {
+                field: 'Money',
                 title: '销售金额',
                 align: "center", valign: "middle"
             }
             ,
             {
-                field: 'OrderDate',
-                title: '单据日期',
-                align: "center", valign: "middle",
-                formatter: function (value) {
-                    return moment(value).format("YYYY-MM-DD");
-                }
+                field: 'VerificationMoney',
+                title: '未核销金额',
+                align: "center", valign: "middle"
             }
         ]
     });
-    //checkOn($orderTable, orderSelections);
+    checkOn($orderTable, orderSelections);
 }
 //保留选中结果
 function payeeResponseHandler(res) {
@@ -325,13 +323,13 @@ function payeeResponseHandler(res) {
     });
     return res;
 }
-////保留选中结果
-//function orderResponseHandler(res) {
-//    $.each(res.rows, function (i, row) {
-//        row.state = $.inArray(row.Id, orderSelections.ids) !== -1;
-//    });
-//    return res;
-//}
+//保留选中结果
+function orderResponseHandler(res) {
+    $.each(res.rows, function (i, row) {
+        row.state = $.inArray(row.Id, orderSelections.ids) !== -1;
+    });
+    return res;
+}
 
 //注册选中事件
 function checkOn($table, selections) {
