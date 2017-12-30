@@ -1,4 +1,5 @@
 ﻿
+@using Ada.Core.Domain
 @using Ada.Core.Infrastructure
 @using Ada.Services.Admin
 @model Ada.Core.ViewModel.Business.BusinessInvoiceView
@@ -20,19 +21,35 @@
         <div class="form-group col-md-4">
             @Html.LabelFor(d => d.LinkManId, Html.DisplayNameFor(d => d.LinkManId).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
-                <select class="form-control" required="" name="LinkManId" id="LinkManId">
-                    <option value="@Model.LinkManId">@Model.LinkManName</option>
-                </select>
-                @Html.HiddenFor(d => d.LinkManName)
+                @if (Model.AuditStatus == Consts.StateNormal)
+                {
+                    @Html.TextBoxFor(d => d.LinkManName, new { @readonly = "readonly", @class = "form-control" })
+                    @Html.HiddenFor(d => d.LinkManId)
+                }
+                else
+                {
+                    <select class="form-control" required="" name="LinkManId" id="LinkManId">
+                        <option value="@Model.LinkManId">@Model.LinkManName</option>
+                    </select>
+                    @Html.HiddenFor(d => d.LinkManName)
+                }
             </div>
         </div>
         <div class="form-group col-md-4">
             @Html.LabelFor(d => d.TransactorId, Html.DisplayNameFor(d => d.TransactorId).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
-                <select class="form-control" required="" name="TransactorId" id="TransactorId">
-                    <option value="@Model.TransactorId">@Model.Transactor</option>
-                </select>
-                @Html.HiddenFor(d => d.Transactor)
+                @if (Model.AuditStatus == Consts.StateNormal)
+                {
+                    @Html.TextBoxFor(d => d.Transactor, new { @readonly = "readonly", @class = "form-control" })
+                    @Html.HiddenFor(d => d.TransactorId)
+                }
+                else
+                {
+                    <select class="form-control" name="TransactorId" id="TransactorId">
+                        <option value="@Model.TransactorId">@Model.Transactor</option>
+                    </select>
+                    @Html.HiddenFor(d => d.Transactor)
+                }
             </div>
         </div>
         <div class="form-group col-md-4">
@@ -44,59 +61,60 @@
         <div class="form-group col-md-4">
             @Html.LabelFor(d => d.InvoiceTitle, Html.DisplayNameFor(d => d.InvoiceTitle).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
-                @Html.DropDownListFor(d => d.InvoiceTitle, invoiceTitles, new { @class = "form-control", required = "" })
+                @(Model.AuditStatus == Consts.StateNormal ? Html.TextBoxFor(d => d.InvoiceTitle, new { @class = "form-control", @readonly = "readonly" }) : Html.DropDownListFor(d => d.InvoiceTitle, invoiceTitles, new { @class = "form-control", required = "" }))
             </div>
         </div>
         <div class="form-group col-md-4">
             @Html.LabelFor(d => d.InvoiceType, Html.DisplayNameFor(d => d.InvoiceType).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
-                @Html.DropDownListFor(d => d.InvoiceType, invoiceTypes, new { @class = "form-control", required = "" })
+                
+                @(Model.AuditStatus == Consts.StateNormal ? Html.TextBoxFor(d => d.InvoiceType, new { @class = "form-control", @readonly = "readonly" }) : Html.DropDownListFor(d => d.InvoiceType, invoiceTypes, new { @class = "form-control", required = "" }))
             </div>
         </div>
         <div class="form-group col-md-4">
             @Html.LabelFor(d => d.Company, Html.DisplayNameFor(d => d.Company).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
-                @Html.TextBoxFor(d => d.Company, new { @class = "form-control", required = "" })
+                @(Model.AuditStatus == Consts.StateNormal ? Html.TextBoxFor(d => d.Company, new { @class = "form-control", @readonly = "readonly" }) : Html.TextBoxFor(d => d.Company, new { @class = "form-control", required = "" }))
             </div>
         </div>
         <div class="form-group col-md-4">
             @Html.LabelFor(d => d.TaxNum, Html.DisplayNameFor(d => d.TaxNum).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
-                @Html.TextBoxFor(d => d.TaxNum, new { @class = "form-control", required = "" })
+                @(Model.AuditStatus == Consts.StateNormal ? Html.TextBoxFor(d => d.TaxNum, new { @class = "form-control", @readonly = "readonly" }) : Html.TextBoxFor(d => d.TaxNum, new { @class = "form-control", required = "" }))
             </div>
         </div>
         <div class="form-group col-md-4">
             @Html.LabelFor(d => d.Address, Html.DisplayNameFor(d => d.Address).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
-                @Html.TextBoxFor(d => d.Address, new { @class = "form-control", required = "" })
+                @(Model.AuditStatus == Consts.StateNormal ? Html.TextBoxFor(d => d.Address, new { @class = "form-control", @readonly = "readonly" }) : Html.TextBoxFor(d => d.Address, new { @class = "form-control", required = "" }))
             </div>
         </div>
         <div class="form-group col-md-4">
             @Html.LabelFor(d => d.Bank, Html.DisplayNameFor(d => d.Bank).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
-                @Html.TextBoxFor(d => d.Bank, new { @class = "form-control", required = "" })
+                @(Model.AuditStatus == Consts.StateNormal ? Html.TextBoxFor(d => d.Bank, new { @class = "form-control", @readonly = "readonly" }) : Html.TextBoxFor(d => d.Bank, new { @class = "form-control", required = "" }))
             </div>
         </div>
         <div class="form-group col-md-4">
             @Html.LabelFor(d => d.BankNum, Html.DisplayNameFor(d => d.BankNum).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
-                @Html.TextBoxFor(d => d.BankNum, new { @class = "form-control", required = "" })
+                @(Model.AuditStatus == Consts.StateNormal ? Html.TextBoxFor(d => d.BankNum, new { @class = "form-control", @readonly = "readonly" }) : Html.TextBoxFor(d => d.BankNum, new { @class = "form-control", required = "" }))
             </div>
         </div>
         <div class="form-group col-md-4">
             @Html.LabelFor(d => d.Phone, Html.DisplayNameFor(d => d.Phone).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
-                @Html.TextBoxFor(d => d.Phone, new { @class = "form-control", required = "" })
+                @(Model.AuditStatus == Consts.StateNormal ? Html.TextBoxFor(d => d.Phone, new { @class = "form-control", @readonly = "readonly" }) : Html.TextBoxFor(d => d.Phone, new { @class = "form-control", required = "" }))
             </div>
         </div>
         <div class="form-group col-md-4">
             @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
-                @Html.TextBoxFor(d => d.Remark, new { @class = "form-control" })
+                @(Model.AuditStatus == Consts.StateNormal ? Html.TextBoxFor(d => d.Remark, new { @class = "form-control", @readonly = "readonly" }) : Html.TextBoxFor(d => d.Remark, new { @class = "form-control" }))
             </div>
         </div>
     </div>
-   
+
     <div class="hr-line-dashed"></div>
     <div class="row">
         <div class="col-lg-12">
@@ -110,4 +128,5 @@
         </div>
     </div>
     @Html.HiddenFor(d => d.Id)
+    @Html.HiddenFor(d => d.AuditStatus)
 </div>

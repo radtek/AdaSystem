@@ -1,6 +1,6 @@
 ﻿<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props" Condition="Exists('..\..\..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props')" />
   <Import Project="..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\..\..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props" Condition="Exists('..\..\..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -8,12 +8,12 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{9DF100D9-F9D0-421D-BB19-C7B0C7D3DCF4}</ProjectGuid>
+    <ProjectGuid>{D815898F-9949-435B-BBE6-856A9D334DCE}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Resource</RootNamespace>
-    <AssemblyName>Resource</AssemblyName>
+    <RootNamespace>Setting</RootNamespace>
+    <AssemblyName>Setting</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
@@ -47,42 +47,12 @@
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="ClosedXML, Version=0.90.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\ClosedXML.0.90.0\lib\net452\ClosedXML.dll</HintPath>
-    </Reference>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\DocumentFormat.OpenXml.2.7.2\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
-    </Reference>
-    <Reference Include="FastMember.Signed, Version=1.0.0.9, Culture=neutral, PublicKeyToken=9e8f22703bef9a29, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\FastMember.Signed.1.1.0\lib\net40\FastMember.Signed.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.8.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="NPOI, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NPOI.2.3.0\lib\net40\NPOI.dll</HintPath>
-    </Reference>
-    <Reference Include="NPOI.OOXML, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NPOI.2.3.0\lib\net40\NPOI.OOXML.dll</HintPath>
-    </Reference>
-    <Reference Include="NPOI.OpenXml4Net, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NPOI.2.3.0\lib\net40\NPOI.OpenXml4Net.dll</HintPath>
-    </Reference>
-    <Reference Include="NPOI.OpenXmlFormats, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NPOI.2.3.0\lib\net40\NPOI.OpenXmlFormats.dll</HintPath>
-    </Reference>
-    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\System.IO.FileSystem.Primitives.4.0.1\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="System.IO.Packaging, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\System.IO.Packaging.4.0.0\lib\net46\System.IO.Packaging.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -106,7 +76,6 @@
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
     </Reference>
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Web.Razor">
@@ -132,81 +101,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\index.js" />
-    <Content Include="Scripts\resource.js" />
-    <Content Include="Scripts\transactor.js" />
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\HeadLineController.cs" />
-    <Compile Include="Controllers\MediaController.cs" />
-    <Compile Include="Controllers\MediaGroupController.cs" />
-    <Compile Include="Controllers\MediaTagController.cs" />
-    <Compile Include="Controllers\MediaTypeController.cs" />
-    <Compile Include="Controllers\RedBookController.cs" />
-    <Compile Include="Controllers\SinaBlogController.cs" />
-    <Compile Include="Controllers\UpdateController.cs" />
-    <Compile Include="Controllers\WebCastController.cs" />
-    <Compile Include="Controllers\WebSiteController.cs" />
-    <Compile Include="Controllers\WeiXinController.cs" />
-    <Compile Include="Controllers\ZhiHuController.cs" />
-    <Compile Include="ResourceAreaRegistration.cs" />
+    <Compile Include="Controllers\SiteController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SettingAreaRegistration.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
     <None Include="packages.config" />
-    <Content Include="Views\MediaType\Index.cshtml" />
+    <Content Include="Views\Site\Index.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\MediaType\Add.cshtml" />
-    <Content Include="Views\MediaType\Update.cshtml" />
-    <Content Include="Views\WeiXin\Index.cshtml" />
-    <Content Include="Views\WeiXin\Add.cshtml" />
-    <Content Include="Views\WeiXin\Update.cshtml" />
-    <Content Include="Views\MediaTag\Index.cshtml" />
-    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
-    <Content Include="Views\WeiXin\WeiXinEdit.cshtml" />
-    <Content Include="Views\SinaBlog\Index.cshtml" />
-    <Content Include="Views\SinaBlog\Add.cshtml" />
-    <Content Include="Views\SinaBlog\Update.cshtml" />
-    <Content Include="Views\SinaBlog\SinaBlogEdit.cshtml" />
-    <Content Include="Views\WebCast\Index.cshtml" />
-    <Content Include="Views\WebCast\Add.cshtml" />
-    <Content Include="Views\WebCast\Update.cshtml" />
-    <Content Include="Views\WebCast\WebCastEdit.cshtml" />
-    <Content Include="Views\HeadLine\Index.cshtml" />
-    <Content Include="Views\HeadLine\Add.cshtml" />
-    <Content Include="Views\HeadLine\Update.cshtml" />
-    <Content Include="Views\HeadLine\HeadLineEdit.cshtml" />
-    <Content Include="Views\ZhiHu\Index.cshtml" />
-    <Content Include="Views\ZhiHu\Add.cshtml" />
-    <Content Include="Views\ZhiHu\Update.cshtml" />
-    <Content Include="Views\ZhiHu\ZhiHuEdit.cshtml" />
-    <Content Include="Views\RedBook\Index.cshtml" />
-    <Content Include="Views\RedBook\Add.cshtml" />
-    <Content Include="Views\RedBook\Update.cshtml" />
-    <Content Include="Views\RedBook\RedBookEdit.cshtml" />
-    <Content Include="Views\Update\Index.cshtml" />
-    <Content Include="Views\MediaGroup\Index.cshtml" />
-    <Content Include="Views\MediaGroup\Add.cshtml" />
-    <Content Include="Views\MediaGroup\MediaGroupEdit.cshtml" />
-    <Content Include="Views\MediaGroup\Update.cshtml" />
-    <Content Include="Views\Shared\MediaGroupDetail.cshtml" />
-    <Content Include="Views\WebSite\Index.cshtml" />
-    <Content Include="Views\WebSite\Add.cshtml" />
-    <Content Include="Views\WebSite\Update.cshtml" />
-    <Content Include="Views\WebSite\WebSiteEdit.cshtml" />
-    <Content Include="Views\Media\Index.cshtml" />
-    <Content Include="Views\Media\Add.cshtml" />
-    <Content Include="Views\Shared\WeiXin.cshtml" />
-    <Content Include="Views\Media\Update.cshtml" />
-    <Content Include="Views\Shared\WebSite.cshtml" />
-    <Content Include="Views\Shared\RedBook.cshtml" />
-    <Content Include="Views\Shared\HeadLine.cshtml" />
-    <Content Include="Views\Shared\SinaBlog.cshtml" />
-    <Content Include="Views\Shared\ZhiHu.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -219,7 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Ada.Core\Ada.Core.csproj">
-      <Project>{1E0B290A-3337-43C9-9CE9-BFB8CE741DBA}</Project>
+      <Project>{1e0b290a-3337-43c9-9ce9-bfb8ce741dba}</Project>
       <Name>Ada.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Ada.Framework\Ada.Framework.csproj">
@@ -244,9 +150,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>14233</DevelopmentServerPort>
+          <DevelopmentServerPort>21309</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:14233/</IISUrl>
+          <IISUrl>http://localhost:21309/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
@@ -260,8 +166,8 @@
     <PropertyGroup>
       <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
     <Error Condition="!Exists('..\..\..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

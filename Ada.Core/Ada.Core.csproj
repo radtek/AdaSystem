@@ -88,6 +88,7 @@
     <Compile Include="Domain\Admin\FieldType.cs" />
     <Compile Include="Domain\Admin\Manager.cs" />
     <Compile Include="Domain\Admin\ManagerAction.cs" />
+    <Compile Include="Domain\Admin\Setting.cs" />
     <Compile Include="Domain\Business\BusinessOfferDetail.cs" />
     <Compile Include="Domain\Business\BusinessOrder.cs" />
     <Compile Include="Domain\Business\BusinessOrderDetail.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="ViewModel\Resource\MediaTagView.cs" />
     <Compile Include="ViewModel\Resource\MediaTypeView.cs" />
     <Compile Include="ViewModel\Resource\MediaView.cs" />
+    <Compile Include="ViewModel\Setting\Site.cs" />
     <Compile Include="ViewModel\TreeView.cs" />
     <Compile Include="ViewModel\WorkLog\WorkLogView.cs" />
   </ItemGroup>

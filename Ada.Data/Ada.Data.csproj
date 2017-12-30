@@ -61,6 +61,7 @@
     <Compile Include="Mapping\Admin\ManagerActionMap.cs" />
     <Compile Include="Mapping\Admin\ActionMap.cs" />
     <Compile Include="Mapping\Admin\ManagerMap.cs" />
+    <Compile Include="Mapping\Admin\SettingMap.cs" />
     <Compile Include="Mapping\Business\BusinessInvoiceDetailMap.cs" />
     <Compile Include="Mapping\Business\BusinessInvoiceMap.cs" />
     <Compile Include="Mapping\Business\BusinessOfferDetailMap.cs" />
@@ -260,6 +261,10 @@
     <Compile Include="Migrations\201712291416259_PurchaseOrderUpdate20171229.Designer.cs">
       <DependentUpon>201712291416259_PurchaseOrderUpdate20171229.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712300943114_Setting.cs" />
+    <Compile Include="Migrations\201712300943114_Setting.Designer.cs">
+      <DependentUpon>201712300943114_Setting.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -396,6 +401,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712291416259_PurchaseOrderUpdate20171229.resx">
       <DependentUpon>201712291416259_PurchaseOrderUpdate20171229.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712300943114_Setting.resx">
+      <DependentUpon>201712300943114_Setting.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

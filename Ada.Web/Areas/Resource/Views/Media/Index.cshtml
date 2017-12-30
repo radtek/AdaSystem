@@ -1,0 +1,461 @@
+﻿@using System.Web.Optimization
+@using Ada.Core
+@using Ada.Core.Domain.Resource
+@using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Resource
+@using Ada.Services.Resource
+@using Microsoft.Ajax.Utilities
+@model MediaView
+@{
+    ViewBag.Title = "媒体资源";
+    var repository = EngineContext.Current.Resolve<IRepository<MediaType>>();
+    var mediaTypes = repository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis).ToList();
+    var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
+    List<SelectListItem> adaPostions = new List<SelectListItem>();
+    if (!string.IsNullOrWhiteSpace(Model.MediaTypeId))
+    {
+        var mediaType = repository.LoadEntities(d => d.Id == Model.MediaTypeId).FirstOrDefault();
+        adaPostions = mediaType.AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name }).ToList();
+    }
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index","Home",new{area= "Dashboards" })">工作台</a>
+            </li>
+            <li class="active">
+                <strong>@ViewBag.Title</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+    <div class="ibox">
+        <div class="ibox-content m-b-sm border-bottom">
+            <div class="row">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.MediaTypeId, Html.DisplayNameFor(d => d.MediaTypeId).ToString(), new { @class = "control-label" })
+                            <select name="MediaTypeId" class="form-control" id="MediaTypeId">
+                                <option value="">请选择</option>
+                                @foreach (var item in mediaTypes)
+                                {
+                                    if (item.Id == Model.MediaTypeId)
+                                    {
+                                        <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))' selected="selected">@item.TypeName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))'>@item.TypeName</option>
+                                    }
+
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
+                            @Html.DropDownListFor(d => d.AdPositionName, adaPostions, "不限", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart).ToString(), new { @class = "control-label" })
+                            <div class="input-daterange input-group">
+                                @Html.TextBoxFor(d => d.PriceStart, new { @class = "form-control" })
+                                <span class="input-group-addon">至</span>
+                                @Html.TextBoxFor(d => d.PriceEnd, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName).ToString(), new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "control-label" })
+                            <div class="row">
+                                <div class="col-md-12">
+                                    @foreach (var item in tags)
+                                    {
+                                        var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
+                                        <div class="checkbox checkbox-success checkbox-inline">
+                                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
+                                            <label for="@item.Id">@item.TagName</label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    @*<div class="col-sm-3">
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.limit, "导出记录数", new { @class = "control-label" })
+                                @Html.TextBoxFor(d => d.limit, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor).ToString(), new { @class = "control-label" })
+                                @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control" })
+                            </div>
+                        </div>*@
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.MediaNames, Html.DisplayNameFor(d => d.MediaNames).ToString(), new { @class = "control-label" })
+                            @Html.TextAreaFor(d => d.MediaNames, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.MediaIDs, Html.DisplayNameFor(d => d.MediaIDs).ToString(), new { @class = "control-label" })
+                            @Html.TextAreaFor(d => d.MediaIDs, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <button class="btn btn-success btn-sm" type="submit"><i class="fa fa-search"></i> 查询数据</button>
+
+                            <button class="btn btn-primary btn-sm" type="submit" name="submit.Export" value="export"><i class="fa fa-download"></i> 导出数据</button>
+                            <button class="btn btn-white btn-sm" type="button" data-toggle="modal" data-target="#uploadModal"><i class="fa fa-upload"></i> 更新导入</button>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="alert alert-warning">
+                            <strong>注意事项：</strong>导出导入的文件后缀名为[.xlsx]，导入资源的文件一定为导出资源的文件，其他文件排版格式会出错。
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <button class="btn btn-warning btn-sm" type="button" onclick="addMedia();"><i class="fa fa-plus"></i> 新增媒体</button>
+                </div>
+                <div class="ibox-content">
+                    <div class="sk-spinner sk-spinner-wave">
+                        <div class="sk-rect2"></div>
+                        <div class="sk-rect3"></div>
+                        <div class="sk-rect4"></div>
+                        <div class="sk-rect5"></div>
+                    </div>
+                    @Html.ValidationMessage("message")
+                    @if (Model.Medias.Count > 0)
+                    {
+                        <div class="hr-line-dashed"></div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>媒体类型</th>
+                                    <th>媒体名称</th>
+                                    <th data-breakpoints="xs sm">媒体分类</th>
+                                    <th data-breakpoints="xs sm">媒体组</th>
+                                    <th data-breakpoints="xs sm">粉丝数</th>
+                                    <th data-breakpoints="xs">媒体价格</th>
+                                    <th data-breakpoints="all" data-title="媒体内容">媒体内容</th>
+                                    <th data-breakpoints="all" data-title="媒体备注">媒体备注</th>
+                                    <th data-breakpoints="xs sm">经办媒介</th>
+                                    <th data-breakpoints="xs sm">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Medias)
+                                {
+                                    <tr>
+                                        <td>@item.MediaType.TypeName</td>
+                                        @if (item.MediaType.CallIndex == "website")
+                                        {
+                                            var medianame = item.MediaName + "-" + item.Client + "-" + item.Channel;
+                                            <td>@medianame</td>
+                                        }
+                                        else if (item.MediaType.CallIndex == "weixin")
+                                        {
+                                            var medianame = item.MediaName + " [ " + item.MediaID + " ]";
+                                            <td>@medianame</td>
+                                        }
+                                        else if (item.MediaType.CallIndex == "headline" || item.MediaType.CallIndex == "webcast")
+                                        {
+                                            var medianame = "[ " + item.Platform + " ] " + item.MediaName;
+                                            <td>@medianame</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@item.MediaName</td>
+                                        }
+                                        <td>@string.Join(",", item.MediaTags.Select(d => d.TagName))</td>
+                                        <td>
+                                            @foreach (var group in item.MediaGroups)
+                                            {
+                                                <button class='btn btn-warning btn-xs' onclick="groupDetail('@group.Id');"><i class='fa fa-object-group'></i> @group.GroupName</button>
+                                            }
+                                        </td>
+                                        <td>@item.FansNum</td>
+                                        <td>
+                                            @foreach (var price in item.MediaPrices)
+                                            {
+                                                var str = price.AdPositionName + "：¥ " + price.PurchasePrice + "　　有效期至：" + price.InvalidDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"));
+                                                <div class="bg-info">@str</div>
+                                            }
+                                        </td>
+                                        <td>@item.Content</td>
+                                        <td>@item.Remark</td>
+                                        <td>@item.Transactor</td>
+                                        <td>
+                                            <a class='btn btn-success btn-sm' href='@Url.Action("Update",new{id=item.Id})'><i class='fa fa-pencil'></i> 编辑</a>
+                                            <a class='btn btn-danger btn-sm' href='javascript:;' onclick="cancle('@item.Id');"><i class='fa fa-trash-o'></i> 删除</a>
+                                        </td>
+                                    </tr>
+                                }
+
+
+                            </tbody>
+                        </table>
+
+                    }
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="modal inmodal" id="uploadModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">导入更新媒体资源</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>导入文件</label>
+                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                            <div class="form-control" data-trigger="fileinput">
+                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                <span class="fileinput-filename"></span>
+                            </div>
+                            <span class="input-group-addon btn btn-default btn-file">
+                                <span class="fileinput-new">选择</span>
+                                <span class="fileinput-exists">更换</span>
+                                <input type="file" name="upfile" id="upfile" />
+                            </span>
+                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">移除</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <button type="button" class="ladda-button btn btn-primary" onclick="upLoadFile();" data-style="zoom-in">导入</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@section Styles {
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+    @Styles.Render("~/plugins/footableV3Styles")
+    @Styles.Render("~/plugins/jasnyBootstrapStyles")
+    @Styles.Render("~/plugins/laddaStyles")
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/footableV3")
+    @Scripts.Render("~/plugins/jasnyBootstrap")
+    @Scripts.Render("~/plugins/ladda")
+    <script>
+        $(function() {
+            $('#uploadModal').on('shown.bs.modal',
+                function() {
+
+                }).on('hidden.bs.modal',
+                function() {
+                    $('.fileinput').fileinput("clear");
+                });
+            @if (Model.Medias.Count > 0)
+            {
+                <text>
+                    $('.table').footable();
+                </text>
+            }
+            $("#MediaTypeId").change(function() {
+                var $adpostion = $("#AdPositionName");
+                $adpostion.empty();
+                if ($(this).val()) {
+                    var selectdata = $(this).find('option:selected').attr("data-value");
+                    var arr = JSON.parse(selectdata);
+                    $adpostion.append("<option value=''>不限</option>");
+                    $.each(arr,
+                        function(k, v) {
+                            $adpostion.append("<option value='" + v + "'>" + v + "</option>");
+                        });
+                } else {
+                    $adpostion.append("<option value=''>不限</option>");
+                }
+            });
+        });
+
+        function upLoadFile() {
+            var fileObj = document.getElementById("upfile").files[0]; // js 获取文件对象
+            if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
+                swal("操作失败", "请选择文件", "warning");
+                return;
+            }
+            if (!checkFileExt(fileObj.name)) {
+                swal("操作失败", "只支持xlsx后缀文件", "warning");
+                return;
+            }
+            var formFile = new FormData();
+            formFile.append("upfile", fileObj); //加入文件对象
+            var data = formFile;
+            var subBtn = $('.ladda-button').ladda();
+            $.ajax({
+                url: "@Url.Action("Import")",
+                data: data,
+                type: "Post",
+                dataType: "json",
+                cache: false, //上传文件无需缓存
+                processData: false, //用于对data参数进行序列化处理 这里必须false
+                contentType: false, //必须
+                success: function(result) {
+                    if (result.State == 1) {
+                        swal({
+                            title: "操作成功",
+                            text: data.Msg,
+                            timer: 2000,
+                            type: "success",
+                            showConfirmButton: false
+                        });
+                    } else {
+                        swal("操作失败", result.Msg, "error");
+                    }
+                },
+                error: function() {
+                    swal("操作失败", "系统错误", "error");
+                },
+                beforeSend: function() {
+                    subBtn.ladda('start');
+                },
+                complete: function() {
+                    subBtn.ladda('stop');
+                }
+            });
+        }
+
+        function checkFileExt(filename) {
+            var flag = false; //状态
+            var arr = ["xlsx"];
+            //取出上传文件的扩展名
+            var index = filename.lastIndexOf(".");
+            var ext = filename.substr(index + 1);
+            //循环比较
+            for (var i = 0; i < arr.length; i++) {
+                if (ext == arr[i]) {
+                    flag = true; //一旦找到合适的，立即退出循环
+                    break;
+                }
+            }
+            return flag;
+        }
+
+        function groupDetail(id) {
+            $("#modalView").load("@Url.Action("Detail", "MediaGroup")?id=" + id,
+                function() {
+                    $('#modalView .modal').on('shown.bs.modal',
+                        function() {
+                            $('[data-toggle="tooltip"]').tooltip();
+                        }).on('hidden.bs.modal',
+                        function() {
+
+                        });
+                    $('#modalView .modal').modal('show');
+                });
+
+        }
+
+        function addMedia() {
+            var mediaId = $("#MediaTypeId").val();
+            if (mediaId) {
+                location.href = "@Url.Action("Add")?id=" + mediaId;
+            } else {
+                swal("操作警告", "请选择媒体类型", "warning");
+            }
+        }
+
+        //撤销
+        function cancle(id) {
+            swal({
+                    title: "您确定吗?",
+                    text: "确认要删除此数据吗?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    closeOnConfirm: false
+                },
+                function() {
+                    $.ajax({
+                        type: "post",
+                        headers: {
+                            '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                        },
+                        url: "@Url.Action("Delete")",
+                        data: { "id": id },
+                        success: function(data) {
+                            if (data.State == 1) {
+                                swal({
+                                        title: "操作成功",
+                                        text: data.Msg,
+                                        type: "success"
+                                    },
+                                    function(isConfirm) {
+                                        if (isConfirm) {
+                                            window.location.reload();
+                                        }
+                                    });
+
+                            } else {
+                                swal("操作提醒", data.Msg, "warning");
+                            }
+                        },
+                        error: function() {
+                            swal("操作失败", data.Msg, "error");
+                        },
+                        complete: function() {
+
+                        }
+                    });
+                });
+        }
+    </script>
+}
+
+
+

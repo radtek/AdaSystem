@@ -75,6 +75,7 @@ namespace Business.Controllers
             viewModel.Transactor = CurrentManager.UserName;
             viewModel.TransactorId = CurrentManager.Id;
             viewModel.TotalMoney = 0;
+            viewModel.AuditStatus = Consts.StateLock;
             return View(viewModel);
         }
         [HttpPost]
@@ -123,7 +124,7 @@ namespace Business.Controllers
             invoice.AddedBy = CurrentManager.UserName;
             invoice.AddedById = CurrentManager.Id;
             invoice.AddedDate = DateTime.Now;
-
+            invoice.AuditStatus = Consts.StateNormal;
             _businessInvoiceService.Add(invoice);
             TempData["Msg"] = "开票成功";
             return RedirectToAction("Index");
@@ -148,6 +149,7 @@ namespace Business.Controllers
             viewModel.TaxNum = entity.TaxNum;
             viewModel.TotalMoney = entity.TotalMoney;
             viewModel.Remark = entity.Remark;
+            viewModel.AuditStatus = entity.AuditStatus;
             List<BusinessInvoiceDetail> details = entity.BusinessInvoiceDetails.ToList();
             viewModel.OrderDetails = JsonConvert.SerializeObject(details.Select(d => new
             {
@@ -198,16 +200,20 @@ namespace Business.Controllers
             invoice.ModifiedById = CurrentManager.Id;
             invoice.ModifiedDate = DateTime.Now;
             //明细处理
-            _businessInvoiceDetailrepository.Remove(invoice.BusinessInvoiceDetails);
-            foreach (var businessInvoiceDetail in orderdetails)
+            if (invoice.AuditStatus==Consts.StateLock)
             {
-                businessInvoiceDetail.Id = IdBuilder.CreateIdNum();
-                businessInvoiceDetail.AddedBy = CurrentManager.UserName;
-                businessInvoiceDetail.AddedById = CurrentManager.Id;
-                businessInvoiceDetail.AddedDate = DateTime.Now;
-                invoice.BusinessInvoiceDetails.Add(businessInvoiceDetail);
+                _businessInvoiceDetailrepository.Remove(invoice.BusinessInvoiceDetails);
+                foreach (var businessInvoiceDetail in orderdetails)
+                {
+                    businessInvoiceDetail.Id = IdBuilder.CreateIdNum();
+                    businessInvoiceDetail.AddedBy = CurrentManager.UserName;
+                    businessInvoiceDetail.AddedById = CurrentManager.Id;
+                    businessInvoiceDetail.AddedDate = DateTime.Now;
+                    invoice.BusinessInvoiceDetails.Add(businessInvoiceDetail);
+                }
+                invoice.TotalMoney = orderdetails.Sum(d => d.InvoiceMoney);
             }
-            invoice.TotalMoney = orderdetails.Sum(d=>d.InvoiceMoney);
+            
             _businessInvoiceService.Update(invoice);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");
@@ -224,6 +230,26 @@ namespace Business.Controllers
             _businessInvoiceDetailrepository.Remove(entity.BusinessInvoiceDetails);
             _businessInvoiceService.Delete(entity);//物理删除
             return Json(new { State = 1, Msg = "撤销成功" });
+        }
+        /// <summary>
+        /// 审核
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Audit(string id)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (entity.AuditStatus == null || entity.AuditStatus == Consts.StateLock)
+            {
+                entity.AuditStatus = Consts.StateNormal;
+            }
+            else
+            {
+                entity.AuditStatus = Consts.StateLock;
+            }
+            _businessInvoiceService.Update(entity);
+            TempData["Msg"] = "操作成功";
+            return RedirectToAction("Update", new { id });
         }
     }
 }

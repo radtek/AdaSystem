@@ -38,13 +38,14 @@
     @Scripts.Render("~/plugins/bootstrapEditTableScript")
     @Scripts.Render("~/plugins/select2")
     @Scripts.Render("~/plugins/lodash")
-    <script>
+<script>
         var orders = @Html.Raw(string.IsNullOrWhiteSpace(Model.OrderDetails) ?"[]": Model.OrderDetails),
             orderdetail = "@Url.Action("OrderDetails")",
             orderapi = "@Url.Action("GetList", "Order")",
             linkmanUrl = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})",
-            managerUrl = "@Url.Action("GetList", "Manager", new {area = "Admin"})";
-    </script>
+            managerUrl = "@Url.Action("GetList", "Manager", new {area = "Admin"})",
+            isReadonly = @Model.AuditStatus;
+</script>
     <script src="@Url.Content("~/Areas/Business/Scripts/invoice.js")"></script>
 }
 

@@ -5,11 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Ada.Core.Domain.Resource;
 
 namespace Ada.Core.ViewModel.Resource
 {
     public class MediaView : BaseView
     {
+        public MediaView()
+        {
+            Medias=new List<Media>();
+        }
         /// <summary>
         /// 媒体名称
         /// </summary>
@@ -277,6 +282,11 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "媒体频道")]
         public string Channel { get; set; }
+        /// <summary>
+        /// 媒体集合
+        /// </summary>
+        [Display(Name = "媒体集合")]
+        public List<Media> Medias { get; set; }
     }
 
 }

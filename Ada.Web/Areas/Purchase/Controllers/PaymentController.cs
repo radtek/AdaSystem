@@ -77,6 +77,7 @@ namespace Purchase.Controllers
             viewModel.Tax = 0;
             viewModel.IsInvoice = false;
             viewModel.DiscountMoney = 0;
+            viewModel.AuditStatus = Consts.StateLock;
             return View(viewModel);
         }
 
@@ -118,6 +119,7 @@ namespace Purchase.Controllers
             payment.Transactor = viewModel.Transactor;
             payment.TransactorId = viewModel.TransactorId;
             payment.Status = Consts.StateLock;//待付款
+            payment.AuditStatus = Consts.StateNormal;//默认审核通过
             payment.IsInvoice = viewModel.IsInvoice;
             if (payment.IsInvoice==true)
             {
@@ -157,6 +159,7 @@ namespace Purchase.Controllers
                 orderDetail.AddedBy = CurrentManager.UserName;
                 orderDetail.AddedById = CurrentManager.Id;
                 orderDetail.AddedDate = DateTime.Now;
+                orderDetail.AuditStatus = Consts.StateNormal;
                 payment.PurchasePaymentOrderDetails.Add(orderDetail);
                 //更新订单金额
                 var order = _purchaseOrderDetailrepository.LoadEntities(d => d.Id == item.Id).FirstOrDefault();
@@ -198,6 +201,7 @@ namespace Purchase.Controllers
             viewModel.DiscountMoney = entity.DiscountMoney;
             viewModel.Tax = entity.Tax;
             viewModel.Id = id;
+            viewModel.AuditStatus = entity.AuditStatus;
             List<PurchaseOrderDetail> details = entity.PurchasePaymentOrderDetails.Select(d => d.PurchaseOrderDetail).ToList();
             viewModel.IsDisable = entity.PurchasePaymentDetails.Count(d => d.AuditStatus == Consts.StateNormal) == 0;
             viewModel.OrderDetails = JsonConvert.SerializeObject(details.Select(d => new
@@ -259,18 +263,20 @@ namespace Purchase.Controllers
             payment.TransactorId = viewModel.TransactorId;
             payment.IsInvoice = viewModel.IsInvoice;
             payment.InvoiceTitle = viewModel.InvoiceTitle;
+            payment.BillDate = viewModel.BillDate;
+            if (payment.PurchasePaymentDetails.Count(d => d.Status == Consts.StateNormal) == 0)
+            {
+                payment.LinkManName = viewModel.LinkManName;
+                payment.LinkManId = viewModel.LinkManId;
+                payment.Tax = viewModel.Tax ?? 0;
+                payment.DiscountMoney = viewModel.DiscountMoney ?? 0;
+            }
+
             decimal? ordermoney;
-            decimal? paymoney = 0;
+            decimal? paymoney;
             //如果审核了，以下信息就不作更新
             if (payment.PurchasePaymentDetails.Count(d => d.AuditStatus == Consts.StateNormal) == 0)//未审核
             {
-                decimal? money = 0;
-                payment.LinkManName = viewModel.LinkManName;
-                payment.LinkManId = viewModel.LinkManId;
-                payment.BillDate = viewModel.BillDate;
-                payment.Tax = viewModel.Tax ?? 0;
-                payment.DiscountMoney = viewModel.DiscountMoney ?? 0;
-                
                 //订单明细
                 _purchasePaymentOrderDetailRepository.Remove(payment.PurchasePaymentOrderDetails);
                 foreach (var item in orderdetails)
@@ -288,11 +294,10 @@ namespace Purchase.Controllers
                     order.TaxMoney = item.TaxMoney;
                     order.PurchaseMoney = item.PurchaseMoney;
                     order.Money = item.Money;
-                    money += item.Money;
                 }
-                payment.PayMoney = money;
+                payment.PayMoney = orderdetails.Sum(d=>d.Money);
                 payment.TaxMoney = orderdetails.Sum(d => d.TaxMoney);
-                ordermoney = money - payment.DiscountMoney;
+                ordermoney = payment.PayMoney - payment.DiscountMoney;
                 //付款明细
                 _purchasePaymentDetailRepository.Remove(payment.PurchasePaymentDetails);
                 foreach (var item in paydetails)
@@ -304,8 +309,8 @@ namespace Purchase.Controllers
                     item.Status = Consts.StateLock;//待付款
                     item.AuditStatus = Consts.StateLock;//待审批
                     payment.PurchasePaymentDetails.Add(item);
-                    paymoney += item.PayMoney;
                 }
+                paymoney = paydetails.Sum(d => d.PayMoney);
             }
             else//已审核
             {
@@ -338,7 +343,6 @@ namespace Purchase.Controllers
                         temp.PayMoney = item.PayMoney;
                         paymoney += item.PayMoney;
                     }
-
                 }
             }
             if (paymoney > ordermoney)
@@ -349,7 +353,6 @@ namespace Purchase.Controllers
             payment.ModifiedBy = CurrentManager.UserName;
             payment.ModifiedById = CurrentManager.Id;
             payment.ModifiedDate = DateTime.Now;
-
             _purchasePaymentService.Update(payment);
             TempData["Msg"] = "修改成功";
             return RedirectToAction("Index");
@@ -369,6 +372,26 @@ namespace Purchase.Controllers
             }
             _purchasePaymentService.Delete(entity);//物理删除
             return Json(new { State = 1, Msg = "撤销成功" });
+        }
+        /// <summary>
+        /// 审核
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Audit(string id)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (entity.AuditStatus == null || entity.AuditStatus == Consts.StateLock)
+            {
+                entity.AuditStatus = Consts.StateNormal;
+            }
+            else
+            {
+                entity.AuditStatus = Consts.StateLock;
+            }
+            _purchasePaymentService.Update(entity);
+            TempData["Msg"] = "操作成功";
+            return RedirectToAction("Update", new { id });
         }
     }
 }

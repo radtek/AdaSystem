@@ -89,8 +89,10 @@ $(function () {
 });
 
 function initData() {
-    initSelect2("LinkManId", linkmanSelect);
-    initSelect2("TransactorId", transactorSelect);
+    if (!isReadonly) {
+        initSelect2("LinkManId", linkmanSelect);
+        initSelect2("TransactorId", transactorSelect);
+    }
     $table.bootstrapTable({
         data: orders,
         classes: "table table-no-bordered",
