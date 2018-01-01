@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Ada.Core.ViewModel.Setting
 {
+    /// <summary>
+    /// 站点配置
+    /// </summary>
     public class Site
     {
         public Site()

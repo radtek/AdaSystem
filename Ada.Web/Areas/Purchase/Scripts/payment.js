@@ -454,6 +454,16 @@ function showOrder() {
                                 align: "center", valign: "middle"
                             },
                             {
+                                field: 'PublishDate',
+                                title: '出刊日期',
+                                align: "center", valign: "middle",
+                                formatter: function (value) {
+                                    if (value) {
+                                        return moment(value).format("YYYY-MM-DD");
+                                    }
+                                }
+                            },
+                            {
                                 field: 'CostMoney',
                                 title: '采购成本',
                                 align: "center", valign: "middle"

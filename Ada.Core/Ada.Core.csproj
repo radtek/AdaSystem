@@ -186,6 +186,7 @@
     <Compile Include="ViewModel\Resource\MediaTypeView.cs" />
     <Compile Include="ViewModel\Resource\MediaView.cs" />
     <Compile Include="ViewModel\Setting\Site.cs" />
+    <Compile Include="ViewModel\Setting\WeiGuang.cs" />
     <Compile Include="ViewModel\TreeView.cs" />
     <Compile Include="ViewModel\WorkLog\WorkLogView.cs" />
   </ItemGroup>

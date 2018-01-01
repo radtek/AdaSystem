@@ -1,5 +1,9 @@
-﻿@{
+﻿@using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Setting
+@using Ada.Services.Setting
+@{
     Layout = null;
+    var setting = EngineContext.Current.Resolve<ISettingService>().GetSetting<Site>();
 }
 
 <!DOCTYPE html>
@@ -45,7 +49,7 @@
                 <button type="submit" class="btn btn-primary block full-width m-b">登陆</button>
             }
 
-            <p class="m-t"> <small>江西微广联合文化传播有限公司 &copy; @DateTime.Now.Year</small> </p>
+            <p class="m-t"> <small>@setting.CompanyName &copy; @DateTime.Now.Year</small> </p>
         </div>
     </div>
 

@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Resource;
+using Ada.Core.ViewModel.Setting;
 using Ada.Framework.Filter;
 using Ada.Framework.UploadFile;
 using Ada.Services.Resource;
+using Ada.Services.Setting;
 using Newtonsoft.Json.Linq;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -22,6 +25,7 @@ namespace Resource.Controllers
     {
         private readonly IMediaPriceService _mediaPriceService;
         private readonly IMediaService _mediaService;
+        private readonly ISettingService _settingService;
         private readonly IRepository<Media> _repository;
         private readonly IRepository<MediaType> _mediaTypeRepository;
         private readonly IRepository<MediaPrice> _mediaPriceRepository;
@@ -33,7 +37,8 @@ namespace Resource.Controllers
             IDbContext dbContext,
             IRepository<Media> repository,
             IRepository<MediaTag> mediaTagRepository,
-            IRepository<MediaType> mediaTypeRepository)
+            IRepository<MediaType> mediaTypeRepository,
+            ISettingService settingService)
         {
             _mediaPriceService = mediaPriceService;
             _mediaService = mediaService;
@@ -42,6 +47,7 @@ namespace Resource.Controllers
             _repository = repository;
             _mediaTagRepository = mediaTagRepository;
             _mediaTypeRepository = mediaTypeRepository;
+            _settingService = settingService;
         }
 
         public ActionResult Index()
@@ -59,20 +65,12 @@ namespace Resource.Controllers
                 ModelState.AddModelError("message", "请先选择媒体类型！");
                 return View(viewModel);
             }
-            Stopwatch watcher = new Stopwatch();
-            watcher.Start();
             viewModel.Managers = PremissionData();
-            var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
-            viewModel.Medias = result;
-            watcher.Stop();
-            if (!result.Any())
-            {
-                ModelState.AddModelError("message", "没有查询到相关媒体信息！");
-                return View(viewModel);
-            }
-
+            var setting = _settingService.GetSetting<WeiGuang>();
             if (export == "export")
             {
+                viewModel.limit = setting.PurchaseExportRows;
+                var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
                 //找到没有的
                 if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
                 {
@@ -128,8 +126,23 @@ namespace Resource.Controllers
                 }
                 return File(ExportData(jObjects.ToString()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
             }
-            ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + result.Count + "条。注：查询结果最多显示10条");
-            return View(viewModel);
+            else
+            {
+                Stopwatch watcher = new Stopwatch();
+                watcher.Start();
+                viewModel.limit = setting.PurchaseSeachRows;
+                var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
+                viewModel.Medias = result;
+                watcher.Stop();
+                if (!result.Any())
+                {
+                    ModelState.AddModelError("message", "没有查询到相关媒体信息！");
+                    return View(viewModel);
+                }
+                ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + result.Count + "条。注：查询结果最多显示"+ setting.PurchaseSeachRows + "条");
+                return View(viewModel);
+            }
+
 
         }
         /// <summary>
@@ -214,7 +227,7 @@ namespace Resource.Controllers
                 rows = result.Select(d => new
                 {
                     d.Id,
-                    d.Media.MediaName,
+                    MediaName=SetMediaName(d.Media),
                     d.Media.MediaType.TypeName,
                     d.Media.MediaType.CallIndex,
                     d.Media.MediaID,
@@ -228,6 +241,27 @@ namespace Resource.Controllers
 
                 })
             }, JsonRequestBehavior.AllowGet);
+        }
+
+        private string SetMediaName(Media media)
+        {
+            string str = media.MediaName;
+            switch (media.MediaType.CallIndex)
+            {
+                case "website":
+                    str = media.MediaName + " - " + media.Client + " - " + media.Channel;
+                    break;
+                case "weixin":
+                case "zhihu":
+                    str = media.MediaName + " - " + media.MediaID;
+                    break;
+                case "headline":
+                case "webcast":
+                    str = media.Platform + " - " + media.MediaName;
+                    break;
+            }
+
+            return str;
         }
         public ActionResult GetMedias(MediaView viewModel)
         {
@@ -268,7 +302,7 @@ namespace Resource.Controllers
                 return View(viewModel);
             }
             //校验ID不能重复
-            if (IsExist(viewModel,out var msg))
+            if (IsExist(viewModel, out var msg))
             {
                 ModelState.AddModelError("message", msg);
                 return View(viewModel);
@@ -287,7 +321,8 @@ namespace Resource.Controllers
             entity.MediaLink = viewModel.MediaLink;
             entity.MediaLogo = viewModel.MediaLogo;
             entity.MediaQR = viewModel.MediaQR;
-
+            entity.Sex = viewModel.Sex;
+            entity.Platform = viewModel.Platform;
             entity.IsAuthenticate = viewModel.IsAuthenticate;
             entity.IsOriginal = viewModel.IsOriginal;
             entity.IsComment = viewModel.IsComment;
@@ -298,10 +333,16 @@ namespace Resource.Controllers
             entity.Area = viewModel.Area;
             entity.ChannelType = viewModel.ChannelType;
             //entity.LastPushDate = viewModel.LastPushDate;
-            //entity.AuthenticateType = viewModel.AuthenticateType;
-            //entity.TransmitNum = viewModel.TransmitNum;
-            //entity.CommentNum = viewModel.CommentNum;
-            //entity.LikesNum = viewModel.LikesNum;
+            entity.AuthenticateType = viewModel.AuthenticateType;
+            entity.TransmitNum = viewModel.TransmitNum;
+            entity.CommentNum = viewModel.CommentNum;
+            entity.LikesNum = viewModel.LikesNum;
+            entity.Client = viewModel.Client;
+            entity.SEO = viewModel.SEO;
+            entity.Efficiency = viewModel.Efficiency;
+            entity.ResourceType = viewModel.ResourceType;
+            entity.Channel = viewModel.Channel;
+
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
             entity.Status = viewModel.Status;
@@ -346,13 +387,15 @@ namespace Resource.Controllers
             entity.TransactorId = item.TransactorId;
             entity.MediaTypeIndex = item.MediaType.CallIndex;
             entity.MediaTypeName = item.MediaType.TypeName;
+            entity.MediaTypeId = item.MediaType.Id;
 
             entity.MediaName = item.MediaName;
             entity.MediaID = item.MediaID;
             entity.MediaLink = item.MediaLink;
             entity.MediaLogo = item.MediaLogo;
             entity.MediaQR = item.MediaQR;
-
+            entity.Sex = item.Sex;
+            entity.Platform = item.Platform;
             entity.IsAuthenticate = item.IsAuthenticate;
             entity.IsOriginal = item.IsOriginal;
             entity.IsComment = item.IsComment;
@@ -362,10 +405,17 @@ namespace Resource.Controllers
             entity.PublishFrequency = item.PublishFrequency;
             entity.Area = item.Area;
             entity.ChannelType = item.ChannelType;
-            //entity.AuthenticateType = item.AuthenticateType;
-            //entity.TransmitNum = item.TransmitNum;
-            //entity.CommentNum = item.CommentNum;
-            //entity.LikesNum = item.LikesNum;
+            entity.AuthenticateType = item.AuthenticateType;
+            entity.TransmitNum = item.TransmitNum;
+            entity.CommentNum = item.CommentNum;
+            entity.LikesNum = item.LikesNum;
+            entity.Client = item.Client;
+            entity.SEO = item.SEO;
+            entity.Efficiency = item.Efficiency;
+            entity.ResourceType = item.ResourceType;
+            entity.Channel = item.Channel;
+
+
             entity.Content = item.Content;
             entity.Remark = item.Remark;
             entity.Status = item.Status;
@@ -373,6 +423,7 @@ namespace Resource.Controllers
             entity.IsHot = item.IsHot;
             entity.IsSlide = item.IsSlide;
             entity.IsRecommend = item.IsRecommend;
+
             //联系人
             entity.LinkManId = item.LinkManId;
             entity.LinkManName = item.LinkMan.Name;
@@ -400,12 +451,9 @@ namespace Resource.Controllers
                 return View(viewModel);
             }
             //校验ID不能重复
-            var temp = _repository.LoadEntities(d =>
-                d.MediaID.Equals(viewModel.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
-                d.MediaTypeId == viewModel.MediaTypeId && d.Id != viewModel.Id).FirstOrDefault();
-            if (temp != null)
+            if (IsExist(viewModel, out var msg, true))
             {
-                ModelState.AddModelError("message", viewModel.MediaID + "，此微信公众号已存在！");
+                ModelState.AddModelError("message", msg);
                 return View(viewModel);
             }
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
@@ -420,7 +468,13 @@ namespace Resource.Controllers
             entity.MediaLink = viewModel.MediaLink;
             entity.MediaLogo = viewModel.MediaLogo;
             entity.MediaQR = viewModel.MediaQR;
-
+            entity.Client = viewModel.Client;
+            entity.SEO = viewModel.SEO;
+            entity.Efficiency = viewModel.Efficiency;
+            entity.ResourceType = viewModel.ResourceType;
+            entity.Channel = viewModel.Channel;
+            entity.Sex = viewModel.Sex;
+            entity.Platform = viewModel.Platform;
             entity.IsAuthenticate = viewModel.IsAuthenticate;
             entity.IsOriginal = viewModel.IsOriginal;
             entity.IsComment = viewModel.IsComment;
@@ -430,11 +484,11 @@ namespace Resource.Controllers
             entity.PublishFrequency = viewModel.PublishFrequency;
             entity.Area = viewModel.Area;
             entity.ChannelType = viewModel.ChannelType;
-            //entity.LastPushDate = viewModel.LastPushDate;
-            //entity.AuthenticateType = viewModel.AuthenticateType;
-            //entity.TransmitNum = viewModel.TransmitNum;
-            //entity.CommentNum = viewModel.CommentNum;
-            //entity.LikesNum = viewModel.LikesNum;
+            entity.LastPushDate = viewModel.LastPushDate;
+            entity.AuthenticateType = viewModel.AuthenticateType;
+            entity.TransmitNum = viewModel.TransmitNum;
+            entity.CommentNum = viewModel.CommentNum;
+            entity.LikesNum = viewModel.LikesNum;
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
             entity.Status = viewModel.Status;
@@ -494,63 +548,81 @@ namespace Resource.Controllers
 
 
 
-        private bool IsExist(MediaView viewModel, out string msg)
+        private bool IsExist(MediaView viewModel, out string msg, bool isSelf = false)
         {
             msg = string.Empty;
             bool result = false;
-            var mediaType = _mediaTypeRepository.LoadEntities(d => d.Id == viewModel.MediaTypeId).FirstOrDefault();
-            switch (mediaType.CallIndex)
+
+            Expression<Func<Media, bool>> whereLambda;
+            switch (viewModel.MediaTypeIndex)
             {
                 case "weixin":
                 case "zhihu":
-                    var weixin = _repository.LoadEntities(d =>
-                        d.MediaID.Equals(viewModel.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
-                        d.MediaTypeId == viewModel.MediaTypeId).FirstOrDefault();
-                    if (weixin != null)
+
+                    whereLambda = d =>
+                          d.MediaID.Equals(viewModel.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
+                          d.MediaTypeId == viewModel.MediaTypeId;
+                    if (isSelf)
                     {
-                        msg = viewModel.MediaID + "，此媒体账号已存在！";
-                        result = true;
+                        whereLambda = d =>
+                            d.MediaID.Equals(viewModel.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
+                            d.MediaTypeId == viewModel.MediaTypeId && d.Id != viewModel.Id;
                     }
+
                     break;
                 case "headline":
                 case "webcast":
-                    var headline = _repository.LoadEntities(d =>
-                        d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
-                        d.Platform.Equals(viewModel.Platform, StringComparison.CurrentCultureIgnoreCase) &&
-                        d.IsDelete == false &&
-                        d.MediaTypeId == viewModel.MediaTypeId).FirstOrDefault();
-                    if (headline != null)
+                    whereLambda = d =>
+                          d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
+                          d.Platform.Equals(viewModel.Platform, StringComparison.CurrentCultureIgnoreCase) &&
+                          d.IsDelete == false &&
+                          d.MediaTypeId == viewModel.MediaTypeId;
+                    if (isSelf)
                     {
-                        msg = viewModel.Platform + "-" + viewModel.MediaName + "，此媒体账号已存在！";
-                        result = true;
+                        whereLambda = d =>
+                            d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
+                            d.Platform.Equals(viewModel.Platform, StringComparison.CurrentCultureIgnoreCase) &&
+                            d.IsDelete == false &&
+                            d.MediaTypeId == viewModel.MediaTypeId && d.Id != viewModel.Id;
                     }
                     break;
                 case "website":
-                    var website = _repository.LoadEntities(d =>
-                        d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
-                        d.Client.Equals(viewModel.Client, StringComparison.CurrentCultureIgnoreCase) &&
-                        d.Channel.Equals(viewModel.Channel, StringComparison.CurrentCultureIgnoreCase) &&
-                        d.IsDelete == false &&
-                        d.MediaTypeId == viewModel.MediaTypeId).FirstOrDefault();
-                    if (website != null)
+                    whereLambda = d =>
+                          d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
+                          d.Client.Equals(viewModel.Client, StringComparison.CurrentCultureIgnoreCase) &&
+                          d.Channel.Equals(viewModel.Channel, StringComparison.CurrentCultureIgnoreCase) &&
+                          d.IsDelete == false &&
+                          d.MediaTypeId == viewModel.MediaTypeId;
+                    if (isSelf)
                     {
-                        msg = viewModel.MediaName + "-" + viewModel.Client + "" + viewModel.Channel + "，此媒体账号已存在！";
-                        result = true;
+                        whereLambda = d =>
+                            d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
+                            d.Client.Equals(viewModel.Client, StringComparison.CurrentCultureIgnoreCase) &&
+                            d.Channel.Equals(viewModel.Channel, StringComparison.CurrentCultureIgnoreCase) &&
+                            d.IsDelete == false &&
+                            d.MediaTypeId == viewModel.MediaTypeId && d.Id != viewModel.Id;
                     }
                     break;
                 default:
-                    var media = _repository.LoadEntities(d =>
-                        d.MediaID.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
-                        d.MediaTypeId == viewModel.MediaTypeId).FirstOrDefault();
-                    if (media != null)
+                    whereLambda = d =>
+                          d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
+                          d.MediaTypeId == viewModel.MediaTypeId;
+                    if (isSelf)
                     {
-                        msg = viewModel.MediaName + "，此媒体账号已存在！";
-                        result = true;
+                        whereLambda = d =>
+                            d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
+                            d.MediaTypeId == viewModel.MediaTypeId && d.Id != viewModel.Id;
                     }
+
                     break;
             }
 
-
+            var media = _repository.LoadEntities(whereLambda).FirstOrDefault();
+            if (media != null)
+            {
+                msg = viewModel.MediaName + "，此媒体账号已存在！";
+                result = true;
+            }
             return result;
         }
     }

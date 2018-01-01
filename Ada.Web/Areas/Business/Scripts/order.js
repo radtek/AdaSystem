@@ -303,22 +303,22 @@ function showMedia(url) {
                             field: 'MediaName',
                             title: '媒体信息',
                             align: "center",
-                            formatter: function (v, r, i) {
-                                var str = v;
-                                switch (key) {
-                                    case "website":
-                                        str = v + "-" + r.Client + "-" + r.Channel;
-                                        break;
-                                    case "weixin":
-                                        str = v + " [ " + r.MediaID + " ]";
-                                        break;
-                                    case "headline":
-                                    case "webcast":
-                                        str = "[ " + r.Platform + " ] " + v;
-                                        break;
-                                }
-                                return str;
-                            }
+                            //formatter: function (v, r, i) {
+                            //    var str = v;
+                            //    switch (key) {
+                            //        case "website":
+                            //            str = v + "-" + r.Client + "-" + r.Channel;
+                            //            break;
+                            //        case "weixin":
+                            //            str = v + " [ " + r.MediaID + " ]";
+                            //            break;
+                            //        case "headline":
+                            //        case "webcast":
+                            //            str = "[ " + r.Platform + " ] " + v;
+                            //            break;
+                            //    }
+                            //    return str;
+                            //}
                         },
                         //{
                         //    field: 'MediaID',

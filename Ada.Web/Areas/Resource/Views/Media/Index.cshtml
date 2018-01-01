@@ -1,5 +1,6 @@
 ﻿@using System.Web.Optimization
 @using Ada.Core
+@using Ada.Core.Domain
 @using Ada.Core.Domain.Resource
 @using Ada.Core.Infrastructure
 @using Ada.Core.ViewModel.Resource
@@ -36,117 +37,130 @@
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
     <div class="ibox">
         <div class="ibox-content m-b-sm border-bottom">
-            <div class="row">
+            
                 @using (Html.BeginForm())
                 {
                     @Html.AntiForgeryToken()
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.MediaTypeId, Html.DisplayNameFor(d => d.MediaTypeId).ToString(), new { @class = "control-label" })
-                            <select name="MediaTypeId" class="form-control" id="MediaTypeId">
-                                <option value="">请选择</option>
-                                @foreach (var item in mediaTypes)
-                                {
-                                    if (item.Id == Model.MediaTypeId)
-                                    {
-                                        <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))' selected="selected">@item.TypeName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))'>@item.TypeName</option>
-                                    }
 
-                                }
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
-                            @Html.DropDownListFor(d => d.AdPositionName, adaPostions, "不限", new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart).ToString(), new { @class = "control-label" })
-                            <div class="input-daterange input-group">
-                                @Html.TextBoxFor(d => d.PriceStart, new { @class = "form-control" })
-                                <span class="input-group-addon">至</span>
-                                @Html.TextBoxFor(d => d.PriceEnd, new { @class = "form-control" })
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName).ToString(), new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "control-label" })
-                            <div class="row">
-                                <div class="col-md-12">
-                                    @foreach (var item in tags)
-                                    {
-                                        var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
-                                        <div class="checkbox checkbox-success checkbox-inline">
-                                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
-                                            <label for="@item.Id">@item.TagName</label>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
 
-                        </div>
-                    </div>
 
-                    @*<div class="col-sm-3">
+
+
+
+                    <div class="row">
+                        <div class="col-sm-3">
                             <div class="form-group">
-                                @Html.LabelFor(d => d.limit, "导出记录数", new { @class = "control-label" })
-                                @Html.TextBoxFor(d => d.limit, new { @class = "form-control" })
+                                @Html.LabelFor(d => d.MediaTypeId, Html.DisplayNameFor(d => d.MediaTypeId).ToString(), new { @class = "control-label" })
+                                <select name="MediaTypeId" class="form-control" id="MediaTypeId">
+                                    <option value="">请选择</option>
+                                    @foreach (var item in mediaTypes)
+                                    {
+                                        if (item.Id == Model.MediaTypeId)
+                                        {
+                                            <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))' selected="selected">@item.TypeName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))'>@item.TypeName</option>
+                                        }
+
+                                    }
+                                </select>
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
-                                @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor).ToString(), new { @class = "control-label" })
-                                @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control" })
+                                @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
+                                @Html.DropDownListFor(d => d.AdPositionName, adaPostions, "不限", new { @class = "form-control" })
                             </div>
-                        </div>*@
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.MediaNames, Html.DisplayNameFor(d => d.MediaNames).ToString(), new { @class = "control-label" })
-                            @Html.TextAreaFor(d => d.MediaNames, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart).ToString(), new { @class = "control-label" })
+                                <div class="input-daterange input-group">
+                                    @Html.TextBoxFor(d => d.PriceStart, new { @class = "form-control" })
+                                    <span class="input-group-addon">至</span>
+                                    @Html.TextBoxFor(d => d.PriceEnd, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName).ToString(), new { @class = "control-label" })
+                                @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control" })
+                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.MediaIDs, Html.DisplayNameFor(d => d.MediaIDs).ToString(), new { @class = "control-label" })
-                            @Html.TextAreaFor(d => d.MediaIDs, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
+
+                    <div class="panel-group" id="accordion">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse">更多条件</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "control-label" })
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        @foreach (var item in tags)
+                                                        {
+                                                            var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
+                                                            <div class="checkbox checkbox-success checkbox-inline">
+                                                                <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
+                                                                <label for="@item.Id">@item.TagName</label>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(d => d.MediaNames, Html.DisplayNameFor(d => d.MediaNames).ToString(), new { @class = "control-label" })
+                                                @Html.TextAreaFor(d => d.MediaNames, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(d => d.MediaIDs, Html.DisplayNameFor(d => d.MediaIDs).ToString(), new { @class = "control-label" })
+                                                @Html.TextAreaFor(d => d.MediaIDs, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <button class="btn btn-success btn-sm" type="submit"><i class="fa fa-search"></i> 查询数据</button>
+
+                                <button class="btn btn-primary btn-sm" type="submit" name="submit.Export" value="export"><i class="fa fa-download"></i> 导出数据</button>
+                                <button class="btn btn-white btn-sm" type="button" data-toggle="modal" data-target="#uploadModal"><i class="fa fa-upload"></i> 更新导入</button>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="alert alert-warning">
+                                <strong>注意事项：</strong>导出导入的文件后缀名为[.xlsx]，导入资源的文件一定为导出资源的文件，其他文件排版格式会出错。
+                            </div>
+
                         </div>
                     </div>
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <button class="btn btn-success btn-sm" type="submit"><i class="fa fa-search"></i> 查询数据</button>
 
-                            <button class="btn btn-primary btn-sm" type="submit" name="submit.Export" value="export"><i class="fa fa-download"></i> 导出数据</button>
-                            <button class="btn btn-white btn-sm" type="button" data-toggle="modal" data-target="#uploadModal"><i class="fa fa-upload"></i> 更新导入</button>
-                        </div>
-
-                    </div>
-
-                    <div class="col-sm-12">
-                        <div class="alert alert-warning">
-                            <strong>注意事项：</strong>导出导入的文件后缀名为[.xlsx]，导入资源的文件一定为导出资源的文件，其他文件排版格式会出错。
-                        </div>
-
-                    </div>
                 }
 
             </div>
 
         </div>
-    </div>
+   
 
 
     <div class="row">
@@ -169,8 +183,10 @@
                         <table class="table">
                             <thead>
                                 <tr>
+                                    <th data-breakpoints="xs sm">媒体状态</th>
                                     <th>媒体类型</th>
                                     <th>媒体名称</th>
+
                                     <th data-breakpoints="xs sm">媒体分类</th>
                                     <th data-breakpoints="xs sm">媒体组</th>
                                     <th data-breakpoints="xs sm">粉丝数</th>
@@ -185,6 +201,16 @@
                                 @foreach (var item in Model.Medias)
                                 {
                                     <tr>
+                                        <td>
+                                            @if (item.Status == Consts.StateNormal)
+                                            {
+                                                <span class='label label-primary'>正常</span>
+                                            }
+                                            else
+                                            {
+                                                <span class='label'>关闭</span>
+                                            }
+                                        </td>
                                         <td>@item.MediaType.TypeName</td>
                                         @if (item.MediaType.CallIndex == "website")
                                         {
@@ -205,6 +231,7 @@
                                         {
                                             <td>@item.MediaName</td>
                                         }
+
                                         <td>@string.Join(",", item.MediaTags.Select(d => d.TagName))</td>
                                         <td>
                                             @foreach (var group in item.MediaGroups)
@@ -224,7 +251,7 @@
                                         <td>@item.Remark</td>
                                         <td>@item.Transactor</td>
                                         <td>
-                                            <a class='btn btn-success btn-sm' href='@Url.Action("Update",new{id=item.Id})'><i class='fa fa-pencil'></i> 编辑</a>
+                                            <a class='btn btn-success btn-sm' href='@Url.Action("Update", new {id = item.Id})'><i class='fa fa-pencil'></i> 编辑</a>
                                             <a class='btn btn-danger btn-sm' href='javascript:;' onclick="cancle('@item.Id');"><i class='fa fa-trash-o'></i> 删除</a>
                                         </td>
                                     </tr>

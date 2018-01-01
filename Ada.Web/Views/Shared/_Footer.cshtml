@@ -1,8 +1,14 @@
-﻿<div class="footer">
+﻿@using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Setting
+@using Ada.Services.Setting
+@{
+    var setting = EngineContext.Current.Resolve<ISettingService>().GetSetting<Site>();
+}
+<div class="footer">
     <div class="pull-right">
         版本号：V 1.0
     </div>
     <div>
-        <strong>版权：</strong> 江西微广联合文化传播有限公司 &copy; @DateTime.Now.Year
+        <strong>版权：</strong> @setting.CompanyName &copy; @DateTime.Now.Year
     </div>
 </div>

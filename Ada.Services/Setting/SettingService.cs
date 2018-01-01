@@ -39,9 +39,9 @@ namespace Ada.Services.Setting
             }
             _dbContext.SaveChanges();
         }
-        public T GetSetting<T>(string settingName) where T : class, new()
+        public T GetSetting<T>() where T : class, new()
         {
-            var setting= _repository.LoadEntities(d=>d.SettingName.Equals(settingName,StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            var setting= _repository.LoadEntities(d=>d.SettingName.Equals(typeof(T).Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             return setting!=null ? JsonConvert.DeserializeObject<T>(setting.Content) : new T();
         }
         

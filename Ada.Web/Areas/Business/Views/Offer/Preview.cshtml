@@ -1,9 +1,13 @@
 ﻿@using System.Web.Optimization
+@using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Setting
+@using Ada.Services.Setting
 @model Ada.Core.Domain.Business.BusinessOffer
 @{
     //Layout = "~/Views/Shared/_Layout_Home.cshtml";
     ViewBag.Title = "报价预览";
     List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "销售报价", Value = Url.Action("Index") } };
+    var setting = EngineContext.Current.Resolve<ISettingService>().GetSetting<Site>();
 }
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-8">
@@ -41,10 +45,10 @@
                     <div class="col-sm-6">
                         <h4>报价公司:</h4>
                         <address>
-                            <strong>江西微广联合文化传播有限公司</strong><br>
+                            <strong>@setting.CompanyName</strong><br>
                             @Model.Transactor<br>
-                            江西省吉安市吉安县亿都家具城30幢3楼<br>
-                            <abbr title="Phone">联系电话:</abbr> 0796-88888888
+                            @setting.CompanyAddress<br>
+                            <abbr title="Phone">联系电话:</abbr> @setting.CompanyPhone
                         </address>
                     </div>
 

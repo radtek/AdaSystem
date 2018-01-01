@@ -10,6 +10,10 @@
     {
         @Html.AntiForgeryToken()
         @Html.Partial(Model.MediaTypeIndex, Model)
+        @Html.HiddenFor(d => d.Id)
+        @Html.HiddenFor(d => d.MediaTypeId)
+        @Html.HiddenFor(d => d.MediaTypeIndex)
+        @Html.HiddenFor(d => d.MediaTypeName)
     }
 </div>
 

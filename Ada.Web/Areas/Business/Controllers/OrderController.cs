@@ -69,7 +69,7 @@ namespace Business.Controllers
                     Id = d.Id,
                     OrderNum = d.OrderNum,
                     LinkManName = d.LinkManName,
-                    TotalMoney = d.TotalMoney,
+                    TotalMoney = d.BusinessOrderDetails.Sum(o=>o.Money),
                     Transactor = d.Transactor,
                     Status = d.Status ?? Consts.StateLock,
                     OrderDate = d.OrderDate,
@@ -271,11 +271,11 @@ namespace Business.Controllers
             }
 
             var orderDetails = JsonConvert.DeserializeObject<List<BusinessOrderDetail>>(viewModel.OrderDetails);
-            if (orderDetails.Count <= 0)
-            {
-                ModelState.AddModelError("message", "请录入订单明细！");
-                return View(viewModel);
-            }
+            //if (orderDetails.Count <= 0)
+            //{
+            //    ModelState.AddModelError("message", "请录入订单明细！");
+            //    return View(viewModel);
+            //}
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
             entity.ModifiedById = CurrentManager.Id;
             entity.ModifiedBy = CurrentManager.UserName;
@@ -374,7 +374,7 @@ namespace Business.Controllers
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            if (entity.Status == Consts.StateLock)
+            if (entity.BusinessOrderDetails.Count==0)
             {
                 entity.DeletedBy = CurrentManager.UserName;
                 entity.DeletedById = CurrentManager.Id;

@@ -9,8 +9,10 @@ using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Resource;
+using Ada.Core.ViewModel.Setting;
 using Ada.Framework.Filter;
 using Ada.Services.Resource;
+using Ada.Services.Setting;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Newtonsoft.Json;
@@ -22,40 +24,32 @@ namespace Business.Controllers
     public class MediasController : BaseController
     {
         private readonly IMediaService _mediaService;
-        public MediasController(IMediaService mediaService)
+        private readonly ISettingService _settingService;
+        public MediasController(IMediaService mediaService,ISettingService settingService)
         {
             _mediaService = mediaService;
+            _settingService = settingService;
         }
         public ActionResult Index()
         {
-            ViewBag.ViewModel = new MediaView();
-            return View();
+            MediaView media = new MediaView();
+            return View(media);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Index(MediaView viewModel)
         {
             var export = Request.Form["Submit.Export"];
-            ViewBag.ViewModel = viewModel;
             if (string.IsNullOrWhiteSpace(viewModel.MediaTypeId))
             {
                 ModelState.AddModelError("message", "请先选择媒体类型！");
-                return View();
+                return View(viewModel);
             }
-            Stopwatch watcher = new Stopwatch();
-            watcher.Start();
-            viewModel.Status = Consts.StateNormal;
-            viewModel.limit = 100;
-            var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
-            watcher.Stop();
-            if (!result.Any())
-            {
-                ModelState.AddModelError("message", "没有查询到相关媒体信息！");
-                return View();
-            }
-
+            var setting = _settingService.GetSetting<WeiGuang>();
             if (export == "export")
             {
+                viewModel.limit = setting.BusinessExportRows;
+                var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
                 //找到没有的
                 if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
                 {
@@ -128,7 +122,6 @@ namespace Business.Controllers
                     {
                         jo.Add("收录效果", media.SEO);
                     }
-                
                     foreach (var mediaMediaPrice in media.MediaPrices)
                     {
                         jo.Add(mediaMediaPrice.AdPositionName, mediaMediaPrice.PurchasePrice);
@@ -143,10 +136,23 @@ namespace Business.Controllers
                 }
                 return File(ExportData(jObjects.ToString()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
             }
-            ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + result.Count + "条。注：查询结果最多显示100条");
-            return View(result);
-
-
+            else
+            {
+                Stopwatch watcher = new Stopwatch();
+                watcher.Start();
+                viewModel.Status = Consts.StateNormal;
+                viewModel.limit = setting.BusinessSeachRows;
+                var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
+                viewModel.Medias = result;
+                watcher.Stop();
+                if (!result.Any())
+                {
+                    ModelState.AddModelError("message", "没有查询到相关媒体信息！");
+                    return View(viewModel);
+                }
+                ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + result.Count + "条。注：查询结果最多显示" + setting.BusinessSeachRows + "条");
+                return View(viewModel);
+            }
         }
 
     }
