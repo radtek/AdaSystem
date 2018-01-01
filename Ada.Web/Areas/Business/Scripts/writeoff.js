@@ -276,7 +276,7 @@ function initOrder() {
         mobileResponsive: true,
         queryParams: function (parameters) {
             parameters.OrderNum = $("#OrderNum").val();
-            //parameters.VerificationStatus = 0;
+            parameters.VerificationStatus = 0;
             parameters.Status = 1;
             return parameters;
         },

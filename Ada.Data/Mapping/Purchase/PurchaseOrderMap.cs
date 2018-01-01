@@ -18,7 +18,7 @@ namespace Ada.Data.Mapping.Purchase
             //配置字段
             Property(s => s.OrderNum).IsRequired().HasMaxLength(32);
             Property(s => s.BusinessOrderId).HasMaxLength(32);
-            Property(s => s.TotalMoney).IsRequired();
+            Property(s => s.TotalMoney);
             Property(s => s.TotalDiscountMoney);
             Property(s => s.TotalPurchaseMoney);
             Property(s => s.TotalTaxMoney);

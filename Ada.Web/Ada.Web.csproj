@@ -1677,6 +1677,7 @@
     <Content Include="Scripts\plugins\sparkline\jquery.sparkline.min.js" />
     <Content Include="Scripts\plugins\steps\jquery.steps.min.js" />
     <Content Include="Scripts\plugins\summernote\summernote.min.js" />
+    <Content Include="Scripts\plugins\sweetalert\sweetalert-dev.js" />
     <Content Include="Scripts\plugins\sweetalert\sweetalert.min.js" />
     <Content Include="Scripts\plugins\switchery\switchery.js" />
     <Content Include="Scripts\plugins\tinycon\tinycon.min.js" />

@@ -320,7 +320,7 @@ namespace Ada.Web
 
             // Sweet alert
             bundles.Add(new ScriptBundle("~/plugins/sweetAlert").Include(
-                      "~/Scripts/plugins/sweetalert/sweetalert.min.js"));
+                      "~/Scripts/plugins/sweetalert/sweetalert-dev.js"));
 
             // Footable Styless
             bundles.Add(new StyleBundle("~/plugins/footableStyles").Include(

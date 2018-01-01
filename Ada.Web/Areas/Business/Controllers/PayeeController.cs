@@ -53,7 +53,7 @@ namespace Business.Controllers
                     Money = d.Money,
                     ClaimDate = d.ClaimDate,
                     VerificationStatus = d.VerificationStatus,
-                    VerificationMoney = d.Money - d.BusinessPayments.Where(p => p.AuditStatus == Consts.StateNormal).Sum(p => p.PayMoney),
+                    VerificationMoney = d.VerificationStatus==Consts.StateNormal?0: d.Money - d.BusinessPayments.Where(p => p.AuditStatus == Consts.StateNormal).Sum(p => p.PayMoney),
                     PaymentCount = d.BusinessPayments.Count
                 })
             }, JsonRequestBehavior.AllowGet);

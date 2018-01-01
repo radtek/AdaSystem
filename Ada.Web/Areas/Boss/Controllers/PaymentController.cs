@@ -95,6 +95,7 @@ namespace Boss.Controllers
             //通过就增加客户账户信息
             if (entity.AuditStatus == Consts.StateNormal)
             {
+                
                 //判断是否增加账户
                 var account = entity.BusinessPayee.LinkMan.PayAccounts.FirstOrDefault(d =>
                     d.AccountName.Equals(viewModel.AccountName, StringComparison.CurrentCultureIgnoreCase) &&
@@ -115,6 +116,7 @@ namespace Boss.Controllers
             }
             else
             {
+               
                 //判断是否已经付款了
                 var bill = _billPaymentService.GetByRequestNum(entity.ApplicationNum);
                 if (bill != null)

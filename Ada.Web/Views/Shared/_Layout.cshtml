@@ -26,6 +26,7 @@
     @Styles.Render("~/plugins/imagecropperStyles")
     @if (IsSectionDefined("Styles"))
     {@RenderSection("Styles", required: false)}
+
 </head>
 <body>
 
@@ -72,6 +73,7 @@
     @Scripts.Render("~/plugins/imagecropper")
     @Scripts.Render("~/plugins/moment")
     @Scripts.Render("~/bundles/base")
+
     <!-- Handler for local scripts -->
     @RenderSection("Scripts", required: false)
     <script>
@@ -86,12 +88,15 @@
                     toastr.success('@TempData["Msg"]');
                 </text>
             }
+/**/
             @if (TempData["Warning"]!= null){
                 <text>
                     toastr.options.positionClass = "toast-bottom-right";
                     toastr.warning('@TempData["Warning"]');
                 </text>
             }
+/**/
+/**/
           initChangePwd("@Url.Action("ChangePassword", "Manager",new{area="Admin"})",$('@Html.AntiForgeryToken()').val());
           initCropper("@Url.Action("UploadImage","Manager",new{area="Admin"})");
         });

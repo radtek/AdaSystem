@@ -431,6 +431,9 @@ function showOrder() {
                             parameters.IsPayment = false;
                             return parameters;
                         },
+                        formatSearch: function () {
+                            return "媒体名称";
+                        },
                         columns: [
                             {
                                 field: 'state',

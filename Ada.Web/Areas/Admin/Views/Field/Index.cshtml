@@ -212,7 +212,8 @@ if (list.Count > 0)
                 confirmButtonColor: "#DD6B55",
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
-                closeOnConfirm: false
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true
             }, function () {
                 var magicToken = $("input[name=__RequestVerificationToken]").first();
                 if (!magicToken) { return; }
@@ -350,7 +351,8 @@ if (list.Count > 0)
                         confirmButtonColor: "#DD6B55",
                         confirmButtonText: "确定",
                         cancelButtonText: "取消",
-                        closeOnConfirm: false
+                        closeOnConfirm: false,
+                        showLoaderOnConfirm: true
                     }, function () {
                         $.ajax({
                             type: "post",

@@ -85,11 +85,14 @@
     <script src="@Url.Content("~/Areas/Business/Scripts/order.js")"></script>
     <script>
         function transOrder() {
+            
             var arrselections = $table.bootstrapTable('getSelections');
             if (arrselections.length <= 0) {
                 swal("操作提醒", "请选择有效数据", "warning");
                 return;
             }
+
+            
             swal({
                 title: "您确定吗?",
                 text: "确认要转成采购订单吗?",
@@ -98,7 +101,8 @@
                 confirmButtonColor: "#DD6B55",
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
-                closeOnConfirm: false
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true
             }, function () {
                 $.ajax({
                     type: "post",

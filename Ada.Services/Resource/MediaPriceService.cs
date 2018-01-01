@@ -19,7 +19,7 @@ namespace Ada.Services.Resource
         }
         public IQueryable<MediaPrice> LoadEntitiesFilter(MediaView viewModel)
         {
-            var allList = _repository.LoadEntities(d => d.IsDelete == false);
+            var allList = _repository.LoadEntities(d => d.IsDelete == false&&d.Media.IsDelete==false);
             if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeIndex))
             {
                 allList = allList.Where(d => d.Media.MediaType.CallIndex == viewModel.MediaTypeIndex);
