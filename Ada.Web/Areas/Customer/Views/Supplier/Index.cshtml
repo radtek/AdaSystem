@@ -24,14 +24,53 @@
     <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
         <i class="fa fa-plus"></i> 新增
     </a>
+    <button class="btn btn-primary btn-outline" type="button" data-toggle="modal" data-target="#uploadModal">
+        <i class="fa fa-upload"></i> 导入
+    </button>
+</div>
+
+<div class="modal inmodal" id="uploadModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">导入供应商信息</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>导入文件</label>
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput">
+                            <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                            <span class="fileinput-filename"></span>
+                        </div>
+                        <span class="input-group-addon btn btn-default btn-file">
+                            <span class="fileinput-new">选择</span>
+                            <span class="fileinput-exists">更换</span>
+                            <input type="file" name="upfile" id="upfile" />
+                        </span>
+                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">移除</a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="ladda-button btn btn-primary" onclick="upLoadFile();" data-style="zoom-in">导入</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/jasnyBootstrapStyles")
+    @Styles.Render("~/plugins/laddaStyles")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/jasnyBootstrap")
+    @Scripts.Render("~/plugins/ladda")
 <script type="text/javascript">
 
         $(document).ready(function () {
@@ -40,7 +79,13 @@
             ////2.初始化Button的点击事件
             //var oButtonInit = new ButtonInit();
             //oButtonInit.Init();
+            $('#uploadModal').on('shown.bs.modal',
+                function() {
 
+                }).on('hidden.bs.modal',
+                function() {
+                    $('.fileinput').fileinput("clear");
+                });
 
         });
         var TableInit = function() {
@@ -170,7 +215,67 @@
                 });
             });
         }
-
+        function checkFileExt(filename) {
+            var flag = false; //状态
+            var arr = ["xlsx"];
+            //取出上传文件的扩展名
+            var index = filename.lastIndexOf(".");
+            var ext = filename.substr(index + 1);
+            //循环比较
+            for (var i = 0; i < arr.length; i++) {
+                if (ext == arr[i]) {
+                    flag = true; //一旦找到合适的，立即退出循环
+                    break;
+                }
+            }
+            return flag;
+        }
+        function upLoadFile() {
+            var fileObj = document.getElementById("upfile").files[0]; // js 获取文件对象
+            if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
+                swal("操作失败", "请选择文件", "warning");
+                return;
+            }
+            if (!checkFileExt(fileObj.name)) {
+                swal("操作失败", "只支持xlsx后缀文件", "warning");
+                return;
+            }
+            var formFile = new FormData();
+            formFile.append("upfile", fileObj); //加入文件对象
+            var data = formFile;
+            var subBtn = $('.ladda-button').ladda();
+            $.ajax({
+                url: "@Url.Action("Import")",
+                data: data,
+                type: "Post",
+                dataType: "json",
+                cache: false, //上传文件无需缓存
+                processData: false, //用于对data参数进行序列化处理 这里必须false
+                contentType: false, //必须
+                success: function(result) {
+                    if (result.State == 1) {
+                        swal({
+                            title: "操作成功",
+                            text: data.Msg,
+                            timer: 2000,
+                            type: "success",
+                            showConfirmButton: false
+                        });
+                    } else {
+                        swal("操作失败", result.Msg, "error");
+                    }
+                },
+                error: function() {
+                    swal("操作失败", "系统错误", "error");
+                },
+                beforeSend: function() {
+                    subBtn.ladda('start');
+                },
+                complete: function() {
+                    subBtn.ladda('stop');
+                }
+            });
+        }
 </script>
 }
 

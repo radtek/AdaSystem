@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection;
-using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain.Customer;
@@ -21,6 +17,7 @@ namespace Customer.Controllers
     {
         private readonly ILinkManService _linkManService;
         private readonly IRepository<LinkMan> _repository;
+
         public SupplierLinkManController(ILinkManService linkManService,
             IRepository<LinkMan> repository
         )
@@ -173,16 +170,6 @@ namespace Customer.Controllers
             return File(ExportData(json), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
         }
 
-        //private string GetTypeName(Type type, string propertyName)
-        //{
-            
-        //    var property = type.GetProperty(propertyName);
-        //    if (property==null)
-        //    {
-        //        return propertyName;
-        //    }
-        //    var attribute = property.GetCustomAttribute<DisplayAttribute>();
-        //    return attribute.Name;
-        //}
+       
     }
 }
