@@ -78,30 +78,40 @@ namespace Business.Controllers
             {
                 return Json(new { State = 0, Msg = "领款金额超出可领金额" });
             }
-            //校验账号
-            var linkman = _linkManRepository.LoadEntities(d => d.Id == viewModel.LinkManId).FirstOrDefault();
-            if (linkman.PayAccounts.Count > 0)
-            {
-                var payAccount = linkman.PayAccounts
-                    .FirstOrDefault(d => d.AccountName.Equals(receivables.AccountName, StringComparison.CurrentCultureIgnoreCase));
-                if (payAccount == null)
-                {
-                    return Json(new { State = 0, Msg = "客户：[" + viewModel.LinkManName + "]的付款账户中不存在此账户：" + receivables.AccountName + "，请联系BOSS处理！" });
-                }
-            }
-            else
-            {
-                //如果没账号，就新增
-                PayAccount payAccount = new PayAccount();
-                payAccount.Id = IdBuilder.CreateIdNum();
-                payAccount.AccountType = receivables.AccountBank;
-                payAccount.AccountName = receivables.AccountName;
-                payAccount.AccountNum = receivables.AccountNum;
-                payAccount.AddedBy = CurrentManager.UserName;
-                payAccount.AddedById = CurrentManager.Id;
-                payAccount.AddedDate = DateTime.Now;
-                linkman.PayAccounts.Add(payAccount);
-            }
+            ////校验账号
+            //var linkman = _linkManRepository.LoadEntities(d => d.Id == viewModel.LinkManId).FirstOrDefault();
+            //if (linkman.PayAccounts.Count > 0)
+            //{
+            //    var payAccount = linkman.PayAccounts
+            //        .FirstOrDefault(d => d.AccountName.Equals(receivables.AccountName, StringComparison.CurrentCultureIgnoreCase));
+            //    if (payAccount == null)
+            //    {
+            //        //如果没账号，就新增
+            //        payAccount = new PayAccount();
+            //        payAccount.Id = IdBuilder.CreateIdNum();
+            //        payAccount.AccountType = receivables.AccountBank;
+            //        payAccount.AccountName = receivables.AccountName;
+            //        payAccount.AccountNum = receivables.AccountNum;
+            //        payAccount.AddedBy = CurrentManager.UserName;
+            //        payAccount.AddedById = CurrentManager.Id;
+            //        payAccount.AddedDate = DateTime.Now;
+            //        linkman.PayAccounts.Add(payAccount);
+            //        //return Json(new { State = 0, Msg = "客户：[" + viewModel.LinkManName + "]的付款账户中不存在此账户：" + receivables.AccountName + "，请联系BOSS处理！" });
+            //    }
+            //}
+            //else
+            //{
+            //    //如果没账号，就新增
+            //    PayAccount payAccount = new PayAccount();
+            //    payAccount.Id = IdBuilder.CreateIdNum();
+            //    payAccount.AccountType = receivables.AccountBank;
+            //    payAccount.AccountName = receivables.AccountName;
+            //    payAccount.AccountNum = receivables.AccountNum;
+            //    payAccount.AddedBy = CurrentManager.UserName;
+            //    payAccount.AddedById = CurrentManager.Id;
+            //    payAccount.AddedDate = DateTime.Now;
+            //    linkman.PayAccounts.Add(payAccount);
+            //}
             BusinessPayee entity = new BusinessPayee();
             entity.Id = IdBuilder.CreateIdNum();
             entity.ClaimDate = DateTime.Now;

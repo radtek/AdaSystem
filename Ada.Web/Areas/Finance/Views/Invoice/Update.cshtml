@@ -18,21 +18,19 @@
                     <p class="bg-danger">@Html.ValidationMessage("message") </p>
                     <ul class="nav nav-tabs">
                         <li class="active"><a data-toggle="tab" href="#tab-1"> 开票信息</a></li>
-                        <li class=""><a data-toggle="tab" href="#tab-2"> 处理发票</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-2"> 订单明细</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-3"> 处理发票</a></li>
                     </ul>
                     <div class="tab-content">
                         <div id="tab-1" class="tab-pane active">
                             <div class="panel-body">
-                                
                                 <div class="form-horizontal">
-
                                     <div class="form-group">
                                         @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
                                             @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control", @readonly = "readonly" })
                                         </div>
                                     </div>
-
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
                                         @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName).ToString(), new { @class = "col-sm-2 control-label" })
@@ -112,10 +110,55 @@
                                     </div>
                                 </div>
 
-                                
+
                             </div>
                         </div>
                         <div id="tab-2" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    项目摘要
+                                                </th>
+                                                <th>
+                                                    销售金额
+                                                </th>
+                                                <th>
+                                                    税率%
+                                                </th>
+                                                <th>
+                                                    税额
+                                                </th>
+                                                <th>
+                                                    经办业务
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.BusinessInvoiceDetails != null)
+                                            {
+                                                foreach (var item in Model.BusinessInvoiceDetails)
+                                                {
+                                                    <tr>
+                                                        <td>@item.BusinessOrder.Remark</td>
+                                                        <td>@item.BusinessOrder.BusinessOrderDetails.Sum(d => d.Money)</td>
+                                                        <td>@item.BusinessOrder.Tax</td>
+                                                        <td>@item.BusinessOrder.BusinessOrderDetails.Sum(d => d.TaxMoney)</td>
+                                                        <td>@item.BusinessOrder.Transactor</td>
+                                                    </tr>
+                                                }
+
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div id="tab-3" class="tab-pane">
                             <div class="panel-body">
                                 <div class="form-horizontal">
                                     <div class="form-group">
@@ -174,13 +217,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="hr-line-dashed"></div>
-                                    <div class="form-group">
-                                        @Html.LabelFor(d => d.ReceivableNum, Html.DisplayNameFor(d => d.ReceivableNum).ToString(), new { @class = "col-sm-2 control-label" })
-                                        <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.ReceivableNum, new { @class = "form-control" })
-                                        </div>
-                                    </div>
+                                    @*<div class="hr-line-dashed"></div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(d => d.ReceivableNum, Html.DisplayNameFor(d => d.ReceivableNum).ToString(), new { @class = "col-sm-2 control-label" })
+                                            <div class="col-sm-10">
+                                                @Html.TextBoxFor(d => d.ReceivableNum, new { @class = "form-control" })
+                                            </div>
+                                        </div>*@
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
                                         <div class="col-sm-4 col-sm-offset-2">
@@ -190,7 +233,7 @@
                                     </div>
                                     @Html.HiddenFor(d => d.Id)
                                 </div>
-                                
+
 
                             </div>
                         </div>
@@ -208,7 +251,7 @@
 @section Scripts {
     @Scripts.Render("~/plugins/dateTimePickerScript")
     <script>
-        $(function() {
+        $(function () {
             $('.input-group.date').datetimepicker({
                 language: 'zh-CN',
                 weekStart: 1,

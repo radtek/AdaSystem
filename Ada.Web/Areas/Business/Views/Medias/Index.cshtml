@@ -41,46 +41,65 @@
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.MediaTypeId, Html.DisplayNameFor(d => d.MediaTypeId).ToString(), new { @class = "control-label" })
-                        <select name="MediaTypeId" class="form-control" id="MediaTypeId">
-                            <option value="">请选择</option>
-                            @foreach (var item in mediaTypes)
-                            {
-                                if (item.Id == Model.MediaTypeId)
-                                {
-                                    <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))' selected="selected">@item.TypeName</option>
-                                }
-                                else
-                                {
-                                    <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))'>@item.TypeName</option>
-                                }
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.LabelFor(d => d.MediaTypeId, Html.DisplayNameFor(d => d.MediaTypeId).ToString(), new { @class = "control-label" })
+                    <select name="MediaTypeId" class="form-control" id="MediaTypeId">
+                        <option value="">请选择</option>
+                        @foreach (var item in mediaTypes)
+                {
+                    if (item.Id == Model.MediaTypeId)
+                    {
+                        <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))' selected="selected">@item.TypeName</option>
+            }
+            else
+            {
+                <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))'>@item.TypeName</option>
+    }
 
-                            }
-                        </select>
+}
+                    </select>
 
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
-                        @Html.DropDownListFor(d => d.AdPositionName, adaPostions, "不限", new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart).ToString(), new { @class = "control-label" })
-                        <div class="input-daterange input-group">
-                            @Html.TextBoxFor(d => d.PriceStart, new { @class = "form-control" })
-                            <span class="input-group-addon">至</span>
-                            @Html.TextBoxFor(d => d.PriceEnd, new { @class = "form-control" })
-                        </div>
-
-                    </div>
                 </div>
             </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
+                    @Html.DropDownListFor(d => d.AdPositionName, adaPostions, "不限", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart).ToString(), new { @class = "control-label" })
+                    <div class="input-daterange input-group">
+                        @Html.TextBoxFor(d => d.PriceStart, new { @class = "form-control" })
+                        <span class="input-group-addon">至</span>
+                        @Html.TextBoxFor(d => d.PriceEnd, new { @class = "form-control" })
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.LabelFor(d => d.Platform, Html.DisplayNameFor(d => d.Platform).ToString(), new { @class = "control-label" })
+                    @Html.TextBoxFor(d => d.Platform, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName).ToString(), new { @class = "control-label" })
+                    @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    @Html.LabelFor(d => d.MediaID, Html.DisplayNameFor(d => d.MediaID).ToString(), new { @class = "control-label" })
+                    @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control" })
+                </div>
+            </div>
+          
+        </div>
 
 
             <div class="panel-group" id="accordion">

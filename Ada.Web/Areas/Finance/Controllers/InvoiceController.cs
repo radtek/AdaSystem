@@ -54,8 +54,8 @@ namespace Finance.Controllers
             viewModel.MoneyStatus = entity.MoneyStatus;
             viewModel.InvoiceTime = entity.InvoiceTime ?? DateTime.Now;
             viewModel.InvoiceNum = entity.InvoiceNum;
-            viewModel.PayTime = viewModel.PayTime;
-            viewModel.ReceivableNum = viewModel.ReceivableNum;
+            viewModel.PayTime = entity.PayTime;
+            viewModel.BusinessInvoiceDetails = entity.BusinessInvoiceDetails;
             return View(viewModel);
         }
         [HttpPost]

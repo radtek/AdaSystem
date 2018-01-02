@@ -207,6 +207,8 @@
     <Content Include="Views\Shared\HeadLine.cshtml" />
     <Content Include="Views\Shared\SinaBlog.cshtml" />
     <Content Include="Views\Shared\ZhiHu.cshtml" />
+    <Content Include="Views\Shared\WebCast.cshtml" />
+    <Content Include="Views\Shared\Brush.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

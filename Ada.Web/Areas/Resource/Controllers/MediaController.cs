@@ -139,7 +139,7 @@ namespace Resource.Controllers
                     ModelState.AddModelError("message", "没有查询到相关媒体信息！");
                     return View(viewModel);
                 }
-                ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + result.Count + "条。注：查询结果最多显示"+ setting.PurchaseSeachRows + "条");
+                ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + result.Count + "条。注：查询结果最多显示" + setting.PurchaseSeachRows + "条");
                 return View(viewModel);
             }
 
@@ -227,7 +227,7 @@ namespace Resource.Controllers
                 rows = result.Select(d => new
                 {
                     d.Id,
-                    MediaName=SetMediaName(d.Media),
+                    MediaName = SetMediaName(d.Media),
                     d.Media.MediaType.TypeName,
                     d.Media.MediaType.CallIndex,
                     d.Media.MediaID,
@@ -257,6 +257,7 @@ namespace Resource.Controllers
                     break;
                 case "headline":
                 case "webcast":
+                case "brush":
                     str = media.Platform + " - " + media.MediaName;
                     break;
             }
@@ -317,7 +318,7 @@ namespace Resource.Controllers
 
 
             entity.MediaName = viewModel.MediaName.Trim();
-            entity.MediaID = viewModel.MediaID.Trim();
+            entity.MediaID = string.IsNullOrWhiteSpace(viewModel.MediaID) ? null : viewModel.MediaID.Trim();
             entity.MediaLink = viewModel.MediaLink;
             entity.MediaLogo = viewModel.MediaLogo;
             entity.MediaQR = viewModel.MediaQR;
@@ -464,7 +465,7 @@ namespace Resource.Controllers
             entity.TransactorId = viewModel.TransactorId;
 
             entity.MediaName = viewModel.MediaName.Trim();
-            entity.MediaID = viewModel.MediaID.Trim();
+            entity.MediaID = string.IsNullOrWhiteSpace(viewModel.MediaID) ? null : viewModel.MediaID.Trim();
             entity.MediaLink = viewModel.MediaLink;
             entity.MediaLogo = viewModel.MediaLogo;
             entity.MediaQR = viewModel.MediaQR;
@@ -572,6 +573,7 @@ namespace Resource.Controllers
                     break;
                 case "headline":
                 case "webcast":
+                case "brush":
                     whereLambda = d =>
                           d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
                           d.Platform.Equals(viewModel.Platform, StringComparison.CurrentCultureIgnoreCase) &&

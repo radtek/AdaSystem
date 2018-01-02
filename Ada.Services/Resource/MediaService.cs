@@ -50,6 +50,18 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.MediaName.Contains(viewModel.search));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaName))
+            {
+                allList = allList.Where(d => d.MediaName.Contains(viewModel.MediaName));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.Platform))
+            {
+                allList = allList.Where(d => d.Platform.Contains(viewModel.Platform));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.Channel))
+            {
+                allList = allList.Where(d => d.Channel.Contains(viewModel.Channel));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaID))
             {
                 allList = allList.Where(d => d.MediaID.Contains(viewModel.MediaID));

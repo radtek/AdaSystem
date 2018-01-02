@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ada.Core.Domain.Business;
 
 namespace Ada.Core.ViewModel.Business
 {
@@ -80,7 +81,7 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "客户名称")]
         public string LinkManName { get; set; }
         /// <summary>
-        /// 开票金额
+        /// 发票金额
         /// </summary>
         [Display(Name = "发票金额")]
         public decimal? TotalMoney { get; set; }
@@ -139,5 +140,16 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "审核状态")]
         public short? AuditStatus { get; set; }
+        /// <summary>
+        /// 税额
+        /// </summary>
+        [Display(Name = "税额")]
+        public decimal? TaxMoney { get; set; }
+
+        /// <summary>
+        /// 税额
+        /// </summary>
+        [Display(Name = "税额")]
+        public IEnumerable<BusinessInvoiceDetail> BusinessInvoiceDetails { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace Business.Controllers
         private readonly IBusinessInvoiceService _businessInvoiceService;
         private readonly IRepository<BusinessInvoice> _repository;
         private readonly IRepository<BusinessInvoiceDetail> _businessInvoiceDetailrepository;
-        public InvoiceController(IBusinessInvoiceService businessInvoiceService, 
+        public InvoiceController(IBusinessInvoiceService businessInvoiceService,
             IRepository<BusinessInvoice> repository,
             IRepository<BusinessInvoiceDetail> businessInvoiceDetailrepository)
         {
@@ -48,15 +48,16 @@ namespace Business.Controllers
                     AddedDate = d.AddedDate,
                     TotalMoney = d.TotalMoney,
                     Status = d.Status,
-                    MoneyStatus=d.MoneyStatus,
+                    MoneyStatus = d.MoneyStatus,
                     InvoiceTitle = d.InvoiceTitle,
                     InvoiceType = d.InvoiceType,
                     Company = d.Company,
                     TaxNum = d.TaxNum,
                     InvoiceTime = d.InvoiceTime,
                     InvoiceNum = d.InvoiceNum,
-                    PayTime = d.PayTime
-                   
+                    PayTime = d.PayTime,
+                    TaxMoney = d.BusinessInvoiceDetails.Sum(o => o.BusinessOrder.BusinessOrderDetails.Sum(b => b.TaxMoney))
+
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -118,9 +119,9 @@ namespace Business.Controllers
                 item.AddedById = CurrentManager.Id;
                 item.AddedDate = DateTime.Now;
                 invoice.BusinessInvoiceDetails.Add(item);
-                
+
             }
-            invoice.TotalMoney = details.Sum(d=>d.InvoiceMoney);
+            invoice.TotalMoney = details.Sum(d => d.InvoiceMoney);
             invoice.AddedBy = CurrentManager.UserName;
             invoice.AddedById = CurrentManager.Id;
             invoice.AddedDate = DateTime.Now;
@@ -176,9 +177,9 @@ namespace Business.Controllers
                 ModelState.AddModelError("message", "开票订单明细不能为空");
                 return View(viewModel);
             }
-            
+
             var invoice = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
-            if (invoice.Status==Consts.StateNormal)
+            if (invoice.Status == Consts.StateNormal)
             {
                 ModelState.AddModelError("message", "发票已开，无法修改，请联系财务进行处理");
                 return View(viewModel);
@@ -200,7 +201,7 @@ namespace Business.Controllers
             invoice.ModifiedById = CurrentManager.Id;
             invoice.ModifiedDate = DateTime.Now;
             //明细处理
-            if (invoice.AuditStatus==Consts.StateLock)
+            if (invoice.AuditStatus == Consts.StateLock)
             {
                 _businessInvoiceDetailrepository.Remove(invoice.BusinessInvoiceDetails);
                 foreach (var businessInvoiceDetail in orderdetails)
@@ -213,7 +214,7 @@ namespace Business.Controllers
                 }
                 invoice.TotalMoney = orderdetails.Sum(d => d.InvoiceMoney);
             }
-            
+
             _businessInvoiceService.Update(invoice);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");

@@ -61,14 +61,14 @@
         <div class="form-group col-md-4">
             @Html.LabelFor(d => d.InvoiceTitle, Html.DisplayNameFor(d => d.InvoiceTitle).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
-                @(Model.AuditStatus == Consts.StateNormal ? Html.TextBoxFor(d => d.InvoiceTitle, new { @class = "form-control", @readonly = "readonly" }) : Html.DropDownListFor(d => d.InvoiceTitle, invoiceTitles, new { @class = "form-control", required = "" }))
+                @(Model.AuditStatus == Consts.StateNormal ? Html.TextBoxFor(d => d.InvoiceTitle, new { @class = "form-control", @readonly = "readonly" }) : Html.DropDownListFor(d => d.InvoiceTitle, invoiceTitles, "请选择", new { @class = "form-control", required = "" }))
             </div>
         </div>
         <div class="form-group col-md-4">
             @Html.LabelFor(d => d.InvoiceType, Html.DisplayNameFor(d => d.InvoiceType).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
                 
-                @(Model.AuditStatus == Consts.StateNormal ? Html.TextBoxFor(d => d.InvoiceType, new { @class = "form-control", @readonly = "readonly" }) : Html.DropDownListFor(d => d.InvoiceType, invoiceTypes, new { @class = "form-control", required = "" }))
+                @(Model.AuditStatus == Consts.StateNormal ? Html.TextBoxFor(d => d.InvoiceType, new { @class = "form-control", @readonly = "readonly" }) : Html.DropDownListFor(d => d.InvoiceType, invoiceTypes, "请选择",new { @class = "form-control", required = "" }))
             </div>
         </div>
         <div class="form-group col-md-4">
