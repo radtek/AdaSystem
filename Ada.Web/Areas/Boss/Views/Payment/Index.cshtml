@@ -131,7 +131,7 @@
                         align: "center", valign: "middle",
                         formatter: function (value,row) {
                             return "<a class='btn btn-success btn-sm' href='@Url.Action("Audit")?id=" + value +"'><i class='fa fa-gavel'></i>  审批</a> " +
-                                "<a class='btn btn-danger btn-sm' href='javascript:;' onclick=\"cancle('" + value +"');\");'><i class='fa fa-trash-o'></i> 删除</a>";
+                                "<button class='btn btn-danger btn-sm' onclick=\"cancle('" + value +"');\"><i class='fa fa-trash-o'></i> 删除</button>";
                         }
 
                     }
@@ -178,7 +178,7 @@
                         }
                     },
                     error: function () {
-                        swal("操作失败", data.Msg, "error");
+                        swal("操作失败", "系统错误", "error");
                     },
                     complete: function () {
 

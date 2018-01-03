@@ -45,9 +45,9 @@ namespace Ada.Core.ViewModel.Purchase
         [Display(Name = "经办媒介")]
         public string TransactorId { get; set; }
         /// <summary>
-        /// 付款金额
+        /// 本次申请金额
         /// </summary>
-        [Display(Name = "申请金额")]
+        [Display(Name = "本次申请金额")]
         public decimal? PayMoney { get; set; }
         /// <summary>
         /// 开户行
@@ -130,14 +130,19 @@ namespace Ada.Core.ViewModel.Purchase
         [Display(Name = "开票公司")]
         public string InvoiceTitle { get; set; }
         /// <summary>
-        /// 订单总额
+        /// 采购总额
         /// </summary>
-        [Display(Name = "订单总额")]
+        [Display(Name = "采购总额")]
         public decimal? OrderMoney { get; set; }
         /// <summary>
         /// 优惠金额
         /// </summary>
         [Display(Name = "优惠金额")]
         public decimal? DiscountMoney { get; set; }
+        /// <summary>
+        /// 总申请金额
+        /// </summary>
+        [Display(Name = "总申请金额")]
+        public decimal? TotalPayMoney { get; set; }
     }
 }

@@ -59,7 +59,9 @@ namespace Finance.Controllers
                     BillNum = d.BillNum,
                     PaymentType = d.PaymentType,
                     BillDate = d.BillDate,
-                    Image = d.Image
+                    Image = d.Image,
+                    PayInfo = string.Join(",",d.BillPaymentDetails.Select(p=>p.SettleAccount.SettleName))
+                    
                 })
             }, JsonRequestBehavior.AllowGet);
         }

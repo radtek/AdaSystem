@@ -139,7 +139,7 @@ namespace Resource.Controllers
                     ModelState.AddModelError("message", "没有查询到相关媒体信息！");
                     return View(viewModel);
                 }
-                ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + result.Count + "条。注：查询结果最多显示" + setting.PurchaseSeachRows + "条");
+                ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + viewModel.total + "条。注：查询结果最多显示" + setting.PurchaseSeachRows + "条");
                 return View(viewModel);
             }
 

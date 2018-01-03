@@ -57,7 +57,7 @@ namespace Purchase.Controllers
                     PayMoney = d.PayMoney,
                     Tax = d.Tax,
                     DiscountMoney = d.DiscountMoney,
-                    RequstMoney = d.PurchasePaymentDetails.Sum(m=>m.PayMoney),
+                    RequstMoney = d.PurchasePaymentDetails.Sum(m => m.PayMoney),
                     InvoiceTitle = d.InvoiceTitle,
                     InvoiceStauts = d.InvoiceStauts,
                     InvoiceDate = d.InvoiceDate,
@@ -121,7 +121,7 @@ namespace Purchase.Controllers
             payment.Status = Consts.StateLock;//待付款
             payment.AuditStatus = Consts.StateNormal;//默认审核通过
             payment.IsInvoice = viewModel.IsInvoice;
-            if (payment.IsInvoice==true)
+            if (payment.IsInvoice == true)
             {
                 if (string.IsNullOrWhiteSpace(viewModel.InvoiceTitle))
                 {
@@ -140,7 +140,11 @@ namespace Purchase.Controllers
             //付款信息
             foreach (var item in paydetails)
             {
-
+                if (string.IsNullOrWhiteSpace(item.AccountBank) || string.IsNullOrWhiteSpace(item.AccountName) || string.IsNullOrWhiteSpace(item.AccountNum) || item.PayMoney <= 0)
+                {
+                    ModelState.AddModelError("message", "付款信息不能为空或者申请金额须大于0");
+                    return View(viewModel);
+                }
                 item.Id = IdBuilder.CreateIdNum();
                 item.AddedBy = CurrentManager.UserName;
                 item.AddedById = CurrentManager.Id;
@@ -169,11 +173,11 @@ namespace Purchase.Controllers
                 order.Money = item.Money;
                 ordermoney += item.Money;
             }
-            if (paymoney > ordermoney - payment.DiscountMoney)
-            {
-                ModelState.AddModelError("message", "申请付款金额超出订单总额");
-                return View(viewModel);
-            }
+            //if (paymoney > ordermoney - payment.DiscountMoney)
+            //{
+            //    ModelState.AddModelError("message", "申请付款金额超出订单总额");
+            //    return View(viewModel);
+            //}
             payment.AddedBy = CurrentManager.UserName;
             payment.AddedById = CurrentManager.Id;
             payment.AddedDate = DateTime.Now;
@@ -295,7 +299,7 @@ namespace Purchase.Controllers
                     order.PurchaseMoney = item.PurchaseMoney;
                     order.Money = item.Money;
                 }
-                payment.PayMoney = orderdetails.Sum(d=>d.Money);
+                payment.PayMoney = orderdetails.Sum(d => d.Money);
                 payment.TaxMoney = orderdetails.Sum(d => d.TaxMoney);
                 ordermoney = payment.PayMoney - payment.DiscountMoney;
                 //付款明细
@@ -345,11 +349,11 @@ namespace Purchase.Controllers
                     }
                 }
             }
-            if (paymoney > ordermoney)
-            {
-                ModelState.AddModelError("message", "申请付款金额超出订单总额");
-                return View(viewModel);
-            }
+            //if (paymoney > ordermoney)
+            //{
+            //    ModelState.AddModelError("message", "申请付款金额超出订单总额");
+            //    return View(viewModel);
+            //}
             payment.ModifiedBy = CurrentManager.UserName;
             payment.ModifiedById = CurrentManager.Id;
             payment.ModifiedDate = DateTime.Now;

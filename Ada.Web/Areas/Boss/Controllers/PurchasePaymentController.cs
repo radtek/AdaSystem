@@ -66,8 +66,10 @@ namespace Boss.Controllers
             viewModel.AuditStatus = entity.AuditStatus;
             viewModel.IsInvoice = entity.PurchasePayment.IsInvoice;
             viewModel.InvoiceTitle = entity.PurchasePayment.InvoiceTitle;
-            viewModel.OrderMoney = entity.PurchasePayment.PayMoney;
+            viewModel.OrderMoney = entity.PurchasePayment.PurchasePaymentOrderDetails.Sum(d => d.PurchaseOrderDetail.Money);
             viewModel.DiscountMoney = entity.PurchasePayment.DiscountMoney;
+            viewModel.TotalPayMoney = entity.PurchasePayment.PurchasePaymentDetails.Sum(d => d.PayMoney);
+            
             ViewBag.LinkMan = entity.PurchasePayment.LinkMan;
             ViewBag.OrderDetail = entity.PurchasePayment.PurchasePaymentOrderDetails.ToList();
             ViewBag.PayDetail = entity.PurchasePayment.PurchasePaymentDetails.ToList();
@@ -95,8 +97,8 @@ namespace Boss.Controllers
             {
                 //判断是否增加账户
                 var account = entity.PurchasePayment.LinkMan.PayAccounts.FirstOrDefault(d =>
-                    d.AccountName.Equals(viewModel.AccountName,StringComparison.CurrentCultureIgnoreCase) &&
-                    d.AccountNum.Equals(viewModel.AccountNum,StringComparison.CurrentCultureIgnoreCase) 
+                    d.AccountName.Equals(viewModel.AccountName, StringComparison.CurrentCultureIgnoreCase) &&
+                    d.AccountNum.Equals(viewModel.AccountNum, StringComparison.CurrentCultureIgnoreCase)
                     && d.IsDelete == false);
                 if (account == null)
                 {
@@ -134,7 +136,7 @@ namespace Boss.Controllers
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             //付款了的不能清除
-            if (entity.Status==Consts.StateNormal)
+            if (entity.Status == Consts.StateNormal)
             {
                 return Json(new { State = 0, Msg = "此申请已付款，无法删除" });
             }

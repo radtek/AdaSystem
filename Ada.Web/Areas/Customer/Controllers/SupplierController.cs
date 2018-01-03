@@ -75,7 +75,7 @@ namespace Customer.Controllers
 
             var temp = _repository.LoadEntities(d =>
                 d.Name.Equals(viewModel.Name, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
-                d.IsBusiness == viewModel.IsBusiness).FirstOrDefault();
+                d.IsBusiness).FirstOrDefault();
             if (temp != null)
             {
                 ModelState.AddModelError("message", viewModel.Name + "，此公司已存在！");
@@ -132,7 +132,7 @@ namespace Customer.Controllers
             //校验公司名称唯一
             var temp = _repository.LoadEntities(d =>
                 d.Name.Equals(viewModel.Name, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
-                d.IsBusiness == viewModel.IsBusiness && d.Id != viewModel.Id).FirstOrDefault();
+                d.IsBusiness  && d.Id != viewModel.Id).FirstOrDefault();
             if (temp != null)
             {
                 ModelState.AddModelError("message", viewModel.Name + "，此公司已存在！");

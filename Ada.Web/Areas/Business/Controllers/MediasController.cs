@@ -83,6 +83,7 @@ namespace Business.Controllers
                 foreach (var media in result)
                 {
                     var jo = new JObject();
+                    
                     jo.Add("媒体类型", media.MediaType == null ? "不存在的资源" : media.MediaType.TypeName);
                     if (!string.IsNullOrWhiteSpace(media.Platform))
                     {
@@ -128,9 +129,19 @@ namespace Business.Controllers
                         //jo.Add(mediaMediaPrice.AdPositionName + "更新日期", mediaMediaPrice.PriceDate);
                         //jo.Add(mediaMediaPrice.AdPositionName + "失效日期", mediaMediaPrice.InvalidDate);
                     }
+                    jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.PriceDate);
+                    if (!string.IsNullOrWhiteSpace(media.Content))
+                    {
+                        jo.Add("媒体内容", media.Content);
+                    }
                     if (!string.IsNullOrWhiteSpace(media.Remark))
                     {
                         jo.Add("备注说明", media.Remark);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(media.Transactor))
+                    {
+                        jo.Add("经办媒介", media.Transactor);
                     }
                     jObjects.Add(jo);
                 }
@@ -150,7 +161,7 @@ namespace Business.Controllers
                     ModelState.AddModelError("message", "没有查询到相关媒体信息！");
                     return View(viewModel);
                 }
-                ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + result.Count + "条。注：查询结果最多显示" + setting.BusinessSeachRows + "条");
+                ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + viewModel.total + "条。注：查询结果最多显示" + setting.BusinessSeachRows + "条");
                 return View(viewModel);
             }
         }

@@ -51,7 +51,7 @@ namespace Customer.Controllers
         public ActionResult Add()
         {
             CommpanyView viewModel = new CommpanyView();
-            viewModel.IsBusiness = true;
+            viewModel.IsBusiness = false;
             viewModel.Transactor = CurrentManager.UserName;
             viewModel.TransactorId = CurrentManager.Id;
             return View(viewModel);
@@ -69,7 +69,7 @@ namespace Customer.Controllers
 
             var temp = _repository.LoadEntities(d =>
                 d.Name.Equals(viewModel.Name, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
-                d.IsBusiness == viewModel.IsBusiness).FirstOrDefault();
+                d.IsBusiness == false).FirstOrDefault();
             if (temp != null)
             {
                 ModelState.AddModelError("message", viewModel.Name + "，此公司已存在！");

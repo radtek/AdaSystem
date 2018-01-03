@@ -106,21 +106,21 @@
                         title: '@Html.DisplayNameFor(d=>d.BillNum)',
                         align: "center", valign: "middle"
                     },
-                    {
+                    @*{
                         field: 'AccountBank',
                         title: '@Html.DisplayNameFor(d=>d.AccountBank)',
                         align: "center", valign: "middle"
-                    },
+                    },*@
                     {
                         field: 'AccountName',
                         title: '@Html.DisplayNameFor(d=>d.AccountName)',
                         align: "center", valign: "middle"
                     },
-                    {
+                    @*{
                         field: 'AccountNum',
                         title: '@Html.DisplayNameFor(d=>d.AccountNum)',
                         align: "center", valign: "middle"
-                    },
+                    },*@
                     {
                         field: 'Money',
                         title: '@Html.DisplayNameFor(d=>d.Money)',
@@ -196,7 +196,7 @@
                                             }
                                         },
                                         error: function () {
-                                            swal("操作失败", res.Msg, "error");
+                                            swal("操作失败", "系统错误", "error");
                                         }
                                     });
                                 }

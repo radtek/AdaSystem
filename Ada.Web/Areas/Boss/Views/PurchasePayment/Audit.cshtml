@@ -8,6 +8,7 @@
     LinkMan linkMan = ViewBag.LinkMan;
     List<PurchasePaymentOrderDetail> details = ViewBag.OrderDetail;
     List<PurchasePaymentDetail> paydetails = ViewBag.PayDetail;
+    var warning = Model.TotalPayMoney > (Model.OrderMoney - Model.DiscountMoney) ? "has-error" : "";
 }
 @Html.Partial("Bread", urls)
 
@@ -74,6 +75,13 @@
                                         </div>
                                     </div>
                                     <div class="hr-line-dashed"></div>
+                                    <div class="form-group @warning">
+                                        @Html.LabelFor(d => d.TotalPayMoney, Html.DisplayNameFor(d => d.TotalPayMoney).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.TotalPayMoney, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
                                     <div class="form-group">
                                         @Html.LabelFor(d => d.OrderMoney, Html.DisplayNameFor(d => d.OrderMoney).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
@@ -88,15 +96,15 @@
                                         </div>
                                     </div>
                                     @if (Model.IsInvoice == true)
-                                    {
-                                        <div class="hr-line-dashed"></div>
-                                        <div class="form-group">
-                                            @Html.LabelFor(d => d.InvoiceTitle, Html.DisplayNameFor(d => d.InvoiceTitle).ToString(), new { @class = "col-sm-2 control-label" })
-                                            <div class="col-sm-10">
-                                                @Html.TextBoxFor(d => d.InvoiceTitle, new { @class = "form-control", @readonly = "readonly" })
-                                            </div>
-                                        </div>
-                                    }
+    {
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.InvoiceTitle, Html.DisplayNameFor(d => d.InvoiceTitle).ToString(), new { @class = "col-sm-2 control-label" })
+                                    <div class="col-sm-10">
+                                        @Html.TextBoxFor(d => d.InvoiceTitle, new { @class = "form-control", @readonly = "readonly" })
+                                    </div>
+                                </div>
+}
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
                                         @Html.LabelFor(d => d.AuditStatus, Html.DisplayNameFor(d => d.AuditStatus).ToString(), new { @class = "col-sm-2 control-label" })

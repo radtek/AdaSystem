@@ -177,7 +177,7 @@ function initChangePwd(url,token) {
                                 }
                             },
                             error: function () {
-                                swal("操作失败", res.Msg, "error");
+                                swal("操作失败", "系统错误", "error");
                             }
                         });
                     }
@@ -284,7 +284,7 @@ function initCropper(apiurl) {
                                 }
                             },
                             error: function () {
-                                swal("操作失败", res.Msg, "error");
+                                swal("操作失败", "系统错误", "error");
                             }
                         });
                     }
