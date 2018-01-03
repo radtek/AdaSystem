@@ -133,6 +133,10 @@
     <Compile Include="Domain\Resource\MediaTag.cs" />
     <Compile Include="Domain\Resource\MediaType.cs" />
     <Compile Include="Domain\StatusEnum.cs" />
+    <Compile Include="Domain\WeiXin\WeiXinAccount.cs" />
+    <Compile Include="Domain\WeiXin\WeiXinKeyword.cs" />
+    <Compile Include="Domain\WeiXin\WeiXinKeywordMatch.cs" />
+    <Compile Include="Domain\WeiXin\WeiXinRequestReocrd.cs" />
     <Compile Include="IAppStart.cs" />
     <Compile Include="ICacheStorageProvider.cs" />
     <Compile Include="IDbContext.cs" />

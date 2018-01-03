@@ -3,6 +3,7 @@
 @using Ada.Core.Domain.Resource
 @using Ada.Core.Infrastructure
 @using Ada.Core.ViewModel.Resource
+@using Ada.Services.Admin
 @using Ada.Services.Resource
 @using Microsoft.Ajax.Utilities
 @model MediaView
@@ -17,6 +18,10 @@
         var mediaType = repository.LoadEntities(d => d.Id == Model.MediaTypeId).FirstOrDefault();
         adaPostions = mediaType.AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name }).ToList();
     }
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var seos = fieldService.GetFieldsByKey("SEO").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    
+    var resourceTypes = fieldService.GetFieldsByKey("ResourceType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
@@ -111,9 +116,33 @@
                     </div>
                     <div id="collapse" class="panel-collapse collapse">
                         <div class="panel-body">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.Area, Html.DisplayNameFor(d => d.Area).ToString(), new { @class = "control-label" })
+                                    @Html.TextBoxFor(d => d.Area, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.SEO, Html.DisplayNameFor(d => d.SEO).ToString(), new {@class = "control-label"})
+                                    @Html.DropDownListFor(d => d.SEO, seos, "请选择", new {@class = "form-control"})
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.ResourceType, Html.DisplayNameFor(d => d.ResourceType).ToString(), new {@class = "control-label"})
+                                    @Html.DropDownListFor(d => d.ResourceType, resourceTypes, "请选择", new {@class = "form-control"})
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.Efficiency, Html.DisplayNameFor(d => d.Efficiency).ToString(), new {@class = "control-label"})
+                                    @Html.TextBoxFor(d => d.Efficiency, new {@class = "form-control"})
+                                </div>
+                            </div>
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "control-label" })
+                                    @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new {@class = "control-label"})
                                     <div class="row">
                                         <div class="col-md-12">
                                             @foreach (var item in tags)
@@ -131,14 +160,14 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    @Html.LabelFor(d => d.MediaNames, Html.DisplayNameFor(d => d.MediaNames).ToString(), new { @class = "control-label" })
-                                    @Html.TextAreaFor(d => d.MediaNames, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
+                                    @Html.LabelFor(d => d.MediaNames, Html.DisplayNameFor(d => d.MediaNames).ToString(), new {@class = "control-label"})
+                                    @Html.TextAreaFor(d => d.MediaNames, 4, 20, new {@class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询"})
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    @Html.LabelFor(d => d.MediaIDs, Html.DisplayNameFor(d => d.MediaIDs).ToString(), new { @class = "control-label" })
-                                    @Html.TextAreaFor(d => d.MediaIDs, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
+                                    @Html.LabelFor(d => d.MediaIDs, Html.DisplayNameFor(d => d.MediaIDs).ToString(), new {@class = "control-label"})
+                                    @Html.TextAreaFor(d => d.MediaIDs, 4, 20, new {@class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询"})
                                 </div>
                             </div>
                         </div>

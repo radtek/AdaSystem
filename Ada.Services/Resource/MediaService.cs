@@ -54,6 +54,22 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.MediaName.Contains(viewModel.MediaName));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.Area))
+            {
+                allList = allList.Where(d => d.Area.Contains(viewModel.Area));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.SEO))
+            {
+                allList = allList.Where(d => d.SEO.Contains(viewModel.SEO));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.Efficiency))
+            {
+                allList = allList.Where(d => d.Efficiency.Contains(viewModel.Efficiency));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.ResourceType))
+            {
+                allList = allList.Where(d => d.ResourceType.Contains(viewModel.ResourceType));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.Platform))
             {
                 allList = allList.Where(d => d.Platform.Contains(viewModel.Platform));
