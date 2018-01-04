@@ -1,8 +1,12 @@
 ﻿
 @using System.Web.Optimization
+@using Ada.Core.Infrastructure
+@using Ada.Services.Admin
 @model Ada.Core.ViewModel.Purchase.PurchaseOrderDetailView
 @{
     ViewBag.Title = "媒介订单";
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var purchaseStatus = fieldService.GetFieldsByKey("PurchaseStatus").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 @Html.Partial("Bread")
 
@@ -17,27 +21,55 @@
             </div>
         </div>
         <div class="ibox-content">
-            <form class="form-inline" id="searchFrm" onSubmit="javascript:searchFrm.search(this,event);">
+            <form id="searchFrm" onSubmit="javascript:searchFrm.search(this,event);">
                 <div class="row">
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="form-group">
                             @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName) + "：", new { @class = "control-label" })
                             @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control input-sm" })
                         </div>
                     </div>
-                    <div class="col-sm-2">
+
+
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.MediaTypeName, Html.DisplayNameFor(d => d.MediaTypeName) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.MediaTypeName, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status) + "：", new { @class = "control-label" })
+                            @Html.DropDownListFor(d => d.Status, purchaseStatus, "请选择", new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.PublishDateStartEnd, Html.DisplayNameFor(d => d.PublishDateStartEnd) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.PublishDateStartEnd, new { @class = "form-control input-sm",@readonly="" })
+                            @Html.HiddenFor(d => d.PublishDateStart)
+                            @Html.HiddenFor(d => d.PublishDateEnd)
+                        </div>
+                    </div>
+                   
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.BusinessBy, Html.DisplayNameFor(d => d.BusinessBy) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.BusinessBy, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
                         <div class="form-group">
                             @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor) + "：", new { @class = "control-label" })
                             @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control input-sm" })
                         </div>
                     </div>
-                    @*<div class="col-sm-4">
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.Message, Html.DisplayNameFor(d => d.Message).ToString(), new { @class = "control-label" })
-                                @Html.TextBoxFor(d => d.Message, new { @class = "form-control" })
-                            </div>
-                        </div>*@
-
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="row">
@@ -67,10 +99,12 @@
 
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/dateRangeStyles")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/dateRange")
 
 <script type="text/javascript">
 
@@ -80,6 +114,59 @@
             //2.初始化Button的点击事件
             var oButtonInit = new ButtonInit();
             oButtonInit.Init();
+            var $datepicker = $('#PublishDateStartEnd');
+            $datepicker.daterangepicker({
+                    autoUpdateInput: false,
+                    opens: "center",
+                    linkedCalendars: false,
+                    locale: {
+                        format: 'YYYY-MM-DD',
+                        separator: " 至 ",
+                        applyLabel: "确认",
+                        cancelLabel: "取消",
+                        fromLabel: "从",
+                        toLabel: "到",
+                        customRangeLabel: "自定义",
+                        weekLabel: "周",
+                        daysOfWeek: [
+                            "日",
+                            "一",
+                            "二",
+                            "三",
+                            "四",
+                            "五",
+                            "六"
+                        ],
+                        monthNames: [
+                            "一月",
+                            "二月",
+                            "三月",
+                            "四月",
+                            "五月",
+                            "六月",
+                            "七月",
+                            "八月",
+                            "九月",
+                            "十月",
+                            "十一月",
+                            "十二月"
+                        ],
+                        firstDay: 1
+                    }
+                },
+                function(start,end,label) {
+                    $("#PublishDateStart").val(start.format('YYYY-MM-DD'));
+                    $("#PublishDateEnd").val(end.format('YYYY-MM-DD'));
+                });
+
+            $datepicker.on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' 至 ' + picker.endDate.format('YYYY-MM-DD'));
+            });
+            $datepicker.on('cancel.daterangepicker', function(ev, picker) {
+                $(this).val('');
+                $("#PublishDateStart").val("");
+                $("#PublishDateEnd").val("");
+            });
         });
         var TableInit = function() {
             var obj = new Object();
@@ -183,8 +270,8 @@
                         align: "center", valign: "middle", formatter: formatter.tooltip
                     },
                     {
-                        field: 'Money',
-                        title: '@Html.DisplayNameFor(d=>d.Money)',
+                        field: 'CostMoney',
+                        title: '@Html.DisplayNameFor(d=>d.CostMoney)',
                         align: "center", valign: "middle"
                     },
                     @*{

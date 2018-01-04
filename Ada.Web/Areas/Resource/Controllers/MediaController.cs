@@ -72,36 +72,57 @@ namespace Resource.Controllers
                 viewModel.limit = setting.PurchaseExportRows;
                 var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
                 //找到没有的
+                //找到没有的
+
                 if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
                 {
                     var names = viewModel.MediaNames.Split(',').ToList();
+                    int i = 0;
                     foreach (var name in names)
                     {
-                        if (result.All(d => d.MediaName != name))
+                        var temp = result.FirstOrDefault(d =>
+                            d.MediaName.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+                        if (temp == null)
                         {
                             result.Add(new Media
                             {
-                                MediaName = name
+                                MediaName = name,
+                                Taxis = i
                             });
                         }
+                        else
+                        {
+                            temp.Taxis = i;
+                        }
+
+                        i++;
                     }
                 }
                 if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
                 {
                     var ids = viewModel.MediaIDs.Split(',').ToList();
+                    int i = 0;
                     foreach (var id in ids)
                     {
-                        if (result.All(d => d.MediaID != id))
+                        var temp = result.FirstOrDefault(d =>
+                            d.MediaID.Equals(id, StringComparison.CurrentCultureIgnoreCase));
+                        if (temp == null)
                         {
                             result.Add(new Media
                             {
-                                MediaID = id
+                                MediaID = id,
+                                Taxis = i
                             });
                         }
+                        else
+                        {
+                            temp.Taxis = i;
+                        }
+                        i++;
                     }
                 }
                 JArray jObjects = new JArray();
-                foreach (var media in result)
+                foreach (var media in result.OrderBy(d=>d.Taxis))
                 {
                     var jo = new JObject();
                     jo.Add("Id", media.Id ?? "不存在的资源");

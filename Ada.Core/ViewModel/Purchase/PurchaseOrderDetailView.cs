@@ -218,5 +218,20 @@ namespace Ada.Core.ViewModel.Purchase
         /// </summary>
         [Display(Name = "销售备注")]
         public string BusinessRemark { get; set; }
+        /// <summary>
+        /// 出刊日期
+        /// </summary>
+        [Display(Name = "出刊日期")]
+        public DateTime? PublishDateStart { get; set; }
+        /// <summary>
+        /// 出刊日期
+        /// </summary>
+        [Display(Name = "出刊日期")]
+        public DateTime? PublishDateEnd { get; set; }
+        /// <summary>
+        /// 出刊日期
+        /// </summary>
+        [Display(Name = "出刊日期")]
+        public string PublishDateStartEnd { get; set; }
     }
 }

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Ada.Core.Domain.Finance
 {
+    /// <summary>
+    /// 业务付款明细
+    /// </summary>
   public  class BillPaymentDetail:BaseEntity
     {
         /// <summary>

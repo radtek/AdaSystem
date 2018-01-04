@@ -43,5 +43,20 @@ namespace Ada.Core.ViewModel.Finance
         /// </summary>
         [Display(Name = "税率%")]
         public decimal? Tax { get; set; }
+        /// <summary>
+        /// 余额
+        /// </summary>
+        [Display(Name = "余额")]
+        public decimal? TotalMoney { get; set; }
+        /// <summary>
+        /// 收入
+        /// </summary>
+        [Display(Name = "收入")]
+        public decimal? Income { get; set; }
+        /// <summary>
+        /// 支出
+        /// </summary>
+        [Display(Name = "支出")]
+        public decimal? Expend { get; set; }
     }
 }

@@ -33,6 +33,18 @@ namespace Ada.Services.Purchase
             {
                 allList = allList.Where(d => d.MediaName.Contains(viewModel.search));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaName))
+            {
+                allList = allList.Where(d => d.MediaName.Contains(viewModel.MediaName));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeName))
+            {
+                allList = allList.Where(d => d.MediaTypeName.Contains(viewModel.MediaTypeName));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.BusinessBy))
+            {
+                allList = allList.Where(d => d.PurchaseOrder.BusinessBy.Contains(viewModel.BusinessBy));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.LinkManName))
             {
                 allList = allList.Where(d => d.LinkManName.Contains(viewModel.LinkManName));
@@ -56,6 +68,15 @@ namespace Ada.Services.Purchase
             if (viewModel.IsPayment==false)//过滤没有请款的
             {
                 allList = allList.Where(d => d.PurchasePaymentOrderDetails.Count==0);
+            }
+            if (viewModel.PublishDateStart != null)
+            {
+                allList = allList.Where(d => d.PublishDate >= viewModel.PublishDateStart);
+            }
+            if (viewModel.PublishDateEnd != null)
+            {
+                var endDate = viewModel.PublishDateEnd.Value.AddDays(1);
+                allList = allList.Where(d => d.PublishDate < endDate);
             }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;

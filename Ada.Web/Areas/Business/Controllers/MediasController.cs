@@ -51,40 +51,66 @@ namespace Business.Controllers
                 viewModel.limit = setting.BusinessExportRows;
                 var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
                 //找到没有的
+                
                 if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
                 {
                     var names = viewModel.MediaNames.Split(',').ToList();
+                    int i = 0;
                     foreach (var name in names)
                     {
-                        if (result.All(d => d.MediaName != name))
+                        var temp = result.FirstOrDefault(d =>
+                            d.MediaName.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+                        if (temp==null)
                         {
                             result.Add(new Media
                             {
-                                MediaName = name
+                                MediaName = name,
+                                Taxis = i
                             });
                         }
+                        else
+                        {
+                            temp.Taxis = i;
+                        }
+
+                        i++;
                     }
                 }
                 if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
                 {
                     var ids = viewModel.MediaIDs.Split(',').ToList();
+                    int i = 0;
                     foreach (var id in ids)
                     {
-                        if (result.All(d => d.MediaID != id))
+                        var temp = result.FirstOrDefault(d =>
+                            d.MediaID.Equals(id, StringComparison.CurrentCultureIgnoreCase));
+                        if (temp == null)
                         {
                             result.Add(new Media
                             {
-                                MediaID = id
+                                MediaID = id,
+                                Taxis = i
                             });
                         }
+                        else
+                        {
+                            temp.Taxis = i;
+                        }
+                        i++;
                     }
                 }
                 JArray jObjects = new JArray();
-                foreach (var media in result)
+                foreach (var media in result.OrderBy(d=>d.Taxis))
                 {
                     var jo = new JObject();
-                    
-                    jo.Add("媒体类型", media.MediaType == null ? "不存在的资源" : media.MediaType.TypeName);
+                    jo.Add("主键", string.IsNullOrWhiteSpace(media.Id)?"不存在的资源":media.Id);
+                    foreach (var mediaMediaPrice in media.MediaPrices)
+                    {
+                        jo.Add(mediaMediaPrice.AdPositionName, mediaMediaPrice.PurchasePrice);
+                        //jo.Add(mediaMediaPrice.AdPositionName + "更新日期", mediaMediaPrice.PriceDate);
+                        //jo.Add(mediaMediaPrice.AdPositionName + "失效日期", mediaMediaPrice.InvalidDate);
+                    }
+                    jo.Add("媒体类型",  media.MediaType?.TypeName);
                     if (!string.IsNullOrWhiteSpace(media.Platform))
                     {
                         jo.Add("平台", media.Platform);
@@ -101,6 +127,10 @@ namespace Business.Controllers
                     if (!string.IsNullOrWhiteSpace(media.MediaID))
                     {
                         jo.Add("媒体ID", media.MediaID);
+                    }
+                    if (!string.IsNullOrWhiteSpace(media.MediaLink))
+                    {
+                        jo.Add("媒体链接", media.MediaLink);
                     }
                     if (!string.IsNullOrWhiteSpace(media.Sex))
                     {
@@ -123,12 +153,7 @@ namespace Business.Controllers
                     {
                         jo.Add("收录效果", media.SEO);
                     }
-                    foreach (var mediaMediaPrice in media.MediaPrices)
-                    {
-                        jo.Add(mediaMediaPrice.AdPositionName, mediaMediaPrice.PurchasePrice);
-                        //jo.Add(mediaMediaPrice.AdPositionName + "更新日期", mediaMediaPrice.PriceDate);
-                        //jo.Add(mediaMediaPrice.AdPositionName + "失效日期", mediaMediaPrice.InvalidDate);
-                    }
+                    
                     jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.PriceDate);
                     if (!string.IsNullOrWhiteSpace(media.Content))
                     {

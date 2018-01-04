@@ -9,7 +9,7 @@ using Ada.Core.Domain.Business;
 namespace Ada.Core.Domain.Finance
 {
     /// <summary>
-    /// 收款单
+    /// 销售收款单
     /// </summary>
    public class Receivables:BaseEntity
     {

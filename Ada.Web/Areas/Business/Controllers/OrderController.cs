@@ -136,6 +136,7 @@ namespace Business.Controllers
                 PublishLink = GetPurchaseOrderDetail(d.Id)?.PublishLink,
                 PublishDate = GetPurchaseOrderDetail(d.Id)?.PublishDate,
                 PurchaseStatus = GetPurchaseOrderDetail(d.Id)?.Status,
+                CostMoney = GetPurchaseOrderDetail(d.Id).PurchaseMoney
             });
             return PartialView("OrderDetails", details);
         }
@@ -306,6 +307,7 @@ namespace Business.Controllers
             decimal? sellMoney = 0;
             foreach (var businessOrderDetail in orderDetails)
             {
+                //新增
                 if (string.IsNullOrWhiteSpace(businessOrderDetail.Id))
                 {
                     businessOrderDetail.Id = IdBuilder.CreateIdNum();
@@ -318,7 +320,7 @@ namespace Business.Controllers
                 }
                 else
                 {
-                    //未核销的更新
+                    //未核销的，未审核的更新
                     var detail = _businessOrderDetailRepository.LoadEntities(d => d.Id == businessOrderDetail.Id)
                         .FirstOrDefault();
                     if (detail.VerificationStatus != Consts.StateNormal && detail.AuditStatus == Consts.StateLock)
@@ -339,6 +341,8 @@ namespace Business.Controllers
                         detail.VerificationMoney = businessOrderDetail.Money;
                         detail.ConfirmVerificationMoney = 0;
                     }
+                    //可以修改稿件标题
+                    detail.MediaTitle = businessOrderDetail.MediaTitle;
                     //已下单的金额校验
                     if (detail.Status == Consts.StateNormal)
                     {

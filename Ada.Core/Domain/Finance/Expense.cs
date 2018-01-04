@@ -9,7 +9,7 @@ using Ada.Core.Domain.Customer;
 namespace Ada.Core.Domain.Finance
 {
     /// <summary>
-    /// 付款单
+    /// 收支单
     /// </summary>
    public class Expense : BaseEntity
     {

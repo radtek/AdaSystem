@@ -32,10 +32,13 @@
                                         @Html.DisplayNameFor(d => d.MediaTitle)
                                     </th>
                                     @*<th>
-                                        @Html.DisplayNameFor(d => d.PrePublishDate)
-                                    </th>*@
+            @Html.DisplayNameFor(d => d.PrePublishDate)
+        </th>*@
                                     <th>
                                         @Html.DisplayNameFor(d => d.Money)
+                                    </th>
+                                    <th>
+                                        采购成本
                                     </th>
                                     <th>
                                         @Html.DisplayNameFor(d => d.PublishDate)
@@ -75,6 +78,7 @@
 
                                         @*<td>@item.PrePublishDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"))</td>*@
                                         <td>@item.Money</td>
+                                        <td>@item.CostMoney</td>
                                         <td>@item.PublishDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"))</td>
                                         @if (!string.IsNullOrWhiteSpace(item.PublishLink))
                                         {

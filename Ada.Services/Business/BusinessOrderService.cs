@@ -34,6 +34,10 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => d.LinkManName.Contains(viewModel.search));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.LinkManName))
+            {
+                allList = allList.Where(d => d.LinkManName.Contains(viewModel.LinkManName));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.LinkManId))
             {
                 allList = allList.Where(d => d.LinkManId == viewModel.LinkManId);

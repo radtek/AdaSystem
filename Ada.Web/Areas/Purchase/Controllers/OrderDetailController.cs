@@ -82,6 +82,7 @@ namespace Purchase.Controllers
             item.CostMoney = entity.CostMoney;
             item.PublishDate = entity.PublishDate;
             item.PublishLink = entity.PublishLink;
+            item.Remark = entity.Remark;
             //item.Tax = entity.Tax;
             //item.TaxMoney = entity.TaxMoney;
             //item.PurchaseMoney = entity.PurchaseMoney;

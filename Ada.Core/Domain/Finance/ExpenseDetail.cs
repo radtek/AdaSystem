@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Ada.Core.Domain.Finance
 {
+    /// <summary>
+    /// 其他收支明细
+    /// </summary>
   public  class ExpenseDetail : BaseEntity
     {
         /// <summary>
