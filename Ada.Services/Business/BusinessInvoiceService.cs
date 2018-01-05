@@ -47,6 +47,27 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => d.Transactor.Contains(viewModel.Transactor));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.Company))
+            {
+                allList = allList.Where(d => d.Company.Contains(viewModel.Company));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.TaxNum))
+            {
+                allList = allList.Where(d => d.TaxNum.Contains(viewModel.TaxNum));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.InvoiceTitle))
+            {
+                allList = allList.Where(d => d.InvoiceTitle.Contains(viewModel.InvoiceTitle));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.InvoiceNum))
+            {
+                allList = allList.Where(d => d.InvoiceNum.Contains(viewModel.InvoiceNum));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.InvoiceType))
+            {
+                allList = allList.Where(d => d.InvoiceType.Contains(viewModel.InvoiceType));
+            }
+            
             if (viewModel.Status!=null)
             {
                 allList = allList.Where(d => d.Status==viewModel.Status);

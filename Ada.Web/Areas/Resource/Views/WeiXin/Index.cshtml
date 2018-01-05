@@ -184,8 +184,8 @@
                         //visible:false
                     },
                     {
-                        field: 'Area',
-                        title: '@Html.DisplayNameFor(d=>d.Area)',
+                        field: 'Areas',
+                        title: '@Html.DisplayNameFor(d=>d.Areas)',
                         valign: "middle",
                         align: "center"
                     },
@@ -273,7 +273,8 @@
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 closeOnConfirm: false,
-                showLoaderOnConfirm: true
+                showLoaderOnConfirm: true,
+
             }, function () {
                 $.ajax({
                     type: "post",

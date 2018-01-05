@@ -352,7 +352,7 @@ namespace Resource.Controllers
             entity.LastReadNum = viewModel.LastReadNum;
             entity.AvgReadNum = viewModel.AvgReadNum;
             entity.PublishFrequency = viewModel.PublishFrequency;
-            entity.Area = viewModel.Area;
+            entity.Area = viewModel.Areas;
             entity.ChannelType = viewModel.ChannelType;
             //entity.LastPushDate = viewModel.LastPushDate;
             entity.AuthenticateType = viewModel.AuthenticateType;
@@ -425,7 +425,7 @@ namespace Resource.Controllers
             entity.LastReadNum = item.LastReadNum;
             entity.AvgReadNum = item.AvgReadNum;
             entity.PublishFrequency = item.PublishFrequency;
-            entity.Area = item.Area;
+            entity.Areas = item.Area;
             entity.ChannelType = item.ChannelType;
             entity.AuthenticateType = item.AuthenticateType;
             entity.TransmitNum = item.TransmitNum;
@@ -504,7 +504,7 @@ namespace Resource.Controllers
             entity.LastReadNum = viewModel.LastReadNum;
             entity.AvgReadNum = viewModel.AvgReadNum;
             entity.PublishFrequency = viewModel.PublishFrequency;
-            entity.Area = viewModel.Area;
+            entity.Area = viewModel.Areas;
             entity.ChannelType = viewModel.ChannelType;
             entity.LastPushDate = viewModel.LastPushDate;
             entity.AuthenticateType = viewModel.AuthenticateType;

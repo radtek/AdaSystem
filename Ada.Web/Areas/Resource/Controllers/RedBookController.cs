@@ -54,7 +54,7 @@ namespace Resource.Controllers
                     MediaLink = d.MediaLink,
                     LikesNum = d.LikesNum,
                     FansNum = d.FansNum,
-                    Area = d.Area,
+                    Areas = d.Area,
                     Content = d.Content,
                     Remark = d.Remark,
                     Status = d.Status,
@@ -113,7 +113,7 @@ namespace Resource.Controllers
             entity.MediaLink = viewModel.MediaLink;
             entity.LikesNum = viewModel.LikesNum;
             entity.FansNum = viewModel.FansNum;
-            entity.Area = viewModel.Area;
+            entity.Area = viewModel.Areas;
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
             entity.Status = viewModel.Status;
@@ -163,7 +163,7 @@ namespace Resource.Controllers
             entity.MediaLink = item.MediaLink;
             entity.LikesNum = item.LikesNum;
             entity.FansNum = item.FansNum;
-            entity.Area = item.Area;
+            entity.Areas = item.Area;
             entity.Content = item.Content;
             entity.Remark = item.Remark;
             entity.Status = item.Status;
@@ -217,7 +217,7 @@ namespace Resource.Controllers
             entity.MediaLink = viewModel.MediaLink;
             entity.LikesNum = viewModel.LikesNum;
             entity.FansNum = viewModel.FansNum;
-            entity.Area = viewModel.Area;
+            entity.Area = viewModel.Areas;
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
             entity.Status = viewModel.Status;

@@ -57,7 +57,7 @@ namespace Resource.Controllers
                     Efficiency = d.Efficiency,
                     ResourceType = d.ResourceType,
                     Channel = d.Channel,
-                    Area = d.Area,
+                    Areas = d.Area,
                     Content = d.Content,
                     Remark = d.Remark,
                     Status = d.Status,
@@ -123,7 +123,7 @@ namespace Resource.Controllers
             entity.ResourceType = viewModel.ResourceType;
             entity.Channel = viewModel.Channel;
 
-            entity.Area = viewModel.Area;
+            entity.Area = viewModel.Areas;
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
             entity.Status = viewModel.Status;
@@ -176,7 +176,7 @@ namespace Resource.Controllers
             entity.Efficiency = item.Efficiency;
             entity.ResourceType = item.ResourceType;
             entity.Channel = item.Channel;
-            entity.Area = item.Area;
+            entity.Areas = item.Area;
             entity.Content = item.Content;
             entity.Remark = item.Remark;
             entity.Status = item.Status;
@@ -237,7 +237,7 @@ namespace Resource.Controllers
             entity.Efficiency = viewModel.Efficiency;
             entity.ResourceType = viewModel.ResourceType;
             entity.Channel = viewModel.Channel;
-            entity.Area = viewModel.Area;
+            entity.Area = viewModel.Areas;
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
             entity.Status = viewModel.Status;

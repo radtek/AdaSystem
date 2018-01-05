@@ -48,10 +48,7 @@ namespace Ada.Services.Admin
             var tempUserAction = managerActions.FirstOrDefault();
             if (tempUserAction != null)
             {
-                if (!tempUserAction.IsPass)
-                {
-                    return false;
-                }
+                return tempUserAction.IsPass;
             }
             //TODO 3.校验（用户/部门）角色权限  这里只做了用户
             var manager = _managerRepository.LoadEntities(d => d.Id == managerId).FirstOrDefault();

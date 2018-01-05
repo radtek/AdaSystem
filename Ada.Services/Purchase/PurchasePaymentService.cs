@@ -43,9 +43,20 @@ namespace Ada.Services.Purchase
             {
                 allList = allList.Where(d => d.Transactor.Contains(viewModel.Transactor));
             }
-            if (viewModel.IsInvoice!=null)
+            if (viewModel.InvoiceStauts != null)
             {
-                allList = allList.Where(d => d.IsInvoice==viewModel.IsInvoice);
+                allList = allList.Where(d => d.InvoiceStauts == viewModel.InvoiceStauts);
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.InvoiceCompany))
+            {
+                allList = from p in allList
+                          from d in p.PurchasePaymentDetails
+                          where d.AccountName.Contains(viewModel.InvoiceCompany)
+                          select p;
+            }
+            if (viewModel.IsInvoice != null)
+            {
+                allList = allList.Where(d => d.IsInvoice == viewModel.IsInvoice);
             }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;

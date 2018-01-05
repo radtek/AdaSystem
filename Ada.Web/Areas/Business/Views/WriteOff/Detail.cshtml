@@ -28,6 +28,9 @@
                                         领款日期
                                     </th>
                                     <th>
+                                        请款金额
+                                    </th>
+                                    <th>
                                         核销金额
                                     </th>
 
@@ -36,17 +39,19 @@
                             <tbody>
                                 @foreach (var item in Model.BusinessPayees)
                                 {
-                                    <tr>
-                                        <td>@item.LinkManName</td>
-                                        <td>@item.Money</td>
-                                        <td>@item.ClaimDate</td>
-                                        <td>@item.ConfirmVerificationMoney</td>
-                                    </tr>
+                                <tr>
+                                    <td>@item.LinkManName</td>
+                                    <td>@item.Money</td>
+                                    <td>@item.ClaimDate</td>
+                                    <td>@item.BusinessPayments.Sum(d=>d.PayMoney)</td>
+                                    <td>@item.ConfirmVerificationMoney</td>
+                                </tr>
                                 }
                                 <tr>
                                     <td>合计</td>
-                                    <td>@Model.BusinessPayees.Sum(d=>d.Money)</td>
+                                    <td>@Model.BusinessPayees.Sum(d => d.Money)</td>
                                     <td></td>
+                                    <td>@Model.BusinessPayees.Sum(d=>d.BusinessPayments.Sum(p=>p.PayMoney))</td>
                                     <td>@Model.BusinessPayees.Sum(d => d.ConfirmVerificationMoney)</td>
                                 </tr>
                             </tbody>

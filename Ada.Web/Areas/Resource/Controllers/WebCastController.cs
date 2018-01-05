@@ -56,7 +56,7 @@ namespace Resource.Controllers
                     Sex = d.Sex,
                     Platform = d.Platform,
                     FansNum = d.FansNum,
-                    Area = d.Area,
+                    Areas = d.Area,
                     Content = d.Content,
                     Remark = d.Remark,
                     Status = d.Status,
@@ -118,7 +118,7 @@ namespace Resource.Controllers
             entity.Sex = viewModel.Sex;
             entity.Platform = viewModel.Platform;
             entity.FansNum = viewModel.FansNum;
-            entity.Area = viewModel.Area;
+            entity.Area = viewModel.Areas;
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
             entity.Status = viewModel.Status;
@@ -169,7 +169,7 @@ namespace Resource.Controllers
             entity.Sex = item.Sex;
             entity.Platform = item.Platform;
             entity.FansNum = item.FansNum;
-            entity.Area = item.Area;
+            entity.Areas = item.Area;
             entity.Content = item.Content;
             entity.Remark = item.Remark;
             entity.Status = item.Status;
@@ -227,7 +227,7 @@ namespace Resource.Controllers
             entity.Sex = viewModel.Sex;
             entity.Platform = viewModel.Platform;
             entity.FansNum = viewModel.FansNum;
-            entity.Area = viewModel.Area;
+            entity.Area = viewModel.Areas;
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
             entity.Status = viewModel.Status;

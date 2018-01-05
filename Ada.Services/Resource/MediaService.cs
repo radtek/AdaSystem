@@ -54,9 +54,9 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.MediaName.Contains(viewModel.MediaName));
             }
-            if (!string.IsNullOrWhiteSpace(viewModel.Area))
+            if (!string.IsNullOrWhiteSpace(viewModel.Areas))
             {
-                allList = allList.Where(d => d.Area.Contains(viewModel.Area));
+                allList = allList.Where(d => d.Area.Contains(viewModel.Areas));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.SEO))
             {

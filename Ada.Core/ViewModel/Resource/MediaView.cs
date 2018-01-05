@@ -13,7 +13,7 @@ namespace Ada.Core.ViewModel.Resource
     {
         public MediaView()
         {
-            Medias=new List<Media>();
+            Medias = new List<Media>();
         }
         /// <summary>
         /// 媒体名称
@@ -79,7 +79,7 @@ namespace Ada.Core.ViewModel.Resource
         /// 地区
         /// </summary>
         [Display(Name = "地区")]
-        public string Area { get; set; }
+        public string Areas { get; set; }
         /// <summary>
         /// 最后推送时间
         /// </summary>

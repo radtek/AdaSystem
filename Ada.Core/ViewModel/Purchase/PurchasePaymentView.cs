@@ -105,10 +105,15 @@ namespace Ada.Core.ViewModel.Purchase
         [Display(Name = "发票号")]
         public string InvoiceNum { get; set; }
         /// <summary>
+        /// 发票抬头
+        /// </summary>
+        [Display(Name = "发票抬头")]
+        public string InvoiceTitle { get; set; }
+        /// <summary>
         /// 开票公司
         /// </summary>
         [Display(Name = "开票公司")]
-        public string InvoiceTitle { get; set; }
+        public string InvoiceCompany { get; set; }
         /// <summary>
         /// 审核人
         /// </summary>

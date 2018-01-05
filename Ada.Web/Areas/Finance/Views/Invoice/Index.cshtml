@@ -2,11 +2,88 @@
 @model Ada.Core.ViewModel.Business.BusinessInvoiceView
 @{
     ViewBag.Title = "销售开票";
+    List<SelectListItem> status = new List<SelectListItem>() { new SelectListItem() { Text = "已开", Value = "1" }, new SelectListItem() { Text = "待开", Value = "0" } };
+    List<SelectListItem> moneyStatus = new List<SelectListItem>() { new SelectListItem() { Text = "已付", Value = "1" }, new SelectListItem() { Text = "待付", Value = "0" } };
 }
 @Html.Partial("Bread")
 
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
+    <div class="ibox collapsed">
+        <div class="ibox-title">
+            <h5>高级筛选</h5>
+            <div class="ibox-tools">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <form id="searchFrm" onSubmit="javascript:searchFrm.search(this,event);">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Company, Html.DisplayNameFor(d => d.Company) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.Company, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
 
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.InvoiceNum, Html.DisplayNameFor(d => d.InvoiceNum) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.InvoiceNum, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.InvoiceTitle, Html.DisplayNameFor(d => d.InvoiceTitle) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.InvoiceTitle, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.InvoiceType, Html.DisplayNameFor(d => d.InvoiceType) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.InvoiceType, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.TaxNum, Html.DisplayNameFor(d => d.TaxNum) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.TaxNum, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status) + "：", new { @class = "control-label" })
+                            @Html.DropDownListFor(d => d.Status, status, "请选择", new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.MoneyStatus, Html.DisplayNameFor(d => d.MoneyStatus) + "：", new { @class = "control-label" })
+                            @Html.DropDownListFor(d => d.MoneyStatus, moneyStatus, "请选择", new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 搜索</button>
+                            <button class="btn btn-warning" type="button" onclick="searchFrm.reset($('#searchFrm'));"><i class="fa fa-repeat"></i> 重置</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
@@ -29,6 +106,7 @@
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
+           
         });
         var TableInit = function() {
             var obj = new Object();

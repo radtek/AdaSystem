@@ -52,7 +52,7 @@ namespace Resource.Controllers
                     Id = d.Id,
                     MediaName = d.MediaName,
                     MediaID = d.MediaID,
-                    Area = d.Area,
+                    Areas = d.Area,
                     FansNum = d.FansNum,
                     Content = d.Content,
                     Remark = d.Remark,
@@ -110,7 +110,7 @@ namespace Resource.Controllers
 
             entity.MediaName = viewModel.MediaName.Trim();
             entity.MediaID = viewModel.MediaID.Trim();
-            entity.Area = viewModel.Area;
+            entity.Area = viewModel.Areas;
             entity.FansNum = viewModel.FansNum;
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
@@ -159,7 +159,7 @@ namespace Resource.Controllers
             entity.TransactorId = item.TransactorId;
             entity.MediaName = item.MediaName;
             entity.MediaID = item.MediaID;
-            entity.Area = item.Area;
+            entity.Areas = item.Area;
             entity.FansNum = item.FansNum;
             entity.Content = item.Content;
             entity.Remark = item.Remark;
@@ -212,7 +212,7 @@ namespace Resource.Controllers
             entity.TransactorId = viewModel.TransactorId;
             entity.MediaName = viewModel.MediaName.Trim();
             entity.MediaID = viewModel.MediaID.Trim();
-            entity.Area = viewModel.Area;
+            entity.Area = viewModel.Areas;
             entity.FansNum = viewModel.FansNum;
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
