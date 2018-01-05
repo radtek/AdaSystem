@@ -180,5 +180,10 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "转单情况")]
         public string OrderSchedule { get; set; }
+        /// <summary>
+        /// 媒体名称
+        /// </summary>
+        [Display(Name = "媒体名称")]
+        public string MediaName { get; set; }
     }
 }

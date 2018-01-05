@@ -15,11 +15,13 @@ namespace Customer.Controllers
     {
         private readonly ILinkManService _linkManService;
         private readonly IRepository<Commpany> _repository;
+        private readonly IRepository<LinkMan> _linkManRepository;
 
-        public LinkManController(ILinkManService linkManService, IRepository<Commpany> repository)
+        public LinkManController(ILinkManService linkManService, IRepository<Commpany> repository, IRepository<LinkMan> linkManRepository)
         {
             _linkManService = linkManService;
             _repository = repository;
+            _linkManRepository = linkManRepository;
         }
         public ActionResult GetList(LinkManView viewModel)
         {
@@ -55,6 +57,12 @@ namespace Customer.Controllers
                     Name = d.Name
                 })
             }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Detail(string id)
+        {
+            var linkman = _linkManRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            return PartialView("LinkManDetail",linkman);
         }
     }
 }

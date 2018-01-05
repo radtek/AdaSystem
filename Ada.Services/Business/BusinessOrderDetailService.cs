@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Business;
+using Ada.Core.Domain.Purchase;
 using Ada.Core.ViewModel.Business;
 
 namespace Ada.Services.Business
@@ -14,34 +15,81 @@ namespace Ada.Services.Business
     {
         private readonly IDbContext _dbContext;
         private readonly IRepository<BusinessOrderDetail> _repository;
+        private readonly IRepository<PurchaseOrderDetail> _purchaseOrderDetailRepository;
         public BusinessOrderDetailService(IDbContext dbContext,
-            IRepository<BusinessOrderDetail> repository)
+            IRepository<BusinessOrderDetail> repository,
+            IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository)
         {
             _dbContext = dbContext;
             _repository = repository;
+            _purchaseOrderDetailRepository = purchaseOrderDetailRepository;
         }
 
 
         public IQueryable<BusinessOrderDetail> LoadEntitiesFilter(BusinessOrderDetailView viewModel)
         {
+            var purchaseOrderDetails = _purchaseOrderDetailRepository.LoadEntities(d => d.IsDelete == false);
             var allList = _repository.LoadEntities(d => d.IsDelete == false);
             //条件过滤
             if (viewModel.Managers != null && viewModel.Managers.Count > 0)
             {
                 allList = allList.Where(d => viewModel.Managers.Contains(d.BusinessOrder.TransactorId));
             }
-
+            if (!string.IsNullOrWhiteSpace(viewModel.Transactor))
+            {
+                allList = allList.Where(d => d.BusinessOrder.Transactor.Contains(viewModel.Transactor));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.OrderRemark))
+            {
+                allList = allList.Where(d => d.BusinessOrder.Remark.Contains(viewModel.OrderRemark));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaName))
+            {
+                allList = allList.Where(d => d.MediaName.Contains(viewModel.MediaName));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeName))
+            {
+                allList = allList.Where(d => d.MediaTypeName.Contains(viewModel.MediaTypeName));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
+            {
+                allList = allList.Where(d => d.AdPositionName.Contains(viewModel.AdPositionName));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.OrderNum))
             {
                 allList = allList.Where(d => d.BusinessOrder.OrderNum == viewModel.OrderNum);
             }
-            if (viewModel.Status!=null)
+            if (viewModel.Status != null)
             {
-                allList = allList.Where(d => d.Status==viewModel.Status);
+                allList = allList.Where(d => d.Status == viewModel.Status);
             }
             if (viewModel.VerificationStatus != null)
             {
                 allList = allList.Where(d => d.VerificationStatus == viewModel.VerificationStatus);
+            }
+            if (viewModel.PurchaseStatus != null)
+            {
+
+                allList = from b in allList
+                          from p in purchaseOrderDetails
+                          where b.Id == p.BusinessOrderDetailId && p.Status == viewModel.PurchaseStatus
+                          select b;
+            }
+
+            if (viewModel.PublishDateStart != null)
+            {
+                allList = from b in allList
+                          from p in purchaseOrderDetails
+                          where b.Id == p.BusinessOrderDetailId && p.PublishDate >= viewModel.PublishDateStart
+                          select b;
+            }
+            if (viewModel.PublishDateEnd != null)
+            {
+                var endDate = viewModel.PublishDateEnd.Value.AddDays(1);
+                allList = from b in allList
+                          from p in purchaseOrderDetails
+                          where b.Id == p.BusinessOrderDetailId && p.PublishDate < endDate
+                          select b;
             }
             if (viewModel.AuditStatus != null)
             {

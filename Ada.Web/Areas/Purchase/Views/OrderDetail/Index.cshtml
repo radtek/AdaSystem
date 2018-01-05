@@ -220,6 +220,7 @@
                         field: 'LinkManName',
                         title: '@Html.DisplayNameFor(d=>d.LinkManName)',
                         align: "center", valign: "middle",
+                        formatter: formatter.linkman
                     },
                     {
                         field: 'MediaTypeName',
@@ -270,8 +271,8 @@
                         align: "center", valign: "middle", formatter: formatter.tooltip
                     },
                     {
-                        field: 'CostMoney',
-                        title: '@Html.DisplayNameFor(d=>d.CostMoney)',
+                        field: 'PurchaseMoney',
+                        title: '@Html.DisplayNameFor(d=>d.PurchaseMoney)',
                         align: "center", valign: "middle"
                     },
                     @*{

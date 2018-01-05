@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Business;
+using Ada.Core.Domain.Purchase;
 using Ada.Core.ViewModel.Business;
 using Ada.Framework.Filter;
 using Ada.Services.Business;
@@ -20,16 +21,19 @@ namespace Business.Controllers
         private readonly IBusinessWriteOffService _businessWriteOffService;
         private readonly IRepository<BusinessWriteOff> _repository;
         private readonly IRepository<BusinessOrderDetail> _businessOrderDetailRepository;
+        private readonly IRepository<PurchaseOrderDetail> _purchaseOrderDetailRepository;
         private readonly IRepository<BusinessPayee> _businessPayeerepository;
         public WriteOffController(IBusinessWriteOffService businessWriteOffService,
             IRepository<BusinessWriteOff> repository,
             IRepository<BusinessOrderDetail> businessOrderDetailRepository,
-            IRepository<BusinessPayee> businessPayeerepository)
+            IRepository<BusinessPayee> businessPayeerepository,
+            IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository)
         {
             _businessWriteOffService = businessWriteOffService;
             _repository = repository;
             _businessOrderDetailRepository = businessOrderDetailRepository;
             _businessPayeerepository = businessPayeerepository;
+            _purchaseOrderDetailRepository = purchaseOrderDetailRepository;
         }
         public ActionResult Index()
         {
@@ -94,25 +98,35 @@ namespace Business.Controllers
             foreach (var orderId in orderIds)
             {
                 var order = _businessOrderDetailRepository.LoadEntities(d => d.Id == orderId).FirstOrDefault();
-                orderMoney += order.VerificationMoney;
-                order.VerificationStatus = Consts.StateNormal;
-                order.ConfirmVerificationMoney = order.VerificationMoney;
-                order.VerificationMoney = 0;
-                businessWriteOff.BusinessOrderDetails.Add(order);
+                //未核销 已下单 已采购完成
+                if (order.VerificationStatus != Consts.StateNormal && order.Status == Consts.StateNormal && IsPurchased(orderId))
+                {
+                    orderMoney += order.VerificationMoney;
+                    order.VerificationStatus = Consts.StateNormal;
+                    order.ConfirmVerificationMoney = order.VerificationMoney;
+                    order.VerificationMoney = 0;
+                    businessWriteOff.BusinessOrderDetails.Add(order);
+                }
+
             }
             foreach (var payeeId in payeeIds)
             {
                 var payee = _businessPayeerepository.LoadEntities(d => d.Id == payeeId).FirstOrDefault();
-                var verificaitonMoney = payee.Money - payee.BusinessPayments.Where(d => d.AuditStatus == Consts.StateNormal)
-                    .Sum(d => d.PayMoney);
-                payeeMoney += verificaitonMoney;
-                payee.VerificationStatus = Consts.StateNormal;
-                payee.ConfirmVerificationMoney = verificaitonMoney;
-                payee.VerificationMoney = 0;
-                businessWriteOff.BusinessPayees.Add(payee);
+                //未核销
+                if (payee.VerificationStatus != Consts.StateNormal)
+                {
+                    var verificaitonMoney = payee.Money - payee.BusinessPayments.Where(d => d.AuditStatus == Consts.StateNormal)
+                                                .Sum(d => d.PayMoney);
+                    payeeMoney += verificaitonMoney;
+                    payee.VerificationStatus = Consts.StateNormal;
+                    payee.ConfirmVerificationMoney = verificaitonMoney;
+                    payee.VerificationMoney = 0;
+                    businessWriteOff.BusinessPayees.Add(payee);
+                }
+
             }
             //校验金额
-            if (orderMoney != payeeMoney)
+            if (orderMoney != payeeMoney || orderMoney == 0 || payeeMoney == 0)
             {
                 ModelState.AddModelError("message", "核销金额不一致！");
                 return View(viewModel);
@@ -144,6 +158,12 @@ namespace Business.Controllers
             entity.BusinessPayees.Clear();
             _businessWriteOffService.Delete(entity);//物理删除
             return Json(new { State = 1, Msg = "撤销成功" });
+        }
+
+        private bool IsPurchased(string id)
+        {
+            var purchase = _purchaseOrderDetailRepository.LoadEntities(d => d.BusinessOrderDetailId == id).FirstOrDefault();
+            return purchase.Status == Consts.PurchaseStatusSuccess;
         }
     }
 }

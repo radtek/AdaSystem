@@ -372,9 +372,9 @@ function getData() {
             var index = _.findIndex(tableData, { 'Id': v.Id });
             if (index < 0) {
                 v.Tax = $("#Tax").val() || 0;
-                v.PurchaseMoney = v.CostMoney;
-                v.Money = Math.toFixMoney(v.CostMoney * (1 + v.Tax / 100));//乘以税率
-                v.TaxMoney = Math.toFixMoney(v.CostMoney * (v.Tax  / 100));
+                //v.PurchaseMoney = v.PurchaseMoney;
+                v.Money = Math.toFixMoney(v.PurchaseMoney * (1 + v.Tax / 100));//乘以税率
+                v.TaxMoney = Math.toFixMoney(v.PurchaseMoney * (v.Tax  / 100));
                 temp.push(v);
             }
 

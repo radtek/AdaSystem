@@ -69,6 +69,7 @@ namespace Business.Controllers
                     Id = d.Id,
                     OrderNum = d.OrderNum,
                     LinkManName = d.LinkManName,
+                    LinkManId = d.LinkManId,
                     TotalMoney = d.BusinessOrderDetails.Sum(o=>o.Money),
                     Transactor = d.Transactor,
                     Status = d.Status ?? Consts.StateLock,

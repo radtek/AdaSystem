@@ -50,9 +50,16 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => d.Transactor.Contains(viewModel.Transactor));
             }
-            if (viewModel.Status!=null)
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaName))
             {
-                allList = allList.Where(d => d.Status==viewModel.Status);
+                allList = from o in allList
+                          from d in o.BusinessOrderDetails
+                          where d.MediaName.Contains(viewModel.MediaName)
+                          select o;
+            }
+            if (viewModel.Status != null)
+            {
+                allList = allList.Where(d => d.Status == viewModel.Status);
             }
             if (viewModel.VerificationStatus != null)
             {
@@ -68,7 +75,7 @@ namespace Ada.Services.Business
             }
             if (viewModel.IsInvoice == false)
             {
-                allList = allList.Where(d => d.BusinessInvoiceDetails.Count==0);
+                allList = allList.Where(d => d.BusinessInvoiceDetails.Count == 0);
             }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;

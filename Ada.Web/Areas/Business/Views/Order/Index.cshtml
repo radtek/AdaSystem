@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="ibox-content">
-            <form  id="searchFrm" onSubmit="javascript:searchFrm.search(this,event);">
+            <form id="searchFrm" onSubmit="javascript:searchFrm.search(this,event);">
                 <div class="row">
                     <div class="col-sm-3">
                         <div class="form-group">
@@ -25,11 +25,17 @@
                             @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control input-sm" })
                         </div>
                     </div>
-                   
+
                     <div class="col-sm-3">
                         <div class="form-group">
                             @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark) + "：", new { @class = "control-label" })
                             @Html.TextBoxFor(d => d.Remark, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control input-sm" })
                         </div>
                     </div>
                     <div class="col-sm-3">
@@ -68,8 +74,8 @@
         <i class="fa fa-plus"></i> 新增
     </a>
     @*<button id="btn_edit" type="button" class="btn btn-primary btn-outline">
-        <i class="fa fa-pencil"></i> 修改
-    </button>*@
+            <i class="fa fa-pencil"></i> 修改
+        </button>*@
     <button id="btn_delete" type="button" class="btn btn-primary btn-outline">
         <i class="fa fa-trash-o"></i> 删除
     </button>
@@ -82,7 +88,7 @@
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/peity")
-<script type="text/javascript">
+    <script type="text/javascript">
 
         $(document).ready(function () {
             var table = new TableInit();
@@ -144,6 +150,7 @@
                         field: 'LinkManName',
                         title: '@Html.DisplayNameFor(d=>d.LinkManName)',
                         align: "center", valign: "middle",
+                        formatter:formatter.linkman
                     }
                     ,
                     {
@@ -302,7 +309,8 @@
                 });
 
         }
-</script>
+
+    </script>
 }
 
 

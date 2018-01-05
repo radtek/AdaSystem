@@ -45,7 +45,7 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "成本金额")]
         public decimal? CostMoney { get; set; }
         /// <summary>
-        /// 销售金额
+        /// 无税金额
         /// </summary>
         [Display(Name = "无税金额")]
         public decimal? SellMoney { get; set; }
@@ -115,7 +115,7 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "采购状态")]
         public short? PurchaseStatus { get; set; }
         /// <summary>
-        /// 订单状态
+        /// 订单状态 0未转单 1已转采购
         /// </summary>
         [Display(Name = "订单状态")]
         public short? Status { get; set; }
@@ -124,5 +124,30 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "订单编号")]
         public string OrderNum { get; set; }
+        /// <summary>
+        /// 订单日期
+        /// </summary>
+        [Display(Name = "订单日期")]
+        public DateTime OrderDate { get; set; }
+        /// <summary>
+        /// 项目摘要
+        /// </summary>
+        [Display(Name = "项目摘要")]
+        public string OrderRemark { get; set; }
+        /// <summary>
+        /// 出刊日期
+        /// </summary>
+        [Display(Name = "出刊日期")]
+        public DateTime? PublishDateStart { get; set; }
+        /// <summary>
+        /// 出刊日期
+        /// </summary>
+        [Display(Name = "出刊日期")]
+        public DateTime? PublishDateEnd { get; set; }
+        /// <summary>
+        /// 经办业务
+        /// </summary>
+        [Display(Name = "经办业务")]
+        public string Transactor { get; set; }
     }
 }

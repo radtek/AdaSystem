@@ -276,8 +276,9 @@ function initOrder() {
         mobileResponsive: true,
         queryParams: function (parameters) {
             parameters.OrderNum = $("#OrderNum").val();
-            parameters.VerificationStatus = 0;
-            parameters.Status = 1;
+            parameters.VerificationStatus = 0;//已核销
+            parameters.Status = 1;//已转单
+            parameters.PurchaseStatus = 3;//采购已完成
             return parameters;
         },
         responseHandler: orderResponseHandler,

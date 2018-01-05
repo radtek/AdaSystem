@@ -42,6 +42,7 @@ namespace Purchase.Controllers
                     Id = d.Id,
                     Status = d.Status,
                     LinkManName = d.LinkManName,
+                    LinkManId = d.LinkManId,
                     PurchaseOrderNum = d.PurchaseOrder.OrderNum,
                     BusinessBy = d.PurchaseOrder.BusinessBy,
                     MediaTypeName = d.MediaTypeName,
@@ -85,7 +86,7 @@ namespace Purchase.Controllers
             item.Remark = entity.Remark;
             //item.Tax = entity.Tax;
             //item.TaxMoney = entity.TaxMoney;
-            //item.PurchaseMoney = entity.PurchaseMoney;
+            item.PurchaseMoney = entity.PurchaseMoney;
             //item.Money = entity.Money;
             //item.DiscountRate = entity.DiscountRate;
             //item.DiscountMoney = entity.DiscountMoney;
@@ -133,7 +134,7 @@ namespace Purchase.Controllers
             //entity.DiscountRate = viewModel.DiscountRate;
             //entity.Tax = viewModel.Tax;
             //entity.TaxMoney = viewModel.TaxMoney;
-            //entity.PurchaseMoney = viewModel.PurchaseMoney;
+            entity.PurchaseMoney = viewModel.PurchaseMoney;
             //entity.Money = viewModel.Money;
             //entity.DiscountMoney = viewModel.DiscountMoney;
             //entity.BargainMoney = viewModel.BargainMoney;

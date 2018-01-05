@@ -1,0 +1,93 @@
+﻿@model Ada.Core.Domain.Customer.LinkMan
+<div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">[@Model.Name] 信息</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Commpany.Name, Html.DisplayNameFor(d => d.Commpany.Name).ToString(), new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.Commpany.Name, new { @class = "form-control input-sm", @readonly = "" })
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Commpany.City, Html.DisplayNameFor(d => d.Commpany.City).ToString(), new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.Commpany.City, new { @class = "form-control input-sm", @readonly = "" })
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Commpany.CommpanyType, Html.DisplayNameFor(d => d.Commpany.CommpanyType).ToString(), new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.Commpany.CommpanyType, new { @class = "form-control input-sm", @readonly = "" })
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.WeiXin, Html.DisplayNameFor(d => d.WeiXin).ToString(), new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.WeiXin, new { @class = "form-control input-sm", @readonly = "" })
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.QQ, Html.DisplayNameFor(d => d.QQ).ToString(), new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.QQ, new { @class = "form-control input-sm", @readonly = "" })
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Phone, Html.DisplayNameFor(d => d.Phone).ToString(), new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.Phone, new { @class = "form-control input-sm", @readonly = "" })
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <caption class="text-center">
+                                    <h3>相关账户信息</h3>
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            账户类型
+                                        </th>
+                                        <th>
+                                            账户名称
+                                        </th>
+                                        <th>
+                                            账户账号
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.PayAccounts)
+                                    {
+                                        <tr>
+                                            <td>@item.AccountType</td>
+                                            <td>@item.AccountName</td>
+                                            <td>@item.AccountNum</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>

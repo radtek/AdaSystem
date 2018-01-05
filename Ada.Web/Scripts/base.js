@@ -35,7 +35,7 @@ searchFrm.reset = function (form) {
 }
 
 var formatter = {};
-formatter.userStatus = function(value, row, index) {
+formatter.userStatus = function (value, row, index) {
     if (value == 1) {
         return "<span class='label label-primary'>是</span>";
     } else {
@@ -63,14 +63,14 @@ formatter.inout = function (value, row, index) {
         return "<span class='label label-warning'>支出</span>";
     }
 };
-formatter.normalStatus = function(value, row, index) {
+formatter.normalStatus = function (value, row, index) {
     if (value == 1) {
         return "<span class='label label-primary'>正常</span>";
     } else {
         return "<span class='label label-warning'>关闭</span>";
     }
 };
-formatter.businessStatus = function(value, row, index) {
+formatter.businessStatus = function (value, row, index) {
     if (value == 1) {
         return "<span class='label label-primary'>已下单</span>";
     } else if (value == -1) {
@@ -91,7 +91,7 @@ formatter.auditStatus = function (value, row, index) {
 formatter.payStatus = function (value, row, index) {
     if (value == 1) {
         return "<span class='label label-primary'>已付</span>";
-    }else {
+    } else {
         return "<span class='label'>待付</span>";
     }
 };
@@ -102,7 +102,7 @@ formatter.invoiceStatus = function (value, row, index) {
         return "<span class='label'>待开</span>";
     }
 };
-formatter.purchaseStatus = function(value, row, index) {
+formatter.purchaseStatus = function (value, row, index) {
     if (value == 2) {
         return "<span class='label label-primary'>已确认</span>";
     } else if (value == 1) {
@@ -115,12 +115,12 @@ formatter.purchaseStatus = function(value, row, index) {
         return "<span class='label label-danger'>采购失败</span>";
     }
 };
-formatter.url = function(value, row, index) {
+formatter.url = function (value, row, index) {
     if (value) {
         return "<a class='label' href='" + value + "' target='_blank'><i class='fa fa-link'></i> 浏览</a>";
     }
 };
-formatter.tooltip = function(value, row, index) {
+formatter.tooltip = function (value, row, index) {
     if (value) {
         return '<span class="label label-info" data-toggle="tooltip" data-placement="bottom" title="' +
             value +
@@ -128,13 +128,23 @@ formatter.tooltip = function(value, row, index) {
     }
 };
 formatter.pie = function (value, row, index) {
-    return '<span class="pie">'+value+'</span>';
+    return '<span class="pie">' + value + '</span>';
 };
 formatter.image = function (value, row, index) {
     if (value) {
         return '<div class="lightBoxGallery"><a href="' + value + '" title="预览图片" data-gallery=""><i class="fa fa-picture-o"></i></a></div>';
     }
 };
+formatter.linkman = function (value, row, index) {
+    return "<a class='label label-info' href=\"javascript:linkmanDetail('" + row.LinkManId + "')\"><i class='fa fa-address-book-o'></i> " + value + "</a>";
+}
+
+function linkmanDetail(id) {
+    $("#modalView").load("/Customer/LinkMan/Detail/" + id,
+        function () {
+            $('#modalView .modal').modal('show');
+        });
+}
 function initTooltip() {
     $('[data-toggle="tooltip"]').tooltip();
 }
@@ -145,8 +155,8 @@ function initPie() {
             fill: ['#1ab394', '#d7d7d7', '#ffffff']
         });
 }
-function initChangePwd(url,token) {
-    $("#changepwd").click(function() {
+function initChangePwd(url, token) {
+    $("#changepwd").click(function () {
         $("#modalView").load(url,
             function () {
                 $('#modalView .modal').modal('show');
@@ -184,10 +194,10 @@ function initChangePwd(url,token) {
                 });
             });
     });
-    
+
 }
 function initCropper(apiurl) {
-    $("#changeimage").click(function() {
+    $("#changeimage").click(function () {
         $("#modalView").load(apiurl,
             function () {
                 var image = document.getElementById('image');
@@ -222,7 +232,7 @@ function initCropper(apiurl) {
                 };
                 $('#modalView .modal').on('shown.bs.modal', function () {
                     cropper = new Cropper(image, options);
-                    
+
                 }).on('hidden.bs.modal', function () {
                     cropBoxData = cropper.getCropBoxData();
                     canvasData = cropper.getCanvasData();
@@ -318,7 +328,7 @@ function initCropper(apiurl) {
                 $('#modalView .modal').modal('show');
             });
     });
-    
+
 }
 
 
