@@ -34,8 +34,8 @@
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control input-sm" })
+                            @Html.LabelFor(d => d.OrderNum, Html.DisplayNameFor(d => d.OrderNum) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.OrderNum, new { @class = "form-control input-sm" })
                         </div>
                     </div>
                     <div class="col-sm-3">
@@ -131,6 +131,7 @@
                 },
                 mobileResponsive: true,
                 onLoadSuccess: initPie,
+                queryParams: searchFrm.queryParams,
                 columns: [
                     {
                         checkbox: true
@@ -149,7 +150,7 @@
                     {
                         field: 'LinkManName',
                         title: '@Html.DisplayNameFor(d=>d.LinkManName)',
-                        align: "center", valign: "middle",
+                        align: "left", valign: "middle",
                         formatter:formatter.linkman
                     }
                     ,

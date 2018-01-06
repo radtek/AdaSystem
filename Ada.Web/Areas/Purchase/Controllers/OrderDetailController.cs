@@ -114,6 +114,11 @@ namespace Purchase.Controllers
             }
 
             var entity = _purchaseOrderDetailRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
+            if (viewModel.PurchaseMoney > entity.CostMoney)
+            {
+                ModelState.AddModelError("message", "不能低于成本金额处理");
+                return View(viewModel);
+            }
             //var businessOrderDetail = GetBusinessOrderDetail(entity.BusinessOrderDetailId);
             //if (businessOrderDetail.BusinessOrder.VerificationStatus==Consts.StateNormal)
             //{
@@ -135,6 +140,7 @@ namespace Purchase.Controllers
             //entity.Tax = viewModel.Tax;
             //entity.TaxMoney = viewModel.TaxMoney;
             entity.PurchaseMoney = viewModel.PurchaseMoney;
+            
             //entity.Money = viewModel.Money;
             //entity.DiscountMoney = viewModel.DiscountMoney;
             //entity.BargainMoney = viewModel.BargainMoney;

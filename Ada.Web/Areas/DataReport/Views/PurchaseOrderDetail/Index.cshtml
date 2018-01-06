@@ -23,7 +23,7 @@
         <div class="ibox-content">
             <form id="searchFrm" onSubmit="javascript:searchFrm.search(this,event);">
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
                             @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName) + "：", new { @class = "control-label" })
                             @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control input-sm" })
@@ -31,40 +31,35 @@
                     </div>
 
 
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
                             @Html.LabelFor(d => d.MediaTypeName, Html.DisplayNameFor(d => d.MediaTypeName) + "：", new { @class = "control-label" })
                             @Html.TextBoxFor(d => d.MediaTypeName, new { @class = "form-control input-sm" })
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
                             @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName) + "：", new { @class = "control-label" })
                             @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control input-sm" })
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
                             @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status) + "：", new { @class = "control-label" })
                             @Html.DropDownListFor(d => d.Status, purchaseStatus, "请选择", new { @class = "form-control input-sm" })
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    @*<div class="col-sm-3">
                         <div class="form-group">
                             @Html.LabelFor(d => d.PublishDateStartEnd, Html.DisplayNameFor(d => d.PublishDateStartEnd) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.PublishDateStartEnd, new { @class = "form-control input-sm",@readonly="" })
+                            @Html.TextBoxFor(d => d.PublishDateStartEnd, new { @class = "form-control input-sm", @readonly = "" })
                             @Html.HiddenFor(d => d.PublishDateStart)
                             @Html.HiddenFor(d => d.PublishDateEnd)
                         </div>
-                    </div>
+                    </div>*@
+
                    
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.BusinessBy, Html.DisplayNameFor(d => d.BusinessBy) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.BusinessBy, new { @class = "form-control input-sm" })
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
                             @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor) + "：", new { @class = "control-label" })
                             @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control input-sm" })
@@ -76,7 +71,7 @@
                     <div class="col-sm-12 text-center">
                         <div class="form-group">
                             <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 搜索</button>
-                            <button class="btn btn-warning" type="button" id="btn_reset"><i class="fa fa-repeat"></i> 重置</button>
+                            <button class="btn btn-warning" type="button" onclick="searchFrm.reset($('#searchFrm'));"><i class="fa fa-repeat"></i> 重置</button>
                         </div>
                     </div>
                 </div>
@@ -106,66 +101,12 @@
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/dateRange")
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
-            //2.初始化Button的点击事件
-            var oButtonInit = new ButtonInit();
-            oButtonInit.Init();
-            var $datepicker = $('#PublishDateStartEnd');
-            $datepicker.daterangepicker({
-                    autoUpdateInput: false,
-                    opens: "center",
-                    linkedCalendars: false,
-                    locale: {
-                        format: 'YYYY-MM-DD',
-                        separator: " 至 ",
-                        applyLabel: "确认",
-                        cancelLabel: "取消",
-                        fromLabel: "从",
-                        toLabel: "到",
-                        customRangeLabel: "自定义",
-                        weekLabel: "周",
-                        daysOfWeek: [
-                            "日",
-                            "一",
-                            "二",
-                            "三",
-                            "四",
-                            "五",
-                            "六"
-                        ],
-                        monthNames: [
-                            "一月",
-                            "二月",
-                            "三月",
-                            "四月",
-                            "五月",
-                            "六月",
-                            "七月",
-                            "八月",
-                            "九月",
-                            "十月",
-                            "十一月",
-                            "十二月"
-                        ],
-                        firstDay: 1
-                    }
-                },
-                function(start,end,label) {
-                    $("#PublishDateStart").val(start.format('YYYY-MM-DD'));
-                    $("#PublishDateEnd").val(end.format('YYYY-MM-DD'));
-                });
-
-            $datepicker.on('apply.daterangepicker', function(ev, picker) {
-                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' 至 ' + picker.endDate.format('YYYY-MM-DD'));
-            });
-            $datepicker.on('cancel.daterangepicker', function(ev, picker) {
-                $(this).val('');
-                resetDate();
-            });
+         
         });
         var TableInit = function() {
             var obj = new Object();
@@ -193,23 +134,36 @@
                 uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
                 showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
                 cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
-                //detailView: true,                   //设置为 true 可以显示详细页面模式。
-                //detailFormatter: detailFormatter,
+                showFooter: true,
                 formatSearch: function() {
                     return "@Html.DisplayNameFor(d => d.MediaName)";
                 },
                 queryParams: searchFrm.queryParams,
+                rowStyle: function (row, index) {
+                    if (row.Status == 3 && row.PurchaseMoney == 0) {
+                        return {
+                            classes: "warning"
+                        };
+                    }
+                    if (row.Status == 3 && row.PurchaseMoney > row.CostMoney) {
+                        return {
+                            classes: "danger"
+                        };
+                    }
+                    return {};
+                },
                 mobileResponsive: true,
-                onLoadSuccess: initTooltip,
                 columns: [
-                    //{
-                    //    checkbox: true
-                    //},
                     {
-                        field: 'Status',
-                        title: '@Html.DisplayNameFor(d=>d.Status)',
+                        field: 'OrderDate',
+                        title: '@Html.DisplayNameFor(d=>d.OrderDate)',
                         align: "center", valign: "middle",
-                        formatter: formatter.purchaseStatus
+                        formatter: function(value) {
+                            return  moment(value).format("YYYY-MM-DD");
+                        },
+                        footerFormatter: function () {
+                            return "合计";
+                        }
                     },
                     {
                         field: 'PurchaseOrderNum',
@@ -219,7 +173,7 @@
                     {
                         field: 'LinkManName',
                         title: '@Html.DisplayNameFor(d=>d.LinkManName)',
-                        align: "center", valign: "middle",
+                        align: "left", valign: "middle",
                         formatter: formatter.linkman
                     },
                     {
@@ -238,51 +192,56 @@
                         title: '@Html.DisplayNameFor(d=>d.AdPositionName)',
                         align: "center", valign: "middle",
                     },
-                    @*{
+                    {
                         field: 'CostMoney',
                         title: '@Html.DisplayNameFor(d=>d.CostMoney)',
                         align: "center", valign: "middle",
                     },
-                   {
+                    {
+                        field: 'Money',
+                        title: '@Html.DisplayNameFor(d=>d.Money)',
+                        align: "center", valign: "middle",
+                        footerFormatter: function (data) {
+                            if (data[0]) {
+                                return data[0].TotalMoney;
+                            }
+                            return 0;
+                        }
+                    },
+                    {
                         field: 'PurchaseMoney',
                         title: '@Html.DisplayNameFor(d=>d.PurchaseMoney)',
-                        align: "center"
-                    }
-                    ,
-                    {
-                        field: 'Tax',
-                        title: '@Html.DisplayNameFor(d=>d.Tax)',
-                        align: "center"
+                        align: "center", valign: "middle",
+                        footerFormatter: function (data) {
+                            if (data[0]) {
+                                return data[0].TotalPurchaseMoney;
+                            }
+                            return 0;
+                        }
                     }
                     ,
                     {
                         field: 'TaxMoney',
                         title: '@Html.DisplayNameFor(d=>d.TaxMoney)',
-                        align: "center"
+                        align: "center", valign: "middle",
+                        footerFormatter: function (data) {
+                            if (data[0]) {
+                                return data[0].TotalTaxMoney;
+                            }
+                            return 0;
+                        }
                     },
                     {
                         field: 'DiscountMoney',
                         title: '@Html.DisplayNameFor(d=>d.DiscountMoney)',
-                        align: "center"
-                    },*@
-                    {
-                        field: 'MediaTitle',
-                        title: '@Html.DisplayNameFor(d=>d.MediaTitle)',
-                        align: "center", valign: "middle", formatter: formatter.tooltip
-                    },
-                    {
-                        field: 'PurchaseMoney',
-                        title: '@Html.DisplayNameFor(d=>d.PurchaseMoney)',
-                        align: "center", valign: "middle"
-                    },
-                    @*{
-                        field: 'PrePublishDate',
-                        title: '@Html.DisplayNameFor(d=>d.PrePublishDate)',
                         align: "center", valign: "middle",
-                        formatter: function(value) {
-                            return  moment(value).format("YYYY-MM-DD");
+                        footerFormatter: function (data) {
+                            if (data[0]) {
+                                return data[0].TotalDiscountMoney;
+                            }
+                            return 0;
                         }
-                    },*@
+                    },
                     {
                         field: 'PublishDate',
                         title: '@Html.DisplayNameFor(d=>d.PublishDate)',
@@ -298,107 +257,27 @@
                         title: '@Html.DisplayNameFor(d=>d.PublishLink)',
                         align: "center", valign: "middle", formatter: formatter.url
                     },
-                    @*{
-                        field: 'Money',
-                        title: '@Html.DisplayNameFor(d=>d.Money)',
-                        align: "center", valign: "middle",
-                    },*@
-                    {
-                        field: 'BusinessBy',
-                        title: '@Html.DisplayNameFor(d=>d.BusinessBy)',
-                        align: "center", valign: "middle",
-                    },
+
                     {
                         field: 'Transactor',
                         title: '@Html.DisplayNameFor(d=>d.Transactor)',
                         align: "center", valign: "middle",
                     },
-                    {
-                        field: 'OrderDate',
-                        title: '@Html.DisplayNameFor(d=>d.OrderDate)',
-                        align: "center", valign: "middle",
-                        formatter: function(value) {
-                            return  moment(value).format("YYYY-MM-DD");
-                        }
-                    },
-                    {
-                        field: 'Id',
-                        title: '操作',
-                        align: "center", valign: "middle",
-                        formatter: function (value) {
-                            return "<a class='btn btn-success btn-sm' href='@Url.Action("Update")?id=" + value + "');'><i class='fa fa-pencil'></i> 处理</a> " +
-                                "<button class='btn btn-danger btn-sm' onclick=\"cancle('" + value + "');\"><i class='fa fa-reply'></i> 撤销</button>";
-                        }
 
+                    {
+                        field: 'Status',
+                        title: '@Html.DisplayNameFor(d=>d.Status)',
+                        align: "center", valign: "middle",
+                        formatter: formatter.purchaseStatus
                     }
-
                 ]
             });
             };
             return obj;
         };
-        var ButtonInit = function () {
-            var oInit = new Object();
-            oInit.Init = function () {
-                $("#btn_reset").click(function () {
-                    resetDate();
-                    searchFrm.reset($("#searchFrm"));
-                    
-                });
-            };
-            return oInit;
-        };
-
-        function resetDate() {
-            $("#PublishDateStart").val("");
-            $("#PublishDateEnd").val("");
-        }
-        //撤销
-        function cancle(id) {
-            swal({
-                title: "您确定吗?",
-                text: "确认要撤销此单据吗?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                closeOnConfirm: false,
-                showLoaderOnConfirm: true
-            }, function () {
-                $.ajax({
-                    type: "post",
-                    headers: {
-                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                    },
-                    url: "@Url.Action("Delete")",
-                    data: { "id": id },
-                    success: function (data) {
-                        if (data.State == 1) {
-                            $("#table").bootstrapTable('refresh');
-                            swal({
-                                title: "操作成功",
-                                text: data.Msg,
-                                timer: 2000,
-                                type:"success",
-                                showConfirmButton: false
-                            });
-
-                        } else {
-                            swal("操作提醒", data.Msg, "warning");
-                        }
-                    },
-                    error: function () {
-                        swal("操作失败", "系统错误", "error");
-                    },
-                    complete: function () {
-
-                    }
-                });
-            });
-        }
-</script>
+    </script>
 }
+
 
 
 

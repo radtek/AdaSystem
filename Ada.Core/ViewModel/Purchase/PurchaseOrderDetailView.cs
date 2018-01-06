@@ -32,9 +32,9 @@ namespace Ada.Core.ViewModel.Purchase
         [Display(Name = "采购金额")]
         public decimal? Money { get; set; }
         /// <summary>
-        /// 成本金额
+        /// 参考成本
         /// </summary>
-        [Display(Name = "成本金额")]
+        [Display(Name = "参考成本")]
         public decimal? CostMoney { get; set; }
         /// <summary>
         /// 税额
@@ -233,5 +233,25 @@ namespace Ada.Core.ViewModel.Purchase
         /// </summary>
         [Display(Name = "出刊日期")]
         public string PublishDateStartEnd { get; set; }
+        /// <summary>
+        /// 总税额
+        /// </summary>
+        [Display(Name = "总税额")]
+        public decimal? TotalTaxMoney { get; set; }
+        /// <summary>
+        /// 采购总额
+        /// </summary>
+        [Display(Name = "采购总额")]
+        public decimal? TotalMoney { get; set; }
+        /// <summary>
+        /// 无税总额
+        /// </summary>
+        [Display(Name = "无税总额")]
+        public decimal? TotalPurchaseMoney { get; set; }
+        /// <summary>
+        /// 优惠总额
+        /// </summary>
+        [Display(Name = "优惠总额")]
+        public decimal? TotalDiscountMoney { get; set; }
     }
 }

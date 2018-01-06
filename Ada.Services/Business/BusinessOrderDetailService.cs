@@ -28,8 +28,8 @@ namespace Ada.Services.Business
 
         public IQueryable<BusinessOrderDetail> LoadEntitiesFilter(BusinessOrderDetailView viewModel)
         {
-            var purchaseOrderDetails = _purchaseOrderDetailRepository.LoadEntities(d => d.IsDelete == false);
-            var allList = _repository.LoadEntities(d => d.IsDelete == false);
+            var purchaseOrderDetails = _purchaseOrderDetailRepository.LoadEntities(d => d.IsDelete == false && d.PurchaseOrder.IsDelete == false);
+            var allList = _repository.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false);
             //条件过滤
             if (viewModel.Managers != null && viewModel.Managers.Count > 0)
             {
@@ -42,6 +42,10 @@ namespace Ada.Services.Business
             if (!string.IsNullOrWhiteSpace(viewModel.OrderRemark))
             {
                 allList = allList.Where(d => d.BusinessOrder.Remark.Contains(viewModel.OrderRemark));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.search))
+            {
+                allList = allList.Where(d => d.MediaName.Contains(viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaName))
             {
@@ -96,6 +100,11 @@ namespace Ada.Services.Business
                 allList = allList.Where(d => d.AuditStatus == viewModel.AuditStatus);
             }
             viewModel.total = allList.Count();
+            viewModel.TotalMoney = allList.Sum(d => d.Money);
+            viewModel.TotalPurchaseMoney = (from b in allList
+                                            from p in purchaseOrderDetails
+                                            where b.Id == p.BusinessOrderDetailId
+                                            select p).Sum(d => d.PurchaseMoney);
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
             string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;

@@ -40,9 +40,9 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "销售金额")]
         public decimal? Money { get; set; }
         /// <summary>
-        /// 成本金额
+        /// 参考成本
         /// </summary>
-        [Display(Name = "成本金额")]
+        [Display(Name = "参考成本")]
         public decimal? CostMoney { get; set; }
         /// <summary>
         /// 无税金额
@@ -128,7 +128,7 @@ namespace Ada.Core.ViewModel.Business
         /// 订单日期
         /// </summary>
         [Display(Name = "订单日期")]
-        public DateTime OrderDate { get; set; }
+        public DateTime? OrderDate { get; set; }
         /// <summary>
         /// 项目摘要
         /// </summary>
@@ -149,5 +149,35 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "经办业务")]
         public string Transactor { get; set; }
+        /// <summary>
+        /// 客户名称
+        /// </summary>
+        [Display(Name = "客户名称")]
+        public string LinkManName { get; set; }
+        /// <summary>
+        /// 客户名称
+        /// </summary>
+        [Display(Name = "客户名称")]
+        public string LinkManId { get; set; }
+        /// <summary>
+        /// 采购成本
+        /// </summary>
+        [Display(Name = "采购成本")]
+        public decimal? PurchaseMoney { get; set; }
+        /// <summary>
+        /// 销售订单
+        /// </summary>
+        [Display(Name = "销售订单")]
+        public string BusinessOrderId { get; set; }
+        /// <summary>
+        /// 销售总额
+        /// </summary>
+        [Display(Name = "销售总额")]
+        public decimal? TotalMoney { get; set; }
+        /// <summary>
+        /// 采购总成本
+        /// </summary>
+        [Display(Name = "采购总成本")]
+        public decimal? TotalPurchaseMoney { get; set; }
     }
 }

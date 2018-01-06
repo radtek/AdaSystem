@@ -130,7 +130,7 @@ function initData() {
             },
             {
                 field: 'CostMoney',
-                title: '成本价格',
+                title: '参考成本',
                 align: "center", valign: "middle",
                 footerFormatter: sumFormatter
             },

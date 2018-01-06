@@ -79,6 +79,10 @@ namespace Ada.Services.Purchase
                 allList = allList.Where(d => d.PublishDate < endDate);
             }
             viewModel.total = allList.Count();
+            viewModel.TotalMoney = allList.Sum(d => d.Money);
+            viewModel.TotalPurchaseMoney = allList.Sum(d => d.PurchaseMoney);
+            viewModel.TotalTaxMoney = allList.Sum(d => d.TaxMoney);
+            viewModel.TotalDiscountMoney = allList.Sum(d => d.DiscountMoney);
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
             string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;

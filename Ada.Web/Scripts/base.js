@@ -25,13 +25,28 @@ Math.toFixMoney = function (value) {
 
 var searchFrm = {};
 searchFrm.search = function (form, evt) {
-    var query = $(form).serializeObject();
-    $("#table").bootstrapTable("refresh", { query: query });
+    $("#table").bootstrapTable("refresh");
     evt.preventDefault();
 }
 searchFrm.reset = function (form) {
     form[0].reset();
     $("#table").bootstrapTable("refresh");
+}
+searchFrm.queryParams = function (parameters) {
+    var query = $("#searchFrm").serializeObject();
+    $.each(query,
+        function (k, v) {
+            if (isArray(v)) {
+                $.each(v,
+                    function(a, b) {
+                        parameters[k + "[" + a + "]"] = b;
+                    });
+            } else {
+                parameters[k] = v;
+            }
+            
+        });
+    return parameters;
 }
 
 var formatter = {};
@@ -138,7 +153,9 @@ formatter.image = function (value, row, index) {
 formatter.linkman = function (value, row, index) {
     return "<a class='label label-info' href=\"javascript:linkmanDetail('" + row.LinkManId + "')\"><i class='fa fa-address-book-o'></i> " + value + "</a>";
 }
-
+function isArray(o) {
+    return Object.prototype.toString.call(o) == '[object Array]';
+}
 function linkmanDetail(id) {
     $("#modalView").load("/Customer/LinkMan/Detail/" + id,
         function () {

@@ -70,7 +70,7 @@ namespace Business.Controllers
                     OrderNum = d.OrderNum,
                     LinkManName = d.LinkManName,
                     LinkManId = d.LinkManId,
-                    TotalMoney = d.BusinessOrderDetails.Sum(o=>o.Money),
+                    TotalMoney = d.BusinessOrderDetails.Sum(o => o.Money),
                     Transactor = d.Transactor,
                     Status = d.Status ?? Consts.StateLock,
                     OrderDate = d.OrderDate,
@@ -137,7 +137,7 @@ namespace Business.Controllers
                 PublishLink = GetPurchaseOrderDetail(d.Id)?.PublishLink,
                 PublishDate = GetPurchaseOrderDetail(d.Id)?.PublishDate,
                 PurchaseStatus = GetPurchaseOrderDetail(d.Id)?.Status,
-                CostMoney = GetPurchaseOrderDetail(d.Id).PurchaseMoney
+                CostMoney = GetPurchaseOrderDetail(d.Id)?.PurchaseMoney
             });
             return PartialView("OrderDetails", details);
         }
@@ -344,6 +344,8 @@ namespace Business.Controllers
                     }
                     //可以修改稿件标题
                     detail.MediaTitle = businessOrderDetail.MediaTitle;
+                    detail.PrePublishDate = businessOrderDetail.PrePublishDate;
+                    detail.Remark = businessOrderDetail.Remark;
                     //已下单的金额校验
                     if (detail.Status == Consts.StateNormal)
                     {
@@ -353,11 +355,11 @@ namespace Business.Controllers
                 }
             }
 
-            if (sellMoney <= costMoney && sellMoney > 0 && costMoney > 0)
-            {
-                ModelState.AddModelError("message", "不能低于成本金额！");
-                return View(viewModel);
-            }
+            //if (sellMoney <= costMoney && sellMoney > 0 && costMoney > 0)
+            //{
+            //    ModelState.AddModelError("message", "不能低于成本金额！");
+            //    return View(viewModel);
+            //}
             //删除
             foreach (var deleteId in deleteIds)
             {
@@ -379,14 +381,20 @@ namespace Business.Controllers
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            if (entity.BusinessOrderDetails.Count==0)
+            if (entity.AuditStatus != Consts.StateNormal)
             {
-                entity.DeletedBy = CurrentManager.UserName;
-                entity.DeletedById = CurrentManager.Id;
-                entity.DeletedDate = DateTime.Now;
-                _businessOrderService.Delete(entity);
+                foreach (var entityBusinessOrderDetail in entity.BusinessOrderDetails)
+                {
+                    var purchase = GetPurchaseOrderDetail(entityBusinessOrderDetail.Id);
+                    if (purchase != null)
+                    {
+                        return Json(new { State = 0, Msg = "此订单状态无法删除" });
+                    }
+                }
+                _businessOrderService.Remove(entity);
                 return Json(new { State = 1, Msg = "删除成功" });
             }
+
             return Json(new { State = 0, Msg = "此订单状态无法删除" });
         }
         /// <summary>
@@ -513,11 +521,11 @@ namespace Business.Controllers
                 purchaseOrderDetail.DiscountRate = 100;
                 purchaseOrder.PurchaseOrderDetails.Add(purchaseOrderDetail);
             }
-            //校验金额
-            if (sellMoney <= costMoney)
-            {
-                return Json(new { State = 0, Msg = "不能低于成本金额" });
-            }
+            ////校验金额
+            //if (sellMoney <= costMoney)
+            //{
+            //    return Json(new { State = 0, Msg = "不能低于成本金额" });
+            //}
 
             if (isAdd)
             {

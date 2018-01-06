@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Business;
+using Ada.Core.Domain.Purchase;
 using Ada.Core.ViewModel.Business;
 
 namespace Ada.Services.Business
@@ -14,11 +15,17 @@ namespace Ada.Services.Business
     {
         private readonly IDbContext _dbContext;
         private readonly IRepository<BusinessOrder> _repository;
+        private readonly IRepository<BusinessOrderDetail> _detailRepository;
+        private readonly IRepository<PurchaseOrder> _purchaseOrderRepository;
         public BusinessOrderService(IDbContext dbContext,
-            IRepository<BusinessOrder> repository)
+            IRepository<BusinessOrder> repository,
+            IRepository<BusinessOrderDetail> detailRepository,
+            IRepository<PurchaseOrder> purchaseOrderRepository)
         {
             _dbContext = dbContext;
             _repository = repository;
+            _detailRepository = detailRepository;
+            _purchaseOrderRepository = purchaseOrderRepository;
         }
 
 
@@ -78,6 +85,14 @@ namespace Ada.Services.Business
                 allList = allList.Where(d => d.BusinessInvoiceDetails.Count == 0);
             }
             viewModel.total = allList.Count();
+            viewModel.AllMoney = allList.Sum(d => d.BusinessOrderDetails.Where(a => a.Status == Consts.StateNormal).Sum(b => b.Money));
+            viewModel.AllSellMoney = allList.Sum(d => d.BusinessOrderDetails.Where(a => a.Status == Consts.StateNormal).Sum(b => b.SellMoney));
+            viewModel.AllTaxMoney = allList.Sum(d => d.BusinessOrderDetails.Where(a => a.Status == Consts.StateNormal).Sum(b => b.TaxMoney));
+            var purchases = _purchaseOrderRepository.LoadEntities(d => d.IsDelete == false);
+            viewModel.AllPurchaseMoney = (from b in allList
+                                          from p in purchases
+                                          where b.Id == p.BusinessOrderId
+                                          select p).Sum(d => d.PurchaseOrderDetails.Sum(o => o.PurchaseMoney));
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
             string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
@@ -102,6 +117,15 @@ namespace Ada.Services.Business
         public void Delete(BusinessOrder entity)
         {
             _repository.Delete(entity);
+            _dbContext.SaveChanges();
+        }
+        public void Remove(BusinessOrder entity)
+        {
+            if (entity.BusinessOrderDetails.Count > 0)
+            {
+                _detailRepository.Remove(entity.BusinessOrderDetails);
+            }
+            _repository.Remove(entity);
             _dbContext.SaveChanges();
         }
     }

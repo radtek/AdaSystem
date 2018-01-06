@@ -185,5 +185,30 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "媒体名称")]
         public string MediaName { get; set; }
+        /// <summary>
+        /// 无税总额
+        /// </summary>
+        [Display(Name = "无税总额")]
+        public decimal? AllSellMoney { get; set; }
+        /// <summary>
+        /// 销售总额
+        /// </summary>
+        [Display(Name = "销售总额")]
+        public decimal? AllMoney { get; set; }
+        /// <summary>
+        /// 总税额
+        /// </summary>
+        [Display(Name = "总税额")]
+        public decimal? AllTaxMoney { get; set; }
+        /// <summary>
+        /// 总采购金额
+        /// </summary>
+        [Display(Name = "总采购金额")]
+        public decimal? AllPurchaseMoney { get; set; }
+        /// <summary>
+        /// 采购成本
+        /// </summary>
+        [Display(Name = "采购成本")]
+        public decimal? TotalPurchaseMoney { get; set; }
     }
 }

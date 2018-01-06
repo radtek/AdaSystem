@@ -14,6 +14,7 @@ namespace Ada.Services.Business
         void Add(BusinessOrder entity);
         void Update(BusinessOrder entity);
         void Delete(BusinessOrder entity);
+        void Remove(BusinessOrder entity);
         /// <summary>
         /// 获取数据
         /// </summary>
