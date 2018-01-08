@@ -35,6 +35,27 @@ namespace Ada.Services.Customer
             {
                 allList = allList.Where(d => d.Commpany.Name.Contains(viewModel.CommpanyName));
             }
+
+            if (!string.IsNullOrWhiteSpace(viewModel.QQ))
+            {
+                allList = allList.Where(d => d.QQ.Contains(viewModel.QQ));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.WeiXin))
+            {
+                allList = allList.Where(d => d.WeiXin.Contains(viewModel.WeiXin));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.Phone))
+            {
+                allList = allList.Where(d => d.Phone.Contains(viewModel.Phone));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.Name))
+            {
+                allList = allList.Where(d => d.Name.Contains(viewModel.Name));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.Transactor))
+            {
+                allList = allList.Where(d => d.Transactor.Contains(viewModel.Transactor));
+            }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;

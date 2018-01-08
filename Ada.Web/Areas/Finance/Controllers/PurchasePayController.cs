@@ -63,6 +63,11 @@ namespace Finance.Controllers
                 return View(viewModel);
             }
             var payment = _repository.LoadEntities(d => d.Id == viewModel.RequestNum).FirstOrDefault();
+            if (payment.Status==Consts.StateNormal)
+            {
+                ModelState.AddModelError("message", "此请款已生成付款单据！");
+                return View(viewModel);
+            }
             BillPayment entity = new BillPayment();
             entity.Id = IdBuilder.CreateIdNum();
             entity.AddedBy = CurrentManager.UserName;

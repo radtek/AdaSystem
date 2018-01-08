@@ -11,7 +11,8 @@ namespace Ada.Services.Finance
         private readonly IDbContext _dbContext;
         private readonly IRepository<IncomeExpend> _repository;
         public IncomeExpendService(IDbContext dbContext,
-            IRepository<IncomeExpend> repository)
+            IRepository<IncomeExpend> repository
+            )
         {
             _dbContext = dbContext;
             _repository = repository;

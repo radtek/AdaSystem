@@ -179,5 +179,10 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "采购总成本")]
         public decimal? TotalPurchaseMoney { get; set; }
+        /// <summary>
+        /// 无税金额
+        /// </summary>
+        [Display(Name = "无税金额")]
+        public decimal? TotalSellMoney { get; set; }
     }
 }

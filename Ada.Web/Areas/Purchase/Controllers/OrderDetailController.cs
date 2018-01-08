@@ -119,6 +119,12 @@ namespace Purchase.Controllers
                 ModelState.AddModelError("message", "不能低于成本金额处理");
                 return View(viewModel);
             }
+            //已审核 已完成 无税金额不能低于上次填写的金额
+            if (viewModel.PurchaseMoney >= entity.PurchaseMoney && entity.Status == Consts.PurchaseStatusSuccess)
+            {
+                ModelState.AddModelError("message", "不能低于上次的无税金额：" + entity.PurchaseMoney);
+                return View(viewModel);
+            }
             //var businessOrderDetail = GetBusinessOrderDetail(entity.BusinessOrderDetailId);
             //if (businessOrderDetail.BusinessOrder.VerificationStatus==Consts.StateNormal)
             //{
@@ -140,7 +146,7 @@ namespace Purchase.Controllers
             //entity.Tax = viewModel.Tax;
             //entity.TaxMoney = viewModel.TaxMoney;
             entity.PurchaseMoney = viewModel.PurchaseMoney;
-            
+
             //entity.Money = viewModel.Money;
             //entity.DiscountMoney = viewModel.DiscountMoney;
             //entity.BargainMoney = viewModel.BargainMoney;
@@ -164,12 +170,12 @@ namespace Purchase.Controllers
             var entity = _purchaseOrderDetailRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
             var businessOrder = GetBusinessOrderDetail(entity.BusinessOrderDetailId);
             //是否已经核销
-            if (businessOrder.VerificationStatus==Consts.StateNormal)
+            if (businessOrder.VerificationStatus == Consts.StateNormal)
             {
                 return Json(new { State = 0, Msg = "此销售订单已核销，无法删除" });
             }
             //是否已经付款
-            if (entity.PurchasePaymentOrderDetails.Count>0)
+            if (entity.PurchasePaymentOrderDetails.Count > 0)
             {
                 return Json(new { State = 0, Msg = "此采购订单已请款，无法删除" });
             }

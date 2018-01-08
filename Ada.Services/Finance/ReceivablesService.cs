@@ -66,7 +66,18 @@ namespace Ada.Services.Finance
             {
                 allList = allList.Where(d => d.BalanceMoney <= viewModel.BalanceMoneyMax);
             }
+            if (viewModel.BillDateStart != null)
+            {
+                allList = allList.Where(d => d.BillDate >= viewModel.BillDateStart);
+            }
+            if (viewModel.BillDateEnd != null)
+            {
+                var endDate = viewModel.BillDateEnd.Value.AddDays(1);
+                allList = allList.Where(d => d.BillDate < endDate);
+            }
             viewModel.total = allList.Count();
+            viewModel.TotalMoney = allList.Sum(d => d.Money);
+            viewModel.TotalTaxMoney = allList.Sum(d => d.TaxMoney);
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
             string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;

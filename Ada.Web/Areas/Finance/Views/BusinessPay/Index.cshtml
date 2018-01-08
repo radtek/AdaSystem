@@ -18,7 +18,23 @@
         </div>
     </div>
 </div>
-
+<div id="toolbar">
+    <div class="form-inline" role="form">
+        <div class="form-group">
+            <div class="input-group">
+                <select name="Status" class="form-control" id="Status">
+                    <option value="0">待付</option>
+                    <option value="1">已付</option>
+                </select>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-primary" onclick="$('#table').bootstrapTable('refresh');">
+                        <i class='fa fa-search'></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
@@ -37,7 +53,7 @@
                 $('#table').bootstrapTable({
                 classes: "table table-no-bordered",
                 url: '@Url.Action("GetList", "Payment",new{area="Boss"})',         //请求后台的URL（*）BalanceMoneyMin
-                //toolbar: '#toolbar',                //工具按钮用哪个容器
+                toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）
@@ -61,7 +77,7 @@
                 //detailFormatter: detailFormatter,
                 queryParams: function(parameters) {
                     parameters.AuditStatus = 1;
-                    parameters.Status = 0;
+                    parameters.Status = $("#Status").val();
                     return parameters;
                 },
                 formatSearch: function() {
@@ -102,8 +118,9 @@
                         field: 'Id',
                         title: '操作',
                         align: "center", valign: "middle",
-                        formatter: function (value,row) {
-                            return "<a class='btn btn-success btn-sm' href='@Url.Action("Pay")?id=" + value +"'><i class='fa fa-jpy'></i>  付款</a> ";
+                        formatter: function (value, row) {
+                            var isdisabled = row.Status == 1 ? " disabled" : "";
+                            return "<a class='btn btn-success btn-sm" + isdisabled +"' href='@Url.Action("Pay")?id=" + value +"'><i class='fa fa-jpy'></i>  付款</a> ";
                         }
 
                     }

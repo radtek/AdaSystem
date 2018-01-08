@@ -110,5 +110,25 @@ namespace Ada.Core.ViewModel.Finance
         /// </summary>
         [Display(Name = "领款明细")]
         public List<BusinessPayeeView> BusinessPayees { get; set; }
+        /// <summary>
+        /// 实收总额
+        /// </summary>
+        [Display(Name = "实收总额")]
+        public decimal? TotalMoney { get; set; }
+        /// <summary>
+        /// 总税额
+        /// </summary>
+        [Display(Name = "总税额")]
+        public decimal? TotalTaxMoney { get; set; }
+        /// <summary>
+        /// 单据日期
+        /// </summary>
+        [Display(Name = "单据日期")]
+        public DateTime? BillDateStart { get; set; }
+        /// <summary>
+        /// 单据日期
+        /// </summary>
+        [Display(Name = "单据日期")]
+        public DateTime? BillDateEnd { get; set; }
     }
 }

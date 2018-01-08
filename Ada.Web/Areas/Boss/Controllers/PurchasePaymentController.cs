@@ -47,7 +47,8 @@ namespace Boss.Controllers
                     PaymentType = d.PaymentType,
                     BillDate = d.PurchasePayment.BillDate,
                     LinkManName = d.PurchasePayment.LinkManName,
-                    AuditStatus = d.AuditStatus
+                    AuditStatus = d.AuditStatus,
+                    Status = d.Status
                 })
             }, JsonRequestBehavior.AllowGet);
         }

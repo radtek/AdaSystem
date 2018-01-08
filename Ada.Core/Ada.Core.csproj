@@ -177,6 +177,7 @@
     <Compile Include="ViewModel\Finance\BillPaymentView.cs" />
     <Compile Include="ViewModel\Finance\ExpenseView.cs" />
     <Compile Include="ViewModel\Finance\IncomeExpendView.cs" />
+    <Compile Include="ViewModel\Finance\ReceiptExpenditureView.cs" />
     <Compile Include="ViewModel\Finance\ReceivablesView.cs" />
     <Compile Include="ViewModel\Finance\SettleAccountView.cs" />
     <Compile Include="ViewModel\HttpResultView.cs" />

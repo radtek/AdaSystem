@@ -95,7 +95,7 @@ namespace Finance.Controllers
             entity.LinkManId = viewModel.LinkManId;
             entity.IsIncom = viewModel.IsIncom;
             entity.Image = viewModel.Image;
-            entity.BillNum = IdBuilder.CreateOrderNum("SR");
+            entity.BillNum = IdBuilder.CreateOrderNum(viewModel.IsIncom ? "SR" : "ZC");
             entity.BillDate = viewModel.BillDate;
             entity.Remark = viewModel.Remark;
             foreach (var detail in payDetails)

@@ -101,6 +101,7 @@ namespace Ada.Services.Business
             }
             viewModel.total = allList.Count();
             viewModel.TotalMoney = allList.Sum(d => d.Money);
+            viewModel.TotalSellMoney = allList.Sum(d => d.SellMoney);
             viewModel.TotalPurchaseMoney = (from b in allList
                                             from p in purchaseOrderDetails
                                             where b.Id == p.BusinessOrderDetailId

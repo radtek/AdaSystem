@@ -434,6 +434,7 @@ function showOrder() {
                         formatSearch: function () {
                             return "媒体名称";
                         },
+                        onLoadSuccess: initTooltip,
                         columns: [
                             {
                                 field: 'state',
@@ -457,6 +458,16 @@ function showOrder() {
                                 align: "center", valign: "middle"
                             },
                             {
+                                field: 'MediaTitle',
+                                title: '稿件标题',
+                                align: "center", valign: "middle", formatter: formatter.tooltip
+                            },
+                            {
+                                field: 'BusinessBy',
+                                title: '经办业务',
+                                align: "center", valign: "middle"
+                            },
+                            {
                                 field: 'PublishDate',
                                 title: '出刊日期',
                                 align: "center", valign: "middle",
@@ -466,9 +477,15 @@ function showOrder() {
                                     }
                                 }
                             },
+
+                            {
+                                field: 'PurchaseMoney',
+                                title: '无税金额',
+                                align: "center", valign: "middle"
+                            },
                             {
                                 field: 'CostMoney',
-                                title: '采购成本',
+                                title: '参考成本',
                                 align: "center", valign: "middle"
                             }
                         ]

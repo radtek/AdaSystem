@@ -79,8 +79,12 @@
     <Compile Include="Business\IBusinessPayeeService.cs" />
     <Compile Include="Customer\FollowUpService.cs" />
     <Compile Include="Customer\IFollowUpService.cs" />
+    <Compile Include="Finance\BillPaymentDetailService.cs" />
+    <Compile Include="Finance\ExpenseDetailService.cs" />
     <Compile Include="Finance\ExpenseService.cs" />
     <Compile Include="Finance\BillPaymentService.cs" />
+    <Compile Include="Finance\IBillPaymentDetailService.cs" />
+    <Compile Include="Finance\IExpenseDetailService.cs" />
     <Compile Include="Finance\IExpenseService.cs" />
     <Compile Include="Finance\IBillPaymentService.cs" />
     <Compile Include="Finance\IReceivablesService.cs" />

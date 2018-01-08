@@ -3,6 +3,7 @@
 @model Ada.Core.ViewModel.Business.BusinessOrderDetailView
 @{
     ViewBag.Title = "销售明细";
+    List<SelectListItem> status = new List<SelectListItem>() { new SelectListItem() { Text = "已下单", Value = "1" }, new SelectListItem() { Text = "未转单", Value = "0" } };
 }
 @Html.Partial("Bread")
 
@@ -51,6 +52,12 @@
                             <input type="text" id="PublishDateStr" class="form-control input-sm" readonly="readonly" />
                             @Html.HiddenFor(d => d.PublishDateStart)
                             @Html.HiddenFor(d => d.PublishDateEnd)
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status) + "：", new { @class = "control-label" })
+                            @Html.DropDownListFor(d => d.Status, status,"请选择", new { @class = "form-control input-sm" })
                         </div>
                     </div>
 

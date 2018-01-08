@@ -55,7 +55,8 @@ namespace DataReport.Controllers
                     PurchaseMoney = GetPurchaseOrderDetail(d.Id)?.PurchaseMoney,
                     PublishDate = GetPurchaseOrderDetail(d.Id)?.PublishDate,
                     TotalMoney = viewModel.TotalMoney,
-                    TotalPurchaseMoney = viewModel.TotalPurchaseMoney
+                    TotalPurchaseMoney = viewModel.TotalPurchaseMoney,
+                    TotalSellMoney = viewModel.TotalSellMoney
                 })
             }, JsonRequestBehavior.AllowGet);
         }
