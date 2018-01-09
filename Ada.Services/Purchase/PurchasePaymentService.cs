@@ -54,6 +54,13 @@ namespace Ada.Services.Purchase
                           where d.AccountName.Contains(viewModel.InvoiceCompany)
                           select p;
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaName))
+            {
+                allList = from p in allList
+                    from d in p.PurchasePaymentOrderDetails
+                    where d.PurchaseOrderDetail.MediaName.Contains(viewModel.MediaName)
+                    select p;
+            }
             if (viewModel.IsInvoice != null)
             {
                 allList = allList.Where(d => d.IsInvoice == viewModel.IsInvoice);

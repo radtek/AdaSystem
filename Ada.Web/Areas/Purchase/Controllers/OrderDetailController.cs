@@ -59,7 +59,8 @@ namespace Purchase.Controllers
                     PublishDate = d.PublishDate,
                     PublishLink = d.PublishLink,
                     Transactor = d.Transactor,
-                    OrderDate = d.PurchaseOrder.OrderDate
+                    OrderDate = d.PurchaseOrder.OrderDate,
+                    
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -98,7 +99,7 @@ namespace Purchase.Controllers
             item.MediaTitle = businessOrder.MediaTitle;
             item.BusinessRemark = businessOrder.Remark;
             item.AuditStatus = entity.AuditStatus;
-            //item.Status = entity.Status;
+            item.Status = entity.Status;
             //item.BargainMoney = entity.BargainMoney;
             //item.OrderDate = entity.PurchaseOrder.OrderDate;
             return View(item);
@@ -114,17 +115,17 @@ namespace Purchase.Controllers
             }
 
             var entity = _purchaseOrderDetailRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
-            if (viewModel.PurchaseMoney > entity.CostMoney)
-            {
-                ModelState.AddModelError("message", "不能低于成本金额处理");
-                return View(viewModel);
-            }
-            //已审核 已完成 无税金额不能低于上次填写的金额
-            if (viewModel.PurchaseMoney >= entity.PurchaseMoney && entity.Status == Consts.PurchaseStatusSuccess)
-            {
-                ModelState.AddModelError("message", "不能低于上次的无税金额：" + entity.PurchaseMoney);
-                return View(viewModel);
-            }
+            //if (viewModel.PurchaseMoney > entity.CostMoney)
+            //{
+            //    ModelState.AddModelError("message", "不能低于成本金额处理");
+            //    return View(viewModel);
+            //}
+            ////已审核 已完成 无税金额不能低于上次填写的金额
+            //if (viewModel.PurchaseMoney >= entity.PurchaseMoney && entity.Status == Consts.PurchaseStatusSuccess)
+            //{
+            //    ModelState.AddModelError("message", "不能低于上次的无税金额：" + entity.PurchaseMoney);
+            //    return View(viewModel);
+            //}
             //var businessOrderDetail = GetBusinessOrderDetail(entity.BusinessOrderDetailId);
             //if (businessOrderDetail.BusinessOrder.VerificationStatus==Consts.StateNormal)
             //{
@@ -146,7 +147,18 @@ namespace Purchase.Controllers
             //entity.Tax = viewModel.Tax;
             //entity.TaxMoney = viewModel.TaxMoney;
             entity.PurchaseMoney = viewModel.PurchaseMoney;
-
+            var tax = entity.Tax ?? 0;
+            entity.Money = entity.PurchaseMoney * (1 + tax / 100);
+            entity.Status = viewModel.Status;
+            if (entity.Status==Consts.PurchaseStatusSuccess)
+            {
+                if (entity.PublishDate==null)
+                {
+                    ModelState.AddModelError("message", "出刊日期不能为空");
+                    return View(viewModel);
+                }
+                entity.AuditStatus = Consts.StateNormal;
+            }
             //entity.Money = viewModel.Money;
             //entity.DiscountMoney = viewModel.DiscountMoney;
             //entity.BargainMoney = viewModel.BargainMoney;
@@ -155,9 +167,9 @@ namespace Purchase.Controllers
             //    //更新成本金额
             //    businessOrderDetail.CostMoney = viewModel.CostMoney;
             //}
-            entity.CostMoney = viewModel.CostMoney;
+            //entity.CostMoney = viewModel.CostMoney;
 
-            entity.Status = viewModel.Status;
+            
             entity.Remark = viewModel.Remark;
             _purchaseOrderDetailService.Update(entity);
             TempData["Msg"] = "更新成功";

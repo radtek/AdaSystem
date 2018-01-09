@@ -44,6 +44,7 @@ namespace DataReport.Controllers
                     TaxMoney = d.TaxMoney,
                     Tax = d.Tax,
                     SellMoney = d.SellMoney,
+                    VerificationStatus = d.VerificationStatus,
                     Status = d.Status,
                     Transactor = d.BusinessOrder.Transactor,
                     LinkManName = d.BusinessOrder.LinkManName,

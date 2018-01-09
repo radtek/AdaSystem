@@ -61,7 +61,7 @@ formatter.verification = function (value, row, index) {
     if (value == 1) {
         return "<span class='label label-primary'>已核销</span>";
     } else {
-        return "<span class='label label-warning'>未核销</span>";
+        return "<span class='label'>未核销</span>";
     }
 };
 formatter.yesorno = function (value, row, index) {
@@ -126,9 +126,10 @@ formatter.purchaseStatus = function (value, row, index) {
         return "<span class='label'>待响应</span>";
     } else if (value == 3) {
         return "<span class='label label-success'>已完成</span>";
-    } else {
+    } else if (value == -1){
         return "<span class='label label-danger'>采购失败</span>";
     }
+    return "";
 };
 formatter.url = function (value, row, index) {
     if (value) {

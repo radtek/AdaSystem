@@ -81,19 +81,25 @@
                                     @Html.LabelFor(d => d.IsInvoice, Html.DisplayNameFor(d => d.IsInvoice).ToString(), new { @class = "col-sm-4 control-label" })
                                     <div class="col-sm-8">
                                         @if (Model.IsInvoice == true)
-                                        {
-                                            <input type="text" value="是" readonly="" class="form-control"/>
-                                        }
-                                        else
-                                        {
-                                            <input type="text" value="否" readonly="" class="form-control"/>
-                                        }
+            {
+                            <input type="text" value="是" readonly="" class="form-control" />
+}
+else
+{
+                            <input type="text" value="否" readonly="" class="form-control" />
+}
                                     </div>
                                 </div>
                                 <div class="form-group col-md-4">
                                     @Html.LabelFor(d => d.InvoiceTitle, Html.DisplayNameFor(d => d.InvoiceTitle).ToString(), new { @class = "col-sm-4 control-label" })
                                     <div class="col-sm-8">
                                         @Html.TextBoxFor(d => d.InvoiceTitle, new { @class = "form-control", @readonly = "readonly" })
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(d => d.Remark, new { @class = "form-control" })
                                     </div>
                                 </div>
                             </div>

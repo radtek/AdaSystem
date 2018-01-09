@@ -309,7 +309,9 @@ namespace Business.Controllers
             foreach (var businessOrderDetail in orderDetails)
             {
                 //新增
-                if (string.IsNullOrWhiteSpace(businessOrderDetail.Id))
+                var detail = _businessOrderDetailRepository.LoadEntities(d => d.Id == businessOrderDetail.Id)
+                    .FirstOrDefault();
+                if (detail == null)
                 {
                     businessOrderDetail.Id = IdBuilder.CreateIdNum();
                     businessOrderDetail.Status = Consts.StateLock;
@@ -322,8 +324,6 @@ namespace Business.Controllers
                 else
                 {
                     //未核销的，未审核的更新
-                    var detail = _businessOrderDetailRepository.LoadEntities(d => d.Id == businessOrderDetail.Id)
-                        .FirstOrDefault();
                     if (detail.VerificationStatus != Consts.StateNormal && detail.AuditStatus == Consts.StateLock)
                     {
                         detail.MediaPriceId = businessOrderDetail.MediaPriceId;
@@ -456,7 +456,8 @@ namespace Business.Controllers
             var sellMoney = detailsTemp.Sum(d => d.SellMoney);
             foreach (var order in orderDetails)
             {
-                if (string.IsNullOrWhiteSpace(order.Id))
+                var temp = _businessOrderDetailRepository.LoadEntities(d => d.Id == order.Id).FirstOrDefault();
+                if (temp == null)
                 {
                     order.Id = IdBuilder.CreateIdNum();
                     order.Status = Consts.StateNormal;
@@ -474,7 +475,6 @@ namespace Business.Controllers
                 }
                 else
                 {
-                    var temp = _businessOrderDetailRepository.LoadEntities(d => d.Id == order.Id).FirstOrDefault();
                     if (temp.Status == Consts.StateNormal)
                     {
                         continue;
@@ -503,7 +503,7 @@ namespace Business.Controllers
                 purchaseOrderDetail.MediaName = order.MediaName;
                 purchaseOrderDetail.MediaTypeName = order.MediaTypeName;
                 purchaseOrderDetail.MediaPriceId = order.MediaPriceId;
-                purchaseOrderDetail.AuditStatus = Consts.StateNormal;
+                purchaseOrderDetail.AuditStatus = Consts.StateLock;
                 purchaseOrderDetail.Status = Consts.PurchaseStatusWait;
                 var price = _mediaPriceRepository.LoadEntities(d => d.Id == order.MediaPriceId).FirstOrDefault();
                 purchaseOrderDetail.Transactor = price.Media.Transactor;

@@ -136,19 +136,19 @@ function initData() {
                 field: 'PurchaseMoney',
                 title: '无税金额',
                 align: "center", valign: "middle",
-                editable: {
-                    mode: "inline", emptytext: '请输入', validate: function (value) {
-                        if (isNaN(value)) {
-                            return '请输入有效的金额';
-                        }
-                        var index = $(this).parents('tr[data-index]').data('index'),
-                            data = $table.bootstrapTable('getData'),
-                            row = data[index];
-                        if (value > row.CostMoney) {
-                            return '不能超出成本价格';
-                        }
-                    }
-                },
+                //editable: {
+                //    mode: "inline", emptytext: '请输入', validate: function (value) {
+                //        if (isNaN(value)) {
+                //            return '请输入有效的金额';
+                //        }
+                //        var index = $(this).parents('tr[data-index]').data('index'),
+                //            data = $table.bootstrapTable('getData'),
+                //            row = data[index];
+                //        if (value > row.CostMoney) {
+                //            return '不能超出成本价格';
+                //        }
+                //    }
+                //},
                 footerFormatter: sumFormatter
             },
             {
@@ -428,7 +428,7 @@ function showOrder() {
                         responseHandler: responseHandler,
                         queryParams: function (parameters) {
                             parameters.LinkManId = linkman;
-                            parameters.IsPayment = false;
+                            //parameters.IsPayment = false;
                             return parameters;
                         },
                         formatSearch: function () {

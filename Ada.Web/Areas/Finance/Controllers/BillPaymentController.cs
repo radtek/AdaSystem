@@ -77,6 +77,7 @@ namespace Finance.Controllers
             entity.AccountName = item.AccountName;
             entity.AccountNum = item.AccountNum;
             entity.Image = item.Image;
+            entity.Remark = item.Remark;
             entity.ThumbnailImage = Thumbnail.MakeThumbnailImageToBase64(Utils.GetMapPath(item.Image));
             var paydetails = item.BillPaymentDetails.Where(d => d.IsDelete == false).Select(d => new
             {
@@ -113,6 +114,7 @@ namespace Finance.Controllers
             entity.AccountName = viewModel.AccountName;
             entity.AccountNum = viewModel.AccountNum;
             entity.Image = viewModel.Image;
+            entity.Remark = viewModel.Remark;
             //删除
             _billPaymentDetailrepository.Remove(payDetails.Select(d=>d.Id).ToArray());
             //新增

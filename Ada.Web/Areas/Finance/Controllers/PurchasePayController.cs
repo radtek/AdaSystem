@@ -85,6 +85,7 @@ namespace Finance.Controllers
             entity.PaymentType = viewModel.PaymentType;
             entity.RequestNum = viewModel.RequestNum;//这里是申请的ID号
             entity.RequestType = Consts.StateLock;//采购付款单
+            entity.Remark = viewModel.Remark;
             decimal? money = 0;
             foreach (var billPaymentDetail in payDetails)
             {

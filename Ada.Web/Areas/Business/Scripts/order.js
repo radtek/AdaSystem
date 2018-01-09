@@ -414,8 +414,8 @@ function initSelect2(id, opt) {
 window.operateEvents = {
     'click .remove': function (e, value, row, index) {
         $table.bootstrapTable('remove', {
-            field: 'MediaPriceId',
-            values: [row.MediaPriceId]
+            field: 'Id',
+            values: [row.Id]
         });
     }
 };
@@ -426,10 +426,10 @@ function deleteRow() {
         var arr = [];
         $.each(rows,
             function(k, v) {
-                arr.push(v.MediaPriceId);
+                arr.push(v.Id);
             });
         $table.bootstrapTable('remove', {
-            field: 'MediaPriceId',
+            field: 'Id',
             values: arr
         });
     } else {
@@ -438,7 +438,7 @@ function deleteRow() {
 }
 function operateFormatter(value, row, index) {
     return [
-        '<a class="remove" href="javascript:void(0)" title="Remove">',
+        '<a class="remove" href="javascript:void(0)" title="移除">',
         '<i class="glyphicon glyphicon-remove"></i>',
         '</a>'
     ].join('');
@@ -451,31 +451,54 @@ function confirmData() {
     }
     $('#modalView .modal').modal('hide');
 }
-//过滤重复数据
+////过滤重复数据
+//function getData() {
+//    var temp = [], tax = $("#Tax").val(), now = moment().add(10, "days").format('YYYY-MM-DD');
+//    var tableData = $table.bootstrapTable('getData');
+//    $.each(selections.rows,
+//        function (k, v) {
+//            var index = _.findIndex(tableData, { 'MediaPriceId': v.Id });
+//            if (index < 0) {
+//                temp.push({
+//                    MediaTypeName: v.TypeName,
+//                    MediaPriceId: v.Id,
+//                    MediaName: v.MediaName,
+//                    AdPositionName: v.AdPositionName,
+//                    TaxMoney: 0,
+//                    Tax: tax,
+//                    Money: 0,
+//                    SellMoney: 0,
+//                    MediaTitle: "",
+//                    PrePublishDate: now,
+//                    Remark: "",
+//                    MediaByPurchase: v.Transactor,
+//                    CostMoney: v.PurchasePrice
+//                });
+//            }
+
+//        });
+//    return temp;
+//}
 function getData() {
-    var temp = [], tax = $("#Tax").val(), now = moment().add(10, "days").format('YYYY-MM-DD');
-    var tableData = $table.bootstrapTable('getData');
+    var temp = [],tax = $("#Tax").val(),now = moment().add(10, "days").format('YYYY-MM-DD');
     $.each(selections.rows,
         function (k, v) {
-            var index = _.findIndex(tableData, { 'MediaPriceId': v.Id });
-            if (index < 0) {
-                temp.push({
-                    MediaTypeName: v.TypeName,
-                    MediaPriceId: v.Id,
-                    MediaName: v.MediaName,
-                    AdPositionName: v.AdPositionName,
-                    TaxMoney: 0,
-                    Tax: tax,
-                    Money: 0,
-                    SellMoney: 0,
-                    MediaTitle: "",
-                    PrePublishDate: now,
-                    Remark: "",
-                    MediaByPurchase: v.Transactor,
-                    CostMoney: v.PurchasePrice
-                });
-            }
-
+            temp.push({
+                MediaTypeName: v.TypeName,
+                MediaPriceId: v.Id,
+                MediaName: v.MediaName,
+                AdPositionName: v.AdPositionName,
+                TaxMoney: 0,
+                Tax: tax,
+                Money: 0,
+                SellMoney: 0,
+                MediaTitle: "",
+                PrePublishDate: now,
+                Remark: "",
+                MediaByPurchase: v.Transactor,
+                CostMoney: v.PurchasePrice,
+                Id: 100 + ~~(Math.random() * 100)
+            });
         });
     return temp;
 }

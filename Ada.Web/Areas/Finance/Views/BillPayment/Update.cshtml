@@ -40,7 +40,7 @@
                                 <div class="form-group col-md-4">
                                     @Html.LabelFor(d => d.BillNum, Html.DisplayNameFor(d => d.BillNum).ToString(), new { @class = "col-sm-4 control-label" })
                                     <div class="col-sm-8">
-                                        @Html.TextBoxFor(d => d.BillNum, new { @class = "form-control",@readonly="" })
+                                        @Html.TextBoxFor(d => d.BillNum, new { @class = "form-control", @readonly = "" })
                                     </div>
                                 </div>
                                 <div class="form-group col-md-4">
@@ -76,6 +76,12 @@
                                     @Html.LabelFor(d => d.AccountNum, Html.DisplayNameFor(d => d.AccountNum).ToString(), new { @class = "col-sm-4 control-label" })
                                     <div class="col-sm-8">
                                         @Html.TextBoxFor(d => d.AccountNum, new { @class = "form-control", required = "" })
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(d => d.Remark, new { @class = "form-control"})
                                     </div>
                                 </div>
                             </div>

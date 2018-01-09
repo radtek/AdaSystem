@@ -134,5 +134,10 @@ namespace Ada.Core.ViewModel.Purchase
         /// </summary>
         [Display(Name = "审核状态")]
         public short? AuditStatus { get; set; }
+        /// <summary>
+        /// 媒体名称
+        /// </summary>
+        [Display(Name = "媒体名称")]
+        public string MediaName { get; set; }
     }
 }

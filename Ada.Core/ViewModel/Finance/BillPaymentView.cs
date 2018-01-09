@@ -110,5 +110,10 @@ namespace Ada.Core.ViewModel.Finance
         /// </summary>
         [Display(Name = "付款摘要")]
         public string PayInfo { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        [Display(Name = "备注")]
+        public string Remark { get; set; }
     }
 }

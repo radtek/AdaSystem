@@ -96,6 +96,7 @@ namespace Boss.Controllers
             //通过就增加客户账户信息
             if (entity.AuditStatus == Consts.StateNormal)
             {
+                
                 //判断是否增加账户
                 var account = entity.PurchasePayment.LinkMan.PayAccounts.FirstOrDefault(d =>
                     d.AccountName.Equals(viewModel.AccountName, StringComparison.CurrentCultureIgnoreCase) &&
@@ -127,6 +128,11 @@ namespace Boss.Controllers
                     return View(viewModel);
                 }
             }
+            ////订单审核
+            //foreach (var orderDetail in entity.PurchasePayment.PurchasePaymentOrderDetails)
+            //{
+            //    orderDetail.PurchaseOrderDetail.AuditStatus = viewModel.AuditStatus;
+            //}
             _purchasePaymentDetailService.Update(entity);
             TempData["Msg"] = "审批成功";
             return RedirectToAction("Index");

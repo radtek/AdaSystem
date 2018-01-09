@@ -7,6 +7,7 @@ using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Log;
+using Ada.Core.Domain.Purchase;
 using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel.Admin;
@@ -18,6 +19,7 @@ namespace Ada.Web.Controllers
     public class LoginController : Controller
     {
         private readonly IRepository<Manager> _repository;
+        
         private readonly IDbContext _dbContext;
         private readonly ISignals _signals;
         public LoginController(IRepository<Manager> repository, IDbContext dbContext, ISignals signals)
@@ -25,6 +27,7 @@ namespace Ada.Web.Controllers
             _repository = repository;
             _dbContext = dbContext;
             _signals = signals;
+            
         }
         public ActionResult Index()
         {
@@ -92,5 +95,6 @@ namespace Ada.Web.Controllers
             return RedirectToAction("Index", "Login", new { area = "" });
         }
 
+        
     }
 }
