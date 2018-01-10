@@ -67,5 +67,10 @@ namespace Ada.Core.ViewModel.Finance
         /// </summary>
         [Display(Name = "科目类型")]
         public short? SubjectType { get; set; }
+        /// <summary>
+        /// 业务员
+        /// </summary>
+        [Display(Name = "业务员")]
+        public string Employe { get; set; }
     }
 }

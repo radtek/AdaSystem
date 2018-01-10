@@ -100,6 +100,7 @@ namespace Purchase.Controllers
             item.BusinessRemark = businessOrder.Remark;
             item.AuditStatus = entity.AuditStatus;
             item.Status = entity.Status;
+            item.IsPayment = entity.PurchasePaymentOrderDetails.Count > 0;
             //item.BargainMoney = entity.BargainMoney;
             //item.OrderDate = entity.PurchaseOrder.OrderDate;
             return View(item);

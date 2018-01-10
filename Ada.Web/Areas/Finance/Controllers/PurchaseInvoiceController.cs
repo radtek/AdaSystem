@@ -53,11 +53,11 @@ namespace Finance.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Update(PurchasePaymentView viewModel)
         {
-            if (!ModelState.IsValid)
-            {
-                ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
-                return View(viewModel);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
+            //    return View();
+            //}
             
             PurchasePayment payment = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
             payment.InvoiceNum = viewModel.InvoiceNum;

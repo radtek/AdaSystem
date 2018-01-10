@@ -139,5 +139,15 @@ namespace Ada.Core.ViewModel.Purchase
         /// </summary>
         [Display(Name = "媒体名称")]
         public string MediaName { get; set; }
+        /// <summary>
+        /// 总税额
+        /// </summary>
+        [Display(Name = "总税额")]
+        public decimal? TotalTaxMoney { get; set; }
+        /// <summary>
+        /// 总申请金额
+        /// </summary>
+        [Display(Name = "总申请金额")]
+        public decimal? TotalRequestMoney { get; set; }
     }
 }

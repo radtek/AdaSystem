@@ -25,7 +25,7 @@ Math.toFixMoney = function (value) {
 
 var searchFrm = {};
 searchFrm.search = function (form, evt) {
-    $("#table").bootstrapTable("refresh");
+    $("#table").bootstrapTable("selectPage",1).bootstrapTable("refresh");
     evt.preventDefault();
 }
 searchFrm.reset = function (form) {
@@ -69,6 +69,13 @@ formatter.yesorno = function (value, row, index) {
         return '<a href="javascript:;"><i class="fa fa-check text-navy"></i></a>';
     } else {
         return '<a href="javascript:;"><i class="fa fa-times text-danger"></i></a>';
+    }
+};
+formatter.islock = function (value, row, index) {
+    if (value == 1) {
+        return '<span><i class="fa fa-lock text-navy"></i></span>';
+    } else {
+        return '<span><i class="fa fa-unlock text-warning"></i></span>';
     }
 };
 formatter.inout = function (value, row, index) {

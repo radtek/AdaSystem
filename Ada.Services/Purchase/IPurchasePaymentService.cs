@@ -10,6 +10,6 @@ namespace Ada.Services.Purchase
         void Add(PurchasePayment entity);
         void Update(PurchasePayment entity);
         void Delete(PurchasePayment entity);
-        IQueryable<PurchasePayment> LoadEntitiesFilter(PurchasePaymentView viewModel);
+        IQueryable<PurchasePaymentView> LoadEntitiesFilter(PurchasePaymentView viewModel);
     }
 }

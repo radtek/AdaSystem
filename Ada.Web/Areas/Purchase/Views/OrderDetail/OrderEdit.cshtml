@@ -1,5 +1,6 @@
 ﻿@using Ada.Core.Domain
 @using Ada.Core.Infrastructure
+@using Ada.Framework
 @using Ada.Services.Admin
 @using Microsoft.Ajax.Utilities
 @model Ada.Core.ViewModel.Purchase.PurchaseOrderDetailView
@@ -189,7 +190,15 @@
                             <div class="form-group">
                                 @Html.LabelFor(d => d.PurchaseMoney, Html.DisplayNameFor(d => d.PurchaseMoney).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-4">
-                                    @(Model.AuditStatus == Consts.StateNormal ? Html.TextBoxFor(d => d.PurchaseMoney, new { @class = "form-control", @readonly = "readonly" }) : Html.TextBoxFor(d => d.PurchaseMoney, new { @class = "form-control" }))
+                                    @if (Model.AuditStatus == Consts.StateNormal || Model.IsPayment == true)
+                                    {
+                                        @Html.TextBoxFor(d => d.PurchaseMoney, new { @class = "form-control", @readonly = "readonly" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(d => d.PurchaseMoney, new { @class = "form-control" })
+                                    }
+                                    @Html.HiddenFor(d=>d.IsPayment)
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -205,8 +214,8 @@
                                 <div class="col-sm-2">
                                     @if (Model.AuditStatus == Consts.StateNormal)
                                     {
-                                        <input type="text" readonly="readonly" value="已完成" class="form-control"/>
-                                        @Html.HiddenFor(d=>d.Status)
+                                        <input type="text" readonly="readonly" value="已完成" class="form-control" />
+                                        @Html.HiddenFor(d => d.Status)
                                     }
                                     else
                                     {

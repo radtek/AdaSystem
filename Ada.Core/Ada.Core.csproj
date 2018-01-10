@@ -151,6 +151,7 @@
     <Compile Include="IRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\Encrypt.cs" />
+    <Compile Include="Tools\FastPropertyComparer.cs" />
     <Compile Include="Tools\SerializeHelper.cs" />
     <Compile Include="Tools\Thumbnail.cs" />
     <Compile Include="Tools\Utils.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="ViewModel\Business\BusinessOrderView.cs" />
     <Compile Include="ViewModel\Business\BusinessPayeeView.cs" />
     <Compile Include="ViewModel\Business\BusinessPaymentView.cs" />
+    <Compile Include="ViewModel\Business\BusinessWriteOffDetailView.cs" />
     <Compile Include="ViewModel\Business\BusinessWriteOffView.cs" />
     <Compile Include="ViewModel\Customer\FollowUpView.cs" />
     <Compile Include="ViewModel\Customer\LinkManView.cs" />

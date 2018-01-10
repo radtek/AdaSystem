@@ -30,10 +30,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -74,8 +81,8 @@
     <Compile Include="Business\IBusinessOrderService.cs" />
     <Compile Include="Business\BusinessOrderService.cs" />
     <Compile Include="Business\IBusinessInvoiceService.cs" />
-    <Compile Include="Business\IBusinessWriteOffService.cs" />
     <Compile Include="Business\IBusinessPaymentService.cs" />
+    <Compile Include="Business\IBusinessWriteOffService.cs" />
     <Compile Include="Business\IBusinessPayeeService.cs" />
     <Compile Include="Customer\FollowUpService.cs" />
     <Compile Include="Customer\IFollowUpService.cs" />

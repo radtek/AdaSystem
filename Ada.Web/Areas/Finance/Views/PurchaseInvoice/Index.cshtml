@@ -117,8 +117,7 @@
                 uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
                 showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
                 cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
-                //detailView: true,                   //设置为 true 可以显示详细页面模式。
-                //detailFormatter: detailFormatter,
+                showFooter:true,
                 queryParams: function(parameters) {
                     parameters.IsInvoice = true;
                     return searchFrm.queryParams(parameters);
@@ -132,7 +131,10 @@
                     {
                         field: 'BillNum',
                         title: '请款单据号',
-                        align: "center", valign: "middle"
+                        align: "center", valign: "middle",
+                        footerFormatter: function () {
+                            return "合计";
+                        }
                     },
                     {
                         field: 'LinkManName',
@@ -152,7 +154,6 @@
                         title: '@Html.DisplayNameFor(d=>d.InvoiceTitle)',
                         align: "center", valign: "middle"
                     },
-
                     {
                         field: 'Tax',
                         title: '@Html.DisplayNameFor(d=>d.Tax)',
@@ -161,7 +162,25 @@
                     {
                         field: 'RequstMoney',
                         title: '付款金额',
-                        align: "center", valign: "middle"
+                        align: "center", valign: "middle",
+                        footerFormatter: function (data) {
+                            if (data[0]) {
+                                return data[0].TotalRequestMoney;
+                            }
+                            return 0;
+                        }
+                    },
+                   
+                    {
+                        field: 'TaxMoney',
+                        title: '@Html.DisplayNameFor(d=>d.TaxMoney)',
+                        align: "center", valign: "middle",
+                        footerFormatter: function (data) {
+                            if (data[0]) {
+                                return data[0].TotalTaxMoney;
+                            }
+                            return 0;
+                        }
                     },
 
                     @*{

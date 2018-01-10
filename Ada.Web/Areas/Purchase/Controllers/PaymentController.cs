@@ -46,7 +46,7 @@ namespace Purchase.Controllers
             return Json(new
             {
                 viewModel.total,
-                rows = result.Select(d => new PurchasePaymentView
+                rows = result.Select(d => new 
                 {
                     Id = d.Id,
                     //Status = d.Status,
@@ -57,15 +57,25 @@ namespace Purchase.Controllers
                     PayMoney = d.PayMoney,
                     Tax = d.Tax,
                     DiscountMoney = d.DiscountMoney,
-                    RequstMoney = d.PurchasePaymentDetails.Sum(m => m.PayMoney),
+                    RequstMoney = d.RequstMoney,
                     InvoiceTitle = d.InvoiceTitle,
                     InvoiceStauts = d.InvoiceStauts,
                     InvoiceDate = d.InvoiceDate,
                     InvoiceNum = d.InvoiceNum,
-                    IsInvoice = d.IsInvoice
+                    IsInvoice = d.IsInvoice,
+                    TaxMoney = d.TaxMoney,
+                    TotalTaxMoney = viewModel.TotalTaxMoney,
+                    TotalRequestMoney = viewModel.TotalRequestMoney
 
                 })
             }, JsonRequestBehavior.AllowGet);
+        }
+
+        private decimal? SetTaxMoney(PurchasePayment payment)
+        {
+            var money = payment.PurchasePaymentDetails.Sum(m => m.PayMoney);
+            var tax = payment.Tax ?? 0;
+            return Math.Round(Convert.ToDecimal(money - money / (1 + tax / 100)),2) ;
         }
         public ActionResult Add()
         {
@@ -132,7 +142,7 @@ namespace Purchase.Controllers
             payment.InvoiceTitle = viewModel.InvoiceTitle;
             payment.InvoiceStauts = false;
             payment.Tax = viewModel.Tax ?? 0;
-            payment.DiscountMoney = viewModel.DiscountMoney ?? 0;
+            //payment.DiscountMoney = viewModel.DiscountMoney ?? 0;
             payment.LinkManName = viewModel.LinkManName;
             payment.LinkManId = viewModel.LinkManId;
             decimal? ordermoney = 0;

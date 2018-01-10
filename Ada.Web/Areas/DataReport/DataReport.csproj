@@ -111,6 +111,7 @@
     <Compile Include="Controllers\PurchaseOrderDetailController.cs" />
     <Compile Include="Controllers\ReceivableController.cs" />
     <Compile Include="Controllers\SettleAccountController.cs" />
+    <Compile Include="Controllers\WriteOffController.cs" />
     <Compile Include="DataReportAreaRegistration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -126,6 +127,7 @@
     <Content Include="Views\IncomeExpend\Index.cshtml" />
     <Content Include="Views\Receivable\Index.cshtml" />
     <Content Include="Views\Payable\Index.cshtml" />
+    <Content Include="Views\WriteOff\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

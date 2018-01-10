@@ -33,6 +33,10 @@ namespace Ada.Services.Finance
             {
                 allList = allList.Where(d => d.IncomeExpend.SubjectName.Contains(viewModel.IncomeExpendName));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.Employe))
+            {
+                allList = allList.Where(d => d.Expense.Employe.Contains(viewModel.Employe));
+            }
             if (viewModel.BillDateStart!=null)
             {
                 allList = allList.Where(d => d.Expense.BillDate >= viewModel.BillDateStart);

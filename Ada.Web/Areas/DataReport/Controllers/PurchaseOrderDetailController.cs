@@ -52,7 +52,8 @@ namespace DataReport.Controllers
                     TotalMoney = viewModel.TotalMoney,
                     TotalPurchaseMoney = viewModel.TotalPurchaseMoney,
                     TotalTaxMoney = viewModel.TotalTaxMoney,
-                    TotalDiscountMoney = viewModel.TotalDiscountMoney
+                    TotalDiscountMoney = viewModel.TotalDiscountMoney,
+                    AuditStatus = d.AuditStatus
                 })
             }, JsonRequestBehavior.AllowGet);
         }

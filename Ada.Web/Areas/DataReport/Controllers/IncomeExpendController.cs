@@ -42,7 +42,8 @@ namespace DataReport.Controllers
                     IncomeExpendName = d.IncomeExpend.SubjectName,
                     TotalReceiptMoney = viewModel.TotalReceiptMoney,
                     TotalExpenditureMoney = viewModel.TotalExpenditureMoney,
-                    SubjectType = d.IncomeExpend.SubjectType
+                    SubjectType = d.IncomeExpend.SubjectType,
+                    Employe = d.Expense.Employe
 
                 })
             }, JsonRequestBehavior.AllowGet);

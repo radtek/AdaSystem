@@ -27,7 +27,7 @@ namespace Ada.Services.Purchase
             _purchasePaymentDetailRepository = purchasePaymentDetailRepository;
             _purchasePaymentOrderDetailRepository = purchasePaymentOrderDetailRepository;
         }
-        public IQueryable<PurchasePayment> LoadEntitiesFilter(PurchasePaymentView viewModel)
+        public IQueryable<PurchasePaymentView> LoadEntitiesFilter(PurchasePaymentView viewModel)
         {
             var allList = _repository.LoadEntities(d => d.IsDelete == false);
             //条件过滤
@@ -57,23 +57,47 @@ namespace Ada.Services.Purchase
             if (!string.IsNullOrWhiteSpace(viewModel.MediaName))
             {
                 allList = from p in allList
-                    from d in p.PurchasePaymentOrderDetails
-                    where d.PurchaseOrderDetail.MediaName.Contains(viewModel.MediaName)
-                    select p;
+                          from d in p.PurchasePaymentOrderDetails
+                          where d.PurchaseOrderDetail.MediaName.Contains(viewModel.MediaName)
+                          select p;
             }
             if (viewModel.IsInvoice != null)
             {
                 allList = allList.Where(d => d.IsInvoice == viewModel.IsInvoice);
             }
-            viewModel.total = allList.Count();
+
+            var temp = from a in allList
+                       select new PurchasePaymentView
+                       {
+                           Id = a.Id,
+                           RequstMoney = a.PurchasePaymentDetails.Sum(d => d.PayMoney),
+                           LinkManName = a.LinkManName,
+                           Transactor = a.Transactor,
+                           BillDate = a.BillDate,
+                           BillNum = a.BillNum,
+                           PayMoney = a.PayMoney,
+                           Tax = a.Tax,
+                           DiscountMoney = a.DiscountMoney,
+                           InvoiceTitle = a.InvoiceTitle,
+                           InvoiceStauts = a.InvoiceStauts,
+                           InvoiceDate = a.InvoiceDate,
+                           InvoiceNum = a.InvoiceNum,
+                           IsInvoice = a.IsInvoice,
+                           TaxMoney = a.PurchasePaymentDetails.Sum(d => d.PayMoney) - a.PurchasePaymentDetails.Sum(d => d.PayMoney) / (1 + a.Tax / 100)
+
+                       };
+            viewModel.TotalRequestMoney = temp.Sum(d => d.RequstMoney);
+            viewModel.TotalTaxMoney = temp.Sum(d=>d.TaxMoney);
+           
+            viewModel.total = temp.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
             string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
             if (order == "desc")
             {
-                return allList.OrderByDescending(d => d.Id).Skip(offset).Take(rows);
+                return temp.OrderByDescending(d => d.Id).Skip(offset).Take(rows);
             }
-            return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
+            return temp.OrderBy(d => d.Id).Skip(offset).Take(rows);
         }
 
         public void Add(PurchasePayment entity)

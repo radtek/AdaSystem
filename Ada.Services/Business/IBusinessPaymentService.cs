@@ -9,11 +9,12 @@ using Ada.Core.ViewModel.Business;
 
 namespace Ada.Services.Business
 {
-   public interface IBusinessWriteOffService:IDependency
+   public interface IBusinessPaymentService:IDependency
     {
-        void Add(BusinessWriteOff entity);
-        void Update(BusinessWriteOff entity);
-        void Delete(BusinessWriteOff entity);
-        IQueryable<BusinessWriteOff> LoadEntitiesFilter(BusinessWriteOffView viewModel);
+        void Add(BusinessPayment entity);
+        void Update(BusinessPayment entity);
+        void Delete(BusinessPayment entity);
+        IQueryable<BusinessPayment> LoadEntitiesFilter(BusinessPaymentView viewModel);
+        
     }
 }
