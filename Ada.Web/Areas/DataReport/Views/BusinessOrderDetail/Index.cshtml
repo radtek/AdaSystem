@@ -282,7 +282,7 @@
                             return 0;
                         }
                     },
-                    {
+                    @*{
                         field: 'Money',
                         title: '@Html.DisplayNameFor(d=>d.Money)',
                         align: "center", valign: "middle",
@@ -292,7 +292,7 @@
                             }
                             return 0;
                         }
-                    },
+                    },*@
                     {
                         field: 'PurchaseMoney',
                         title: '@Html.DisplayNameFor(d=>d.PurchaseMoney)',
@@ -313,6 +313,11 @@
                                 return moment(value).format("YYYY-MM-DD");
                             }
                         }
+                    },
+                    {
+                        field: 'MediaByPurchase',
+                        title: '@Html.DisplayNameFor(d=>d.MediaByPurchase)',
+                        align: "center", valign: "middle",
                     },
                     {
                         field: 'Transactor',

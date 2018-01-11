@@ -179,11 +179,20 @@
                             <div class="form-group">
                                 @Html.LabelFor(d => d.PublishDate, Html.DisplayNameFor(d => d.PublishDate).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-4">
-                                    <div class="input-group date">
-                                        @Html.TextBoxFor(d => d.PublishDate, Model.PublishDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control", @readonly = "" })
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                    </div>
+                                    @if (Model.AuditStatus == Consts.StateNormal)
+                                    {
+                                        @Html.TextBoxFor(d => d.PublishDate, Model.PublishDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control", @readonly = "readonly" })
+                                    }
+                                    else
+                                    {
+
+                                        <div class="input-group date">
+                                            @Html.TextBoxFor(d => d.PublishDate, Model.PublishDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control", @readonly = "" })
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    }
+
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -198,7 +207,7 @@
                                     {
                                         @Html.TextBoxFor(d => d.PurchaseMoney, new { @class = "form-control" })
                                     }
-                                    @Html.HiddenFor(d=>d.IsPayment)
+                                    @Html.HiddenFor(d => d.IsPayment)
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>

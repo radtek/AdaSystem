@@ -60,6 +60,11 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "税率%")]
         public decimal? Tax { get; set; }
         /// <summary>
+        /// 提成系数
+        /// </summary>
+        [Display(Name = "提成系数")]
+        public decimal? Percentage { get; set; }
+        /// <summary>
         /// 经办业务
         /// </summary>
         [Display(Name = "经办业务")]

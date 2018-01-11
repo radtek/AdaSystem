@@ -8,6 +8,8 @@ using Ada.Core;
 using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.ViewModel.Business;
+using Ada.Core.ViewModel.Setting;
+using Ada.Services.Setting;
 using Microsoft.SqlServer.Server;
 
 namespace Ada.Services.Business
@@ -16,11 +18,15 @@ namespace Ada.Services.Business
     {
         private readonly IDbContext _dbContext;
         private readonly IRepository<BusinessWriteOff> _repository;
+        private readonly ISettingService _settingService;
         private readonly IRepository<PurchaseOrderDetail> _purchaseOrderDetailRepository;
         public BusinessWriteOffService(IDbContext dbContext,
-            IRepository<BusinessWriteOff> repository, IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository)
+            IRepository<BusinessWriteOff> repository,
+            IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository,
+                ISettingService settingService)
         {
             _dbContext = dbContext;
+            _settingService = settingService;
             _repository = repository;
             _purchaseOrderDetailRepository = purchaseOrderDetailRepository;
         }
@@ -70,7 +76,7 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => viewModel.Managers.Contains(d.TransactorId));
             }
-
+            var setting = _settingService.GetSetting<WeiGuang>();
             var purchases = _purchaseOrderDetailRepository.LoadEntities(d => d.IsDelete == false);
             var temp = from h in allList
                        from o in h.BusinessOrderDetails
@@ -82,15 +88,16 @@ namespace Ada.Services.Business
                            Id = h.Id,
                            WriteOffDate = h.WriteOffDate,
                            PublishDate = p.PublishDate,
-                           OrderNum=o.BusinessOrder.OrderNum,
+                           OrderNum = o.BusinessOrder.OrderNum,
                            Transactor = o.BusinessOrder.Transactor,
                            LinkManName = o.BusinessOrder.LinkManName,
                            OrderId = o.BusinessOrderId,
                            BusinessMoney = o.SellMoney,
                            PurchaseMoney = p.PurchaseMoney,
-                           Profit = Math.Round((decimal) (o.SellMoney - p.PurchaseMoney),2),
-                           ReturnDays = SqlFunctions.DateDiff("day", p.PublishDate,h.WriteOffDate),
-                           Commission =Math.Round((decimal) ((o.SellMoney - p.PurchaseMoney) * 0.15M),2) 
+                           Profit = Math.Round((decimal)(o.SellMoney - p.PurchaseMoney), 2),
+                           ReturnDays = SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate),
+                           Percentage = SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays1 ? setting.Percentage1 : (SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays2 && SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) > setting.ReturnDays1 ? setting.Percentage2 : 0),
+                           Commission = Math.Round((decimal)((o.SellMoney - p.PurchaseMoney) * (SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays1 ? setting.Percentage1 : (SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays2 && SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) > setting.ReturnDays1 ? setting.Percentage2 : 0))), 2)
                        };
 
             viewModel.TotalBusinessMoney = temp.Sum(d => d.BusinessMoney);
@@ -107,6 +114,8 @@ namespace Ada.Services.Business
             }
             return temp.OrderBy(d => d.Id).Skip(offset).Take(rows);
         }
+
+        
         public void Update(BusinessWriteOff entity)
         {
 

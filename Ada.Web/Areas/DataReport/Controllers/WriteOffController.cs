@@ -22,6 +22,7 @@ namespace DataReport.Controllers
         }
         public ActionResult GetList(BusinessWriteOffDetailView viewModel)
         {
+            viewModel.Managers = PremissionData();
             var result = _businessWriteOffService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {
@@ -40,7 +41,7 @@ namespace DataReport.Controllers
                     d.WriteOffDate,
                     d.ReturnDays,
                     d.Transactor,
-                    //d.Tax,
+                    d.Percentage,
                     viewModel.TotalCommission,
                     viewModel.TotalBusinessMoney,
                     viewModel.TotalProfit,

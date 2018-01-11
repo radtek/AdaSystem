@@ -185,6 +185,9 @@
                         field: 'Transactor',
                         title: '@Html.DisplayNameFor(d=>d.Transactor)',
                         align: "center", valign: "middle",
+                        footerFormatter: function () {
+                            return "合计";
+                        }
                     }
                     ,
                     {
@@ -195,7 +198,10 @@
                     {
                         field: 'OrderNum',
                         title: '@Html.DisplayNameFor(d=>d.OrderNum)',
-                        align: "center", valign: "middle"
+                        align: "center", valign: "middle",
+                        formatter: function (value, row) {
+                            return "<a class='label' href='@Url.Action("Update", "Order", new{area= "Business" })?id=" + row.OrderId+"'><i class='fa fa-link'></i> " + value + "</a>";
+                        }
                     },
                     {
                         field: 'WriteOffDate',
@@ -203,10 +209,8 @@
                         align: "center", valign: "middle",
                         formatter: function(value) {
                             return  moment(value).format("YYYY-MM-DD");
-                        },
-                        footerFormatter: function () {
-                            return "合计";
                         }
+
                     },
                     {
                         field: 'PublishDate',
@@ -254,6 +258,7 @@
                             return 0;
                         }
                     },
+
                     {
                         field: 'Profit',
                         title: '@Html.DisplayNameFor(d=>d.Profit)',
@@ -265,7 +270,11 @@
                             return 0;
                         }
                     },
-
+                    {
+                        field: 'Percentage',
+                        title: '@Html.DisplayNameFor(d=>d.Percentage)',
+                        align: "center", valign: "middle"
+                    },
 
                     {
                         field: 'Commission',
