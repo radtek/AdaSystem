@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
+using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Log;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.Infrastructure;
@@ -19,15 +20,16 @@ namespace Ada.Web.Controllers
     public class LoginController : Controller
     {
         private readonly IRepository<Manager> _repository;
-        
+        private readonly IRepository<BusinessOrderDetail> _temp;
         private readonly IDbContext _dbContext;
         private readonly ISignals _signals;
-        public LoginController(IRepository<Manager> repository, IDbContext dbContext, ISignals signals)
+        public LoginController(IRepository<Manager> repository, IDbContext dbContext, ISignals signals, IRepository<BusinessOrderDetail> temp)
         {
             _repository = repository;
             _dbContext = dbContext;
             _signals = signals;
-            
+
+            _temp = temp;
         }
         public ActionResult Index()
         {
@@ -50,7 +52,7 @@ namespace Ada.Web.Controllers
                 ModelState.AddModelError("message", "用户名或密码有误");
                 return View();
             }
-            if (manager.Roles.Count==0)
+            if (manager.Roles.Count == 0)
             {
                 ModelState.AddModelError("message", "未分配角色，请联系管理员");
                 return View();
@@ -76,7 +78,7 @@ namespace Ada.Web.Controllers
                 UserName = manager.UserName,
                 RoleId = role.Id,
                 RoleName = role.RoleName,
-                RoleList = manager.Roles.Select(d=>new RoleView(){Id = d.Id,RoleName = d.RoleName}),
+                RoleList = manager.Roles.Select(d => new RoleView() { Id = d.Id, RoleName = d.RoleName }),
                 Roles = manager.Roles.Count > 0 ? string.Join(",", manager.Roles.Select(d => d.RoleName)) : "",
                 Organizations = manager.Organizations.Count > 0 ? String.Join("-", manager.Organizations.Select(d => d.OrganizationName)) : ""
             };
@@ -95,6 +97,17 @@ namespace Ada.Web.Controllers
             return RedirectToAction("Index", "Login", new { area = "" });
         }
 
-        
+        public ActionResult Update()
+        {
+            var list = _temp.LoadEntities(d => d.IsDelete == false && d.VerificationStatus == Consts.StateLock);
+            foreach (var businessOrderDetail in list)
+            {
+                businessOrderDetail.VerificationMoney = businessOrderDetail.SellMoney;
+            }
+
+            _dbContext.SaveChanges();
+            return Content("OK");
+        }
+
     }
 }

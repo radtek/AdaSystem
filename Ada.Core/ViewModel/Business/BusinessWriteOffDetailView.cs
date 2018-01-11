@@ -25,9 +25,9 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "销账金额")]
         public decimal? Money { get; set; }
         /// <summary>
-        /// 销售金额
+        /// 销售无税金额
         /// </summary>
-        [Display(Name = "销售金额")]
+        [Display(Name = "销售无税金额")]
         public decimal? BusinessMoney { get; set; }
         /// <summary>
         /// 利润金额
@@ -45,9 +45,9 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "回款天数")]
         public int? ReturnDays { get; set; }
         /// <summary>
-        /// 采购成本
+        /// 采购无税成本
         /// </summary>
-        [Display(Name = "采购成本")]
+        [Display(Name = "采购无税成本")]
         public decimal? PurchaseMoney { get; set; }
         /// <summary>
         /// 领款金额

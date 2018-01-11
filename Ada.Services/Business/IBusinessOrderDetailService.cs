@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
+using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Business;
 using Ada.Core.ViewModel.Business;
 
@@ -20,5 +21,8 @@ namespace Ada.Services.Business
         /// <param name="viewModel"></param>
         /// <returns></returns>
         IQueryable<BusinessOrderDetail> LoadEntitiesFilter(BusinessOrderDetailView viewModel);
+
+        List<BusinessOrderDetailView> BusinessPerformance(List<Manager> managers);
+        BusinessOrderDetailView BusinessPerformance(string transactorId);
     }
 }

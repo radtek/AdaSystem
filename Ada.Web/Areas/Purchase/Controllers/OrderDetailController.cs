@@ -158,6 +158,12 @@ namespace Purchase.Controllers
                     ModelState.AddModelError("message", "出刊日期不能为空");
                     return View(viewModel);
                 }
+
+                if (entity.PurchaseMoney<=0||entity.PurchaseMoney==null)
+                {
+                    ModelState.AddModelError("message", "无税金额不能为0元");
+                    return View(viewModel);
+                }
                 entity.AuditStatus = Consts.StateNormal;
             }
             //entity.Money = viewModel.Money;

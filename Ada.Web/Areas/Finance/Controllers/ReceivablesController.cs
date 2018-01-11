@@ -20,7 +20,7 @@ namespace Finance.Controllers
         private readonly IReceivablesService _receivablesService;
         private readonly IRepository<Receivables> _repository;
         private readonly IRepository<SettleAccount> _settleAccountrepository;
-        public ReceivablesController(IReceivablesService receivablesService, 
+        public ReceivablesController(IReceivablesService receivablesService,
             IRepository<Receivables> repository,
             IRepository<SettleAccount> settleAccountrepository)
         {
@@ -84,15 +84,14 @@ namespace Finance.Controllers
             entity.Transactor = CurrentManager.UserName;
             entity.TransactorId = CurrentManager.Id;
             entity.Money = viewModel.Money;
-            entity.BalanceMoney = viewModel.Money;
-            var account= _settleAccountrepository.LoadEntities(d => d.Id == viewModel.SettleAccountId).FirstOrDefault();
+
+            var account = _settleAccountrepository.LoadEntities(d => d.Id == viewModel.SettleAccountId).FirstOrDefault();
             var tax = account.Tax ?? 0;
             decimal money = (decimal)viewModel.Money;
             decimal taxMoney = money - money / (1 + tax / 100);
             entity.TaxMoney = Math.Round(taxMoney);
             entity.IncomeExpendId = viewModel.IncomeExpendId;
-            //entity.IncomeExpendName = viewModel.IncomeExpendName;
-            //entity.SettleAccountName = viewModel.SettleAccountName;
+            entity.BalanceMoney = entity.Money - entity.TaxMoney;
             entity.SettleAccountId = viewModel.SettleAccountId;
             entity.SettleType = viewModel.SettleType;
             entity.BillNum = IdBuilder.CreateOrderNum("SK");
@@ -121,7 +120,7 @@ namespace Finance.Controllers
             viewModel.BillNum = entity.BillNum;
             viewModel.BillDate = entity.BillDate;
             viewModel.Remark = entity.Remark;
-            if (entity.BusinessPayees.Count>0)
+            if (entity.BusinessPayees.Count > 0)
             {
                 viewModel.BusinessPayees = entity.BusinessPayees.Select(d => new BusinessPayeeView { Transactor = d.Transactor, ClaimDate = d.ClaimDate, Money = d.Money }).ToList();
             }
@@ -145,15 +144,17 @@ namespace Finance.Controllers
             entity.AccountName = viewModel.AccountName;
             entity.AccountNum = viewModel.AccountNum;
             entity.Money = viewModel.Money;
-            if (entity.BusinessPayees.Count<=0)
+            if (entity.BusinessPayees.Count >0)
             {
-                entity.BalanceMoney = viewModel.Money;
+                ModelState.AddModelError("message", "此收款单据已被领款，无法修改");
+                return View(viewModel);
             }
             var account = _settleAccountrepository.LoadEntities(d => d.Id == viewModel.SettleAccountId).FirstOrDefault();
             var tax = account.Tax ?? 0;
-            decimal money = (decimal) viewModel.Money;
-            decimal taxMoney = money - money / (1 +  tax / 100);
+            decimal money = (decimal)viewModel.Money;
+            decimal taxMoney = money - money / (1 + tax / 100);
             entity.TaxMoney = Math.Round(taxMoney);
+            entity.BalanceMoney = entity.Money - entity.TaxMoney;
             entity.IncomeExpendId = viewModel.IncomeExpendId;
             entity.IncomeExpendName = viewModel.IncomeExpendName;
             entity.SettleAccountName = viewModel.SettleAccountName;
@@ -170,7 +171,7 @@ namespace Finance.Controllers
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            if (entity.BusinessPayees.Count>0)
+            if (entity.BusinessPayees.Count > 0)
             {
                 return Json(new { State = 0, Msg = "此单据已被领款，无法删除" });
             }

@@ -199,7 +199,7 @@ namespace Business.Controllers
                 businessOrderDetail.Id = IdBuilder.CreateIdNum();
                 businessOrderDetail.Status = Consts.StateLock;//待转采购
                 businessOrderDetail.VerificationStatus = Consts.StateLock;
-                businessOrderDetail.VerificationMoney = businessOrderDetail.Money;
+                businessOrderDetail.VerificationMoney = businessOrderDetail.SellMoney;
                 businessOrderDetail.ConfirmVerificationMoney = 0;
                 businessOrderDetail.AuditStatus = Consts.StateLock;
                 entity.BusinessOrderDetails.Add(businessOrderDetail);
@@ -317,7 +317,7 @@ namespace Business.Controllers
                     businessOrderDetail.Status = Consts.StateLock;
                     businessOrderDetail.AuditStatus = Consts.StateLock;
                     businessOrderDetail.VerificationStatus = Consts.StateLock;
-                    businessOrderDetail.VerificationMoney = businessOrderDetail.Money;
+                    businessOrderDetail.VerificationMoney = businessOrderDetail.SellMoney;
                     businessOrderDetail.ConfirmVerificationMoney = 0;
                     entity.BusinessOrderDetails.Add(businessOrderDetail);
                 }
@@ -339,7 +339,7 @@ namespace Business.Controllers
                         detail.Remark = businessOrderDetail.Remark;
                         detail.CostMoney = businessOrderDetail.CostMoney;
                         detail.MediaByPurchase = businessOrderDetail.MediaByPurchase;
-                        detail.VerificationMoney = businessOrderDetail.Money;
+                        detail.VerificationMoney = businessOrderDetail.SellMoney;
                         detail.ConfirmVerificationMoney = 0;
                     }
                     //可以修改稿件标题
@@ -463,7 +463,7 @@ namespace Business.Controllers
                     order.Status = Consts.StateNormal;
                     order.VerificationStatus = Consts.StateLock;
                     order.AuditStatus = Consts.StateNormal;
-                    order.VerificationMoney = order.Money;
+                    order.VerificationMoney = order.SellMoney;
                     order.ConfirmVerificationMoney = 0;
                     entity.BusinessOrderDetails.Add(order);
                     //entity.TotalTaxMoney = entity.TotalTaxMoney + order.TaxMoney;
@@ -486,7 +486,7 @@ namespace Business.Controllers
                     temp.Tax = order.Tax;
                     temp.TaxMoney = order.TaxMoney;
                     temp.Remark = order.Remark;
-                    temp.VerificationMoney = order.Money;
+                    temp.VerificationMoney = order.SellMoney;
                     temp.ConfirmVerificationMoney = 0;
                     temp.Status = Consts.StateNormal;//已转采购
                     temp.AuditStatus = Consts.StateNormal;//审核通过

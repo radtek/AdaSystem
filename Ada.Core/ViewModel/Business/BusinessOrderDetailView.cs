@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ada.Core.ViewModel.Business
 {
-    public class BusinessOrderDetailView:BaseView
+    public class BusinessOrderDetailView : BaseView
     {
         /// <summary>
         /// 税额
@@ -150,6 +150,11 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "经办业务")]
         public string Transactor { get; set; }
         /// <summary>
+        /// 经办业务
+        /// </summary>
+        [Display(Name = "经办业务")]
+        public string TransactorId { get; set; }
+        /// <summary>
         /// 客户名称
         /// </summary>
         [Display(Name = "客户名称")]
@@ -184,5 +189,15 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "无税金额")]
         public decimal? TotalSellMoney { get; set; }
+        /// <summary>
+        /// 未核销金额
+        /// </summary>
+        [Display(Name = "未核销金额")]
+        public decimal? TotalVerificationMoney { get; set; }
+        /// <summary>
+        /// 利润率
+        /// </summary>
+        [Display(Name = "利润率")]
+        public decimal? Profit { get; set; }
     }
 }

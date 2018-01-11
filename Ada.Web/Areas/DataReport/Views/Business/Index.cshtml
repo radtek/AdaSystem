@@ -1,0 +1,96 @@
+﻿@using System.Linq
+@using System.Web.Optimization
+@model List<Ada.Core.ViewModel.Business.BusinessOrderDetailView>
+@{
+    ViewBag.Title = "销售业绩";
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index","Home",new{area= "Dashboards" })">工作台</a>
+            </li>
+            <li class="active">
+                <strong>@ViewBag.Title</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                @*<div class="ibox-title">
+                    <h2>销售业绩统计</h2>
+                </div>*@
+                <div class="ibox-content">
+
+                    <table class="table table-hover footable" data-sorting="true">
+                        <thead>
+                            <tr>
+
+                                <th>销售人员</th>
+                                <th data-breakpoints="xs sm" data-type="number">销售总额(不含税)</th>
+                                <th data-breakpoints="xs sm" data-type="number">成本总额(不含税)</th>
+                                <th data-type="number">利润率%</th>
+                                <th data-breakpoints="xs sm" data-type="number">未核销总额</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Transactor</td>
+                                    <td>@item.TotalSellMoney</td>
+                                    <td>@item.TotalPurchaseMoney</td>
+                                    <td>
+                                        @if (item.Profit != null)
+                                        {
+                                            @Math.Round((decimal)item.Profit, 2)
+                                        }
+                                    </td>
+                                    <td>@item.TotalVerificationMoney</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>合计</th>
+                                <th>@Model.Sum(d => d.TotalSellMoney)</th>
+                                <th>@Model.Sum(d => d.TotalPurchaseMoney)</th>
+                                <th></th>
+                                <th>@Model.Sum(d => d.TotalVerificationMoney)</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Styles {
+    @Styles.Render("~/plugins/footableV3Styles")
+
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/footableV3")
+
+
+    <script>
+        $(function () {
+            $('.table').footable();
+
+        });
+
+
+    </script>
+}

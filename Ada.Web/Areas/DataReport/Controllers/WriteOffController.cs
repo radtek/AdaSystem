@@ -40,7 +40,7 @@ namespace DataReport.Controllers
                     d.WriteOffDate,
                     d.ReturnDays,
                     d.Transactor,
-                    d.Tax,
+                    //d.Tax,
                     viewModel.TotalCommission,
                     viewModel.TotalBusinessMoney,
                     viewModel.TotalProfit,

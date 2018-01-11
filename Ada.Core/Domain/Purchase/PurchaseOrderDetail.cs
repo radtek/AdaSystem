@@ -51,9 +51,9 @@ namespace Ada.Core.Domain.Purchase
         [Display(Name = "税率%")]
         public decimal? Tax { get; set; }
         /// <summary>
-        /// 无税金额
+        /// 采购无税金额
         /// </summary>
-        [Display(Name = "无税金额")]
+        [Display(Name = "采购无税金额")]
         public decimal? PurchaseMoney { get; set; }
         /// <summary>
         /// 预付定金

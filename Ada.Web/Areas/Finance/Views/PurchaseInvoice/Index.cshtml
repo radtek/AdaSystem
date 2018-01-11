@@ -3,7 +3,7 @@
 @model Ada.Core.ViewModel.Purchase.PurchasePaymentView
 @{
     ViewBag.Title = "媒介发票";
-    List<SelectListItem> status = new List<SelectListItem>() { new SelectListItem() { Text = "已到票", Value = "1" }, new SelectListItem() { Text = "未到票", Value = "0" } };
+    List<SelectListItem> status = new List<SelectListItem>() { new SelectListItem() { Text = "已到票", Value = "true" }, new SelectListItem() { Text = "未到票", Value = "false" } };
 }
 @Html.Partial("Bread")
 

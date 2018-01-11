@@ -53,7 +53,7 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "成本金额")]
         public decimal? CostMoney { get; set; }
         /// <summary>
-        /// 销售金额
+        /// 无税金额
         /// </summary>
         [Display(Name = "无税金额")]
         public decimal? SellMoney { get; set; }

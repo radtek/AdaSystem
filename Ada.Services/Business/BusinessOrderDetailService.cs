@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
 using Ada.Core.Domain;
+using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.ViewModel.Business;
@@ -13,16 +14,18 @@ namespace Ada.Services.Business
 {
     public class BusinessOrderDetailService : IBusinessOrderDetailService
     {
-        private readonly IDbContext _dbContext;
+      
         private readonly IRepository<BusinessOrderDetail> _repository;
+        
         private readonly IRepository<PurchaseOrderDetail> _purchaseOrderDetailRepository;
-        public BusinessOrderDetailService(IDbContext dbContext,
+        public BusinessOrderDetailService(
             IRepository<BusinessOrderDetail> repository,
-            IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository)
+            IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository
+            )
         {
-            _dbContext = dbContext;
             _repository = repository;
             _purchaseOrderDetailRepository = purchaseOrderDetailRepository;
+            
         }
 
 
@@ -115,22 +118,58 @@ namespace Ada.Services.Business
             }
             return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
         }
-        //public void Add(BusinessOrder entity)
-        //{
-        //    _repository.Add(entity);
-        //    _dbContext.SaveChanges();
-        //}
+        /// <summary>
+        /// 根据人员统计业务订单
+        /// </summary>
+        /// <param name="managers"></param>
+        /// <returns></returns>
+        public List<BusinessOrderDetailView> BusinessPerformance(List<Manager> managers)
+        {
+            List<BusinessOrderDetailView> list = new List<BusinessOrderDetailView>();
+            foreach (var manager in managers)
+            {
+                var item = BusinessPerformance(manager.Id);
+                item.Transactor = manager.UserName;
+                list.Add(item);
+            }
+            return list;
+        }
+        /// <summary>
+        /// 根据个人
+        /// </summary>
+        /// <param name="transactorId"></param>
+        /// <returns></returns>
+        public BusinessOrderDetailView BusinessPerformance(string transactorId)
+        {
+            var orders = GetBusinessOrderDetails();
+            BusinessOrderDetailView item = new BusinessOrderDetailView
+            {
+                TransactorId = transactorId,
+                TotalSellMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.SellMoney),
+                TotalVerificationMoney =
+                    orders.Where(d => d.TransactorId == transactorId).Sum(d => d.VerificationMoney),
+                TotalPurchaseMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.PurchaseMoney)
+            };
+            item.Profit = ((item.TotalSellMoney - item.TotalPurchaseMoney) / item.TotalSellMoney) * 100;
+            return item;
+        }
+        private IQueryable<BusinessOrderDetailView> GetBusinessOrderDetails()
+        {
+            var purchaseOrders = _purchaseOrderDetailRepository.LoadEntities(d => d.IsDelete == false && d.PurchaseOrder.IsDelete == false);
+            var businessOrders = _repository.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false);
+            return from b in businessOrders
+                from p in purchaseOrders
 
-        //public void Update(BusinessOrder entity)
-        //{
-        //    _repository.Update(entity);
-        //    _dbContext.SaveChanges();
-        //}
+                where p.Status == Consts.PurchaseStatusSuccess && b.Id == p.BusinessOrderDetailId
+                select new BusinessOrderDetailView
+                {
+                    SellMoney = b.SellMoney,
+                    VerificationMoney = b.VerificationMoney,
+                    PurchaseMoney = p.PurchaseMoney,
+                    Transactor = b.BusinessOrder.Transactor,
+                    TransactorId = b.BusinessOrder.TransactorId
 
-        //public void Delete(BusinessOrder entity)
-        //{
-        //    _repository.Delete(entity);
-        //    _dbContext.SaveChanges();
-        //}
+                };
+        }
     }
 }

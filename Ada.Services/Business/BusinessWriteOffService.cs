@@ -86,12 +86,11 @@ namespace Ada.Services.Business
                            Transactor = o.BusinessOrder.Transactor,
                            LinkManName = o.BusinessOrder.LinkManName,
                            OrderId = o.BusinessOrderId,
-                           BusinessMoney = o.Money,
+                           BusinessMoney = o.SellMoney,
                            PurchaseMoney = p.PurchaseMoney,
-                           Tax = h.BusinessPayees.Max(d => d.Receivables.SettleAccount.Tax),
-                           Profit = Math.Round((decimal) (o.Money / (1 + h.BusinessPayees.Max(d => d.Receivables.SettleAccount.Tax) / 100) - p.PurchaseMoney),2),
+                           Profit = Math.Round((decimal) (o.SellMoney - p.PurchaseMoney),2),
                            ReturnDays = SqlFunctions.DateDiff("day", p.PublishDate,h.WriteOffDate),
-                           Commission =Math.Round((decimal) ((o.Money / (1 + h.BusinessPayees.Max(d => d.Receivables.SettleAccount.Tax) / 100) - p.PurchaseMoney) * 0.15M),2) 
+                           Commission =Math.Round((decimal) ((o.SellMoney - p.PurchaseMoney) * 0.15M),2) 
                        };
 
             viewModel.TotalBusinessMoney = temp.Sum(d => d.BusinessMoney);

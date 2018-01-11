@@ -25,7 +25,7 @@ Math.toFixMoney = function (value) {
 
 var searchFrm = {};
 searchFrm.search = function (form, evt) {
-    $("#table").bootstrapTable("selectPage",1).bootstrapTable("refresh");
+    $("#table").bootstrapTable("refresh");
     evt.preventDefault();
 }
 searchFrm.reset = function (form) {
