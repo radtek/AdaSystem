@@ -14,18 +14,19 @@ namespace Ada.Services.Business
 {
     public class BusinessOrderDetailService : IBusinessOrderDetailService
     {
-      
+
         private readonly IRepository<BusinessOrderDetail> _repository;
-        
+        private readonly IDbContext _dbContext;
         private readonly IRepository<PurchaseOrderDetail> _purchaseOrderDetailRepository;
         public BusinessOrderDetailService(
+            IDbContext dbContext,
             IRepository<BusinessOrderDetail> repository,
             IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository
             )
         {
             _repository = repository;
             _purchaseOrderDetailRepository = purchaseOrderDetailRepository;
-            
+            _dbContext = dbContext;
         }
 
 
@@ -158,18 +159,24 @@ namespace Ada.Services.Business
             var purchaseOrders = _purchaseOrderDetailRepository.LoadEntities(d => d.IsDelete == false && d.PurchaseOrder.IsDelete == false);
             var businessOrders = _repository.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false);
             return from b in businessOrders
-                from p in purchaseOrders
+                   from p in purchaseOrders
+                   //双方都是已完成的状态
+                   where p.Status == Consts.PurchaseStatusSuccess && b.Status == Consts.StateOK && b.Id == p.BusinessOrderDetailId
+                   select new BusinessOrderDetailView
+                   {
+                       SellMoney = b.SellMoney,
+                       VerificationMoney = b.VerificationMoney,
+                       PurchaseMoney = p.PurchaseMoney,
+                       Transactor = b.BusinessOrder.Transactor,
+                       TransactorId = b.BusinessOrder.TransactorId
 
-                where p.Status == Consts.PurchaseStatusSuccess && b.Id == p.BusinessOrderDetailId
-                select new BusinessOrderDetailView
-                {
-                    SellMoney = b.SellMoney,
-                    VerificationMoney = b.VerificationMoney,
-                    PurchaseMoney = p.PurchaseMoney,
-                    Transactor = b.BusinessOrder.Transactor,
-                    TransactorId = b.BusinessOrder.TransactorId
-
-                };
+                   };
         }
+        public void Update(BusinessOrderDetail entity)
+        {
+            _repository.Update(entity);
+            _dbContext.SaveChanges();
+        }
+
     }
 }

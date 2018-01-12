@@ -428,7 +428,7 @@ function showOrder() {
                         responseHandler: responseHandler,
                         queryParams: function (parameters) {
                             parameters.LinkManId = linkman;
-                            //parameters.IsPayment = false;
+                            parameters.IsPayment = false;
                             return parameters;
                         },
                         formatSearch: function () {

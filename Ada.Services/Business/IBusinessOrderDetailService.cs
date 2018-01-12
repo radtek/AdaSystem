@@ -24,5 +24,6 @@ namespace Ada.Services.Business
 
         List<BusinessOrderDetailView> BusinessPerformance(List<Manager> managers);
         BusinessOrderDetailView BusinessPerformance(string transactorId);
+        void Update(BusinessOrderDetail entity);
     }
 }

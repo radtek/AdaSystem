@@ -25,39 +25,18 @@
                         @Html.AntiForgeryToken()
                         <h1>核销对象</h1>
                             <fieldset>
-                                <h2>填写核销信息</h2>
-                                <div class="row">
-                                    <div class="col-lg-8">
-                                        <div class="form-group">
-                                            @Html.LabelFor(d => d.LinkManId, Html.DisplayNameFor(d => d.LinkManId).ToString())
-                                            <select class="form-control" required="" name="LinkManId" id="LinkManId">
-                                                <option value="@Model.LinkManId">@Model.LinkManName</option>
-                                            </select>
-                                            @Html.HiddenFor(d => d.LinkManName)
-                                        </div>
-                                        <div class="form-group">
-                                            @Html.LabelFor(d => d.OrderNum, Html.DisplayNameFor(d => d.OrderNum).ToString())
-                                            @Html.TextBoxFor(d=>d.OrderNum,new{@class= "form-control", required=""})
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="text-center">
-                                            <div style="margin-top: 20px">
-                                                <i class="fa fa-sign-in" style="font-size: 180px;color: #e5e5e5 "></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <h4>请勾选需要核销的项目订单</h4>
+                                <table id="table"></table>
                             </fieldset>
                             <h1>核销款项</h1>
                             <fieldset>
-                                <h4>请勾选需要核销的款项</h4>
+                                <h4>请勾选需要核销的领款单据</h4>
                                 <table id="payeetable"></table>
                             </fieldset>
 
                             <h1>核销订单</h1>
                             <fieldset>
-                                <h4>请勾选需要核销的订单</h4>
+                                <h4>请勾选需要核销的订单明细</h4>
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <table id="ordertable"></table>
@@ -127,9 +106,10 @@
         var linkmanapi = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})",
             transactorapi="@Url.Action("GetList", "Manager", new {area = "Admin"})",
             payeeapi = '@Url.Action("GetList", "Payee")',
-            orderapi = '@Url.Action("GetDetails", "Order")';
+            orderapi = '@Url.Action("GetDetails", "Order")',
+            itemapi = '@Url.Action("GetList", "Order")';
     </script>
-    <script src="@Url.Content("~/Areas/Business/Scripts/writeoff.js")"></script>
+    <script src="@Url.Content("~/Areas/Business/Scripts/writeoff.js?v=201801121")"></script>
 }
 
 

@@ -257,7 +257,9 @@ namespace Business.Controllers
                 d.Remark,
                 d.CostMoney,
                 d.MediaByPurchase,
-                Status = d.Status ?? Consts.StateLock
+                Status = d.Status ?? Consts.StateLock,
+                PurchaseStatus = GetPurchaseOrderDetail(d.Id)?.Status,
+                GetPurchaseOrderDetail(d.Id)?.PurchaseMoney
             });
             entity.OrderDetails = JsonConvert.SerializeObject(orderDetails);
 
@@ -415,14 +417,42 @@ namespace Business.Controllers
             {
                 entity.AuditStatus = Consts.StateLock;
             }
-            //已下单的都审核
-            foreach (var entityBusinessOrderDetail in entity.BusinessOrderDetails.Where(d => d.Status == Consts.StateNormal))
+            //已完成的都审核
+            foreach (var entityBusinessOrderDetail in entity.BusinessOrderDetails.Where(d => d.Status == Consts.StateOK))
             {
                 entityBusinessOrderDetail.AuditStatus = entity.AuditStatus;
             }
             _businessOrderService.Update(entity);
             TempData["Msg"] = "操作成功";
             return RedirectToAction("Update", new { id });
+        }
+        /// <summary>
+        /// 确认订单
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Confirm(BusinessOrderDetailView viewModel)
+        {
+            var entity = _businessOrderDetailRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
+            var purchase = GetPurchaseOrderDetail(entity.Id);
+            entity.SellMoney = viewModel.SellMoney;
+            entity.Money = viewModel.Money;
+            entity.Remark = viewModel.Remark;
+            if (entity.SellMoney > purchase.PurchaseMoney)
+            {
+                entity.Status = Consts.StateOK;//订单已完成
+                entity.AuditStatus = Consts.StateNormal;//审核通过
+            }
+            else
+            {
+                entity.Status = Consts.StateError;//进入审核
+                entity.AuditStatus = Consts.StateLock;//未审核
+            }
+            _businessOrderDetailService.Update(entity);
+
+            return RedirectToAction("Update", new { id = entity.BusinessOrderId });
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
@@ -463,7 +493,7 @@ namespace Business.Controllers
                     order.Id = IdBuilder.CreateIdNum();
                     order.Status = Consts.StateNormal;
                     order.VerificationStatus = Consts.StateLock;
-                    order.AuditStatus = Consts.StateNormal;
+                    order.AuditStatus = Consts.StateLock;
                     order.VerificationMoney = order.SellMoney;
                     order.ConfirmVerificationMoney = 0;
                     entity.BusinessOrderDetails.Add(order);
@@ -490,7 +520,7 @@ namespace Business.Controllers
                     temp.VerificationMoney = order.SellMoney;
                     temp.ConfirmVerificationMoney = 0;
                     temp.Status = Consts.StateNormal;//已转采购
-                    temp.AuditStatus = Consts.StateNormal;//审核通过
+                    temp.AuditStatus = Consts.StateLock;
                     costMoney += temp.CostMoney;
                     sellMoney += temp.SellMoney;
                 }

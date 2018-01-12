@@ -17,9 +17,13 @@ namespace Ada.Core.Domain
         /// </summary>
         public const short StateLock = (short)StatusEnum.Locked;
         /// <summary>
-        /// 错误|失败 -1
+        /// 错误|失败|待确认 -1
         /// </summary>
         public const short StateError = (short)StatusEnum.Error;
+        /// <summary>
+        /// 成功|完成  2
+        /// </summary>
+        public const short StateOK = (short)StatusEnum.Success;
         /// <summary>
         /// 待处理
         /// </summary>

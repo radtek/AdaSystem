@@ -46,7 +46,7 @@ namespace Purchase.Controllers
             return Json(new
             {
                 viewModel.total,
-                rows = result.Select(d => new 
+                rows = result.Select(d => new
                 {
                     Id = d.Id,
                     //Status = d.Status,
@@ -75,7 +75,7 @@ namespace Purchase.Controllers
         {
             var money = payment.PurchasePaymentDetails.Sum(m => m.PayMoney);
             var tax = payment.Tax ?? 0;
-            return Math.Round(Convert.ToDecimal(money - money / (1 + tax / 100)),2) ;
+            return Math.Round(Convert.ToDecimal(money - money / (1 + tax / 100)), 2);
         }
         public ActionResult Add()
         {
@@ -167,6 +167,14 @@ namespace Purchase.Controllers
             //订单明细
             foreach (var item in details)
             {
+                //校验是否已付款
+                var temp = _purchasePaymentOrderDetailRepository.LoadEntities(d => d.PurchaseOrderDetailId == item.Id)
+                     .FirstOrDefault();
+                if (temp != null)
+                {
+                    ModelState.AddModelError("message", item.MediaName + ",此订单已申请！");
+                    return View(viewModel);
+                }
                 PurchasePaymentOrderDetail orderDetail = new PurchasePaymentOrderDetail();
                 orderDetail.Id = IdBuilder.CreateIdNum();
                 orderDetail.PurchaseOrderDetailId = item.Id;

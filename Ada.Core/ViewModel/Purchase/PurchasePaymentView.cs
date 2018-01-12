@@ -100,6 +100,16 @@ namespace Ada.Core.ViewModel.Purchase
         [Display(Name = "到票日期")]
         public DateTime? InvoiceDate { get; set; }
         /// <summary>
+        /// 到票日期
+        /// </summary>
+        [Display(Name = "到票日期")]
+        public DateTime? InvoiceDateStart { get; set; }
+        /// <summary>
+        /// 到票日期
+        /// </summary>
+        [Display(Name = "到票日期")]
+        public DateTime? InvoiceDateEnd { get; set; }
+        /// <summary>
         /// 发票号
         /// </summary>
         [Display(Name = "发票号")]

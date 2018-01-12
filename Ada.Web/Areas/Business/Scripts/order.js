@@ -85,10 +85,10 @@ function initData() {
         forceParse: 0,
         format: "yyyy年mm月dd日"
     });
-    
-    
+
+
     var isvisible = $("#Status").val() == 0 ? true : false;
-   
+
     if (!isReadonly) {
         initSelect2("LinkManId", linkmanSelect);
         initSelect2("TransactorId", transactorSelect);
@@ -98,6 +98,7 @@ function initData() {
         toolbar: '#toolbar',
         classes: "table table-no-bordered",
         clickToSelect: true,
+        uniqueId: "Id", 
         columns: [
             {
                 checkbox: true,
@@ -195,20 +196,41 @@ function initData() {
             {
                 field: 'Tax',
                 title: '税率%',
-                align: "center", valign: "middle",
+                align: "center", valign: "middle", visible: false
                 //editable: { mode: "inline", emptytext: '请输入' }
             },
             {
                 field: 'TaxMoney',
                 title: '税额',
                 align: "center", valign: "middle",
+                footerFormatter: sumFormatter,
+                visible: false
+            },
+            {
+                field: 'PurchaseMoney',
+                title: '采购成本',
+                align: "center", valign: "middle",
                 footerFormatter: sumFormatter
             },
             {
-                field: 'Remark',
-                title: '备注',
+                field: 'PurchaseStatus',
+                title: '采购状态',
                 align: "center", valign: "middle",
-                editable: { mode: "inline", emptytext: '请输入' }
+                formatter: formatter.purchaseStatus
+
+            },
+            {
+                field: 'Id',
+                title: '销售状态',
+                align: "center", valign: "middle",
+                formatter: function (value, row,index) {
+                    if (row.PurchaseStatus == 3 && row.Status == 1) {
+                        return "<button type='button' class='btn btn-warning btn-xs' onclick=\"confirmOrder('" + value+"')\"><i class='fa fa-check'></i> 确认</button>";
+                    } else {
+                        return formatter.businessStatus(row.Status);
+                    }
+                }
+
             }
             ,
             {
@@ -261,6 +283,38 @@ function initData() {
 
     });
 }
+
+function confirmOrder(id) {
+    var row = $table.bootstrapTable('getRowByUniqueId', id);
+    if (row.SellMoney <= row.PurchaseMoney) {
+        swal({
+                title: "警告",
+                text: "销售价格低于采购成本，需审批。",
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                confirmButtonText: "申请",
+                cancelButtonText: "取消",
+                animation: "slide-from-top",
+                inputPlaceholder: "填写申请审批说明",
+                showLoaderOnConfirm: true
+            },
+            function (inputValue) {
+                if (inputValue === false) return false;
+                if (inputValue === "") {
+                    swal.showInputError("请输入申请说明！");
+                    return false;
+                }
+                row.Remark = inputValue;
+                subConfirm(row);
+            });
+    } else {
+        subConfirm(row);
+        
+    }
+    
+}
+ 
 function showMedia(url) {
     $("#modalView").load(url,
         function () {
@@ -425,7 +479,7 @@ function deleteRow() {
     if (rows.length > 0) {
         var arr = [];
         $.each(rows,
-            function(k, v) {
+            function (k, v) {
                 arr.push(v.Id);
             });
         $table.bootstrapTable('remove', {
@@ -480,7 +534,7 @@ function confirmData() {
 //    return temp;
 //}
 function getData() {
-    var temp = [],tax = $("#Tax").val(),now = moment().add(10, "days").format('YYYY-MM-DD');
+    var temp = [], tax = $("#Tax").val(), now = moment().add(10, "days").format('YYYY-MM-DD');
     $.each(selections.rows,
         function (k, v) {
             temp.push({

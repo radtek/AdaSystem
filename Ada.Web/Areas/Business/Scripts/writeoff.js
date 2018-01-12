@@ -1,48 +1,19 @@
-﻿var linkmanSelect = {},
-    transactorSelect = {},
+﻿var transactorSelect = {},
     isPayeeSelect = false,
     isOrderSelect = false,
     payeeSelections = {},
+    itemSelections = {},
     orderSelections = {},
     $payeeTable,
+    $table,
     $orderTable;
 payeeSelections.ids = [];
 payeeSelections.rows = [];
 orderSelections.ids = [];
 orderSelections.rows = [];
-linkmanSelect.url = linkmanapi;
-linkmanSelect.paramsData = function (params) {
-    return {
-        search: params.term, // search term
-        IsBusiness: false
-    };
-};
-linkmanSelect.processResults = function (data, params) {
-    var result = $.map(data.rows,
-        function (v, k) {
-            return { id: v.Id, text: v.Name, commpany: v.CommpanyName };
-        });
-    return {
-        results: result
-    };
-};
-linkmanSelect.formatRepo = function (repo) {
-    if (repo.loading) {
-        return repo.text;
-    }
-    return "<p>" + repo.commpany + " 【 " + repo.text + " 】 <p>";
-};
-linkmanSelect.formatRepoSelection = function (repo) {
-    $("#LinkManName").val(repo.text);
-    isPayeeSelect = true;
-    isOrderSelect = true;
-    payeeSelections.ids = [];
-    payeeSelections.rows = [];
-    orderSelections.ids = [];
-    orderSelections.rows = [];
+itemSelections.ids = [];
+itemSelections.rows = [];
 
-    return repo.text;
-};
 transactorSelect.url = transactorapi;
 transactorSelect.paramsData = function (params) {
     return {
@@ -80,11 +51,12 @@ $(function () {
             loading: "核销中 ..."
         },
         onInit: function (event, currentIndex) {
-            initSelect2("LinkManId", linkmanSelect);
             $payeeTable = $('#payeetable');
             $orderTable = $('#ordertable');
+            $table = $('#table');
             initPayee();
             initOrder();
+            initItem();
         },
         onStepChanging: function (event, currentIndex, newIndex) {
             // Always allow going backward even if the current step contains invalid fields!
@@ -254,7 +226,7 @@ function initPayee() {
     });
     checkOn($payeeTable, payeeSelections);
 }
-//订单列表
+//订单明细
 function initOrder() {
     $orderTable.bootstrapTable({
         classes: "table table-no-bordered",
@@ -277,7 +249,7 @@ function initOrder() {
         queryParams: function (parameters) {
             parameters.OrderNum = $("#OrderNum").val();
             parameters.VerificationStatus = 0;//已核销
-            parameters.Status = 1;//已转单
+            parameters.Status = 2;//已完成
             parameters.PurchaseStatus = 3;//采购已完成
             return parameters;
         },
@@ -317,6 +289,72 @@ function initOrder() {
     });
     checkOn($orderTable, orderSelections);
 }
+//项目列表
+function initItem() {
+    $table.bootstrapTable({
+        classes: "table table-no-bordered",
+        url: itemapi,         //请求后台的URL（*）
+        height: 360,
+        striped: true,                      //是否显示行间隔色
+        cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+        sortable: true,                     //是否启用排序
+        sortOrder: "desc",                   //排序方式
+        sortName: "Id",
+        sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+        pagination: true,
+        pageNumber: 1,                       //初始化加载第一页，默认第一页
+        pageSize: 6,                       //每页的记录行数（*）
+        pageList: [6, 15, 50],
+        clickToSelect: true,                //是否启用点击选中行
+        search: true,
+        strictSearch: true,
+        uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+        //mobileResponsive: true,
+        queryParams: function (parameters) {
+            return parameters;
+        },
+        formatSearch: function () {
+            return "客户名称";
+        },
+        responseHandler: itemResponseHandler,
+        columns: [
+            {
+                field: 'state',
+                checkbox: true
+            },
+            {
+                field: 'OrderNum',
+                title: '订单编号',
+                align: "center", valign: "middle"
+            },
+            {
+                field: 'Remark',
+                title: '项目摘要',
+                align: "center", valign: "middle"
+            },
+            {
+                field: 'LinkManName',
+                title: '客户名称',
+                align: "center", valign: "middle"
+            },
+            {
+                field: 'TotalSellMoney',
+                title: '无税金额',
+                align: "center", valign: "middle"
+            }
+            ,
+            {
+                field: 'OrderDate',
+                title: '订单日期',
+                align: "center", valign: "middle",
+                formatter: function (value) {
+                    return moment(value).format("YYYY-MM-DD");
+                }
+            }
+        ]
+    });
+    checkOn($table, itemSelections);
+}
 //保留选中结果
 function payeeResponseHandler(res) {
     $.each(res.rows, function (i, row) {
@@ -328,6 +366,13 @@ function payeeResponseHandler(res) {
 function orderResponseHandler(res) {
     $.each(res.rows, function (i, row) {
         row.state = $.inArray(row.Id, orderSelections.ids) !== -1;
+    });
+    return res;
+}
+//保留选中结果
+function itemResponseHandler(res) {
+    $.each(res.rows, function (i, row) {
+        row.state = $.inArray(row.Id, itemSelections.ids) !== -1;
     });
     return res;
 }

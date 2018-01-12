@@ -52,11 +52,11 @@ namespace Ada.Services.Finance
             }
             if (!string.IsNullOrWhiteSpace(viewModel.IncomeExpendName))
             {
-                allList = allList.Where(d => d.IncomeExpendName.Contains(viewModel.IncomeExpendName));
+                allList = allList.Where(d => d.IncomeExpend.SubjectName.Contains(viewModel.IncomeExpendName));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.SettleAccountName))
             {
-                allList = allList.Where(d => d.SettleAccountName.Contains(viewModel.SettleAccountName));
+                allList = allList.Where(d => d.SettleAccount.SettleName.Contains(viewModel.SettleAccountName));
             }
             if (viewModel.BalanceMoneyMin!=null)
             {

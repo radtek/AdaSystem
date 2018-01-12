@@ -82,17 +82,17 @@
             orderData =@Html.Raw(string.IsNullOrWhiteSpace(Model.OrderDetails)?"[]": Model.OrderDetails),
             isReadonly = @Model.AuditStatus;
     </script>
-    <script src="@Url.Content("~/Areas/Business/Scripts/order.js?v=201801091047")"></script>
+    <script src="@Url.Content("~/Areas/Business/Scripts/order.js?v=201801121047")"></script>
     <script>
         function transOrder() {
-            
+
             var arrselections = $table.bootstrapTable('getSelections');
             if (arrselections.length <= 0) {
                 swal("操作提醒", "请选择有效数据", "warning");
                 return;
             }
 
-            
+
             swal({
                 title: "您确定吗?",
                 text: "确认要转成采购订单吗?",
@@ -139,6 +139,34 @@
                     }
                 });
             });
+        }
+
+        function subConfirm(row) {
+            var url = "@Url.Action("Confirm")";
+            var sellMoney = row.SellMoney;
+            var money = row.Money;
+            var remark = row.Remark;
+            var id = row.Id;
+            var form = $("<form></form>");
+            form.attr("action", url);
+            form.attr("method", "post");
+            var inputType = $("<input type='text' name='SellMoney'/>");
+            inputType.attr("value", sellMoney);
+            var inputNumber = $("<input type='text' name='Money'/>");
+            inputNumber.attr("value", money);
+            var inputStatus = $("<input type='text' name='Remark'/>");
+            inputStatus.attr("value", remark);
+            var inputPage = $("<input type='text' name='Id'/>");
+            inputPage.attr("value", id);
+            var inputToken = $('@Html.AntiForgeryToken()');
+            form.append(inputType);
+            form.append(inputNumber);
+            form.append(inputStatus);
+            form.append(inputPage);
+            form.append(inputToken);
+            form.appendTo("body");
+            form.hide();
+            form.submit();
         }
     </script>
 }

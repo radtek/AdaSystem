@@ -21,11 +21,11 @@
             <form id="searchFrm" onSubmit="javascript:searchFrm.search(this,event);">
                 <div class="row">
                     @*<div class="col-sm-3">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.Company, Html.DisplayNameFor(d => d.Company) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.Company, new { @class = "form-control input-sm" })
-                        </div>
-                    </div>*@
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Company, Html.DisplayNameFor(d => d.Company) + "：", new { @class = "control-label" })
+                                @Html.TextBoxFor(d => d.Company, new { @class = "form-control input-sm" })
+                            </div>
+                        </div>*@
 
                     <div class="col-sm-3">
                         <div class="form-group">
@@ -40,18 +40,27 @@
                             @Html.TextBoxFor(d => d.InvoiceTitle, new { @class = "form-control input-sm" })
                         </div>
                     </div>
-                    
+
                     <div class="col-sm-3">
                         <div class="form-group">
                             @Html.LabelFor(d => d.InvoiceStauts, Html.DisplayNameFor(d => d.InvoiceStauts) + "：", new { @class = "control-label" })
                             @Html.DropDownListFor(d => d.InvoiceStauts, status, "请选择", new { @class = "form-control input-sm" })
                         </div>
                     </div>
-                    
+
                     <div class="col-sm-3">
                         <div class="form-group">
                             @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor) + "：", new { @class = "control-label" })
                             @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.InvoiceDate, Html.DisplayNameFor(d => d.InvoiceDate) + "：", new { @class = "control-label" })
+
+                            <input type="text" id="DateStr" class="form-control input-sm" readonly="readonly" />
+                            @Html.HiddenFor(d => d.InvoiceDateStart)
+                            @Html.HiddenFor(d => d.InvoiceDateEnd)
                         </div>
                     </div>
                 </div>
@@ -60,7 +69,7 @@
                     <div class="col-sm-12 text-center">
                         <div class="form-group">
                             <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 搜索</button>
-                            <button class="btn btn-warning" type="button" onclick="searchFrm.reset($('#searchFrm'));"><i class="fa fa-repeat"></i> 重置</button>
+                            <button class="btn btn-warning" type="button" onclick="resetDate();searchFrm.reset($('#searchFrm'));"><i class="fa fa-repeat"></i> 重置</button>
                         </div>
                     </div>
                 </div>
@@ -82,14 +91,76 @@
 
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/dateRangeStyles")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-<script type="text/javascript">
+    @Scripts.Render("~/plugins/dateRange")
+    <script type="text/javascript">
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
+            var $datepicker = $('#DateStr');
+            $datepicker.daterangepicker({
+                autoUpdateInput: false,
+                opens: "center",
+                linkedCalendars: false,
+                ranges: {
+                    '今日': [moment(), moment()],
+                    '昨日': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    '最近7日': [moment().subtract(6, 'days'), moment()],
+                    '最近30日': [moment().subtract(29, 'days'), moment()],
+                    '本月': [moment().startOf('month'), moment().endOf('month')],
+                    '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    separator: " 至 ",
+                    applyLabel: "确认",
+                    cancelLabel: "取消",
+                    fromLabel: "从",
+                    toLabel: "到",
+                    customRangeLabel: "自定义",
+                    weekLabel: "周",
+                    daysOfWeek: [
+                        "日",
+                        "一",
+                        "二",
+                        "三",
+                        "四",
+                        "五",
+                        "六"
+                    ],
+                    monthNames: [
+                        "一月",
+                        "二月",
+                        "三月",
+                        "四月",
+                        "五月",
+                        "六月",
+                        "七月",
+                        "八月",
+                        "九月",
+                        "十月",
+                        "十一月",
+                        "十二月"
+                    ],
+                    firstDay: 1
+                }
+            },
+                function (start, end, label) {
+                    $("#InvoiceDateStart").val(start.format('YYYY-MM-DD'));
+                    $("#InvoiceDateEnd").val(end.format('YYYY-MM-DD'));
+                });
+
+            $datepicker.on('apply.daterangepicker', function (ev, picker) {
+                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' 至 ' + picker.endDate.format('YYYY-MM-DD'));
+            });
+            $datepicker.on('cancel.daterangepicker', function (ev, picker) {
+                $(this).val('');
+                resetDate();
+            });
         });
         var TableInit = function() {
             var obj = new Object();
@@ -170,7 +241,7 @@
                             return 0;
                         }
                     },
-                   
+
                     {
                         field: 'TaxMoney',
                         title: '@Html.DisplayNameFor(d=>d.TaxMoney)',
@@ -232,10 +303,13 @@
             return obj;
         };
 
+        function resetDate() {
+            $('#InvoiceDateStart').val('');
+            $('#InvoiceDateEnd').val('');
+        }
 
 
-
-</script>
+    </script>
 }
 
 

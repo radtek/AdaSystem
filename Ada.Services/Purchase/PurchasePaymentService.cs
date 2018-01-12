@@ -65,7 +65,15 @@ namespace Ada.Services.Purchase
             {
                 allList = allList.Where(d => d.IsInvoice == viewModel.IsInvoice);
             }
-
+            if (viewModel.InvoiceDateStart != null)
+            {
+                allList = allList.Where(d => d.InvoiceDate >= viewModel.InvoiceDateStart);
+            }
+            if (viewModel.InvoiceDateEnd != null)
+            {
+                var endDate = viewModel.InvoiceDateEnd.Value.AddDays(1);
+                allList = allList.Where(d => d.InvoiceDate < endDate);
+            }
             var temp = from a in allList
                        select new PurchasePaymentView
                        {

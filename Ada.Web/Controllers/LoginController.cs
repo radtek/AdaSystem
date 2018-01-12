@@ -99,10 +99,10 @@ namespace Ada.Web.Controllers
 
         public ActionResult Update()
         {
-            var list = _temp.LoadEntities(d => d.IsDelete == false && d.VerificationStatus == Consts.StateLock);
+            var list = _temp.LoadEntities(d => d.IsDelete == false && d.VerificationStatus == Consts.StateNormal);
             foreach (var businessOrderDetail in list)
             {
-                businessOrderDetail.VerificationMoney = businessOrderDetail.SellMoney;
+                businessOrderDetail.Status = Consts.StateOK;
             }
 
             _dbContext.SaveChanges();

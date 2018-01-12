@@ -60,7 +60,7 @@ namespace Purchase.Controllers
                     PublishLink = d.PublishLink,
                     Transactor = d.Transactor,
                     OrderDate = d.PurchaseOrder.OrderDate,
-                    
+
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -151,32 +151,26 @@ namespace Purchase.Controllers
             var tax = entity.Tax ?? 0;
             entity.Money = entity.PurchaseMoney * (1 + tax / 100);
             entity.Status = viewModel.Status;
-            if (entity.Status==Consts.PurchaseStatusSuccess)
+            if (viewModel.PublishDate != null && !string.IsNullOrWhiteSpace(viewModel.PublishLink) && entity.PurchaseMoney > 0)
             {
-                if (entity.PublishDate==null)
+                entity.Status = Consts.PurchaseStatusSuccess;
+            }
+            if (entity.Status == Consts.PurchaseStatusSuccess)
+            {
+                if (entity.PublishDate == null || string.IsNullOrWhiteSpace(viewModel.PublishLink))
                 {
-                    ModelState.AddModelError("message", "出刊日期不能为空");
+                    ModelState.AddModelError("message", "出刊日期或出刊链接不能为空");
                     return View(viewModel);
                 }
 
-                if (entity.PurchaseMoney<=0||entity.PurchaseMoney==null)
+                if (entity.PurchaseMoney <= 0 || entity.PurchaseMoney == null)
                 {
                     ModelState.AddModelError("message", "无税金额不能为0元");
                     return View(viewModel);
                 }
                 entity.AuditStatus = Consts.StateNormal;
             }
-            //entity.Money = viewModel.Money;
-            //entity.DiscountMoney = viewModel.DiscountMoney;
-            //entity.BargainMoney = viewModel.BargainMoney;
-            //if (entity.CostMoney != viewModel.CostMoney)
-            //{
-            //    //更新成本金额
-            //    businessOrderDetail.CostMoney = viewModel.CostMoney;
-            //}
-            //entity.CostMoney = viewModel.CostMoney;
 
-            
             entity.Remark = viewModel.Remark;
             _purchaseOrderDetailService.Update(entity);
             TempData["Msg"] = "更新成功";

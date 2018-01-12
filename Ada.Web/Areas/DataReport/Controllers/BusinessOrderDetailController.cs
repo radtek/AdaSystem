@@ -42,6 +42,7 @@ namespace DataReport.Controllers
                     AdPositionName = d.AdPositionName,
                     Money = d.Money,
                     TaxMoney = d.TaxMoney,
+                    Remark = d.Remark,
                     Tax = d.Tax,
                     SellMoney = d.SellMoney,
                     VerificationStatus = d.VerificationStatus,

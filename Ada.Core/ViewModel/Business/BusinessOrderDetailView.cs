@@ -199,5 +199,10 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "利润率")]
         public decimal? Profit { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        [Display(Name = "备注")]
+        public string Remark { get; set; }
     }
 }
