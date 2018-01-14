@@ -4,10 +4,8 @@
     selections = {},
     linkmanSelect = {},
     transactorSelect = {};
-
 selections.ids = [];
 selections.rows = [];
-
 linkmanSelect.url = linkmanUrl;
 linkmanSelect.paramsData = function (params) {
     return {
@@ -395,29 +393,19 @@ function showMedia(url) {
                         }
                     ]
                 });
-                //注册选中事件
-                $mediatable.on('check.bs.table check-all.bs.table ' +
-                    'uncheck.bs.table uncheck-all.bs.table', function (e, rows) {
-                        var ids = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
-                            return row.Id;
-                        }),
-                            rowarry = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
-                                return row;
-                            }),
-                            func = $.inArray(e.type, ['check', 'check-all']) > -1 ? 'union' : 'difference';
-                        selections.ids = _[func](selections.ids, ids);
-                        selections.rows = _[func](selections.rows, rowarry);
-                    });
+                checkOn($mediatable, selections);
             }).on('hidden.bs.modal', function () {
                 //重置数据
-                selections.ids = [];
                 selections.rows = [];
+                selections.ids = [];
                 $mediatable.bootstrapTable('destroy');
             });
             $('#modalView .modal').modal('show');
 
         });
 }
+//注册选中事件
+
 //初始化媒体选择参数
 function initMediaData($obj, isrefresh) {
     key = $obj.attr("data-key");

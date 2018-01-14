@@ -25,18 +25,18 @@
                         @Html.AntiForgeryToken()
                         <h1>核销对象</h1>
                             <fieldset>
-                                <h4>请勾选需要核销的项目订单</h4>
+                                <h4>请勾选需要核销的项目订单<small id="linkman"></small></h4>
                                 <table id="table"></table>
                             </fieldset>
                             <h1>核销款项</h1>
                             <fieldset>
-                                <h4>请勾选需要核销的领款单据</h4>
+                                <h4>请勾选需要核销的领款单据<small id="payeemoney"></small></h4>
                                 <table id="payeetable"></table>
                             </fieldset>
 
                             <h1>核销订单</h1>
                             <fieldset>
-                                <h4>请勾选需要核销的订单明细</h4>
+                                <h4>请勾选需要核销的订单明细<small id="ordermoney"></small></h4>
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <table id="ordertable"></table>
@@ -109,7 +109,7 @@
             orderapi = '@Url.Action("GetDetails", "Order")',
             itemapi = '@Url.Action("GetList", "Order")';
     </script>
-    <script src="@Url.Content("~/Areas/Business/Scripts/writeoff.js?v=201801121")"></script>
+    <script src="@Url.Content("~/Areas/Business/Scripts/writeoff.js?v=201801142")"></script>
 }
 
 

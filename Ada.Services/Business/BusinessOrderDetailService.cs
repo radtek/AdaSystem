@@ -47,6 +47,11 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => d.BusinessOrder.Remark.Contains(viewModel.OrderRemark));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.BusinessOrderId))
+            {
+                var ids = viewModel.BusinessOrderId.Split(',').ToList();
+                allList = allList.Where(d => ids.Contains(d.BusinessOrderId));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
                 allList = allList.Where(d => d.MediaName.Contains(viewModel.search));

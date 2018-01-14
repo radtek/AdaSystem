@@ -40,7 +40,6 @@ namespace Ada.Core.ViewModel.Business
         /// 订单编号
         /// </summary>
         [Display(Name = "订单编号")]
-        [Required]
         public string OrderNum { get; set; }
         /// <summary>
         /// 销售订单
@@ -57,7 +56,6 @@ namespace Ada.Core.ViewModel.Business
         /// 客户名称
         /// </summary>
         [Display(Name = "客户名称")]
-        [Required]
         public string LinkManId { get; set; }
         /// <summary>
         /// 领款核销总额

@@ -80,7 +80,7 @@ namespace Business.Controllers
                     //AdderBy = d.AddedBy,
                     PurchaseSchedule = GetPurchaseSchedule(d),
                     OrderDetailCount = d.BusinessOrderDetails.Count,
-                    OrderSchedule = d.BusinessOrderDetails.Count(o => o.Status == Consts.StateNormal) + "/" + d.BusinessOrderDetails.Count,
+                    OrderSchedule = d.BusinessOrderDetails.Count(o => o.Status == Consts.StateOK) + "/" + d.BusinessOrderDetails.Count,
                     Remark = d.Remark
                 })
             }, JsonRequestBehavior.AllowGet);

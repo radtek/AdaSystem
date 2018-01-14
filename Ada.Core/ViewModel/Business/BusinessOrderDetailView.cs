@@ -204,5 +204,6 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "备注")]
         public string Remark { get; set; }
+       
     }
 }

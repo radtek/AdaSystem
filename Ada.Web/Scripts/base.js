@@ -386,3 +386,60 @@ function initSelect(id, opt) {
 
     });
 }
+
+//注册选中事件
+function checkOn(table, obj) {
+    var mark;
+    var union = function (array, ids) {
+        $.each(ids, function (i, id) {
+            if ($.inArray(id, array) == -1) {
+                array[array.length] = id;
+            }
+        });
+        return array;
+    };
+    var difference = function (array, ids) {
+        $.each(ids, function (i, id) {
+            var index = $.inArray(id, array);
+            mark = index;
+            if (index != -1) {
+                array.splice(index, 1);
+            }
+        });
+        return array;
+    };
+    var unions = function (arrays, rowa) {
+        $.each(rowa, function (i, row) {
+            if ($.inArray(row, arrays) == -1) {
+                arrays[arrays.length] = row;
+            }
+        });
+        return arrays;
+    };
+    var differences = function (arrays, rowa) {
+        $.each(rowa, function (i, row) {
+
+            if (mark != -1) {
+                arrays.splice(mark, 1);
+            }
+        });
+
+        return arrays;
+    };
+    table.on('check.bs.table check-all.bs.table ' +
+        'uncheck.bs.table uncheck-all.bs.table', function (e, rows) {
+
+            var d = { "union": union, "difference": difference };
+            var r = { "unions": unions, "differences": differences };
+            var ids = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
+                    return row.Id;
+                }),
+                rowarry = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
+                    return row;
+                }),
+                func = $.inArray(e.type, ['check', 'check-all']) > -1 ? 'union' : 'difference',
+                funcs = $.inArray(e.type, ['check', 'check-all']) > -1 ? 'unions' : 'differences';
+            obj.ids = d[func](obj.ids, ids);
+            obj.rows = r[funcs](obj.rows, rowarry);
+        });
+}

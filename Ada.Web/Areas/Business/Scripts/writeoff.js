@@ -4,6 +4,8 @@
     payeeSelections = {},
     itemSelections = {},
     orderSelections = {},
+    linkmanId,
+    orderIds,
     $payeeTable,
     $table,
     $orderTable;
@@ -59,11 +61,23 @@ $(function () {
             initItem();
         },
         onStepChanging: function (event, currentIndex, newIndex) {
+            if (currentIndex == 0) {
+                var orders = _.uniq(itemSelections.rows, 'LinkManId');
+                if (orders.length == 0) {
+                    swal("操作提醒", "请选择要核销的项目订单！", "warning");
+                    return false;
+                }
+                if (orders.length > 1) {
+                    swal("操作提醒", "请选择相同的客户！", "warning");
+                    return false;
+                }
+                linkmanId = orders[0].LinkManId;
+                orderIds = itemSelections.ids.join(',');
+            }
             // Always allow going backward even if the current step contains invalid fields!
             if (currentIndex > newIndex) {
                 return true;
             }
-
             //// Forbid suppressing "Warning" step if the user is to young
             //if (newIndex === 3 && Number($("#age").val()) < 18) {
             //    return false;
@@ -86,6 +100,8 @@ $(function () {
         },
         onStepChanged: function (event, currentIndex, priorIndex) {
             //// Suppress (skip) "Warning" step if the user is old enough.
+
+
             if (currentIndex === 3) {
                 initSelect2("TransactorId", transactorSelect);
                 //计算选取总额
@@ -102,14 +118,14 @@ $(function () {
                 $("#PayeeMoney").val(payeeMoney);
                 $("#Payees").val(payeeSelections.ids.join(","));
                 $("#Orders").val(orderSelections.ids.join(","));
-                
+
                 //$(this).steps("next");
             }
-            if (currentIndex === 1 && isPayeeSelect) {
+            if (currentIndex === 1) {
                 $("#payeetable").bootstrapTable('refresh');
                 isPayeeSelect = false;
             }
-            if (currentIndex === 2 && isOrderSelect) {
+            if (currentIndex === 2) {
                 $("#ordertable").bootstrapTable('refresh');
                 isOrderSelect = false;
             }
@@ -121,7 +137,6 @@ $(function () {
         },
         onFinishing: function (event, currentIndex) {
             var form = $(this);
-
             // Disable validation on fields that are disabled.
             // At this point it's recommended to do an overall check (mean ignoring only disabled fields)
             form.validate().settings.ignore = ":disabled";
@@ -194,10 +209,18 @@ function initPayee() {
         uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
         mobileResponsive: true,
         queryParams: function (parameters) {
-            parameters.LinkManId = $("#LinkManId").val();
+            parameters.LinkManId = linkmanId;
             parameters.VerificationStatus = 0;
             return parameters;
         },
+        //onClickRow: function () {
+        //    var money = 0;
+        //    $.each(payeeSelections.rows,
+        //        function (k, v) {
+        //            money += v.VerificationMoney;
+        //        });
+        //    $("#payeemoney").text("[已选中核销金额：" + money+"]"+money);
+        //},
         responseHandler: payeeResponseHandler,
         columns: [
             {
@@ -247,12 +270,19 @@ function initOrder() {
         uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
         mobileResponsive: true,
         queryParams: function (parameters) {
-            parameters.OrderNum = $("#OrderNum").val();
+            parameters.BusinessOrderId = orderIds;
             parameters.VerificationStatus = 0;//已核销
             parameters.Status = 2;//已完成
-            parameters.PurchaseStatus = 3;//采购已完成
             return parameters;
         },
+        //onClickRow: function () {
+        //    var money = 0;
+        //    $.each(orderSelections.rows,
+        //        function (k, v) {
+        //            money += v.VerificationMoney;
+        //        });
+        //    $("#ordermoney").text("[已选中核销金额：" + money+"]");
+        //},
         responseHandler: orderResponseHandler,
         columns: [
             {
@@ -316,6 +346,21 @@ function initItem() {
         formatSearch: function () {
             return "客户名称";
         },
+        onClickRow: function() {
+            payeeSelections.ids = [];
+            payeeSelections.rows = [];
+            orderSelections.ids = [];
+            orderSelections.rows = [];
+            //$("#payeemoney").text('');
+            //$("#ordermoney").text('');
+            ////获取选中的客户显示
+            //var orders = _.uniq(itemSelections.rows, 'LinkManId'),temp=[];
+            //$.each(orders,
+            //    function(k, v) {
+            //        temp.push(v.LinkManName);
+            //    });
+            //$("#linkman").text("[已选客户："+temp.join(',')+"]");
+        },
         responseHandler: itemResponseHandler,
         columns: [
             {
@@ -372,23 +417,8 @@ function orderResponseHandler(res) {
 //保留选中结果
 function itemResponseHandler(res) {
     $.each(res.rows, function (i, row) {
-        row.state = $.inArray(row.Id, itemSelections.ids) !== -1;
+        row.state = $.inArray(row.Id, itemSelections.ids) != -1;
     });
     return res;
 }
 
-//注册选中事件
-function checkOn($table, selections) {
-    $table.on('check.bs.table check-all.bs.table ' +
-        'uncheck.bs.table uncheck-all.bs.table', function (e, rows) {
-            var ids = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
-                return row.Id;
-            }),
-                rowarry = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
-                    return row;
-                }),
-                func = $.inArray(e.type, ['check', 'check-all']) > -1 ? 'union' : 'difference';
-            selections.ids = _[func](selections.ids, ids);
-            selections.rows = _[func](selections.rows, rowarry);
-        });
-}

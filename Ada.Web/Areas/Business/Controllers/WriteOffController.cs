@@ -98,8 +98,8 @@ namespace Business.Controllers
             foreach (var orderId in orderIds)
             {
                 var order = _businessOrderDetailRepository.LoadEntities(d => d.Id == orderId).FirstOrDefault();
-                //未核销 已下单 已采购完成
-                if (order.VerificationStatus != Consts.StateNormal && order.Status == Consts.StateNormal && IsPurchased(orderId))
+                //未核销 已完成 已采购完成
+                if (order.VerificationStatus != Consts.StateNormal && order.Status == Consts.StateOK && IsPurchased(orderId))
                 {
                     orderMoney += order.VerificationMoney;
                     order.VerificationStatus = Consts.StateNormal;

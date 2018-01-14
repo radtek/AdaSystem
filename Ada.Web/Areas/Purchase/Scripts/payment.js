@@ -491,19 +491,7 @@ function showOrder() {
                         ]
                     });
                     //注册选中事件
-                    $ordertable.on('check.bs.table check-all.bs.table ' +
-                        'uncheck.bs.table uncheck-all.bs.table', function (e, rows) {
-                            var ids = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
-                                return row.Id;
-                            }),
-                                rowarry = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
-                                    return row;
-                                }),
-                                func = $.inArray(e.type, ['check', 'check-all']) > -1 ? 'union' : 'difference';
-                            selections.ids = _[func](selections.ids, ids);
-                            selections.rows = _[func](selections.rows, rowarry);
-                        });
-
+                    checkOn($ordertable, selections);
                 }).on('hidden.bs.modal', function () {
                     //重置数据
                     selections.ids = [];
