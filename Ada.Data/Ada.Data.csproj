@@ -269,6 +269,14 @@
     <Compile Include="Migrations\201801011302184_OrderUpdate20180101.Designer.cs">
       <DependentUpon>201801011302184_OrderUpdate20180101.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801150229357_InvoiceUpdate2018115.cs" />
+    <Compile Include="Migrations\201801150229357_InvoiceUpdate2018115.Designer.cs">
+      <DependentUpon>201801150229357_InvoiceUpdate2018115.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801150307125_BusinessOrderUpdate2018115.cs" />
+    <Compile Include="Migrations\201801150307125_BusinessOrderUpdate2018115.Designer.cs">
+      <DependentUpon>201801150307125_BusinessOrderUpdate2018115.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -411,6 +419,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801011302184_OrderUpdate20180101.resx">
       <DependentUpon>201801011302184_OrderUpdate20180101.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801150229357_InvoiceUpdate2018115.resx">
+      <DependentUpon>201801150229357_InvoiceUpdate2018115.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801150307125_BusinessOrderUpdate2018115.resx">
+      <DependentUpon>201801150307125_BusinessOrderUpdate2018115.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

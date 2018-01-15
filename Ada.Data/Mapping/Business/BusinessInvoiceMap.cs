@@ -21,7 +21,7 @@ namespace Ada.Data.Mapping.Business
             Property(s => s.InvoiceType).HasMaxLength(32);
             Property(s => s.Company).HasMaxLength(32);
             Property(s => s.TaxNum).HasMaxLength(32);
-            Property(s => s.Address).HasMaxLength(32);
+            Property(s => s.Address).HasMaxLength(128);
             Property(s => s.Bank).HasMaxLength(32);
             Property(s => s.BankNum).HasMaxLength(32);
             Property(s => s.Phone).HasMaxLength(32);

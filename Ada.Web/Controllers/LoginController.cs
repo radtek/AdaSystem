@@ -21,14 +21,15 @@ namespace Ada.Web.Controllers
     {
         private readonly IRepository<Manager> _repository;
         private readonly IRepository<BusinessOrderDetail> _temp;
+        private readonly IRepository<PurchaseOrderDetail> _ptemp;
         private readonly IDbContext _dbContext;
         private readonly ISignals _signals;
-        public LoginController(IRepository<Manager> repository, IDbContext dbContext, ISignals signals, IRepository<BusinessOrderDetail> temp)
+        public LoginController(IRepository<Manager> repository, IDbContext dbContext, ISignals signals, IRepository<BusinessOrderDetail> temp, IRepository<PurchaseOrderDetail> ptemp)
         {
             _repository = repository;
             _dbContext = dbContext;
             _signals = signals;
-
+            _ptemp = ptemp;
             _temp = temp;
         }
         public ActionResult Index()
@@ -99,14 +100,70 @@ namespace Ada.Web.Controllers
 
         public ActionResult Update()
         {
-            var list = _temp.LoadEntities(d => d.IsDelete == false && d.VerificationStatus == Consts.StateNormal);
-            foreach (var businessOrderDetail in list)
+            //var i = _temp.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false && d.Status != 0).Count();
+            //return Content(i.ToString());
+            List<string> ids = new List<string>();
+            int x = 0;
+            int y = 0;
+            int z = 0;
+            int q = 0;
+            var p = _ptemp.LoadEntities(d => d.IsDelete == false).ToList();
+            foreach (var item in p)
             {
-                businessOrderDetail.Status = Consts.StateOK;
+                var b = _temp.LoadEntities(d => d.Id == item.BusinessOrderDetailId).FirstOrDefault();
+                if (b == null)
+                {
+                    ids.Add(item.BusinessOrderDetailId);
+                }
+                else
+                {
+                    if (b.Status==0)
+                    {
+                        x++;
+                    }
+
+                    if (b.Status==1)
+                    {
+                        y++;
+                    }
+                    if (b.Status == 2)
+                    {
+                        z++;
+                    }
+                    if (b.Status == -1)
+                    {
+                        q++;
+                    }
+                }
+
             }
 
-            _dbContext.SaveChanges();
-            return Content("OK");
+            if (ids.Count > 0)
+            {
+                return Content(string.Join(",", ids));
+            }
+            return Content("未转单："+x+"，已下单："+y+"，已完成："+z+"，待申请："+q);
+            //BusinessOrderDetail detail = new BusinessOrderDetail();
+            //detail.Id = "X1801121627020781";
+            //detail.MediaName = "家居家电指南 - jjdpzn";
+            //detail.Money = 0;
+            //detail.BusinessOrderId = "X1801121627020779";
+            //detail.Status = Consts.StateNormal;
+            //detail.Tax = 8;
+            //detail.SellMoney = 0;
+            //detail.CostMoney = 600;
+            //detail.AdPositionName = "头条";
+            //detail.MediaTypeName = "微信";
+            //detail.MediaByPurchase = "肖柳梦翎";
+            //detail.VerificationStatus = 0;
+            //detail.VerificationMoney = 0;
+            //detail.ConfirmVerificationMoney = 0;
+            //detail.AuditStatus = 0;
+            //detail.MediaPriceId = "X1712181756410022";
+            //_temp.Add(detail);
+            //_dbContext.SaveChanges();
+            //return Content("OK");
+
         }
 
     }

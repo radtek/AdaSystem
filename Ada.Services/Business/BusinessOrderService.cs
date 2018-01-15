@@ -64,10 +64,23 @@ namespace Ada.Services.Business
                           where d.MediaName.Contains(viewModel.MediaName)
                           select o;
             }
-            if (viewModel.Status != null)
+            if (viewModel.OrderStatus != null)
             {
-                allList = allList.Where(d => d.Status == viewModel.Status);
+                if (viewModel.OrderStatus.Value)
+                {
+                    allList = from o in allList
+                              where o.Status == Consts.StateNormal && o.BusinessOrderDetails.Count == o.BusinessOrderDetails.Count(b => b.Status == Consts.StateOK) && o.BusinessOrderDetails.Count > 0
+                              select o;
+                }
+                else
+                {
+                    allList = from o in allList
+                              where o.BusinessOrderDetails.Count != o.BusinessOrderDetails.Count(b => b.Status == Consts.StateOK) || o.BusinessOrderDetails.Count == 0
+                              select o;
+                }
+
             }
+
             if (viewModel.VerificationStatus != null)
             {
                 allList = allList.Where(d => d.VerificationStatus == viewModel.VerificationStatus);

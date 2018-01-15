@@ -31,7 +31,7 @@ namespace Ada.Data.Mapping.Business
             Property(s => s.MediaName).HasMaxLength(128);
             Property(s => s.MediaByPurchase).HasMaxLength(32);
             Property(s => s.MediaPriceId).HasMaxLength(32);
-
+            Property(s => s.AuditRemark).HasMaxLength(1024);
 
             Property(s => s.AddedDate);
             Property(s => s.AddedBy).HasMaxLength(32);

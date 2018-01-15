@@ -72,7 +72,7 @@ namespace Business.Controllers
                     LinkManId = d.LinkManId,
                     TotalMoney = d.BusinessOrderDetails.Sum(o => o.Money),
                     Transactor = d.Transactor,
-                    Status = d.Status ?? Consts.StateLock,
+                    //Status = d.Status ?? Consts.StateLock,
                     OrderDate = d.OrderDate,
                     TotalSellMoney = d.BusinessOrderDetails.Sum(o => o.SellMoney),
                     TotalTaxMoney = d.BusinessOrderDetails.Sum(o => o.TaxMoney),
@@ -368,6 +368,11 @@ namespace Business.Controllers
             {
                 var temp = _businessOrderDetailRepository.LoadEntities(d => d.Id == deleteId)
                     .FirstOrDefault();
+                var purchase = GetPurchaseOrderDetail(deleteId);
+                if (purchase != null)
+                {
+                    continue;
+                }
                 _businessOrderDetailRepository.Remove(temp);
             }
             //entity.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);
@@ -438,6 +443,7 @@ namespace Business.Controllers
             var entity = _businessOrderDetailRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
             var purchase = GetPurchaseOrderDetail(entity.Id);
             entity.SellMoney = viewModel.SellMoney;
+            entity.VerificationMoney = viewModel.SellMoney;
             entity.Money = viewModel.Money;
             entity.Remark = viewModel.Remark;
             if (entity.SellMoney > purchase.PurchaseMoney)

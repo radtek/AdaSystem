@@ -58,6 +58,11 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "无税金额")]
         public decimal? SellMoney { get; set; }
         /// <summary>
+        /// 申请修改金额
+        /// </summary>
+        [Display(Name = "申请修改金额")]
+        public decimal? RequestSellMoney { get; set; }
+        /// <summary>
         /// 未核销金额
         /// </summary>
         [Display(Name = "未核销金额")]
@@ -77,7 +82,16 @@ namespace Ada.Core.Domain.Business
         /// </summary>
         [Display(Name = "审核状态")]
         public short? AuditStatus { get; set; }
-
+        /// <summary>
+        /// 申请说明
+        /// </summary>
+        [Display(Name = "申请说明")]
+        public string AuditRemark { get; set; }
+        /// <summary>
+        /// 审核日期
+        /// </summary>
+        [Display(Name = "审核日期")]
+        public DateTime? AuditDate { get; set; }
         /// <summary>
         /// 预出刊日期
         /// </summary>

@@ -95,6 +95,7 @@ namespace Business.Controllers
             businessWriteOff.AddedDate = DateTime.Now;
             decimal? orderMoney = 0;
             decimal? payeeMoney = 0;
+            List<string> linkman=new List<string>();
             foreach (var orderId in orderIds)
             {
                 var order = _businessOrderDetailRepository.LoadEntities(d => d.Id == orderId).FirstOrDefault();
@@ -106,9 +107,11 @@ namespace Business.Controllers
                     order.ConfirmVerificationMoney = order.VerificationMoney;
                     order.VerificationMoney = 0;
                     businessWriteOff.BusinessOrderDetails.Add(order);
+                    linkman.Add(order.BusinessOrder.LinkManId);
                 }
 
             }
+          
             foreach (var payeeId in payeeIds)
             {
                 var payee = _businessPayeerepository.LoadEntities(d => d.Id == payeeId).FirstOrDefault();
@@ -122,8 +125,16 @@ namespace Business.Controllers
                     payee.ConfirmVerificationMoney = verificaitonMoney;
                     payee.VerificationMoney = 0;
                     businessWriteOff.BusinessPayees.Add(payee);
+                    linkman.Add(payee.LinkManId);
                 }
 
+            }
+
+            var temp = linkman.Distinct();
+            if (temp.Count()>1)
+            {
+                ModelState.AddModelError("message", "客户名称不一致，请重新选择！");
+                return View(viewModel);
             }
             //校验金额
             if (orderMoney != payeeMoney || orderMoney == 0 || payeeMoney == 0)

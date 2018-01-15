@@ -56,6 +56,7 @@ namespace DataReport.Controllers
                     PurchaseStatus = GetPurchaseOrderDetail(d.Id)?.Status,
                     PurchaseMoney = GetPurchaseOrderDetail(d.Id)?.PurchaseMoney,
                     PublishDate = GetPurchaseOrderDetail(d.Id)?.PublishDate,
+                    PublishLink = GetPurchaseOrderDetail(d.Id)?.PublishLink,
                     MediaByPurchase = GetPurchaseOrderDetail(d.Id)?.Transactor,
                     TotalMoney = viewModel.TotalMoney,
                     TotalPurchaseMoney = viewModel.TotalPurchaseMoney,

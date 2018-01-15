@@ -28,6 +28,10 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.Media.MediaName.Contains(viewModel.MediaName));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaID))
+            {
+                allList = allList.Where(d => d.Media.MediaID.Contains(viewModel.MediaID));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
             {
                 allList = allList.Where(d => d.AdPositionName==viewModel.AdPositionName);

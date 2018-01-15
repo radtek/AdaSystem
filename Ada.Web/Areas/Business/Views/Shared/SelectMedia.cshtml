@@ -28,8 +28,6 @@
                                             </li>
                                         }
                                     }
-                                    
-                                    
                                 </ul>
                                 <div class="tab-content ">
                                     <div id="tab" class="tab-pane active">
@@ -38,22 +36,50 @@
                                             </table>
                                             <div id="mediatoolbar">
                                                 <div class="form-inline" role="form">
+                                                    
                                                     <div class="form-group">
-                                                        <label>广告位: </label>
-                                                        <select name="AdPositionName" class="form-control" id="AdPositionName">
-                                                        </select>
+                                                        <div class="col-sm-12">
+                                                            <div class="row">
+                                                                <div class="col-md-2">
+                                                                    <select name="AdPositionName" class="form-control input-sm" id="AdPositionName"></select>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <input class="form-control input-sm" type="text" value="" id="MediaId" placeholder="媒体ID（模糊）">
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <input class="form-control input-sm" type="text" value="" id="MediaName" placeholder="媒体名称（模糊）">
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <input class="form-control input-sm" type="text" value="" id="MediaIds" placeholder="媒体ID（批量）">
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <input class="form-control input-sm" type="text" value="" id="MediaNames" placeholder="媒体名称（批量）">
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <button type="button" class="btn btn-primary btn-sm" onclick="$mediatable.bootstrapTable('refresh');">
+                                                                        <i class='fa fa-search'></i> 搜索
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @*<label>广告位: </label>*@
+                                                        
+
+                                                    </div>
+                                                    @*<div class="form-group">
+                                                       
+                                                    </div>
+                                                    <div class="form-group">
                                                         
                                                     </div>
                                                     <div class="form-group">
-                                                        <label>媒体名称: </label>
-                                                        <div class="input-group">
-                                                            <input class="form-control" type="text" value="" id="MediaName"><span class="input-group-btn">
-                                                                <button type="button" class="btn btn-primary" onclick="$mediatable.bootstrapTable('refresh');">
-                                                                    <i class='fa fa-search'></i>
-                                                                </button>
-                                                            </span>
-                                                        </div>
+                                                        
                                                     </div>
+                                                    <div class="form-group">
+                                                       
+
+                                                        
+                                                    </div>*@
                                                 </div>
                                             </div>
                                         </div>

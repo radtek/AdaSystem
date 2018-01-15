@@ -18,7 +18,11 @@
         </div>
     </div>
 </div>
-
+<div id="toolbar" class="btn-group">
+    <button  type="button" class="btn btn-primary btn-outline">
+        <i class="fa fa-plus"></i> 申请收款账户
+    </button>
+</div>
 
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
@@ -67,7 +71,7 @@
                 $('#table').bootstrapTable({
                 classes: "table table-no-bordered",
                 url: '@Url.Action("GetList", "Receivables", new{area="Finance"})',         //请求后台的URL（*）BalanceMoneyMin
-                //toolbar: '#toolbar',                //工具按钮用哪个容器
+                toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）

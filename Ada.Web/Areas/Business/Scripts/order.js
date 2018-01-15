@@ -343,7 +343,10 @@ function showMedia(url) {
                     queryParams: function (parameters) {
                         parameters.MediaTypeIndex = key;
                         parameters.AdPositionName = $("#AdPositionName").val();
-                        parameters.MediaNames = $("#MediaName").val();
+                        parameters.MediaNames = $("#MediaNames").val();
+                        parameters.MediaName = $("#MediaName").val();
+                        parameters.MediaID = $("#MediaId").val();
+                        parameters.MediaIDs = $("#MediaIds").val();
                         return parameters;
                     },
                     columns: [
