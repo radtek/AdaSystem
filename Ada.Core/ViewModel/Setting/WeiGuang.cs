@@ -18,6 +18,7 @@ namespace Ada.Core.ViewModel.Setting
             BusinessExportRows = 10;
             PurchaseSeachRows = 10;
             BusinessSeachRows = 10;
+            BusinessOrderExportRows = 10;
             Percentage1 = 0.15M;
             Percentage2 = 0.12M;
             ReturnDays1 = 183;
@@ -43,6 +44,11 @@ namespace Ada.Core.ViewModel.Setting
         /// </summary>
         [Display(Name = "销售资源导出数")]
         public int BusinessExportRows { get; set; }
+        /// <summary>
+        /// 销售订单导出数
+        /// </summary>
+        [Display(Name = "销售订单导出数")]
+        public int BusinessOrderExportRows { get; set; }
         /// <summary>
         /// 提成系数
         /// </summary>

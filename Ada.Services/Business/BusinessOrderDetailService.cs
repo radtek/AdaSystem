@@ -124,6 +124,8 @@ namespace Ada.Services.Business
             }
             return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
         }
+
+
         /// <summary>
         /// 根据人员统计业务订单
         /// </summary>
@@ -165,7 +167,7 @@ namespace Ada.Services.Business
             var businessOrders = _repository.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false);
             return from b in businessOrders
                    from p in purchaseOrders
-                   //双方都是已完成的状态
+                       //双方都是已完成的状态
                    where p.Status == Consts.PurchaseStatusSuccess && b.Status == Consts.StateOK && b.Id == p.BusinessOrderDetailId
                    select new BusinessOrderDetailView
                    {

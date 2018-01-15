@@ -488,9 +488,6 @@ namespace Business.Controllers
                 isAdd = true;
             }
             var orderDetails = JsonConvert.DeserializeObject<List<BusinessOrderDetail>>(details);
-            var detailsTemp = entity.BusinessOrderDetails.Where(d => d.Status == Consts.StateNormal).ToList();
-            var costMoney = detailsTemp.Sum(d => d.CostMoney);
-            var sellMoney = detailsTemp.Sum(d => d.SellMoney);
             foreach (var order in orderDetails)
             {
                 var temp = _businessOrderDetailRepository.LoadEntities(d => d.Id == order.Id).FirstOrDefault();
@@ -503,12 +500,6 @@ namespace Business.Controllers
                     order.VerificationMoney = order.SellMoney;
                     order.ConfirmVerificationMoney = 0;
                     entity.BusinessOrderDetails.Add(order);
-                    //entity.TotalTaxMoney = entity.TotalTaxMoney + order.TaxMoney;
-                    //entity.TotalMoney = entity.TotalMoney + order.Money;
-                    //entity.TotalSellMoney = entity.TotalSellMoney + order.SellMoney;
-                    //entity.VerificationMoney = entity.TotalMoney;
-                    costMoney += order.CostMoney;
-                    sellMoney += order.SellMoney;
                 }
                 else
                 {
@@ -527,8 +518,12 @@ namespace Business.Controllers
                     temp.ConfirmVerificationMoney = 0;
                     temp.Status = Consts.StateNormal;//已转采购
                     temp.AuditStatus = Consts.StateLock;
-                    costMoney += temp.CostMoney;
-                    sellMoney += temp.SellMoney;
+                }
+                //校验是否重复转单
+                var isOrder = _purchaseOrderDetailRepository.LoadEntities(d => d.BusinessOrderDetailId == order.Id).FirstOrDefault();
+                if (isOrder != null)
+                {
+                    continue;
                 }
                 PurchaseOrderDetail purchaseOrderDetail = new PurchaseOrderDetail();
                 purchaseOrderDetail.Id = IdBuilder.CreateIdNum();
@@ -558,12 +553,6 @@ namespace Business.Controllers
                 purchaseOrderDetail.DiscountRate = 100;
                 purchaseOrder.PurchaseOrderDetails.Add(purchaseOrderDetail);
             }
-            ////校验金额
-            //if (sellMoney <= costMoney)
-            //{
-            //    return Json(new { State = 0, Msg = "不能低于成本金额" });
-            //}
-
             if (isAdd)
             {
                 _purchaseOrderService.Add(purchaseOrder);

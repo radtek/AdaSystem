@@ -6,8 +6,11 @@ using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.ViewModel.Business;
+using Ada.Core.ViewModel.Setting;
 using Ada.Framework.Filter;
 using Ada.Services.Business;
+using Ada.Services.Setting;
+using Newtonsoft.Json.Linq;
 
 namespace DataReport.Controllers
 {
@@ -15,10 +18,14 @@ namespace DataReport.Controllers
     {
         private readonly IBusinessOrderDetailService _businessOrderDetailService;
         private readonly IRepository<PurchaseOrderDetail> _purchaseOrderDetailRepository;
-        public BusinessOrderDetailController(IBusinessOrderDetailService businessOrderDetailService, IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository)
+        private readonly ISettingService _settingService;
+        public BusinessOrderDetailController(IBusinessOrderDetailService businessOrderDetailService,
+            IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository,
+            ISettingService settingService)
         {
             _businessOrderDetailService = businessOrderDetailService;
             _purchaseOrderDetailRepository = purchaseOrderDetailRepository;
+            _settingService = settingService;
         }
         public ActionResult Index()
         {
@@ -63,6 +70,55 @@ namespace DataReport.Controllers
                     TotalSellMoney = viewModel.TotalSellMoney
                 })
             }, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Export(BusinessOrderDetailView viewModel)
+        {
+            viewModel.Managers = PremissionData();
+            var setting = _settingService.GetSetting<WeiGuang>();
+            viewModel.limit = setting.BusinessOrderExportRows;
+            var business = _businessOrderDetailService.LoadEntitiesFilter(viewModel);
+            var purchase = _purchaseOrderDetailRepository.LoadEntities(d => d.IsDelete == false);
+            var result = from b in business
+                from p in purchase
+                where b.Id == p.BusinessOrderDetailId
+                select new BusinessOrderDetailView()
+                {
+                    OrderDate = b.BusinessOrder.OrderDate,
+                    OrderNum = b.BusinessOrder.OrderNum,
+                    OrderRemark = b.BusinessOrder.Remark,
+                    LinkManName = b.BusinessOrder.LinkManName,
+                    MediaTypeName = b.MediaTypeName,
+                    MediaName = b.MediaName,
+                    AdPositionName = b.AdPositionName,
+                    SellMoney = b.SellMoney,
+                    PurchaseMoney = p.PurchaseMoney,
+                    PublishDate = p.PublishDate,
+                    PublishLink = p.PublishLink,
+                    MediaByPurchase = p.Transactor,
+                    Transactor = b.BusinessOrder.Transactor
+                };
+            JArray jObjects = new JArray();
+            foreach (var item in result)
+            {
+                var jo = new JObject();
+                jo.Add("订单日期", item.OrderDate);
+                jo.Add("订单编号", item.OrderNum);
+                jo.Add("项目摘要", item.OrderRemark);
+                jo.Add("客户名称", item.LinkManName);
+                jo.Add("媒体类型", item.MediaTypeName);
+                jo.Add("媒体名称", item.MediaName);
+                jo.Add("广告位", item.AdPositionName);
+                jo.Add("无税金额", item.SellMoney);
+                jo.Add("采购成本", item.PurchaseMoney);
+                jo.Add("出刊日期", item.PublishDate);
+                jo.Add("出刊链接", item.PublishLink);
+                jo.Add("经办媒介", item.MediaByPurchase);
+                jo.Add("销售人员", item.Transactor);
+                jObjects.Add(jo);
+            }
+            return File(ExportData(jObjects.ToString()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
         }
         private PurchaseOrderDetail GetPurchaseOrderDetail(string id)
         {

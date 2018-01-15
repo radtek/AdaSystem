@@ -100,49 +100,64 @@ namespace Ada.Web.Controllers
 
         public ActionResult Update()
         {
-            //var i = _temp.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false && d.Status != 0).Count();
-            //return Content(i.ToString());
+
+           var b= _temp.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false).ToList();
             List<string> ids = new List<string>();
-            int x = 0;
-            int y = 0;
-            int z = 0;
-            int q = 0;
-            var p = _ptemp.LoadEntities(d => d.IsDelete == false).ToList();
-            foreach (var item in p)
+            foreach (var item in b)
             {
-                var b = _temp.LoadEntities(d => d.Id == item.BusinessOrderDetailId).FirstOrDefault();
-                if (b == null)
+                if (_ptemp.LoadEntities(d => d.BusinessOrderDetailId == item.Id).Count()>1)
                 {
-                    ids.Add(item.BusinessOrderDetailId);
+                    ids.Add(item.Id);
                 }
-                else
-                {
-                    if (b.Status==0)
-                    {
-                        x++;
-                    }
-
-                    if (b.Status==1)
-                    {
-                        y++;
-                    }
-                    if (b.Status == 2)
-                    {
-                        z++;
-                    }
-                    if (b.Status == -1)
-                    {
-                        q++;
-                    }
-                }
-
             }
 
-            if (ids.Count > 0)
+            if (ids.Count>0)
             {
                 return Content(string.Join(",", ids));
             }
-            return Content("未转单："+x+"，已下单："+y+"，已完成："+z+"，待申请："+q);
+
+            return Content("未找到重复订单");
+            //List<string> ids = new List<string>();
+            //int x = 0;
+            //int y = 0;
+            //int z = 0;
+            //int q = 0;
+            //var p = _ptemp.LoadEntities(d => d.IsDelete == false).ToList();
+            //foreach (var item in p)
+            //{
+            //    var b = _temp.LoadEntities(d => d.Id == item.BusinessOrderDetailId).FirstOrDefault();
+            //    if (b == null)
+            //    {
+            //        ids.Add(item.BusinessOrderDetailId);
+            //    }
+            //    else
+            //    {
+            //        if (b.Status==0)
+            //        {
+            //            x++;
+            //        }
+
+            //        if (b.Status==1)
+            //        {
+            //            y++;
+            //        }
+            //        if (b.Status == 2)
+            //        {
+            //            z++;
+            //        }
+            //        if (b.Status == -1)
+            //        {
+            //            q++;
+            //        }
+            //    }
+
+            //}
+
+            //if (ids.Count > 0)
+            //{
+            //    return Content(string.Join(",", ids));
+            //}
+            //return Content("未转单："+x+"，已下单："+y+"，已完成："+z+"，待申请："+q);
             //BusinessOrderDetail detail = new BusinessOrderDetail();
             //detail.Id = "X1801121627020781";
             //detail.MediaName = "家居家电指南 - jjdpzn";
