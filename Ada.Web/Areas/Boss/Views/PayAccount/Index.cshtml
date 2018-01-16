@@ -1,8 +1,8 @@
 ﻿
 @using System.Web.Optimization
-@model Ada.Core.ViewModel.Business.BusinessPaymentView
+@model Ada.Core.ViewModel.Customer.PayAccountView
 @{
-    ViewBag.Title = "销售请款";
+    ViewBag.Title = "客户账户";
 }
 @Html.Partial("Bread")
 
@@ -21,10 +21,10 @@
 <div id="toolbar">
     <div class="form-inline" role="form">
         <div class="form-group">
-            <select name="AuditStatus" class="form-control" id="AuditStatus">
+            <select name="Status" class="form-control" id="Status">
                 <option value="0">待审</option>
                 <option value="1">同意</option>
-            </select>                               
+            </select>
         </div>
     </div>
 </div>
@@ -35,11 +35,11 @@
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-    <script type="text/javascript">
+<script type="text/javascript">
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
-            $("#AuditStatus").change(function () {
+            $("#Status").change(function() {
                 $('#table').bootstrapTable('refresh');
             });
         });
@@ -72,71 +72,54 @@
                 //detailView: true,                   //设置为 true 可以显示详细页面模式。
                 //detailFormatter: detailFormatter,
                 queryParams: function(parameters) {
-                    parameters.AuditStatus = $("#AuditStatus").val();
+                    parameters.Status = $("#Status").val();
                     return parameters;
                 },
                 formatSearch: function() {
-                    return "@Html.DisplayNameFor(d => d.Transactor)";
+                    return "@Html.DisplayNameFor(d => d.LinkManName)";
                 },
                 mobileResponsive:true,
                 columns: [
                     {
-                        field: 'ApplicationNum',
-                        title: '@Html.DisplayNameFor(d=>d.ApplicationNum)',
+                        field: 'CompanyName',
+                        title: '@Html.DisplayNameFor(d=>d.CompanyName)',
                         align: "center", valign: "middle"
                     },
                     {
-                        field: 'AuditStatus',
-                        title: '@Html.DisplayNameFor(d=>d.AuditStatus)',
-                        align: "center", valign: "middle",
-                        formatter: formatter.auditStatus
-                    },
-                    {
-                        field: 'LinkmanName',
-                        title: '@Html.DisplayNameFor(d=>d.LinkmanName)',
+                        field: 'LinkManName',
+                        title: '@Html.DisplayNameFor(d=>d.LinkManName)',
                         align: "center", valign: "middle"
                     },
                     {
-                        field: 'PaymentType',
-                        title: '@Html.DisplayNameFor(d=>d.PaymentType)',
+                        field: 'AccountName',
+                        title: '@Html.DisplayNameFor(d=>d.AccountName)',
                         align: "center", valign: "middle"
                     },
                     {
-                        field: 'PayMoney',
-                        title: '@Html.DisplayNameFor(d=>d.PayMoney)',
+                        field: 'Remark',
+                        title: '@Html.DisplayNameFor(d=>d.Remark)',
                         align: "center", valign: "middle"
                     },
-                    {
-                        field: 'ApplicationDate',
-                        title: '@Html.DisplayNameFor(d=>d.ApplicationDate)',
-                        align: "center", valign: "middle",
-                        formatter: function(value) {
-                            return  moment(value).format("YYYY-MM-DD");
-                        }
-                    },
+
                     {
                         field: 'Transactor',
                         title: '@Html.DisplayNameFor(d=>d.Transactor)',
                         align: "center", valign: "middle"
                     },
-
                     {
                         field: 'Id',
                         title: '操作',
                         align: "center", valign: "middle",
                         formatter: function (value,row) {
-                            return "<a class='btn btn-success btn-sm' href='@Url.Action("Audit")?id=" + value +"'><i class='fa fa-gavel'></i>  审批</a> " +
-                                "<button class='btn btn-danger btn-sm' onclick=\"cancle('" + value +"');\"><i class='fa fa-trash-o'></i> 删除</button>";
+                            return "<a class='btn btn-success btn-sm' href='@Url.Action("Audit")?id=" + value + "'><i class='fa fa-gavel'></i>  审批</a> " +
+                                "<button class='btn btn-danger btn-sm' onclick=\"cancle('" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button>";
                         }
-
                     }
                 ]
             });
             };
-
             return obj;
         };
-
         //撤销
         function cancle(id) {
             swal({
@@ -181,9 +164,9 @@
                 });
             });
         }
-
-    </script>
+</script>
 }
+
 
 
 

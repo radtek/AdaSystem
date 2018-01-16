@@ -21,18 +21,10 @@
 <div id="toolbar">
     <div class="form-inline" role="form">
         <div class="form-group">
-            @*<label>审核状态: </label>*@
-            <div class="input-group">
-                <select name="AuditStatus" class="form-control" id="AuditStatus">
-                    <option value="0">待审</option>
-                    <option value="1">同意</option>
-                </select>
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-primary" onclick="$('#table').bootstrapTable('refresh');">
-                        <i class='fa fa-search'></i>
-                    </button>
-                </span>
-            </div>
+            <select name="AuditStatus" class="form-control" id="AuditStatus">
+                <option value="0">待审</option>
+                <option value="1">同意</option>
+            </select>
         </div>
     </div>
 </div>
@@ -47,6 +39,9 @@
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
+            $("#AuditStatus").change(function () {
+                $('#table').bootstrapTable('refresh');
+            });
         });
         var TableInit = function() {
             var obj = new Object();

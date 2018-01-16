@@ -167,6 +167,7 @@
     <Content Include="Views\Invoice\InvoiceEdit.cshtml" />
     <Content Include="Views\Invoice\Update.cshtml" />
     <Content Include="Views\Medias\Index.cshtml" />
+    <Content Include="Views\Receivables\PayAccount.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

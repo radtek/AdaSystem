@@ -37,6 +37,7 @@
                                 <th>销售人员</th>
                                 <th data-breakpoints="xs sm" data-type="number">销售总额(不含税)</th>
                                 <th data-breakpoints="xs sm" data-type="number">成本总额(不含税)</th>
+                                <th data-type="number">利润</th>
                                 <th data-type="number">利润率%</th>
                                 <th data-breakpoints="xs sm" data-type="number">未核销总额</th>
                             </tr>
@@ -44,26 +45,34 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                <tr>
-                                    <td>@item.Transactor</td>
-                                    <td>@item.TotalSellMoney</td>
-                                    <td>@item.TotalPurchaseMoney</td>
-                                    <td>
-                                        @if (item.Profit != null)
-                                        {
-                                            @Math.Round((decimal)item.Profit, 2)
-                                        }
-                                    </td>
-                                    <td>@item.TotalVerificationMoney</td>
-                                </tr>
+                            <tr>
+                                <td>@item.Transactor</td>
+                                <td>@item.TotalSellMoney</td>
+                                <td>@item.TotalPurchaseMoney</td>
+                                <td>@{
+                                        var temp = item.TotalSellMoney - item.TotalPurchaseMoney;
+                                    }
+                                    @temp</td>
+                                <td>
+                                    @if (item.Profit != null)
+        {
+                            @Math.Round((decimal)item.Profit, 2)
+}
+                                </td>
+                                <td>@item.TotalVerificationMoney</td>
+                            </tr>
                             }
-                        <tr>
-                            <th>合计</th>
-                            <th>@Model.Sum(d => d.TotalSellMoney)</th>
-                            <th>@Model.Sum(d => d.TotalPurchaseMoney)</th>
-                            <th></th>
-                            <th>@Model.Sum(d => d.TotalVerificationMoney)</th>
-                        </tr>
+                            <tr>
+                                <th>合计</th>
+                                <th>@Model.Sum(d => d.TotalSellMoney)</th>
+                                <th>@Model.Sum(d => d.TotalPurchaseMoney)</th>
+                                <th>@{
+                                        var totalTemp = Model.Sum(d => d.TotalSellMoney) - Model.Sum(d => d.TotalPurchaseMoney);
+                                    }
+                                    @totalTemp</th>
+                                <th></th>
+                                <th>@Model.Sum(d => d.TotalVerificationMoney)</th>
+                            </tr>
                         </tbody>
                         
                     </table>

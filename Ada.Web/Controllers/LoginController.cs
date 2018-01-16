@@ -98,86 +98,30 @@ namespace Ada.Web.Controllers
             return RedirectToAction("Index", "Login", new { area = "" });
         }
 
-        public ActionResult Update()
+        public ActionResult CheckOrder()
         {
 
-           var b= _temp.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false).ToList();
+            var b = _temp.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false).ToList();
             List<string> ids = new List<string>();
             foreach (var item in b)
             {
-                if (_ptemp.LoadEntities(d => d.BusinessOrderDetailId == item.Id).Count()>1)
+                if (_ptemp.LoadEntities(d => d.BusinessOrderDetailId == item.Id).Count() > 1)
                 {
                     ids.Add(item.Id);
                 }
             }
 
-            if (ids.Count>0)
+            var business = _temp
+                .LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false && d.Status != 0).Count();
+            var purchase = _ptemp.LoadEntities(d => d.IsDelete == false).Count();
+
+            if (ids.Count > 0)
             {
-                return Content(string.Join(",", ids));
+                return Content("存在重复订单：" + string.Join(",", ids));
             }
 
-            return Content("未找到重复订单");
-            //List<string> ids = new List<string>();
-            //int x = 0;
-            //int y = 0;
-            //int z = 0;
-            //int q = 0;
-            //var p = _ptemp.LoadEntities(d => d.IsDelete == false).ToList();
-            //foreach (var item in p)
-            //{
-            //    var b = _temp.LoadEntities(d => d.Id == item.BusinessOrderDetailId).FirstOrDefault();
-            //    if (b == null)
-            //    {
-            //        ids.Add(item.BusinessOrderDetailId);
-            //    }
-            //    else
-            //    {
-            //        if (b.Status==0)
-            //        {
-            //            x++;
-            //        }
+            return Content("未找到重复订单，销售订单数：" + business + "，采购订单数：" + purchase);
 
-            //        if (b.Status==1)
-            //        {
-            //            y++;
-            //        }
-            //        if (b.Status == 2)
-            //        {
-            //            z++;
-            //        }
-            //        if (b.Status == -1)
-            //        {
-            //            q++;
-            //        }
-            //    }
-
-            //}
-
-            //if (ids.Count > 0)
-            //{
-            //    return Content(string.Join(",", ids));
-            //}
-            //return Content("未转单："+x+"，已下单："+y+"，已完成："+z+"，待申请："+q);
-            //BusinessOrderDetail detail = new BusinessOrderDetail();
-            //detail.Id = "X1801121627020781";
-            //detail.MediaName = "家居家电指南 - jjdpzn";
-            //detail.Money = 0;
-            //detail.BusinessOrderId = "X1801121627020779";
-            //detail.Status = Consts.StateNormal;
-            //detail.Tax = 8;
-            //detail.SellMoney = 0;
-            //detail.CostMoney = 600;
-            //detail.AdPositionName = "头条";
-            //detail.MediaTypeName = "微信";
-            //detail.MediaByPurchase = "肖柳梦翎";
-            //detail.VerificationStatus = 0;
-            //detail.VerificationMoney = 0;
-            //detail.ConfirmVerificationMoney = 0;
-            //detail.AuditStatus = 0;
-            //detail.MediaPriceId = "X1712181756410022";
-            //_temp.Add(detail);
-            //_dbContext.SaveChanges();
-            //return Content("OK");
 
         }
 

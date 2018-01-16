@@ -9,8 +9,10 @@ using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Customer;
 using Ada.Core.Domain.Finance;
 using Ada.Core.ViewModel.Business;
+using Ada.Core.ViewModel.Customer;
 using Ada.Framework.Filter;
 using Ada.Services.Business;
+using Ada.Services.Customer;
 
 namespace Business.Controllers
 {
@@ -22,18 +24,18 @@ namespace Business.Controllers
 
         private readonly IBusinessPayeeService _businessPayeeService;
         private readonly IRepository<Receivables> _receivablesRepository;
-        private readonly IRepository<PayAccount> _payAccountRepository;
+        private readonly IPayAccountService _payAccountService;
         private readonly IRepository<LinkMan> _linkManRepository;
         public ReceivablesController(
             IRepository<Receivables> receivablesRepository,
             IBusinessPayeeService businessPayeeService,
-            IRepository<PayAccount> payAccountRepository,
+            IPayAccountService payAccountService,
             IRepository<LinkMan> linkManRepository
         )
         {
             _receivablesRepository = receivablesRepository;
             _businessPayeeService = businessPayeeService;
-            _payAccountRepository = payAccountRepository;
+            _payAccountService = payAccountService;
             _linkManRepository = linkManRepository;
         }
         /// <summary>
@@ -59,6 +61,49 @@ namespace Business.Controllers
             return PartialView("Received", entity);
         }
         /// <summary>
+        /// 申请收款账户
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult AddPayAccount(string id)
+        {
+            var receivables = _receivablesRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            PayAccountView payAccount = new PayAccountView();
+            payAccount.AccountName = receivables.AccountName;
+            payAccount.AccountNum = receivables.AccountNum;
+            payAccount.AccountType = receivables.AccountBank;
+            return PartialView("PayAccount", payAccount);
+        }
+        /// <summary>
+        /// 申请收款账户
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddPayAccount(PayAccountView viewModel)
+        {
+            var linkMan = _linkManRepository.LoadEntities(d => d.Id == viewModel.LinkManId).FirstOrDefault();
+            var temp = linkMan.PayAccounts.FirstOrDefault(d => d.AccountName.Equals(viewModel.AccountName,StringComparison.CurrentCultureIgnoreCase));
+            if (temp == null)
+            {
+                PayAccount payAccount = new PayAccount();
+                payAccount.AccountName = viewModel.AccountName;
+                payAccount.AccountNum = viewModel.AccountNum;
+                payAccount.AccountType = viewModel.AccountType;
+                payAccount.LinkManId = viewModel.LinkManId;
+                payAccount.Status = Consts.StateLock;
+                payAccount.Id = IdBuilder.CreateIdNum();
+                payAccount.AddedDate = DateTime.Now;
+                payAccount.AddedBy = CurrentManager.UserName;
+                payAccount.AddedById = CurrentManager.Id;
+                payAccount.Remark = viewModel.Remark;
+                _payAccountService.Add(payAccount);
+            }
+
+            TempData["Msg"] = "申请成功";
+            return RedirectToAction("Index");
+        }
+        /// <summary>
         /// 领款
         /// </summary>
         /// <param name="viewModel"></param>
@@ -82,7 +127,7 @@ namespace Business.Controllers
             var linkman = _linkManRepository.LoadEntities(d => d.Id == viewModel.LinkManId).FirstOrDefault();
             if (linkman.PayAccounts.Count > 0)
             {
-                var payAccount = linkman.PayAccounts.Where(d=>d.Status!=Consts.StateLock)
+                var payAccount = linkman.PayAccounts.Where(d => d.Status != Consts.StateLock)
                     .FirstOrDefault(d => d.AccountName.Equals(receivables.AccountName, StringComparison.CurrentCultureIgnoreCase));
                 if (payAccount == null)
                 {
@@ -97,6 +142,7 @@ namespace Business.Controllers
                 payAccount.AccountType = receivables.AccountBank;
                 payAccount.AccountName = receivables.AccountName;
                 payAccount.AccountNum = receivables.AccountNum;
+                payAccount.Remark = "收款账户";
                 payAccount.Status = Consts.StateNormal;
                 payAccount.AddedBy = CurrentManager.UserName;
                 payAccount.AddedById = CurrentManager.Id;

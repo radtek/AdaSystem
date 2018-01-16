@@ -23,17 +23,10 @@
     <div class="form-inline" role="form">
         <div class="form-group">
             @*<label>审核状态: </label>*@
-            <div class="input-group">
-                <select name="Status" class="form-control" id="Status">
-                    <option value="-1">待审</option>
-                    <option value="2">同意</option>
-                </select>
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-primary" onclick="refreshTable();">
-                        <i class='fa fa-search'></i>
-                    </button>
-                </span>
-            </div>
+            <select name="Status" class="form-control" id="Status">
+                <option value="-1">待审</option>
+                <option value="2">同意</option>
+            </select>
             <button type="button" class="btn btn-primary btn-outline" onclick="audit();">
                 <i class="fa fa-gavel"></i> 审批
             </button>
@@ -54,6 +47,9 @@
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
+            $("#Status").change(function () {
+                $('#table').bootstrapTable('refresh');
+            });
         });
 
         function refreshTable() {

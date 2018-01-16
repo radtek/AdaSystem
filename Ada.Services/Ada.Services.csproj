@@ -86,6 +86,8 @@
     <Compile Include="Business\IBusinessPayeeService.cs" />
     <Compile Include="Customer\FollowUpService.cs" />
     <Compile Include="Customer\IFollowUpService.cs" />
+    <Compile Include="Customer\IPayAccountService.cs" />
+    <Compile Include="Customer\PayAccountService.cs" />
     <Compile Include="Finance\BillPaymentDetailService.cs" />
     <Compile Include="Finance\ExpenseDetailService.cs" />
     <Compile Include="Finance\ExpenseService.cs" />

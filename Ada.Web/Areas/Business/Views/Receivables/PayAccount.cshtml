@@ -1,0 +1,77 @@
+﻿@model Ada.Core.ViewModel.Customer.PayAccountView
+<style>
+    .select2-drop {
+        z-index: 10050 !important;
+    }
+ 
+    .select2-search-choice-close {
+        margin-top: 0 !important;
+        right: 2px !important;
+        min-height: 10px;
+    }
+ 
+    .select2-search-choice-close:before {
+        color: black !important;
+    }
+    /*防止select2不会自动失去焦点*/
+    .select2-container {
+        z-index: 16000 !important;
+    }
+ 
+    .select2-drop-mask {
+        z-index: 15990 !important;
+    }
+ 
+    .select2-drop-active {
+        z-index: 15995 !important;
+    }
+</style>
+<div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        @using (Html.BeginForm("AddPayAccount", "Receivables"))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">申请添加收款账户</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.LinkManId, Html.DisplayNameFor(d => d.LinkManId).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                <select class="form-control" required="" name="LinkManId" id="LinkManId">
+                                    <option value="@Model.LinkManId">@Model.LinkManName</option>
+                                </select>
+                                @Html.HiddenFor(d => d.LinkManName)
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.AccountName, Html.DisplayNameFor(d => d.AccountName).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(d => d.AccountName, new { @class = "form-control", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "col-sm-2 control-label" })
+                            <div class="col-sm-10">
+                                @Html.TextAreaFor(d => d.Remark, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        @Html.HiddenFor(d => d.AccountNum)
+                        @Html.HiddenFor(d => d.AccountType)
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">确定</button>
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -19,7 +19,7 @@
     </div>
 </div>
 <div id="toolbar" class="btn-group">
-    <button  type="button" class="btn btn-primary btn-outline">
+    <button  type="button" class="btn btn-primary btn-outline" onclick="addPayAccount();">
         <i class="fa fa-plus"></i> 申请收款账户
     </button>
 </div>
@@ -32,7 +32,7 @@
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/select2")
-    <script type="text/javascript">
+<script type="text/javascript">
         var linkmanSelect = {};
         linkmanSelect.url = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})";
         linkmanSelect.paramsData = function (params) {
@@ -102,9 +102,9 @@
                 },
                 mobileResponsive:true,
                 columns: [
-                    //{
-                    //    checkbox: true
-                    //},
+                    {
+                        checkbox: true
+                    },
                     {
                         field: 'BillNum',
                         title: '@Html.DisplayNameFor(d=>d.BillNum)',
@@ -168,7 +168,6 @@
             $("#modalView").load("@Url.Action("ReceivedView")?id="+id,
                     function () {
                         $('#modalView .modal').on('shown.bs.modal', function () {
-
                             initSelect2("LinkManId", linkmanSelect);
                             $("#modalView form").validate({
                                 rules:{
@@ -213,6 +212,29 @@
                     });
 
         }
+        function addPayAccount() {
+            var arrselections = $("#table").bootstrapTable('getSelections');
+            if (arrselections.length > 1) {
+                swal("操作提醒", "只能选择一条单据", "warning");
+                return;
+            }
+            if (arrselections.length <= 0) {
+                swal("操作提醒", "请选择要申请的领款单据", "warning");
+                return;
+            }
+            $("#modalView").load("@Url.Action("AddPayAccount")?id=" + arrselections[0].Id,
+                    function () {
+                        $('#modalView .modal').on('shown.bs.modal', function () {
+                            initSelect2("LinkManId", linkmanSelect);
+                            
+                        }).on('hidden.bs.modal', function () {
+
+                        });
+                        $('#modalView .modal').modal('show');
+
+                    });
+
+        }
         function initSelect2(id, opt) {
             $("#" + id).select2({
                 placeholder: "请输入关键字",
@@ -233,7 +255,7 @@
 
             });
         }
-    </script>
+</script>
 }
 
 

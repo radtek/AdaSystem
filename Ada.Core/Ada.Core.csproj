@@ -176,6 +176,7 @@
     <Compile Include="ViewModel\Customer\FollowUpView.cs" />
     <Compile Include="ViewModel\Customer\LinkManView.cs" />
     <Compile Include="ViewModel\Customer\CommpanyView.cs" />
+    <Compile Include="ViewModel\Customer\PayAccountView.cs" />
     <Compile Include="ViewModel\Finance\BillPaymentView.cs" />
     <Compile Include="ViewModel\Finance\ExpenseView.cs" />
     <Compile Include="ViewModel\Finance\IncomeExpendView.cs" />

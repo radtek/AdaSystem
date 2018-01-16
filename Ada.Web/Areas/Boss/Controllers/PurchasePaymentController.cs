@@ -112,6 +112,8 @@ namespace Boss.Controllers
                     payAccount.AddedBy = CurrentManager.UserName;
                     payAccount.AddedById = CurrentManager.Id;
                     payAccount.AddedDate = DateTime.Now;
+                    payAccount.Status = Consts.StateNormal;
+                    payAccount.Remark = entity.PaymentType;
                     entity.PurchasePayment.LinkMan.PayAccounts.Add(payAccount);
                 }
             }

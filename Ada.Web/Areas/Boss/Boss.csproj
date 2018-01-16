@@ -106,6 +106,7 @@
   <ItemGroup>
     <Compile Include="BossAreaRegistration.cs" />
     <Compile Include="Controllers\BusinessOrderController.cs" />
+    <Compile Include="Controllers\PayAccountController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\PurchasePaymentController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -122,6 +123,8 @@
     <Content Include="Views\PurchasePayment\Audit.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Views\BusinessOrder\Index.cshtml" />
+    <Content Include="Views\PayAccount\Index.cshtml" />
+    <Content Include="Views\PayAccount\Audit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

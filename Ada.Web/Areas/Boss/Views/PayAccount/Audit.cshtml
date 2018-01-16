@@ -1,29 +1,23 @@
 ﻿@using System.Web.Optimization
+@using Ada.Core.Domain
 @using Ada.Core.Domain.Customer
-@model Ada.Core.ViewModel.Business.BusinessPaymentView
+@model PayAccount
 @{
-    ViewBag.Title = "审批请款";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "销售请款", Value = Url.Action("Index") } };
-    LinkMan linkMan = ViewBag.LinkMan;
+    ViewBag.Title = "审批账户";
+    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "客户账户", Value = Url.Action("Index") } };
 }
 @Html.Partial("Bread", urls)
 
 
 <div class="wrapper wrapper-content">
-   
+
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-
-        <!-- The Gallery as lightbox dialog, should be a child element of the document body -->
-
         <div class="row">
             <div class="col-lg-12">
                 <div class="tabs-container">
-                    @if (!string.IsNullOrWhiteSpace(Model.WarningMsg))
-                    {
-                        <p class="bg-warning p-xs b-r-sm"> <strong>@Model.WarningMsg</strong></p>
-                    }
+                  
                     <p class="bg-danger">@Html.ValidationMessage("message") </p>
                     <ul class="nav nav-tabs">
                         <li class="active"><a data-toggle="tab" href="#tab-1"> 申请信息</a></li>
@@ -34,85 +28,29 @@
                             <div class="panel-body">
                                 <div class="form-horizontal">
                                     <div class="form-group">
-                                        @Html.LabelFor(d => d.PaymentType, Html.DisplayNameFor(d => d.PaymentType).ToString(), new {@class = "col-sm-2 control-label"})
+                                        @Html.LabelFor(d => d.AccountName, Html.DisplayNameFor(d => d.AccountName).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.PaymentType, new {@class = "form-control", @readonly = "readonly"})
+                                            @Html.TextBoxFor(d => d.AccountName, new { @class = "form-control", @readonly = "readonly" })
                                         </div>
                                     </div>
 
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
-                                        @Html.LabelFor(d => d.AccountBank, Html.DisplayNameFor(d => d.AccountBank).ToString(), new {@class = "col-sm-2 control-label"})
+                                        @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.AccountBank, new {@class = "form-control", @readonly = "readonly"})
+                                            @Html.TextAreaFor(d => d.Remark, new { @class = "form-control",@readonly="" })
                                         </div>
                                     </div>
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
-                                        @Html.LabelFor(d => d.AccountName, Html.DisplayNameFor(d => d.AccountName).ToString(), new {@class = "col-sm-2 control-label"})
-                                        <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.AccountName, new {@class = "form-control", @readonly = "readonly"})
-                                        </div>
-                                    </div>
-                                    <div class="hr-line-dashed"></div>
-                                    <div class="form-group">
-                                        @Html.LabelFor(d => d.AccountNum, Html.DisplayNameFor(d => d.AccountNum).ToString(), new {@class = "col-sm-2 control-label"})
-                                        <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.AccountNum, new {@class = "form-control", @readonly = "readonly"})
-                                        </div>
-                                    </div>
-                                    <div class="hr-line-dashed"></div>
-                                    <div class="form-group">
-                                        @Html.LabelFor(d => d.PayMoney, Html.DisplayNameFor(d => d.PayMoney).ToString(), new {@class = "col-sm-2 control-label"})
-                                        <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.PayMoney, new {@class = "form-control", @readonly = "readonly"})
-                                        </div>
-                                    </div>
-                                    <div class="hr-line-dashed"></div>
-                                    <div class="form-group">
-                                        @Html.LabelFor(d => d.Image, Html.DisplayNameFor(d => d.Image).ToString(), new {@class = "col-sm-2 control-label"})
-                                        <div class="col-sm-1">
-                                            @if (string.IsNullOrWhiteSpace(Model.Image))
-                                            {
-                                                <input type="text" class="form-control" readonly="readonly" value="未上传凭证"/>
-                                            }
-                                            else
-                                            {
-                                                <div class="lightBoxGallery">
-                                                    <a href="@Model.Image" title="申请凭证" data-gallery="">
-                                                        <img src="@Model.Image" style="width: 100px;">
-                                                    </a>
-                                                    <div id="blueimp-gallery" class="blueimp-gallery">
-                                                        <div class="slides"></div>
-                                                        <h3 class="title"></h3>
-                                                        <a class="prev">‹</a>
-                                                        <a class="next">›</a>
-                                                        <a class="close">×</a>
-                                                        <a class="play-pause"></a>
-                                                        <ol class="indicator"></ol>
-                                                    </div>
-                                                </div>
-                                            }
-
-                                        </div>
-                                    </div>
-                                    <div class="hr-line-dashed"></div>
-                                    <div class="form-group">
-                                        @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new {@class = "col-sm-2 control-label"})
-                                        <div class="col-sm-10">
-                                            @Html.TextAreaFor(d => d.Remark, new {@class = "form-control"})
-                                        </div>
-                                    </div>
-                                    <div class="hr-line-dashed"></div>
-                                    <div class="form-group">
-                                        @Html.LabelFor(d => d.AuditStatus, Html.DisplayNameFor(d => d.AuditStatus).ToString(), new {@class = "col-sm-2 control-label"})
+                                        @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
                                             <div class="radio radio-info radio-inline">
-                                                @Html.RadioButtonFor(d => d.AuditStatus, 1)
+                                                @Html.RadioButtonFor(d => d.Status, 1)
                                                 <label> 同意 </label>
                                             </div>
                                             <div class="radio radio-info radio-inline">
-                                                @Html.RadioButtonFor(d => d.AuditStatus, 0)
+                                                @Html.RadioButtonFor(d => d.Status, 0)
                                                 <label> 拒绝 </label>
                                             </div>
                                         </div>
@@ -125,7 +63,7 @@
                                         </div>
                                     </div>
                                     @Html.HiddenFor(d => d.Id)
-                                    @Html.HiddenFor(d => d.Image)
+     
                                 </div>
 
                             </div>
@@ -140,37 +78,37 @@
                                             <div class="form-group col-md-4">
                                                 <label class="col-sm-4 control-label">公司名称</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.Commpany.Name"/>
+                                                    <input type="text" class="form-control" readonly="readonly" value="@Model.LinkMan.Commpany.Name" />
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label class="col-sm-4 control-label">客户名称</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.Name"/>
+                                                    <input type="text" class="form-control" readonly="readonly" value="@Model.LinkMan.Name" />
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label class="col-sm-4 control-label">客户状态</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.Status"/>
+                                                    <input type="text" class="form-control" readonly="readonly" value="@Model.LinkMan.Status" />
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label class="col-sm-4 control-label">客户微信</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.WeiXin"/>
+                                                    <input type="text" class="form-control" readonly="readonly" value="@Model.LinkMan.WeiXin" />
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label class="col-sm-4 control-label">客户QQ</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.QQ"/>
+                                                    <input type="text" class="form-control" readonly="readonly" value="@Model.LinkMan.QQ" />
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label class="col-sm-4 control-label">客户电话</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.Phone"/>
+                                                    <input type="text" class="form-control" readonly="readonly" value="@Model.LinkMan.Phone" />
                                                 </div>
                                             </div>
                                         </div>
@@ -182,7 +120,8 @@
                                         <div class="table-responsive">
                                             <table class="table table-striped">
                                                 <caption class="text-center">
-                                                    <h3>客户账户信息</h3></caption>
+                                                    <h3>客户账户信息</h3>
+                                                </caption>
                                                 <thead>
                                                     <tr>
                                                         <th>
@@ -200,15 +139,15 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                @foreach (var item in linkMan.PayAccounts)
-                                                {
-                                                    <tr>
-                                                        <td>@item.AccountType</td>
-                                                        <td>@item.AccountName</td>
-                                                        <td>@item.AccountNum</td>
-                                                        <td>@item.Remark</td>
-                                                    </tr>
-                                                }
+                                                    @foreach (var item in Model.LinkMan.PayAccounts.Where(d=>d.Status==Consts.StateNormal))
+                                                    {
+                                                        <tr>
+                                                            <td>@item.AccountType</td>
+                                                            <td>@item.AccountName</td>
+                                                            <td>@item.AccountNum</td>
+                                                            <td>@item.Remark</td>
+                                                        </tr>
+                                                    }
                                                 </tbody>
                                             </table>
                                         </div>
@@ -233,5 +172,6 @@
 @section Scripts {
     @Scripts.Render("~/plugins/lightboxGallery")
 }
+
 
 
