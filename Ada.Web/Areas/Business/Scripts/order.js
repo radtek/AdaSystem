@@ -416,10 +416,12 @@ function initMediaData($obj, isrefresh) {
     var options = JSON.parse(arrposition);
     var $positionSelect = $("#AdPositionName");
     $positionSelect.empty();
+    $positionSelect.append('<option value="请选择">请选择</option>');
     $.each(options,
         function (k, v) {
             $positionSelect.append('<option value="' + v + '">' + v + '</option>');
         });
+    
     if (isrefresh) {
         $mediatable.bootstrapTable('refresh');
     }
