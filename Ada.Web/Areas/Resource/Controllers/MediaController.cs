@@ -511,7 +511,7 @@ namespace Resource.Controllers
             }
             _mediaService.Add(entity);
             TempData["Msg"] = "添加成功";
-            return RedirectToAction("Index");
+            return RedirectToAction("Add",new{id= entity.MediaTypeId });
         }
         public ActionResult Update(string id)
         {
@@ -667,7 +667,7 @@ namespace Resource.Controllers
             }
             _mediaService.Update(entity);
             TempData["Msg"] = "更新成功";
-            return RedirectToAction("Index");
+            return View(viewModel); 
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]

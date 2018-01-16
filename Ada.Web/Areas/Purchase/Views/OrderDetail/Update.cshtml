@@ -2,7 +2,7 @@
 @using System.Web.Optimization
 @model Ada.Core.ViewModel.Purchase.PurchaseOrderDetailView
 @{
-    ViewBag.Title = "处理订单";
+    ViewBag.Title = Model.MediaName;
     List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "媒介订单", Value = Url.Action("Index") } };
     //var discountBefore = Model.Money + Model.DiscountMoney;
 }

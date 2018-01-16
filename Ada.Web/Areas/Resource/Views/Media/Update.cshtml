@@ -1,7 +1,7 @@
 ﻿@using System.Web.Optimization
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
-    ViewBag.Title = "编辑"+Model.MediaTypeName;
+    ViewBag.Title = "编辑"+Model.MediaTypeName+" - "+Model.MediaName;
     List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "媒体资源", Value = Url.Action("Index") } };
 }
 @Html.Partial("Bread", urls)

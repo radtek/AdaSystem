@@ -304,7 +304,7 @@
                                         <td>@item.Remark</td>
                                         <td>@item.Transactor</td>
                                         <td>
-                                            <a class='btn btn-success btn-sm' href='@Url.Action("Update", new {id = item.Id})'><i class='fa fa-pencil'></i> 编辑</a>
+                                            <a class='btn btn-success btn-sm' href='@Url.Action("Update", new {id = item.Id})'  target='_blank'><i class='fa fa-pencil'></i> 编辑</a>
                                             <button class='btn btn-danger btn-sm' onclick="cancle('@item.Id');"><i class='fa fa-trash-o'></i> 删除</button>
                                         </td>
                                     </tr>
@@ -483,7 +483,7 @@
         function addMedia() {
             var mediaId = $("#MediaTypeId").val();
             if (mediaId) {
-                location.href = "@Url.Action("Add")?id=" + mediaId;
+                window.open("@Url.Action("Add")?id=" + mediaId);
             } else {
                 swal("操作警告", "请选择媒体类型", "warning");
             }

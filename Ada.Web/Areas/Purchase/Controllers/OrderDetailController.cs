@@ -174,7 +174,7 @@ namespace Purchase.Controllers
             entity.Remark = viewModel.Remark;
             _purchaseOrderDetailService.Update(entity);
             TempData["Msg"] = "更新成功";
-            return RedirectToAction("Index");
+            return View(viewModel);
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
