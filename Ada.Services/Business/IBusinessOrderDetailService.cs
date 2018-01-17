@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Ada.Core;
 using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Business;
+using Ada.Core.ViewModel.Admin;
 using Ada.Core.ViewModel.Business;
 
 namespace Ada.Services.Business
@@ -22,8 +23,9 @@ namespace Ada.Services.Business
         /// <returns></returns>
         IQueryable<BusinessOrderDetail> LoadEntitiesFilter(BusinessOrderDetailView viewModel);
 
-        List<BusinessOrderDetailView> BusinessPerformance(List<Manager> managers, BusinessOrderDetailView viewModel);
+        List<BusinessOrderDetailView> BusinessPerformance(List<ManagerView> managers, BusinessOrderDetailView viewModel);
         BusinessOrderDetailView BusinessPerformance(string transactorId, BusinessOrderDetailView viewModel);
+        BusinessOrderDetailView BusinessPerformance(BusinessOrderDetailView viewModel);
         void Update(BusinessOrderDetail entity);
     }
 }

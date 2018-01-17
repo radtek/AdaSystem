@@ -8,6 +8,7 @@ using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Purchase;
+using Ada.Core.ViewModel.Admin;
 using Ada.Core.ViewModel.Business;
 
 namespace Ada.Services.Business
@@ -131,11 +132,11 @@ namespace Ada.Services.Business
 
 
         /// <summary>
-        /// 根据人员统计业务订单
+        /// 根据人员集合获取订单明细统计数
         /// </summary>
         /// <param name="managers"></param>
         /// <returns></returns>
-        public List<BusinessOrderDetailView> BusinessPerformance(List<Manager> managers, BusinessOrderDetailView viewModel)
+        public List<BusinessOrderDetailView> BusinessPerformance(List<ManagerView> managers, BusinessOrderDetailView viewModel)
         {
             List<BusinessOrderDetailView> list = new List<BusinessOrderDetailView>();
             foreach (var manager in managers)
@@ -147,7 +148,7 @@ namespace Ada.Services.Business
             return list;
         }
         /// <summary>
-        /// 根据个人
+        /// 根据个人已完成的订单明细统计数
         /// </summary>
         /// <param name="transactorId"></param>
         /// <returns></returns>
@@ -168,6 +169,32 @@ namespace Ada.Services.Business
             item.Profit = item.TotalProfitMoney / item.TotalSellMoney * 100;
             return item;
         }
+        /// <summary>
+        /// 所有数据订单明细数据
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        public BusinessOrderDetailView BusinessPerformance(BusinessOrderDetailView viewModel)
+        {
+            var orders = GetBusinessOrderDetails(viewModel);
+            BusinessOrderDetailView item = new BusinessOrderDetailView
+            {
+                TotalSellMoney = orders.Sum(d => d.SellMoney),
+                TotalVerificationMoney =
+                    orders.Sum(d => d.VerificationMoney),
+                TotalConfirmVerificationMoney =
+                    orders.Sum(d => d.ConfirmVerificationMoney),
+                TotalPurchaseMoney = orders.Sum(d => d.PurchaseMoney),
+                TotalProfitMoney = orders.Sum(d => d.ProfitMoney)
+            };
+            item.Profit = item.TotalProfitMoney / item.TotalSellMoney * 100;
+            return item;
+        }
+        /// <summary>
+        /// 获取所有的已完成的销售订单明细
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         private IQueryable<BusinessOrderDetailView> GetBusinessOrderDetails(BusinessOrderDetailView viewModel)
         {
             var purchaseOrders = _purchaseOrderDetailRepository.LoadEntities(d => d.IsDelete == false && d.PurchaseOrder.IsDelete == false);

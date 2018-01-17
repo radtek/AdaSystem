@@ -38,6 +38,6 @@ namespace Ada.Services.Admin
         /// <param name="entity"></param>
         void Edit(Manager entity);
 
-        IEnumerable<Manager> GetByOrganizationName(string name);
+        IEnumerable<ManagerView> GetByOrganizationName(string name);
     }
 }

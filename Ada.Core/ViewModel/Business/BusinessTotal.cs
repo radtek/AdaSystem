@@ -9,11 +9,7 @@ namespace Ada.Core.ViewModel.Business
 {
    public class BusinessTotal
     {
-        public BusinessTotal()
-        {
-            Business1=new List<BusinessOrderDetailView>();
-            Business2=new List<BusinessOrderDetailView>();
-        }
+        
         /// <summary>
         /// 待转单
         /// </summary>
@@ -46,15 +42,20 @@ namespace Ada.Core.ViewModel.Business
         public int? Tomorrow { get; set; }
 
         /// <summary>
-        /// 销售一部业绩
+        /// 排序
         /// </summary>
-        [Display(Name = "销售一部业绩")]
-        public List<BusinessOrderDetailView> Business1 { get; set; }
+        [Display(Name = "排序")]
+        public int? Sort { get; set; }
         /// <summary>
-        /// 销售二部业绩
+        /// 月份
         /// </summary>
-        [Display(Name = "销售二部业绩")]
-        public List<BusinessOrderDetailView> Business2 { get; set; }
+        [Display(Name = "月份")]
+        public string Month { get; set; }
+        /// <summary>
+        /// 订单数据
+        /// </summary>
+        [Display(Name = "订单数据")]
+        public BusinessOrderDetailView BusinessOrderDetailView { get; set; }
 
     }
 }

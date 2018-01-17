@@ -124,6 +124,26 @@ namespace Ada.Web.Controllers
 
 
         }
+        public ActionResult Update()
+        {
 
+            var b = _temp.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false && d.VerificationStatus == Consts.StateLock).ToList();
+            int i = 0;
+            foreach (var businessOrderDetail in b)
+            {
+                if (businessOrderDetail.VerificationMoney != businessOrderDetail.SellMoney)
+                {
+                    businessOrderDetail.VerificationMoney = businessOrderDetail.SellMoney;
+                    i++;
+                }
+
+
+            }
+
+            _dbContext.SaveChanges();
+            return Content(i.ToString());
+
+
+        }
     }
 }

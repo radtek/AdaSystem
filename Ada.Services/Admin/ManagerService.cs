@@ -158,14 +158,18 @@ namespace Ada.Services.Admin
             _dbContext.SaveChanges();
         }
 
-        public IEnumerable<Manager> GetByOrganizationName(string name)
+        public IEnumerable<ManagerView> GetByOrganizationName(string name)
         {
             var organization = _organizationRepository.LoadEntities(d => d.IsDelete == false && d.OrganizationName == name).FirstOrDefault();
             var allManagers = _managerRepository.LoadEntities(d => d.Status == Consts.StateNormal && d.IsDelete == false);
             var managers = from m in allManagers
                 from o in m.Organizations
                 where o.TreePath.Contains(organization.Id)
-                select m;
+                select new ManagerView()
+                {
+                    Id = m.Id,
+                    UserName = m.UserName
+                };
             return managers;
         }
     }
