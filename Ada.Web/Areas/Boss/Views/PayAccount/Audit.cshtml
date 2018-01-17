@@ -17,11 +17,12 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="tabs-container">
-                  
+
                     <p class="bg-danger">@Html.ValidationMessage("message") </p>
                     <ul class="nav nav-tabs">
                         <li class="active"><a data-toggle="tab" href="#tab-1"> 申请信息</a></li>
                         <li class=""><a data-toggle="tab" href="#tab-2"> 客户信息</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-3"> 订单信息</a></li>
                     </ul>
                     <div class="tab-content">
                         <div id="tab-1" class="tab-pane active">
@@ -38,7 +39,7 @@
                                     <div class="form-group">
                                         @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
-                                            @Html.TextAreaFor(d => d.Remark, new { @class = "form-control",@readonly="" })
+                                            @Html.TextAreaFor(d => d.Remark, new { @class = "form-control", @readonly = "" })
                                         </div>
                                     </div>
                                     <div class="hr-line-dashed"></div>
@@ -63,7 +64,7 @@
                                         </div>
                                     </div>
                                     @Html.HiddenFor(d => d.Id)
-     
+
                                 </div>
 
                             </div>
@@ -139,7 +140,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach (var item in Model.LinkMan.PayAccounts.Where(d=>d.Status==Consts.StateNormal))
+                                                    @foreach (var item in Model.LinkMan.PayAccounts.Where(d => d.Status == Consts.StateNormal))
                                                     {
                                                         <tr>
                                                             <td>@item.AccountType</td>
@@ -158,6 +159,56 @@
 
                             </div>
                         </div>
+
+
+                        <div id="tab-3" class="tab-pane">
+                            <div class="panel-body">
+
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            订单编号
+                                                        </th>
+                                                        <th>
+                                                            项目摘要
+                                                        </th>
+                                                        <th>
+                                                            销售总额（不含税）
+                                                        </th>
+                                                        <th>
+                                                            订单日期
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.LinkMan.BusinessOrders.OrderByDescending(d => d.OrderDate).Take(20))
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                <button class="btn btn-info btn-xs" type="button" onclick="initDetails('@item.Id')">@item.OrderNum</button>
+                                                            </td>
+                                                            <td>@item.Remark</td>
+                                                            <td>@item.BusinessOrderDetails.Sum(d => d.SellMoney)</td>
+                                                            <td>@item.OrderDate.Value.ToString("yyyy年MM月dd日")</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -171,6 +222,20 @@
 }
 @section Scripts {
     @Scripts.Render("~/plugins/lightboxGallery")
+<script>
+        function initDetails(id) {
+            $("#modalView").load("@Url.Action("Details","Order",new{area="Business"})?id="+id,
+                function () {
+                    $('#modalView .modal').on('shown.bs.modal', function () {
+                        $('[data-toggle="tooltip"]').tooltip();
+                    }).on('hidden.bs.modal', function () {
+
+                    });
+                    $('#modalView .modal').modal('show');
+                });
+
+        }
+</script>
 }
 
 

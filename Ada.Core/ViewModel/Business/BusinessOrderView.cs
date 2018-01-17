@@ -64,7 +64,7 @@ namespace Ada.Core.ViewModel.Business
         /// 核销状态
         /// </summary>
         [Display(Name = "核销状态")]
-        public short? VerificationStatus { get; set; }
+        public bool? VerificationStatus { get; set; }
         /// <summary>
         /// 经办业务
         /// </summary>

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
+using Ada.Core.ViewModel.Business;
 using Ada.Framework.Filter;
 using Ada.Services.Business;
 
@@ -34,7 +35,7 @@ namespace DataReport.Controllers
                            from o in m.Organizations
                            where o.TreePath.Contains(organization.Id)
                            select m;
-           var model= _businessOrderDetailService.BusinessPerformance(managers.ToList());
+           var model= _businessOrderDetailService.BusinessPerformance(managers.ToList(),new BusinessOrderDetailView());
             return View(model);
         }
     }

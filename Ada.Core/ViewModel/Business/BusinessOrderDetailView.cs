@@ -50,6 +50,11 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "无税金额")]
         public decimal? SellMoney { get; set; }
         /// <summary>
+        /// 利润金额
+        /// </summary>
+        [Display(Name = "利润金额")]
+        public decimal? ProfitMoney { get; set; }
+        /// <summary>
         /// 未核销金额
         /// </summary>
         [Display(Name = "未核销金额")]
@@ -185,6 +190,11 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "采购总成本")]
         public decimal? TotalPurchaseMoney { get; set; }
         /// <summary>
+        /// 总利润
+        /// </summary>
+        [Display(Name = "总利润")]
+        public decimal? TotalProfitMoney { get; set; }
+        /// <summary>
         /// 无税金额
         /// </summary>
         [Display(Name = "无税金额")]
@@ -194,6 +204,11 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "未核销金额")]
         public decimal? TotalVerificationMoney { get; set; }
+        /// <summary>
+        /// 已核销金额
+        /// </summary>
+        [Display(Name = "已核销金额")]
+        public decimal? TotalConfirmVerificationMoney { get; set; }
         /// <summary>
         /// 利润率
         /// </summary>

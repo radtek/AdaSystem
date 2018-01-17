@@ -22,8 +22,8 @@ namespace Ada.Services.Business
         /// <returns></returns>
         IQueryable<BusinessOrderDetail> LoadEntitiesFilter(BusinessOrderDetailView viewModel);
 
-        List<BusinessOrderDetailView> BusinessPerformance(List<Manager> managers);
-        BusinessOrderDetailView BusinessPerformance(string transactorId);
+        List<BusinessOrderDetailView> BusinessPerformance(List<Manager> managers, BusinessOrderDetailView viewModel);
+        BusinessOrderDetailView BusinessPerformance(string transactorId, BusinessOrderDetailView viewModel);
         void Update(BusinessOrderDetail entity);
     }
 }

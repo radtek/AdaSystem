@@ -37,5 +37,7 @@ namespace Ada.Services.Admin
         /// </summary>
         /// <param name="entity"></param>
         void Edit(Manager entity);
+
+        IEnumerable<Manager> GetByOrganizationName(string name);
     }
 }

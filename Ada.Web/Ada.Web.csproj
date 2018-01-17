@@ -1554,6 +1554,8 @@
     <Content Include="Scripts\plugins\dualListbox\jquery.bootstrap-duallistbox.js" />
     <Content Include="Scripts\plugins\easypiechart\easypiechart.js" />
     <Content Include="Scripts\plugins\easypiechart\jquery.easypiechart.js" />
+    <Content Include="Scripts\plugins\echarts\echarts.js" />
+    <Content Include="Scripts\plugins\echarts\echarts.min.js" />
     <Content Include="Scripts\plugins\flot\curvedLines.js" />
     <Content Include="Scripts\plugins\flot\excanvas.min.js" />
     <Content Include="Scripts\plugins\flot\jquery.flot.js" />

@@ -83,7 +83,19 @@ namespace Ada.Services.Business
 
             if (viewModel.VerificationStatus != null)
             {
-                allList = allList.Where(d => d.VerificationStatus == viewModel.VerificationStatus);
+                if (viewModel.VerificationStatus.Value)
+                {
+                    allList = from o in allList
+                        where o.BusinessOrderDetails.Count == o.BusinessOrderDetails.Count(b => b.VerificationStatus == Consts.StateNormal) && o.BusinessOrderDetails.Count > 0
+                        select o;
+                }
+                else
+                {
+                    allList = from o in allList
+                        where o.BusinessOrderDetails.Count != o.BusinessOrderDetails.Count(b => b.VerificationStatus == Consts.StateNormal) || o.BusinessOrderDetails.Count >0
+                        select o;
+                }
+               
             }
             if (viewModel.AuditStatus != null)
             {

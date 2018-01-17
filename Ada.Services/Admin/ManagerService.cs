@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
+using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
 using Ada.Core.ViewModel.Admin;
 
@@ -155,6 +156,17 @@ namespace Ada.Services.Admin
         {
             _managerRepository.Update(entity);
             _dbContext.SaveChanges();
+        }
+
+        public IEnumerable<Manager> GetByOrganizationName(string name)
+        {
+            var organization = _organizationRepository.LoadEntities(d => d.IsDelete == false && d.OrganizationName == name).FirstOrDefault();
+            var allManagers = _managerRepository.LoadEntities(d => d.Status == Consts.StateNormal && d.IsDelete == false);
+            var managers = from m in allManagers
+                from o in m.Organizations
+                where o.TreePath.Contains(organization.Id)
+                select m;
+            return managers;
         }
     }
 }

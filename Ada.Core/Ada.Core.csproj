@@ -171,6 +171,7 @@
     <Compile Include="ViewModel\Business\BusinessOrderView.cs" />
     <Compile Include="ViewModel\Business\BusinessPayeeView.cs" />
     <Compile Include="ViewModel\Business\BusinessPaymentView.cs" />
+    <Compile Include="ViewModel\Business\BusinessTotal.cs" />
     <Compile Include="ViewModel\Business\BusinessWriteOffDetailView.cs" />
     <Compile Include="ViewModel\Business\BusinessWriteOffView.cs" />
     <Compile Include="ViewModel\Customer\FollowUpView.cs" />

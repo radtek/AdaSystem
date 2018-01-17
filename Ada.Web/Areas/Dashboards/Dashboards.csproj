@@ -125,9 +125,17 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Ada.Core\Ada.Core.csproj">
+      <Project>{1E0B290A-3337-43C9-9CE9-BFB8CE741DBA}</Project>
+      <Name>Ada.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Ada.Framework\Ada.Framework.csproj">
       <Project>{DABBE303-D2A1-4255-ADEE-C7836054EED7}</Project>
       <Name>Ada.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Ada.Services\Ada.Services.csproj">
+      <Project>{290B1457-586C-4AB4-9B82-6DBBA35F5BD5}</Project>
+      <Name>Ada.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

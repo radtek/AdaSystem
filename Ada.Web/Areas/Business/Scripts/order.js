@@ -218,14 +218,28 @@ function initData() {
 
             },
             {
-                field: 'Id',
+                field: 'Status',
                 title: '销售状态',
                 align: "center", valign: "middle",
                 formatter: function (value, row,index) {
-                    if (row.PurchaseStatus == 3 && row.Status == 1) {
-                        return "<button type='button' class='btn btn-warning btn-xs' onclick=\"confirmOrder('" + value+"')\"><i class='fa fa-check'></i> 确认</button>";
+                    if (row.PurchaseStatus == 3 && value == 1) {
+                        return "<button type='button' class='btn btn-warning btn-xs' onclick=\"confirmOrder('" + row.Id+"')\"><i class='fa fa-check'></i> 确认</button>";
                     } else {
                         return formatter.businessStatus(row.Status);
+                    }
+                }
+
+            }
+            ,
+            {
+                field: 'Id',
+                title: '申请',
+                align: "center", valign: "middle",
+                formatter: function (value, row, index) {
+                    if (row.Status == 2) {
+                        return "<button type='button' class='btn btn-danger btn-xs' onclick=\"alert('待开发');\"><i class='fa fa-pencil'></i> 申请改价</button>";
+                    } else {
+                        return "";
                     }
                 }
 

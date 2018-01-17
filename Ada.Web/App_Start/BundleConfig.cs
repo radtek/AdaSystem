@@ -502,6 +502,9 @@ namespace Ada.Web
             // html2canvas
             bundles.Add(new ScriptBundle("~/plugins/html2canvas").Include(
                 "~/Scripts/plugins/html2canvas/html2canvas.js"));
+            // 百度Echarts
+            bundles.Add(new ScriptBundle("~/plugins/echarts").Include(
+                "~/Scripts/plugins/echarts/echarts.min.js"));
         }
     }
 }

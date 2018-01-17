@@ -135,12 +135,12 @@ namespace Ada.Services.Business
         /// </summary>
         /// <param name="managers"></param>
         /// <returns></returns>
-        public List<BusinessOrderDetailView> BusinessPerformance(List<Manager> managers)
+        public List<BusinessOrderDetailView> BusinessPerformance(List<Manager> managers, BusinessOrderDetailView viewModel)
         {
             List<BusinessOrderDetailView> list = new List<BusinessOrderDetailView>();
             foreach (var manager in managers)
             {
-                var item = BusinessPerformance(manager.Id);
+                var item = BusinessPerformance(manager.Id, viewModel);
                 item.Transactor = manager.UserName;
                 list.Add(item);
             }
@@ -151,37 +151,68 @@ namespace Ada.Services.Business
         /// </summary>
         /// <param name="transactorId"></param>
         /// <returns></returns>
-        public BusinessOrderDetailView BusinessPerformance(string transactorId)
+        public BusinessOrderDetailView BusinessPerformance(string transactorId, BusinessOrderDetailView viewModel)
         {
-            var orders = GetBusinessOrderDetails();
+            var orders = GetBusinessOrderDetails(viewModel);
             BusinessOrderDetailView item = new BusinessOrderDetailView
             {
                 TransactorId = transactorId,
                 TotalSellMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.SellMoney),
                 TotalVerificationMoney =
                     orders.Where(d => d.TransactorId == transactorId).Sum(d => d.VerificationMoney),
-                TotalPurchaseMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.PurchaseMoney)
+                TotalConfirmVerificationMoney = 
+                    orders.Where(d => d.TransactorId == transactorId).Sum(d => d.ConfirmVerificationMoney),
+                TotalPurchaseMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.PurchaseMoney),
+                TotalProfitMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.ProfitMoney)
             };
-            item.Profit = ((item.TotalSellMoney - item.TotalPurchaseMoney) / item.TotalSellMoney) * 100;
+            item.Profit = item.TotalProfitMoney / item.TotalSellMoney * 100;
             return item;
         }
-        private IQueryable<BusinessOrderDetailView> GetBusinessOrderDetails()
+        private IQueryable<BusinessOrderDetailView> GetBusinessOrderDetails(BusinessOrderDetailView viewModel)
         {
             var purchaseOrders = _purchaseOrderDetailRepository.LoadEntities(d => d.IsDelete == false && d.PurchaseOrder.IsDelete == false);
             var businessOrders = _repository.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false);
+            if (viewModel.PublishDateStart != null && viewModel.PublishDateEnd != null)
+            {
+                var endDay = viewModel.PublishDateEnd.Value.AddDays(1);
+                return from b in businessOrders
+                       from p in purchaseOrders
+                           //双方都是已完成的状态
+                       where p.Status == Consts.PurchaseStatusSuccess &&
+                             b.Status == Consts.StateOK &&
+                             b.Id == p.BusinessOrderDetailId &&
+                             p.PublishDate >= viewModel.PublishDateStart 
+                             && p.PublishDate < endDay
+                       select new BusinessOrderDetailView
+                       {
+                           SellMoney = b.SellMoney,
+                           VerificationMoney = b.VerificationMoney,
+                           ConfirmVerificationMoney = b.ConfirmVerificationMoney,
+                           PurchaseMoney = p.PurchaseMoney,
+                           ProfitMoney = b.SellMoney - p.PurchaseMoney,
+                           Transactor = b.BusinessOrder.Transactor,
+                           TransactorId = b.BusinessOrder.TransactorId
+
+                       };
+            }
             return from b in businessOrders
                    from p in purchaseOrders
                        //双方都是已完成的状态
-                   where p.Status == Consts.PurchaseStatusSuccess && b.Status == Consts.StateOK && b.Id == p.BusinessOrderDetailId
+                   where p.Status == Consts.PurchaseStatusSuccess &&
+                         b.Status == Consts.StateOK &&
+                         b.Id == p.BusinessOrderDetailId
                    select new BusinessOrderDetailView
                    {
                        SellMoney = b.SellMoney,
                        VerificationMoney = b.VerificationMoney,
+                       ConfirmVerificationMoney = b.ConfirmVerificationMoney,
                        PurchaseMoney = p.PurchaseMoney,
+                       ProfitMoney = b.SellMoney - p.PurchaseMoney,
                        Transactor = b.BusinessOrder.Transactor,
                        TransactorId = b.BusinessOrder.TransactorId
 
                    };
+
         }
         public void Update(BusinessOrderDetail entity)
         {

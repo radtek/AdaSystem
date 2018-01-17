@@ -341,6 +341,7 @@ function initItem() {
         uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
         //mobileResponsive: true,
         queryParams: function (parameters) {
+            parameters.VerificationStatus = false;
             return parameters;
         },
         formatSearch: function () {
