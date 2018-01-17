@@ -37,11 +37,16 @@ namespace Dashboards.Controllers
             //订单数
             BusinessTotal viewModel = new BusinessTotal();
             var premission = PremissionData();
+            var userId = string.Empty;
+            if (premission.Count > 0)
+            {
+                userId = CurrentManager.Id;
+            }
             var business =
                 _businessRepository.LoadEntities(d => d.BusinessOrder.IsDelete == false && d.IsDelete == false);
-            if (premission != null && premission.Count > 0)
+            if (!string.IsNullOrWhiteSpace(userId))
             {
-                business = business.Where(d => premission.Contains(d.BusinessOrder.TransactorId));
+                business = business.Where(d => d.BusinessOrder.TransactorId==userId);
             }
             var purchase = _purchaseRepository.LoadEntities(d => d.IsDelete == false);
             viewModel.Waiting = business.Count(d => d.Status == Consts.StateLock);
