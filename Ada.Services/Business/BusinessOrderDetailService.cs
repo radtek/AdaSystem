@@ -246,6 +246,19 @@ namespace Ada.Services.Business
             _repository.Update(entity);
             _dbContext.SaveChanges();
         }
+        public void Update(List<BusinessOrderDetail> entitys)
+        {
+            foreach (var item in entitys)
+            {
+                _repository.Update(item);
+            }
+            _dbContext.SaveChanges();
+        }
+        public void Delete(BusinessOrderDetail entity)
+        {
+            _repository.Remove(entity);
+            _dbContext.SaveChanges();
+        }
 
     }
 }

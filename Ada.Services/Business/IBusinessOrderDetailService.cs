@@ -27,5 +27,7 @@ namespace Ada.Services.Business
         BusinessOrderDetailView BusinessPerformance(string transactorId, BusinessOrderDetailView viewModel);
         BusinessOrderDetailView BusinessPerformance(BusinessOrderDetailView viewModel);
         void Update(BusinessOrderDetail entity);
+        void Update(List<BusinessOrderDetail> entitys);
+        void Delete(BusinessOrderDetail entity);
     }
 }

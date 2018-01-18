@@ -86,6 +86,11 @@ namespace Ada.Core.ViewModel.Admin
         [Display(Name = "相片")]
         public string Image { get; set; }
         /// <summary>
+        /// 角色级别
+        /// </summary>
+        [Display(Name = "角色级别")]
+        public int? RoleLever { get; set; }
+        /// <summary>
         /// 角色集合
         /// </summary>
         [Display(Name = "角色集合")]

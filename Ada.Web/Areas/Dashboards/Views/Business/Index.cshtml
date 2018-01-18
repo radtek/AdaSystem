@@ -1,0 +1,433 @@
+﻿@using System.Web.Optimization
+@model Ada.Core.ViewModel.Statistics.BusinessTotal
+@{
+    ViewBag.Title = "销售工作台";
+}
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-2">
+
+            <div class="widget style1 white-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","BusinessOrderDetail",new {area="DataReport"})';">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-hourglass fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 待转采购单 </span>
+                        <h2 class="font-bold">@Model.Waiting</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+
+            <div class="widget style1 yellow-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","BusinessOrderDetail",new {area="DataReport"})';">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-comments fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 采购正处理 </span>
+                        <h2 class="font-bold">@Model.Doing</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+
+            <div class="widget style1 navy-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","BusinessOrderDetail",new {area="DataReport"})';">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-handshake-o fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 采购已确认 </span>
+                        <h2 class="font-bold">@Model.Confirm</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+
+            <div class="widget style1 blue-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","Order",new {area="Business"})';">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-check fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 销售待确认 </span>
+                        <h2 class="font-bold">@Model.Done</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+
+            <div class="widget style1 lazur-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","BusinessOrderDetail",new {area="DataReport"})';">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-calendar-o fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 今日预出刊 </span>
+                        <h2 class="font-bold">@Model.Today</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="widget style1 lazur-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","BusinessOrderDetail",new {area="DataReport"})';">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-calendar-plus-o fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 明日预出刊 </span>
+                        <h2 class="font-bold">@Model.Tomorrow</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>销售情况统计</h5>
+
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <div class="flot-chart" style="height: 300px;">
+                                <div class="flot-chart-content" id="flot-dashboard-chart"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <ul class="stat-list">
+                                <li>
+                                    <h2 class="no-margins">@Model.OrderCount</h2>
+                                    <small>销售订单数</small>
+
+                                </li>
+                                <li>
+                                    <h2 class="no-margins"><i class="fa fa-jpy "></i> @Model.SellMoney</h2>
+                                    <small>销售总额（不含税）</small>
+
+                                </li>
+                                <li>
+                                    <h2 class="no-margins "><i class="fa fa-jpy "></i> @Model.VerificationMoney</h2>
+                                    <small>未核销金额</small>
+
+                                </li>
+                                <li>
+                                    <h2 class="no-margins "><i class="fa fa-jpy "></i> @Model.ConfirmVerificationMoney</h2>
+                                    <small>已核销金额</small>
+
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+
+
+        <div class="col-lg-12">
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="ibox float-e-margins" id="ibox1">
+                        <div class="ibox-title">
+                            <h5>销售一部销售业绩排行（@DateTime.Now.Month 月）</h5>
+                            <div class="ibox-tools">
+
+                                <a href="javascript:getTop('业务一部', 'ibox1');">
+                                    <i class="fa fa-refresh"></i>
+                                </a>
+
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="sk-spinner sk-spinner-double-bounce">
+                                <div class="sk-double-bounce1"></div>
+                                <div class="sk-double-bounce2"></div>
+                            </div>
+                            <table class="table table-hover margin bottom">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">排名</th>
+                                        <th>销售人员</th>
+                                        <th>销售额（不含税）</th>
+                                        <th>利润</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="ibox float-e-margins" id="ibox2">
+                        <div class="ibox-title">
+                            <h5>销售二部销售业绩排行（@DateTime.Now.Month 月）</h5>
+                            <div class="ibox-tools">
+
+                                <a href="javascript:getTop('业务二部', 'ibox2');">
+                                    <i class="fa fa-refresh"></i>
+                                </a>
+
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="sk-spinner sk-spinner-double-bounce">
+                                <div class="sk-double-bounce1"></div>
+                                <div class="sk-double-bounce2"></div>
+                            </div>
+                            <table class="table table-hover margin bottom">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">排名</th>
+                                        <th>销售人员</th>
+                                        <th>销售额（不含税）</th>
+                                        <th>利润</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>销售业绩大比拼（PK）</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <h2>待开发</h2>
+                            @*<div class="row">
+                                    <div class="col-lg-12">
+                                        <table class="table table-hover margin bottom">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 1%" class="text-center">No.</th>
+                                                    <th>Transaction</th>
+                                                    <th class="text-center">Date</th>
+                                                    <th class="text-center">Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-center">1</td>
+                                                    <td>
+                                                        Security doors
+                                                    </td>
+                                                    <td class="text-center small">16 Jun 2014</td>
+                                                    <td class="text-center"><span class="label label-primary">$483.00</span></td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center">2</td>
+                                                    <td>
+                                                        Wardrobes
+                                                    </td>
+                                                    <td class="text-center small">10 Jun 2014</td>
+                                                    <td class="text-center"><span class="label label-primary">$327.00</span></td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center">3</td>
+                                                    <td>
+                                                        Set of tools
+                                                    </td>
+                                                    <td class="text-center small">12 Jun 2014</td>
+                                                    <td class="text-center"><span class="label label-warning">$125.00</span></td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center">4</td>
+                                                    <td> Panoramic pictures</td>
+                                                    <td class="text-center small">22 Jun 2013</td>
+                                                    <td class="text-center"><span class="label label-primary">$344.00</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center">5</td>
+                                                    <td>Phones</td>
+                                                    <td class="text-center small">24 Jun 2013</td>
+                                                    <td class="text-center"><span class="label label-primary">$235.00</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center">6</td>
+                                                    <td>Monitors</td>
+                                                    <td class="text-center small">26 Jun 2013</td>
+                                                    <td class="text-center"><span class="label label-primary">$100.00</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+@section Scripts{
+    @Scripts.Render("~/plugins/echarts")
+    <script>
+        $(function() {
+            getTop("业务一部", "ibox1");
+            getTop("业务二部", "ibox2");
+            initCharts();
+        });
+
+        function getTop(oname, id) {
+            var $top = $("#" + id),$table = $("#" + id + " tbody");
+
+            $.ajax({
+                type: "get",
+                url: "@Url.Action("GetBusinessPerformance")",
+                data: { o: oname },
+                success: function (data) {
+                    $table.empty();
+                    $.each(data,
+                        function(k, v) {
+                            $table.append('<tr>' +
+                                '<td class="text-center">' + (k + 1) + '</td><td>' + v.Transactor+'</td>' +
+                                '<td><span class="label label-primary">¥ ' + v.TotalSellMoney+'</span></td>' +
+                                '<td><span class="label label-warning">¥ ' +v.TotalProfitMoney+'</span></td>' +
+                                '</tr>');
+                        });
+                },
+                error: function () {
+                    //swal("操作失败", "系统错误", "error");
+                },
+                complete: function () {
+                    $top.children('.ibox-content').toggleClass('sk-loading');
+                },
+                beforeSend: function() {
+                    $top.children('.ibox-content').toggleClass('sk-loading');
+                }
+            });
+        }
+
+        function initCharts() {
+            var myChart = echarts.init(document.getElementById('flot-dashboard-chart'));
+            var option = {
+                title : {
+                    text: '核销统计',
+                    //subtext: ''
+                },
+                tooltip : {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data:['未核销','已核销']
+                },
+                toolbox: {
+                    show : true,
+                    feature : {
+                        //dataView : {show: true, readOnly: false},
+                        magicType : {show: true, type: ['line', 'bar']},
+                        restore : {show: true},
+                        //saveAsImage : {show: true}
+                    }
+                },
+                calculable: true,
+                color: ['#d1dade', '#1ab394'],
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : []
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value'
+                    }
+                ],
+                series : [
+                    {
+                        name:'未核销',
+                        type:'bar',
+                        data:[]
+
+                    },
+                    {
+                        name:'已核销',
+                        type:'bar',
+                        data:[]
+
+                    }
+                ]
+            };
+            myChart.setOption(option);
+            $.ajax({
+                type: "get",
+                url: "@Url.Action("GetBusinessIncome")",
+                //data: {},
+                success: function (data) {
+                    var months = [], confirmVerificationMoneys = [], verificationMoneys = [];
+                    $.each(data,
+                        function(k, v) {
+                            months.push(v.Month);
+                            confirmVerificationMoneys.push(v.BusinessOrderDetailView.TotalConfirmVerificationMoney ||
+                                0);
+                            verificationMoneys.push(v.BusinessOrderDetailView.TotalVerificationMoney ||
+                                0);
+
+                        });
+                    myChart.setOption({
+                        xAxis: {
+                            data: months
+                        }
+                        ,
+                        series : [
+                            {
+                                name:'未核销',
+                                data: verificationMoneys
+                            },
+                            {
+                                name:'已核销',
+                                data: confirmVerificationMoneys
+                            }
+                        ]
+                    });
+                    console.log(data);
+                },
+                error: function () {
+                    //swal("操作失败", "系统错误", "error");
+                },
+                complete: function () {
+                    myChart.hideLoading();
+                },
+                beforeSend: function() {
+                    myChart.showLoading();
+                }
+            });
+        }
+    </script>
+}

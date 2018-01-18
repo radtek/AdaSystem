@@ -276,25 +276,17 @@ namespace Business.Controllers
             }
 
             var orderDetails = JsonConvert.DeserializeObject<List<BusinessOrderDetail>>(viewModel.OrderDetails);
-            //if (orderDetails.Count <= 0)
-            //{
-            //    ModelState.AddModelError("message", "请录入订单明细！");
-            //    return View(viewModel);
-            //}
+
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
             entity.ModifiedById = CurrentManager.Id;
             entity.ModifiedBy = CurrentManager.UserName;
             entity.ModifiedDate = DateTime.Now;
-            //entity.BusinessType = viewModel.BusinessType;
             entity.LinkManId = viewModel.LinkManId;
             entity.LinkManName = viewModel.LinkManName;
             entity.Transactor = viewModel.Transactor;
             entity.TransactorId = viewModel.TransactorId;
             entity.Tax = viewModel.Tax;
-            //entity.DiscountRate = viewModel.DiscountRate;
-            //entity.SettlementType = viewModel.SettlementType;
             entity.OrderDate = viewModel.OrderDate;
-            //entity.TotalDiscountMoney = viewModel.DiscountMoney;
             entity.Remark = viewModel.Remark;
             //找到已删除的
             var ids = orderDetails.Select(d => d.Id).ToList();
@@ -307,8 +299,6 @@ namespace Business.Controllers
                 }
             }
             //更新，增加
-            decimal? costMoney = 0;
-            decimal? sellMoney = 0;
             foreach (var businessOrderDetail in orderDetails)
             {
                 //新增
@@ -349,20 +339,11 @@ namespace Business.Controllers
                     detail.MediaTitle = businessOrderDetail.MediaTitle;
                     detail.PrePublishDate = businessOrderDetail.PrePublishDate;
                     detail.Remark = businessOrderDetail.Remark;
-                    //已下单的金额校验
-                    if (detail.Status == Consts.StateNormal)
-                    {
-                        costMoney += detail.CostMoney;
-                        sellMoney += detail.SellMoney;
-                    }
+
                 }
             }
 
-            //if (sellMoney <= costMoney && sellMoney > 0 && costMoney > 0)
-            //{
-            //    ModelState.AddModelError("message", "不能低于成本金额！");
-            //    return View(viewModel);
-            //}
+
             //删除
             foreach (var deleteId in deleteIds)
             {
@@ -375,11 +356,7 @@ namespace Business.Controllers
                 }
                 _businessOrderDetailRepository.Remove(temp);
             }
-            //entity.TotalTaxMoney = orderDetails.Sum(d => d.TaxMoney);
-            //entity.TotalMoney = orderDetails.Sum(d => d.Money);
-            //entity.TotalSellMoney = orderDetails.Sum(d => d.SellMoney);
-            //entity.VerificationMoney = entity.TotalMoney;
-            //entity.ConfirmVerificationMoney = 0;
+
             _businessOrderService.Update(entity);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Update", new { id = entity.Id });
@@ -402,8 +379,71 @@ namespace Business.Controllers
                 _businessOrderService.Remove(entity);
                 return Json(new { State = 1, Msg = "删除成功" });
             }
-
             return Json(new { State = 0, Msg = "此订单状态无法删除" });
+        }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult DeleteDetail(string id)
+        {
+            var entity = _businessOrderDetailRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (entity == null)
+            {
+                return Json(new { State = 1, Msg = "删除成功" });
+            }
+            var purchase = GetPurchaseOrderDetail(id);
+            if (purchase != null)
+            {
+                return Json(new { State = 0, Msg = "此订单已下单，无法删除" });
+            }
+            _businessOrderDetailService.Delete(entity);
+            return Json(new { State = 1, Msg = "删除成功" });
+        }
+        /// <summary>
+        /// 批量确认
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult Confirms()
+        {
+            var details = Request["rows"];
+            if (string.IsNullOrWhiteSpace(details))
+            {
+                return Json(new { State = 0, Msg = "请先选择要确认的订单." });
+            }
+            var orderDetails = JsonConvert.DeserializeObject<List<BusinessOrderDetail>>(details);
+            int i = 0;
+            int count = orderDetails.Count;
+            List<BusinessOrderDetail> list = new List<BusinessOrderDetail>();
+            foreach (var businessOrderDetail in orderDetails)
+            {
+                var entity = _businessOrderDetailRepository.LoadEntities(d => d.Id == businessOrderDetail.Id).FirstOrDefault();
+                if (entity == null)
+                    continue;
+                var purchase = GetPurchaseOrderDetail(entity.Id);
+                if (purchase.Status != Consts.PurchaseStatusSuccess)
+                    continue;
+                if (entity.Status == Consts.StateOK)
+                    continue;
+                if (!(entity.SellMoney > purchase.PurchaseMoney)) continue;
+                entity.Status = Consts.StateOK;//订单已完成
+                entity.AuditStatus = Consts.StateNormal;//审核通过
+                entity.SellMoney = businessOrderDetail.SellMoney;
+                entity.VerificationMoney = businessOrderDetail.SellMoney;
+                entity.Money = businessOrderDetail.Money;
+                list.Add(entity);
+                i++;
+            }
+            if (list.Count > 0)
+            {
+                _businessOrderDetailService.Update(list);
+            }
+            else
+            {
+                return Json(new { State = 0, Msg = "没有可以符合确认条件的订单." });
+            }
+            var temp = count - i;
+            return Json(temp > 0 ? new { State = 1, Msg = "确认成功，其中有" + temp + "笔订单需要提交申请确认！" } : new { State = 1, Msg = "确认成功" });
         }
         /// <summary>
         /// 审核
@@ -432,7 +472,7 @@ namespace Business.Controllers
             return RedirectToAction("Update", new { id });
         }
         /// <summary>
-        /// 确认订单
+        /// 确认订单（采购已完成，销售未完成）
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
@@ -441,7 +481,12 @@ namespace Business.Controllers
         public ActionResult Confirm(BusinessOrderDetailView viewModel)
         {
             var entity = _businessOrderDetailRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
+            if (entity == null) return RedirectToAction("Index");
             var purchase = GetPurchaseOrderDetail(entity.Id);
+            if (purchase.Status != Consts.PurchaseStatusSuccess)
+                return RedirectToAction("Update", new { id = entity.BusinessOrderId });
+            if (entity.Status == Consts.StateOK)
+                return RedirectToAction("Update", new { id = entity.BusinessOrderId });
             entity.SellMoney = viewModel.SellMoney;
             entity.VerificationMoney = viewModel.SellMoney;
             entity.Money = viewModel.Money;
@@ -457,8 +502,8 @@ namespace Business.Controllers
                 entity.AuditStatus = Consts.StateLock;//未审核
             }
             _businessOrderDetailService.Update(entity);
-
             return RedirectToAction("Update", new { id = entity.BusinessOrderId });
+
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
@@ -488,8 +533,16 @@ namespace Business.Controllers
                 isAdd = true;
             }
             var orderDetails = JsonConvert.DeserializeObject<List<BusinessOrderDetail>>(details);
+            //int count = orderDetails.Count;
+            int i = 0;
             foreach (var order in orderDetails)
             {
+                //校验是否重复转单
+                var isOrder = _purchaseOrderDetailRepository.LoadEntities(d => d.BusinessOrderDetailId == order.Id).FirstOrDefault();
+                if (isOrder != null)
+                {
+                    continue;
+                }
                 var temp = _businessOrderDetailRepository.LoadEntities(d => d.Id == order.Id).FirstOrDefault();
                 if (temp == null)
                 {
@@ -500,10 +553,12 @@ namespace Business.Controllers
                     order.VerificationMoney = order.SellMoney;
                     order.ConfirmVerificationMoney = 0;
                     entity.BusinessOrderDetails.Add(order);
+                    i++;
                 }
                 else
                 {
-                    if (temp.Status == Consts.StateNormal)
+                    //已下单或已完成的，不用转
+                    if (temp.Status == Consts.StateNormal || temp.Status == Consts.StateOK)
                     {
                         continue;
                     }
@@ -518,12 +573,7 @@ namespace Business.Controllers
                     temp.ConfirmVerificationMoney = 0;
                     temp.Status = Consts.StateNormal;//已转采购
                     temp.AuditStatus = Consts.StateLock;
-                }
-                //校验是否重复转单
-                var isOrder = _purchaseOrderDetailRepository.LoadEntities(d => d.BusinessOrderDetailId == order.Id).FirstOrDefault();
-                if (isOrder != null)
-                {
-                    continue;
+                    i++;
                 }
                 PurchaseOrderDetail purchaseOrderDetail = new PurchaseOrderDetail();
                 purchaseOrderDetail.Id = IdBuilder.CreateIdNum();
@@ -553,6 +603,11 @@ namespace Business.Controllers
                 purchaseOrderDetail.DiscountRate = 100;
                 purchaseOrder.PurchaseOrderDetails.Add(purchaseOrderDetail);
             }
+
+            if (i == 0)
+            {
+                return Json(new { State = 0, Msg = "没有符合转单条件的订单" });
+            }
             if (isAdd)
             {
                 _purchaseOrderService.Add(purchaseOrder);
@@ -562,7 +617,7 @@ namespace Business.Controllers
                 _purchaseOrderService.Update(purchaseOrder);
             }
 
-            return Json(new { State = 1, Msg = "转换成功" });
+            return Json(new { State = 1, Msg = "成功转换" + i + "笔订单" });
         }
 
     }

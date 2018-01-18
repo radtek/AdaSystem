@@ -63,6 +63,7 @@ namespace Resource.Controllers
             entity.TypeName = viewModel.TypeName;
             entity.CallIndex = viewModel.CallIndex;
             entity.Taxis = viewModel.Taxis;
+            entity.Image = viewModel.Image;
             _mediaTypeService.Add(entity,viewModel.AdPositions);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
@@ -75,6 +76,7 @@ namespace Resource.Controllers
             entity.CallIndex = item.CallIndex;
             entity.TypeName = item.TypeName;
             entity.Taxis = item.Taxis;
+            entity.Image = item.Image;
             entity.AdPositions = item.AdPositions.Select(d => d.Name).ToList();
             return View(entity);
         }
@@ -94,6 +96,7 @@ namespace Resource.Controllers
             entity.TypeName = viewModel.TypeName;
             entity.CallIndex = viewModel.CallIndex;
             entity.Taxis = viewModel.Taxis;
+            entity.Image = viewModel.Image;
             _mediaTypeService.Update(entity,viewModel.AdPositions);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");

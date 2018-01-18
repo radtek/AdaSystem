@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using Ada.Core.ViewModel.Business;
 
-namespace Ada.Core.ViewModel.Business
+namespace Ada.Core.ViewModel.Statistics
 {
    public class BusinessTotal
     {
@@ -40,7 +36,26 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "明日预出刊")]
         public int? Tomorrow { get; set; }
-
+        /// <summary>
+        /// 销售金额
+        /// </summary>
+        [Display(Name = "销售金额")]
+        public decimal? SellMoney { get; set; }
+        /// <summary>
+        /// 未核销金额
+        /// </summary>
+        [Display(Name = "未核销金额")]
+        public decimal? VerificationMoney { get; set; }
+        /// <summary>
+        /// 已核销金额
+        /// </summary>
+        [Display(Name = "已核销金额")]
+        public decimal? ConfirmVerificationMoney { get; set; }
+        /// <summary>
+        /// 销售订单
+        /// </summary>
+        [Display(Name = "销售订单")]
+        public int? OrderCount { get; set; }
         /// <summary>
         /// 排序
         /// </summary>

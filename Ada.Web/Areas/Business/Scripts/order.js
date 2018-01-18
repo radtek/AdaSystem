@@ -101,7 +101,7 @@ function initData() {
             {
                 checkbox: true,
                 formatter: function (value, row, index) {
-                    if (row.Status === 1) {
+                    if (row.Status === 2) {
                         return {
                             disabled: true
                         };
@@ -481,22 +481,7 @@ window.operateEvents = {
     }
 };
 
-function deleteRow() {
-    var rows = $table.bootstrapTable("getSelections");
-    if (rows.length > 0) {
-        var arr = [];
-        $.each(rows,
-            function (k, v) {
-                arr.push(v.Id);
-            });
-        $table.bootstrapTable('remove', {
-            field: 'Id',
-            values: arr
-        });
-    } else {
-        swal("操作提醒", "请选择要删除的数据", "warning");
-    }
-}
+
 function operateFormatter(value, row, index) {
     return [
         '<a class="remove" href="javascript:void(0)" title="移除">',

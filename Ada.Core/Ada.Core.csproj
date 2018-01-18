@@ -74,6 +74,7 @@
     <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -171,7 +172,7 @@
     <Compile Include="ViewModel\Business\BusinessOrderView.cs" />
     <Compile Include="ViewModel\Business\BusinessPayeeView.cs" />
     <Compile Include="ViewModel\Business\BusinessPaymentView.cs" />
-    <Compile Include="ViewModel\Business\BusinessTotal.cs" />
+    <Compile Include="ViewModel\Statistics\BusinessTotal.cs" />
     <Compile Include="ViewModel\Business\BusinessWriteOffDetailView.cs" />
     <Compile Include="ViewModel\Business\BusinessWriteOffView.cs" />
     <Compile Include="ViewModel\Customer\FollowUpView.cs" />
@@ -196,6 +197,7 @@
     <Compile Include="ViewModel\Resource\MediaView.cs" />
     <Compile Include="ViewModel\Setting\Site.cs" />
     <Compile Include="ViewModel\Setting\WeiGuang.cs" />
+    <Compile Include="ViewModel\Statistics\WeiGuangTotal.cs" />
     <Compile Include="ViewModel\TreeView.cs" />
     <Compile Include="ViewModel\WorkLog\WorkLogView.cs" />
   </ItemGroup>

@@ -147,6 +147,13 @@ namespace Ada.Framework.Filter
             return _permissionService.AuthorizeData(CurrentManager.Id, CurrentManager.RoleId);
         }
         /// <summary>
+        /// 获取数据范围
+        /// </summary>
+        public bool IsPremission(Action action)
+        {
+            return _permissionService.Authorize(action,CurrentManager.Id);
+        }
+        /// <summary>
         /// 导出数据
         /// </summary>
         /// <param name="jsonStr"></param>

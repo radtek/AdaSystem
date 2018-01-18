@@ -1,0 +1,154 @@
+﻿@using System.Web.Optimization
+@using Ada.Core.Domain
+@model Ada.Core.ViewModel.Statistics.WeiGuangTotal
+@{
+    ViewBag.Title = "工作台";
+    var orderBg = Model.OrderStatus ? "navy-bg" : "red-bg";
+    var moneyBg = Model.MoneyStatus ? "navy-bg" : "red-bg";
+}
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="widget style1 navy-bg">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <div style="margin-top: 25px;">
+                            <i class="fa fa-link fa-5x"></i>
+                        </div>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <div class="row">
+                            <div class="col-xs-12 mouse-pointer" onclick="location.href = '@Url.Action("Index","Business")';">
+                                <h2 class="font-bold">销售工作台</h2>
+                                <span> 点击进入 </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 mouse-pointer" style="cursor: pointer;" onclick="location.href = '@Url.Action("Index","Purchase")';">
+
+                                <h2 class="font-bold">媒介工作台</h2>
+                                <span> 点击进入 </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="widget style1 @orderBg">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <div style="margin-top: 25px;">
+                            <i class="fa fa-database fa-5x"></i>
+                        </div>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h2 class="font-bold">@Model.BusinessCount</h2>
+                                <span> 销售订单 </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+
+                                <h2 class="font-bold">@Model.PurchaseCount</h2>
+                                <span> 采购订单 </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="widget style1 @moneyBg">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <div style="margin-top: 25px;">
+                            <i class="fa fa-jpy fa-5x"></i>
+                        </div>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h2 class="font-bold">
+                                    @Model.BusinessSellMoney
+                                </h2>
+                                <span> 销售金额 </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+
+                                <h2 class="font-bold">@Model.BusinessVerificationMoney</h2>
+                                <span> 未核销金额 </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="widget style1 navy-bg">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <div style="margin-top: 25px;">
+                            <i class="fa fa-cc-visa fa-5x"></i>
+                        </div>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h2 class="font-bold">
+                                    @Model.Income
+                                </h2>
+                                <span> 收入金额 </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+
+                                <h2 class="font-bold">@Model.Expend</h2>
+                                <span> 支出金额 </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model.MediaTypes)
+        {
+            <div class="col-lg-3">
+                <div class="widget style1 yellow-bg">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <i class="fa @item.Image fa-5x"></i>
+                        </div>
+                        <div class="col-xs-8 text-right">
+                            <span> @item.TypeName </span>
+                            <h2 class="font-bold">@item.Taxis</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+
+
+</div>
+
+
+@section Scripts{
+
+    <script>
+        $(function() {
+
+        });
+
+
+    </script>
+}
