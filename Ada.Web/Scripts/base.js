@@ -443,3 +443,10 @@ function checkOn(table, obj) {
             obj.rows = r[funcs](obj.rows, rowarry);
         });
 }
+function goBackOrClose() {
+    if (window.history.length > 2) {
+        window.history.go(-1);
+    } else {
+        window.opener = null; window.close();
+    }
+}
