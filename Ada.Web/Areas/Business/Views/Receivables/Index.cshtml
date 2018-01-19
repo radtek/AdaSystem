@@ -110,6 +110,11 @@
                         title: '@Html.DisplayNameFor(d=>d.BillNum)',
                         align: "center", valign: "middle"
                     },
+                    {
+                        field: 'SettleAccountName',
+                        title: '收款账户',
+                        align: "center", valign: "middle"
+                    },
                     @*{
                         field: 'AccountBank',
                         title: '@Html.DisplayNameFor(d=>d.AccountBank)',
@@ -117,7 +122,7 @@
                     },*@
                     {
                         field: 'AccountName',
-                        title: '@Html.DisplayNameFor(d=>d.AccountName)',
+                        title: '付款人名称',
                         align: "center", valign: "middle"
                     },
                     @*{
@@ -226,7 +231,7 @@
                     function () {
                         $('#modalView .modal').on('shown.bs.modal', function () {
                             initSelect2("LinkManId", linkmanSelect);
-                            
+
                         }).on('hidden.bs.modal', function () {
 
                         });

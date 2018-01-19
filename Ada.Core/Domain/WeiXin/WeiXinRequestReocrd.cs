@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Ada.Core.Domain.WeiXin
 {
+    /// <summary>
+    /// 请求回复记录
+    /// </summary>
    public class WeiXinRequestReocrd:BaseEntity
     {
         /// <summary>

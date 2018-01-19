@@ -214,9 +214,9 @@ namespace Ada.Core.ViewModel.Purchase
         [Display(Name = "是否请款")]
         public bool? IsPayment { get; set; }
         /// <summary>
-        /// 销售备注
+        /// 销售项目
         /// </summary>
-        [Display(Name = "销售备注")]
+        [Display(Name = "销售项目")]
         public string BusinessRemark { get; set; }
         /// <summary>
         /// 出刊日期

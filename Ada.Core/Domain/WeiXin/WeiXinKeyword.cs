@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Ada.Core.Domain.WeiXin
 {
+    /// <summary>
+    /// 微信关键字管理
+    /// </summary>
    public class WeiXinKeyword:BaseEntity
     {
         public WeiXinKeyword()

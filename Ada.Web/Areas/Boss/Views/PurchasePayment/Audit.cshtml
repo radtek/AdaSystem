@@ -160,6 +160,9 @@
                                                         <th>
                                                             采购金额
                                                         </th>
+                                                        <th>
+                                                            经办媒介
+                                                        </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -173,6 +176,7 @@
                                                         <td>@item.PurchaseOrderDetail.Tax</td>
                                                         <td>@item.PurchaseOrderDetail.TaxMoney</td>
                                                         <td>@item.PurchaseOrderDetail.Money</td>
+                                                        <td>@item.PurchaseOrderDetail.Transactor</td>
                                                     </tr>
                                                     }
                                                     <tr>
@@ -183,6 +187,7 @@
                                                         <td></td>
                                                         <td>@details.Sum(d => d.PurchaseOrderDetail.TaxMoney)</td>
                                                         <td>@details.Sum(d => d.PurchaseOrderDetail.Money)</td>
+                                                        <td></td>
                                                     </tr>
                                                 </tbody>
                                             </table>

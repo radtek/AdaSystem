@@ -25,10 +25,10 @@ namespace Ada.Core.Domain.WeiXin
         [Display(Name = "原始ID")]
         public string SourceId { get; set; }
         /// <summary>
-        /// 账号类型
+        /// 账号类型 0 订阅号 1 服务号 2小程序 3企业号
         /// </summary>
         [Display(Name = "账号类型")]
-        public string AccountType { get; set; }
+        public short? AccountType { get; set; }
 
         /// <summary>
         /// 开发ID

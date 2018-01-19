@@ -78,32 +78,109 @@
                 <option value="true">已完成</option>
             </select>
             @*<div class="input-group">
-                
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-primary" onclick="">
-                        <i class='fa fa-search'></i>
-                    </button>
-                </span>
-            </div>*@
-            <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")"  target='_blank'>
-                <i class="fa fa-plus"></i> 新增
+
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-primary" onclick="">
+                    <i class='fa fa-search'></i>
+                </button>
+            </span>
+        </div>*@
+            <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")" target='_blank'>
+                <i class="fa fa-plus"></i> 新增订单
             </a>
+            <button type="button" class="btn btn-primary btn-outline" data-toggle="modal" data-target="#uploadModal">
+                <i class="fa fa-plus"></i> 新增网稿
+            </button>
             <button id="btn_delete" type="button" class="btn btn-primary btn-outline">
-                <i class="fa fa-trash-o"></i> 删除
+                <i class="fa fa-trash-o"></i> 删除订单
             </button>
         </div>
     </div>
 </div>
-
+<div class="modal inmodal" id="uploadModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">新增网稿订单</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>项目摘要</label>
+                    <input type="text" class="form-control" id="orderName"/>
+                </div>
+                <div class="form-group">
+                    <label>客户名称</label>
+                    <select class="form-control" id="LinkManId">
+                    </select>
+                    <input type="hidden" id="linkname" value=""/>
+                </div>
+                <div class="form-group">
+                    <label>导入文件</label>
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput">
+                            <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                            <span class="fileinput-filename"></span>
+                        </div>
+                        <span class="input-group-addon btn btn-default btn-file">
+                            <span class="fileinput-new">选择</span>
+                            <span class="fileinput-exists">更换</span>
+                            <input type="file" name="upfile" id="upfile"/>
+                        </span>
+                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">移除</a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="ladda-button btn btn-primary" onclick="upLoadFile();" data-style="zoom-in">导入</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/jasnyBootstrapStyles")
+    @Styles.Render("~/plugins/laddaStyles")
+    @Styles.Render("~/plugins/select2Styles")
+    <style>
+        .select2-drop {
+            z-index: 10050 !important;
+        }
+
+        .select2-search-choice-close {
+            margin-top: 0 !important;
+            right: 2px !important;
+            min-height: 10px;
+        }
+
+        .select2-search-choice-close:before {
+            color: black !important;
+        }
+        /*防止select2不会自动失去焦点*/
+        .select2-container {
+            z-index: 16000 !important;
+        }
+
+        .select2-drop-mask {
+            z-index: 15990 !important;
+        }
+
+        .select2-drop-active {
+            z-index: 15995 !important;
+        }
+    </style>
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/peity")
+    @Scripts.Render("~/plugins/jasnyBootstrap")
+    @Scripts.Render("~/plugins/ladda")
+    @Scripts.Render("~/plugins/select2")
+    <script src="@Url.Content("~/Areas/Business/Scripts/linkman.js")"></script>
     <script type="text/javascript">
-
+        
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
@@ -113,6 +190,17 @@
             $("#OrderStatus").change(function() {
                 $('#table').bootstrapTable('refresh');
             });
+            $('#uploadModal').on('shown.bs.modal',
+                function () {
+                    initSelect("LinkManId", linkmanSelect, $("#modalView .modal"));
+                }).on('hidden.bs.modal',
+                function () {
+                    $('.fileinput').fileinput("clear");
+                    $("#LinkManId").val("");
+                    $("#linkname").val("");
+                    $("#orderName").val("");
+
+                });
         });
         var TableInit = function() {
             var obj = new Object();
@@ -187,7 +275,7 @@
                         formatter: formatter.pie
                     },
 
-                   
+
                     {
                         field: 'TotalSellMoney',
                         title: '@Html.DisplayNameFor(d=>d.TotalSellMoney)',
@@ -243,22 +331,6 @@
         var ButtonInit = function () {
             var oInit = new Object();
             oInit.Init = function () {
-
-                @*//编辑
-                $("#btn_edit").click(function () {
-                    var arrselections = $("#table").bootstrapTable('getSelections');
-                    if (arrselections.length > 1) {
-                        swal("操作提醒", "只能选择一行进行编辑", "warning");
-                        return;
-                    }
-                    if (arrselections.length <= 0) {
-                        swal("操作提醒", "请选择有效数据", "warning");
-                        return;
-                    }
-                    window.location.href = "@Url.Action("Update")?id="+arrselections[0].Id;
-
-                });*@
-
                 $("#btn_delete").click(function () {
                     var arrselections = $("#table").bootstrapTable('getSelections');
                     if (arrselections.length > 1) {
@@ -330,7 +402,81 @@
                 });
 
         }
-
+        function upLoadFile() {
+            //校验
+            var orderName = $("#orderName").val(), linkId = $("#LinkManId").val(), linkname = $("#linkname").val();
+            if (!orderName && !linkId) {
+                swal("操作失败", "请输入必要的订单信息", "warning");
+                return;
+            }
+            var fileObj = document.getElementById("upfile").files[0]; // js 获取文件对象
+            if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
+                swal("操作失败", "请选择文件", "warning");
+                return;
+            }
+            if (!checkFileExt(fileObj.name)) {
+                swal("操作失败", "只支持xlsx后缀文件", "warning");
+                return;
+            }
+            var formFile = new FormData();
+            formFile.append("Remark", orderName);
+            formFile.append("LinkManId", linkId);
+            formFile.append("LinkManName", linkname);
+            formFile.append("upfile", fileObj); //加入文件对象
+            var data = formFile;
+            var subBtn = $('.ladda-button').ladda();
+            $.ajax({
+                url: "@Url.Action("ImportOrder")",
+                data: data,
+                type: "Post",
+                dataType: "json",
+                headers: {
+                    '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                },
+                cache: false, //上传文件无需缓存
+                processData: false, //用于对data参数进行序列化处理 这里必须false
+                contentType: false, //必须
+                success: function(result) {
+                    if (result.State == 1) {
+                        swal({
+                            title: "操作成功",
+                            text: result.Msg,
+                            type: "success"
+                        },
+                            function() {
+                                $("#table").bootstrapTable('refresh');
+                                $('#uploadModal').modal('hide'); 
+                            });
+                    } else {
+                        swal("操作失败", result.Msg, "error");
+                    }
+                },
+                error: function() {
+                    swal("操作失败", "系统错误", "error");
+                },
+                beforeSend: function() {
+                    subBtn.ladda('start');
+                },
+                complete: function() {
+                    subBtn.ladda('stop');
+                }
+            });
+        }
+        function checkFileExt(filename) {
+            var flag = false; //状态
+            var arr = ["xlsx"];
+            //取出上传文件的扩展名
+            var index = filename.lastIndexOf(".");
+            var ext = filename.substr(index + 1);
+            //循环比较
+            for (var i = 0; i < arr.length; i++) {
+                if (ext == arr[i]) {
+                    flag = true; //一旦找到合适的，立即退出循环
+                    break;
+                }
+            }
+            return flag;
+        }
     </script>
 }
 

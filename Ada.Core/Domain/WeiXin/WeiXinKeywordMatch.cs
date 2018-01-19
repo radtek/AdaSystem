@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Ada.Core.Domain.WeiXin
 {
+    /// <summary>
+    /// 关键字回复内容
+    /// </summary>
    public class WeiXinKeywordMatch:BaseEntity
     {
         /// <summary>

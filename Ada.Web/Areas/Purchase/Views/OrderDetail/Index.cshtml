@@ -52,12 +52,17 @@
                     <div class="col-sm-3">
                         <div class="form-group">
                             @Html.LabelFor(d => d.PublishDateStartEnd, Html.DisplayNameFor(d => d.PublishDateStartEnd) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.PublishDateStartEnd, new { @class = "form-control input-sm",@readonly="" })
+                            @Html.TextBoxFor(d => d.PublishDateStartEnd, new { @class = "form-control input-sm", @readonly = "" })
                             @Html.HiddenFor(d => d.PublishDateStart)
                             @Html.HiddenFor(d => d.PublishDateEnd)
                         </div>
                     </div>
-                   
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.BusinessRemark, Html.DisplayNameFor(d => d.BusinessRemark) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.BusinessRemark, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
                     <div class="col-sm-3">
                         <div class="form-group">
                             @Html.LabelFor(d => d.BusinessBy, Html.DisplayNameFor(d => d.BusinessBy) + "：", new { @class = "control-label" })
@@ -212,14 +217,14 @@
                         formatter: formatter.purchaseStatus
                     },
                     {
-                        field: 'PurchaseOrderNum',
-                        title: '@Html.DisplayNameFor(d=>d.PurchaseOrderNum)',
+                        field: 'BusinessRemark',
+                        title: '@Html.DisplayNameFor(d=>d.BusinessRemark)',
                         align: "center", valign: "middle",
                     },
                     {
                         field: 'LinkManName',
                         title: '@Html.DisplayNameFor(d=>d.LinkManName)',
-                        align: "center", valign: "middle",
+                        align: "left", valign: "middle",
                         formatter: formatter.linkman
                     },
                     {

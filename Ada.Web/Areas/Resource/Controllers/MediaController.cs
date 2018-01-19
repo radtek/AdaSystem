@@ -172,11 +172,11 @@ namespace Resource.Controllers
 
         }
         /// <summary>
-        /// 导入
+        /// 导入更新价格
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Import(string aou="update")
+        public ActionResult Import()
         {
             UEditorModel uploadConfig = new UEditorModel()
             {
@@ -208,22 +208,12 @@ namespace Resource.Controllers
             {
                 return Json(new { State = 0, Msg = "此文件没有导入数据，请填充数据再进行导入" });
             }
-
-            if (aou=="add")
-            {
-                AddMedias(sheet);
-            }
-
-            if (aou=="update")
-            {
-                UpdatePrice(sheet);
-            }
-            
+            UpdateMedia(sheet);
             _dbContext.SaveChanges();
             return Json(new { State = 1, Msg = "导入成功" });
         }
 
-        private void UpdatePrice(ISheet sheet)
+        private void UpdateMedia(ISheet sheet)
         {
             //拿到广告位的名称
             IRow headRow = sheet.GetRow(0);
@@ -258,99 +248,6 @@ namespace Resource.Controllers
                     mediaPrice.Media.FansNum = fansNum;
                 }
             }
-        }
-
-        private void AddMedias(ISheet sheet)
-        {
-            List<Media> medias = new List<Media>();
-            for (int i = 1; i <= sheet.LastRowNum; i++)
-            {
-                IRow row = sheet.GetRow(i);
-                var id = row.GetCell(0)?.ToString();
-                if (string.IsNullOrWhiteSpace(id))
-                {
-                    continue;
-                }
-                var mediaId = row.GetCell(6)?.ToString();
-                if (string.IsNullOrWhiteSpace(mediaId))
-                {
-                    continue;
-                }
-                //var linkman = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-                //if (linkman == null)
-                //{
-                //    continue;
-                //}
-                Media media = new Media();
-                media.Id = IdBuilder.CreateIdNum();
-                media.MediaTypeId = "X1711091747220001";
-                media.LinkManId = id;
-                media.MediaName = row.GetCell(5)?.ToString();
-                media.MediaID = mediaId;
-                int.TryParse(row.GetCell(7)?.ToString(), out var fans);
-                media.FansNum = fans * 10000;
-                media.Area = row.GetCell(8)?.ToString();
-                
-
-                var mediaType = _mediaTypeRepository.LoadEntities(d => d.Id == media.MediaTypeId).FirstOrDefault();
-                if (IsExist(new MediaView(){MediaTypeIndex = mediaType.CallIndex,MediaID = mediaId,MediaTypeId = mediaType.Id}, out string msg))
-                {
-                    continue;
-                }
-                var tags = row.GetCell(9)?.ToString().Trim().Replace("，", ",").Split(',');
-                if (tags != null)
-                {
-                    foreach (var tag in tags)
-                    {
-                        var mediaTag = _mediaTagRepository.LoadEntities(d => d.IsDelete == false && d.TagName == tag)
-                            .FirstOrDefault();
-                        if (mediaTag != null)
-                        {
-                            media.MediaTags.Add(mediaTag);
-                        }
-                    }
-                }
-                foreach (var mediaTypeAdPosition in mediaType.AdPositions)
-                {
-                    MediaPrice price = new MediaPrice();
-                    price.Id = IdBuilder.CreateIdNum();
-                    price.AdPositionName = mediaTypeAdPosition.Name;
-                    price.AdPositionId = mediaTypeAdPosition.Id;
-                    price.PriceDate = DateTime.Now;
-                    if (mediaTypeAdPosition.Name=="头条")
-                    {
-                        decimal.TryParse(row.GetCell(1)?.ToString(), out var pricett);
-                        price.PurchasePrice= pricett;
-                    }
-                    if (mediaTypeAdPosition.Name == "头条（原创）")
-                    {
-                        decimal.TryParse(row.GetCell(2)?.ToString(), out var pricett);
-                        price.PurchasePrice = pricett;
-                    }
-                    if (mediaTypeAdPosition.Name == "二条")
-                    {
-                        decimal.TryParse(row.GetCell(3)?.ToString(), out var pricett);
-                        price.PurchasePrice = pricett;
-                    }
-                    if (mediaTypeAdPosition.Name == "二条（原创）")
-                    {
-                        decimal.TryParse(row.GetCell(4)?.ToString(), out var pricett);
-                        price.PurchasePrice = pricett;
-                    }
-                    price.InvalidDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
-                    media.MediaPrices.Add(price);
-                }
-                media.MediaLink = row.GetCell(10)?.ToString();
-                media.Content = row.GetCell(11)?.ToString();
-                media.Remark = row.GetCell(12)?.ToString();
-                media.Transactor = "刘玲";
-                media.TransactorId = "X1712181338330003";
-                media.Status = Consts.StateNormal;
-                medias.Add(media);
-            }
-            //去重
-            medias=medias.Distinct(new FastPropertyComparer<Media>("MediaID")).ToList();
-            _repository.Add(medias);
         }
         public ActionResult GetMediaPrices(MediaView viewModel)
         {

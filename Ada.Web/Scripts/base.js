@@ -367,18 +367,22 @@ function initiChecks() {
     });
 }
 //初始化select2
-function initSelect(id, opt) {
+function initSelect(id, opt, $obj) {
+    var ajaxOption = {
+        url: opt.url,
+        dataType: "json",
+        delay: 250,
+        data: opt.paramsData,
+        processResults: opt.processResults,
+        cache: true
+    };
+    if ($obj) {
+        ajaxOption.dropdownParent = $obj;
+    }
     $("#" + id).select2({
         placeholder: "请输入关键字",
         language: "zh-CN",
-        ajax: {
-            url: opt.url,
-            dataType: 'json',
-            delay: 250,
-            data: opt.paramsData,
-            processResults: opt.processResults,
-            cache: true
-        },
+        ajax: ajaxOption,
         escapeMarkup: function (markup) { return markup; }, // 字符转义处理
         minimumInputLength: 1,
         templateResult: opt.formatRepo, //返回结果回调function formatRepo(repo){return repo.text},这样就可以将返回结果的的text显示到下拉框里，当然你可以return repo.text+"1";等

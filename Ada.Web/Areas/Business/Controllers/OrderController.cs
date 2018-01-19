@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -11,10 +12,13 @@ using Ada.Core.Domain.Purchase;
 using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Business;
 using Ada.Framework.Filter;
+using Ada.Framework.UploadFile;
 using Ada.Services.Business;
 using Ada.Services.Purchase;
 using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 
 namespace Business.Controllers
 {
@@ -618,6 +622,155 @@ namespace Business.Controllers
             }
 
             return Json(new { State = 1, Msg = "成功转换" + i + "笔订单" });
+        }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult ImportOrder(BusinessOrderView viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { State = 0, Msg = "数据校验失败，请核对输入的信息是否准确" });
+            }
+            UEditorModel uploadConfig = new UEditorModel()
+            {
+                AllowExtensions = UEditorConfig.GetStringList("fileAllowFiles"),
+                PathFormat = UEditorConfig.GetString("filePathFormat"),
+                SizeLimit = UEditorConfig.GetInt("fileMaxSize"),
+                UploadFieldName = UEditorConfig.GetString("fileFieldName")
+            };
+            var file = Request.Files[uploadConfig.UploadFieldName];
+            if (file == null)
+            {
+                return Json(new { State = 0, Msg = "请选择要导入的文件" });
+            }
+            var uploadFileName = file.FileName;
+            var fileExtension = Path.GetExtension(uploadFileName).ToLower();
+            if (!uploadConfig.AllowExtensions.Select(x => x.ToLower()).Contains(fileExtension))
+            {
+                return Json(new { State = 0, Msg = "文件类型不匹配" });
+            }
+            if (!(file.ContentLength < uploadConfig.SizeLimit))
+            {
+                return Json(new { State = 0, Msg = "上传的文件最大只能为：" + uploadConfig.SizeLimit + "B" });
+            }
+            //创建工作薄
+            IWorkbook wk = new XSSFWorkbook(file.InputStream);
+            //1.获取第一个工作表
+            ISheet sheet = wk.GetSheetAt(0);
+            if (sheet.LastRowNum <= 1)
+            {
+                return Json(new { State = 0, Msg = "此文件没有导入数据，请填充数据再进行导入" });
+            }
+            //销售订单
+            BusinessOrder entity = new BusinessOrder();
+            entity.Id = IdBuilder.CreateIdNum();
+            entity.OrderNum = IdBuilder.CreateOrderNum("XD");
+            entity.Status = Consts.StateNormal;//已下单
+            entity.AuditStatus = Consts.StateNormal;//已审核
+            entity.AddedBy = CurrentManager.UserName;
+            entity.AddedById = CurrentManager.Id;
+            entity.AddedDate = DateTime.Now;
+            entity.Remark = viewModel.Remark;
+            entity.LinkManId = viewModel.LinkManId;
+            entity.LinkManName = viewModel.LinkManName;
+            entity.Transactor = CurrentManager.UserName;
+            entity.TransactorId = CurrentManager.Id;
+            entity.Tax = 0;
+            entity.OrderDate = DateTime.Now;
+            //媒介订单
+            PurchaseOrder purchase = new PurchaseOrder();
+            purchase.Id = IdBuilder.CreateIdNum();
+            purchase.BusinessOrderId = entity.Id;
+            purchase.BusinessBy = entity.Transactor;
+            purchase.BusinessById = entity.TransactorId;
+            purchase.OrderDate = DateTime.Now;
+            purchase.TotalMoney = 0;
+            purchase.OrderNum = IdBuilder.CreateOrderNum("CD");
+            purchase.Status = Consts.StateNormal;
+            var count = 0;
+            List<string> losts = new List<string>();
+            //处理订单明细
+            for (int i = 1; i <= sheet.LastRowNum; i++)
+            {
+                IRow row = sheet.GetRow(i);
+
+                //根据资源找价格
+                var mediaName = row.GetCell(0)?.ToString();
+                var client = row.GetCell(1)?.ToString();
+                var channal = row.GetCell(2)?.ToString();
+                var adpositon = row.GetCell(5)?.ToString();
+                var mediaPrice = _mediaPriceRepository.LoadEntities(d =>
+                     d.Media.MediaName.Equals(mediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
+                     d.Media.Client.Equals(client.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
+                     d.Media.Channel.Equals(channal.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
+                     d.Media.IsDelete == false && d.AdPositionName == adpositon && d.IsDelete == false).FirstOrDefault();
+                if (mediaPrice == null)
+                {
+                    losts.Add(mediaName + " - " + client + " - " + channal);
+                    continue;
+                }
+                BusinessOrderDetail detail = new BusinessOrderDetail();
+                detail.Id = IdBuilder.CreateIdNum();
+                detail.Status = Consts.StateNormal;//已转单
+                detail.AdPositionName = adpositon;
+                decimal.TryParse(row.GetCell(3)?.ToString(), out var money);
+                detail.Money = money;
+                detail.SellMoney = money;
+                detail.Tax = 0;
+                detail.TaxMoney = 0;
+                detail.CostMoney = mediaPrice.PurchasePrice;
+                DateTime.TryParse(row.GetCell(8)?.ToString(), out var date);
+                detail.PrePublishDate = date;
+                detail.MediaTitle = row.GetCell(6)?.ToString();
+                detail.MediaTypeName = mediaPrice.Media.MediaType.TypeName;
+                detail.MediaName = mediaName + " - " + client + " - " + channal;
+                detail.MediaPriceId = mediaPrice.Id;
+                detail.Remark = viewModel.Remark;
+                detail.MediaByPurchase = mediaPrice.Media.Transactor;
+                detail.VerificationStatus = Consts.StateLock;//待核销
+                detail.VerificationMoney = detail.SellMoney;
+                detail.ConfirmVerificationMoney = 0;
+                detail.AuditStatus = Consts.StateLock;
+                entity.BusinessOrderDetails.Add(detail);
+                //媒介明细
+                PurchaseOrderDetail purchaseOrderDetail = new PurchaseOrderDetail();
+                purchaseOrderDetail.Id = IdBuilder.CreateIdNum();
+                purchaseOrderDetail.BusinessOrderDetailId = detail.Id;
+                purchaseOrderDetail.CostMoney = detail.CostMoney;
+                purchaseOrderDetail.VerificationStatus = Consts.StateLock;
+                purchaseOrderDetail.AdPositionName = detail.AdPositionName;
+                purchaseOrderDetail.MediaTitle = detail.MediaTitle;
+                purchaseOrderDetail.MediaName = detail.MediaName;
+                purchaseOrderDetail.MediaTypeName = detail.MediaTypeName;
+                purchaseOrderDetail.MediaPriceId = detail.MediaPriceId;
+                purchaseOrderDetail.AuditStatus = Consts.StateNormal;//已审核
+                purchaseOrderDetail.Status = Consts.PurchaseStatusSuccess;//已完成
+                purchaseOrderDetail.Transactor = mediaPrice.Media.Transactor;
+                purchaseOrderDetail.TransactorId = mediaPrice.Media.TransactorId;
+                purchaseOrderDetail.LinkMan = mediaPrice.Media.LinkMan;
+                purchaseOrderDetail.LinkManName = mediaPrice.Media.LinkMan.Name;
+                purchaseOrderDetail.Tax = 0;
+                purchaseOrderDetail.TaxMoney = 0;
+                decimal.TryParse(row.GetCell(4)?.ToString(), out var pmoney);
+                purchaseOrderDetail.Money = pmoney;
+                purchaseOrderDetail.ConfirmVerificationMoney = 0;
+                purchaseOrderDetail.VerificationMoney = pmoney;
+                purchaseOrderDetail.DiscountMoney = 0;
+                purchaseOrderDetail.PurchaseMoney = pmoney;
+                purchaseOrderDetail.DiscountRate = 100;
+                purchaseOrderDetail.PublishDate = detail.PrePublishDate;
+                purchaseOrderDetail.PublishLink = row.GetCell(7)?.ToString();
+                purchase.PurchaseOrderDetails.Add(purchaseOrderDetail);
+                count++;
+            }
+            _purchaseOrderRepository.Add(purchase);
+            _businessOrderService.Add(entity);
+            var lostStr = string.Empty;
+            if (losts.Count > 0)
+            {
+                lostStr = "其中以下资源不存在，部分订单导入失败：【" + string.Join("，", losts) + "】";
+            }
+            return Json(new { State = 1, Msg = "成功导入" + count + "篇网稿订单。" + lostStr });
         }
 
     }

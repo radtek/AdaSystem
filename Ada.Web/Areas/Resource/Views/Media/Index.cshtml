@@ -401,8 +401,8 @@
             });
         });
 
-        function upLoadFile(action) {
-            action = action || "update";
+        function upLoadFile() {
+            
             var fileObj = document.getElementById("upfile").files[0]; // js 获取文件对象
             if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
                 swal("操作失败", "请选择文件", "warning");
@@ -417,7 +417,7 @@
             var data = formFile;
             var subBtn = $('.ladda-button').ladda();
             $.ajax({
-                url: "@Url.Action("Import")?aou="+action,
+                url: "@Url.Action("Import")",
                 data: data,
                 type: "Post",
                 dataType: "json",

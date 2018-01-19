@@ -15,15 +15,20 @@ namespace Ada.Services.Purchase
     {
         private readonly IDbContext _dbContext;
         private readonly IRepository<PurchaseOrderDetail> _repository;
+        private readonly IRepository<BusinessOrderDetail> _businessRepository;
         public PurchaseOrderDetailService(IDbContext dbContext,
-            IRepository<PurchaseOrderDetail> repository)
+            IRepository<PurchaseOrderDetail> repository,
+            IRepository<BusinessOrderDetail> businessRepository)
         {
             _dbContext = dbContext;
             _repository = repository;
+            _businessRepository = businessRepository;
         }
         public IQueryable<PurchaseOrderDetail> LoadEntitiesFilter(PurchaseOrderDetailView viewModel)
         {
             var allList = _repository.LoadEntities(d => d.IsDelete == false);
+            var business =
+                _businessRepository.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false);
             //条件过滤
             if (viewModel.Managers != null && viewModel.Managers.Count > 0)
             {
@@ -40,6 +45,13 @@ namespace Ada.Services.Purchase
             if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeName))
             {
                 allList = allList.Where(d => d.MediaTypeName.Contains(viewModel.MediaTypeName));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.BusinessRemark))
+            {
+                allList = from p in allList
+                          from b in business
+                          where p.BusinessOrderDetailId == b.Id && b.Remark.Contains(viewModel.BusinessRemark)
+                          select p;
             }
             if (!string.IsNullOrWhiteSpace(viewModel.BusinessBy))
             {
@@ -65,9 +77,9 @@ namespace Ada.Services.Purchase
             {
                 allList = allList.Where(d => d.AuditStatus == viewModel.AuditStatus);
             }
-            if (viewModel.IsPayment==false)//过滤没有请款的
+            if (viewModel.IsPayment == false)//过滤没有请款的
             {
-                allList = allList.Where(d => d.PurchasePaymentOrderDetails.Count==0);
+                allList = allList.Where(d => d.PurchasePaymentOrderDetails.Count == 0);
             }
             if (viewModel.PublishDateStart != null)
             {

@@ -60,6 +60,7 @@ namespace Purchase.Controllers
                     PublishLink = d.PublishLink,
                     Transactor = d.Transactor,
                     OrderDate = d.PurchaseOrder.OrderDate,
+                    BusinessRemark = GetBusinessOrderDetail(d.BusinessOrderDetailId)?.BusinessOrder.Remark
 
                 })
             }, JsonRequestBehavior.AllowGet);
@@ -97,7 +98,7 @@ namespace Purchase.Controllers
             var businessOrder = GetBusinessOrderDetail(entity.BusinessOrderDetailId);
             item.PrePublishDate = businessOrder.PrePublishDate;
             item.MediaTitle = businessOrder.MediaTitle;
-            item.BusinessRemark = businessOrder.Remark;
+            item.BusinessRemark = businessOrder.BusinessOrder.Remark;
             item.AuditStatus = entity.AuditStatus;
             item.Status = entity.Status;
             item.IsPayment = entity.PurchasePaymentOrderDetails.Count > 0;

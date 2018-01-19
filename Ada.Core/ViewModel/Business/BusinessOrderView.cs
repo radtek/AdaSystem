@@ -69,7 +69,6 @@ namespace Ada.Core.ViewModel.Business
         /// 经办业务
         /// </summary>
         [Display(Name = "经办业务")]
-        [Required]
         public string Transactor { get; set; }
         /// <summary>
         /// 经办业务
@@ -137,6 +136,7 @@ namespace Ada.Core.ViewModel.Business
         /// 客户名称
         /// </summary>
         [Display(Name = "客户名称")]
+        [Required]
         public string LinkManId { get; set; }
         /// <summary>
         /// 创建人员
@@ -152,7 +152,6 @@ namespace Ada.Core.ViewModel.Business
         /// 单据时间
         /// </summary>
         [Display(Name = "单据时间")]
-        [Required]
         public DateTime? OrderDate { get; set; }
         /// <summary>
         /// 项目摘要
@@ -163,7 +162,6 @@ namespace Ada.Core.ViewModel.Business
         /// 订单明细
         /// </summary>
         [Display(Name = "订单明细")]
-        [Required]
         public string OrderDetails { get; set; }
         /// <summary>
         /// 采购进度
