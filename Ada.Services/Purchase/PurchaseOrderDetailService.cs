@@ -50,7 +50,7 @@ namespace Ada.Services.Purchase
             {
                 allList = from p in allList
                           from b in business
-                          where p.BusinessOrderDetailId == b.Id && b.Remark.Contains(viewModel.BusinessRemark)
+                          where p.BusinessOrderDetailId == b.Id && b.BusinessOrder.Remark.Contains(viewModel.BusinessRemark)
                           select p;
             }
             if (!string.IsNullOrWhiteSpace(viewModel.BusinessBy))

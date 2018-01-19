@@ -76,6 +76,21 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => viewModel.Managers.Contains(d.TransactorId));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.search))
+            {
+                allList = allList.Where(d => d.Transactor.Contains(viewModel.search));
+            }
+
+            if (viewModel.WriteOffDateStar != null)
+            {
+                allList = allList.Where(d => d.WriteOffDate >= viewModel.WriteOffDateStar);
+            }
+
+            if (viewModel.WriteOffDateEnd != null)
+            {
+                var endDate = viewModel.WriteOffDateEnd.Value.AddDays(1);
+                allList = allList.Where(d => d.WriteOffDate < endDate);
+            }
             var setting = _settingService.GetSetting<WeiGuang>();
             var purchases = _purchaseOrderDetailRepository.LoadEntities(d => d.IsDelete == false);
             var temp = from h in allList
@@ -99,6 +114,7 @@ namespace Ada.Services.Business
                            Percentage = SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays1 ? setting.Percentage1 : (SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays2 && SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) > setting.ReturnDays1 ? setting.Percentage2 : 0),
                            Commission = Math.Round((decimal)((o.SellMoney - p.PurchaseMoney) * (SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays1 ? setting.Percentage1 : (SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays2 && SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) > setting.ReturnDays1 ? setting.Percentage2 : 0))), 2)
                        };
+           
 
             viewModel.TotalBusinessMoney = temp.Sum(d => d.BusinessMoney);
             viewModel.TotalCommission = temp.Sum(d => d.Commission);

@@ -15,6 +15,16 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "销账日期")]
         public DateTime? WriteOffDate { get; set; }
         /// <summary>
+        /// 销账日期
+        /// </summary>
+        [Display(Name = "销账日期")]
+        public DateTime? WriteOffDateStar { get; set; }
+        /// <summary>
+        /// 销账日期
+        /// </summary>
+        [Display(Name = "销账日期")]
+        public DateTime? WriteOffDateEnd { get; set; }
+        /// <summary>
         /// 出刊日期
         /// </summary>
         [Display(Name = "出刊日期")]

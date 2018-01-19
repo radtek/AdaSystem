@@ -2,67 +2,11 @@
 @using System.Web.Optimization
 @model Ada.Core.ViewModel.Business.BusinessWriteOffDetailView
 @{
-    ViewBag.Title = "核销明细";
+    ViewBag.Title = "提成明细";
 }
 @Html.Partial("Bread")
 
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
-    @*<div class="ibox collapsed">
-        <div class="ibox-title">
-            <h5>高级筛选</h5>
-            <div class="ibox-tools">
-                <a class="collapse-link">
-                    <i class="fa fa-chevron-up"></i>
-                </a>
-            </div>
-        </div>
-        <div class="ibox-content">
-            <form id="searchFrm" onSubmit="javascript:searchFrm.search(this,event);">
-                <div class="row">
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.IncomeExpendName, Html.DisplayNameFor(d => d.IncomeExpendName) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.IncomeExpendName, new { @class = "form-control input-sm" })
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.SettleAccountName, Html.DisplayNameFor(d => d.SettleAccountName) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.SettleAccountName, new { @class = "form-control input-sm" })
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.BillNum, Html.DisplayNameFor(d => d.BillNum) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.BillNum, new { @class = "form-control input-sm" })
-                        </div>
-                    </div>
-
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.BillDate, Html.DisplayNameFor(d => d.BillDate) + "：", new { @class = "control-label" })
-
-                            <input type="text" id="DateStr" class="form-control input-sm" readonly="readonly" />
-                            @Html.HiddenFor(d => d.BillDateStart)
-                            @Html.HiddenFor(d => d.BillDateEnd)
-                        </div>
-                    </div>
-
-
-                </div>
-                <div class="hr-line-dashed"></div>
-                <div class="row">
-                    <div class="col-sm-12 text-center">
-                        <div class="form-group">
-                            <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 搜索</button>
-                            <button class="btn btn-warning" type="button" onclick="resetDate();searchFrm.reset($('#searchFrm'));"><i class="fa fa-repeat"></i> 重置</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-
-        </div>
-    </div>*@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
@@ -73,7 +17,15 @@
         </div>
     </div>
 </div>
-
+<div id="toolbar">
+    <div class="form-inline" role="form">
+        <div class="form-group">
+            <input type="text" placeholder="请选择销账日期" class="form-control" id="datepicker">
+            @Html.HiddenFor(d => d.WriteOffDateStar)
+            @Html.HiddenFor(d => d.WriteOffDateEnd)
+        </div>
+    </div>
+</div>
 
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
@@ -88,66 +40,63 @@
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
-            //var $datepicker = $('#DateStr');
-            //$datepicker.daterangepicker({
-            //    autoUpdateInput: false,
-            //    opens: "center",
-            //    linkedCalendars: false,
-            //    ranges: {
-            //        '今日': [moment(), moment()],
-            //        '昨日': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            //        '最近7日': [moment().subtract(6, 'days'), moment()],
-            //        '最近30日': [moment().subtract(29, 'days'), moment()],
-            //        '本月': [moment().startOf('month'), moment().endOf('month')],
-            //        '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            //    },
-            //    locale: {
-            //        format: 'YYYY-MM-DD',
-            //        separator: " 至 ",
-            //        applyLabel: "确认",
-            //        cancelLabel: "取消",
-            //        fromLabel: "从",
-            //        toLabel: "到",
-            //        customRangeLabel: "自定义",
-            //        weekLabel: "周",
-            //        daysOfWeek: [
-            //            "日",
-            //            "一",
-            //            "二",
-            //            "三",
-            //            "四",
-            //            "五",
-            //            "六"
-            //        ],
-            //        monthNames: [
-            //            "一月",
-            //            "二月",
-            //            "三月",
-            //            "四月",
-            //            "五月",
-            //            "六月",
-            //            "七月",
-            //            "八月",
-            //            "九月",
-            //            "十月",
-            //            "十一月",
-            //            "十二月"
-            //        ],
-            //        firstDay: 1
-            //    }
-            //},
-            //    function (start, end, label) {
-            //        $("#BillDateStart").val(start.format('YYYY-MM-DD'));
-            //        $("#BillDateEnd").val(end.format('YYYY-MM-DD'));
-            //    });
+            var $datepicker = $('#datepicker');
+            $datepicker.daterangepicker({
+                autoUpdateInput: false,
+                opens: "center",
+                linkedCalendars: false,
+                ranges: {
+                    '本月': [moment().startOf('month'), moment().endOf('month')],
+                    '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    separator: "至",
+                    applyLabel: "确认",
+                    cancelLabel: "取消",
+                    fromLabel: "从",
+                    toLabel: "到",
+                    customRangeLabel: "自定义",
+                    weekLabel: "周",
+                    daysOfWeek: [
+                        "日",
+                        "一",
+                        "二",
+                        "三",
+                        "四",
+                        "五",
+                        "六"
+                    ],
+                    monthNames: [
+                        "一月",
+                        "二月",
+                        "三月",
+                        "四月",
+                        "五月",
+                        "六月",
+                        "七月",
+                        "八月",
+                        "九月",
+                        "十月",
+                        "十一月",
+                        "十二月"
+                    ],
+                    firstDay: 1
+                }
+            },
+                function (start, end, label) {
+                    $("#WriteOffDateStar").val(start.format('YYYY-MM-DD'));
+                    $("#WriteOffDateEnd").val(end.format('YYYY-MM-DD'));
+                    $('#table').bootstrapTable("refresh");
+                });
 
-            //$datepicker.on('apply.daterangepicker', function (ev, picker) {
-            //    $(this).val(picker.startDate.format('YYYY-MM-DD') + ' 至 ' + picker.endDate.format('YYYY-MM-DD'));
-            //});
-            //$datepicker.on('cancel.daterangepicker', function (ev, picker) {
-            //    $(this).val('');
-            //    resetDate();
-            //});
+            $datepicker.on('apply.daterangepicker', function (ev, picker) {
+                $(this).val(picker.startDate.format('YYYY-MM-DD') + '至' + picker.endDate.format('YYYY-MM-DD'));
+            });
+            $datepicker.on('cancel.daterangepicker', function (ev, picker) {
+                $(this).val('');
+                resetDate();
+            });
         });
         var TableInit = function() {
             var obj = new Object();
@@ -165,7 +114,7 @@
                 sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
                 pageNumber: 1,                       //初始化加载第一页，默认第一页
                 pageSize: 10,                       //每页的记录行数（*）
-                //search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
                 strictSearch: true,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
                 showColumns: true,                  //是否显示所有的列
                 showRefresh: true,                  //是否显示刷新按钮
@@ -178,8 +127,14 @@
                 showFooter:true,
 
                 mobileResponsive: true,
-                queryParams: searchFrm.queryParams,
-
+                queryParams: function (parameters) {
+                    parameters.WriteOffDateStar = $("#WriteOffDateStar").val();
+                    parameters.WriteOffDateEnd = $("#WriteOffDateEnd").val();
+                    return parameters;
+                },
+                formatSearch: function() {
+                    return "@Html.DisplayNameFor(d => d.Transactor)";
+                },
                 columns: [
                     {
                         field: 'Transactor',
@@ -226,16 +181,6 @@
                         title: '@Html.DisplayNameFor(d=>d.ReturnDays)',
                         align: "center", valign: "middle"
                     },
-                    @*{
-                        field: 'BillNum',
-                        title: '@Html.DisplayNameFor(d=>d.BillNum)',
-                        align: "center", valign: "middle",
-                        formatter: function (value, row) {
-                            return "<a class='label' href='@Url.Action("Update", "Receivables", new{area= "Finance" })?id=" + row.Id+"'><i class='fa fa-link'></i> " + value + "</a>";
-                        }
-                    },*@
-
-
                     {
                         field: 'BusinessMoney',
                         title: '@Html.DisplayNameFor(d=>d.BusinessMoney)',
@@ -286,18 +231,7 @@
                             }
                             return 0;
                         }
-                    },
-                    @*{
-                        field: 'TaxMoney',
-                        title: '@Html.DisplayNameFor(d=>d.TaxMoney)',
-                        align: "center", valign: "middle",
-                        footerFormatter: function (data) {
-                            if (data[0]) {
-                                return data[0].TotalTaxMoney;
-                            }
-                            return 0;
-                        }
-                    }*@
+                    }
 
 
                 ]
@@ -308,8 +242,9 @@
         };
 
         function resetDate() {
-            $('#BillDateStart').val('');
-            $('#BillDateEnd').val('');
+            $('#WriteOffDateStar').val('');
+            $('#WriteOffDateEnd').val('');
+            $('#table').bootstrapTable("refresh");
         }
 
 </script>
