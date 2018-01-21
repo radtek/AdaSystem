@@ -128,6 +128,7 @@
     <Compile Include="Domain\Purchase\PurchaseReturnOrder.cs" />
     <Compile Include="Domain\QuartzTask\Job.cs" />
     <Compile Include="Domain\Resource\Media.cs" />
+    <Compile Include="Domain\Resource\MediaComment.cs" />
     <Compile Include="Domain\Resource\MediaGroup.cs" />
     <Compile Include="Domain\Resource\MediaPrice.cs" />
     <Compile Include="Domain\Resource\AdPosition.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="ViewModel\Business\BusinessOrderView.cs" />
     <Compile Include="ViewModel\Business\BusinessPayeeView.cs" />
     <Compile Include="ViewModel\Business\BusinessPaymentView.cs" />
+    <Compile Include="ViewModel\Resource\MediaCommentView.cs" />
     <Compile Include="ViewModel\Statistics\BusinessTotal.cs" />
     <Compile Include="ViewModel\Business\BusinessWriteOffDetailView.cs" />
     <Compile Include="ViewModel\Business\BusinessWriteOffView.cs" />

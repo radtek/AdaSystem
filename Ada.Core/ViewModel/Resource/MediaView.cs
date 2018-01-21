@@ -14,6 +14,7 @@ namespace Ada.Core.ViewModel.Resource
         public MediaView()
         {
             Medias = new List<Media>();
+            MediaCommentViews=new List<MediaCommentView>();
         }
         /// <summary>
         /// 媒体名称
@@ -202,6 +203,11 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "媒体类别")]
         public string MediaTypeName { get; set; }
         /// <summary>
+        /// 媒体类别图片
+        /// </summary>
+        [Display(Name = "媒体类别图片")]
+        public string MediaTypeImage { get; set; }
+        /// <summary>
         /// 渠道类型
         /// </summary>
         [Display(Name = "渠道类型")]
@@ -287,6 +293,16 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "媒体集合")]
         public List<Media> Medias { get; set; }
+        /// <summary>
+        /// 配合度
+        /// </summary>
+        [Display(Name = "配合度")]
+        public short? Cooperation { get; set; }
+        /// <summary>
+        /// 媒体评论
+        /// </summary>
+        [Display(Name = "媒体评论")]
+        public List<MediaCommentView> MediaCommentViews { get; set; }
     }
 
 }

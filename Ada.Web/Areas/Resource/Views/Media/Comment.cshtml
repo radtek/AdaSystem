@@ -1,0 +1,228 @@
+﻿@using System.Web.Optimization
+@using Ada.Core.Infrastructure
+@using Ada.Core.Tools
+@using Ada.Services.Resource
+@model Ada.Core.Domain.Resource.Media
+@{
+    ViewBag.Title = "资源评价 " + Model.MediaName;
+    var sorce = Model.MediaComments.Count == 0 ? 0 : Model.MediaComments.Sum(d => d.Score) / (Model.MediaComments.Count * 1.0);
+    sorce = Math.Round((double)sorce, 1);
+    var service = EngineContext.Current.Resolve<IMediaService>();
+    int page = ViewBag.Page;
+    var comments = service.LoadComments(Model.Id, (page - 1) * 20);
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>资源评价</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index","Home",new{area= "Dashboards" })">工作台</a>
+            </li>
+
+            <li class="active">
+                <strong>@Model.MediaName</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<div class="wrapper wrapper-content">
+    <div class="row animated fadeInRight">
+        <div class="col-md-4">
+            <div class="ibox">
+
+                <div>
+                    <div class="ibox-content border-left-right text-center">
+                        <i class="fa @Model.MediaType.Image fa-5x"></i>
+                        <h1 class="m-xs">@Model.MediaType.TypeName</h1>
+
+                    </div>
+                    <div class="ibox-content profile-content">
+                        <h4><strong>@Model.MediaName</strong> <small> @Model.MediaID </small></h4>
+
+                        <h5>
+                            媒体信息
+                        </h5>
+                        <p>
+                            @Model.Content
+                        </p>
+                        <div class="row m-t-lg">
+                            <div class="col-md-4">
+                                <h5><strong>@Model.FansNum</strong> 粉丝数</h5>
+                            </div>
+                            <div class="col-md-4">
+                                <h5 class="text-danger"><strong>@sorce</strong> 综合评分</h5>
+                            </div>
+                            <div class="col-md-4">
+                                <h5><strong>@Model.MediaPrices.Sum(d => d.BusinessOrderDetails.Count)</strong> 订单数</h5>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="sk-spinner sk-spinner-wave">
+                        <div class="sk-rect2"></div>
+                        <div class="sk-rect3"></div>
+                        <div class="sk-rect4"></div>
+                        <div class="sk-rect5"></div>
+                    </div>
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <label>资源评星</label>
+                            <div class="radio radio-info">
+                                <input type="radio" id="star1" value="1" name="Score">
+                                <label for="star1"><span class="text-danger"><i class="fa fa-star"></i></span></label>
+                            </div>
+                            <div class="radio radio-info">
+                                <input type="radio" id="star2" value="2" name="Score">
+                                <label for="star2">
+                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                </label>
+                            </div>
+                            <div class="radio radio-info">
+                                <input type="radio" id="star3" value="3" name="Score">
+                                <label for="star3">
+                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                </label>
+                            </div>
+                            <div class="radio radio-info">
+                                <input type="radio" id="star4" value="4" name="Score">
+                                <label for="star4">
+                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                </label>
+                            </div>
+                            <div class="radio radio-info">
+                                <input type="radio" id="star5" value="5" name="Score">
+                                <label for="star5">
+                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>评价内容</label>
+                            <textarea class="form-control" placeholder="请输入您的评论" rows="3" required="" name="Content"></textarea>
+                            <input type="hidden" name="MediaId" value="@Model.Id" />
+                        </div>
+                        <button class="btn btn-primary btn-block" type="submit">提交评论</button>
+                        <a class="btn btn-white btn-block" href="javascript:window.close();">返回关闭</a>
+                    }
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>评论信息（@Model.MediaComments.Count）</h5>
+
+                </div>
+                <div class="ibox-content">
+
+                    <div>
+                        @if (Model.MediaComments.Count > 0)
+                        {
+                            <div class="feed-activity-list">
+                                @foreach (var item in comments)
+                                {
+                                    <div class="feed-element">
+                                        <a href="#" class="pull-left">
+                                            @{
+                                                var image = string.IsNullOrWhiteSpace(item.TransactorImage) ? "/Images/noheader.png" : item.TransactorImage;
+                                            }
+                                            <img alt="image" class="img-circle" src="@image">
+                                        </a>
+                                        <div class="media-body">
+                                            <small class="pull-right">@Utils.ToRead(item.CommentDate)</small>
+                                            <strong>@item.Transactor</strong> @item.Organization <br>
+                                            <small>
+                                                @for (int i = 0; i < item.Score; i++)
+                                                {
+                                                    <span class="btn btn-danger btn-xs"><i class="fa fa-star"></i></span>
+                                                }
+                                                @for (int i = 0; i < 5 - item.Score; i++)
+                                                {
+                                                    <span class="btn btn-default btn-xs"><i class="fa fa-star"></i></span>
+                                                }
+
+
+                                            </small>
+                                            <div class="well">
+                                                @item.Content
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                }
+
+
+                            </div>
+                            if (Model.MediaComments.Count > 20)
+                            {
+                                <a class="btn btn-primary btn-block m" href="@Url.Action("Comment",new{id=Model.Id,page=page+1})"><i class="fa fa-arrow-down"></i> 显示更多评论</a>
+                            }
+                            else
+                            {
+                                <button class="btn btn-default btn-block m"> 没有更多评论了</button>
+                            }
+
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning">
+                                暂无相关评论信息
+                            </div>
+                        }
+
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+}
+@section Scripts {
+
+    <script>
+        $(function () {
+            $(".wrapper.wrapper-content form").validate({
+                submitHandler: function (form) {
+                    $('.wrapper.wrapper-content .ibox').children('.ibox-content').toggleClass('sk-loading');
+                    form.submit();
+                },
+                rules: {
+                    Content: {
+                        required: true
+                    },
+                    Score: {
+                        required: true
+                    }
+                }
+            });
+        });
+    </script>
+
+}

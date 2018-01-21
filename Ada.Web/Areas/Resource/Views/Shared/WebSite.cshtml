@@ -11,6 +11,7 @@
     var seos = fieldService.GetFieldsByKey("SEO").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var clients = fieldService.GetFieldsByKey("Client").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var resourceTypes = fieldService.GetFieldsByKey("ResourceType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var cooperations = fieldService.GetFieldsByKey("Cooperation").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 
 <div class="row">

@@ -12,6 +12,7 @@ namespace Ada.Services.Resource
    public interface IMediaService: IDependency
     {
         IQueryable<Media> LoadEntitiesFilter(MediaView viewModel);
+        IQueryable<MediaCommentView> LoadComments(string id, int offset = 0);
         void Add(Media entity);
         void Update(Media entity);
         void Delete(Media entity);

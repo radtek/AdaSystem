@@ -209,6 +209,7 @@
     <Content Include="Views\Shared\ZhiHu.cshtml" />
     <Content Include="Views\Shared\WebCast.cshtml" />
     <Content Include="Views\Shared\Brush.cshtml" />
+    <Content Include="Views\Media\Comment.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

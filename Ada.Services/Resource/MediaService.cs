@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
+using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Resource;
 
@@ -13,10 +14,14 @@ namespace Ada.Services.Resource
     {
         private readonly IDbContext _dbContext;
         private readonly IRepository<Media> _repository;
-        public MediaService(IRepository<Media> repository, IDbContext dbContext)
+        private readonly IRepository<Manager> _managerRepository;
+        private readonly IRepository<MediaComment> _mediaCommentRepository;
+        public MediaService(IRepository<Media> repository, IDbContext dbContext, IRepository<Manager> managerRepository, IRepository<MediaComment> mediaCommentRepository)
         {
             _repository = repository;
             _dbContext = dbContext;
+            _managerRepository = managerRepository;
+            _mediaCommentRepository = mediaCommentRepository;
         }
 
         public void Add(Media entity)
@@ -96,7 +101,7 @@ namespace Ada.Services.Resource
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
             {
-                viewModel.MediaNames = viewModel.MediaNames.Trim().Replace("\r\n", ",").Replace("，", ",").Replace(" ",",");
+                viewModel.MediaNames = viewModel.MediaNames.Trim().Replace("\r\n", ",").Replace("，", ",").Replace(" ", ",");
                 var mediaNames = viewModel.MediaNames.Split(',').ToList();
                 allList = allList.Where(d => mediaNames.Contains(d.MediaName));
             }
@@ -169,6 +174,28 @@ namespace Ada.Services.Resource
         {
             _repository.Update(entity);
             _dbContext.SaveChanges();
+        }
+
+        public IQueryable<MediaCommentView> LoadComments(string id, int offset = 0)
+        {
+            var mediaComments = _mediaCommentRepository.LoadEntities(d => d.MediaId == id);
+            var managers = _managerRepository.LoadEntities(d => true);
+
+            var allList = from c in mediaComments
+                          from m in managers
+                          from o in m.Organizations
+                          where c.TransactorId == m.Id
+                          select new MediaCommentView()
+                          {
+                              Transactor = c.Transactor,
+                              Content = c.Content,
+                              Score = c.Score,
+                              CommentDate = c.CommentDate,
+                              TransactorImage = m.Image,
+                              Organization = o.OrganizationName
+                          };
+            
+            return allList.OrderByDescending(d => d.CommentDate).Skip(offset).Take(20);
         }
     }
 }

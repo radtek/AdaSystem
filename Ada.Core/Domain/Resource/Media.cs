@@ -15,6 +15,7 @@ namespace Ada.Core.Domain.Resource
             MediaTags=new HashSet<MediaTag>();
             MediaPrices=new HashSet<MediaPrice>();
             MediaGroups=new HashSet<MediaGroup>();
+            MediaComments=new HashSet<MediaComment>();
         }
         /// <summary>
         /// 媒体名称
@@ -197,6 +198,11 @@ namespace Ada.Core.Domain.Resource
         [Display(Name = "媒体频道")]
         public string Channel { get; set; }
         /// <summary>
+        /// 配合度
+        /// </summary>
+        [Display(Name = "配合度")]
+        public short? Cooperation { get; set; }
+        /// <summary>
         /// 媒体类型
         /// </summary>
         [Display(Name = "媒体类型")]
@@ -211,5 +217,6 @@ namespace Ada.Core.Domain.Resource
         public virtual ICollection<MediaTag> MediaTags { get; set; }
         public virtual ICollection<MediaPrice> MediaPrices { get; set; }
         public virtual ICollection<MediaGroup> MediaGroups { get; set; }
+        public virtual ICollection<MediaComment> MediaComments { get; set; }
     }
 }

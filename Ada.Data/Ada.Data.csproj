@@ -95,12 +95,17 @@
     <Compile Include="Mapping\Purchase\PurchaseReturenOrderDetailMap.cs" />
     <Compile Include="Mapping\Purchase\PurchaseReturnOrderMap.cs" />
     <Compile Include="Mapping\QuartzTask\JobMap.cs" />
+    <Compile Include="Mapping\Resource\MediaCommentMap.cs" />
     <Compile Include="Mapping\Resource\MediaPriceMap.cs" />
     <Compile Include="Mapping\Resource\MediaMap.cs" />
     <Compile Include="Mapping\Resource\MediaGroupMap.cs" />
     <Compile Include="Mapping\Resource\MediaTagMap.cs" />
     <Compile Include="Mapping\Resource\AdPositionMap.cs" />
     <Compile Include="Mapping\Resource\MediaTypeMap.cs" />
+    <Compile Include="Mapping\WeiXin\WeiXinRequestReocrdMap.cs" />
+    <Compile Include="Mapping\WeiXin\WeiXinKeywordMatchMap.cs" />
+    <Compile Include="Mapping\WeiXin\WeiXinKeywordMap.cs" />
+    <Compile Include="Mapping\WeiXin\WeiXinAccountMap.cs" />
     <Compile Include="Migrations\201710221333304_ManagerLoginLog.cs" />
     <Compile Include="Migrations\201710221333304_ManagerLoginLog.Designer.cs">
       <DependentUpon>201710221333304_ManagerLoginLog.cs</DependentUpon>
@@ -277,6 +282,10 @@
     <Compile Include="Migrations\201801150307125_BusinessOrderUpdate2018115.Designer.cs">
       <DependentUpon>201801150307125_BusinessOrderUpdate2018115.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801210739556_WeiXin.cs" />
+    <Compile Include="Migrations\201801210739556_WeiXin.Designer.cs">
+      <DependentUpon>201801210739556_WeiXin.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -425,6 +434,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801150307125_BusinessOrderUpdate2018115.resx">
       <DependentUpon>201801150307125_BusinessOrderUpdate2018115.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801210739556_WeiXin.resx">
+      <DependentUpon>201801210739556_WeiXin.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

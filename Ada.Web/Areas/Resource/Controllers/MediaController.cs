@@ -32,7 +32,6 @@ namespace Resource.Controllers
         private readonly IRepository<MediaType> _mediaTypeRepository;
         private readonly IRepository<MediaPrice> _mediaPriceRepository;
         private readonly IRepository<MediaTag> _mediaTagRepository;
-        private readonly IRepository<LinkMan> _linkManRepository;
         private readonly IDbContext _dbContext;
         public MediaController(IMediaPriceService mediaPriceService,
             IMediaService mediaService,
@@ -41,8 +40,7 @@ namespace Resource.Controllers
             IRepository<Media> repository,
             IRepository<MediaTag> mediaTagRepository,
             IRepository<MediaType> mediaTypeRepository,
-            ISettingService settingService,
-            IRepository<LinkMan> linkManRepository)
+            ISettingService settingService)
         {
             _mediaPriceService = mediaPriceService;
             _mediaService = mediaService;
@@ -52,7 +50,6 @@ namespace Resource.Controllers
             _mediaTagRepository = mediaTagRepository;
             _mediaTypeRepository = mediaTypeRepository;
             _settingService = settingService;
-            _linkManRepository = linkManRepository;
         }
 
         public ActionResult Index()
@@ -374,6 +371,7 @@ namespace Resource.Controllers
             entity.Efficiency = viewModel.Efficiency;
             entity.ResourceType = viewModel.ResourceType;
             entity.Channel = viewModel.Channel;
+            entity.Cooperation = viewModel.Cooperation;
 
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
@@ -408,7 +406,7 @@ namespace Resource.Controllers
             }
             _mediaService.Add(entity);
             TempData["Msg"] = "添加成功";
-            return RedirectToAction("Add",new{id= entity.MediaTypeId });
+            return RedirectToAction("Add", new { id = entity.MediaTypeId });
         }
         public ActionResult Update(string id)
         {
@@ -446,7 +444,7 @@ namespace Resource.Controllers
             entity.Efficiency = item.Efficiency;
             entity.ResourceType = item.ResourceType;
             entity.Channel = item.Channel;
-
+            entity.Cooperation = item.Cooperation;
 
             entity.Content = item.Content;
             entity.Remark = item.Remark;
@@ -528,6 +526,7 @@ namespace Resource.Controllers
             entity.IsHot = viewModel.IsHot;
             entity.IsSlide = viewModel.IsSlide;
             entity.IsRecommend = viewModel.IsRecommend;
+            entity.Cooperation = viewModel.Cooperation;
             //联系人
             entity.LinkManId = viewModel.LinkManId;
             //标签
@@ -564,7 +563,7 @@ namespace Resource.Controllers
             }
             _mediaService.Update(entity);
             TempData["Msg"] = "更新成功";
-            return View(viewModel); 
+            return View(viewModel);
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
@@ -577,8 +576,28 @@ namespace Resource.Controllers
             _mediaService.Delete(entity);
             return Json(new { State = 1, Msg = "删除成功" });
         }
-
-
+        public ActionResult Comment(string id, int page = 1)
+        {
+            ViewBag.Page = page;
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            return View(entity);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Comment(MediaCommentView viewModel)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == viewModel.MediaId).FirstOrDefault();
+            MediaComment comment = new MediaComment();
+            comment.Id = IdBuilder.CreateIdNum();
+            comment.CommentDate = DateTime.Now;
+            comment.Transactor = CurrentManager.UserName;
+            comment.TransactorId = CurrentManager.Id;
+            comment.Content = viewModel.Content;
+            comment.Score = viewModel.Score;
+            entity.MediaComments.Add(comment);
+            _mediaService.Update(entity);
+            return View(entity);
+        }
 
         private bool IsExist(MediaView viewModel, out string msg, bool isSelf = false)
         {
