@@ -224,25 +224,26 @@
                                 {
                                     <tr>
                                         <td>@item.MediaType.TypeName</td>
-                                        @if (item.MediaType.CallIndex == "website")
-                                        {
-                                            var medianame = item.MediaName + "-" + item.Client + "-" + item.Channel;
-                                            <td>@medianame</td>
+                                        @{
+                                            var mediaName = item.MediaName;
+                                            switch (item.MediaType.CallIndex)
+                                            {
+                                                case "website":
+                                                    mediaName = item.MediaName + "-" + item.Client + "-" + item.Channel;
+                                                    break;
+                                                case "weixin":
+                                                    mediaName = item.MediaName + " [ " + item.MediaID + " ]";
+                                                    break;
+                                                case "headline":
+                                                case "webcast":
+                                                case "brush":
+                                                    mediaName = "[ " + item.Platform + " ] " + item.MediaName;
+                                                    break;
+                                            }
                                         }
-                                        else if (item.MediaType.CallIndex == "weixin")
-                                        {
-                                            var medianame = item.MediaName + " [ " + item.MediaID + " ]";
-                                            <td>@medianame</td>
-                                        }
-                                        else if (item.MediaType.CallIndex == "headline" || item.MediaType.CallIndex == "webcast")
-                                        {
-                                            var medianame = "[ " + item.Platform + " ] " + item.MediaName;
-                                            <td>@medianame</td>
-                                        }
-                                        else
-                                        {
-                                            <td>@item.MediaName</td>
-                                        }
+                                        <td>
+                                            @mediaName  <a class='btn btn-warning btn-circle btn-xs' href='@Url.Action("Comment", "Media",new{area="Resource",id=item.Id})' target='_blank' title='评价'><i class='fa fa-commenting'></i></a>
+                                        </td>
                                         <td>@string.Join(",", item.MediaTags.Select(d => d.TagName))</td>
                                         <td>@item.FansNum</td>
                                         <td>

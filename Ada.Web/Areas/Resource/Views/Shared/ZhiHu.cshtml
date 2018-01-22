@@ -1,5 +1,6 @@
 ﻿
 @using Ada.Core.Infrastructure
+@using Ada.Services.Admin
 @using Ada.Services.Resource
 @using Microsoft.Ajax.Utilities
 @model Ada.Core.ViewModel.Resource.MediaView
@@ -7,6 +8,7 @@
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
     var mediaTypeService = EngineContext.Current.Resolve<IMediaTypeService>();
     var prices = mediaTypeService.GetMediaTypeByCallIndex("zhihu").AdPositions.ToList();
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var cooperations = fieldService.GetFieldsByKey("Cooperation").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 

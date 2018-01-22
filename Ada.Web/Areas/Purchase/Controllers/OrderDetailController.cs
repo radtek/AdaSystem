@@ -53,6 +53,7 @@ namespace Purchase.Controllers
                     Tax = d.Tax,
                     TaxMoney = d.TaxMoney,
                     DiscountMoney = d.DiscountMoney,
+                    MediaPriceId = d.MediaPrice.MediaId,
                     Money = d.Money,
                     MediaTitle = GetBusinessOrderDetail(d.BusinessOrderDetailId)?.MediaTitle,
                     PrePublishDate = GetBusinessOrderDetail(d.BusinessOrderDetailId)?.PrePublishDate,

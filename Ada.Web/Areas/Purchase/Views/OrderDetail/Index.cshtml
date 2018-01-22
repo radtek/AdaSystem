@@ -235,7 +235,13 @@
                     {
                         field: 'MediaName',
                         title: '@Html.DisplayNameFor(d=>d.MediaName)',
-                        align: "center", valign: "middle",
+                        align: "left", valign: "middle",
+                        formatter: function(value,row) {
+                            return value +
+                                " <a class='btn btn-warning btn-circle btn-xs' href='@Url.Action("Comment", "Media",new{area="Resource"})?id=" +
+                                row.MediaPriceId +
+                                "' target='_blank' title='评价'><i class='fa fa-commenting'></i></a>";
+                        }
                     }
                     ,
                     {
@@ -348,7 +354,7 @@
                 $("#btn_reset").click(function () {
                     resetDate();
                     searchFrm.reset($("#searchFrm"));
-                    
+
                 });
             };
             return oInit;

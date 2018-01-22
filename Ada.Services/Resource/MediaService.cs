@@ -176,7 +176,7 @@ namespace Ada.Services.Resource
             _dbContext.SaveChanges();
         }
 
-        public IQueryable<MediaCommentView> LoadComments(string id, int offset = 0)
+        public IQueryable<MediaCommentView> LoadComments(string id, int page = 1)
         {
             var mediaComments = _mediaCommentRepository.LoadEntities(d => d.MediaId == id);
             var managers = _managerRepository.LoadEntities(d => true);
@@ -195,7 +195,7 @@ namespace Ada.Services.Resource
                               Organization = o.OrganizationName
                           };
             
-            return allList.OrderByDescending(d => d.CommentDate).Skip(offset).Take(20);
+            return allList.OrderByDescending(d => d.CommentDate).Skip(0).Take(page*20);
         }
     }
 }

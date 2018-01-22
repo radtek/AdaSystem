@@ -9,7 +9,7 @@
     sorce = Math.Round((double)sorce, 1);
     var service = EngineContext.Current.Resolve<IMediaService>();
     int page = ViewBag.Page ?? 1;
-    var comments = service.LoadComments(Model.Id, (page - 1) * 20);
+    var comments = service.LoadComments(Model.Id, page);
 }
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
@@ -122,7 +122,7 @@
                             <input type="hidden" name="MediaId" value="@Model.Id" />
                         </div>
                         <button class="btn btn-primary btn-block" type="submit">提交评论</button>
-                        <a class="btn btn-white btn-block" href="javascript:window.close();">返回关闭</a>
+                        <a class="btn btn-white btn-block" href="javascript:goBackOrClose();">返回关闭</a>
                     }
 
                 </div>

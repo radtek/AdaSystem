@@ -50,6 +50,7 @@ namespace DataReport.Controllers
                     Money = d.Money,
                     TaxMoney = d.TaxMoney,
                     Remark = d.Remark,
+                    MediaPriceId = d.MediaPrice.MediaId,
                     Tax = d.Tax,
                     SellMoney = d.SellMoney,
                     VerificationStatus = d.VerificationStatus,

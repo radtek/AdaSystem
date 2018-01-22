@@ -265,38 +265,39 @@
                                             }
                                         </td>
                                         <td>@item.MediaType.TypeName</td>
-                                        @if (item.MediaType.CallIndex == "website")
-                                        {
-                                            var medianame = item.MediaName + "-" + item.Client + "-" + item.Channel;
-                                            <td>@medianame</td>
-                                        }
-                                        else if (item.MediaType.CallIndex == "weixin")
-                                        {
-                                            var medianame = item.MediaName + " [ " + item.MediaID + " ]";
-                                            <td>@medianame</td>
-                                        }
-                                        else if (item.MediaType.CallIndex == "headline" || item.MediaType.CallIndex == "webcast" || item.MediaType.CallIndex == "brush")
-                                        {
-                                            var medianame = "[ " + item.Platform + " ] " + item.MediaName;
-                                            <td>@medianame</td>
-                                        }
-                                        else
-                                        {
-                                            <td>@item.MediaName</td>
-                                        }
+                                        @{
+                                            var mediaName = item.MediaName;
+                                            switch (item.MediaType.CallIndex)
+                                            {
+                                                case "website":
+                                                    mediaName = item.MediaName + "-" + item.Client + "-" + item.Channel;
+                                                    break;
+                                                case "weixin":
+                                                    mediaName = item.MediaName + " [ " + item.MediaID + " ]";
+                                                    break;
+                                                case "headline":
+                                                case "webcast":
+                                                case "brush":
+                                                    mediaName = "[ " + item.Platform + " ] " + item.MediaName;
+                                                    break;
+                                            }
+                                                        }
+                                        <td>
+                                            @mediaName  <a class='btn btn-warning btn-circle btn-xs' href='@Url.Action("Comment", "Media",new{id=item.Id})' target='_blank' title='评价'><i class='fa fa-commenting'></i></a>
+                                        </td>
 
                                         <td>@string.Join(",", item.MediaTags.Select(d => d.TagName))</td>
                                         <td>
                                             @foreach (var group in item.MediaGroups)
                                             {
                                                 <button class='btn btn-warning btn-xs' onclick="groupDetail('@group.Id');"><i class='fa fa-object-group'></i> @group.GroupName</button>
-                                            }
+                                                }
                                         </td>
                                         <td>@item.FansNum</td>
                                         <td>
                                             @foreach (var price in item.MediaPrices)
-                                            {
-                                                var str = price.AdPositionName + "：¥ " + price.PurchasePrice + "　　有效期至：" + price.InvalidDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"));
+                                                {
+                                                    var str = price.AdPositionName + "：¥ " + price.PurchasePrice + "　　有效期至：" + price.InvalidDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"));
                                                 <div class="bg-info">@str</div>
                                             }
                                         </td>
@@ -305,7 +306,7 @@
                                         <td>@item.Transactor</td>
                                         <td>
                                             <a class='btn btn-success btn-sm' href='@Url.Action("Update", new {id = item.Id})' target='_blank'><i class='fa fa-pencil'></i> 编辑</a>
-                                            <a class='btn btn-white btn-sm' href='@Url.Action("Comment", new {id = item.Id})' target='_blank'><i class='fa fa-commenting'></i> 评论</a>
+                                           
                                             <button class='btn btn-danger btn-sm' onclick="cancle('@item.Id');"><i class='fa fa-trash-o'></i> 删除</button>
                                         </td>
                                     </tr>
@@ -361,13 +362,13 @@
 
 </div>
 @section Styles {
-    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+                                                @Styles.Render("~/plugins/awesomeCheckboxStyles")
     @Styles.Render("~/plugins/footableV3Styles")
     @Styles.Render("~/plugins/jasnyBootstrapStyles")
     @Styles.Render("~/plugins/laddaStyles")
 }
-@section Scripts {
-    @Scripts.Render("~/plugins/footableV3")
+                                            @section Scripts {
+                                                @Scripts.Render("~/plugins/footableV3")
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/ladda")
     <script>
@@ -375,50 +376,50 @@
             $('#uploadModal').on('shown.bs.modal',
                 function() {
 
-                }).on('hidden.bs.modal',
-                function() {
+                                                    }).on('hidden.bs.modal',
+                                                    function() {
                     $('.fileinput').fileinput("clear");
-                });
-            @if (Model.Medias.Count > 0)
+                                                    });
+                                                    @if (Model.Medias.Count > 0)
             {
                 <text>
                     $('.table').footable();
                 </text>
             }
             $("#MediaTypeId").change(function() {
-                var $adpostion = $("#AdPositionName");
+                                                        var $adpostion = $("#AdPositionName");
                 $adpostion.empty();
-                if ($(this).val()) {
-                    var selectdata = $(this).find('option:selected').attr("data-value");
-                    var arr = JSON.parse(selectdata);
+                                                        if ($(this).val()) {
+                                                            var selectdata = $(this).find('option:selected').attr("data-value");
+                                                            var arr = JSON.parse(selectdata);
                     $adpostion.append("<option value=''>不限</option>");
                     $.each(arr,
                         function(k, v) {
                             $adpostion.append("<option value='" + v + "'>" + v + "</option>");
-                        });
-                } else {
+                                                            });
+                                                        } else {
                     $adpostion.append("<option value=''>不限</option>");
-                }
-            });
-        });
+                                                        }
+                                                    });
+                                                });
 
-        function upLoadFile() {
-            
-            var fileObj = document.getElementById("upfile").files[0]; // js 获取文件对象
-            if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
-                swal("操作失败", "请选择文件", "warning");
-                return;
-            }
-            if (!checkFileExt(fileObj.name)) {
-                swal("操作失败", "只支持xlsx后缀文件", "warning");
-                return;
-            }
-            var formFile = new FormData();
-            formFile.append("upfile", fileObj); //加入文件对象
-            var data = formFile;
-            var subBtn = $('.ladda-button').ladda();
+                                                function upLoadFile() {
+
+                                                    var fileObj = document.getElementById("upfile").files[0]; // js 获取文件对象
+                                                    if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
+                                                        swal("操作失败", "请选择文件", "warning");
+                                                        return;
+                                                    }
+                                                    if (!checkFileExt(fileObj.name)) {
+                                                        swal("操作失败", "只支持xlsx后缀文件", "warning");
+                                                        return;
+                                                    }
+                                                    var formFile = new FormData();
+                                                    formFile.append("upfile", fileObj); //加入文件对象
+                                                    var data = formFile;
+                                                    var subBtn = $('.ladda-button').ladda();
             $.ajax({
-                url: "@Url.Action("Import")",
+                                                        url: "@Url.Action("Import")",
                 data: data,
                 type: "Post",
                 dataType: "json",
@@ -426,28 +427,28 @@
                 processData: false, //用于对data参数进行序列化处理 这里必须false
                 contentType: false, //必须
                 success: function(result) {
-                    if (result.State == 1) {
-                        swal({
-                            title: "操作成功",
+                                                            if (result.State == 1) {
+                                                                swal({
+                                                                    title: "操作成功",
                             text: data.Msg,
                             timer: 2000,
                             type: "success",
                             showConfirmButton: false
-                        });
-                    } else {
-                        swal("操作失败", result.Msg, "error");
-                    }
-                },
+                                                                });
+                                                            } else {
+                                                                swal("操作失败", result.Msg, "error");
+                                                            }
+                                                        },
                 error: function() {
-                    swal("操作失败", "系统错误", "error");
-                },
+                                                            swal("操作失败", "系统错误", "error");
+                                                        },
                 beforeSend: function() {
-                    subBtn.ladda('start');
-                },
+                                                            subBtn.ladda('start');
+                                                        },
                 complete: function() {
-                    subBtn.ladda('stop');
-                }
-            });
+                                                            subBtn.ladda('stop');
+                                                        }
+                                                    });
         }
 
         function checkFileExt(filename) {

@@ -38,6 +38,7 @@ namespace DataReport.Controllers
                     BusinessBy = d.PurchaseOrder.BusinessBy,
                     MediaTypeName = d.MediaTypeName,
                     MediaName = d.MediaName,
+                    MediaPriceId = d.MediaPrice.MediaId,
                     AdPositionName = d.AdPositionName,
                     CostMoney = d.CostMoney,
                     PurchaseMoney = d.PurchaseMoney,

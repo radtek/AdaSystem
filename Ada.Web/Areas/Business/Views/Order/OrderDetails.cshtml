@@ -68,7 +68,7 @@
                                         }
 
                                         <td>@item.MediaTypeName</td>
-                                        <td>@item.MediaName</td>
+                                        <td>@item.MediaName <a class='btn btn-warning btn-circle btn-xs' href='@Url.Action("Comment", "Media",new{area="Resource",id=item.MediaPriceId})' target='_blank' title='评价'><i class='fa fa-commenting'></i></a></td>
                                         <td>@item.AdPositionName</td>
                                         <td>
                                             <span class="label label-info" data-toggle="tooltip" data-placement="bottom" title="@item.MediaTitle">

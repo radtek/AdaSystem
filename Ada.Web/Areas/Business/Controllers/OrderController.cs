@@ -138,6 +138,7 @@ namespace Business.Controllers
                 MediaName = d.MediaName,
                 MediaByPurchase = d.MediaByPurchase,
                 AdPositionName = d.AdPositionName,
+                MediaPriceId = d.MediaPrice.MediaId,
                 VerificationStatus = d.VerificationStatus,
                 PublishLink = GetPurchaseOrderDetail(d.Id)?.PublishLink,
                 PublishDate = GetPurchaseOrderDetail(d.Id)?.PublishDate,
