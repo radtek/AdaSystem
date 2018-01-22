@@ -1,11 +1,197 @@
-﻿@{
-    ViewBag.Title = "工作台";
+﻿@using System.Web.Optimization
+@model Ada.Core.ViewModel.Statistics.PurchaseTotal
+@{
+    ViewBag.Title = "媒介工作台";
 }
 <div class="wrapper wrapper-content">
-    
-
-    <h1>待开发</h1>
 
 
+    <div class="row">
+        <div class="col-lg-2">
+
+            <div class="widget style1 white-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","OrderDetail",new {area="Purchase"})';">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-hourglass fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 待响应 </span>
+                        <h2 class="font-bold">@Model.Waiting</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+
+            <div class="widget style1 yellow-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","OrderDetail",new {area="Purchase"})';">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-comments fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 正处理 </span>
+                        <h2 class="font-bold">@Model.Doing</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+
+            <div class="widget style1 navy-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","OrderDetail",new {area="Purchase"})';">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-handshake-o fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 已确认 </span>
+                        <h2 class="font-bold">@Model.Confirm</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+
+            <div class="widget style1 lazur-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","OrderDetail",new {area="Purchase"})';">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-calendar-o fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 预付金额 </span>
+                        <h2 class="font-bold">@Model.TotalPayMoney</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="widget style1 lazur-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","OrderDetail",new {area="Purchase"})';">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-jpy fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 已付金额 </span>
+                        <h2 class="font-bold">@Model.PayMoney</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+
+            <div class="widget style1 red-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","Payment",new {area="Purchase"})';">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-money fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 未到票 </span>
+                        <h2 class="font-bold">@Model.InvoiceCount</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+
+                    <h5>媒体资源统计</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-9">
+
+                            <div class="flot-chart" style="height: 350px;">
+                                <div class="flot-chart-content" id="flot-dashboard-chart"></div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-3">
+                            <ul class="stat-list">
+                                <li>
+                                    <h2 class="no-margins">1111</h2>
+                                    <small>销售订单数</small>
+
+                                </li>
+                                <li>
+                                    <h2 class="no-margins"><i class="fa fa-jpy "></i> 11111</h2>
+                                    <small>销售总额（不含税）</small>
+
+                                </li>
+                                <li>
+                                    <h2 class="no-margins "><i class="fa fa-jpy "></i> 11111</h2>
+                                    <small>未核销金额</small>
+
+                                </li>
+                                <li>
+                                    <h2 class="no-margins "><i class="fa fa-jpy "></i> 11111</h2>
+                                    <small>已核销金额</small>
+
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        
+
+    </div>
 </div>
+
+
+@section Scripts{
+    @Scripts.Render("~/plugins/echarts")
+    <script>
+        $(function() {
+
+            initCharts();
+        });
+
+
+
+        function initCharts() {
+            var myChart = echarts.init(document.getElementById('flot-dashboard-chart'));
+            var medias =@Html.Raw(Model.Medias);
+            var types = [];
+            $.each(medias,
+                function(k, v) {
+                    types.push(v.name);
+                });
+            var option = {
+                
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    //orient: 'vertical',
+                    data: types
+                },
+                series : [
+                    {
+                        name: '媒体资源',
+                        type: 'pie',
+                        radius : '55%',
+                        center: ['50%', '60%'],
+                        data: medias,
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+
+            myChart.setOption(option);
+        }
+    </script>
+}
 

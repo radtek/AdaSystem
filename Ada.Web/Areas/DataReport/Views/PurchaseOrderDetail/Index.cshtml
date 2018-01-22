@@ -50,15 +50,20 @@
                         </div>
                     </div>
                     @*<div class="col-sm-3">
+            <div class="form-group">
+                @Html.LabelFor(d => d.PublishDateStartEnd, Html.DisplayNameFor(d => d.PublishDateStartEnd) + "：", new { @class = "control-label" })
+                @Html.TextBoxFor(d => d.PublishDateStartEnd, new { @class = "form-control input-sm", @readonly = "" })
+                @Html.HiddenFor(d => d.PublishDateStart)
+                @Html.HiddenFor(d => d.PublishDateEnd)
+            </div>
+        </div>*@
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.PublishDateStartEnd, Html.DisplayNameFor(d => d.PublishDateStartEnd) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.PublishDateStartEnd, new { @class = "form-control input-sm", @readonly = "" })
-                            @Html.HiddenFor(d => d.PublishDateStart)
-                            @Html.HiddenFor(d => d.PublishDateEnd)
+                            @Html.LabelFor(d => d.BusinessBy, Html.DisplayNameFor(d => d.BusinessBy) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.BusinessBy, new { @class = "form-control input-sm" })
                         </div>
-                    </div>*@
+                    </div>
 
-                   
                     <div class="col-sm-2">
                         <div class="form-group">
                             @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor) + "：", new { @class = "control-label" })
@@ -272,7 +277,11 @@
                         title: '@Html.DisplayNameFor(d=>d.PublishLink)',
                         align: "center", valign: "middle", formatter: formatter.url
                     },
-
+                    {
+                        field: 'BusinessBy',
+                        title: '@Html.DisplayNameFor(d=>d.BusinessBy)',
+                        align: "center", valign: "middle",
+                    },
                     {
                         field: 'Transactor',
                         title: '@Html.DisplayNameFor(d=>d.Transactor)',

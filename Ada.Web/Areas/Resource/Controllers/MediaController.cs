@@ -586,6 +586,7 @@ namespace Resource.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Comment(MediaCommentView viewModel)
         {
+
             var entity = _repository.LoadEntities(d => d.Id == viewModel.MediaId).FirstOrDefault();
             MediaComment comment = new MediaComment();
             comment.Id = IdBuilder.CreateIdNum();

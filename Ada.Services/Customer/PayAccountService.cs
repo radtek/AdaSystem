@@ -55,7 +55,7 @@ namespace Ada.Services.Customer
 
         public void Delete(PayAccount entity)
         {
-            _repository.Delete(entity);
+            _repository.Remove(entity);
             _dbContext.SaveChanges();
         }
     }
