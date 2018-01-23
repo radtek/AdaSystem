@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
+using Ada.Core.Domain;
 using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Resource;
 
@@ -19,7 +20,7 @@ namespace Ada.Services.Resource
         }
         public IQueryable<MediaPrice> LoadEntitiesFilter(MediaView viewModel)
         {
-            var allList = _repository.LoadEntities(d => d.IsDelete == false&&d.Media.IsDelete==false);
+            var allList = _repository.LoadEntities(d => d.IsDelete == false&&d.Media.IsDelete==false&&d.Media.Status==Consts.StateLock);
             if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeIndex))
             {
                 allList = allList.Where(d => d.Media.MediaType.CallIndex == viewModel.MediaTypeIndex);

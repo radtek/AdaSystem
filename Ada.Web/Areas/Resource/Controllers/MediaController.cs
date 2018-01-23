@@ -331,11 +331,14 @@ namespace Resource.Controllers
                 return View(viewModel);
             }
             //校验ID不能重复
-            if (IsExist(viewModel, out var msg))
+            if (IsExist(viewModel, out var msg) != null)
             {
                 ModelState.AddModelError("message", msg);
                 return View(viewModel);
             }
+            ////查询删除的有没有，有就显示出来
+            //var temp = IsExist(viewModel, out var msg1, false, true);
+
             Media entity = new Media();
             entity.Id = IdBuilder.CreateIdNum();
             entity.AddedById = CurrentManager.Id;
@@ -481,7 +484,7 @@ namespace Resource.Controllers
                 return View(viewModel);
             }
             //校验ID不能重复
-            if (IsExist(viewModel, out var msg, true))
+            if (IsExist(viewModel, out var msg, true) != null)
             {
                 ModelState.AddModelError("message", msg);
                 return View(viewModel);
@@ -600,10 +603,10 @@ namespace Resource.Controllers
             return View(entity);
         }
 
-        private bool IsExist(MediaView viewModel, out string msg, bool isSelf = false)
+        private Media IsExist(MediaView viewModel, out string msg, bool isSelf = false, bool isDelete = false)
         {
             msg = string.Empty;
-            bool result = false;
+
 
             Expression<Func<Media, bool>> whereLambda;
             switch (viewModel.MediaTypeIndex)
@@ -612,12 +615,12 @@ namespace Resource.Controllers
                 case "zhihu":
 
                     whereLambda = d =>
-                          d.MediaID.Equals(viewModel.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
+                          d.MediaID.Equals(viewModel.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == isDelete &&
                           d.MediaTypeId == viewModel.MediaTypeId;
                     if (isSelf)
                     {
                         whereLambda = d =>
-                            d.MediaID.Equals(viewModel.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
+                            d.MediaID.Equals(viewModel.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == isDelete &&
                             d.MediaTypeId == viewModel.MediaTypeId && d.Id != viewModel.Id;
                     }
 
@@ -628,14 +631,14 @@ namespace Resource.Controllers
                     whereLambda = d =>
                           d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
                           d.Platform.Equals(viewModel.Platform, StringComparison.CurrentCultureIgnoreCase) &&
-                          d.IsDelete == false &&
+                          d.IsDelete == isDelete &&
                           d.MediaTypeId == viewModel.MediaTypeId;
                     if (isSelf)
                     {
                         whereLambda = d =>
                             d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
                             d.Platform.Equals(viewModel.Platform, StringComparison.CurrentCultureIgnoreCase) &&
-                            d.IsDelete == false &&
+                            d.IsDelete == isDelete &&
                             d.MediaTypeId == viewModel.MediaTypeId && d.Id != viewModel.Id;
                     }
                     break;
@@ -644,7 +647,7 @@ namespace Resource.Controllers
                           d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
                           d.Client.Equals(viewModel.Client, StringComparison.CurrentCultureIgnoreCase) &&
                           d.Channel.Equals(viewModel.Channel, StringComparison.CurrentCultureIgnoreCase) &&
-                          d.IsDelete == false &&
+                          d.IsDelete == isDelete &&
                           d.MediaTypeId == viewModel.MediaTypeId;
                     if (isSelf)
                     {
@@ -652,18 +655,18 @@ namespace Resource.Controllers
                             d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
                             d.Client.Equals(viewModel.Client, StringComparison.CurrentCultureIgnoreCase) &&
                             d.Channel.Equals(viewModel.Channel, StringComparison.CurrentCultureIgnoreCase) &&
-                            d.IsDelete == false &&
+                            d.IsDelete == isDelete &&
                             d.MediaTypeId == viewModel.MediaTypeId && d.Id != viewModel.Id;
                     }
                     break;
                 default:
                     whereLambda = d =>
-                          d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
+                          d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == isDelete &&
                           d.MediaTypeId == viewModel.MediaTypeId;
                     if (isSelf)
                     {
                         whereLambda = d =>
-                            d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
+                            d.MediaName.Equals(viewModel.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == isDelete &&
                             d.MediaTypeId == viewModel.MediaTypeId && d.Id != viewModel.Id;
                     }
 
@@ -671,12 +674,9 @@ namespace Resource.Controllers
             }
 
             var media = _repository.LoadEntities(whereLambda).FirstOrDefault();
-            if (media != null)
-            {
-                msg = viewModel.MediaName + "，此媒体账号已存在！";
-                result = true;
-            }
-            return result;
+            if (media == null) return null;
+            msg = viewModel.MediaName + "，此媒体账号已存在！";
+            return media;
         }
     }
 }

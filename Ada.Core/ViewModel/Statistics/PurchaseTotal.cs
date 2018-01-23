@@ -9,6 +9,15 @@ namespace Ada.Core.ViewModel.Statistics
 {
   public  class PurchaseTotal
     {
+        public PurchaseTotal()
+        {
+            Tops=new List<MediaAddTop>();
+        }
+        /// <summary>
+        /// 订单总数
+        /// </summary>
+        [Display(Name = "订单总数")]
+        public int? OrderCount { get; set; }
         /// <summary>
         /// 待响应
         /// </summary>
@@ -54,5 +63,24 @@ namespace Ada.Core.ViewModel.Statistics
         /// </summary>
         [Display(Name = "媒体资源")]
         public string Medias { get; set; }
+        /// <summary>
+        /// 开发排行
+        /// </summary>
+        [Display(Name = "开发排行")]
+        public List<MediaAddTop> Tops { get; set; }
+    }
+
+    public class MediaAddTop
+    {
+        /// <summary>
+        /// 媒介人员
+        /// </summary>
+        [Display(Name = "媒介人员")]
+        public string Transactor { get; set; }
+        /// <summary>
+        /// 开发数
+        /// </summary>
+        [Display(Name = "开发数")]
+        public int? MediasCount { get; set; }
     }
 }

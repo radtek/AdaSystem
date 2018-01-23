@@ -2,6 +2,7 @@
 @model Ada.Core.ViewModel.Statistics.PurchaseTotal
 @{
     ViewBag.Title = "媒介工作台";
+    int index = 1;
 }
 <div class="wrapper wrapper-content">
 
@@ -57,8 +58,8 @@
                         <i class="fa fa-calendar-o fa-5x"></i>
                     </div>
                     <div class="col-xs-8 text-right">
-                        <span> 预付金额 </span>
-                        <h2 class="font-bold">@Model.TotalPayMoney</h2>
+                        <span> 今日出刊 </span>
+                        <h2 class="font-bold">@Model.Today</h2>
                     </div>
                 </div>
             </div>
@@ -67,11 +68,11 @@
             <div class="widget style1 lazur-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","OrderDetail",new {area="Purchase"})';">
                 <div class="row">
                     <div class="col-xs-4">
-                        <i class="fa fa-jpy fa-5x"></i>
+                        <i class="fa fa-calendar-plus-o fa-5x"></i>
                     </div>
                     <div class="col-xs-8 text-right">
-                        <span> 已付金额 </span>
-                        <h2 class="font-bold">@Model.PayMoney</h2>
+                        <span> 明日出刊 </span>
+                        <h2 class="font-bold">@Model.Tomorrow</h2>
                     </div>
                 </div>
             </div>
@@ -95,42 +96,66 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
-                <div class="ibox-title">
+                @*<div class="ibox-title">
 
-                    <h5>媒体资源统计</h5>
-                </div>
+                        <h5>媒体资源统计</h5>
+                    </div>*@
                 <div class="ibox-content">
+                    <div>
+                        <span class="pull-right text-right">
+                            <strong>采购订单统计</strong>
+                            <br />
+                            订单总数: @Model.OrderCount
+                        </span>
+                        <h4 class="font-bold no-margins">
+                            媒体资源统计
+                        </h4>
+                        @*<small>Sales marketing.</small>*@
+                    </div>
                     <div class="row">
-                        <div class="col-lg-9">
+                        <div class="col-lg-8">
 
                             <div class="flot-chart" style="height: 350px;">
                                 <div class="flot-chart-content" id="flot-dashboard-chart"></div>
                             </div>
 
                         </div>
-                        <div class="col-lg-3">
-                            <ul class="stat-list">
-                                <li>
-                                    <h2 class="no-margins">1111</h2>
-                                    <small>销售订单数</small>
+                        <div class="col-lg-4">
+                            <div class="row m-t-xs">
+                                <div class="col-xs-6">
+                                    <h5 class="m-b-xs">预付金额</h5>
+                                    <h1 class="no-margins">@Model.TotalPayMoney</h1>
 
-                                </li>
-                                <li>
-                                    <h2 class="no-margins"><i class="fa fa-jpy "></i> 11111</h2>
-                                    <small>销售总额（不含税）</small>
+                                </div>
+                                <div class="col-xs-6">
+                                    <h5 class="m-b-xs">已付金额</h5>
+                                    <h1 class="no-margins">@Model.PayMoney</h1>
 
-                                </li>
-                                <li>
-                                    <h2 class="no-margins "><i class="fa fa-jpy "></i> 11111</h2>
-                                    <small>未核销金额</small>
+                                </div>
+                            </div>
 
-                                </li>
-                                <li>
-                                    <h2 class="no-margins "><i class="fa fa-jpy "></i> 11111</h2>
-                                    <small>已核销金额</small>
+                            @*<ul class="stat-list">
+                                    <li>
+                                        <h2 class="no-margins">1111</h2>
+                                        <small>销售订单数</small>
 
-                                </li>
-                            </ul>
+                                    </li>
+                                    <li>
+                                        <h2 class="no-margins"><i class="fa fa-jpy "></i> 11111</h2>
+                                        <small>销售总额（不含税）</small>
+
+                                    </li>
+                                    <li>
+                                        <h2 class="no-margins "><i class="fa fa-jpy "></i> 11111</h2>
+                                        <small>未核销金额</small>
+
+                                    </li>
+                                    <li>
+                                        <h2 class="no-margins "><i class="fa fa-jpy "></i> 11111</h2>
+                                        <small>已核销金额</small>
+
+                                    </li>
+                                </ul>*@
                         </div>
                     </div>
 
@@ -138,7 +163,52 @@
                 </div>
             </div>
         </div>
-        
+
+
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>媒体资源开发排行榜（@DateTime.Now.Month 月）</h5>
+                    <div class="ibox-tools">
+
+                        @*<a href="javascript:;">
+                            <i class="fa fa-refresh"></i>
+                        </a>*@
+
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="sk-spinner sk-spinner-double-bounce">
+                        <div class="sk-double-bounce1"></div>
+                        <div class="sk-double-bounce2"></div>
+                    </div>
+                    <table class="table table-hover margin bottom">
+                        <thead>
+                            <tr>
+                                <th class="text-center">排名</th>
+                                <th>媒介人员</th>
+                                <th>开发数</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Tops)
+                            {
+                                <tr>
+                                    <td class="text-center">@index</td>
+                                    <td>@item.Transactor</td>
+                                    <td>@item.MediasCount</td>
+                                </tr>
+                                index++;
+                            }
+                        </tbody>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
     </div>
 </div>
@@ -163,7 +233,7 @@
                     types.push(v.name);
                 });
             var option = {
-                
+
                 tooltip : {
                     trigger: 'item',
                     formatter: "{a} <br/>{b} : {c} ({d}%)"
