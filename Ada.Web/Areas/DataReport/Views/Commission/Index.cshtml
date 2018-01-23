@@ -1,0 +1,174 @@
+﻿@using System.Web.Optimization
+@model List<Ada.Core.ViewModel.Business.BusinessWriteOffDetailView>
+@{
+    ViewBag.Title = "报表统计";
+    var start = ViewBag.Start == null ? "''" : "moment('" + ViewBag.Start + "')";
+    var end = ViewBag.End == null ? "''" : "moment('" + ViewBag.End + "')";
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index","Home",new{area= "Dashboards" })">工作台</a>
+            </li>
+            <li class="active">
+                <strong>@ViewBag.Title</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+
+    </div>
+</div>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>销售提成统计</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="sk-spinner sk-spinner-wave">
+                        <div class="sk-rect2"></div>
+                        <div class="sk-rect3"></div>
+                        <div class="sk-rect4"></div>
+                        <div class="sk-rect5"></div>
+                    </div>
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="m-b-lg">
+                            <div class="input-group">
+                                <input type="text" placeholder="请选择日期范围" class="form-control input-lg" id="datepicker">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-lg btn-primary" type="submit">
+                                        统计
+                                    </button>
+                                </div>
+                            </div>
+                            @Html.Hidden("start")
+                            @Html.Hidden("end")
+                            <div class="m-t-md">
+                                @*<div class="pull-right">
+                                        <button type="button" class="btn btn-sm btn-white"> <i class="fa fa-comments"></i> </button>
+                                    </div>*@
+                            </div>
+                            @Html.ValidationMessage("message")
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <table class="table" data-empty="点击按钮开始统计">
+                            <thead>
+                                <tr>
+
+                                    <th>销售人员</th>
+                                    <th>提成总额</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.Transactor</td>
+                                            <td>@Math.Round(item.TotalCommission ?? 0,2)</td>
+                                            
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td>合计</td>
+                                        <td>@Math.Round(Model.Sum(d => d.TotalCommission)??0,2)</td>
+                                        
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Styles {
+    @Styles.Render("~/plugins/footableV3Styles")
+    @Styles.Render("~/plugins/dateRangeStyles")
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/footableV3")
+    @Scripts.Render("~/plugins/dateRange")
+
+    <script>
+        $(function () {
+            $('.table').footable();
+            $(".wrapper.wrapper-content form").validate({
+                submitHandler: function (form) {
+                    $('.wrapper.wrapper-content .ibox').children('.ibox-content').toggleClass('sk-loading');
+                    form.submit();
+                }
+            });
+            var start =@Html.Raw(start) || moment().startOf('month');
+            var end = @Html.Raw(end) || moment().endOf('month');
+            cb(start, end);
+            $("#datepicker").daterangepicker({
+                startDate: start,
+                endDate: end,
+                opens: "center",
+                linkedCalendars: false,
+                ranges: {
+                    '今日': [moment(), moment()],
+                    '昨日': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    '最近7日': [moment().subtract(6, 'days'), moment()],
+                    '最近30日': [moment().subtract(29, 'days'), moment()],
+                    '本月': [moment().startOf('month'), moment().endOf('month')],
+                    '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    separator: " 至 ",
+                    applyLabel: "确认",
+                    cancelLabel: "取消",
+                    fromLabel: "从",
+                    toLabel: "到",
+                    customRangeLabel: "自定义日期",
+                    weekLabel: "周",
+                    daysOfWeek: [
+                        "日",
+                        "一",
+                        "二",
+                        "三",
+                        "四",
+                        "五",
+                        "六"
+                    ],
+                    monthNames: [
+                        "一月",
+                        "二月",
+                        "三月",
+                        "四月",
+                        "五月",
+                        "六月",
+                        "七月",
+                        "八月",
+                        "九月",
+                        "十月",
+                        "十一月",
+                        "十二月"
+                    ],
+                    firstDay: 1
+                }
+            },cb);
+        });
+
+        function cb(start, end) {
+            $('#start').val(start.format('YYYY-MM-DD'));
+            $('#end').val(end.format('YYYY-MM-DD'));
+        }
+    </script>
+}

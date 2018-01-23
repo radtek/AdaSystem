@@ -36,15 +36,12 @@ namespace Dashboards.Controllers
         public ActionResult Index()
         {
             var premission = PremissionData();
-            var userId = string.Empty;
-            if (premission.Count > 0)
-            {
-                userId = CurrentManager.Id;
-            }
+            
             var purchase = _purchaseRepository.LoadEntities(d => d.IsDelete == false);
-            if (!string.IsNullOrWhiteSpace(userId))
+            
+            if (premission != null && premission.Count > 0)
             {
-                purchase = purchase.Where(d => d.TransactorId == userId);
+                purchase = purchase.Where(d => premission.Contains(d.TransactorId));
             }
             //订单数
             PurchaseTotal total = new PurchaseTotal();
@@ -61,26 +58,28 @@ namespace Dashboards.Controllers
             //已付款
             total.TotalPayMoney = purchase.Where(d => d.Status != Consts.PurchaseStatusFail).Sum(d => d.PurchaseMoney);
             var payment = _purchasePaymentRepository.LoadEntities(d => d.IsDelete == false);
-            if (!string.IsNullOrWhiteSpace(userId))
+           
+            if (premission != null && premission.Count > 0)
             {
-                payment = payment.Where(d => d.TransactorId == userId);
+                payment = payment.Where(d => premission.Contains(d.TransactorId));
             }
             total.PayMoney = payment.Sum(d =>
                   d.PurchasePaymentDetails.Where(t => t.Status == Consts.StateNormal).Sum(p => p.PayMoney));
             //发票数
             var invoice = _purchasePaymentRepository.LoadEntities(d => d.IsInvoice == true && d.InvoiceStauts == false);
-            if (!string.IsNullOrWhiteSpace(userId))
+            
+            if (premission != null && premission.Count > 0)
             {
-                invoice = invoice.Where(d => d.TransactorId == userId);
+                invoice = invoice.Where(d => premission.Contains(d.TransactorId));
             }
             total.InvoiceCount = invoice.Count();
             //资源数
             var types = _mediaTypeRepository.LoadEntities(d => d.IsDelete == false);
-            if (!string.IsNullOrWhiteSpace(userId))
+            if (premission != null && premission.Count > 0)
             {
                 var counts = types.Select(d => new
                 {
-                    value = d.Medias.Count(m => m.IsDelete == false && m.TransactorId == userId),
+                    value = d.Medias.Count(m => m.IsDelete == false && premission.Contains(m.TransactorId)),
                     name = d.TypeName
                 });
                 total.Medias = JsonConvert.SerializeObject(counts);

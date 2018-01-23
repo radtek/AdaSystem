@@ -107,6 +107,7 @@
     <Compile Include="Controllers\BusinessController.cs" />
     <Compile Include="Controllers\BusinessOrderController.cs" />
     <Compile Include="Controllers\BusinessOrderDetailController.cs" />
+    <Compile Include="Controllers\CommissionController.cs" />
     <Compile Include="Controllers\IncomeExpendController.cs" />
     <Compile Include="Controllers\PayableController.cs" />
     <Compile Include="Controllers\PurchaseOrderDetailController.cs" />
@@ -130,6 +131,7 @@
     <Content Include="Views\Payable\Index.cshtml" />
     <Content Include="Views\WriteOff\Index.cshtml" />
     <Content Include="Views\Business\Index.cshtml" />
+    <Content Include="Views\Commission\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

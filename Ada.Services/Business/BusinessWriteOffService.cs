@@ -68,6 +68,24 @@ namespace Ada.Services.Business
             }
             return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
         }
+        public IQueryable<BusinessWriteOffDetailView> LoadEntitiesFilterPage(BusinessWriteOffDetailView viewModel)
+        {
+            var temp = LoadEntitiesFilter(viewModel);
+            viewModel.TotalBusinessMoney = temp.Sum(d => d.BusinessMoney);
+            viewModel.TotalCommission = temp.Sum(d => d.Commission);
+            viewModel.TotalProfit = temp.Sum(d => d.Profit);
+            viewModel.TotalPurchaseMoney = temp.Sum(d => d.PurchaseMoney);
+            viewModel.total = temp.Count();
+            int offset = viewModel.offset ?? 0;
+            int rows = viewModel.limit ?? 10;
+            string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
+            if (order == "desc")
+            {
+                return temp.OrderByDescending(d => d.Id).Skip(offset).Take(rows);
+            }
+            return temp.OrderBy(d => d.Id).Skip(offset).Take(rows);
+        }
+        
         public IQueryable<BusinessWriteOffDetailView> LoadEntitiesFilter(BusinessWriteOffDetailView viewModel)
         {
             var allList = _repository.LoadEntities(d => d.IsDelete == false);
@@ -105,6 +123,7 @@ namespace Ada.Services.Business
                            PublishDate = p.PublishDate,
                            OrderNum = o.BusinessOrder.OrderNum,
                            Transactor = o.BusinessOrder.Transactor,
+                           TransactorId = o.BusinessOrder.TransactorId,
                            LinkManName = o.BusinessOrder.LinkManName,
                            OrderId = o.BusinessOrderId,
                            BusinessMoney = o.SellMoney,
@@ -114,24 +133,9 @@ namespace Ada.Services.Business
                            Percentage = SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays1 ? setting.Percentage1 : (SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays2 && SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) > setting.ReturnDays1 ? setting.Percentage2 : 0),
                            Commission = Math.Round((decimal)((o.SellMoney - p.PurchaseMoney) * (SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays1 ? setting.Percentage1 : (SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays2 && SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) > setting.ReturnDays1 ? setting.Percentage2 : 0))), 2)
                        };
-           
-
-            viewModel.TotalBusinessMoney = temp.Sum(d => d.BusinessMoney);
-            viewModel.TotalCommission = temp.Sum(d => d.Commission);
-            viewModel.TotalProfit = temp.Sum(d => d.Profit);
-            viewModel.TotalPurchaseMoney = temp.Sum(d => d.PurchaseMoney);
-            viewModel.total = temp.Count();
-            int offset = viewModel.offset ?? 0;
-            int rows = viewModel.limit ?? 10;
-            string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
-            if (order == "desc")
-            {
-                return temp.OrderByDescending(d => d.Id).Skip(offset).Take(rows);
-            }
-            return temp.OrderBy(d => d.Id).Skip(offset).Take(rows);
+            
+            return temp;
         }
-
-        
         public void Update(BusinessWriteOff entity)
         {
 

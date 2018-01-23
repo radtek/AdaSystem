@@ -9,6 +9,9 @@ using Ada.Services.Business;
 
 namespace DataReport.Controllers
 {
+    /// <summary>
+    /// 提成明细（核销明细）
+    /// </summary>
     public class WriteOffController : BaseController
     {
         private readonly IBusinessWriteOffService _businessWriteOffService;
@@ -23,7 +26,7 @@ namespace DataReport.Controllers
         public ActionResult GetList(BusinessWriteOffDetailView viewModel)
         {
             viewModel.Managers = PremissionData();
-            var result = _businessWriteOffService.LoadEntitiesFilter(viewModel).ToList();
+            var result = _businessWriteOffService.LoadEntitiesFilterPage(viewModel).ToList();
             return Json(new
             {
                 viewModel.total,
