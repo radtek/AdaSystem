@@ -140,6 +140,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\BrushController.cs" />
     <Compile Include="Controllers\HeadLineController.cs" />
     <Compile Include="Controllers\MediaController.cs" />
     <Compile Include="Controllers\MediaGroupController.cs" />
@@ -163,31 +164,13 @@
     <Content Include="Views\MediaType\Add.cshtml" />
     <Content Include="Views\MediaType\Update.cshtml" />
     <Content Include="Views\WeiXin\Index.cshtml" />
-    <Content Include="Views\WeiXin\Add.cshtml" />
-    <Content Include="Views\WeiXin\Update.cshtml" />
     <Content Include="Views\MediaTag\Index.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
-    <Content Include="Views\WeiXin\WeiXinEdit.cshtml" />
     <Content Include="Views\SinaBlog\Index.cshtml" />
-    <Content Include="Views\SinaBlog\Add.cshtml" />
-    <Content Include="Views\SinaBlog\Update.cshtml" />
-    <Content Include="Views\SinaBlog\SinaBlogEdit.cshtml" />
     <Content Include="Views\WebCast\Index.cshtml" />
-    <Content Include="Views\WebCast\Add.cshtml" />
-    <Content Include="Views\WebCast\Update.cshtml" />
-    <Content Include="Views\WebCast\WebCastEdit.cshtml" />
     <Content Include="Views\HeadLine\Index.cshtml" />
-    <Content Include="Views\HeadLine\Add.cshtml" />
-    <Content Include="Views\HeadLine\Update.cshtml" />
-    <Content Include="Views\HeadLine\HeadLineEdit.cshtml" />
     <Content Include="Views\ZhiHu\Index.cshtml" />
-    <Content Include="Views\ZhiHu\Add.cshtml" />
-    <Content Include="Views\ZhiHu\Update.cshtml" />
-    <Content Include="Views\ZhiHu\ZhiHuEdit.cshtml" />
     <Content Include="Views\RedBook\Index.cshtml" />
-    <Content Include="Views\RedBook\Add.cshtml" />
-    <Content Include="Views\RedBook\Update.cshtml" />
-    <Content Include="Views\RedBook\RedBookEdit.cshtml" />
     <Content Include="Views\Update\Index.cshtml" />
     <Content Include="Views\MediaGroup\Index.cshtml" />
     <Content Include="Views\MediaGroup\Add.cshtml" />
@@ -195,9 +178,6 @@
     <Content Include="Views\MediaGroup\Update.cshtml" />
     <Content Include="Views\Shared\MediaGroupDetail.cshtml" />
     <Content Include="Views\WebSite\Index.cshtml" />
-    <Content Include="Views\WebSite\Add.cshtml" />
-    <Content Include="Views\WebSite\Update.cshtml" />
-    <Content Include="Views\WebSite\WebSiteEdit.cshtml" />
     <Content Include="Views\Media\Index.cshtml" />
     <Content Include="Views\Media\Add.cshtml" />
     <Content Include="Views\Shared\WeiXin.cshtml" />
@@ -210,6 +190,8 @@
     <Content Include="Views\Shared\WebCast.cshtml" />
     <Content Include="Views\Shared\Brush.cshtml" />
     <Content Include="Views\Media\Comment.cshtml" />
+    <Content Include="Views\Brush\Index.cshtml" />
+    <Content Include="Views\Shared\Import.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

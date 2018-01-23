@@ -21,7 +21,7 @@
     }
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var seos = fieldService.GetFieldsByKey("SEO").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
-    
+
     var resourceTypes = fieldService.GetFieldsByKey("ResourceType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -42,178 +42,177 @@
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
     <div class="ibox">
         <div class="ibox-content m-b-sm border-bottom">
-            
-                @using (Html.BeginForm())
-                {
-                    @Html.AntiForgeryToken()
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
 
 
 
 
 
 
-            <div class="row">
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.MediaTypeId, Html.DisplayNameFor(d => d.MediaTypeId).ToString(), new { @class = "control-label" })
-                        <select name="MediaTypeId" class="form-control" id="MediaTypeId">
-                            <option value="">请选择</option>
-                            @foreach (var item in mediaTypes)
-                {
-                    if (item.Id == Model.MediaTypeId)
-                    {
-                        <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))' selected="selected">@item.TypeName</option>
-        }
-        else
-        {
-            <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))'>@item.TypeName</option>
-}
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.MediaTypeId, Html.DisplayNameFor(d => d.MediaTypeId).ToString(), new { @class = "control-label" })
+                            <select name="MediaTypeId" class="form-control" id="MediaTypeId">
+                                <option value="">请选择</option>
+                                @foreach (var item in mediaTypes)
+                                {
+                                    if (item.Id == Model.MediaTypeId)
+                                    {
+                                        <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))' selected="selected">@item.TypeName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))'>@item.TypeName</option>
+                                    }
 
-}
-                        </select>
+                                }
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
-                        @Html.DropDownListFor(d => d.AdPositionName, adaPostions, "不限", new { @class = "form-control" })
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
+                            @Html.DropDownListFor(d => d.AdPositionName, adaPostions, "不限", new { @class = "form-control" })
+                        </div>
                     </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart).ToString(), new { @class = "control-label" })
-                        <div class="input-daterange input-group">
-                            @Html.TextBoxFor(d => d.PriceStart, new { @class = "form-control" })
-                            <span class="input-group-addon">至</span>
-                            @Html.TextBoxFor(d => d.PriceEnd, new { @class = "form-control" })
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart).ToString(), new { @class = "control-label" })
+                            <div class="input-daterange input-group">
+                                @Html.TextBoxFor(d => d.PriceStart, new { @class = "form-control" })
+                                <span class="input-group-addon">至</span>
+                                @Html.TextBoxFor(d => d.PriceEnd, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName).ToString(), new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Platform, Html.DisplayNameFor(d => d.Platform).ToString(), new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.Platform, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName).ToString(), new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.MediaID, Html.DisplayNameFor(d => d.MediaID).ToString(), new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.Channel, Html.DisplayNameFor(d => d.Channel).ToString(), new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.Channel, new { @class = "form-control" })
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName).ToString(), new { @class = "control-label" })
-                        @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.Platform, Html.DisplayNameFor(d => d.Platform).ToString(), new { @class = "control-label" })
-                        @Html.TextBoxFor(d => d.Platform, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName).ToString(), new { @class = "control-label" })
-                        @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.MediaID, Html.DisplayNameFor(d => d.MediaID).ToString(), new { @class = "control-label" })
-                        @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.Channel, Html.DisplayNameFor(d => d.Channel).ToString(), new { @class = "control-label" })
-                        @Html.TextBoxFor(d => d.Channel, new { @class = "form-control" })
-                    </div>
-                </div>
-            </div>
 
-                    <div class="panel-group" id="accordion">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse">更多条件</a>
-                                    </h4>
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse">更多条件</a>
+                            </h4>
+                        </div>
+                        <div id="collapse" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Areas, Html.DisplayNameFor(d => d.Areas).ToString(), new { @class = "control-label" })
+                                        @Html.TextBoxFor(d => d.Areas, new { @class = "form-control" })
+                                    </div>
                                 </div>
-                                <div id="collapse" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <div class="col-sm-3">
-                                            <div class="form-group">
-                                                @Html.LabelFor(d => d.Areas, Html.DisplayNameFor(d => d.Areas).ToString(), new { @class = "control-label" })
-                                                @Html.TextBoxFor(d => d.Areas, new { @class = "form-control" })
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="form-group">
-                                                @Html.LabelFor(d => d.SEO, Html.DisplayNameFor(d => d.SEO).ToString(), new {@class = "control-label"})
-                                                @Html.DropDownListFor(d => d.SEO, seos, "请选择", new {@class = "form-control"})
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="form-group">
-                                                @Html.LabelFor(d => d.ResourceType, Html.DisplayNameFor(d => d.ResourceType).ToString(), new {@class = "control-label"})
-                                                @Html.DropDownListFor(d => d.ResourceType, resourceTypes, "请选择", new {@class = "form-control"})
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="form-group">
-                                                @Html.LabelFor(d => d.Efficiency, Html.DisplayNameFor(d => d.Efficiency).ToString(), new {@class = "control-label"})
-                                                @Html.TextBoxFor(d => d.Efficiency, new {@class = "form-control"})
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new {@class = "control-label"})
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        @foreach (var item in tags)
-                                                        {
-                                                            var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
-                                                            <div class="checkbox checkbox-success checkbox-inline">
-                                                                <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
-                                                                <label for="@item.Id">@item.TagName</label>
-                                                            </div>
-                                                        }
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.SEO, Html.DisplayNameFor(d => d.SEO).ToString(), new { @class = "control-label" })
+                                        @Html.DropDownListFor(d => d.SEO, seos, "请选择", new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.ResourceType, Html.DisplayNameFor(d => d.ResourceType).ToString(), new { @class = "control-label" })
+                                        @Html.DropDownListFor(d => d.ResourceType, resourceTypes, "请选择", new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Efficiency, Html.DisplayNameFor(d => d.Efficiency).ToString(), new { @class = "control-label" })
+                                        @Html.TextBoxFor(d => d.Efficiency, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "control-label" })
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                @foreach (var item in tags)
+                                                {
+                                                    var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
+                                                    <div class="checkbox checkbox-success checkbox-inline">
+                                                        <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
+                                                        <label for="@item.Id">@item.TagName</label>
                                                     </div>
-                                                </div>
+                                                }
+                                            </div>
+                                        </div>
 
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                @Html.LabelFor(d => d.MediaNames, Html.DisplayNameFor(d => d.MediaNames).ToString(), new {@class = "control-label"})
-                                                @Html.TextAreaFor(d => d.MediaNames, 4, 20, new {@class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询"})
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                @Html.LabelFor(d => d.MediaIDs, Html.DisplayNameFor(d => d.MediaIDs).ToString(), new {@class = "control-label"})
-                                                @Html.TextAreaFor(d => d.MediaIDs, 4, 20, new {@class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询"})
-                                            </div>
-                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.MediaNames, Html.DisplayNameFor(d => d.MediaNames).ToString(), new { @class = "control-label" })
+                                        @Html.TextAreaFor(d => d.MediaNames, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.MediaIDs, Html.DisplayNameFor(d => d.MediaIDs).ToString(), new { @class = "control-label" })
+                                        @Html.TextAreaFor(d => d.MediaIDs, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
                                     </div>
                                 </div>
                             </div>
-                        
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <button class="btn btn-success btn-sm" type="submit"><i class="fa fa-search"></i> 查询数据</button>
-
-                                <button class="btn btn-primary btn-sm" type="submit" name="submit.Export" value="export"><i class="fa fa-download"></i> 导出数据</button>
-                                <button class="btn btn-white btn-sm" type="button" data-toggle="modal" data-target="#uploadModal"><i class="fa fa-upload"></i> 更新导入</button>
-                            </div>
-
-                        </div>
-
-                        <div class="col-sm-12">
-                            <div class="alert alert-warning">
-                                <strong>注意事项：</strong>导出导入的文件后缀名为[.xlsx]，导入资源的文件一定为导出资源的文件，其他文件排版格式会出错。
-                            </div>
-
                         </div>
                     </div>
 
-                }
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <button class="btn btn-success btn-sm" type="submit"><i class="fa fa-search"></i> 查询数据</button>
+                            <button class="btn btn-primary btn-sm" type="submit" name="submit.Export" value="export"><i class="fa fa-download"></i> 导出数据</button>
+                            <button class="btn btn-white btn-sm" type="button" data-toggle="modal" data-target="#uploadModal"><i class="fa fa-upload"></i> 更新导入</button>
+                        </div>
 
-            </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="alert alert-warning">
+                            <strong>注意事项：</strong>导出导入的文件后缀名为[.xlsx]，导入资源的文件一定为导出资源的文件，其他文件排版格式会出错。
+                        </div>
+
+                    </div>
+                </div>
+
+            }
 
         </div>
-   
+
+    </div>
+
 
 
     <div class="row">
@@ -281,7 +280,7 @@
                                                     mediaName = "[ " + item.Platform + " ] " + item.MediaName;
                                                     break;
                                             }
-                                                        }
+                                        }
                                         <td>
                                             @mediaName  <a class='btn btn-warning btn-circle btn-xs' href='@Url.Action("Comment", "Media",new{id=item.Id})' target='_blank' title='评价'><i class='fa fa-commenting'></i></a>
                                         </td>
@@ -291,13 +290,13 @@
                                             @foreach (var group in item.MediaGroups)
                                             {
                                                 <button class='btn btn-warning btn-xs' onclick="groupDetail('@group.Id');"><i class='fa fa-object-group'></i> @group.GroupName</button>
-                                                }
+                                            }
                                         </td>
                                         <td>@item.FansNum</td>
                                         <td>
                                             @foreach (var price in item.MediaPrices)
-                                                {
-                                                    var str = price.AdPositionName + "：¥ " + price.PurchasePrice + "　　有效期至：" + price.InvalidDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"));
+                                            {
+                                                var str = price.AdPositionName + "：¥ " + price.PurchasePrice + "　　有效期至：" + price.InvalidDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"));
                                                 <div class="bg-info">@str</div>
                                             }
                                         </td>
@@ -306,7 +305,7 @@
                                         <td>@item.Transactor</td>
                                         <td>
                                             <a class='btn btn-success btn-sm' href='@Url.Action("Update", new {id = item.Id})' target='_blank'><i class='fa fa-pencil'></i> 编辑</a>
-                                           
+
                                             <button class='btn btn-danger btn-sm' onclick="cancle('@item.Id');"><i class='fa fa-trash-o'></i> 删除</button>
                                         </td>
                                     </tr>
@@ -325,50 +324,17 @@
         </div>
     </div>
 
-
-
-
-    <div class="modal inmodal" id="uploadModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content animated bounceInRight">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">导入更新媒体资源</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>导入文件</label>
-                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
-                            <div class="form-control" data-trigger="fileinput">
-                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
-                                <span class="fileinput-filename"></span>
-                            </div>
-                            <span class="input-group-addon btn btn-default btn-file">
-                                <span class="fileinput-new">选择</span>
-                                <span class="fileinput-exists">更换</span>
-                                <input type="file" name="upfile" id="upfile" />
-                            </span>
-                            <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">移除</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                    <button type="button" class="ladda-button btn btn-primary" onclick="upLoadFile();" data-style="zoom-in">导入</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    @Html.Partial("Import")
 
 </div>
 @section Styles {
-                                                @Styles.Render("~/plugins/awesomeCheckboxStyles")
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
     @Styles.Render("~/plugins/footableV3Styles")
     @Styles.Render("~/plugins/jasnyBootstrapStyles")
     @Styles.Render("~/plugins/laddaStyles")
 }
-                                            @section Scripts {
-                                                @Scripts.Render("~/plugins/footableV3")
+@section Scripts {
+    @Scripts.Render("~/plugins/footableV3")
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/ladda")
     <script>

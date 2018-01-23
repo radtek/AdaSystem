@@ -6,7 +6,8 @@
 @{
     ViewBag.Title = "网红资源";
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
-    var adpositions = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("webcast").AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
+    var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("webcast");
+    var adpositions = meidaType.AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
 }
 @Html.Partial("Bread")
 
@@ -21,7 +22,8 @@
             </div>
         </div>
         <div class="ibox-content">
-            <form id="searchFrm" onSubmit="javascript:searchFrm.search(this, event);">
+            <form id="searchFrm" action="@Url.Action("Export", "Media")" method="post">
+                @Html.AntiForgeryToken()
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="form-group">
@@ -73,8 +75,8 @@
                 <div class="row">
                     <div class="col-sm-12 text-center">
                         <div class="form-group">
-                            <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 搜索</button>
-                            <button class="btn btn-warning" type="button" id="btn_reset"><i class="fa fa-repeat"></i> 重置</button>
+                            <button class="btn btn-primary" type="button" onclick="$('#table').bootstrapTable('refresh');"><i class="fa fa-search"></i> 搜索</button>
+                            <button class="btn btn-warning" type="button" onclick="searchFrm.reset($('#searchFrm'));"><i class="fa fa-repeat"></i> 重置</button>
                         </div>
                     </div>
                 </div>
@@ -95,37 +97,45 @@
 
 
 </div>
-
+@Html.Partial("Import")
 <div id="toolbar" class="btn-group">
-    <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
-        <i class="fa fa-plus"></i> 新增
+    <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add","Media",new{id=meidaType.Id})" target="_blank">
+        <i class="fa fa-plus"></i> 新增网红
     </a>
+    <button type="button" class="btn btn-primary btn-outline" onclick="exportDate();">
+        <i class="fa fa-download"></i> 导出数据
+    </button>
+    <button type="button" class="btn btn-primary btn-outline" data-toggle="modal" data-target="#uploadModal">
+        <i class="fa fa-upload"></i> 更新导入
+    </button>
 </div>
 
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
+    @Styles.Render("~/plugins/jasnyBootstrapStyles")
+    @Styles.Render("~/plugins/laddaStyles")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js")"></script>
+    @Scripts.Render("~/plugins/jasnyBootstrap")
+    @Scripts.Render("~/plugins/ladda")
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=20180124")"></script>
 
     <script type="text/javascript">
 
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
-            //2.初始化Button的点击事件
-            var oButtonInit = new ButtonInit();
-            oButtonInit.Init();
+
 
         });
         var TableInit = function() {
             var obj = new Object();
             obj.Init = function() {
                 $('#table').bootstrapTable({
-                    url: '@Url.Action("GetList")',         //请求后台的URL（*）
+                    url: '@Url.Action("GetList","Media")',         //请求后台的URL（*）
                     classes: "table table-no-bordered",
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
@@ -151,6 +161,10 @@
                 //detailFormatter: detailFormatter,
                     formatSearch: function() {
                         return "网红名称";
+                },
+                    queryParams: function (parameters) {
+                        parameters.MediaTypeId = '@meidaType.Id';
+                        return searchFrm.queryParams(parameters);
                     },
                 mobileResponsive:true,
                 onLoadSuccess: initTooltip,
@@ -162,27 +176,26 @@
                         formatter: formatter.normalStatus,
                         align: "center"
                     },
-                    {
-                        field: 'Platform',
-                        title: '@Html.DisplayNameFor(d=>d.Platform)',
-                        valign: "middle",
-                        align: "center"
-                    },
+
                     {
                         field: 'MediaName',
                         title: '网红名称',
                         valign: "middle",
-                        align: "center",
-                        formatter: function(value, row, index) {
+                        align: "left",
+                        formatter: function (value, row, index) {
+                            var comment =
+                                " <a class='btn btn-warning btn-circle btn-xs' href='@Url.Action("Comment", "Media")?id=" +
+                                    row.Id +
+                                    "' target='_blank' title='评价'><i class='fa fa-commenting'></i></a>";
                             if (value) {
                                 if (row.MediaLink) {
-                                    return "<a class='label' href='" + row.MediaLink + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
+                                    return "<a class='label' href='" + row.MediaLink + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>" + comment;
                                 } else {
-                                    return value;
+                                    return value + comment;
                                 }
 
                             } else {
-                                return value;
+                                return value + comment;
                             }
                         }
                     },
@@ -239,7 +252,8 @@
                         field: 'LinkManName',
                         title: '@Html.DisplayNameFor(d=>d.LinkManName)',
                         valign: "middle",
-                        align: "center"
+                        align: "left",
+                        formatter: formatter.linkman
                     },
 
                     {
@@ -255,7 +269,7 @@
                         valign: "middle",
                         align: "center",
                         formatter: function (value) {
-                            return "<a class='btn btn-success btn-sm' href='@Url.Action("Update")?id=" + value + "');'><i class='fa fa-pencil'></i> 编辑</a> " +
+                            return "<a class='btn btn-success btn-sm' href='@Url.Action("Update","Media")?id=" + value + "');' target='_blank'><i class='fa fa-pencil'></i> 编辑</a> " +
                                 "<button class='btn btn-danger btn-sm' onclick=\"cancle('" + value +"');\"><i class='fa fa-trash-o'></i> 删除</button>";
                         }
                     }
@@ -264,62 +278,7 @@
             };
             return obj;
         };
-        var ButtonInit = function () {
-            var oInit = new Object();
-            oInit.Init = function () {
-                $("#btn_reset").click(function () {
-                    searchFrm.reset($("#searchFrm"));
-                });
-            };
 
-            return oInit;
-        };
-
-       
-        //撤销
-        function cancle(id) {
-            swal({
-                title: "您确定吗?",
-                text: "确认要删除此数据吗?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                closeOnConfirm: false,
-                showLoaderOnConfirm: true
-            }, function () {
-                $.ajax({
-                    type: "post",
-                    headers: {
-                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                    },
-                    url: "@Url.Action("Delete")",
-                    data: { "id": id },
-                    success: function (data) {
-                        if (data.State == 1) {
-                            $("#table").bootstrapTable('refresh');
-                            swal({
-                                title: "操作成功",
-                                text: data.Msg,
-                                timer: 2000,
-                                type:"success",
-                                showConfirmButton: false
-                            });
-
-                        } else {
-                            swal("操作提醒", data.Msg, "warning");
-                        }
-                    },
-                    error: function () {
-                        swal("操作失败", "系统错误", "error");
-                    },
-                    complete: function () {
-
-                    }
-                });
-            });
-        }
     </script>
 }
 

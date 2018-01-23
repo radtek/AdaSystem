@@ -72,102 +72,161 @@ namespace Resource.Controllers
             if (export == "export")
             {
                 viewModel.limit = setting.PurchaseExportRows;
-                var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
-                //找到没有的
-                //找到没有的
-
-                if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
-                {
-                    var names = viewModel.MediaNames.Split(',').ToList();
-                    int i = 0;
-                    foreach (var name in names)
-                    {
-                        var temp = result.FirstOrDefault(d =>
-                            d.MediaName.Equals(name, StringComparison.CurrentCultureIgnoreCase));
-                        if (temp == null)
-                        {
-                            result.Add(new Media
-                            {
-                                MediaName = name,
-                                Taxis = i
-                            });
-                        }
-                        else
-                        {
-                            temp.Taxis = i;
-                        }
-
-                        i++;
-                    }
-                }
-                if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
-                {
-                    var ids = viewModel.MediaIDs.Split(',').ToList();
-                    int i = 0;
-                    foreach (var id in ids)
-                    {
-                        var temp = result.FirstOrDefault(d =>
-                            d.MediaID.Equals(id, StringComparison.CurrentCultureIgnoreCase));
-                        if (temp == null)
-                        {
-                            result.Add(new Media
-                            {
-                                MediaID = id,
-                                Taxis = i
-                            });
-                        }
-                        else
-                        {
-                            temp.Taxis = i;
-                        }
-                        i++;
-                    }
-                }
-                JArray jObjects = new JArray();
-                foreach (var media in result.OrderBy(d => d.Taxis))
-                {
-                    var jo = new JObject();
-                    jo.Add("Id", media.Id ?? "不存在的资源");
-                    jo.Add("结算人", media.LinkMan?.Name);
-                    jo.Add("媒体类型", media.MediaType?.TypeName);
-                    jo.Add("平台", media.Platform);
-                    string website = string.Empty;
-                    if (!string.IsNullOrWhiteSpace(media.Client) && !string.IsNullOrWhiteSpace(media.Channel))
-                    {
-                        website = "-" + media.Client + "-" + media.Channel;
-                    }
-                    jo.Add("媒体名称", media.MediaName + website);
-                    jo.Add("媒体ID", media.MediaID);
-                    jo.Add("粉丝数", media.FansNum ?? 0);
-                    foreach (var mediaMediaPrice in media.MediaPrices)
-                    {
-                        jo.Add(mediaMediaPrice.AdPositionName, mediaMediaPrice.PurchasePrice);
-                        //jo.Add(mediaMediaPrice.AdPositionName + "更新日期", mediaMediaPrice.PriceDate);
-                        //jo.Add(mediaMediaPrice.AdPositionName + "失效日期", mediaMediaPrice.InvalidDate);
-                    }
-                    jObjects.Add(jo);
-                }
-                return File(ExportData(jObjects.ToString()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
+                return File(ExportData(ExportExcel(viewModel)), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
             }
-            else
+
+            Stopwatch watcher = new Stopwatch();
+            watcher.Start();
+            viewModel.limit = setting.PurchaseSeachRows;
+            var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
+            viewModel.Medias = result;
+            watcher.Stop();
+            if (!result.Any())
             {
-                Stopwatch watcher = new Stopwatch();
-                watcher.Start();
-                viewModel.limit = setting.PurchaseSeachRows;
-                var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
-                viewModel.Medias = result;
-                watcher.Stop();
-                if (!result.Any())
-                {
-                    ModelState.AddModelError("message", "没有查询到相关媒体信息！");
-                    return View(viewModel);
-                }
-                ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + viewModel.total + "条。注：查询结果最多显示" + setting.PurchaseSeachRows + "条");
+                ModelState.AddModelError("message", "没有查询到相关媒体信息！");
                 return View(viewModel);
             }
-
-
+            ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + viewModel.total + "条。注：查询结果最多显示" + setting.PurchaseSeachRows + "条");
+            return View(viewModel);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Export(MediaView viewModel)
+        {
+            viewModel.Managers = PremissionData();
+            var setting = _settingService.GetSetting<WeiGuang>();
+            viewModel.limit = setting.PurchaseExportRows;
+            return File(ExportData(ExportExcel(viewModel)), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
+        }
+
+        private string ExportExcel(MediaView viewModel)
+        {
+            var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
+            {
+                var names = viewModel.MediaNames.Split(',').ToList();
+                int i = 0;
+                foreach (var name in names)
+                {
+                    var temp = result.FirstOrDefault(d =>
+                        d.MediaName.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+                    if (temp == null)
+                    {
+                        result.Add(new Media
+                        {
+                            MediaName = name,
+                            Taxis = i
+                        });
+                    }
+                    else
+                    {
+                        temp.Taxis = i;
+                    }
+
+                    i++;
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
+            {
+                var ids = viewModel.MediaIDs.Split(',').ToList();
+                int i = 0;
+                foreach (var id in ids)
+                {
+                    var temp = result.FirstOrDefault(d =>
+                        d.MediaID.Equals(id, StringComparison.CurrentCultureIgnoreCase));
+                    if (temp == null)
+                    {
+                        result.Add(new Media
+                        {
+                            MediaID = id,
+                            Taxis = i
+                        });
+                    }
+                    else
+                    {
+                        temp.Taxis = i;
+                    }
+                    i++;
+                }
+            }
+            JArray jObjects = new JArray();
+            foreach (var media in result.OrderBy(d => d.Taxis))
+            {
+                var jo = new JObject();
+                jo.Add("Id", media.Id ?? "不存在的资源");
+                jo.Add("结算人", media.LinkMan?.Name);
+                jo.Add("媒体类型", media.MediaType?.TypeName);
+                jo.Add("平台", media.Platform);
+                string website = string.Empty;
+                if (!string.IsNullOrWhiteSpace(media.Client) && !string.IsNullOrWhiteSpace(media.Channel))
+                {
+                    website = "-" + media.Client + "-" + media.Channel;
+                }
+                jo.Add("媒体名称", media.MediaName + website);
+                jo.Add("媒体ID", media.MediaID);
+                jo.Add("粉丝数", media.FansNum ?? 0);
+                foreach (var mediaMediaPrice in media.MediaPrices)
+                {
+                    jo.Add(mediaMediaPrice.AdPositionName, mediaMediaPrice.PurchasePrice);
+                    //jo.Add(mediaMediaPrice.AdPositionName + "更新日期", mediaMediaPrice.PriceDate);
+                    //jo.Add(mediaMediaPrice.AdPositionName + "失效日期", mediaMediaPrice.InvalidDate);
+                }
+                jObjects.Add(jo);
+            }
+
+            return jObjects.ToString();
+        }
+        public ActionResult GetList(MediaView viewModel)
+        {
+            viewModel.Managers = PremissionData();
+            var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
+            return Json(new
+            {
+                viewModel.total,
+                rows = result.Select(d => new MediaView
+                {
+                    Id = d.Id,
+                    MediaName = SetMediaName(d),
+                    MediaID = d.MediaID,
+                    IsAuthenticate = d.IsAuthenticate,
+                    IsOriginal = d.IsOriginal,
+                    IsComment = d.IsComment,
+                    FansNum = d.FansNum,
+                    ChannelType = d.ChannelType,
+                    LastReadNum = d.LastReadNum,
+                    AvgReadNum = d.AvgReadNum,
+                    PublishFrequency = d.PublishFrequency,
+                    Areas = d.Area,
+                    Sex = d.Sex,
+                    Client = d.Client,
+                    SEO = d.SEO,
+                    Efficiency = d.Efficiency,
+                    ResourceType = d.ResourceType,
+                    Channel = d.Channel,
+                    LastPushDate = d.LastPushDate,
+                    AuthenticateType = d.AuthenticateType,
+                    Platform = d.Platform,
+                    TransmitNum = d.TransmitNum,
+                    CommentNum = d.CommentNum,
+                    LikesNum = d.LikesNum,
+                    Content = d.Content,
+                    Remark = d.Remark,
+                    Status = d.Status,
+                    ApiUpDate = d.ApiUpDate,
+                    MediaLink = d.MediaLink,
+                    MediaLogo = d.MediaLogo,
+                    MediaQR = d.MediaQR,
+                    LinkManId = d.LinkManId,
+                    LinkManName = d.LinkMan.Name,
+                    Transactor = d.Transactor,
+                    MediaGroups = d.MediaGroups.Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
+                    MediaTagStr = string.Join(",", d.MediaTags.Select(t => t.TagName)),
+                    MediaPrices = d.MediaPrices.Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = p.PurchasePrice }).ToList()
+                })
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        
         /// <summary>
         /// 导入更新价格
         /// </summary>

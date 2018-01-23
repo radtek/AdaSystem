@@ -4,9 +4,9 @@
 @using Ada.Services.Resource
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
-    ViewBag.Title = "微信资源";
+    ViewBag.Title = "刷量资源";
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
-    var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("weixin");
+    var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("brush");
     var adpositions = meidaType.AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
 }
 @Html.Partial("Bread")
@@ -24,7 +24,6 @@
         <div class="ibox-content">
             <form id="searchFrm" action="@Url.Action("Export","Media")" method="post">
                 @Html.AntiForgeryToken()
-                <input type="hidden" name="MediaTypeId" value="@meidaType.Id" />
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="form-group">
@@ -41,12 +40,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-2 m-b">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.MediaID, "微信号：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control input-sm" })
-                        </div>
-                    </div>
+                    
                     <div class="col-sm-2 m-b">
                         <div class="form-group">
                             @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName) + "：", new { @class = "control-label" })
@@ -103,31 +97,24 @@
 
 
 </div>
-@Html.Partial("Import")
+
 <div id="toolbar" class="btn-group">
     <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add","Media",new{id=meidaType.Id})" target="_blank">
-        <i class="fa fa-plus"></i> 新增微信
+        <i class="fa fa-plus"></i> 新增刷量
     </a>
     <button type="button" class="btn btn-primary btn-outline" onclick="exportDate();">
         <i class="fa fa-download"></i> 导出数据
-    </button>
-    <button type="button" class="btn btn-primary btn-outline" data-toggle="modal" data-target="#uploadModal">
-        <i class="fa fa-upload"></i> 更新导入
     </button>
 </div>
 
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
-    @Styles.Render("~/plugins/jasnyBootstrapStyles")
-    @Styles.Render("~/plugins/laddaStyles")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-    @Scripts.Render("~/plugins/jasnyBootstrap")
-    @Scripts.Render("~/plugins/ladda")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=20180124")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=20180123")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -163,7 +150,7 @@
                 showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
                 cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
                     formatSearch: function() {
-                        return "微信公众号";
+                        return "资源名称";
                     },
                 onLoadSuccess: initTooltip,
                 mobileResponsive: true,
@@ -181,7 +168,7 @@
                     },
                     {
                         field: 'MediaName',
-                        title: '微信公众号',
+                        title: '资源名称',
                         valign: "middle",
                         align: "left",
                         formatter: function(value,row) {
@@ -192,18 +179,7 @@
                         }
                     },
 
-                    @*{
-                        field: 'Areas',
-                        title: '@Html.DisplayNameFor(d=>d.Areas)',
-                        valign: "middle",
-                        align: "center"
-                    },*@
-                    {
-                        field: 'MediaTagStr',
-                        title: '@Html.DisplayNameFor(d=>d.MediaTagStr)',
-                        valign: "middle",
-                        align: "center"
-                    },
+                   
                     {
                         field: 'MediaPrices',
                         title: '@Html.DisplayNameFor(d=>d.MediaPrices)',
@@ -211,23 +187,13 @@
                         formatter: formatterPrice,
                         //align: "center"
                     },
-                    {
-                        field: 'Content',
-                        title: '@Html.DisplayNameFor(d=>d.Content)',
-                        align: "center", valign: "middle", formatter: formatter.tooltip
-                    },
+                    
                     {
                         field: 'Remark',
                         title: '@Html.DisplayNameFor(d=>d.Remark)',
                         align: "center", valign: "middle", formatter: formatter.tooltip
                     },
-                    {
-                        field: 'MediaGroups',
-                        title: '@Html.DisplayNameFor(d=>d.MediaGroups)',
-                        valign: "middle",
-                        formatter: formatterGroup,
-                        align: "center"
-                    },
+                    
                     {
                         field: 'LinkManName',
                         title: '@Html.DisplayNameFor(d=>d.LinkManName)',
@@ -262,6 +228,7 @@
 
     </script>
 }
+
 
 
 
