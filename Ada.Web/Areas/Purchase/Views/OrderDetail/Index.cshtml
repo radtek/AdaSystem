@@ -217,6 +217,18 @@
                         formatter: formatter.purchaseStatus
                     },
                     {
+                        field: 'IsPayment',
+                        title: '@Html.DisplayNameFor(d=>d.IsPayment)',
+                        align: "center", valign: "middle",
+                        formatter: function(value) {
+                            if (value) {
+                                return "<span class='label label-success'>已请款</span>";
+                            } else {
+                                return "<span class='label'>待请款</span>";
+                            }
+                        }
+                    },
+                    {
                         field: 'BusinessRemark',
                         title: '@Html.DisplayNameFor(d=>d.BusinessRemark)',
                         align: "center", valign: "middle",

@@ -61,6 +61,7 @@ namespace Purchase.Controllers
                     PublishLink = d.PublishLink,
                     Transactor = d.Transactor,
                     OrderDate = d.PurchaseOrder.OrderDate,
+                    IsPayment = d.PurchasePaymentOrderDetails.Count > 0,
                     BusinessRemark = GetBusinessOrderDetail(d.BusinessOrderDetailId)?.BusinessOrder.Remark
 
                 })
