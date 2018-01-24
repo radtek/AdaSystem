@@ -199,8 +199,8 @@
                                     row.Id +
                                     "' target='_blank' title='评价'><i class='fa fa-commenting'></i></a>";
                             if (value) {
-                                if (row.MediaLink) {
-                                    return "<a class='label' href='" + row.MediaLink + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>" + comment;
+                                if (row.MediaID) {
+                                    return "<a class='label' href='https://weibo.com/u/" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>" + comment;
                                 } else {
                                     return value + comment;
                                 }

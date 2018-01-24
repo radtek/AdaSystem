@@ -673,7 +673,7 @@ namespace Resource.Controllers
             {
                 case "weixin":
                 case "zhihu":
-
+                case "sinablog":
                     whereLambda = d =>
                           d.MediaID.Equals(viewModel.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == isDelete &&
                           d.MediaTypeId == viewModel.MediaTypeId;

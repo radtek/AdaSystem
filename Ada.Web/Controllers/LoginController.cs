@@ -156,12 +156,22 @@ namespace Ada.Web.Controllers
         public ActionResult UpdateMedia()
         {
 
-            var medias = _media.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "weixin").ToList();
-            int start = medias.Count;
-            var last = medias.Distinct(new FastPropertyComparer<Media>("MediaID"));
-            var end = last.Count();
-            //_dbContext.SaveChanges();
-            return Content("原有：" + start + ",去重后：" + end);
+            var medias = _media.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "sinablog").ToList();
+            //int start = medias.Count;
+            //var last = medias.Distinct(new FastPropertyComparer<Media>("MediaID"));
+            //var end = last.Count();
+            int i = 0;
+            foreach (var media in medias)
+            {
+                if (!string.IsNullOrWhiteSpace(media.MediaLink))
+                {
+                    media.MediaID = Utils.GetBlogId(media.MediaLink);
+                    i++;
+                }
+            }
+            _dbContext.SaveChanges();
+            return Content("成功更新"+i+"个UID");
+            //return Content("原有：" + start + ",去重后：" + end);
 
 
         }

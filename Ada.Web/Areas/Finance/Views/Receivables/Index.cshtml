@@ -19,27 +19,23 @@
         </div>
         <div class="ibox-content">
             <form id="searchFrm" onSubmit="javascript:searchFrm.search(this, event);">
-                
-                <div class="row">
-                    
-                    <div class="col-sm-2 m-b">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.BillNum, Html.DisplayNameFor(d => d.BillNum) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.BillNum, new { @class = "form-control input-sm" })
-                        </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.BillNum, Html.DisplayNameFor(d => d.BillNum) + "：", new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.BillNum, new { @class = "form-control" })
                     </div>
+                </div>
                     
-                    <div class="col-sm-2 m-b">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.IncomeExpendName, Html.DisplayNameFor(d => d.IncomeExpendName) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.IncomeExpendName, new { @class = "form-control input-sm" })
-                        </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.IncomeExpendName, Html.DisplayNameFor(d => d.IncomeExpendName) + "：", new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.IncomeExpendName, new { @class = "form-control" })
                     </div>
-                    <div class="col-sm-2 m-b">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.SettleAccountName, Html.DisplayNameFor(d => d.SettleAccountName) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.SettleAccountName, new { @class = "form-control input-sm" })
-                        </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.SettleAccountName, Html.DisplayNameFor(d => d.SettleAccountName) + "：", new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.SettleAccountName, new { @class = "form-control" })
                     </div>
                 </div>
 
@@ -70,9 +66,20 @@
 </div>
 
 <div id="toolbar" class="btn-group">
-    <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
-        <i class="fa fa-plus"></i> 新增
-    </a>
+    
+    <div class="form-inline" role="form">
+        <div class="form-group">
+            <select name="Status" class="form-control" id="Status">
+                <option value="">领款状态</option>
+                <option value="false">未领完</option>
+                <option value="true">已领完</option>
+            </select>
+
+            <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
+                <i class="fa fa-plus"></i> 新增
+            </a>
+        </div>
+    </div>
 </div>
 
 @section Styles {
@@ -89,6 +96,9 @@
             //2.初始化Button的点击事件
             var oButtonInit = new ButtonInit();
             oButtonInit.Init();
+            $("#Status").change(function () {
+                $('#table').bootstrapTable('refresh');
+            });
         });
         var TableInit = function() {
             var obj = new Object();
@@ -121,7 +131,11 @@
                 formatSearch: function() {
                     return "@Html.DisplayNameFor(d => d.AccountName)";
                 },
-                mobileResponsive:true,
+                mobileResponsive: true,
+                queryParams: function (parameters) {
+                    parameters.Status = $("#Status").val();
+                    return searchFrm.queryParams(parameters);
+                },
                 columns: [
                     //{
                     //    checkbox: true

@@ -130,5 +130,10 @@ namespace Ada.Core.ViewModel.Finance
         /// </summary>
         [Display(Name = "单据日期")]
         public DateTime? BillDateEnd { get; set; }
+        /// <summary>
+        /// 领款状态  true:已领完 false:未领完
+        /// </summary>
+        [Display(Name = "领款状态")]
+        public bool? Status { get; set; }
     }
 }

@@ -72,19 +72,11 @@
 <div id="toolbar" class="btn-group">
     <div class="form-inline" role="form">
         <div class="form-group">
-            @*<label>订单状态</label>*@
             <select name="Status" class="form-control" id="OrderStatus">
                 <option value="false">待处理</option>
                 <option value="true">已完成</option>
             </select>
-            @*<div class="input-group">
-
-            <span class="input-group-btn">
-                <button type="button" class="btn btn-primary" onclick="">
-                    <i class='fa fa-search'></i>
-                </button>
-            </span>
-        </div>*@
+            
             <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")" target='_blank'>
                 <i class="fa fa-plus"></i> 新增订单
             </a>
