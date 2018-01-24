@@ -423,7 +423,7 @@ namespace Resource.Controllers
             entity.PublishFrequency = viewModel.PublishFrequency;
             entity.Area = viewModel.Areas;
             entity.ChannelType = viewModel.ChannelType;
-            //entity.LastPushDate = viewModel.LastPushDate;
+            entity.LastPushDate = viewModel.LastPushDate;
             entity.AuthenticateType = viewModel.AuthenticateType;
             entity.TransmitNum = viewModel.TransmitNum;
             entity.CommentNum = viewModel.CommentNum;
@@ -495,6 +495,7 @@ namespace Resource.Controllers
             entity.LastReadNum = item.LastReadNum;
             entity.AvgReadNum = item.AvgReadNum;
             entity.PublishFrequency = item.PublishFrequency;
+            entity.LastPushDate = item.LastPushDate;
             entity.Areas = item.Area;
             entity.ChannelType = item.ChannelType;
             entity.AuthenticateType = item.AuthenticateType;

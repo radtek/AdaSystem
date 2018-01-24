@@ -24,54 +24,64 @@
         <div class="ibox-content">
             <form id="searchFrm" action="@Url.Action("Export","Media")" method="post">
                 @Html.AntiForgeryToken()
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds) + "：", new { @class = "control-label" })
-                            @foreach (var item in tags)
-                            {
-                                <div class="checkbox checkbox-success checkbox-inline">
-                                    <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
-                                    <label for="@item.Id">@item.TagName</label>
-                                </div>
-                            }
-
+                <input type="hidden" name="MediaTypeId" value="@meidaType.Id" />
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "control-label" })
+                        <div class="row">
+                            <div class="col-md-12">
+                                @foreach (var item in tags)
+                    {
+                        <div class="checkbox checkbox-success checkbox-inline">
+                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
+                            <label for="@item.Id">@item.TagName</label>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    
-                    <div class="col-sm-2 m-b">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName) + "：", new { @class = "control-label" })
-                            @Html.DropDownListFor(d => d.AdPositionName, adpositions, "不限", new { @class = "form-control input-sm" })
-                        </div>
-                    </div>
-                    <div class="col-sm-2 m-b">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart) + "：", new { @class = "control-label" })
-                            <div class="input-daterange input-group">
-                                @Html.TextBoxFor(d => d.PriceStart, new { @class = "form-control input-sm" })
-                                <span class="input-group-addon">至</span>
-                                @Html.TextBoxFor(d => d.PriceEnd, new { @class = "form-control input-sm" })
+        }
                             </div>
                         </div>
+
                     </div>
-                    <div class="col-sm-2 m-b">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control input-sm" })
-                        </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Platform, Html.DisplayNameFor(d => d.Platform).ToString(), new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.Platform, new { @class = "form-control" })
                     </div>
-                    <div class="col-sm-2 m-b">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control input-sm" })
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName).ToString(), new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.AdPositionName, adpositions, "不限", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart).ToString(), new { @class = "control-label" })
+                        <div class="input-daterange input-group">
+                            @Html.TextBoxFor(d => d.PriceStart, new { @class = "form-control" })
+                            <span class="input-group-addon">至</span>
+                            @Html.TextBoxFor(d => d.PriceEnd, new { @class = "form-control" })
                         </div>
                     </div>
                 </div>
-
-                <div class="hr-line-dashed"></div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName).ToString(), new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor).ToString(), new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control" })
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-12 text-center">
                         <div class="form-group">

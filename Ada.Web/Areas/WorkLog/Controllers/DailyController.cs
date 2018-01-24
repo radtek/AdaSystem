@@ -106,7 +106,7 @@ namespace WorkLog.Controllers
             entity.Director = viewModel.Director;
             _workLogService.Update(entity);
             TempData["Msg"] = "操作成功";
-            return RedirectToAction("Index");
+            return View(viewModel);
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]

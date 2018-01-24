@@ -30,65 +30,64 @@
             <form id="searchFrm" action="@Url.Action("Export", "Media")" method="post">
 
                 @Html.AntiForgeryToken()
-                <div class="row">
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.MediaName, "门户名称", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
-                        </div>
-                    </div>
-
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.Channel, Html.DisplayNameFor(d => d.Channel).ToString(), new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.Channel, new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.Areas, Html.DisplayNameFor(d => d.Areas).ToString(), new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.Areas, new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.SEO, Html.DisplayNameFor(d => d.SEO).ToString(), new { @class = "control-label" })
-                            @Html.DropDownListFor(d => d.SEO, seos, "请选择", new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.ResourceType, Html.DisplayNameFor(d => d.ResourceType).ToString(), new { @class = "control-label" })
-                            @Html.DropDownListFor(d => d.ResourceType, resourceTypes, "请选择", new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.Efficiency, Html.DisplayNameFor(d => d.Efficiency).ToString(), new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.Efficiency, new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "control-label" })
-                            <div class="row">
-                                <div class="col-md-12">
-                                    @foreach (var item in tags)
-                                    {
-
-                                        <div class="checkbox checkbox-success checkbox-inline">
-                                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
-                                            <label for="@item.Id">@item.TagName</label>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-
-                        </div>
+                <input type="hidden" name="MediaTypeId" value="@meidaType.Id" />
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.MediaName, "门户名称", new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
                     </div>
                 </div>
 
-                <div class="hr-line-dashed"></div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Channel, Html.DisplayNameFor(d => d.Channel).ToString(), new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.Channel, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Areas, Html.DisplayNameFor(d => d.Areas).ToString(), new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.Areas, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.SEO, Html.DisplayNameFor(d => d.SEO).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.SEO, seos, "请选择", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.ResourceType, Html.DisplayNameFor(d => d.ResourceType).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.ResourceType, resourceTypes, "请选择", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Efficiency, Html.DisplayNameFor(d => d.Efficiency).ToString(), new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.Efficiency, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "control-label" })
+                        <div class="row">
+                            <div class="col-md-12">
+                                @foreach (var item in tags)
+                    {
+
+                        <div class="checkbox checkbox-success checkbox-inline">
+                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
+                            <label for="@item.Id">@item.TagName</label>
+                        </div>
+        }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                
                 <div class="row">
                     <div class="col-sm-12 text-center">
                         <div class="form-group">

@@ -72,9 +72,9 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "平均阅读数")]
         public int? AvgReadNum { get; set; }
         /// <summary>
-        /// 发布频率
+        /// 最近发布频率
         /// </summary>
-        [Display(Name = "发布频率")]
+        [Display(Name = "最近发布频率")]
         public int? PublishFrequency { get; set; }
         /// <summary>
         /// 地区

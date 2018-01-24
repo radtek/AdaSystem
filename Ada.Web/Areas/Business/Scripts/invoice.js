@@ -264,7 +264,7 @@ function showOrder() {
                         responseHandler: responseHandler,
                         queryParams: function (parameters) {
                             parameters.LinkManId = linkman;
-                            parameters.IsInvoice = false;
+                            //parameters.IsInvoice = false;
                             return parameters;
                         },
                         columns: [

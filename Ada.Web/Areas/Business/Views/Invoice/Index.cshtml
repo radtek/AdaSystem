@@ -79,6 +79,12 @@
                         formatter: formatter.invoiceStatus
                     },
                     {
+                        field: 'MoneyStatus',
+                        title: '@Html.DisplayNameFor(d=>d.MoneyStatus)',
+                        align: "center", valign: "middle",
+                        formatter: formatter.payStatus
+                    },
+                    {
                         field: 'Transactor',
                         title: '@Html.DisplayNameFor(d=>d.Transactor)',
                         align: "center", valign: "middle"
@@ -116,7 +122,7 @@
                             return  moment(value).format("YYYY-MM-DD");
                         }
                     },
-                   
+
                     {
                         field: 'Id',
                         title: '操作',

@@ -9,6 +9,7 @@ using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Log;
 using Ada.Core.Domain.Purchase;
+using Ada.Core.Domain.Resource;
 using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel.Admin;
@@ -21,16 +22,23 @@ namespace Ada.Web.Controllers
     {
         private readonly IRepository<Manager> _repository;
         private readonly IRepository<BusinessOrderDetail> _temp;
+        private readonly IRepository<Media> _media;
         private readonly IRepository<PurchaseOrderDetail> _ptemp;
         private readonly IDbContext _dbContext;
         private readonly ISignals _signals;
-        public LoginController(IRepository<Manager> repository, IDbContext dbContext, ISignals signals, IRepository<BusinessOrderDetail> temp, IRepository<PurchaseOrderDetail> ptemp)
+        public LoginController(IRepository<Manager> repository,
+            IDbContext dbContext,
+            ISignals signals,
+            IRepository<BusinessOrderDetail> temp,
+            IRepository<PurchaseOrderDetail> ptemp,
+            IRepository<Media> media)
         {
             _repository = repository;
             _dbContext = dbContext;
             _signals = signals;
             _ptemp = ptemp;
             _temp = temp;
+            _media = media;
         }
         public ActionResult Index()
         {
@@ -142,6 +150,18 @@ namespace Ada.Web.Controllers
 
             _dbContext.SaveChanges();
             return Content(i.ToString());
+
+
+        }
+        public ActionResult UpdateMedia()
+        {
+
+            var medias = _media.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "weixin").ToList();
+            int start = medias.Count;
+            var last = medias.Distinct(new FastPropertyComparer<Media>("MediaID"));
+            var end = last.Count();
+            //_dbContext.SaveChanges();
+            return Content("原有：" + start + ",去重后：" + end);
 
 
         }
