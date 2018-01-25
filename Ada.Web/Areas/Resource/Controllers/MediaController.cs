@@ -288,6 +288,7 @@ namespace Resource.Controllers
                 {
                     continue;
                 }
+                
                 for (int j = 0; j < adpostionNames.Count; j++)
                 {
 
@@ -417,6 +418,7 @@ namespace Resource.Controllers
             entity.IsAuthenticate = viewModel.IsAuthenticate;
             entity.IsOriginal = viewModel.IsOriginal;
             entity.IsComment = viewModel.IsComment;
+            
             entity.FansNum = viewModel.FansNum;
             entity.LastReadNum = viewModel.LastReadNum;
             entity.AvgReadNum = viewModel.AvgReadNum;

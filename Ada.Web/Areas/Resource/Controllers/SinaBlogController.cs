@@ -69,12 +69,12 @@ namespace Resource.Controllers
                     media.MediaTypeId = "X1711091754300001";
                     media.LinkManId = linkid;
                     media.MediaName = row.GetCell(0)?.ToString();
-                    media.MediaLink = row.GetCell(1)?.ToString();
+                    media.MediaID = row.GetCell(1)?.ToString();
                     int.TryParse(row.GetCell(2)?.ToString(), out var fans);
                     media.FansNum = fans;
                     //校验ID不能重复
                     var temp = _repository.LoadEntities(d =>
-                        d.MediaName.Equals(media.MediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
+                        d.MediaID.Equals(media.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
                         d.MediaTypeId == media.MediaTypeId).FirstOrDefault();
                     if (temp != null)
                     {

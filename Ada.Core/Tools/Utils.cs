@@ -159,7 +159,12 @@ namespace Ada.Core.Tools
             }
             return result;
 
-        } 
+        }
+
+        public static int SetFansNum(decimal? fans,int baseNum=10000)
+        {
+            return fans.HasValue ? Convert.ToInt32(fans*baseNum) : 0;
+        }
         #endregion
 
         #region 获得当前绝对路径

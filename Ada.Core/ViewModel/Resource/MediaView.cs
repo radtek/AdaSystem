@@ -60,7 +60,7 @@ namespace Ada.Core.ViewModel.Resource
         /// 粉丝数
         /// </summary>
         [Display(Name = "粉丝数")]
-        public int? FansNum { get; set; }
+        public decimal? FansNum { get; set; }
         /// <summary>
         /// 最近头条阅读数
         /// </summary>
