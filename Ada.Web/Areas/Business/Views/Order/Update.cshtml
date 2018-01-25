@@ -49,21 +49,24 @@
             </div>
         </div>
     }
-        <div id="toolbar" class="btn-group">
-            <a class="btn btn-primary btn-outline" href="javascript:showMedia('@Url.Action("SelectMedia")');">
-                <i class="fa fa-plus"></i> 添加媒体
-            </a>
-            <a class="btn btn-primary btn-outline" href="javascript:transOrder();">
-                <i class="fa fa-arrow-circle-right"></i> 转为采购
-            </a>
-            <a class="btn btn-primary btn-outline" href="javascript:deleteRow();">
-                <i class="fa fa-trash-o"></i> 删除订单
-            </a>
-            <a class="btn btn-primary btn-outline" href="javascript:confirms();">
-                <i class="fa fa-check"></i> 批量确认
-            </a>
-        </div>
+    <div id="toolbar" class="btn-group">
+        <a class="btn btn-primary btn-outline" href="javascript:showMedia('@Url.Action("SelectMedia")');">
+            <i class="fa fa-plus"></i> 添加媒体
+        </a>
+        <a class="btn btn-primary btn-outline" href="javascript:transOrder();">
+            <i class="fa fa-arrow-circle-right"></i> 转为采购
+        </a>
+        <a class="btn btn-primary btn-outline" href="javascript:deleteRow();">
+            <i class="fa fa-trash-o"></i> 删除订单
+        </a>
+        <a class="btn btn-primary btn-outline" href="javascript:confirms();">
+            <i class="fa fa-check"></i> 批量确认
+        </a>
+    </div>
 </div>
+
+
+
 
 @section Styles {
     @Styles.Render("~/plugins/dateTimePickerStyle")
@@ -85,7 +88,7 @@
             orderData =@Html.Raw(string.IsNullOrWhiteSpace(Model.OrderDetails)?"[]": Model.OrderDetails),
             isReadonly = @Model.AuditStatus;
     </script>
-    <script src="@Url.Content("~/Areas/Business/Scripts/order.js?v=201801181019")"></script>
+    <script src="@Url.Content("~/Areas/Business/Scripts/order.js?v=201801251019")"></script>
     <script>
         function transOrder() {
             var arrselections = $table.bootstrapTable('getSelections');
@@ -269,6 +272,13 @@
                     }
                 });
             });
+        }
+
+        function showEditMoney(id) {
+            $("#modalView").load("@Url.Action("EditMoney")?id="+id,
+                function () {
+                    $('#modalView .modal').modal('show');
+                });
         }
     </script>
 }

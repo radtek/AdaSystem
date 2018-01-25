@@ -25,7 +25,18 @@ namespace Ada.Core.Domain
         /// </summary>
         Success = 2
     }
-
+    public enum AuditEnum
+    {
+        /// <summary>
+        /// 确认申请
+        /// </summary>
+        Confirm = -1,
+        /// <summary>
+        /// 价格申请
+        /// </summary>
+        Price = -2
+       
+    }
     public enum PurchaseStatusEnum
     {
         /// <summary>

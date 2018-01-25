@@ -219,6 +219,16 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "备注")]
         public string Remark { get; set; }
-       
+        /// <summary>
+        /// 申请说明
+        /// </summary>
+        [Display(Name = "申请说明")]
+        public string AuditRemark { get; set; }
+        /// <summary>
+        /// 申请修改金额
+        /// </summary>
+        [Display(Name = "申请修改金额")]
+        public decimal? RequestSellMoney { get; set; }
+
     }
 }

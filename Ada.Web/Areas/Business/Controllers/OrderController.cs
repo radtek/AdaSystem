@@ -495,7 +495,7 @@ namespace Business.Controllers
             entity.SellMoney = viewModel.SellMoney;
             entity.VerificationMoney = viewModel.SellMoney;
             entity.Money = viewModel.Money;
-            entity.Remark = viewModel.Remark;
+            entity.AuditRemark = viewModel.Remark;
             if (entity.SellMoney > purchase.PurchaseMoney)
             {
                 entity.Status = Consts.StateOK;//订单已完成
@@ -503,10 +503,43 @@ namespace Business.Controllers
             }
             else
             {
-                entity.Status = Consts.StateError;//进入审核
+                entity.Status = Consts.AuditConfirmState;//进入审核
                 entity.AuditStatus = Consts.StateLock;//未审核
             }
             _businessOrderDetailService.Update(entity);
+            return RedirectToAction("Update", new { id = entity.BusinessOrderId });
+
+        }
+        /// <summary>
+        /// 申请改价
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult EditMoney(string id)
+        {
+            var entity = _businessOrderDetailRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            BusinessOrderDetailView detail=new BusinessOrderDetailView();
+            detail.Id = id;
+            detail.SellMoney = entity.SellMoney;
+            detail.RequestSellMoney = 0;
+            return PartialView("EditMoney", detail);
+
+        }
+        /// <summary>
+        /// 申请改价
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditMoney(BusinessOrderDetailView viewModel)
+        {
+            var entity = _businessOrderDetailRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
+            if (entity == null) return RedirectToAction("Index");
+            entity.RequestSellMoney = viewModel.RequestSellMoney;
+            entity.AuditRemark = viewModel.AuditRemark;
+            entity.Status = Consts.AuditPriceState;//进入审核
+            _businessOrderDetailService.Update(entity);
+            TempData["Msg"] = "申请成功";
             return RedirectToAction("Update", new { id = entity.BusinessOrderId });
 
         }

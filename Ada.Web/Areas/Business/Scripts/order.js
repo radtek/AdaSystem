@@ -237,7 +237,7 @@ function initData() {
                 align: "center", valign: "middle",
                 formatter: function (value, row, index) {
                     if (row.Status == 2) {
-                        return "<button type='button' class='btn btn-danger btn-xs' onclick=\"alert('待开发');\"><i class='fa fa-pencil'></i> 申请改价</button>";
+                        return "<button type='button' class='btn btn-danger btn-xs' onclick=\"showEditMoney('"+value+"');\"><i class='fa fa-pencil'></i> 申请改价</button>";
                     } else {
                         return "";
                     }

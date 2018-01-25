@@ -25,6 +25,14 @@ namespace Ada.Core.Domain
         /// </summary>
         public const short StateOK = (short)StatusEnum.Success;
         /// <summary>
+        /// 订单确认申请 -1
+        /// </summary>
+        public const short AuditConfirmState = (short)AuditEnum.Confirm;
+        /// <summary>
+        /// 价格修改申请 -2
+        /// </summary>
+        public const short AuditPriceState = (short)AuditEnum.Price;
+        /// <summary>
         /// 待处理
         /// </summary>
         public const short PurchaseStatusWait = (short)PurchaseStatusEnum.Wait;
