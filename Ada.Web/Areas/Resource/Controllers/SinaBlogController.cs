@@ -70,8 +70,8 @@ namespace Resource.Controllers
                     media.LinkManId = linkid;
                     media.MediaName = row.GetCell(0)?.ToString();
                     media.MediaID = row.GetCell(1)?.ToString();
-                    int.TryParse(row.GetCell(2)?.ToString(), out var fans);
-                    media.FansNum = fans;
+                    decimal.TryParse(row.GetCell(2)?.ToString(), out var fans);
+                    media.FansNum = Utils.SetFansNum(fans);
                     //校验ID不能重复
                     var temp = _repository.LoadEntities(d =>
                         d.MediaID.Equals(media.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&

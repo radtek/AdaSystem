@@ -164,7 +164,11 @@ namespace Resource.Controllers
                 }
                 jo.Add("媒体名称", media.MediaName + website);
                 jo.Add("媒体ID", media.MediaID);
-                jo.Add("粉丝数", media.FansNum ?? 0);
+                jo.Add("粉丝数", Utils.ShowFansNum(media.FansNum));
+                jo.Add("媒体分类", string.Join(",",media.MediaTags.Select(d=>d.TagName)));
+                jo.Add("媒体说明", media.Content);
+                jo.Add("备注说明", media.Remark);
+                jo.Add("价格有效期", "");
                 foreach (var mediaMediaPrice in media.MediaPrices)
                 {
                     jo.Add(mediaMediaPrice.AdPositionName, mediaMediaPrice.PurchasePrice);
@@ -191,7 +195,7 @@ namespace Resource.Controllers
                     IsAuthenticate = d.IsAuthenticate,
                     IsOriginal = d.IsOriginal,
                     IsComment = d.IsComment,
-                    FansNum = d.FansNum,
+                    FansNum = Utils.ShowFansNum(d.FansNum),
                     ChannelType = d.ChannelType,
                     LastReadNum = d.LastReadNum,
                     AvgReadNum = d.AvgReadNum,
@@ -274,7 +278,7 @@ namespace Resource.Controllers
             //拿到广告位的名称
             IRow headRow = sheet.GetRow(0);
             List<string> adpostionNames = new List<string>();
-            int startPrice = 7;//价格所在位置
+            int startPrice = 11;//价格所在位置
             for (int i = startPrice; i < headRow.LastCellNum; i++)
             {
                 var adpostionName = headRow.GetCell(i).StringCellValue;
@@ -288,7 +292,52 @@ namespace Resource.Controllers
                 {
                     continue;
                 }
+
+                var media = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+                if (media==null)
+                {
+                    continue;
+                }
+                //媒体ID
+                if (row.GetCell(5) != null)
+                {
+                    //校验ID
+                    var mediaId = row.GetCell(5).ToString().Trim();
+                    var temp = _repository.LoadEntities(d =>
+                        d.MediaID.Equals(mediaId, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
+                        d.MediaTypeId == media.MediaTypeId && d.Id != media.Id).FirstOrDefault();
+                    if (temp!=null)
+                    {
+                        media.IsDelete = true;
+                    }
+                    else
+                    {
+                        media.MediaID = row.GetCell(5).ToString().Trim();
+                    }
+                }
+                //修改粉丝
+                decimal.TryParse(row.GetCell(6)?.ToString(), out var fansNum);
+                media.FansNum = Utils.SetFansNum(fansNum);
+                //标签
+                if (row.GetCell(7) != null)
+                {
+                    media.MediaTags.Clear();
+                    var tags = row.GetCell(7).ToString().Trim().Replace("，", ",").Split(',');
+                    foreach (var tag in tags)
+                    {
+                        var mediaTag = _mediaTagRepository.LoadEntities(d => d.IsDelete == false && d.TagName == tag)
+                            .FirstOrDefault();
+                        media.MediaTags.Add(mediaTag);
+                    }
+                }
+                //备注
+                media.Remark = row.GetCell(9)?.ToString();
                 
+                if (!DateTime.TryParse(row.GetCell(10).ToString(), out var date))
+                {
+                    date = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
+                        DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+                }
                 for (int j = 0; j < adpostionNames.Count; j++)
                 {
 
@@ -299,10 +348,8 @@ namespace Resource.Controllers
                     decimal.TryParse(row.GetCell(startPrice + j).ToString(), out var price);
                     mediaPrice.PurchasePrice = price;
                     mediaPrice.PriceDate = DateTime.Now;
-                    mediaPrice.InvalidDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
-                    //修改粉丝
-                    int.TryParse(row.GetCell(startPrice - 1).ToString(), out var fansNum);
-                    mediaPrice.Media.FansNum = fansNum;
+                    mediaPrice.InvalidDate = date;
+                   
                 }
             }
         }
@@ -419,7 +466,7 @@ namespace Resource.Controllers
             entity.IsOriginal = viewModel.IsOriginal;
             entity.IsComment = viewModel.IsComment;
             
-            entity.FansNum = viewModel.FansNum;
+            entity.FansNum = Utils.SetFansNum(viewModel.FansNum);
             entity.LastReadNum = viewModel.LastReadNum;
             entity.AvgReadNum = viewModel.AvgReadNum;
             entity.PublishFrequency = viewModel.PublishFrequency;
@@ -493,7 +540,7 @@ namespace Resource.Controllers
             entity.IsAuthenticate = item.IsAuthenticate;
             entity.IsOriginal = item.IsOriginal;
             entity.IsComment = item.IsComment;
-            entity.FansNum = item.FansNum;
+            entity.FansNum = Utils.ShowFansNum(item.FansNum);
             entity.LastReadNum = item.LastReadNum;
             entity.AvgReadNum = item.AvgReadNum;
             entity.PublishFrequency = item.PublishFrequency;
@@ -573,7 +620,7 @@ namespace Resource.Controllers
             entity.IsAuthenticate = viewModel.IsAuthenticate;
             entity.IsOriginal = viewModel.IsOriginal;
             entity.IsComment = viewModel.IsComment;
-            entity.FansNum = viewModel.FansNum;
+            entity.FansNum = Utils.SetFansNum(viewModel.FansNum);
             entity.LastReadNum = viewModel.LastReadNum;
             entity.AvgReadNum = viewModel.AvgReadNum;
             entity.PublishFrequency = viewModel.PublishFrequency;

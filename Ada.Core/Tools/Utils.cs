@@ -160,9 +160,19 @@ namespace Ada.Core.Tools
             return result;
 
         }
+        public static decimal ShowFansNum(int? fans, int baseNum = 10000)
+        {
+            if (!fans.HasValue) return 0;
+            var temp = Convert.ToDecimal(fans);
+            return Math.Round(temp / baseNum, 1);
 
+        }
         public static int SetFansNum(decimal? fans,int baseNum=10000)
         {
+            if (fans>baseNum)
+            {
+                return Convert.ToInt32(fans);
+            }
             return fans.HasValue ? Convert.ToInt32(fans*baseNum) : 0;
         }
         #endregion

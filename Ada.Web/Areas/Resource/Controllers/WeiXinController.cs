@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Resource;
+using Ada.Core.Tools;
 using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Filter;
 using Ada.Services.Resource;
@@ -68,8 +69,8 @@ namespace Resource.Controllers
                     media.LinkManId = linkid;
                     media.MediaName = row.GetCell(0)?.ToString();
                     media.MediaID = row.GetCell(1)?.ToString();
-                    int.TryParse(row.GetCell(2)?.ToString(), out var fans);
-                    media.FansNum = fans;
+                    decimal.TryParse(row.GetCell(2)?.ToString(), out var fans);
+                    media.FansNum = Utils.SetFansNum(fans);
                     //校验ID不能重复
                     var temp = _repository.LoadEntities(d =>
                         d.MediaID.Equals(media.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
