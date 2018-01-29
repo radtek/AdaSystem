@@ -73,6 +73,11 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "付款人信息")]
         public string PayInfo { get; set; }
         /// <summary>
+        /// 收款账户
+        /// </summary>
+        [Display(Name = "收款账户")]
+        public string ReceivableInfo { get; set; }
+        /// <summary>
         /// 请款记录数
         /// </summary>
         [Display(Name = "请款记录数")]

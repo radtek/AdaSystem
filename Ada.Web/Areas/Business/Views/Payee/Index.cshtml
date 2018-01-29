@@ -82,11 +82,17 @@
                     {
                         field: 'LinkManName',
                         title: '@Html.DisplayNameFor(d=>d.LinkManName)',
-                        align: "center", valign: "middle"
+                        align: "left", valign: "middle",
+                        formatter: formatter.linkman
                     },
                     {
                         field: 'PayInfo',
                         title: '@Html.DisplayNameFor(d=>d.PayInfo)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'ReceivableInfo',
+                        title: '@Html.DisplayNameFor(d=>d.ReceivableInfo)',
                         align: "center", valign: "middle"
                     },
                     {

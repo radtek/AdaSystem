@@ -49,10 +49,12 @@ namespace Business.Controllers
                 {
                     Id = d.Id,
                     LinkManName = d.LinkManName,
+                    LinkManId = d.LinkManId,
                     Transactor = d.Transactor,
                     Money = d.Money,
                     ClaimDate = d.ClaimDate,
                     PayInfo = d.Receivables.AccountName,
+                    ReceivableInfo = d.Receivables.SettleAccount.SettleName,
                     VerificationStatus = d.VerificationStatus,
                     VerificationMoney = d.VerificationStatus==Consts.StateNormal?0: d.Money - d.BusinessPayments.Where(p => p.AuditStatus == Consts.StateNormal).Sum(p => p.PayMoney),
                     PaymentCount = d.BusinessPayments.Count
