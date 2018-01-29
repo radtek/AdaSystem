@@ -5,7 +5,7 @@
 @model Ada.Core.ViewModel.Business.BusinessOrderDetailView
 @{
     ViewBag.Title = "销售明细";
- 
+
     List<SelectListItem> vstatus = new List<SelectListItem>() { new SelectListItem() { Text = "已核销", Value = "1" }, new SelectListItem() { Text = "未核销", Value = "0" } };
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var purchaseStatus = fieldService.GetFieldsByKey("PurchaseStatus").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
@@ -27,56 +27,65 @@
             <form id="searchFrm" action="@Url.Action("Export")" method="post">
                 @Html.AntiForgeryToken()
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName) + "：", new {@class = "control-label"})
-                            @Html.TextBoxFor(d => d.LinkManName, new {@class = "form-control input-sm"})
+                            @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control input-sm" })
                         </div>
                     </div>
 
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.OrderNum, Html.DisplayNameFor(d => d.OrderNum) + "：", new {@class = "control-label"})
-                            @Html.TextBoxFor(d => d.OrderNum, new {@class = "form-control input-sm"})
+                            @Html.LabelFor(d => d.OrderNum, Html.DisplayNameFor(d => d.OrderNum) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.OrderNum, new { @class = "form-control input-sm" })
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName) + "：", new {@class = "control-label"})
-                            @Html.TextBoxFor(d => d.MediaName, new {@class = "form-control input-sm"})
+                            @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control input-sm" })
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor) + "：", new {@class = "control-label"})
-                            @Html.TextBoxFor(d => d.Transactor, new {@class = "form-control input-sm"})
+                            @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control input-sm" })
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.PublishDate, Html.DisplayNameFor(d => d.PublishDate) + "：", new {@class = "control-label"})
+                            @Html.LabelFor(d => d.PrePublishDate, Html.DisplayNameFor(d => d.PrePublishDate) + "：", new { @class = "control-label" })
 
-                            <input type="text" id="PublishDateStr" class="form-control input-sm" readonly="readonly"/>
+                            <input type="text" id="PrePublishDateStr" class="form-control input-sm" readonly="readonly" />
+                            @Html.HiddenFor(d => d.PrePublishDateStart)
+                            @Html.HiddenFor(d => d.PrePublishDateEnd)
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.PublishDate, Html.DisplayNameFor(d => d.PublishDate) + "：", new { @class = "control-label" })
+
+                            <input type="text" id="PublishDateStr" class="form-control input-sm" readonly="readonly" />
                             @Html.HiddenFor(d => d.PublishDateStart)
                             @Html.HiddenFor(d => d.PublishDateEnd)
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status) + "：", new {@class = "control-label"})
-                            @Html.DropDownListFor(d => d.Status, businessStatus, "请选择", new {@class = "form-control input-sm"})
+                            @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status) + "：", new { @class = "control-label" })
+                            @Html.DropDownListFor(d => d.Status, businessStatus, "请选择", new { @class = "form-control input-sm" })
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.PurchaseStatus, Html.DisplayNameFor(d => d.PurchaseStatus) + "：", new {@class = "control-label"})
-                            @Html.DropDownListFor(d => d.PurchaseStatus, purchaseStatus, "请选择", new {@class = "form-control input-sm"})
+                            @Html.LabelFor(d => d.PurchaseStatus, Html.DisplayNameFor(d => d.PurchaseStatus) + "：", new { @class = "control-label" })
+                            @Html.DropDownListFor(d => d.PurchaseStatus, purchaseStatus, "请选择", new { @class = "form-control input-sm" })
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.VerificationStatus, Html.DisplayNameFor(d => d.VerificationStatus) + "：", new {@class = "control-label"})
-                            @Html.DropDownListFor(d => d.VerificationStatus, vstatus, "请选择", new {@class = "form-control input-sm"})
+                            @Html.LabelFor(d => d.VerificationStatus, Html.DisplayNameFor(d => d.VerificationStatus) + "：", new { @class = "control-label" })
+                            @Html.DropDownListFor(d => d.VerificationStatus, vstatus, "请选择", new { @class = "form-control input-sm" })
                         </div>
                     </div>
                 </div>
@@ -86,7 +95,7 @@
                         <div class="form-group">
                             <button class="btn btn-primary" type="button" onclick="$('#table').bootstrapTable('refresh');"><i class="fa fa-search"></i> 搜索</button>
                             <button class="btn btn-warning" type="button" onclick="resetDate();searchFrm.reset($('#searchFrm'));"><i class="fa fa-repeat"></i> 重置</button>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -123,66 +132,8 @@
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
-            var $datepicker = $('#PublishDateStr');
-            $datepicker.daterangepicker({
-                autoUpdateInput: false,
-                opens: "center",
-                linkedCalendars: false,
-                ranges: {
-                    '今日': [moment(), moment()],
-                    '昨日': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    '最近7日': [moment().subtract(6, 'days'), moment()],
-                    '最近30日': [moment().subtract(29, 'days'), moment()],
-                    '本月': [moment().startOf('month'), moment().endOf('month')],
-                    '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                },
-                locale: {
-                    format: 'YYYY-MM-DD',
-                    separator: " 至 ",
-                    applyLabel: "确认",
-                    cancelLabel: "取消",
-                    fromLabel: "从",
-                    toLabel: "到",
-                    customRangeLabel: "自定义",
-                    weekLabel: "周",
-                    daysOfWeek: [
-                        "日",
-                        "一",
-                        "二",
-                        "三",
-                        "四",
-                        "五",
-                        "六"
-                    ],
-                    monthNames: [
-                        "一月",
-                        "二月",
-                        "三月",
-                        "四月",
-                        "五月",
-                        "六月",
-                        "七月",
-                        "八月",
-                        "九月",
-                        "十月",
-                        "十一月",
-                        "十二月"
-                    ],
-                    firstDay: 1
-                }
-            },
-                function (start, end, label) {
-                    $("#PublishDateStart").val(start.format('YYYY-MM-DD'));
-                    $("#PublishDateEnd").val(end.format('YYYY-MM-DD'));
-                });
-
-            $datepicker.on('apply.daterangepicker', function (ev, picker) {
-                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' 至 ' + picker.endDate.format('YYYY-MM-DD'));
-            });
-            $datepicker.on('cancel.daterangepicker', function (ev, picker) {
-                $(this).val('');
-                resetDate();
-            });
+            initDate($('#PrePublishDateStr'), "PrePublishDate");
+            initDate($('#PublishDateStr'), "PublishDate");
         });
         var TableInit = function() {
             var obj = new Object();
@@ -216,21 +167,21 @@
                 },
                 mobileResponsive: true,
                 queryParams: searchFrm.queryParams,
-                rowStyle: function (row, index) {
-                    if (row.PurchaseStatus == 3 && row.PurchaseMoney==0) {
-                        return {
-                            classes: "warning"
-                        };
-                    }
-                    if (row.PurchaseStatus == 3 && row.PurchaseMoney >= row.Money) {
-                        return {
-                            classes: "danger"
-                        };
-                    }
-                    return {};
-                },
+                //rowStyle: function (row, index) {
+                //    if (row.PurchaseStatus == 3 && row.PurchaseMoney==0) {
+                //        return {
+                //            classes: "warning"
+                //        };
+                //    }
+                //    if (row.PurchaseStatus == 3 && row.PurchaseMoney >= row.Money) {
+                //        return {
+                //            classes: "danger"
+                //        };
+                //    }
+                //    return {};
+                //},
                 columns: [
-                    {
+                    @*{
                         field: 'OrderDate',
                         title: '@Html.DisplayNameFor(d=>d.OrderDate)',
                         align: "center", valign: "middle",
@@ -240,13 +191,13 @@
                         footerFormatter: function () {
                             return "合计";
                         }
-                    },
+                    },*@
                     {
                         field: 'OrderNum',
                         title: '@Html.DisplayNameFor(d=>d.OrderNum)',
                         align: "center", valign: "middle",
                         formatter: function(value,row) {
-                            return "<a class='label' href='@Url.Action("Update", "Order",new{area="Business"})?id=" + row.BusinessOrderId+"'><i class='fa fa-link'></i> " + value + "</a>";
+                            return "<a class='label' href='@Url.Action("Update", "Order",new{area="Business"})?id=" + row.BusinessOrderId+"' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
                         }
                     },
                     {
@@ -262,18 +213,18 @@
                         formatter:formatter.linkman
                     }
                     ,
-                    {
+                    @*{
                         field: 'MediaTypeName',
                         title: '@Html.DisplayNameFor(d=>d.MediaTypeName)',
                         align: "center", valign: "middle"
-                    },
+                    },*@
 
                     {
                         field: 'MediaName',
                         title: '@Html.DisplayNameFor(d=>d.MediaName)',
                         align: "left", valign: "middle",
                         formatter: function(value,row) {
-                            return value +
+                            return "["+row.MediaTypeName+"] "+ value +
                                 " <a class='btn btn-warning btn-circle btn-xs' href='@Url.Action("Comment", "Media",new{area="Resource"})?id=" +
                                 row.MediaPriceId +
                                 "' target='_blank' title='评价'><i class='fa fa-commenting'></i></a>";
@@ -315,6 +266,16 @@
                                 return data[0].TotalPurchaseMoney;
                             }
                             return 0;
+                        }
+                    },
+                    {
+                        field: 'PrePublishDate',
+                        title: '@Html.DisplayNameFor(d=>d.PrePublishDate)',
+                        align: "center", valign: "middle",
+                        formatter: function (value) {
+                            if (value) {
+                                return moment(value).format("YYYY-MM-DD");
+                            }
                         }
                     },
                     {
@@ -371,9 +332,78 @@
             return obj;
         };
 
-        function resetDate() {
-            $('#PublishDateStart').val('');
-            $('#PublishDateEnd').val('');
+        function initDate($datepicker,idstr) {
+            $datepicker.daterangepicker({
+                autoUpdateInput: false,
+                opens: "center",
+                linkedCalendars: false,
+                ranges: {
+                    '今日': [moment(), moment()],
+                    '昨日': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    '最近7日': [moment().subtract(6, 'days'), moment()],
+                    '最近30日': [moment().subtract(29, 'days'), moment()],
+                    '本月': [moment().startOf('month'), moment().endOf('month')],
+                    '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    separator: " 至 ",
+                    applyLabel: "确认",
+                    cancelLabel: "取消",
+                    fromLabel: "从",
+                    toLabel: "到",
+                    customRangeLabel: "自定义",
+                    weekLabel: "周",
+                    daysOfWeek: [
+                        "日",
+                        "一",
+                        "二",
+                        "三",
+                        "四",
+                        "五",
+                        "六"
+                    ],
+                    monthNames: [
+                        "一月",
+                        "二月",
+                        "三月",
+                        "四月",
+                        "五月",
+                        "六月",
+                        "七月",
+                        "八月",
+                        "九月",
+                        "十月",
+                        "十一月",
+                        "十二月"
+                    ],
+                    firstDay: 1
+                }
+            },
+                function (start, end, label) {
+                    $("#" + idstr+"Start").val(start.format('YYYY-MM-DD'));
+                    $("#" + idstr +"End").val(end.format('YYYY-MM-DD'));
+                });
+
+            $datepicker.on('apply.daterangepicker', function (ev, picker) {
+                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' 至 ' + picker.endDate.format('YYYY-MM-DD'));
+            });
+            $datepicker.on('cancel.daterangepicker', function (ev, picker) {
+                $(this).val('');
+                resetDate(idstr);
+            });
+        }
+        function resetDate(idstr) {
+            if (idstr) {
+                $('#'+idstr+'Start').val('');
+                $('#' + idstr +'End').val('');
+            } else {
+                $('#PublishDateStart').val('');
+                $('#PublishDateEnd').val('');
+                $('#PrePublishDateStart').val('');
+                $('#PrePublishDateEnd').val('');
+            }
+
         }
 
         function exportDate() {

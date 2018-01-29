@@ -81,6 +81,15 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => d.Status == viewModel.Status);
             }
+            if (viewModel.PrePublishDateStart != null)
+            {
+                allList = allList.Where(d => d.PrePublishDate >= viewModel.PrePublishDateStart);
+            }
+            if (viewModel.PrePublishDateEnd != null)
+            {
+                var endDate = viewModel.PrePublishDateEnd.Value.AddDays(1);
+                allList = allList.Where(d => d.PrePublishDate < endDate);
+            }
             if (viewModel.VerificationStatus != null)
             {
                 allList = allList.Where(d => d.VerificationStatus == viewModel.VerificationStatus);

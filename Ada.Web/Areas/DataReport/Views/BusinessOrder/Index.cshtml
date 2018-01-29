@@ -114,15 +114,15 @@
                 queryParams: searchFrm.queryParams,
                 showFooter:true,
                 mobileResponsive: true,
-                rowStyle: function (row, index) {
-                    if (row.TotalPurchaseMoney >= row.TotalMoney) {
-                        return {
-                            classes: "danger"
-                        };
-                    } else {
-                        return {};
-                    }
-                },
+                //rowStyle: function (row, index) {
+                //    if (row.TotalPurchaseMoney >= row.TotalMoney) {
+                //        return {
+                //            classes: "danger"
+                //        };
+                //    } else {
+                //        return {};
+                //    }
+                //},
                 columns: [
                     {
                         field: 'OrderDate',

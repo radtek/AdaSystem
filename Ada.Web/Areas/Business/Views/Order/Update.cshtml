@@ -4,9 +4,9 @@
 @model Ada.Core.ViewModel.Business.BusinessOrderView
 @{
     ViewBag.Title = Model.Remark;
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "销售订单", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "销售订单", Value = Url.Action("Index") } };
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 
 <div class="wrapper wrapper-content">
     @using (Html.BeginForm())

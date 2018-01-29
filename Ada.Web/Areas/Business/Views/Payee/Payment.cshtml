@@ -4,11 +4,11 @@
 @model Ada.Core.ViewModel.Business.BusinessPaymentView
 @{
     ViewBag.Title = "申请付款";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "我的领款", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "我的领款", Value = Url.Action("Index") } };
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var paymentTypes = fieldService.GetFieldsByKey("PaymentType");
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 
 
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">

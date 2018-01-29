@@ -3,9 +3,9 @@
 @model Ada.Core.ViewModel.Business.BusinessWriteOffView
 @{
     ViewBag.Title = "销售核销";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "核销明细", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "核销明细", Value = Url.Action("Index") } };
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
     <p class="bg-danger">@Html.ValidationMessage("message") </p>

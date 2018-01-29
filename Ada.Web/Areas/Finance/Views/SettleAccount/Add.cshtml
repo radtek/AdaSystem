@@ -2,9 +2,9 @@
 @model Ada.Core.ViewModel.Finance.SettleAccountView
 @{
     ViewBag.Title = "添加账户";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "结算账户", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "结算账户", Value = Url.Action("Index") } };
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 
 
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">

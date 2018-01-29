@@ -1,9 +1,9 @@
 ﻿@model Ada.Core.ViewModel.WorkLog.WorkLogView
 @{
     ViewBag.Title = "审批日志";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "工作日志", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "工作日志", Value = Url.Action("Index") } };
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 <div class="wrapper wrapper-content">
     @using (Html.BeginForm())
     {

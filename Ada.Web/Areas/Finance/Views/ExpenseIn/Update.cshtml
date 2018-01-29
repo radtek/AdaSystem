@@ -6,14 +6,14 @@
 @model ExpenseView
 @{
     ViewBag.Title ="编辑收入";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "其他收入", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "其他收入", Value = Url.Action("Index") } };
     var settleAccountService = EngineContext.Current.Resolve<ISettleAccountService>();
     var incomeExpendService = EngineContext.Current.Resolve<IIncomeExpendService>();
     var settleAccounts = settleAccountService.LoadEntitiesFilter().Select(d => new { text = d.SettleName, value = d.Id }).ToList();
     var incomeExpends = incomeExpendService.LoadEntitiesFilter(new IncomeExpendView() { IsMain = false, SubjectType = Model.IsIncom ? Consts.StateNormal : Consts.StateLock }).Select(d => new { text = d.SubjectName, value = d.Id }).ToList();
     var thumbimage = string.IsNullOrWhiteSpace(Model.ThumbnailImage) ? "" : Model.ThumbnailImage;
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 
 <div class="wrapper wrapper-content">
     @using (Html.BeginForm())

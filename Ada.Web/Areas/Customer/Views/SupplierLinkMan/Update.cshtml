@@ -2,9 +2,9 @@
 @model Ada.Core.ViewModel.Customer.LinkManView
 @{
     ViewBag.Title = "编辑联系人";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "商家信息", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "商家信息", Value = Url.Action("Index") } };
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 <div class="wrapper wrapper-content animated fadeInRight">
     @using (Html.BeginForm())
     {

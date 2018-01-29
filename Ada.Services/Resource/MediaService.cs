@@ -97,7 +97,7 @@ namespace Ada.Services.Resource
             }
             if (!string.IsNullOrWhiteSpace(viewModel.Transactor))
             {
-                allList = allList.Where(d => d.Transactor == viewModel.Transactor);
+                allList = allList.Where(d => d.Transactor.Contains(viewModel.Transactor));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
             {

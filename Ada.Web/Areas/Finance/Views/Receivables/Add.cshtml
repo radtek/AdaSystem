@@ -2,9 +2,9 @@
 @model Ada.Core.ViewModel.Finance.ReceivablesView
 @{
     ViewBag.Title = "添加收款";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "销售收款", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "销售收款", Value = Url.Action("Index") } };
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 
 
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">

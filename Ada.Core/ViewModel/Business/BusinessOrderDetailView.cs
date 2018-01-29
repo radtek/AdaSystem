@@ -150,6 +150,16 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "出刊日期")]
         public DateTime? PublishDateEnd { get; set; }
         /// <summary>
+        /// 预出刊日期
+        /// </summary>
+        [Display(Name = "预出刊日期")]
+        public DateTime? PrePublishDateStart { get; set; }
+        /// <summary>
+        /// 预出刊日期
+        /// </summary>
+        [Display(Name = "预出刊日期")]
+        public DateTime? PrePublishDateEnd { get; set; }
+        /// <summary>
         /// 经办业务
         /// </summary>
         [Display(Name = "经办业务")]

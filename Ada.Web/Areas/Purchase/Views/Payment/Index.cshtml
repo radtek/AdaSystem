@@ -3,6 +3,8 @@
 @model Ada.Core.ViewModel.Purchase.PurchasePaymentView
 @{
     ViewBag.Title = "媒介请款";
+    List<SelectListItem> status = new List<SelectListItem>() { new SelectListItem() { Text = "已到票", Value = "true" }, new SelectListItem() { Text = "未到票", Value = "false" } };
+    List<SelectListItem> isInvoices = new List<SelectListItem>() { new SelectListItem() { Text = "需开票", Value = "true" } };
 }
 @Html.Partial("Bread")
 
@@ -19,20 +21,32 @@
         <div class="ibox-content">
             <form id="searchFrm" onSubmit="javascript:searchFrm.search(this,event);">
                 <div class="row">
-                    
+
 
 
                     <div class="col-sm-3">
                         <div class="form-group">
                             @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control input-sm" })
+                            @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
                         </div>
                     </div>
-                    
+
                     <div class="col-sm-3">
                         <div class="form-group">
                             @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control input-sm" })
+                            @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.IsInvoice, Html.DisplayNameFor(d => d.IsInvoice) + "：", new { @class = "control-label" })
+                            @Html.DropDownListFor(d => d.IsInvoice, isInvoices, "请选择", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.InvoiceStauts, Html.DisplayNameFor(d => d.InvoiceStauts) + "：", new { @class = "control-label" })
+                            @Html.DropDownListFor(d => d.InvoiceStauts, status, "请选择", new { @class = "form-control" })
                         </div>
                     </div>
                 </div>
@@ -121,15 +135,29 @@
                 },
                 mobileResponsive:true,
                 columns: [
-                    //{
-                    //    checkbox: true,
-                    //    align: "center", valign: "middle"
-                    //},
                     {
                         field: 'BillNum',
                         title: '@Html.DisplayNameFor(d=>d.BillNum)',
                         align: "center", valign: "middle"
                     },
+                    {
+                        field: 'IsInvoice',
+                        title: '发票信息',
+                        align: "center", valign: "middle",
+                        formatter: function(value,row) {
+                            if (value) {
+                                var invoice = "<span class='label'>未到票</span>";
+                                if (row.InvoiceStauts) {
+                                    invoice = "<span class='label label-success'>已收票</span>";
+                                }
+                                return "<span class='label label-primary'>需开票</span> "+invoice;
+                            } else {
+                                return "";
+                            }
+                        }
+                    },
+
+
                     {
                         field: 'LinkManName',
                         title: '@Html.DisplayNameFor(d=>d.LinkManName)',

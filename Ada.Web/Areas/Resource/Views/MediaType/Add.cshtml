@@ -2,10 +2,10 @@
 @model Ada.Core.ViewModel.Resource.MediaTypeView
 @{
     ViewBag.Title = "添加类型";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "媒体类型", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "媒体类型", Value = Url.Action("Index") } };
 
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">

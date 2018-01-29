@@ -2,9 +2,9 @@
 @model Ada.Core.ViewModel.QuartzTask.JobView
 @{
     ViewBag.Title = "新建任务";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "计划任务", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "计划任务", Value = Url.Action("Index") } };
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 <div class="wrapper wrapper-content animated fadeInRight">
     @using (Html.BeginForm())
     {

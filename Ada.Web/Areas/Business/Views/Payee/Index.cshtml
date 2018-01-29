@@ -37,7 +37,7 @@
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/lightboxGallery")
-    <script type="text/javascript">
+<script type="text/javascript">
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
@@ -82,6 +82,11 @@
                     {
                         field: 'LinkManName',
                         title: '@Html.DisplayNameFor(d=>d.LinkManName)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'PayInfo',
+                        title: '@Html.DisplayNameFor(d=>d.PayInfo)',
                         align: "center", valign: "middle"
                     },
                     {
@@ -184,7 +189,7 @@
             });
         }
 
-    </script>
+</script>
 }
 
 

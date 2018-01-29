@@ -7,13 +7,13 @@
 @model BillPaymentView
 @{
     ViewBag.Title = "媒介付款";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "媒介请款", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "媒介请款", Value = Url.Action("Index") } };
     var settleAccountService = EngineContext.Current.Resolve<ISettleAccountService>();
     var incomeExpendService = EngineContext.Current.Resolve<IIncomeExpendService>();
     var settleAccounts = settleAccountService.LoadEntitiesFilter().Select(d => new { text = d.SettleName, value = d.Id }).ToList();
     var incomeExpends = incomeExpendService.LoadEntitiesFilter(new IncomeExpendView() { IsMain = true, SubjectType = Consts.StateLock }).Select(d => new { text = d.SubjectName, value = d.Id }).ToList();
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 
 <div class="wrapper wrapper-content">
     @using (Html.BeginForm())

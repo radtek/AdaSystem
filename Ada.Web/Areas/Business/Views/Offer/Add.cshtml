@@ -2,9 +2,9 @@
 @model Ada.Core.ViewModel.Business.BusinessOfferView
 @{
     ViewBag.Title = "新增报价";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "销售报价", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "销售报价", Value = Url.Action("Index") } };
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 
 <div class="wrapper wrapper-content">
     @using (Html.BeginForm())

@@ -6,11 +6,11 @@
 @model Ada.Core.ViewModel.Customer.FollowUpView
 @{
     ViewBag.Title = "客户跟进";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "客户信息", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "客户信息", Value = Url.Action("Index") } };
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var followUpWays = fieldService.GetFieldsByKey("FollowUpWay").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 <div class="wrapper wrapper-content">
     @using (Html.BeginForm())
     {

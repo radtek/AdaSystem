@@ -110,9 +110,9 @@ namespace Ada.Services.Business
                 allList = allList.Where(d => d.BusinessInvoiceDetails.Count == 0);
             }
             viewModel.total = allList.Count();
-            viewModel.AllMoney = allList.Sum(d => d.BusinessOrderDetails.Where(a => a.Status == Consts.StateNormal).Sum(b => b.Money));
-            viewModel.AllSellMoney = allList.Sum(d => d.BusinessOrderDetails.Where(a => a.Status == Consts.StateNormal).Sum(b => b.SellMoney));
-            viewModel.AllTaxMoney = allList.Sum(d => d.BusinessOrderDetails.Where(a => a.Status == Consts.StateNormal).Sum(b => b.TaxMoney));
+            viewModel.AllMoney = allList.Sum(d => d.BusinessOrderDetails.Where(a => a.Status == Consts.StateOK).Sum(b => b.Money));
+            viewModel.AllSellMoney = allList.Sum(d => d.BusinessOrderDetails.Where(a => a.Status == Consts.StateOK).Sum(b => b.SellMoney));
+            viewModel.AllTaxMoney = allList.Sum(d => d.BusinessOrderDetails.Where(a => a.Status == Consts.StateOK).Sum(b => b.TaxMoney));
             var purchases = _purchaseOrderRepository.LoadEntities(d => d.IsDelete == false);
             viewModel.AllPurchaseMoney = (from b in allList
                                           from p in purchases

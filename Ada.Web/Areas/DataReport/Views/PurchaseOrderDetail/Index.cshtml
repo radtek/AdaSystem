@@ -144,19 +144,19 @@
                     return "@Html.DisplayNameFor(d => d.MediaName)";
                 },
                 queryParams: searchFrm.queryParams,
-                rowStyle: function (row, index) {
-                    if (row.Status == 3 && row.PurchaseMoney == 0) {
-                        return {
-                            classes: "warning"
-                        };
-                    }
-                    if (row.Status == 3 && row.PurchaseMoney > row.CostMoney) {
-                        return {
-                            classes: "danger"
-                        };
-                    }
-                    return {};
-                },
+                //rowStyle: function (row, index) {
+                //    if (row.Status == 3 && row.PurchaseMoney == 0) {
+                //        return {
+                //            classes: "warning"
+                //        };
+                //    }
+                //    if (row.Status == 3 && row.PurchaseMoney > row.CostMoney) {
+                //        return {
+                //            classes: "danger"
+                //        };
+                //    }
+                //    return {};
+                //},
                 mobileResponsive: true,
                 columns: [
                     {

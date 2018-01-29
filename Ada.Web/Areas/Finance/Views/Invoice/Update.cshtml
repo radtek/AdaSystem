@@ -3,9 +3,9 @@
 @model Ada.Core.ViewModel.Business.BusinessInvoiceView
 @{
     ViewBag.Title = "处理发票";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "销售开票", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "销售开票", Value = Url.Action("Index") } };
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 
 
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">

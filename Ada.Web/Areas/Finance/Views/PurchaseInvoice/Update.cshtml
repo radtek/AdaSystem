@@ -5,10 +5,10 @@
 @model Ada.Core.Domain.Purchase.PurchasePayment
 @{
     ViewBag.Title = "处理发票";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "媒介发票", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "媒介发票", Value = Url.Action("Index") } };
     var billService = EngineContext.Current.Resolve<IBillPaymentService>();
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 
 
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">

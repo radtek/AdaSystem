@@ -35,9 +35,9 @@ namespace Purchase.Controllers
             _purchasePaymentOrderDetailRepository = purchasePaymentOrderDetailRepository;
             _purchaseOrderDetailrepository = purchaseOrderDetailrepository;
         }
-        public ActionResult Index()
+        public ActionResult Index(PurchasePaymentView viewModel)
         {
-            return View();
+            return View(viewModel);
         }
         public ActionResult GetList(PurchasePaymentView viewModel)
         {

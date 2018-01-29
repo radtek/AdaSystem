@@ -1,4 +1,5 @@
 ﻿@using System.Web.Optimization
+@using Ada.Core.Domain
 @model Ada.Core.ViewModel.Statistics.PurchaseTotal
 @{
     ViewBag.Title = "媒介工作台";
@@ -10,7 +11,7 @@
     <div class="row">
         <div class="col-lg-2">
 
-            <div class="widget style1 white-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","OrderDetail",new {area="Purchase"})';">
+            <div class="widget style1 white-bg mouse-pointer" onclick="window.open('@Url.Action("Index","OrderDetail",new {area="Purchase",Status=Consts.PurchaseStatusWait})');">
                 <div class="row">
                     <div class="col-xs-4">
                         <i class="fa fa-hourglass fa-5x"></i>
@@ -24,7 +25,7 @@
         </div>
         <div class="col-lg-2">
 
-            <div class="widget style1 yellow-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","OrderDetail",new {area="Purchase"})';">
+            <div class="widget style1 yellow-bg mouse-pointer" onclick="window.open('@Url.Action("Index","OrderDetail",new {area="Purchase",Status=Consts.PurchaseStatusTodo})');">
                 <div class="row">
                     <div class="col-xs-4">
                         <i class="fa fa-comments fa-5x"></i>
@@ -38,7 +39,7 @@
         </div>
         <div class="col-lg-2">
 
-            <div class="widget style1 navy-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","OrderDetail",new {area="Purchase"})';">
+            <div class="widget style1 navy-bg mouse-pointer" onclick="window.open('@Url.Action("Index","OrderDetail",new {area="Purchase",Status=Consts.PurchaseStatusConfirm})');">
                 <div class="row">
                     <div class="col-xs-4">
                         <i class="fa fa-handshake-o fa-5x"></i>
@@ -52,7 +53,7 @@
         </div>
         <div class="col-lg-2">
 
-            <div class="widget style1 lazur-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","OrderDetail",new {area="Purchase"})';">
+            <div class="widget style1 lazur-bg mouse-pointer" onclick="window.open('@Url.Action("Index","OrderDetail",new {area="Purchase",PublishDateStart=DateTime.Now.Date.ToString("d"),PublishDateEnd=DateTime.Now.Date.ToString("d")})');">
                 <div class="row">
                     <div class="col-xs-4">
                         <i class="fa fa-calendar-o fa-5x"></i>
@@ -65,7 +66,7 @@
             </div>
         </div>
         <div class="col-lg-2">
-            <div class="widget style1 lazur-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","OrderDetail",new {area="Purchase"})';">
+            <div class="widget style1 lazur-bg mouse-pointer" onclick="window.open('@Url.Action("Index","OrderDetail",new {area="Purchase",PublishDateStart=DateTime.Now.Date.AddDays(1).ToString("d"),PublishDateEnd=DateTime.Now.Date.AddDays(1).ToString("d")})');">
                 <div class="row">
                     <div class="col-xs-4">
                         <i class="fa fa-calendar-plus-o fa-5x"></i>
@@ -79,7 +80,7 @@
         </div>
         <div class="col-lg-2">
 
-            <div class="widget style1 red-bg mouse-pointer" onclick="location.href = '@Url.Action("Index","Payment",new {area="Purchase"})';">
+            <div class="widget style1 red-bg mouse-pointer" onclick="window.open('@Url.Action("Index","Payment",new {area="Purchase",InvoiceStauts=false,IsInvoice=true})') ;">
                 <div class="row">
                     <div class="col-xs-4">
                         <i class="fa fa-money fa-5x"></i>

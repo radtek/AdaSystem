@@ -27,9 +27,9 @@ namespace DataReport.Controllers
             _purchaseOrderDetailRepository = purchaseOrderDetailRepository;
             _settingService = settingService;
         }
-        public ActionResult Index()
+        public ActionResult Index(BusinessOrderDetailView viewModel)
         {
-            return View();
+            return View(viewModel);
         }
         public ActionResult GetList(BusinessOrderDetailView viewModel)
         {
@@ -63,6 +63,7 @@ namespace DataReport.Controllers
                     OrderDate = d.BusinessOrder.OrderDate,
                     OrderNum = d.BusinessOrder.OrderNum,
                     OrderRemark = d.BusinessOrder.Remark,
+                    PrePublishDate = d.PrePublishDate,
                     PurchaseStatus = GetPurchaseOrderDetail(d.Id)?.Status,
                     PurchaseMoney = GetPurchaseOrderDetail(d.Id)?.PurchaseMoney,
                     PublishDate = GetPurchaseOrderDetail(d.Id)?.PublishDate,

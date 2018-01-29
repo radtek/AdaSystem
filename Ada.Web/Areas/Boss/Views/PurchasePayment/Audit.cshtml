@@ -4,13 +4,13 @@
 @model Ada.Core.ViewModel.Purchase.PurchasePaymentDetailView
 @{
     ViewBag.Title = "审批请款";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "媒介请款", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "媒介请款", Value = Url.Action("Index") } };
     LinkMan linkMan = ViewBag.LinkMan;
     List<PurchasePaymentOrderDetail> details = ViewBag.OrderDetail;
     List<PurchasePaymentDetail> paydetails = ViewBag.PayDetail;
     var warning = Model.TotalPayMoney > (Model.OrderMoney - Model.DiscountMoney) ? "has-error" : "";
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 
 
 <div class="wrapper wrapper-content">

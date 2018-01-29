@@ -3,10 +3,10 @@
 @model Ada.Core.ViewModel.Business.BusinessPaymentView
 @{
     ViewBag.Title = "审批请款";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "销售请款", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "销售请款", Value = Url.Action("Index") } };
     LinkMan linkMan = ViewBag.LinkMan;
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 
 
 <div class="wrapper wrapper-content">

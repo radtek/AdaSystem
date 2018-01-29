@@ -6,7 +6,7 @@
 @{
     //Layout = "~/Views/Shared/_Layout_Home.cshtml";
     ViewBag.Title = "报价预览";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "销售报价", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "销售报价", Value = Url.Action("Index") } };
     var setting = EngineContext.Current.Resolve<ISettingService>().GetSetting<Site>();
 }
 <div class="row wrapper border-bottom white-bg page-heading">

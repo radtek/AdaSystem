@@ -26,9 +26,9 @@ namespace Purchase.Controllers
             _businessOrderDetailRepository = businessOrderDetailRepository;
             _purchaseOrderDetailRepository = purchaseOrderDetailRepository;
         }
-        public ActionResult Index()
+        public ActionResult Index(PurchaseOrderDetailView viewModel)
         {
-            return View();
+            return View(viewModel);
         }
         public ActionResult GetList(PurchaseOrderDetailView viewModel)
         {

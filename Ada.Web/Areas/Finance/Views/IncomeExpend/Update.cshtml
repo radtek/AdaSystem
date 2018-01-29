@@ -3,9 +3,9 @@
 @model Ada.Core.ViewModel.Finance.IncomeExpendView
 @{
     ViewBag.Title = "编辑项目";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "收支项目", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "收支项目", Value = Url.Action("Index") } };
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 
 
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">

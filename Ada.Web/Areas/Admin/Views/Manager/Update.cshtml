@@ -2,9 +2,9 @@
 @model Ada.Core.ViewModel.Admin.ManagerView
 @{
     ViewBag.Title = "编辑用户";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "用户管理", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "用户管理", Value = Url.Action("Index") } };
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 <div class="wrapper wrapper-content">
     @using (Html.BeginForm())
     {

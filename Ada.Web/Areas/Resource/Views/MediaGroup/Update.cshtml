@@ -3,9 +3,9 @@
 @model Ada.Core.ViewModel.Resource.MediaGroupView
 @{
     ViewBag.Title = "编辑分组";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "媒体分组", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "媒体分组", Value = Url.Action("Index") } };
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 
 
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">

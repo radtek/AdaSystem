@@ -2,9 +2,9 @@
 @model Ada.Core.ViewModel.Customer.CommpanyView
 @{
     ViewBag.Title = "新增公司";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "客户公司", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "客户公司", Value = Url.Action("Index") } };
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 <div class="wrapper wrapper-content animated fadeInRight">
     @using (Html.BeginForm())
     {

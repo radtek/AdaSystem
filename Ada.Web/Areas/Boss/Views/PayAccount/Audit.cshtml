@@ -4,9 +4,9 @@
 @model PayAccount
 @{
     ViewBag.Title = "审批账户";
-    List<SelectListItem> urls = new List<SelectListItem>() { new SelectListItem() { Text = "客户账户", Value = Url.Action("Index") } };
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "客户账户", Value = Url.Action("Index") } };
 }
-@Html.Partial("Bread", urls)
+@Html.Partial("Bread")
 
 
 <div class="wrapper wrapper-content">
