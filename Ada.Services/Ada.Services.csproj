@@ -70,6 +70,8 @@
     <Compile Include="Admin\RoleService.cs" />
     <Compile Include="Admin\SystemLogService.cs" />
     <Compile Include="Admin\ManagerLoginLogService.cs" />
+    <Compile Include="API\IAPIInterfacesService.cs" />
+    <Compile Include="API\APIInterfacesService.cs" />
     <Compile Include="Business\BusinessOfferService.cs" />
     <Compile Include="Business\BusinessInvoiceService.cs" />
     <Compile Include="Business\BusinessOrderDetailService.cs" />

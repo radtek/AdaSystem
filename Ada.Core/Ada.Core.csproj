@@ -157,6 +157,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\Encrypt.cs" />
     <Compile Include="Tools\FastPropertyComparer.cs" />
+    <Compile Include="Tools\HttpUtility.cs" />
     <Compile Include="Tools\SerializeHelper.cs" />
     <Compile Include="Tools\Thumbnail.cs" />
     <Compile Include="Tools\Utils.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="ViewModel\Admin\FieldView.cs" />
     <Compile Include="ViewModel\Admin\RoleView.cs" />
     <Compile Include="ViewModel\Admin\SystemLogView.cs" />
+    <Compile Include="ViewModel\API\APIInterfacesView.cs" />
     <Compile Include="ViewModel\BaseView.cs" />
     <Compile Include="ViewModel\Business\BusinessInvoiceView.cs" />
     <Compile Include="ViewModel\Business\BusinessOfferView.cs" />

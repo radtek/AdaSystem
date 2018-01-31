@@ -1,0 +1,70 @@
+﻿@using Ada.Core.Infrastructure
+@using Ada.Services.Admin
+@model Ada.Core.ViewModel.API.APIInterfacesView
+@{
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var apiTypes = fieldService.GetFieldsByKey("APIType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var httpmethods = new List<SelectListItem>()
+    {
+        new SelectListItem() {Text = "GET", Value = "GET"},
+        new SelectListItem() {Text = "POST", Value = "POST"}
+    };
+}
+<div class="form-horizontal">
+    <div class="form-group">
+        @Html.LabelFor(d => d.APIType, Html.DisplayNameFor(d => d.APIType).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.DropDownListFor(d => d.APIType, apiTypes, "请选择", new { @class = "form-control", required = "" })
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.APIName, Html.DisplayNameFor(d => d.APIName).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.APIName, new { @class = "form-control",required="" })
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.CallIndex, Html.DisplayNameFor(d => d.CallIndex).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.CallIndex, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.APIUrl, Html.DisplayNameFor(d => d.APIUrl).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.APIUrl, new { @class = "form-control", required = "" })
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.HttpMethod, Html.DisplayNameFor(d => d.HttpMethod).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.DropDownListFor(d => d.HttpMethod, httpmethods, new { @class = "form-control", required = "" })
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.Token, Html.DisplayNameFor(d => d.Token).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.Token, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.Parameters, Html.DisplayNameFor(d => d.Parameters).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.Parameters, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        @Html.LabelFor(d => d.TimeOut, Html.DisplayNameFor(d => d.TimeOut).ToString(), new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(d => d.TimeOut, new { @class = "form-control" })
+        </div>
+    </div>
+    @Html.HiddenFor(d => d.Id)
+</div>

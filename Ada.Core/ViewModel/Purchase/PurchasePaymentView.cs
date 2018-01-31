@@ -25,6 +25,16 @@ namespace Ada.Core.ViewModel.Purchase
         [Display(Name = "申请日期")]
         public DateTime? BillDate { get; set; }
         /// <summary>
+        /// 申请日期
+        /// </summary>
+        [Display(Name = "申请日期")]
+        public DateTime? BillDateStart { get; set; }
+        /// <summary>
+        /// 申请日期
+        /// </summary>
+        [Display(Name = "申请日期")]
+        public DateTime? BillDateEnd { get; set; }
+        /// <summary>
         /// 申请号
         /// </summary>
         [Display(Name = "申请号")]

@@ -74,6 +74,15 @@ namespace Ada.Services.Purchase
                 var endDate = viewModel.InvoiceDateEnd.Value.AddDays(1);
                 allList = allList.Where(d => d.InvoiceDate < endDate);
             }
+            if (viewModel.BillDateStart != null)
+            {
+                allList = allList.Where(d => d.BillDate >= viewModel.BillDateStart);
+            }
+            if (viewModel.BillDateEnd != null)
+            {
+                var endDate = viewModel.BillDateEnd.Value.AddDays(1);
+                allList = allList.Where(d => d.BillDate < endDate);
+            }
             var temp = from a in allList
                        select new PurchasePaymentView
                        {
