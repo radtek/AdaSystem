@@ -74,19 +74,19 @@ namespace Dashboards.Controllers
                 .Sum(d => d.Money);
             total.Income = receivables + income;
             total.Expend = expend + billpay;
-            //资源数
-            var types = _mediaTypeDetailRepository.LoadEntities(d => d.IsDelete == false).ToList();
-            List<MediaTypeView> mediaTypeViews = new List<MediaTypeView>();
-            foreach (var mediaType in types)
-            {
-                MediaTypeView item = new MediaTypeView();
-                item.Image = mediaType.Image;
-                item.TypeName = mediaType.TypeName;
-                item.Taxis = mediaType.Medias.Count(d => d.IsDelete == false);
-                mediaTypeViews.Add(item);
-            }
+            ////资源数
+            //var types = _mediaTypeDetailRepository.LoadEntities(d => d.IsDelete == false).ToList();
+            //List<MediaTypeView> mediaTypeViews = new List<MediaTypeView>();
+            //foreach (var mediaType in types)
+            //{
+            //    MediaTypeView item = new MediaTypeView();
+            //    item.Image = mediaType.Image;
+            //    item.TypeName = mediaType.TypeName;
+            //    item.Taxis = mediaType.Medias.Count(d => d.IsDelete == false);
+            //    mediaTypeViews.Add(item);
+            //}
 
-            total.MediaTypes = mediaTypeViews;
+            //total.MediaTypes = mediaTypeViews;
             return View(total);
         }
     }

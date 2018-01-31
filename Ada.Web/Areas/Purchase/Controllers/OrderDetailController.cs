@@ -228,5 +228,35 @@ namespace Purchase.Controllers
             TempData["Msg"] = "操作成功";
             return RedirectToAction("Update", new { id });
         }
+
+        /// <summary>
+        /// 改价
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult EditOrder(string id)
+        {
+            var entity = _purchaseOrderDetailRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            return PartialView("EditOrder", entity);
+        }
+
+        /// <summary>
+        /// 改价
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditOrder(PurchaseOrderDetailView viewModel)
+        {
+            var entity = _purchaseOrderDetailRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
+            entity.CostMoney = viewModel.CostMoney;
+            entity.PurchaseMoney = viewModel.PurchaseMoney;
+            var tax = entity.Tax ?? 0;
+            entity.Money = entity.PurchaseMoney * (1 + tax / 100);
+            _purchaseOrderDetailService.Update(entity);
+            TempData["Msg"] = "修改成功";
+            return RedirectToAction("Index");
+        }
     }
 }

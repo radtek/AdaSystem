@@ -92,7 +92,7 @@ namespace Ada.Services.Business
                 else
                 {
                     allList = from o in allList
-                        where o.BusinessOrderDetails.Count != o.BusinessOrderDetails.Count(b => b.VerificationStatus == Consts.StateNormal) || o.BusinessOrderDetails.Count >0
+                        where o.BusinessOrderDetails.Count != o.BusinessOrderDetails.Count(b => b.VerificationStatus == Consts.StateNormal) && o.BusinessOrderDetails.Count >0
                         select o;
                 }
                

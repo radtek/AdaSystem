@@ -83,8 +83,8 @@ namespace Business.Controllers
                 ModelState.AddModelError("message", "请选择核销款项或核销订单！");
                 return View(viewModel);
             }
-            var orderIds = viewModel.Orders.Split(',');
-            var payeeIds = viewModel.Payees.Split(',');
+            var orderIds = viewModel.Orders.Split(',').ToList().Distinct();
+            var payeeIds = viewModel.Payees.Split(',').ToList().Distinct();
             BusinessWriteOff businessWriteOff = new BusinessWriteOff();
             businessWriteOff.Id = IdBuilder.CreateIdNum();
             businessWriteOff.WriteOffDate = DateTime.Now;

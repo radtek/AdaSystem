@@ -100,7 +100,11 @@
     </div>
 </div>
 
-
+<div id="toolbar" class="btn-group">
+    <button class="btn btn-primary btn-outline" onclick="editOrder();">
+        <i class="fa fa-pencil"></i> 改价
+    </button>
+</div>
 
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
@@ -177,7 +181,7 @@
             obj.Init = function() {
                 $('#table').bootstrapTable({
                 url: '@Url.Action("GetList")',         //请求后台的URL（*）
-                //toolbar: '#toolbar',                //工具按钮用哪个容器
+                toolbar: '#toolbar',                //工具按钮用哪个容器
                 classes: "table table-no-bordered",
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
@@ -207,9 +211,9 @@
                 mobileResponsive: true,
                 onLoadSuccess: initTooltip,
                 columns: [
-                    //{
-                    //    checkbox: true
-                    //},
+                    {
+                        checkbox: true
+                    },
                     {
                         field: 'Status',
                         title: '@Html.DisplayNameFor(d=>d.Status)',
@@ -419,6 +423,23 @@
                     }
                 });
             });
+        }
+
+        function editOrder() {
+            var arrselections = $("#table").bootstrapTable('getSelections');
+            if (arrselections.length > 1) {
+                swal("操作提醒", "只能选择一行数据", "warning");
+                return;
+            }
+            if (arrselections.length <= 0) {
+                swal("操作提醒", "请选择有效数据", "warning");
+                return;
+            }
+            $("#modalView").load("@Url.Action("EditOrder")?id=" + arrselections[0].Id,
+                function () {
+                    $('#modalView .modal').modal('show');
+                });
+
         }
 </script>
 }
