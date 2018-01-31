@@ -62,6 +62,8 @@
     <Compile Include="Mapping\Admin\ActionMap.cs" />
     <Compile Include="Mapping\Admin\ManagerMap.cs" />
     <Compile Include="Mapping\Admin\SettingMap.cs" />
+    <Compile Include="Mapping\API\APIInterfacesMap.cs" />
+    <Compile Include="Mapping\API\APIRequestRecordMap.cs" />
     <Compile Include="Mapping\Business\BusinessInvoiceDetailMap.cs" />
     <Compile Include="Mapping\Business\BusinessInvoiceMap.cs" />
     <Compile Include="Mapping\Business\BusinessOfferDetailMap.cs" />
@@ -96,6 +98,7 @@
     <Compile Include="Mapping\Purchase\PurchaseReturnOrderMap.cs" />
     <Compile Include="Mapping\QuartzTask\JobMap.cs" />
     <Compile Include="Mapping\Resource\MediaCommentMap.cs" />
+    <Compile Include="Mapping\Resource\MediaArticleMap.cs" />
     <Compile Include="Mapping\Resource\MediaPriceMap.cs" />
     <Compile Include="Mapping\Resource\MediaMap.cs" />
     <Compile Include="Mapping\Resource\MediaGroupMap.cs" />
@@ -286,6 +289,10 @@
     <Compile Include="Migrations\201801210739556_WeiXin.Designer.cs">
       <DependentUpon>201801210739556_WeiXin.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801310726083_API.cs" />
+    <Compile Include="Migrations\201801310726083_API.Designer.cs">
+      <DependentUpon>201801310726083_API.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -437,6 +444,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801210739556_WeiXin.resx">
       <DependentUpon>201801210739556_WeiXin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801310726083_API.resx">
+      <DependentUpon>201801310726083_API.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

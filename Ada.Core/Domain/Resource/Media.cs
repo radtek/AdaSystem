@@ -16,6 +16,7 @@ namespace Ada.Core.Domain.Resource
             MediaPrices=new HashSet<MediaPrice>();
             MediaGroups=new HashSet<MediaGroup>();
             MediaComments=new HashSet<MediaComment>();
+            MediaArticles=new HashSet<MediaArticle>();
         }
         /// <summary>
         /// 媒体名称
@@ -107,6 +108,21 @@ namespace Ada.Core.Domain.Resource
         /// </summary>
         [Display(Name = "点赞数")]
         public int? LikesNum { get; set; }
+        /// <summary>
+        /// 微博数
+        /// </summary>
+        [Display(Name = "微博数")]
+        public int? PostNum { get; set; }
+        /// <summary>
+        /// 月发文数
+        /// </summary>
+        [Display(Name = "月发文数")]
+        public int? MonthPostNum { get; set; }
+        /// <summary>
+        /// 关注数
+        /// </summary>
+        [Display(Name = "关注数")]
+        public int? FriendNum { get; set; }
         /// <summary>
         /// 媒体说明
         /// </summary>
@@ -218,5 +234,6 @@ namespace Ada.Core.Domain.Resource
         public virtual ICollection<MediaPrice> MediaPrices { get; set; }
         public virtual ICollection<MediaGroup> MediaGroups { get; set; }
         public virtual ICollection<MediaComment> MediaComments { get; set; }
+        public virtual ICollection<MediaArticle> MediaArticles { get; set; }
     }
 }
