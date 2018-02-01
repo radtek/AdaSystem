@@ -182,5 +182,33 @@ namespace Ada.Web.Controllers
 
 
         }
+
+        public ActionResult CheckMedia()
+        {
+
+            var m = _media.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex== "sinablog").ToList();
+            List<string> ids = new List<string>();
+            List<string> isnulls = new List<string>();
+            foreach (var item in m)
+            {
+                if (string.IsNullOrWhiteSpace(item.MediaID))
+                {
+                    isnulls.Add(item.MediaName);
+                    continue;
+                }
+                var temp = _media.LoadEntities(d =>
+                    d.MediaID.Equals(item.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
+                    d.IsDelete == false &&
+                    d.MediaTypeId == item.MediaTypeId && d.Id != item.Id).FirstOrDefault();
+                if (temp!=null)
+                {
+                    ids.Add(item.MediaID);
+                }
+            }
+
+            return Content("存在重复资源：" + string.Join(",", ids)+"，媒体ID是空的："+string.Join(",",isnulls));
+
+
+        }
     }
 }

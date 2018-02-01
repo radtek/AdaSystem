@@ -10,7 +10,7 @@
 
 
 <div class="wrapper wrapper-content">
-   
+
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
@@ -28,53 +28,54 @@
                     <ul class="nav nav-tabs">
                         <li class="active"><a data-toggle="tab" href="#tab-1"> 申请信息</a></li>
                         <li class=""><a data-toggle="tab" href="#tab-2"> 客户信息</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-3"> 客户订单</a></li>
                     </ul>
                     <div class="tab-content">
                         <div id="tab-1" class="tab-pane active">
                             <div class="panel-body">
                                 <div class="form-horizontal">
                                     <div class="form-group">
-                                        @Html.LabelFor(d => d.PaymentType, Html.DisplayNameFor(d => d.PaymentType).ToString(), new {@class = "col-sm-2 control-label"})
+                                        @Html.LabelFor(d => d.PaymentType, Html.DisplayNameFor(d => d.PaymentType).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.PaymentType, new {@class = "form-control", @readonly = "readonly"})
+                                            @Html.TextBoxFor(d => d.PaymentType, new { @class = "form-control", @readonly = "readonly" })
                                         </div>
                                     </div>
 
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
-                                        @Html.LabelFor(d => d.AccountBank, Html.DisplayNameFor(d => d.AccountBank).ToString(), new {@class = "col-sm-2 control-label"})
+                                        @Html.LabelFor(d => d.AccountBank, Html.DisplayNameFor(d => d.AccountBank).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.AccountBank, new {@class = "form-control", @readonly = "readonly"})
+                                            @Html.TextBoxFor(d => d.AccountBank, new { @class = "form-control", @readonly = "readonly" })
                                         </div>
                                     </div>
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
-                                        @Html.LabelFor(d => d.AccountName, Html.DisplayNameFor(d => d.AccountName).ToString(), new {@class = "col-sm-2 control-label"})
+                                        @Html.LabelFor(d => d.AccountName, Html.DisplayNameFor(d => d.AccountName).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.AccountName, new {@class = "form-control", @readonly = "readonly"})
+                                            @Html.TextBoxFor(d => d.AccountName, new { @class = "form-control", @readonly = "readonly" })
                                         </div>
                                     </div>
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
-                                        @Html.LabelFor(d => d.AccountNum, Html.DisplayNameFor(d => d.AccountNum).ToString(), new {@class = "col-sm-2 control-label"})
+                                        @Html.LabelFor(d => d.AccountNum, Html.DisplayNameFor(d => d.AccountNum).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.AccountNum, new {@class = "form-control", @readonly = "readonly"})
+                                            @Html.TextBoxFor(d => d.AccountNum, new { @class = "form-control", @readonly = "readonly" })
                                         </div>
                                     </div>
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
-                                        @Html.LabelFor(d => d.PayMoney, Html.DisplayNameFor(d => d.PayMoney).ToString(), new {@class = "col-sm-2 control-label"})
+                                        @Html.LabelFor(d => d.PayMoney, Html.DisplayNameFor(d => d.PayMoney).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.PayMoney, new {@class = "form-control", @readonly = "readonly"})
+                                            @Html.TextBoxFor(d => d.PayMoney, new { @class = "form-control", @readonly = "readonly" })
                                         </div>
                                     </div>
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
-                                        @Html.LabelFor(d => d.Image, Html.DisplayNameFor(d => d.Image).ToString(), new {@class = "col-sm-2 control-label"})
+                                        @Html.LabelFor(d => d.Image, Html.DisplayNameFor(d => d.Image).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-1">
                                             @if (string.IsNullOrWhiteSpace(Model.Image))
                                             {
-                                                <input type="text" class="form-control" readonly="readonly" value="未上传凭证"/>
+                                                <input type="text" class="form-control" readonly="readonly" value="未上传凭证" />
                                             }
                                             else
                                             {
@@ -98,14 +99,14 @@
                                     </div>
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
-                                        @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new {@class = "col-sm-2 control-label"})
+                                        @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
-                                            @Html.TextAreaFor(d => d.Remark, new {@class = "form-control"})
+                                            @Html.TextAreaFor(d => d.Remark, new { @class = "form-control" })
                                         </div>
                                     </div>
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
-                                        @Html.LabelFor(d => d.AuditStatus, Html.DisplayNameFor(d => d.AuditStatus).ToString(), new {@class = "col-sm-2 control-label"})
+                                        @Html.LabelFor(d => d.AuditStatus, Html.DisplayNameFor(d => d.AuditStatus).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
                                             <div class="radio radio-info radio-inline">
                                                 @Html.RadioButtonFor(d => d.AuditStatus, 1)
@@ -140,37 +141,37 @@
                                             <div class="form-group col-md-4">
                                                 <label class="col-sm-4 control-label">公司名称</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.Commpany.Name"/>
+                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.Commpany.Name" />
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label class="col-sm-4 control-label">客户名称</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.Name"/>
+                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.Name" />
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label class="col-sm-4 control-label">客户状态</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.Status"/>
+                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.Status" />
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label class="col-sm-4 control-label">客户微信</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.WeiXin"/>
+                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.WeiXin" />
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label class="col-sm-4 control-label">客户QQ</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.QQ"/>
+                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.QQ" />
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label class="col-sm-4 control-label">客户电话</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.Phone"/>
+                                                    <input type="text" class="form-control" readonly="readonly" value="@linkMan.Phone" />
                                                 </div>
                                             </div>
                                         </div>
@@ -182,7 +183,8 @@
                                         <div class="table-responsive">
                                             <table class="table table-striped">
                                                 <caption class="text-center">
-                                                    <h3>客户账户信息</h3></caption>
+                                                    <h3>客户账户信息</h3>
+                                                </caption>
                                                 <thead>
                                                     <tr>
                                                         <th>
@@ -200,21 +202,34 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                @foreach (var item in linkMan.PayAccounts)
-                                                {
-                                                    <tr>
-                                                        <td>@item.AccountType</td>
-                                                        <td>@item.AccountName</td>
-                                                        <td>@item.AccountNum</td>
-                                                        <td>@item.Remark</td>
-                                                    </tr>
-                                                }
+                                                    @foreach (var item in linkMan.PayAccounts)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.AccountType</td>
+                                                            <td>@item.AccountName</td>
+                                                            <td>@item.AccountNum</td>
+                                                            <td>@item.Remark</td>
+                                                        </tr>
+                                                    }
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
                                 </div>
 
+
+
+                            </div>
+                        </div>
+
+                        <div id="tab-3" class="tab-pane">
+                            <div class="panel-body">
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <table id="table"></table>
+                                    </div>
+                                </div>
 
 
                             </div>
@@ -229,9 +244,148 @@
 @section StylesFirst {
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
     @Styles.Render("~/plugins/blueimp")
+    @Styles.Render("~/plugins/bootstrapTableStyle")
 }
 @section Scripts {
     @Scripts.Render("~/plugins/lightboxGallery")
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+
+    <script>
+        $(document).ready(function () {
+            var table = new TableInit();
+            table.Init();
+        });
+        var TableInit = function() {
+            var obj = new Object();
+            obj.Init = function() {
+                $('#table').bootstrapTable({
+                url: '@Url.Action("GetList", "BusinessOrderDetail", new { area = "DataReport" })',         //请求后台的URL（*）
+                classes: "table table-no-bordered",
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "desc",                   //排序方式
+                sortName: "Id",
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                //search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                //strictSearch: true,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
+                showColumns: true,                  //是否显示所有的列
+                showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                singleSelect: true,                  //设置True 将禁止多选
+                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
+                mobileResponsive: true,
+                showFooter: true,
+                queryParams: function(parameters) {
+                    parameters.LinkManId = '@linkMan.Id';
+                    return parameters;
+                },
+
+                columns: [
+
+                    {
+                        field: 'OrderNum',
+                        title: '订单编号',
+                        align: "center", valign: "middle",
+                        formatter: function(value,row) {
+                            return "<a class='label' href='@Url.Action("Update", "Order",new{area="Business"})?id=" + row.BusinessOrderId+"' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
+                        },
+                        footerFormatter: function () {
+                            return "合计";
+                        }
+                    },
+                    {
+                        field: 'OrderRemark',
+                        title: '项目备注',
+                        align: "center", valign: "middle",
+                    }
+                    ,
+
+                    {
+                        field: 'MediaName',
+                        title: '媒体信息',
+                        align: "left", valign: "middle",
+                        formatter: function(value,row) {
+                            return "["+row.MediaTypeName+"] "+ value;
+                        }
+                    },
+                    {
+                        field: 'AdPositionName',
+                        title: '广告位',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'SellMoney',
+                        title: '无税金额',
+                        align: "center", valign: "middle",
+                        footerFormatter: function (data) {
+                            if (data[0]) {
+                                return data[0].TotalSellMoney;
+                            }
+                            return 0;
+                        }
+                    },
+
+                    {
+                        field: 'PurchaseMoney',
+                        title: '采购成本',
+                        align: "center", valign: "middle",
+                        footerFormatter: function (data) {
+                            if (data[0]) {
+                                return data[0].TotalPurchaseMoney;
+                            }
+                            return 0;
+                        }
+                    },
+
+                    {
+                        field: 'PublishDate',
+                        title: '出刊日期',
+                        align: "center", valign: "middle",
+                        formatter: function (value) {
+                            if (value) {
+                                return moment(value).format("YYYY-MM-DD");
+                            }
+                        }
+                    },
+                    {
+                        field: 'PublishLink',
+                        title: '出刊链接',
+                        align: "center", valign: "middle",
+                        formatter: formatter.url
+                    },
+                    {
+                        field: 'MediaByPurchase',
+                        title: '经办媒介',
+                        align: "center", valign: "middle",
+                    },
+                    {
+                        field: 'Transactor',
+                        title: '销售人员',
+                        align: "center", valign: "middle",
+                    },
+
+                    {
+                        field: 'PurchaseStatus',
+                        title: '采购状态',
+                        align: "center", valign: "middle",
+                        formatter: formatter.purchaseStatus
+                    }
+
+
+                ]
+            });
+            };
+
+            return obj;
+        };
+    </script>
 }
 
 
