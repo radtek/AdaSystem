@@ -4,10 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
+using Ada.Core.Domain;
 using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Purchase;
+using Ada.Core.ViewModel.Admin;
 using Ada.Core.ViewModel.Business;
 using Ada.Core.ViewModel.Purchase;
+using Ada.Core.ViewModel.Statistics;
 
 namespace Ada.Services.Purchase
 {
@@ -16,13 +19,19 @@ namespace Ada.Services.Purchase
         private readonly IDbContext _dbContext;
         private readonly IRepository<PurchaseOrderDetail> _repository;
         private readonly IRepository<BusinessOrderDetail> _businessRepository;
+        private readonly IRepository<PurchasePaymentDetail> _purchasePaymentDetailRepository;
+        private readonly IRepository<PurchasePaymentOrderDetail> _purchasePaymentRepository;
         public PurchaseOrderDetailService(IDbContext dbContext,
             IRepository<PurchaseOrderDetail> repository,
-            IRepository<BusinessOrderDetail> businessRepository)
+            IRepository<BusinessOrderDetail> businessRepository,
+            IRepository<PurchasePaymentDetail> purchasePaymentDetailRepository,
+            IRepository<PurchasePaymentOrderDetail> purchasePaymentRepository)
         {
             _dbContext = dbContext;
             _repository = repository;
             _businessRepository = businessRepository;
+            _purchasePaymentDetailRepository = purchasePaymentDetailRepository;
+            _purchasePaymentRepository = purchasePaymentRepository;
         }
         public IQueryable<PurchaseOrderDetail> LoadEntitiesFilter(PurchaseOrderDetailView viewModel)
         {
@@ -104,7 +113,40 @@ namespace Ada.Services.Purchase
             }
             return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
         }
-
+        /// <summary>
+        /// 业绩统计
+        /// </summary>
+        /// <param name="managers"></param>
+        /// <returns></returns>
+        public IEnumerable<PurchaseAchievement> PurchasePerformance(List<ManagerView> managers)
+        {
+            List<PurchaseAchievement> list = new List<PurchaseAchievement>();
+            foreach (var managerView in managers)
+            {
+                PurchaseAchievement purchaseAchievement = new PurchaseAchievement();
+                purchaseAchievement.Transactor = managerView.UserName;
+                var purchases = _repository.LoadEntities(d => d.IsDelete == false && d.TransactorId == managerView.Id);
+                purchaseAchievement.OrderCount = purchases.Count();
+                //需付款的金额
+                purchaseAchievement.TotalMoney = purchases.Sum(d => d.Money);
+                //实际付款金额
+                var payment = _purchasePaymentDetailRepository.LoadEntities(d => d.PurchasePayment.IsDelete == false &&
+                    d.IsDelete == false && d.AuditStatus == Consts.StateNormal && d.PurchasePayment.TransactorId == managerView.Id);
+                purchaseAchievement.PayMoney = payment.Sum(d => d.PayMoney);
+                //压款金额
+                purchaseAchievement.Unpaid = (purchaseAchievement.TotalMoney ?? 0) - (purchaseAchievement.PayMoney ?? 0);
+                //节省金额
+                purchaseAchievement.Money = _purchasePaymentRepository.LoadEntities(d => d.IsDelete == false && d.PurchasePayment.IsDelete == false && d.PurchaseOrderDetail.IsDelete == false && d.PurchaseOrderDetail.TransactorId == managerView.Id).Sum(d => d.PurchaseOrderDetail.Money);
+                //var paymentPurchases = from p in payment
+                //                       from o in p.PurchasePayment.PurchasePaymentOrderDetails
+                //                       where o.PurchaseOrderDetail.Status == Consts.PurchaseStatusSuccess
+                //                       select p;
+                //var totalSuccessPayMoney = paymentPurchases.Distinct().Sum(d => d.PayMoney);
+                purchaseAchievement.Economize = (purchaseAchievement.Money ?? 0) - (purchaseAchievement.PayMoney ?? 0);
+                list.Add(purchaseAchievement);
+            }
+            return list;
+        }
         public void Add(PurchaseOrderDetail entity)
         {
             _repository.Add(entity);

@@ -76,12 +76,20 @@ namespace Dashboards.Controllers
             return View(viewModel);
         }
 
-        public ActionResult GetBusinessPerformance(string o)
+        public ActionResult GetBusinessPerformance(string o,string t=null)
         {
+            var date = DateTime.Now;
+            if (!string.IsNullOrWhiteSpace(t))
+            {
+                if (DateTime.TryParse(t,out var dateTime))
+                {
+                    date = dateTime;
+                }
+            }
             var managers = _managerService.GetByOrganizationName(o);
             BusinessOrderDetailView quare = new BusinessOrderDetailView();
-            quare.PublishDateStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-            quare.PublishDateEnd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+            quare.PublishDateStart = new DateTime(date.Year, date.Month, 1);
+            quare.PublishDateEnd = new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month));
             var result = _businessOrderDetailService.BusinessPerformance(managers.ToList(), quare).OrderByDescending(d => d.TotalProfitMoney).Take(10);
             return Json(result, JsonRequestBehavior.AllowGet);
         }

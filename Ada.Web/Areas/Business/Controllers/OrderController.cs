@@ -709,7 +709,7 @@ namespace Business.Controllers
             entity.LinkManName = viewModel.LinkManName;
             entity.Transactor = CurrentManager.UserName;
             entity.TransactorId = CurrentManager.Id;
-            entity.Tax = 0;
+            entity.Tax = viewModel.Tax??0;
             entity.OrderDate = DateTime.Now;
             //媒介订单
             PurchaseOrder purchase = new PurchaseOrder();
@@ -727,12 +727,19 @@ namespace Business.Controllers
             for (int i = 1; i <= sheet.LastRowNum; i++)
             {
                 IRow row = sheet.GetRow(i);
-
-                //根据资源找价格
+                if (row==null)
+                {
+                    continue;
+                }
                 var mediaName = row.GetCell(0)?.ToString();
                 var client = row.GetCell(1)?.ToString();
                 var channal = row.GetCell(2)?.ToString();
                 var adpositon = row.GetCell(5)?.ToString();
+                //根据资源找价格
+                if (string.IsNullOrWhiteSpace(mediaName)|| string.IsNullOrWhiteSpace(client) ||string.IsNullOrWhiteSpace(channal) ||string.IsNullOrWhiteSpace(adpositon))
+                {
+                    continue;
+                }
                 var mediaPrice = _mediaPriceRepository.LoadEntities(d =>
                      d.Media.MediaName.Equals(mediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
                      d.Media.Client.Equals(client.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
@@ -748,10 +755,12 @@ namespace Business.Controllers
                 detail.Status = Consts.StateNormal;//已转单
                 detail.AdPositionName = adpositon;
                 decimal.TryParse(row.GetCell(3)?.ToString(), out var money);
-                detail.Money = money;
+                
                 detail.SellMoney = money;
-                detail.Tax = 0;
-                detail.TaxMoney = 0;
+                detail.Tax = entity.Tax;
+                detail.TaxMoney = detail.SellMoney*(detail.Tax / 100);
+                detail.Money = detail.SellMoney * (1 + detail.Tax / 100);
+                
                 detail.CostMoney = mediaPrice.PurchasePrice;
                 DateTime.TryParse(row.GetCell(8)?.ToString(), out var date);
                 detail.PrePublishDate = date;

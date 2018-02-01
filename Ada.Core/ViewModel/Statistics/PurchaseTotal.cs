@@ -83,4 +83,42 @@ namespace Ada.Core.ViewModel.Statistics
         [Display(Name = "开发数")]
         public int? MediasCount { get; set; }
     }
+    public class PurchaseAchievement
+    {
+        /// <summary>
+        /// 媒介人员
+        /// </summary>
+        [Display(Name = "媒介人员")]
+        public string Transactor { get; set; }
+        /// <summary>
+        /// 订单数
+        /// </summary>
+        [Display(Name = "订单数")]
+        public int? OrderCount { get; set; }
+        /// <summary>
+        /// 采购金额（含税）
+        /// </summary>
+        [Display(Name = "采购金额（含税）")]
+        public decimal? TotalMoney { get; set; }
+        /// <summary>
+        /// 已采购金额（含税）
+        /// </summary>
+        [Display(Name = "已采购金额（含税）")]
+        public decimal? Money { get; set; }
+        /// <summary>
+        /// 付款金额
+        /// </summary>
+        [Display(Name = "付款金额")]
+        public decimal? PayMoney { get; set; }
+        /// <summary>
+        /// 压款金额
+        /// </summary>
+        [Display(Name = "压款金额")]
+        public decimal? Unpaid { get; set; }
+        /// <summary>
+        /// 节省金额
+        /// </summary>
+        [Display(Name = "节省金额")]
+        public decimal? Economize { get; set; }
+    }
 }

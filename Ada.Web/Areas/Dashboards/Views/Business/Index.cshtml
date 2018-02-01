@@ -145,13 +145,24 @@
                 <div class="col-lg-6">
                     <div class="ibox float-e-margins" id="ibox1">
                         <div class="ibox-title">
-                            <h5>销售一部销售业绩排行（@DateTime.Now.Month 月）</h5>
+                            <h5>销售一部销售业绩排行</h5>
                             <div class="ibox-tools">
 
-                                <a href="javascript:getTop('业务一部', 'ibox1');">
+                                @*<a href="javascript:getTop('业务一部', 'ibox1');">
                                     <i class="fa fa-refresh"></i>
+                                </a>*@
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span> 
                                 </a>
-
+                                <ul class="dropdown-menu dropdown-user">
+                                    @for (int i = 0; i < 12; i++)
+                                    {
+                                        <li>
+                                            <a href="javascript:getTop('业务一部','@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")', 'ibox1');">@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")</a>
+                                        </li>
+                                    }
+                                </ul>
+                               
                             </div>
                         </div>
                         <div class="ibox-content">
@@ -176,13 +187,19 @@
                 <div class="col-lg-6">
                     <div class="ibox float-e-margins" id="ibox2">
                         <div class="ibox-title">
-                            <h5>销售二部销售业绩排行（@DateTime.Now.Month 月）</h5>
+                            <h5>销售二部销售业绩排行</h5>
                             <div class="ibox-tools">
-
-                                <a href="javascript:getTop('业务二部', 'ibox2');">
-                                    <i class="fa fa-refresh"></i>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span> 
                                 </a>
-
+                                <ul class="dropdown-menu dropdown-user">
+                                    @for (int i = 0; i < 12; i++)
+                                    {
+                                        <li>
+                                            <a href="javascript:getTop('业务二部','@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")', 'ibox2');">@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")</a>
+                                        </li>
+                                    }
+                                </ul>
                             </div>
                         </div>
                         <div class="ibox-content">
@@ -300,18 +317,18 @@
     @Scripts.Render("~/plugins/echarts")
     <script>
         $(function() {
-            getTop("业务一部", "ibox1");
-            getTop("业务二部", "ibox2");
+            getTop("业务一部","@DateTime.Now.ToString("yyyy年MM月")", "ibox1");
+            getTop("业务二部","@DateTime.Now.ToString("yyyy年MM月")", "ibox2");
             initCharts();
         });
 
-        function getTop(oname, id) {
+        function getTop(oname,date, id) {
             var $top = $("#" + id),$table = $("#" + id + " tbody");
-
+            $("#" + id + " .currentdate").text(date);
             $.ajax({
                 type: "get",
                 url: "@Url.Action("GetBusinessPerformance")",
-                data: { o: oname },
+                data: { o: oname,t:date },
                 success: function (data) {
                     $table.empty();
                     $.each(data,

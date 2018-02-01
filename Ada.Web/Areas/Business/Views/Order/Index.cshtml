@@ -3,6 +3,7 @@
 @model Ada.Core.ViewModel.Business.BusinessOrderView
 @{
     ViewBag.Title = "销售订单";
+    List<SelectListItem> vstatus = new List<SelectListItem>() { new SelectListItem() { Text = "已核销", Value = "true" }, new SelectListItem() { Text = "未核销", Value = "false" } };
 }
 @Html.Partial("Bread")
 
@@ -36,6 +37,12 @@
                         <div class="form-group">
                             @Html.LabelFor(d => d.OrderNum, Html.DisplayNameFor(d => d.OrderNum) + "：", new { @class = "control-label" })
                             @Html.TextBoxFor(d => d.OrderNum, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.VerificationStatus, Html.DisplayNameFor(d => d.VerificationStatus) + "：", new { @class = "control-label" })
+                            @Html.DropDownListFor(d => d.VerificationStatus, vstatus,"请选择",new { @class = "form-control input-sm" })
                         </div>
                     </div>
                     <div class="col-sm-3">
@@ -99,13 +106,16 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label>项目摘要</label>
-                    <input type="text" class="form-control" id="orderName"/>
+                    <input type="text" class="form-control" id="orderName" />
                 </div>
                 <div class="form-group">
                     <label>客户名称</label>
-                    <select class="form-control" id="LinkManId">
-                    </select>
-                    <input type="hidden" id="linkname" value=""/>
+                    <select class="form-control" id="LinkManId"></select>
+                    <input type="hidden" id="linkname" value="" />
+                </div>
+                <div class="form-group">
+                    <label>税率%</label>
+                    <input type="number" class="form-control" id="tax" value="0"/>
                 </div>
                 <div class="form-group">
                     <label>导入文件</label>
@@ -117,7 +127,7 @@
                         <span class="input-group-addon btn btn-default btn-file">
                             <span class="fileinput-new">选择</span>
                             <span class="fileinput-exists">更换</span>
-                            <input type="file" name="upfile" id="upfile"/>
+                            <input type="file" name="upfile" id="upfile" />
                         </span>
                         <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">移除</a>
                     </div>
@@ -191,7 +201,7 @@
                     $("#LinkManId").val("");
                     $("#linkname").val("");
                     $("#orderName").val("");
-
+                    $("#tax").val("0");
                 });
         });
         var TableInit = function() {
@@ -396,7 +406,7 @@
         }
         function upLoadFile() {
             //校验
-            var orderName = $("#orderName").val(), linkId = $("#LinkManId").val(), linkname = $("#linkname").val();
+            var orderName = $("#orderName").val(), linkId = $("#LinkManId").val(), linkname = $("#linkname").val(), tax = $("#tax").val();
             if (!orderName && !linkId) {
                 swal("操作失败", "请输入必要的订单信息", "warning");
                 return;
@@ -414,6 +424,7 @@
             formFile.append("Remark", orderName);
             formFile.append("LinkManId", linkId);
             formFile.append("LinkManName", linkname);
+            formFile.append("Tax", tax||0);
             formFile.append("upfile", fileObj); //加入文件对象
             var data = formFile;
             var subBtn = $('.ladda-button').ladda();

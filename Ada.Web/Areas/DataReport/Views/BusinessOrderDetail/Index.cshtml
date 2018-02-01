@@ -54,6 +54,12 @@
                     </div>
                     <div class="col-sm-2">
                         <div class="form-group">
+                            @Html.LabelFor(d => d.MediaByPurchase, Html.DisplayNameFor(d => d.MediaByPurchase) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.MediaByPurchase, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
                             @Html.LabelFor(d => d.PrePublishDate, Html.DisplayNameFor(d => d.PrePublishDate) + "：", new { @class = "control-label" })
 
                             <input type="text" id="PrePublishDateStr" class="form-control input-sm" readonly="readonly" />

@@ -102,7 +102,14 @@ namespace Ada.Services.Business
                           where b.Id == p.BusinessOrderDetailId && p.Status == viewModel.PurchaseStatus
                           select b;
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaByPurchase))
+            {
 
+                allList = from b in allList
+                    from p in purchaseOrderDetails
+                    where b.Id == p.BusinessOrderDetailId && p.Transactor.Contains(viewModel.MediaByPurchase)
+                    select b;
+            }
             if (viewModel.PublishDateStart != null)
             {
                 allList = from b in allList

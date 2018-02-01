@@ -135,19 +135,26 @@ namespace Ada.Web.Controllers
         public ActionResult Update()
         {
 
-            var b = _temp.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false && d.VerificationStatus == Consts.StateLock).ToList();
+            //var b = _temp.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false && d.VerificationStatus == Consts.StateLock).ToList();
+            //int i = 0;
+            //foreach (var businessOrderDetail in b)
+            //{
+            //    if (businessOrderDetail.VerificationMoney != businessOrderDetail.SellMoney)
+            //    {
+            //        businessOrderDetail.VerificationMoney = businessOrderDetail.SellMoney;
+            //        i++;
+            //    }
+
+
+            //}
+            var p = _ptemp.LoadEntities(d => d.IsDelete == false);
             int i = 0;
-            foreach (var businessOrderDetail in b)
+            foreach (var purchaseOrderDetail in p)
             {
-                if (businessOrderDetail.VerificationMoney != businessOrderDetail.SellMoney)
-                {
-                    businessOrderDetail.VerificationMoney = businessOrderDetail.SellMoney;
-                    i++;
-                }
-
-
+                var tax = purchaseOrderDetail.Tax ?? 0;
+                purchaseOrderDetail.Money = purchaseOrderDetail.PurchaseMoney * (1 + tax / 100);
+                i++;
             }
-
             _dbContext.SaveChanges();
             return Content(i.ToString());
 
