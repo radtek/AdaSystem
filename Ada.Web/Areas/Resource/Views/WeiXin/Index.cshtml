@@ -131,6 +131,9 @@
     <button type="button" class="btn btn-primary btn-outline" data-toggle="modal" data-target="#uploadModal">
         <i class="fa fa-upload"></i> 更新导入
     </button>
+    <button type="button" class="btn btn-primary btn-outline" onclick="collectArticle();">
+        <i class="fa fa-cloud"></i> 采集文章
+    </button>
 </div>
 
 @section Styles {
@@ -189,6 +192,9 @@
                     return searchFrm.queryParams(parameters);
                 },
                 columns: [
+                    {
+                        checkbox: true
+                    },
                     {
                         field: 'Status',
                         title: '@Html.DisplayNameFor(d=>d.Status)',
@@ -275,8 +281,70 @@
             };
             return obj;
         };
+        function collectArticle() {
+            var arrselections = $("#table").bootstrapTable('getSelections');
+            if (arrselections.length > 1) {
+                swal("操作提醒", "只能选择一行数据", "warning");
+                return;
+            }
+            if (arrselections.length <= 0) {
+                swal("操作提醒", "请选择有效数据", "warning");
+                return;
+            }
+            $("#modalView").load("@Url.Action("WeiXinProCollection","Media")?id=" + arrselections[0].Id,
+                function () {
+                    $('#modalView .modal').on('shown.bs.modal', function () {
+                        collection();
+                    }).on('hidden.bs.modal', function () {
 
+                    });
+                    $('#modalView .modal').modal('show');
+                });
 
+        }
+        function collection() {
+            $("#modalView form").validate({
+                submitHandler: function (form) {
+                    var subBtn = $('.ladda-button').ladda();
+                    var $form = $(form),
+                        data = $form.serialize();
+                    $.ajax({
+                        type: "post",
+                        headers: {
+                            '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                        },
+                        url: form.action,
+                        data: data,
+                        success: function (res) {
+                            if (res.State == 1) {
+                               
+                                swal({
+                                    title: "操作成功",
+                                    text: res.Msg,
+                                    
+                                    type:"success"
+                                    
+                                });
+
+                            } else {
+                                swal("操作提醒", res.Msg, "warning");
+                            }
+                        },
+                        error: function () {
+                            swal("操作失败", "系统错误", "error");
+                        },
+                        beforeSend: function () {
+                            subBtn.ladda('start');
+                        },
+                        complete: function () {
+                            subBtn.ladda('stop');
+                        }
+                    });
+                   
+                }
+            });
+
+        }
     </script>
 }
 

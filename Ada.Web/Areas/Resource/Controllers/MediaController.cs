@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
@@ -11,10 +12,13 @@ using Ada.Core.Domain;
 using Ada.Core.Domain.Customer;
 using Ada.Core.Domain.Resource;
 using Ada.Core.Tools;
+using Ada.Core.ViewModel.API;
+using Ada.Core.ViewModel.API.iDataAPI;
 using Ada.Core.ViewModel.Resource;
 using Ada.Core.ViewModel.Setting;
 using Ada.Framework.Filter;
 using Ada.Framework.UploadFile;
+using Ada.Services.API;
 using Ada.Services.Resource;
 using Ada.Services.Setting;
 using Newtonsoft.Json.Linq;
@@ -27,6 +31,7 @@ namespace Resource.Controllers
     {
         private readonly IMediaPriceService _mediaPriceService;
         private readonly IMediaService _mediaService;
+        private readonly IiDataAPIService _iDataAPIService;
         private readonly ISettingService _settingService;
         private readonly IRepository<Media> _repository;
         private readonly IRepository<MediaType> _mediaTypeRepository;
@@ -40,7 +45,8 @@ namespace Resource.Controllers
             IRepository<Media> repository,
             IRepository<MediaTag> mediaTagRepository,
             IRepository<MediaType> mediaTypeRepository,
-            ISettingService settingService)
+            ISettingService settingService,
+            IiDataAPIService iDataAPIService)
         {
             _mediaPriceService = mediaPriceService;
             _mediaService = mediaService;
@@ -50,6 +56,7 @@ namespace Resource.Controllers
             _mediaTagRepository = mediaTagRepository;
             _mediaTypeRepository = mediaTypeRepository;
             _settingService = settingService;
+            _iDataAPIService = iDataAPIService;
         }
 
         public ActionResult Index()
@@ -165,7 +172,7 @@ namespace Resource.Controllers
                 jo.Add("媒体名称", media.MediaName + website);
                 jo.Add("媒体ID", media.MediaID);
                 jo.Add("粉丝数", Utils.ShowFansNum(media.FansNum));
-                jo.Add("媒体分类", string.Join(",",media.MediaTags.Select(d=>d.TagName)));
+                jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
                 jo.Add("媒体说明", media.Content);
                 jo.Add("备注说明", media.Remark);
                 jo.Add("价格有效期", "");
@@ -230,7 +237,7 @@ namespace Resource.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        
+
         /// <summary>
         /// 导入更新价格
         /// </summary>
@@ -294,7 +301,7 @@ namespace Resource.Controllers
                 }
 
                 var media = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-                if (media==null)
+                if (media == null)
                 {
                     continue;
                 }
@@ -306,7 +313,7 @@ namespace Resource.Controllers
                     var temp = _repository.LoadEntities(d =>
                         d.MediaID.Equals(mediaId, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
                         d.MediaTypeId == media.MediaTypeId && d.Id != media.Id).FirstOrDefault();
-                    if (temp!=null)
+                    if (temp != null)
                     {
                         media.IsDelete = true;
                     }
@@ -332,7 +339,7 @@ namespace Resource.Controllers
                 }
                 //备注
                 media.Remark = row.GetCell(9)?.ToString();
-                
+
                 if (!DateTime.TryParse(row.GetCell(10).ToString(), out var date))
                 {
                     date = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
@@ -349,7 +356,7 @@ namespace Resource.Controllers
                     mediaPrice.PurchasePrice = price;
                     mediaPrice.PriceDate = DateTime.Now;
                     mediaPrice.InvalidDate = date;
-                   
+
                 }
             }
         }
@@ -465,7 +472,7 @@ namespace Resource.Controllers
             entity.IsAuthenticate = viewModel.IsAuthenticate;
             entity.IsOriginal = viewModel.IsOriginal;
             entity.IsComment = viewModel.IsComment;
-            
+
             entity.FansNum = Utils.SetFansNum(viewModel.FansNum);
             entity.LastReadNum = viewModel.LastReadNum;
             entity.AvgReadNum = viewModel.AvgReadNum;
@@ -711,7 +718,22 @@ namespace Resource.Controllers
             _mediaService.Update(entity);
             return View(entity);
         }
-
+        public ActionResult WeiXinProCollection(string id)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            WeiXinProParams view=new WeiXinProParams();
+            view.WeiXinId = entity.MediaID;
+            view.CallIndex = "weixinpro";
+            view.PageNum = 1;
+            return PartialView("WeiXinProCollection", view);
+        }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public async Task<ActionResult> WeiXinProCollection(WeiXinProParams viewModel)
+        {
+            var msg = await _iDataAPIService.GetArticlesAsync(viewModel);
+            return Json(new { State = 1, Msg = msg });
+        }
         private Media IsExist(MediaView viewModel, out string msg, bool isSelf = false, bool isDelete = false)
         {
             msg = string.Empty;

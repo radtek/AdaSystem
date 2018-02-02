@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ada.Core.Domain.API
+namespace Ada.Core.ViewModel.API
 {
-   public class APIRequestRecord:BaseEntity
+   public class APIRequestRecordView:BaseView
     {
         /// <summary>
         /// 请求参数
@@ -35,9 +35,9 @@ namespace Ada.Core.Domain.API
         [Display(Name = "返回状态码")]
         public string Retcode { get; set; }
         /// <summary>
-        /// 返回信息
+        /// 错误信息
         /// </summary>
-        [Display(Name = "返回信息")]
+        [Display(Name = "错误信息")]
         public string Retmsg { get; set; }
         /// <summary>
         /// 是否成功
@@ -45,14 +45,9 @@ namespace Ada.Core.Domain.API
         [Display(Name = "是否成功")]
         public bool? IsSuccess { get; set; }
         /// <summary>
-        /// API接口
+        /// API名称
         /// </summary>
-        [Display(Name = "API接口")]
-        public virtual APIInterfaces APIInterfaces { get; set; }
-        /// <summary>
-        /// API接口
-        /// </summary>
-        [Display(Name = "API接口")]
-        public string APIInterfacesId { get; set; }
+        [Display(Name = "API名称")]
+        public string APIName { get; set; }
     }
 }

@@ -29,7 +29,7 @@ namespace Ada.Core.Domain.API
         [Display(Name = "调用别名")]
         public string CallIndex { get; set; }
         /// <summary>
-        /// 域名https://120.76.205.241/post/weixinpro?pageToken=1&uid=rmrbwx&apikey=aHkIQg6KZL5nKgqhcAbrT7AYq484DkAfmFzd8rBgYDrK6CItsvAAOWwz7BiFkoQx
+        /// 域名
         /// </summary>
         [Display(Name = "域名")]
         public string APIUrl { get; set; }

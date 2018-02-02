@@ -5,12 +5,13 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Ada.Core.Tools
 {
     public static class HttpUtility
     {
-        public static async Task<string> Get(string url)
+        public static async Task<string> GetAsync(string url)
         {
             //创建HttpClient（注意传入HttpClientHandler）
             var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
@@ -25,7 +26,12 @@ namespace Ada.Core.Tools
                 return await response.Content.ReadAsStringAsync();
             }
         }
-        public static async Task<string> Post(string url, IEnumerable<KeyValuePair<string, string>> postData = null)
+        public static async Task<T> GetJsonAsync<T>(string url)
+        {
+            string resultStr = await GetAsync(url);
+            return JsonConvert.DeserializeObject<T>(resultStr);
+        }
+        public static async Task<string> PostAsync(string url, IEnumerable<KeyValuePair<string, string>> postData = null)
         {
             var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
             //创建HttpClient（注意传入HttpClientHandler）

@@ -106,6 +106,7 @@
   <ItemGroup>
     <Compile Include="APIStoreAreaRegistration.cs" />
     <Compile Include="Controllers\InterfacesController.cs" />
+    <Compile Include="Controllers\RequestRecordController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -117,6 +118,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Interfaces\APIEdit.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Views\RequestRecord\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -171,6 +171,10 @@
     <Compile Include="ViewModel\Admin\RoleView.cs" />
     <Compile Include="ViewModel\Admin\SystemLogView.cs" />
     <Compile Include="ViewModel\API\APIInterfacesView.cs" />
+    <Compile Include="ViewModel\API\APIRequestRecordView.cs" />
+    <Compile Include="ViewModel\API\iDataAPI\iDataAPIJSON.cs" />
+    <Compile Include="ViewModel\API\iDataAPI\WeiXinProJSON.cs" />
+    <Compile Include="ViewModel\API\iDataAPI\WeiXinProParams.cs" />
     <Compile Include="ViewModel\BaseView.cs" />
     <Compile Include="ViewModel\Business\BusinessInvoiceView.cs" />
     <Compile Include="ViewModel\Business\BusinessOfferView.cs" />
