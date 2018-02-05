@@ -67,14 +67,14 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "最近头条阅读数")]
         public int? LastReadNum { get; set; }
         /// <summary>
-        /// 平均阅读数
+        /// 十天平均阅读数
         /// </summary>
-        [Display(Name = "平均阅读数")]
+        [Display(Name = "十天平均阅读数")]
         public int? AvgReadNum { get; set; }
         /// <summary>
-        /// 最近发布频率
+        /// 十天发布频率
         /// </summary>
-        [Display(Name = "最近发布频率")]
+        [Display(Name = "十天发布频率")]
         public int? PublishFrequency { get; set; }
         /// <summary>
         /// 地区
@@ -82,9 +82,9 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "地区")]
         public string Areas { get; set; }
         /// <summary>
-        /// 最后推送时间
+        /// 最近发布日期
         /// </summary>
-        [Display(Name = "最后推送时间")]
+        [Display(Name = "最近发布日期")]
         public DateTime? LastPushDate { get; set; }
         /// <summary>
         /// 认证类型

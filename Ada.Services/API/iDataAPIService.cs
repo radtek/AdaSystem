@@ -123,6 +123,11 @@ namespace Ada.Services.API
                         }
                     }
                 }
+                //如果没有下一页就退出
+                if (result.hasNext==false)
+                {
+                    break;
+                }
             }
             var msg = "采集成功！新增：" + addCount + "篇，更新：" + updateCount + "篇";
             _dbContext.SaveChanges();

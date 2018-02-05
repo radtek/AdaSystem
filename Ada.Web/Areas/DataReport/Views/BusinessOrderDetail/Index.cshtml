@@ -48,6 +48,12 @@
                     </div>
                     <div class="col-sm-2">
                         <div class="form-group">
+                            @Html.LabelFor(d => d.MediaTypeName, Html.DisplayNameFor(d => d.MediaTypeName) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.MediaTypeName, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
                             @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName) + "：", new { @class = "control-label" })
                             @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control input-sm" })
                         </div>

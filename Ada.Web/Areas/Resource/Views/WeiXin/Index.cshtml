@@ -222,6 +222,20 @@
                         align: "center"
                     },
                     {
+                        field: 'LastReadNum',
+                        title: '@Html.DisplayNameFor(d=>d.LastReadNum)',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'LastPushDate',
+                        title: '@Html.DisplayNameFor(d=>d.LastPushDate)',
+                        align: "center", valign: "middle", formatter: function(value) {
+                            if (value) {
+                                return moment(value).format("YYYY-MM-DD HH:mm");
+                            }
+                        }
+                    },
+                    {
                         field: 'MediaTagStr',
                         title: '@Html.DisplayNameFor(d=>d.MediaTagStr)',
                         valign: "middle",
@@ -234,11 +248,11 @@
                         formatter: formatterPrice,
                         //align: "center"
                     },
-                    {
+                    @*{
                         field: 'Content',
                         title: '@Html.DisplayNameFor(d=>d.Content)',
                         align: "center", valign: "middle", formatter: formatter.tooltip
-                    },
+                    },*@
                     {
                         field: 'Remark',
                         title: '@Html.DisplayNameFor(d=>d.Remark)',
@@ -304,7 +318,7 @@
 
         }
         function details(id) {
-            
+
             $("#modalView").load("@Url.Action("WeiXinArticles","Media")?id=" + id,
                 function () {
                     //$('#modalView .modal').on('shown.bs.modal', function () {
