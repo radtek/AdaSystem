@@ -120,8 +120,8 @@
                     form.submit();
                 }
             });
-            var start =@Html.Raw(start) || moment().startOf('month');
-            var end = @Html.Raw(end) || moment().endOf('month');
+            var start =@Html.Raw(start) || moment('20180101', "YYYYMMDD");
+            var end = @Html.Raw(end) || moment();
             cb(start, end);
             $("#datepicker").daterangepicker({
                 startDate: start,
@@ -133,6 +133,7 @@
                     '昨日': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
                     '最近7日': [moment().subtract(6, 'days'), moment()],
                     '最近30日': [moment().subtract(29, 'days'), moment()],
+                    '至今': [moment('20180101', "YYYYMMDD"), moment()],
                     '本月': [moment().startOf('month'), moment().endOf('month')],
                     '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
                 },

@@ -70,7 +70,7 @@ namespace Ada.Core.Domain.Resource
         [Display(Name = "评论数")]
         public int? CommentCount { get; set; }
         /// <summary>
-        /// 浏览数
+        /// 点赞数
         /// </summary>
         [Display(Name = "点赞数")]
         public int? LikeCount { get; set; }

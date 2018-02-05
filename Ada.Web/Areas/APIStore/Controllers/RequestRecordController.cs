@@ -33,7 +33,7 @@ namespace APIStore.Controllers
                     Retcode = d.Retcode,
                     Retmsg = d.Retmsg,
                     IsSuccess = d.IsSuccess,
-                    //ReponseContent=d.ReponseContent,
+                    ReponseContent=d.ReponseContent,
                     ReponseDate = d.ReponseDate,
                     APIName = d.APIInterfaces.APIName
                 })

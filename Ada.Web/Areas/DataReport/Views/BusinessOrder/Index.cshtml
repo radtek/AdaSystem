@@ -19,29 +19,35 @@
         <div class="ibox-content">
             <form id="searchFrm" onSubmit="javascript:searchFrm.search(this,event);">
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control input-sm" })
+                            @Html.LabelFor(d => d.CompanyName, Html.DisplayNameFor(d => d.CompanyName) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.CompanyName, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName) + "：", new {@class = "control-label"})
+                            @Html.TextBoxFor(d => d.LinkManName, new {@class = "form-control input-sm"})
                         </div>
                     </div>
 
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.Remark, new { @class = "form-control input-sm" })
+                            @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark) + "：", new {@class = "control-label"})
+                            @Html.TextBoxFor(d => d.Remark, new {@class = "form-control input-sm"})
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control input-sm" })
+                            @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName) + "：", new {@class = "control-label"})
+                            @Html.TextBoxFor(d => d.MediaName, new {@class = "form-control input-sm"})
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor) + "：", new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control input-sm" })
+                            @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor) + "：", new {@class = "control-label"})
+                            @Html.TextBoxFor(d => d.Transactor, new {@class = "form-control input-sm"})
                         </div>
                     </div>
                 </div>

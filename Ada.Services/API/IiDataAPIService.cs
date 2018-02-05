@@ -10,6 +10,6 @@ namespace Ada.Services.API
 {
   public  interface IiDataAPIService: IDependency
   {
-      Task<string> GetArticlesAsync(WeiXinProParams wxparams);
+      Task<string> GetWeiXinArticlesAsync(WeiXinProParams wxparams);
   }
 }

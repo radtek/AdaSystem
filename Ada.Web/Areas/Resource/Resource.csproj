@@ -193,6 +193,7 @@
     <Content Include="Views\Brush\Index.cshtml" />
     <Content Include="Views\Shared\Import.cshtml" />
     <Content Include="Views\Shared\WeiXinProCollection.cshtml" />
+    <Content Include="Views\Shared\WeiXinArticles.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

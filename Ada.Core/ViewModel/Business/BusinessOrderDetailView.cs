@@ -170,6 +170,11 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "经办业务")]
         public string TransactorId { get; set; }
         /// <summary>
+        /// 公司名称
+        /// </summary>
+        [Display(Name = "公司名称")]
+        public string CompanyName { get; set; }
+        /// <summary>
         /// 客户名称
         /// </summary>
         [Display(Name = "客户名称")]

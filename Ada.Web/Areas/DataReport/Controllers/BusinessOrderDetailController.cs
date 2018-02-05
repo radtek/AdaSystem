@@ -101,6 +101,8 @@ namespace DataReport.Controllers
                     PublishDate = p.PublishDate,
                     PublishLink = p.PublishLink,
                     MediaByPurchase = p.Transactor,
+                    MediaTitle = b.MediaTitle,
+                    Money = b.Money,
                     Transactor = b.BusinessOrder.Transactor
                 };
             JArray jObjects = new JArray();
@@ -115,7 +117,9 @@ namespace DataReport.Controllers
                 jo.Add("媒体名称", item.MediaName);
                 jo.Add("广告位", item.AdPositionName);
                 jo.Add("无税金额", item.SellMoney);
+                jo.Add("销售金额", item.Money);
                 jo.Add("采购成本", item.PurchaseMoney);
+                jo.Add("稿件标题", item.MediaTitle);
                 jo.Add("出刊日期", item.PublishDate);
                 jo.Add("出刊链接", item.PublishLink);
                 jo.Add("经办媒介", item.MediaByPurchase);

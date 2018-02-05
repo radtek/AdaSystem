@@ -24,38 +24,57 @@ namespace Ada.Services.API
             _mediaRepository = mediaRepository;
         }
 
-        public async Task<string> GetArticlesAsync(WeiXinProParams wxparams)
+        public async Task<string> GetWeiXinArticlesAsync(WeiXinProParams wxparams)
         {
             var apiInfo = _apiInterfacesService.GetAPIInterfacesByCallIndex(wxparams.CallIndex);
-            string url = string.Format(apiInfo.APIUrl + "?apikey={0}&uid={1}", apiInfo.Token, wxparams.WeiXinId);
+
+            string url = string.Format(apiInfo.APIUrl + "?apikey={0}", apiInfo.Token);
+            string urlparams = "&uid=" + wxparams.WeiXinId;
             if (!string.IsNullOrWhiteSpace(wxparams.Range))
             {
-                url += "&range=" + wxparams.Range;
+                urlparams += "&range=" + wxparams.Range;
             }
             int page = wxparams.PageNum ?? 1;
             int addCount = 0;
             int updateCount = 0;
             for (int i = 1; i <= page; i++)
             {
-                var apiUrl = url + "&pageToken=" + i;
-                var jsonStr = await HttpUtility.GetAsync(apiUrl);
-                var result = JsonConvert.DeserializeObject<WeiXinProJSON>(jsonStr);
-                if (result.hasNext == false)
-                {
-                    break;
-                }
-                //增加请求记录
+                var apiUrl = urlparams + "&pageToken=" + i;
                 APIRequestRecord record = new APIRequestRecord();
                 record.Id = IdBuilder.CreateIdNum();
+                string htmlstr;
+                try
+                {
+                    htmlstr = await HttpUtility.GetAsync(url + apiUrl);
+                }
+                catch (Exception ex)
+                {
+                    record.RequestParameters = apiUrl;
+                    record.IsSuccess = false;
+                    record.Retcode = "500";
+                    record.ReponseContent = ex.Message;
+                    record.Retmsg = "请求异常";
+                    record.ReponseDate = DateTime.Now;
+                    apiInfo.APIRequestRecords.Add(record);
+                    break;
+                }
+
+                var result = JsonConvert.DeserializeObject<WeiXinProJSON>(htmlstr);
+                //增加请求记录
                 record.IsSuccess = result.retcode == ReturnCode.请求成功;
-                //record.ReponseContent = ;
                 record.RequestParameters = apiUrl;
                 record.Retcode = result.retcode.GetHashCode().ToString();
                 record.Retmsg = result.message;
+                if (record.IsSuccess == false)
+                {
+                    record.ReponseContent = htmlstr;
+                }
                 record.ReponseDate = DateTime.Now;
                 apiInfo.APIRequestRecords.Add(record);
                 if (result.retcode != ReturnCode.请求成功)
-                    continue;
+                {
+                    break;
+                }
                 if (result.data.Count > 0)
                 {
                     var media = _mediaRepository.LoadEntities(d => d.MediaID == wxparams.WeiXinId).FirstOrDefault();

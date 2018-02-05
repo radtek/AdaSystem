@@ -29,7 +29,7 @@
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-    <script type="text/javascript">
+<script type="text/javascript">
 
         $(document).ready(function() {
             var table = new TableInit();
@@ -61,8 +61,8 @@
                     uniqueId: "Id", //每一行的唯一标识，一般为主键列
                     showToggle: true, //是否显示详细视图和列表视图的切换按钮
                     cardView: false, //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
-                    //detailView: true,                   //设置为 true 可以显示详细页面模式。
-                    //detailFormatter: detailFormatter,
+                    detailView: true,                   //设置为 true 可以显示详细页面模式。
+                    detailFormatter: detailFormatter,
                     mobileResponsive: true,
                     formatSearch: function() {
                         return "@Html.DisplayNameFor(d => d.RequestParameters)";
@@ -81,7 +81,7 @@
                             field: 'RequestParameters',
                             title: '@Html.DisplayNameFor(d => d.RequestParameters)',
                             align: "center", valign: "middle",
-                            formatter: formatter.tooltip
+                            //formatter: formatter.tooltip
                         },
                         {
                             field: 'Retcode',
@@ -107,7 +107,9 @@
             };
             return obj;
         };
-        
+        function detailFormatter(index, row) {
+            return "<div class='table-detail-name'>响应内容：</div><div class='table-detail-value'>" + row.ReponseContent +"</div>";
+        }
         //撤销
         function cancle() {
             var arrselections = $("#table").bootstrapTable('getSelections');
@@ -164,7 +166,7 @@
                         });
                     });
         }
-    </script>
+</script>
 }
 
 

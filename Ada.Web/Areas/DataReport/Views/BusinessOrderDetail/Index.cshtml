@@ -29,6 +29,12 @@
                 <div class="row">
                     <div class="col-sm-2">
                         <div class="form-group">
+                            @Html.LabelFor(d => d.CompanyName, Html.DisplayNameFor(d => d.CompanyName) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.CompanyName, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
                             @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName) + "：", new { @class = "control-label" })
                             @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control input-sm" })
                         </div>
@@ -234,12 +240,22 @@
                                 " <a class='btn btn-warning btn-circle btn-xs' href='@Url.Action("Comment", "Media",new{area="Resource"})?id=" +
                                 row.MediaPriceId +
                                 "' target='_blank' title='评价'><i class='fa fa-commenting'></i></a>";
+                        },
+                        footerFormatter: function (data) {
+                            var lirun = 0;
+                            if (data[0]) {
+                                var s = data[0].TotalSellMoney;
+                                var p = data[0].TotalPurchaseMoney;
+                                lirun = s - p;
+                            }
+                            return "利润：" + lirun;
                         }
                     },
                     {
                         field: 'AdPositionName',
                         title: '@Html.DisplayNameFor(d=>d.AdPositionName)',
-                        align: "center", valign: "middle"
+                        align: "center", valign: "middle",
+                        
                     },
                     {
                         field: 'SellMoney',
@@ -248,6 +264,17 @@
                         footerFormatter: function (data) {
                             if (data[0]) {
                                 return data[0].TotalSellMoney;
+                            }
+                            return 0;
+                        }
+                    },
+                    {
+                        field: 'Money',
+                        title: '@Html.DisplayNameFor(d=>d.Money)',
+                        align: "center", valign: "middle",
+                        footerFormatter: function (data) {
+                            if (data[0]) {
+                                return data[0].TotalMoney;
                             }
                             return 0;
                         }

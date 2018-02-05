@@ -48,6 +48,10 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => d.BusinessOrder.LinkManName.Contains(viewModel.LinkManName));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.CompanyName))
+            {
+                allList = allList.Where(d => d.BusinessOrder.LinkMan.Commpany.Name.Contains(viewModel.CompanyName));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.LinkManId))
             {
                 allList = allList.Where(d => d.BusinessOrder.LinkManId==viewModel.LinkManId);
@@ -186,7 +190,15 @@ namespace Ada.Services.Business
                 TotalPurchaseMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.PurchaseMoney),
                 TotalProfitMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.ProfitMoney)
             };
-            item.Profit = item.TotalProfitMoney / item.TotalSellMoney * 100;
+            if (item.TotalSellMoney==null||item.TotalSellMoney==0)
+            {
+                item.Profit = 0;
+            }
+            else
+            {
+                item.Profit = item.TotalProfitMoney / item.TotalSellMoney * 100;
+            }
+            
             return item;
         }
         /// <summary>

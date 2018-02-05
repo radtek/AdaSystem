@@ -340,7 +340,7 @@ namespace Resource.Controllers
                 //备注
                 media.Remark = row.GetCell(9)?.ToString();
 
-                if (!DateTime.TryParse(row.GetCell(10).ToString(), out var date))
+                if (!DateTime.TryParse(row.GetCell(10)?.ToString(), out var date))
                 {
                     date = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
                         DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
@@ -718,6 +718,11 @@ namespace Resource.Controllers
             _mediaService.Update(entity);
             return View(entity);
         }
+        public ActionResult WeiXinArticles(string id)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            return PartialView("WeiXinArticles", entity);
+        }
         public ActionResult WeiXinProCollection(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -731,7 +736,7 @@ namespace Resource.Controllers
         [AdaValidateAntiForgeryToken]
         public async Task<ActionResult> WeiXinProCollection(WeiXinProParams viewModel)
         {
-            var msg = await _iDataAPIService.GetArticlesAsync(viewModel);
+            var msg = await _iDataAPIService.GetWeiXinArticlesAsync(viewModel);
             return Json(new { State = 1, Msg = msg });
         }
         private Media IsExist(MediaView viewModel, out string msg, bool isSelf = false, bool isDelete = false)
