@@ -24,8 +24,24 @@ namespace DataReport.Controllers
         }
         public ActionResult Index()
         {
+
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(string start, string end)
+        {
+            if (string.IsNullOrWhiteSpace(start) || string.IsNullOrWhiteSpace(end))
+            {
+                ModelState.AddModelError("message", "请输入要统计的日期范围");
+                return View();
+            }
+            ViewBag.Start = start;
+            ViewBag.End = end;
+            var startDate = DateTime.Parse(start);
+            var endDate = DateTime.Parse(end);
             var managers = _managerService.GetByOrganizationName("媒介部");
-            var model= _purchaseOrderDetailServic.PurchasePerformance(managers.ToList());
+            var model = _purchaseOrderDetailServic.PurchasePerformance(managers.ToList(),startDate,endDate.AddDays(1));
             return View(model);
         }
     }

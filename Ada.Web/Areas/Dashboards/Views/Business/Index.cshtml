@@ -91,20 +91,20 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-8">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>销售情况统计</h5>
+                    <h5>销售核销统计</h5>
 
                 </div>
                 <div class="ibox-content">
                     <div class="row">
-                        <div class="col-lg-9">
+                        <div class="col-lg-10">
                             <div class="flot-chart" style="height: 300px;">
                                 <div class="flot-chart-content" id="flot-dashboard-chart"></div>
                             </div>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-2">
                             <ul class="stat-list">
                                 <li>
                                     <h2 class="no-margins">@Model.OrderCount</h2>
@@ -112,17 +112,17 @@
 
                                 </li>
                                 <li>
-                                    <h2 class="no-margins"><i class="fa fa-jpy "></i> @Model.SellMoney</h2>
+                                    <h3 class="no-margins"><i class="fa fa-jpy "></i> @Model.SellMoney</h3>
                                     <small>销售总额（不含税）</small>
 
                                 </li>
                                 <li>
-                                    <h2 class="no-margins "><i class="fa fa-jpy "></i> @Model.VerificationMoney</h2>
+                                    <h3 class="no-margins "><i class="fa fa-jpy "></i> @Model.VerificationMoney</h3>
                                     <small>未核销金额</small>
 
                                 </li>
                                 <li>
-                                    <h2 class="no-margins "><i class="fa fa-jpy "></i> @Model.ConfirmVerificationMoney</h2>
+                                    <h3 class="no-margins "><i class="fa fa-jpy "></i> @Model.ConfirmVerificationMoney</h3>
                                     <small>已核销金额</small>
 
                                 </li>
@@ -131,6 +131,16 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>近四月销售概况</h5>
+                </div>
+                <div id="business">
+
+                </div>
             </div>
         </div>
     </div>
@@ -149,10 +159,10 @@
                             <div class="ibox-tools">
 
                                 @*<a href="javascript:getTop('业务一部', 'ibox1');">
-                                    <i class="fa fa-refresh"></i>
-                                </a>*@
+                                        <i class="fa fa-refresh"></i>
+                                    </a>*@
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span> 
+                                    <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-user">
                                     @for (int i = 0; i < 12; i++)
@@ -162,7 +172,7 @@
                                         </li>
                                     }
                                 </ul>
-                               
+
                             </div>
                         </div>
                         <div class="ibox-content">
@@ -190,7 +200,7 @@
                             <h5>销售二部销售业绩排行</h5>
                             <div class="ibox-tools">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span> 
+                                    <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-user">
                                     @for (int i = 0; i < 12; i++)
@@ -409,6 +419,7 @@
                 //data: {},
                 success: function (data) {
                     var months = [], confirmVerificationMoneys = [], verificationMoneys = [];
+
                     $.each(data,
                         function(k, v) {
                             months.push(v.Month);
@@ -416,6 +427,25 @@
                                 0);
                             verificationMoneys.push(v.BusinessOrderDetailView.TotalVerificationMoney ||
                                 0);
+
+                            if (v.Sort<4) {
+                                $("#business").prepend('<div class="ibox-content">' +
+                                    '<div class="row">' +
+                                    '<div class="col-xs-4">' +
+                                    '<small class="stats-label">月份</small>' +
+                                    '<h4>' + v.Month+'</h4>' +
+                                    '</div>' +
+                                    '<div class="col-xs-4">' +
+                                    '<small class="stats-label">销售额</small>' +
+                                    '<h4><i class="fa fa-jpy "></i> ' + (v.BusinessOrderDetailView.TotalSellMoney || 0)+'</h4>' +
+                                    '</div>' +
+                                    '<div class="col-xs-4">' +
+                                    '<small class="stats-label">利润值</small>' +
+                                    '<h4><i class="fa fa-jpy "></i> ' + (v.BusinessOrderDetailView.TotalProfitMoney || 0)+'</h4>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>');
+                            }
 
                         });
                     myChart.setOption({
@@ -434,7 +464,7 @@
                             }
                         ]
                     });
-                    console.log(data);
+                    //console.log(data);
                 },
                 error: function () {
                     //swal("操作失败", "系统错误", "error");

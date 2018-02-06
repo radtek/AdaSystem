@@ -15,6 +15,6 @@ namespace Ada.Services.Purchase
         void Update(PurchaseOrderDetail entity);
         void Delete(PurchaseOrderDetail entity);
         IQueryable<PurchaseOrderDetail> LoadEntitiesFilter(PurchaseOrderDetailView viewModel);
-        IEnumerable<PurchaseAchievement> PurchasePerformance(List<ManagerView> managers);
+        IEnumerable<PurchaseAchievement> PurchasePerformance(List<ManagerView> managers, DateTime? start = null, DateTime? end = null);
     }
 }

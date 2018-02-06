@@ -61,5 +61,21 @@ namespace Ada.Core.ViewModel.Statistics
         /// </summary>
         [Display(Name = "资源类型")]
         public List<MediaTypeView> MediaTypes { get; set; }
+        /// <summary>
+        /// 资源类型
+        /// </summary>
+        [Display(Name = "资源类型")]
+        public List<MediaOrder> MediaOrders { get; set; }
+
+    }
+
+    public class MediaOrder
+    {
+        public string TypeName { get; set; }
+        public string MediaName { get; set; }
+        public string MediaID { get; set; }
+        public string AdPostion { get; set; }
+        public decimal? SellMoney { get; set; }
+        public int? Count { get; set; }
     }
 }

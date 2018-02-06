@@ -89,7 +89,7 @@ formatter.normalStatus = function (value, row, index) {
     if (value == 1) {
         return "<span class='label label-primary'>正常</span>";
     } else {
-        return "<span class='label label-warning'>关闭</span>";
+        return "<span class='label'>关闭</span>";
     }
 };
 formatter.businessStatus = function (value, row, index) {

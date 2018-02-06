@@ -205,7 +205,7 @@ namespace Resource.Controllers
                     FansNum = Utils.ShowFansNum(d.FansNum),
                     ChannelType = d.ChannelType,
                     LastReadNum = d.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount,
-                    AvgReadNum = d.AvgReadNum,
+                    AvgReadNum = (int?) d.MediaArticles.OrderByDescending(a=>a.PublishDate).Where(aa=>aa.PublishDate>DateTime.Now.Date.AddDays(-10)).Average(aaa=>aaa.ViewCount),
                     PublishFrequency = d.PublishFrequency,
                     Areas = d.Area,
                     Sex = d.Sex,

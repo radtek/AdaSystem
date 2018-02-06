@@ -116,17 +116,25 @@ namespace Ada.Services.Purchase
         /// <summary>
         /// 业绩统计
         /// </summary>
-        /// <param name="managers"></param>
         /// <returns></returns>
-        public IEnumerable<PurchaseAchievement> PurchasePerformance(List<ManagerView> managers)
+        public IEnumerable<PurchaseAchievement> PurchasePerformance(List<ManagerView> managers, DateTime? start = null, DateTime? end = null)
         {
             List<PurchaseAchievement> list = new List<PurchaseAchievement>();
             foreach (var managerView in managers)
             {
                 PurchaseAchievement purchaseAchievement = new PurchaseAchievement();
                 purchaseAchievement.Transactor = managerView.UserName;
+
                 var purchases = _repository.LoadEntities(d => d.IsDelete == false && d.TransactorId == managerView.Id);
-                purchaseAchievement.OrderCount = purchases.Count();
+                if (start != null && end != null)
+                {
+                    purchaseAchievement.OrderCount = purchases.Count(d => d.PublishDate >= start && d.PublishDate < end);
+                }
+                else
+                {
+                    purchaseAchievement.OrderCount = purchases.Count();
+                }
+
                 //需付款的金额
                 purchaseAchievement.TotalMoney = purchases.Sum(d => d.Money);
                 //实际付款金额

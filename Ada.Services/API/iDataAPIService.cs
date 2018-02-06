@@ -29,7 +29,16 @@ namespace Ada.Services.API
             var apiInfo = _apiInterfacesService.GetAPIInterfacesByCallIndex(wxparams.CallIndex);
 
             string url = string.Format(apiInfo.APIUrl + "?apikey={0}", apiInfo.Token);
-            string urlparams = "&uid=" + wxparams.WeiXinId;
+            string urlparams = string.Empty;
+            if (!string.IsNullOrWhiteSpace(wxparams.WeiXinId))
+            {
+                urlparams = "&uid=" + wxparams.WeiXinId;
+            }
+            if (!string.IsNullOrWhiteSpace(wxparams.ArticleLinks))
+            {
+                var base64 = Convert.ToBase64String(Encoding.Default.GetBytes(wxparams.ArticleLinks));
+                urlparams = "&link=" + base64;
+            }
             if (!string.IsNullOrWhiteSpace(wxparams.Range))
             {
                 urlparams += "&range=" + wxparams.Range;

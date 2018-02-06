@@ -15,7 +15,7 @@ namespace Ada.Core.ViewModel.API.iDataAPI
         [Display(Name = "微信账号")]
         public string WeiXinId { get; set; }
         /// <summary>
-        /// 文章链接
+        /// 文章链接(需base64处理，最多5条链接，并且同为一个公众号)
         /// </summary>
         [Display(Name = "文章链接")]
         public string ArticleLinks { get; set; }

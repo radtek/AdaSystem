@@ -23,6 +23,7 @@ namespace Ada.Web.Controllers
         private readonly IRepository<Manager> _repository;
         private readonly IRepository<BusinessOrderDetail> _temp;
         private readonly IRepository<Media> _media;
+        private readonly IRepository<MediaArticle> _mediaArticle;
         private readonly IRepository<PurchaseOrderDetail> _ptemp;
         private readonly IDbContext _dbContext;
         private readonly ISignals _signals;
@@ -31,7 +32,8 @@ namespace Ada.Web.Controllers
             ISignals signals,
             IRepository<BusinessOrderDetail> temp,
             IRepository<PurchaseOrderDetail> ptemp,
-            IRepository<Media> media)
+            IRepository<Media> media,
+            IRepository<MediaArticle> mediaArticle)
         {
             _repository = repository;
             _dbContext = dbContext;
@@ -39,6 +41,7 @@ namespace Ada.Web.Controllers
             _ptemp = ptemp;
             _temp = temp;
             _media = media;
+            _mediaArticle = mediaArticle;
         }
         public ActionResult Index()
         {
@@ -210,5 +213,18 @@ namespace Ada.Web.Controllers
 
 
         }
+        //public ActionResult Test()
+        //{
+
+        //    var articles = _mediaArticle.LoadEntities(d => d.IsDelete == false && d.Media.MediaType.CallIndex == "weixin"&&d.Media.Status==Consts.StateNormal);
+        //    var temp = from a in articles
+        //        group a by a.MediaId
+        //        into m
+        //        select new{m.Key,m.Average(d=>d.PublishDate)};
+
+
+
+
+        //}
     }
 }

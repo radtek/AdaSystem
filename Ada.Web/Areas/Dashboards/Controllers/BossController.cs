@@ -9,6 +9,7 @@ using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Finance;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.Domain.Resource;
+using Ada.Core.ViewModel.Business;
 using Ada.Core.ViewModel.Resource;
 using Ada.Core.ViewModel.Statistics;
 using Ada.Framework.Filter;
@@ -24,7 +25,7 @@ namespace Dashboards.Controllers
         private readonly IRepository<Receivables> _receivablesRepository;
         private readonly IRepository<BillPaymentDetail> _billPaymentDetailRepository;
         private readonly IRepository<ExpenseDetail> _expenseDetailDetailRepository;
-        private readonly IRepository<MediaType> _mediaTypeDetailRepository;
+        private readonly IRepository<MediaPrice> _mediaRepository;
 
         public BossController(IRepository<BusinessOrderDetail> businessRepository,
             IRepository<PurchaseOrderDetail> purchaseRepository,
@@ -32,14 +33,14 @@ namespace Dashboards.Controllers
             IRepository<Receivables> receivablesRepository,
             IRepository<BillPaymentDetail> billPaymentDetailRepository,
             IRepository<ExpenseDetail> expenseDetailDetailRepository,
-            IRepository<MediaType> mediaTypeDetailRepository)
+            IRepository<MediaPrice> mediaRepository)
         {
             _businessRepository = businessRepository;
             _purchaseRepository = purchaseRepository;
             _receivablesRepository = receivablesRepository;
             _billPaymentDetailRepository = billPaymentDetailRepository;
             _expenseDetailDetailRepository = expenseDetailDetailRepository;
-            _mediaTypeDetailRepository = mediaTypeDetailRepository;
+            _mediaRepository = mediaRepository;
         }
         public ActionResult Index()
         {
@@ -51,7 +52,7 @@ namespace Dashboards.Controllers
             total.PurchaseCount = _purchaseRepository.LoadEntities(d => d.IsDelete == false).Count();
             total.OrderStatus = total.BusinessCount == total.PurchaseCount;
             //核销金额校验
-            
+
             total.BusinessSellMoney = business.Sum(d => d.SellMoney);
             total.BusinessVerificationMoney = business.Sum(d => d.VerificationMoney);
             total.BusinessConfirmVerificationMoney = business.Sum(d => d.ConfirmVerificationMoney);
@@ -87,6 +88,17 @@ namespace Dashboards.Controllers
             //}
 
             //total.MediaTypes = mediaTypeViews;
+            total.MediaOrders = _mediaRepository.LoadEntities(d =>
+                  d.Media.IsDelete == false && d.Media.Status == Consts.StateNormal &&
+                  (d.Media.MediaType.CallIndex == "weixin" || d.Media.MediaType.CallIndex == "sinablog")).Select(d => new MediaOrder
+                  {
+                      TypeName= d.Media.MediaType.TypeName,
+                      MediaName= d.Media.MediaName,
+                      MediaID= d.Media.MediaID,
+                      Count= d.BusinessOrderDetails.Count,
+                      AdPostion = d.AdPositionName,
+                      SellMoney = d.BusinessOrderDetails.Sum(o=>o.SellMoney)
+                  }).OrderByDescending(d => d.Count).Take(20).ToList();
             return View(total);
         }
     }

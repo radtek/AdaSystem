@@ -40,7 +40,7 @@
                                             var dateTime = item.PublishDate?.ToString("yyyy-MM-dd HH:mm:ss") ?? string.Empty;
                                         }
                                         <td>
-                                            <a class='label' href='@item.ArticleUrl' target='_blank'><i class='fa fa-link'></i> @item.Title</a>
+
                                             @if (item.IsTop == true)
                                             {
                                                 <span class="label label-danger">头条</span>
@@ -49,6 +49,7 @@
                                             {
                                                 <span class="label label-success">原创</span>
                                             }
+                                             <a class='label' href='@item.ArticleUrl' target='_blank'><i class='fa fa-link'></i> @item.Title</a>
                                         </td>
                                         <td>@item.ViewCount</td>
                                         <td>@item.CommentCount</td>
