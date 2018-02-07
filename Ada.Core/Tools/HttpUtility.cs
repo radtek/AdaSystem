@@ -26,6 +26,22 @@ namespace Ada.Core.Tools
                 return await response.Content.ReadAsStringAsync();
             }
         }
+        public static string Get(string url)
+        {
+            //创建HttpClient（注意传入HttpClientHandler）
+            var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
+
+            using (var http = new HttpClient(handler))
+            {
+                var task = http.GetAsync(url);
+                string resutl = string.Empty;
+                if (task.Result.IsSuccessStatusCode)
+                {
+                    resutl = task.Result.Content.ReadAsStringAsync().Result;
+                }
+                return resutl;
+            }
+        }
         public static async Task<T> GetJsonAsync<T>(string url)
         {
             string resultStr = await GetAsync(url);

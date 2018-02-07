@@ -6,7 +6,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">【@Model.MediaName - @Model.MediaID】最近十篇发布文章</h4>
+                <h4 class="modal-title">【@Model.MediaName】最近二十篇博文</h4>
             </div>
             <div class="modal-body">
                 @if (Model.MediaArticles.Any())
@@ -16,10 +16,10 @@
                             <thead>
                                 <tr>
                                     <th>
-                                        标题
+                                        内容
                                     </th>
                                     <th>
-                                        浏览数
+                                        转发数
                                     </th>
                                     <th>
                                         评论数
@@ -34,26 +34,17 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.MediaArticles.OrderByDescending(d => d.PublishDate).Take(10))
+                                @foreach (var item in Model.MediaArticles.OrderByDescending(d => d.PublishDate).Take(20))
                                 {
                                     <tr>
                                         @{
                                             var dateTime = item.PublishDate?.ToString("yyyy-MM-dd HH:mm:ss") ?? string.Empty;
-                                            var title = Utils.CutString(item.Title, 60);
+                                            var title = Utils.CutString(item.Content, 60);
                                         }
                                         <td>
-
-                                            @if (item.IsTop == true)
-                                            {
-                                                <span class="label label-danger">头条</span>
-                                            }
-                                            @if (item.IsOriginal == true)
-                                            {
-                                                <span class="label label-success">原创</span>
-                                            }
-                                             <a class='label' href='@item.ArticleUrl' target='_blank'><i class='fa fa-link'></i> @title</a>
+                                            <a class='label' href='@item.ArticleUrl' target='_blank'><i class='fa fa-link'></i> @title</a>
                                         </td>
-                                        <td>@item.ViewCount</td>
+                                        <td>@item.ShareCount</td>
                                         <td>@item.CommentCount</td>
                                         <td>@item.LikeCount</td>
                                         <td>@dateTime</td>
@@ -68,7 +59,7 @@
                 }
                 else
                 {
-                    <p class="text-center"><strong>暂无发布文章或未采集更新</strong></p>
+                    <p class="text-center"><strong>暂无发布微博或未采集更新</strong></p>
                 }
 
 

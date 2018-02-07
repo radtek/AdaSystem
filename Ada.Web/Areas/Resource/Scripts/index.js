@@ -167,3 +167,79 @@ function checkFileExt(filename) {
     }
     return flag;
 }
+
+
+function collectArticle(url) {
+    var arrselections = $("#table").bootstrapTable('getSelections');
+    if (arrselections.length > 1) {
+        swal("操作提醒", "只能选择一行数据", "warning");
+        return;
+    }
+    if (arrselections.length <= 0) {
+        swal("操作提醒", "请选择有效数据", "warning");
+        return;
+    }
+    $("#modalView").load(url+"/" + arrselections[0].Id,
+        function () {
+            $('#modalView .modal').on('shown.bs.modal', function () {
+                collection();
+            }).on('hidden.bs.modal', function () {
+
+            });
+            $('#modalView .modal').modal('show');
+        });
+
+}
+function details(url) {
+
+    $("#modalView").load(url,
+        function () {
+            //$('#modalView .modal').on('shown.bs.modal', function () {
+            //    collection();
+            //}).on('hidden.bs.modal', function () {
+
+            //});
+            $('#modalView .modal').modal('show');
+        });
+
+}
+function collection() {
+    $("#modalView form").validate({
+        submitHandler: function (form) {
+            var subBtn = $('.ladda-button').ladda();
+            var $form = $(form),
+                data = $form.serialize();
+            $.ajax({
+                type: "post",
+                url: form.action,
+                data: data,
+                success: function (res) {
+                    if (res.State == 1) {
+                        $("#table").bootstrapTable('refresh');
+                        swal({
+                            title: "操作成功",
+                            text: res.Msg,
+
+                            type: "success"
+
+                        });
+
+                    } else {
+                        swal("操作提醒", res.Msg, "warning");
+                    }
+                },
+                error: function () {
+                    swal("操作失败", "系统错误", "error");
+                },
+                beforeSend: function () {
+                    subBtn.ladda('start');
+                },
+                complete: function () {
+                    subBtn.ladda('stop');
+                }
+            });
+
+        }
+    });
+
+}

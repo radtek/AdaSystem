@@ -5,9 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Ada.Core;
-using Ada.Core.Domain;
 using Ada.Core.Domain.Resource;
 using Ada.Core.Infrastructure;
+using Ada.Core.Tools;
 using Ada.Core.ViewModel.API.iDataAPI;
 using Ada.Services.API;
 using log4net;
@@ -15,13 +15,12 @@ using Quartz;
 
 namespace QuartzTask.Jobs
 {
-    //抓微信文章
-    public class WeiXinArticlesJob : IJob
+    public class WeiboArticlesJob : IJob
     {
         private readonly IiDataAPIService _iDataAPIService;
         private readonly IRepository<Media> _repository;
         private readonly ILog _logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public WeiXinArticlesJob()
+        public WeiboArticlesJob()
         {
             _iDataAPIService = EngineContext.Current.Resolve<IiDataAPIService>();
             _repository = EngineContext.Current.Resolve<IRepository<Media>>();
@@ -32,27 +31,28 @@ namespace QuartzTask.Jobs
             {
                 try
                 {
-                    _logger.Info("微信自动任务开始：" + DateTime.Now);
-                    var medias = _repository.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "weixin").ToList();
+                    _logger.Info("微博自动任务开始：" + DateTime.Now);
+                    var medias = _repository.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "sinablog").ToList();
                     foreach (var media in medias)
                     {
                         if (string.IsNullOrWhiteSpace(media.MediaID)) continue;
-                        WeiXinProParams wxparams = new WeiXinProParams
+                        if (!Utils.IsNum(media.MediaID.Trim())) continue;
+                        WeiBoParams wbparams = new WeiBoParams
                         {
                             PageNum = 1,
-                            Range = "d",
-                            CallIndex = "weixinpro",
-                            UID = media.MediaID.Trim()
+                            CallIndex = "weibo",
+                            UID = media.MediaID
                         };
-                        _iDataAPIService.GetWeiXinArticles(wxparams);
+                        _iDataAPIService.GetWeiBoArticles(wbparams);
                         //Thread.Sleep(1000);
+
                     }
                 }
                 catch (Exception e)
                 {
-                    _logger.Error("微信自动任务失败："+DateTime.Now, e);
+                    _logger.Error("微博自动任务失败："+DateTime.Now, e);
                 }
-                
+
 
             });
         }

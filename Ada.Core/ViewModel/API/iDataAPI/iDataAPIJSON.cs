@@ -36,7 +36,22 @@ namespace Ada.Core.ViewModel.API.iDataAPI
     {
 
         public ReturnCode retcode { get; set; }
-
+        /// <summary>
+        /// 接口别名
+        /// </summary>
+        public string appCode { get; set; }
+        /// <summary>
+        /// 请求方式
+        /// </summary>
+        public string dataType { get; set; }
+        /// <summary>
+        /// 下一页码
+        /// </summary>
+        public int? pageToken { get; set; }
+        /// <summary>
+        /// 是否有下一页
+        /// </summary>
+        public bool? hasNext { get; set; }
         /// <summary>
         /// 返回消息代码数字（同errcode枚举值）
         /// </summary>

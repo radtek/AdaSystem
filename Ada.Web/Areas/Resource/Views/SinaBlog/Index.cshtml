@@ -132,6 +132,9 @@
     <button type="button" class="btn btn-primary btn-outline" data-toggle="modal" data-target="#uploadModal">
         <i class="fa fa-upload"></i> 更新导入
     </button>
+    <button type="button" class="btn btn-primary btn-outline" onclick="collectArticle('@Url.Action("WeiboCollection","Media")');">
+        <i class="fa fa-cloud"></i> 采集文章
+    </button>
 </div>
 
 @section Styles {
@@ -145,7 +148,7 @@
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/ladda")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=20180124")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=2018020713")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -191,7 +194,10 @@
                         parameters.MediaTypeId = '@meidaType.Id';
                         return searchFrm.queryParams(parameters);
                     },
-                columns: [
+                    columns: [
+                        {
+                            checkbox: true
+                        },
                     {
                         field: 'Status',
                         title: '@Html.DisplayNameFor(d=>d.Status)',
@@ -205,28 +211,24 @@
                         valign: "middle",
                         align: "left",
                         formatter: function (value, row, index) {
-                            var comment =
-                                " <a class='btn btn-warning btn-circle btn-xs' href='@Url.Action("Comment", "Media")?id=" +
-                                    row.Id +
-                                    "' target='_blank' title='评价'><i class='fa fa-commenting'></i></a>";
-                            if (value) {
-                                if (row.MediaID) {
-                                    return "<a class='label' href='https://weibo.com/u/" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>" + comment;
-                                } else {
-                                    return value + comment;
-                                }
-
-                            } else {
-                                return value + comment;
-                            }
+                           var url =
+                                "<a class='label' href='https://weibo.com/u/" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
+                            return url +
+                                " <button class='btn btn-warning btn-xs' onclick='details(\"@Url.Action("WeiboArticles","Media")?id="+row.Id+"\");'><i class='fa fa-rss-square'></i> 详情</button>";
                         }
                     },
-                    @*{
+                    {
                         field: 'Areas',
                         title: '@Html.DisplayNameFor(d=>d.Areas)',
                         valign: "middle",
                         align: "center"
-                    },*@
+                    },
+                        {
+                            field: 'Sex',
+                            title: '@Html.DisplayNameFor(d=>d.Sex)',
+                            valign: "middle",
+                            align: "center"
+                        },
                     {
                         field: 'FansNum',
                         title: '@Html.DisplayNameFor(d=>d.FansNum)',
@@ -285,7 +287,8 @@
                         align: "center",
                         formatter: function (value) {
                             return "<a class='btn btn-success btn-sm' href='@Url.Action("Update","Media")?id=" + value + "');' target='_blank'><i class='fa fa-pencil'></i> 编辑</a> " +
-                                "<button class='btn btn-danger btn-sm' onclick=\"cancle('" + value +"');\"><i class='fa fa-trash-o'></i> 删除</button>";
+                                "<a class='btn btn-warning btn-sm' href='@Url.Action("Comment", "Media")?id=" + value + "');' target='_blank'><i class='fa fa-commenting'></i> 评价</a> " +
+                                "<button class='btn btn-danger btn-sm' onclick=\"cancle('" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button>";
                         }
                     }
                 ]

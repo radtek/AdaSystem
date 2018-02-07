@@ -93,8 +93,8 @@ namespace QuartzTask.Controllers
             entity.TriggerName = item.TriggerName;
             entity.Cron = item.Cron;
             //entity.TriggerState = item.TriggerState;
-            entity.StartTime = item.StartTime;
-            entity.EndTime = item.EndTime;
+            entity.StartTime = item.StartTime ?? DateTime.Now;
+            entity.EndTime = item.EndTime ?? DateTime.Now.AddDays(1);
             entity.Remark = item.Remark;
             return View(entity);
         }

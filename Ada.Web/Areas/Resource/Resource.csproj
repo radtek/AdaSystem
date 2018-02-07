@@ -194,6 +194,8 @@
     <Content Include="Views\Shared\Import.cshtml" />
     <Content Include="Views\Shared\WeiXinProCollection.cshtml" />
     <Content Include="Views\Shared\WeiXinArticles.cshtml" />
+    <Content Include="Views\Shared\WeiboCollection.cshtml" />
+    <Content Include="Views\Shared\WeiboArticles.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

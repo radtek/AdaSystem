@@ -10,31 +10,15 @@ namespace Ada.Core.ViewModel.API.iDataAPI
     {
         public WeiXinProJSON()
         {
-            data=new List<ArticleData>();
+            data=new List<WeiXinArticleData>();
         }
-        /// <summary>
-        /// 接口别名
-        /// </summary>
-        public string appCode { get; set; }
-        /// <summary>
-        /// 请求方式
-        /// </summary>
-        public string dataType { get; set; }
-        /// <summary>
-        /// 下一页码
-        /// </summary>
-        public int? pageToken { get; set; }
-        /// <summary>
-        /// 是否有下一页
-        /// </summary>
-        public bool? hasNext { get; set; }
         /// <summary>
         /// 文章集合
         /// </summary>
-        public List<ArticleData> data { get; set; }
+        public List<WeiXinArticleData> data { get; set; }
     }
 
-    public class ArticleData
+    public class WeiXinArticleData
     {
         /// <summary>
         /// 发布时间：时间戳格式

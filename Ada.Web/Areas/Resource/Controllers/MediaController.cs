@@ -211,6 +211,9 @@ namespace Resource.Controllers
                     Sex = d.Sex,
                     Client = d.Client,
                     SEO = d.SEO,
+                    PostNum=d.PostNum,
+                    MonthPostNum = d.MonthPostNum,
+                    FriendNum = d.FriendNum,
                     Efficiency = d.Efficiency,
                     ResourceType = d.ResourceType,
                     Channel = d.Channel,
@@ -490,6 +493,9 @@ namespace Resource.Controllers
             entity.ResourceType = viewModel.ResourceType;
             entity.Channel = viewModel.Channel;
             entity.Cooperation = viewModel.Cooperation;
+            entity.PostNum = viewModel.PostNum;
+            entity.MonthPostNum = viewModel.MonthPostNum;
+            entity.FriendNum = viewModel.FriendNum;
 
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
@@ -564,6 +570,9 @@ namespace Resource.Controllers
             entity.ResourceType = item.ResourceType;
             entity.Channel = item.Channel;
             entity.Cooperation = item.Cooperation;
+            entity.PostNum = item.PostNum;
+            entity.MonthPostNum = item.MonthPostNum;
+            entity.FriendNum = item.FriendNum;
 
             entity.Content = item.Content;
             entity.Remark = item.Remark;
@@ -630,6 +639,9 @@ namespace Resource.Controllers
             entity.FansNum = Utils.SetFansNum(viewModel.FansNum);
             entity.LastReadNum = viewModel.LastReadNum;
             entity.AvgReadNum = viewModel.AvgReadNum;
+            entity.PostNum = viewModel.PostNum;
+            entity.MonthPostNum = viewModel.MonthPostNum;
+            entity.FriendNum = viewModel.FriendNum;
             entity.PublishFrequency = viewModel.PublishFrequency;
             entity.Area = viewModel.Areas;
             entity.ChannelType = viewModel.ChannelType;
@@ -727,16 +739,38 @@ namespace Resource.Controllers
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             WeiXinProParams view=new WeiXinProParams();
-            view.WeiXinId = entity.MediaID;
+            view.UID = entity.MediaID;
             view.CallIndex = "weixinpro";
             view.PageNum = 1;
             return PartialView("WeiXinProCollection", view);
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
-        public async Task<ActionResult> WeiXinProCollection(WeiXinProParams viewModel)
+        [ValidateAntiForgeryToken]
+        public ActionResult WeiXinProCollection(WeiXinProParams viewModel)
         {
-            var msg = await _iDataAPIService.GetWeiXinArticlesAsync(viewModel);
+            var msg = _iDataAPIService.GetWeiXinArticles(viewModel);
+            return Json(new { State = 1, Msg = msg });
+        }
+        
+        public ActionResult WeiboArticles(string id)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            return PartialView("WeiboArticles", entity);
+        }
+        public ActionResult WeiboCollection(string id)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            WeiBoParams view = new WeiBoParams();
+            view.UID = entity.MediaID;
+            view.CallIndex = "weibo";
+            view.PageNum = 1;
+            return PartialView("WeiboCollection", view);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult WeiboCollection(WeiBoParams viewModel)
+        {
+            var msg = _iDataAPIService.GetWeiBoArticles(viewModel);
             return Json(new { State = 1, Msg = msg });
         }
         private Media IsExist(MediaView viewModel, out string msg, bool isSelf = false, bool isDelete = false)

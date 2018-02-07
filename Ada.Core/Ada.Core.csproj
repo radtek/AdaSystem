@@ -172,7 +172,10 @@
     <Compile Include="ViewModel\Admin\SystemLogView.cs" />
     <Compile Include="ViewModel\API\APIInterfacesView.cs" />
     <Compile Include="ViewModel\API\APIRequestRecordView.cs" />
+    <Compile Include="ViewModel\API\iDataAPI\BaseParams.cs" />
     <Compile Include="ViewModel\API\iDataAPI\iDataAPIJSON.cs" />
+    <Compile Include="ViewModel\API\iDataAPI\WeiBoJSON.cs" />
+    <Compile Include="ViewModel\API\iDataAPI\WeiBoParams.cs" />
     <Compile Include="ViewModel\API\iDataAPI\WeiXinProJSON.cs" />
     <Compile Include="ViewModel\API\iDataAPI\WeiXinProParams.cs" />
     <Compile Include="ViewModel\BaseView.cs" />

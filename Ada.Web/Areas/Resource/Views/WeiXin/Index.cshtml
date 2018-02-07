@@ -131,7 +131,7 @@
     <button type="button" class="btn btn-primary btn-outline" data-toggle="modal" data-target="#uploadModal">
         <i class="fa fa-upload"></i> 更新导入
     </button>
-    <button type="button" class="btn btn-primary btn-outline" onclick="collectArticle();">
+    <button type="button" class="btn btn-primary btn-outline" onclick="collectArticle('@Url.Action("WeiXinProCollection","Media")');">
         <i class="fa fa-cloud"></i> 采集文章
     </button>
 </div>
@@ -147,7 +147,7 @@
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/ladda")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=20180124")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=2018020713")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -211,7 +211,7 @@
                             var url =
                                 "<a class='label' href='http://weixin.sogou.com/weixin?type=1&query=" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
                             return url +
-                                " <button class='btn btn-warning btn-xs' onclick='details(\""+row.Id+"\");'><i class='fa fa-rss-square'></i> 详情</button>";
+                                " <button class='btn btn-warning btn-xs' onclick='details(\"@Url.Action("WeiXinArticles","Media")?id="+row.Id+"\");'><i class='fa fa-rss-square'></i> 详情</button>";
                         }
                     },
 
@@ -301,83 +301,7 @@
             };
             return obj;
         };
-        function collectArticle() {
-            var arrselections = $("#table").bootstrapTable('getSelections');
-            if (arrselections.length > 1) {
-                swal("操作提醒", "只能选择一行数据", "warning");
-                return;
-            }
-            if (arrselections.length <= 0) {
-                swal("操作提醒", "请选择有效数据", "warning");
-                return;
-            }
-            $("#modalView").load("@Url.Action("WeiXinProCollection","Media")?id=" + arrselections[0].Id,
-                function () {
-                    $('#modalView .modal').on('shown.bs.modal', function () {
-                        collection();
-                    }).on('hidden.bs.modal', function () {
 
-                    });
-                    $('#modalView .modal').modal('show');
-                });
-
-        }
-        function details(id) {
-
-            $("#modalView").load("@Url.Action("WeiXinArticles","Media")?id=" + id,
-                function () {
-                    //$('#modalView .modal').on('shown.bs.modal', function () {
-                    //    collection();
-                    //}).on('hidden.bs.modal', function () {
-
-                    //});
-                    $('#modalView .modal').modal('show');
-                });
-
-        }
-        function collection() {
-            $("#modalView form").validate({
-                submitHandler: function (form) {
-                    var subBtn = $('.ladda-button').ladda();
-                    var $form = $(form),
-                        data = $form.serialize();
-                    $.ajax({
-                        type: "post",
-                        headers: {
-                            '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                        },
-                        url: form.action,
-                        data: data,
-                        success: function (res) {
-                            if (res.State == 1) {
-
-                                swal({
-                                    title: "操作成功",
-                                    text: res.Msg,
-
-                                    type:"success"
-
-                                });
-
-                            } else {
-                                swal("操作提醒", res.Msg, "warning");
-                            }
-                        },
-                        error: function () {
-                            swal("操作失败", "系统错误", "error");
-                        },
-                        beforeSend: function () {
-                            subBtn.ladda('start');
-                        },
-                        complete: function () {
-                            subBtn.ladda('stop');
-                        }
-                    });
-
-                }
-            });
-
-        }
     </script>
 }
 

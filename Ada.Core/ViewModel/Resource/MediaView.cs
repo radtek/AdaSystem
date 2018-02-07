@@ -107,6 +107,21 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "点赞数")]
         public int? LikesNum { get; set; }
         /// <summary>
+        /// 微博数
+        /// </summary>
+        [Display(Name = "微博数")]
+        public int? PostNum { get; set; }
+        /// <summary>
+        /// 月发文数
+        /// </summary>
+        [Display(Name = "月发文数")]
+        public int? MonthPostNum { get; set; }
+        /// <summary>
+        /// 关注数
+        /// </summary>
+        [Display(Name = "关注数")]
+        public int? FriendNum { get; set; }
+        /// <summary>
         /// 媒体说明
         /// </summary>
         [Display(Name = "媒体说明")]
