@@ -29,29 +29,31 @@ namespace QuartzTask.Jobs
         {
             Task.Factory.StartNew(() =>
             {
-                try
+                _logger.Info("微博自动任务开始：" + DateTime.Now);
+                var medias = _repository.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "sinablog").ToList();
+                foreach (var media in medias)
                 {
-                    _logger.Info("微博自动任务开始：" + DateTime.Now);
-                    var medias = _repository.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "sinablog").ToList();
-                    foreach (var media in medias)
+                    if (string.IsNullOrWhiteSpace(media.MediaID)) continue;
+                    if (!Utils.IsNum(media.MediaID.Trim())) continue;
+                    WeiBoParams wbparams = new WeiBoParams
                     {
-                        if (string.IsNullOrWhiteSpace(media.MediaID)) continue;
-                        if (!Utils.IsNum(media.MediaID.Trim())) continue;
-                        WeiBoParams wbparams = new WeiBoParams
-                        {
-                            PageNum = 1,
-                            CallIndex = "weibo",
-                            UID = media.MediaID
-                        };
+                        PageNum = 1,
+                        CallIndex = "weibo",
+                        UID = media.MediaID.Trim()
+                    };
+                    try
+                    {
                         _iDataAPIService.GetWeiBoArticles(wbparams);
-                        //Thread.Sleep(1000);
-
                     }
+                    catch (Exception e)
+                    {
+                        _logger.Error("微博" + media.MediaID + "，自动任务失败：" + DateTime.Now, e);
+                    }
+
+                    //Thread.Sleep(1000);
+
                 }
-                catch (Exception e)
-                {
-                    _logger.Error("微博自动任务失败："+DateTime.Now, e);
-                }
+
 
 
             });

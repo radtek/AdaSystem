@@ -30,28 +30,29 @@ namespace QuartzTask.Jobs
         {
             Task.Factory.StartNew(() =>
             {
-                try
+                _logger.Info("微信自动任务开始：" + DateTime.Now);
+                var medias = _repository.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "weixin").ToList();
+                foreach (var media in medias)
                 {
-                    _logger.Info("微信自动任务开始：" + DateTime.Now);
-                    var medias = _repository.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "weixin").ToList();
-                    foreach (var media in medias)
+                    if (string.IsNullOrWhiteSpace(media.MediaID)) continue;
+                    WeiXinProParams wxparams = new WeiXinProParams
                     {
-                        if (string.IsNullOrWhiteSpace(media.MediaID)) continue;
-                        WeiXinProParams wxparams = new WeiXinProParams
-                        {
-                            PageNum = 1,
-                            Range = "d",
-                            CallIndex = "weixinpro",
-                            UID = media.MediaID.Trim()
-                        };
+                        PageNum = 1,
+                        Range = "d",
+                        CallIndex = "weixinpro",
+                        UID = media.MediaID.Trim()
+                    };
+                    
+                    try
+                    {
                         _iDataAPIService.GetWeiXinArticles(wxparams);
-                        //Thread.Sleep(1000);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.Error("微信"+media.MediaID+",自动任务失败：" + DateTime.Now, e);
                     }
                 }
-                catch (Exception e)
-                {
-                    _logger.Error("微信自动任务失败："+DateTime.Now, e);
-                }
+                
                 
 
             });
