@@ -31,29 +31,33 @@ namespace QuartzTask.Jobs
             Task.Factory.StartNew(() =>
             {
                 _logger.Info("微信自动任务开始：" + DateTime.Now);
-                var medias = _repository.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "weixin").ToList();
+                var medias = _repository.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "weixin");
+                long addcount = 0;
+                long updatecount = 0;
                 foreach (var media in medias)
                 {
                     if (string.IsNullOrWhiteSpace(media.MediaID)) continue;
                     WeiXinProParams wxparams = new WeiXinProParams
                     {
-                        PageNum = 1,
-                        Range = "d",
+                        PageNum = 6,
+                        Range = "w",
                         CallIndex = "weixinpro",
+                        IsLog = false,
                         UID = media.MediaID.Trim()
                     };
-                    
                     try
                     {
-                        _iDataAPIService.GetWeiXinArticles(wxparams);
+                        var result = _iDataAPIService.GetWeiXinArticles(wxparams);
+                        addcount += result.AddCount;
+                        updatecount += result.UpdateCount;
                     }
                     catch (Exception e)
                     {
                         _logger.Error("微信"+media.MediaID+",自动任务失败：" + DateTime.Now, e);
                     }
                 }
-                
-                
+
+                _logger.Info("微信自动任务结束：" + DateTime.Now + "，共成功采集新增" + addcount + "文章篇，更新" + updatecount + "文章篇");
 
             });
         }

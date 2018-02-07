@@ -93,8 +93,8 @@ namespace QuartzTask.Controllers
             entity.TriggerName = item.TriggerName;
             entity.Cron = item.Cron;
             //entity.TriggerState = item.TriggerState;
-            entity.StartTime = item.StartTime ?? DateTime.Now;
-            entity.EndTime = item.EndTime ?? DateTime.Now.AddDays(1);
+            entity.StartTime = item.StartTime;
+            entity.EndTime = item.EndTime;
             entity.Remark = item.Remark;
             return View(entity);
         }
@@ -145,14 +145,14 @@ namespace QuartzTask.Controllers
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             entity.TriggerState = Quartz.TriggerState.Normal.ToString();
-            if (entity.StartTime == null)
-            {
-                entity.StartTime = DateTime.Now;
-            }
-            if (entity.EndTime == null)
-            {
-                entity.EndTime = DateTime.MaxValue.AddDays(-1);
-            }
+            //if (entity.StartTime == null)
+            //{
+            //    entity.StartTime = DateTime.Now;
+            //}
+            //if (entity.EndTime == null)
+            //{
+            //    entity.EndTime = DateTime.MaxValue.AddDays(-1);
+            //}
             _jobService.Update(entity);
             _quartzService.Start(entity);
             TempData["Msg"] = "任务启动成功";

@@ -30,7 +30,9 @@ namespace QuartzTask.Jobs
             Task.Factory.StartNew(() =>
             {
                 _logger.Info("微博自动任务开始：" + DateTime.Now);
-                var medias = _repository.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "sinablog").ToList();
+                var medias = _repository.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "sinablog");
+                long addcount = 0;
+                long updatecount = 0;
                 foreach (var media in medias)
                 {
                     if (string.IsNullOrWhiteSpace(media.MediaID)) continue;
@@ -39,21 +41,22 @@ namespace QuartzTask.Jobs
                     {
                         PageNum = 1,
                         CallIndex = "weibo",
+                        IsLog = false,
                         UID = media.MediaID.Trim()
                     };
                     try
                     {
-                        _iDataAPIService.GetWeiBoArticles(wbparams);
+                        var result = _iDataAPIService.GetWeiBoArticles(wbparams);
+                        addcount += result.AddCount;
+                        updatecount += result.UpdateCount;
                     }
                     catch (Exception e)
                     {
                         _logger.Error("微博" + media.MediaID + "，自动任务失败：" + DateTime.Now, e);
                     }
 
-                    //Thread.Sleep(1000);
-
                 }
-
+                _logger.Info("微博自动任务结束：" + DateTime.Now + "，共成功采集新增" + addcount + "文章篇，更新" + updatecount + "文章篇");
 
 
             });

@@ -3,6 +3,8 @@
 @{
     ViewBag.Title = "编辑任务";
     ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "计划任务", Value = Url.Action("Index") } };
+    var start = Model.StartTime?.ToString("yyyy-MM-dd HH:mm") ?? "";
+    var end = Model.EndTime?.ToString("yyyy-MM-dd HH:mm") ?? "";
 }
 @Html.Partial("Bread")
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -20,15 +22,17 @@
 @section Scripts {
     @Scripts.Render("~/plugins/dateRange")
 <script type="text/javascript">
-        $(document).ready(function () {
-            $('#StartAndEnd').daterangepicker({
+    $(document).ready(function () {
+        var $datepicker = $('#StartAndEnd');
+        $datepicker.daterangepicker({
                 timePicker: true,
                 timePicker24Hour: true,
                 //timePickerSeconds: true,
                 //timePickerIncrement: 30,
-                startDate: "@Model.StartTime.Value.ToString("yyyy-MM-dd HH:mm")",
-                endDate: "@Model.EndTime.Value.ToString("yyyy-MM-dd HH:mm")",
+                startDate: "@start",
+                endDate: "@end",
                 opens: "center",
+                autoUpdateInput: false,
                 linkedCalendars: false,
                 locale: {
                     format: 'YYYY-MM-DD HH:mm',
@@ -69,6 +73,14 @@
                     $("#StartTime").val(start.format('YYYY-MM-DD HH:mm'));
                     $("#EndTime").val(end.format('YYYY-MM-DD HH:mm'));
                 });
+            $datepicker.on('apply.daterangepicker', function (ev, picker) {
+                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' 至 ' + picker.endDate.format('YYYY-MM-DD'));
+            });
+            $datepicker.on('cancel.daterangepicker', function (ev, picker) {
+                $(this).val('');
+                $("#StartTime").val("");
+                $("#EndTime").val("");
+            });
         });
 
 </script>

@@ -41,13 +41,22 @@ namespace QuartzTask.Models
             JobDataMap jobDataMap = jobDetail.JobDataMap;
             jobDataMap.Put("任务描述", entity.Remark);
             var triggerKey=new TriggerKey(entity.TriggerName,entity.GroupName);
-            DateTimeOffset startRunTime = DateBuilder.NextGivenSecondDate(entity.StartTime, 1);
-            DateTimeOffset endRunTime = DateBuilder.NextGivenSecondDate(entity.EndTime, 1);
-            ITrigger trigger = TriggerBuilder.Create().StartAt(startRunTime).EndAt(endRunTime).WithIdentity(triggerKey).WithCronSchedule(entity.Cron).Build();
+            ITrigger trigger;
+            if (entity.StartTime!=null&&entity.EndTime!=null)
+            {
+                DateTimeOffset startRunTime = DateBuilder.NextGivenSecondDate(entity.StartTime, 1);
+                DateTimeOffset endRunTime = DateBuilder.NextGivenSecondDate(entity.EndTime, 1);
+                trigger = TriggerBuilder.Create().StartAt(startRunTime).EndAt(endRunTime).WithIdentity(triggerKey).WithCronSchedule(entity.Cron).Build();
+            }
+            else
+            {
+                trigger = TriggerBuilder.Create().WithIdentity(triggerKey).WithCronSchedule(entity.Cron).Build();
+            }
+            
             _scheduler.ScheduleJob(jobDetail, trigger);
             
         }
-
+        
         public void Stop(Job entity)
         {
             var jobKey = new JobKey(entity.JobName, entity.GroupName);

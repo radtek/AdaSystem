@@ -34,12 +34,8 @@ namespace Ada.Core.Tools
             using (var http = new HttpClient(handler))
             {
                 var task = http.GetAsync(url);
-                string resutl = string.Empty;
-                if (task.Result.IsSuccessStatusCode)
-                {
-                    resutl = task.Result.Content.ReadAsStringAsync().Result;
-                }
-                return resutl;
+                task.Result.EnsureSuccessStatusCode();
+                return task.Result.Content.ReadAsStringAsync().Result;
             }
         }
         public static async Task<T> GetJsonAsync<T>(string url)

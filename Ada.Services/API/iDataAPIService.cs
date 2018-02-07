@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Ada.Core;
 using Ada.Core.Domain.API;
 using Ada.Core.Domain.Resource;
 using Ada.Core.Tools;
+using Ada.Core.ViewModel.API;
 using Ada.Core.ViewModel.API.iDataAPI;
 using Newtonsoft.Json;
 
@@ -23,7 +25,7 @@ namespace Ada.Services.API
             _dbContext = dbContext;
             _mediaRepository = mediaRepository;
         }
-        public string GetWeiXinArticles(WeiXinProParams wxparams)
+        public RequestResult GetWeiXinArticles(WeiXinProParams wxparams)
         {
             var apiInfo = _apiInterfacesService.GetAPIInterfacesByCallIndex(wxparams.CallIndex);
 
@@ -48,8 +50,6 @@ namespace Ada.Services.API
             for (int i = 1; i <= page; i++)
             {
                 var apiUrl = urlparams + "&pageToken=" + i;
-                APIRequestRecord record = new APIRequestRecord();
-                record.Id = IdBuilder.CreateIdNum();
                 string htmlstr;
                 try
                 {
@@ -57,34 +57,43 @@ namespace Ada.Services.API
                 }
                 catch (Exception ex)
                 {
-                    record.RequestParameters = apiUrl;
-                    record.IsSuccess = false;
-                    record.Retcode = "500";
-                    record.ReponseContent = ex.Message;
-                    record.Retmsg = "请求异常";
-                    record.ReponseDate = DateTime.Now;
-                    apiInfo.APIRequestRecords.Add(record);
+                    APIRequestRecord exrecord = new APIRequestRecord();
+                    exrecord.Id = IdBuilder.CreateIdNum();
+                    exrecord.RequestParameters = apiUrl;
+                    exrecord.IsSuccess = false;
+                    exrecord.Retcode = "500";
+                    exrecord.ReponseContent = ex.Message;
+                    exrecord.Retmsg = "请求异常";
+                    exrecord.ReponseDate = DateTime.Now;
+                    apiInfo.APIRequestRecords.Add(exrecord);
                     break;
                 }
-
+                if (string.IsNullOrWhiteSpace(htmlstr))
+                {
+                    break;
+                }
                 var result = JsonConvert.DeserializeObject<WeiXinProJSON>(htmlstr);
                 //增加请求记录
-                record.IsSuccess = result.retcode == ReturnCode.请求成功;
-                record.RequestParameters = apiUrl;
-                record.Retcode = result.retcode.GetHashCode().ToString();
-                record.Retmsg = result.message;
-                if (record.IsSuccess == false)
+                if (wxparams.IsLog)
                 {
-                    record.ReponseContent = htmlstr;
+                    APIRequestRecord record = new APIRequestRecord();
+                    record.Id = IdBuilder.CreateIdNum();
+                    record.IsSuccess = result.retcode == ReturnCode.请求成功;
+                    record.RequestParameters = apiUrl;
+                    record.Retcode = result.retcode.GetHashCode().ToString();
+                    record.Retmsg = result.message;
+                    if (record.IsSuccess == false)
+                    {
+                        record.ReponseContent = htmlstr;
+                    }
+                    else
+                    {
+                        record.ReponseContent = "当前采集文章数：" + result.data.Count;
+                    }
+                    record.ReponseDate = DateTime.Now;
+                    apiInfo.APIRequestRecords.Add(record);
                 }
-                else
-                {
-                    record.ReponseContent = "当前采集文章数：" + result.data.Count;
-                }
-
-                
-                record.ReponseDate = DateTime.Now;
-                apiInfo.APIRequestRecords.Add(record);
+               
                 if (result.retcode != ReturnCode.请求成功)
                 {
                     break;
@@ -100,7 +109,7 @@ namespace Ada.Services.API
                             article.ArticleIdx = articleData.idx;
                             article.ArticleUrl = articleData.url;
                             article.IsOriginal = articleData.original;
-                            article.OriginUrl = articleData.originUrl;
+                            //article.OriginUrl = articleData.originUrl;
                             article.Biz = articleData.biz;
                             article.CommentCount = articleData.commentCount;
                             article.Content = articleData.content;
@@ -121,7 +130,7 @@ namespace Ada.Services.API
                             article.ArticleIdx = articleData.idx;
                             article.ArticleUrl = articleData.url;
                             article.IsOriginal = articleData.original;
-                            article.OriginUrl = articleData.originUrl;
+                            //article.OriginUrl = articleData.originUrl;
                             article.Biz = articleData.biz;
                             article.CommentCount = articleData.commentCount;
                             article.Content = articleData.content;
@@ -143,13 +152,35 @@ namespace Ada.Services.API
                     break;
                 }
             }
-            var msg = "采集成功！新增：" + addCount + "篇，更新：" + updateCount + "篇";
+            RequestResult requestResult=new RequestResult();
+            requestResult.AddCount = addCount;
+            requestResult.UpdateCount = updateCount;
+            requestResult.Message = "采集成功！新增：" + addCount + "篇，更新：" + updateCount + "篇";
+            
             _dbContext.SaveChanges();
-            return msg;
+            //try
+            //{
+            //    _dbContext.SaveChanges();
+            //}
+            //catch (DbEntityValidationException ex)
+            //{
+            //    StringBuilder errors = new StringBuilder();
+            //    IEnumerable<DbEntityValidationResult> validationResult = ex.EntityValidationErrors;
+            //    foreach (DbEntityValidationResult result in validationResult)
+            //    {
+            //        ICollection<DbValidationError> validationError = result.ValidationErrors;
+            //        foreach (DbValidationError err in validationError)
+            //        {
+            //            errors.Append(err.PropertyName + ":" + err.ErrorMessage + "\r\n");
+            //        }
+            //    }
+            //    requestResult.Message = errors.ToString();
+            //}
+            return requestResult;
         }
         
 
-        public string GetWeiBoArticles(WeiBoParams wbparams)
+        public RequestResult GetWeiBoArticles(WeiBoParams wbparams)
         {
             var apiInfo = _apiInterfacesService.GetAPIInterfacesByCallIndex(wbparams.CallIndex);
 
@@ -170,8 +201,7 @@ namespace Ada.Services.API
             for (int i = 1; i <= page; i++)
             {
                 var apiUrl = urlparams + "&pageToken=" + i;
-                APIRequestRecord record = new APIRequestRecord();
-                record.Id = IdBuilder.CreateIdNum();
+               
                 string htmlstr;
                 try
                 {
@@ -179,33 +209,43 @@ namespace Ada.Services.API
                 }
                 catch (Exception ex)
                 {
-                    record.RequestParameters = apiUrl;
-                    record.IsSuccess = false;
-                    record.Retcode = "500";
-                    record.ReponseContent = ex.Message;
-                    record.Retmsg = "请求异常";
-                    record.ReponseDate = DateTime.Now;
-                    apiInfo.APIRequestRecords.Add(record);
+                    APIRequestRecord exrecord = new APIRequestRecord();
+                    exrecord.Id = IdBuilder.CreateIdNum();
+                    exrecord.RequestParameters = apiUrl;
+                    exrecord.IsSuccess = false;
+                    exrecord.Retcode = "500";
+                    exrecord.ReponseContent = ex.Message;
+                    exrecord.Retmsg = "请求异常";
+                    exrecord.ReponseDate = DateTime.Now;
+                    apiInfo.APIRequestRecords.Add(exrecord);
                     break;
                 }
-
+                if (string.IsNullOrWhiteSpace(htmlstr))
+                {
+                    break;
+                }
                 var result = JsonConvert.DeserializeObject<WeiBoJSON>(htmlstr);
                 //增加请求记录
-                record.IsSuccess = result.retcode == ReturnCode.请求成功;
-                record.RequestParameters = apiUrl;
-                record.Retcode = result.retcode.GetHashCode().ToString();
-                record.Retmsg = result.message;
-              
-                if (record.IsSuccess == false)
+                if (wbparams.IsLog)
                 {
-                    record.ReponseContent = htmlstr;
+                    APIRequestRecord record = new APIRequestRecord();
+                    record.Id = IdBuilder.CreateIdNum();
+                    record.IsSuccess = result.retcode == ReturnCode.请求成功;
+                    record.RequestParameters = apiUrl;
+                    record.Retcode = result.retcode.GetHashCode().ToString();
+                    record.Retmsg = result.message;
+                    if (record.IsSuccess == false)
+                    {
+                        record.ReponseContent = htmlstr;
+                    }
+                    else
+                    {
+                        record.ReponseContent = "当前采集文章数：" + result.data.Count;
+                    }
+                    record.ReponseDate = DateTime.Now;
+                    apiInfo.APIRequestRecords.Add(record);
                 }
-                else
-                {
-                    record.ReponseContent = "当前采集文章数：" + result.data.Count;
-                }
-                record.ReponseDate = DateTime.Now;
-                apiInfo.APIRequestRecords.Add(record);
+
                 if (result.retcode != ReturnCode.请求成功)
                 {
                     break;
@@ -279,9 +319,12 @@ namespace Ada.Services.API
                     break;
                 }
             }
-            var msg = "采集成功！新增：" + addCount + "篇，更新：" + updateCount + "篇";
+            RequestResult requestResult = new RequestResult();
+            requestResult.AddCount = addCount;
+            requestResult.UpdateCount = updateCount;
+            requestResult.Message = "采集成功！新增：" + addCount + "篇，更新：" + updateCount + "篇";
             _dbContext.SaveChanges();
-            return msg;
+            return requestResult;
         }
 
         private string GetAuthenticateType(int? verifiedtype)

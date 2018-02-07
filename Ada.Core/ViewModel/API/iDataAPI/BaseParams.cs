@@ -9,6 +9,10 @@ namespace Ada.Core.ViewModel.API.iDataAPI
 {
     public class BaseParams
     {
+        public BaseParams()
+        {
+            IsLog = true;
+        }
         /// <summary>
         /// API
         /// </summary>
@@ -24,5 +28,10 @@ namespace Ada.Core.ViewModel.API.iDataAPI
         /// </summary>
         [Display(Name = "取页数")]
         public int? PageNum { get; set; }
+        /// <summary>
+        /// 是否记录日志
+        /// </summary>
+        [Display(Name = "是否记录日志")]
+        public bool IsLog { get; set; }
     }
 }

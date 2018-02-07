@@ -749,7 +749,7 @@ namespace Resource.Controllers
         public ActionResult WeiXinProCollection(WeiXinProParams viewModel)
         {
             var msg = _iDataAPIService.GetWeiXinArticles(viewModel);
-            return Json(new { State = 1, Msg = msg });
+            return Json(new { State = 1, Msg = msg.Message });
         }
         
         public ActionResult WeiboArticles(string id)
@@ -771,7 +771,7 @@ namespace Resource.Controllers
         public ActionResult WeiboCollection(WeiBoParams viewModel)
         {
             var msg = _iDataAPIService.GetWeiBoArticles(viewModel);
-            return Json(new { State = 1, Msg = msg });
+            return Json(new { State = 1, Msg = msg.Message });
         }
         private Media IsExist(MediaView viewModel, out string msg, bool isSelf = false, bool isDelete = false)
         {
