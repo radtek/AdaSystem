@@ -1,13 +1,16 @@
 ﻿
 @using System.Web.Optimization
 @using Ada.Core.Infrastructure
+@using Ada.Services.Admin
 @using Ada.Services.Resource
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
     ViewBag.Title = "微信资源";
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("weixin");
     var adpositions = meidaType.AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
+    var yesnos = fieldService.GetFieldsByKey("YesOrNo").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 @Html.Partial("Bread")
 
@@ -31,36 +34,36 @@
                         <div class="row">
                             <div class="col-md-12">
                                 @foreach (var item in tags)
-                                {
-                                    <div class="checkbox checkbox-success checkbox-inline">
-                                        <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
-                                        <label for="@item.Id">@item.TagName</label>
-                                    </div>
-                                }
+                    {
+                        <div class="checkbox checkbox-success checkbox-inline">
+                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
+                            <label for="@item.Id">@item.TagName</label>
+                        </div>
+        }
                             </div>
                         </div>
 
                     </div>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <div class="form-group">
                         @Html.LabelFor(d => d.MediaName, "公众号名称", new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
                     </div>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <div class="form-group">
                         @Html.LabelFor(d => d.MediaID, "微信号", new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control" })
                     </div>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <div class="form-group">
                         @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
                         @Html.DropDownListFor(d => d.AdPositionName, adpositions, "不限", new { @class = "form-control" })
                     </div>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <div class="form-group">
                         @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart).ToString(), new { @class = "control-label" })
                         <div class="input-daterange input-group">
@@ -70,16 +73,28 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <div class="form-group">
                         @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName).ToString(), new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control" })
                     </div>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <div class="form-group">
                         @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor).ToString(), new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.HasArticles, Html.DisplayNameFor(d => d.HasArticles).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.HasArticles, yesnos, "请选择", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.IsSlide, Html.DisplayNameFor(d => d.IsSlide).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.IsSlide, yesnos, "请选择", new { @class = "form-control" })
                     </div>
                 </div>
                 <div class="col-sm-6">
@@ -219,7 +234,14 @@
                         field: 'FansNum',
                         title: '@Html.DisplayNameFor(d=>d.FansNum)',
                         valign: "middle",
-                        align: "center"
+                        ////align: "center",
+                        formatter: function (value) {
+                            var fans = "暂无数据";
+                            if (value) {
+                                fans = value + " 万";
+                            }
+                            return "<span class='label label-info'>" + fans+"</span>";
+                        }
                     },
                     {
                         field: 'AvgReadNum',
@@ -292,9 +314,9 @@
                         valign: "middle",
                         align: "center",
                         formatter: function (value) {
-                            return "<a class='btn btn-success btn-sm' href='@Url.Action("Update","Media")?id=" + value + "');' target='_blank'><i class='fa fa-pencil'></i> 编辑</a> " +
-                                "<a class='btn btn-warning btn-sm' href='@Url.Action("Comment", "Media")?id=" + value + "');' target='_blank'><i class='fa fa-commenting'></i> 评价</a> " +
-                                "<button class='btn btn-danger btn-sm' onclick=\"cancle('" + value +"');\"><i class='fa fa-trash-o'></i> 删除</button>";
+                            return "<div class='btn-group'><a class='btn btn-success btn-outline btn-xs' href='@Url.Action("Update","Media")?id=" + value + "');' target='_blank'><i class='fa fa-pencil'></i> 编辑</a> " +
+                                "<a class='btn btn-warning btn-outline btn-xs' href='@Url.Action("Comment", "Media")?id=" + value + "');' target='_blank'><i class='fa fa-commenting'></i> 评价</a> " +
+                                "<button class='btn btn-danger btn-outline btn-xs' onclick=\"cancle('" + value +"');\"><i class='fa fa-trash-o'></i> 删除</button></div>";
                         }
                     }
                 ]

@@ -21,7 +21,7 @@ namespace Resource.Controllers
         private readonly IMediaService _mediaService;
         private readonly IRepository<Media> _repository;
         private readonly IRepository<MediaTag> _mediaTagRepository;
-   
+
         public SinaBlogController(IMediaService mediaService,
             IRepository<Media> repository,
 
@@ -39,8 +39,8 @@ namespace Resource.Controllers
         {
             return View();
         }
-       
-       
+
+
         public ActionResult Import()
         {
             string path = Server.MapPath("~/upload/weibo.xlsx");
@@ -135,11 +135,47 @@ namespace Resource.Controllers
                     media.Transactor = row.GetCell(10)?.ToString();
                     media.TransactorId = row.GetCell(11)?.ToString();
                     media.Status = Consts.StateNormal;
+                    media.IsSlide = true;
                     _mediaService.Add(media);
                     count++;
                 }
             }
             return Content("导入成功" + count + "条资源");
+        }
+
+        public ActionResult IsCollection()
+        {
+            string path = Server.MapPath("~/upload/wbcj.xlsx");
+            int count = 0;
+            using (FileStream ms = new FileStream(path, FileMode.Open))
+            {
+                //创建工作薄
+                IWorkbook wk = new XSSFWorkbook(ms);
+                //1.获取第一个工作表
+                ISheet sheet = wk.GetSheetAt(0);
+                if (sheet.LastRowNum <= 1)
+                {
+                    return Content("此文件没有导入数据，请填充数据再进行导入");
+                }
+
+                for (int i = 1; i <= sheet.LastRowNum; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+                    var uid = row.GetCell(1)?.ToString();
+                    if (string.IsNullOrWhiteSpace(uid))
+                    {
+                        continue;
+                    }
+                    var temp = _repository.LoadEntities(d =>
+                        d.MediaID == uid.Trim() && d.MediaType.CallIndex == "sinablog" && d.IsDelete == false).FirstOrDefault();
+                    if (temp == null) continue;
+                    temp.MediaLink = uid;
+                    temp.IsSlide = false;
+                    _mediaService.Update(temp);
+                    count++;
+                }
+            }
+            return Content("共有" + count + "条资源加入不采集行列");
         }
     }
 }

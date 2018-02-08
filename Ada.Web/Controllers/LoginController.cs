@@ -213,18 +213,6 @@ namespace Ada.Web.Controllers
 
 
         }
-        //public ActionResult Test()
-        //{
-
-        //    var articles = _mediaArticle.LoadEntities(d => d.IsDelete == false && d.Media.MediaType.CallIndex == "weixin"&&d.Media.Status==Consts.StateNormal);
-        //    var temp = from a in articles
-        //        group a by a.MediaId
-        //        into m
-        //        select new{m.Key,m.Average(d=>d.PublishDate)};
-
-
-
-
-        //}
+       
     }
 }

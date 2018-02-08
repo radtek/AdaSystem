@@ -82,34 +82,41 @@ namespace Ada.Services.API
                     break;
                 }
                 var result = JsonConvert.DeserializeObject<WeiXinProJSON>(htmlstr);
-                //增加请求记录
-                if (wxparams.IsLog)
+                //记录日志
+                //成功日志
+                if (result.retcode == ReturnCode.请求成功 && wxparams.IsLog)
                 {
                     APIRequestRecord record = new APIRequestRecord();
                     record.Id = IdBuilder.CreateIdNum();
-                    record.IsSuccess = result.retcode == ReturnCode.请求成功;
+                    record.IsSuccess = true;
                     record.RequestParameters = apiUrl;
                     record.Retcode = result.retcode.GetHashCode().ToString();
                     record.Retmsg = result.message;
-                    if (record.IsSuccess == false)
-                    {
-                        record.ReponseContent = htmlstr;
-                    }
-                    else
-                    {
-                        record.ReponseContent = "当前采集文章数：" + result.data.Count;
-                    }
+                    record.ReponseContent = "当前采集文章数：" + result.data.Count;
                     record.ReponseDate = DateTime.Now;
                     apiInfo.APIRequestRecords.Add(record);
                 }
-
+                //失败日志
                 if (result.retcode != ReturnCode.请求成功)
                 {
+                    APIRequestRecord record = new APIRequestRecord();
+                    record.Id = IdBuilder.CreateIdNum();
+                    record.IsSuccess = false;
+                    record.RequestParameters = apiUrl;
+                    record.Retcode = result.retcode.GetHashCode().ToString();
+                    record.Retmsg = result.message;
+                    record.ReponseContent = htmlstr;
+                    record.ReponseDate = DateTime.Now;
+                    apiInfo.APIRequestRecords.Add(record);
                     break;
                 }
                 if (result.data.Count > 0)
                 {
-                    var media = _mediaRepository.LoadEntities(d => d.MediaID == wxparams.UID).FirstOrDefault();
+                    var media = _mediaRepository.LoadEntities(d => d.MediaID == wxparams.UID && d.IsDelete == false).FirstOrDefault();
+                    if (media == null)
+                    {
+                        break;
+                    }
                     foreach (var articleData in result.data)
                     {
                         var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
@@ -157,7 +164,13 @@ namespace Ada.Services.API
                 }
                 else
                 {
+
                     //请求成功，但记录为空的
+                    if (!string.IsNullOrWhiteSpace(wxparams.UID))
+                    {
+                        var media = _mediaRepository.LoadEntities(d => d.MediaID == wxparams.UID && d.IsDelete == false).FirstOrDefault();
+                        if (media != null) media.IsSlide = false;
+                    }
                     APIRequestRecord norecord = new APIRequestRecord();
                     norecord.Id = IdBuilder.CreateIdNum();
                     norecord.RequestParameters = apiUrl;
@@ -236,6 +249,7 @@ namespace Ada.Services.API
                     {
                         if (request == apiInfo.TimeOut)
                         {
+                            //异常日期
                             APIRequestRecord exrecord = new APIRequestRecord();
                             exrecord.Id = IdBuilder.CreateIdNum();
                             exrecord.RequestParameters = apiUrl;
@@ -254,36 +268,41 @@ namespace Ada.Services.API
                     break;
                 }
                 var result = JsonConvert.DeserializeObject<WeiBoJSON>(htmlstr);
-                //增加请求记录
-                if (wbparams.IsLog)
+                //记录日志
+                //成功日志
+                if (result.retcode == ReturnCode.请求成功 && wbparams.IsLog)
                 {
                     APIRequestRecord record = new APIRequestRecord();
                     record.Id = IdBuilder.CreateIdNum();
-                    record.IsSuccess = result.retcode == ReturnCode.请求成功;
+                    record.IsSuccess = true;
                     record.RequestParameters = apiUrl;
                     record.Retcode = result.retcode.GetHashCode().ToString();
                     record.Retmsg = result.message;
-                    if (record.IsSuccess == false)
-                    {
-                        record.ReponseContent = htmlstr;
-                    }
-                    else
-                    {
-                        record.ReponseContent = "当前采集文章数：" + result.data.Count;
-                    }
+                    record.ReponseContent = "当前采集文章数：" + result.data.Count;
                     record.ReponseDate = DateTime.Now;
                     apiInfo.APIRequestRecords.Add(record);
                 }
-
+                //失败日志
                 if (result.retcode != ReturnCode.请求成功)
                 {
+                    APIRequestRecord record = new APIRequestRecord();
+                    record.Id = IdBuilder.CreateIdNum();
+                    record.IsSuccess = false;
+                    record.RequestParameters = apiUrl;
+                    record.Retcode = result.retcode.GetHashCode().ToString();
+                    record.Retmsg = result.message;
+                    record.ReponseContent = htmlstr;
+                    record.ReponseDate = DateTime.Now;
+                    apiInfo.APIRequestRecords.Add(record);
                     break;
                 }
-
-
                 if (result.data.Count > 0)
                 {
-                    var media = _mediaRepository.LoadEntities(d => d.MediaID == wbparams.UID).FirstOrDefault();
+                    var media = _mediaRepository.LoadEntities(d => d.MediaID == wbparams.UID && d.IsDelete == false).FirstOrDefault();
+                    if (media == null)
+                    {
+                        break;
+                    }
                     //根据第一个数据更新微博信息
                     var mediaInfo = result.data[0].from;
                     media.MediaName = mediaInfo.name;
@@ -346,7 +365,12 @@ namespace Ada.Services.API
                 }
                 else
                 {
-                    //请求成功，但记录为空的
+                    //第一页请求成功，但记录为空的
+                    if (!string.IsNullOrWhiteSpace(wbparams.UID) && i == 1)
+                    {
+                        var media = _mediaRepository.LoadEntities(d => d.MediaID == wbparams.UID && d.IsDelete == false).FirstOrDefault();
+                        if (media != null) media.IsSlide = false;
+                    }
                     APIRequestRecord norecord = new APIRequestRecord();
                     norecord.Id = IdBuilder.CreateIdNum();
                     norecord.RequestParameters = apiUrl;
@@ -357,10 +381,6 @@ namespace Ada.Services.API
                     norecord.ReponseDate = DateTime.Now;
                     apiInfo.APIRequestRecords.Add(norecord);
                 }
-                //if (apiInfo.TimeOut > 0 && apiInfo.TimeOut != null)
-                //{
-                //    Thread.Sleep(apiInfo.TimeOut.Value);
-                //}
                 //如果没有下一页就退出
                 if (result.hasNext == false)
                 {
@@ -419,9 +439,7 @@ namespace Ada.Services.API
                 case "f":
                     temp = "女";
                     break;
-
             }
-
             return temp;
 
         }

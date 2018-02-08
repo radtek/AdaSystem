@@ -526,7 +526,7 @@ function confirmData() {
 //    return temp;
 //}
 function getData() {
-    var temp = [], tax = $("#Tax").val(), now = moment().add(10, "days").format('YYYY-MM-DD');
+    var temp = [], tax = $("#Tax").val(), now = moment().format('YYYY-MM-DD');
     $.each(selections.rows,
         function (k, v) {
             temp.push({

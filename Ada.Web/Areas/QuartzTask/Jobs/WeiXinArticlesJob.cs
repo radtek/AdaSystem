@@ -31,7 +31,7 @@ namespace QuartzTask.Jobs
             Task.Factory.StartNew(() =>
             {
                 _logger.Info("微信自动任务开始：" + DateTime.Now);
-                var medias = _repository.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "weixin");
+                var medias = _repository.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "weixin"&&d.IsSlide==true);
                 long addcount = 0;
                 long updatecount = 0;
                 foreach (var media in medias)
@@ -39,8 +39,8 @@ namespace QuartzTask.Jobs
                     if (string.IsNullOrWhiteSpace(media.MediaID)) continue;
                     WeiXinProParams wxparams = new WeiXinProParams
                     {
-                        PageNum = 6,
-                        Range = "w",
+                        PageNum = 10,
+                        Range = "m",
                         CallIndex = "weixinpro",
                         IsLog = false,
                         UID = media.MediaID.Trim()

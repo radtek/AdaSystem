@@ -149,9 +149,9 @@ namespace Ada.Core.Domain.Resource
         [Display(Name = "是否置顶")]
         public bool? IsTop { get; set; }
         /// <summary>
-        /// 是否轮播
+        /// 是否采集
         /// </summary>
-        [Display(Name = "是否轮播")]
+        [Display(Name = "是否采集")]
         public bool? IsSlide { get; set; }
         /// <summary>
         /// 是否推荐

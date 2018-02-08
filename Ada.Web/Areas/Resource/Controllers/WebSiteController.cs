@@ -145,6 +145,7 @@ namespace Resource.Controllers
                     media.TransactorId = row.GetCell(17)?.ToString();
                     
                     media.Status = Consts.StateNormal;
+                    media.IsSlide = true;
                     _mediaService.Add(media);
                     count++;
                 }

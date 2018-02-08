@@ -21,19 +21,19 @@ namespace Resource.Controllers
         private readonly IMediaService _mediaService;
         private readonly IRepository<Media> _repository;
         private readonly IRepository<MediaTag> _mediaTagRepository;
-        
+
         public WeiXinController(IMediaService mediaService,
             IRepository<Media> repository,
-        
+
             IRepository<MediaTag> mediaTagRepository
-            
+
         )
         {
             _mediaService = mediaService;
             _repository = repository;
-       
+
             _mediaTagRepository = mediaTagRepository;
-            
+
         }
         public ActionResult Index()
         {
@@ -129,16 +129,55 @@ namespace Resource.Controllers
                             media.MediaTags.Add(mediaTag);
                         }
                     }
-                   
+
                     media.Remark = row.GetCell(8)?.ToString();
                     media.Transactor = row.GetCell(10)?.ToString();
                     media.TransactorId = row.GetCell(11)?.ToString();
                     media.Status = Consts.StateNormal;
+                    media.IsSlide = false;
                     _mediaService.Add(media);
                     count++;
                 }
             }
             return Content("导入成功" + count + "条资源");
+        }
+        public ActionResult IsCollection()
+        {
+            string path = Server.MapPath("~/upload/wxcj.xlsx");
+            int count = 0;
+            using (FileStream ms = new FileStream(path, FileMode.Open))
+            {
+                //创建工作薄
+                IWorkbook wk = new XSSFWorkbook(ms);
+                //1.获取第一个工作表
+                ISheet sheet = wk.GetSheetAt(0);
+                if (sheet.LastRowNum <= 1)
+                {
+                    return Content("此文件没有导入数据，请填充数据再进行导入");
+                }
+
+                for (int i = 1; i <= sheet.LastRowNum; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+                    var uid = row.GetCell(1)?.ToString();
+                    var name = row.GetCell(0)?.ToString();
+                    if (string.IsNullOrWhiteSpace(uid))
+                    {
+                        continue;
+                    }
+                    var temp = _repository.LoadEntities(d =>
+                        d.MediaID.Equals(uid.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.MediaType.CallIndex == "weixin" && d.IsDelete == false).FirstOrDefault();
+                    if (temp == null) continue;
+                    temp.IsSlide = true;
+                    if (!string.IsNullOrWhiteSpace(name))
+                    {
+                        temp.MediaName = name;
+                    }
+                    _mediaService.Update(temp);
+                    count++;
+                }
+            }
+            return Content("共有" + count + "条资源加入采集行列");
         }
     }
 }

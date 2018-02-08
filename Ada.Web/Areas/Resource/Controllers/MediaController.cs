@@ -310,23 +310,23 @@ namespace Resource.Controllers
                 {
                     continue;
                 }
-                //媒体ID
-                if (row.GetCell(5) != null)
-                {
-                    //校验ID
-                    var mediaId = row.GetCell(5).ToString().Trim();
-                    var temp = _repository.LoadEntities(d =>
-                        d.MediaID.Equals(mediaId, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
-                        d.MediaTypeId == media.MediaTypeId && d.Id != media.Id).FirstOrDefault();
-                    if (temp != null)
-                    {
-                        media.IsDelete = true;
-                    }
-                    else
-                    {
-                        media.MediaID = row.GetCell(5).ToString().Trim();
-                    }
-                }
+                ////媒体ID
+                //if (row.GetCell(5) != null)
+                //{
+                //    //校验ID
+                //    var mediaId = row.GetCell(5).ToString().Trim();
+                //    var temp = _repository.LoadEntities(d =>
+                //        d.MediaID.Equals(mediaId, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
+                //        d.MediaTypeId == media.MediaTypeId && d.Id != media.Id).FirstOrDefault();
+                //    if (temp != null)
+                //    {
+                //        media.IsDelete = true;
+                //    }
+                //    else
+                //    {
+                //        media.MediaID = row.GetCell(5).ToString().Trim();
+                //    }
+                //}
                 //修改粉丝
                 decimal.TryParse(row.GetCell(6)?.ToString(), out var fansNum);
                 media.FansNum = Utils.SetFansNum(fansNum);
@@ -504,7 +504,7 @@ namespace Resource.Controllers
             entity.Status = viewModel.Status;
             entity.ClickNum = viewModel.ClickNum;
             entity.IsHot = viewModel.IsHot;
-            entity.IsSlide = viewModel.IsSlide;
+            entity.IsSlide = true;
             entity.IsRecommend = viewModel.IsRecommend;
             entity.MediaTypeId = viewModel.MediaTypeId;
             entity.LinkManId = viewModel.LinkManId;
@@ -581,7 +581,7 @@ namespace Resource.Controllers
             entity.Status = item.Status;
             entity.ClickNum = item.ClickNum;
             entity.IsHot = item.IsHot;
-            entity.IsSlide = item.IsSlide;
+            //entity.IsSlide = item.IsSlide;
             entity.IsRecommend = item.IsRecommend;
 
             //联系人
@@ -657,7 +657,7 @@ namespace Resource.Controllers
             entity.Status = viewModel.Status;
             entity.ClickNum = viewModel.ClickNum;
             entity.IsHot = viewModel.IsHot;
-            entity.IsSlide = viewModel.IsSlide;
+            //entity.IsSlide = viewModel.IsSlide;
             entity.IsRecommend = viewModel.IsRecommend;
             entity.Cooperation = viewModel.Cooperation;
             //联系人

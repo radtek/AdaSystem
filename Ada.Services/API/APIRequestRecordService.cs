@@ -41,7 +41,18 @@ namespace Ada.Services.API
             {
                 allList = allList.Where(d => d.RequestParameters.Contains(viewModel.search));
             }
-
+            if (!string.IsNullOrWhiteSpace(viewModel.Retmsg))
+            {
+                allList = allList.Where(d => d.Retmsg.Contains(viewModel.Retmsg));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.APIName))
+            {
+                allList = allList.Where(d => d.APIInterfaces.APIName.Contains(viewModel.APIName));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.Retcode))
+            {
+                allList = allList.Where(d => d.Retcode==viewModel.Retcode);
+            }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;

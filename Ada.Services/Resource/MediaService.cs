@@ -65,7 +65,14 @@ namespace Ada.Services.Resource
                 {
                     allList = allList.Where(d => d.MediaArticles.Count == 0);
                 }
-                
+                else
+                {
+                    allList = allList.Where(d => d.MediaArticles.Count > 0);
+                }
+            }
+            if (viewModel.IsSlide != null)
+            {
+                allList = allList.Where(d => d.IsSlide == viewModel.IsSlide);
             }
             if (!string.IsNullOrWhiteSpace(viewModel.Areas))
             {

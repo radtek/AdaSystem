@@ -139,6 +139,7 @@ namespace Resource.Controllers
                     media.Transactor = row.GetCell(11)?.ToString();
                     media.TransactorId = row.GetCell(12)?.ToString();
                     media.Status = Consts.StateNormal;
+                    media.IsSlide = true;
                     _mediaService.Add(media);
                     count++;
 
