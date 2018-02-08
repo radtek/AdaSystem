@@ -71,6 +71,13 @@ formatter.yesorno = function (value, row, index) {
         return '<a href="javascript:;"><i class="fa fa-times text-danger"></i></a>';
     }
 };
+formatter.isOpen = function (value, row, index) {
+    if (value == 1) {
+        return '<span><i class="fa fa-toggle-on text-navy"></i></span>';
+    } else {
+        return '<span><i class="fa fa-toggle-off text-warning"></i></span>';
+    }
+};
 formatter.islock = function (value, row, index) {
     if (value == 1) {
         return '<span><i class="fa fa-lock text-navy"></i></span>';
@@ -137,6 +144,18 @@ formatter.purchaseStatus = function (value, row, index) {
         return "<span class='label label-success'>已完成</span>";
     } else if (value == -1){
         return "<span class='label label-danger'>采购失败</span>";
+    }
+    return "";
+};
+formatter.blogLevel = function (value) {
+    if (value == "黄V") {
+        return " <span class='label label-warning'>V</span>";
+    } else if (value == "蓝V") {
+        return " <span class='label label-success'>V</span>";
+    } else if (value == "金V") {
+        return " <span class='label label-danger'>V</span>";
+    } else if (value == "达人") {
+        return " <span><i class='fa fa-star text-danger'></i></span>";
     }
     return "";
 };

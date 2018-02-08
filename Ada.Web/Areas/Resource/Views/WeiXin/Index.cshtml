@@ -195,13 +195,13 @@
                     {
                         checkbox: true
                     },
-                    {
+                    @*{
                         field: 'Status',
                         title: '@Html.DisplayNameFor(d=>d.Status)',
                         valign: "middle",
                         formatter: formatter.normalStatus,
                         align: "center"
-                    },
+                    },*@
                     {
                         field: 'MediaName',
                         title: '微信公众号',
@@ -211,7 +211,7 @@
                             var url =
                                 "<a class='label' href='http://weixin.sogou.com/weixin?type=1&query=" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
                             return url +
-                                " <button class='btn btn-warning btn-xs' onclick='details(\"@Url.Action("WeiXinArticles","Media")?id="+row.Id+"\");'><i class='fa fa-rss-square'></i> 详情</button>";
+                                " <button class='btn btn-warning btn-xs' onclick='details(\"@Url.Action("WeiXinArticles","Media")?id="+row.Id+"\");'>详</button>";
                         }
                     },
 
@@ -223,23 +223,24 @@
                     },
                     {
                         field: 'AvgReadNum',
-                        title: '@Html.DisplayNameFor(d=>d.AvgReadNum)',
-                        align: "center", valign: "middle"
-                    },
-                    {
-                        field: 'LastReadNum',
-                        title: '@Html.DisplayNameFor(d=>d.LastReadNum)',
-                        align: "center", valign: "middle"
-                    },
-                    {
-                        field: 'LastPushDate',
-                        title: '@Html.DisplayNameFor(d=>d.LastPushDate)',
-                        align: "center", valign: "middle", formatter: function(value) {
-                            if (value) {
-                                return moment(value).format("YYYY-MM-DD HH:mm");
+                        title: '微信指数（近十天）',
+                        valign: "middle",
+                        formatter: function (value, row) {
+                            var date = "暂未发文";
+                            if (row.LastPushDate) {
+                                date = moment(row.LastPushDate).format("YYYY-MM-DD HH:mm");
                             }
+                            return "平均头条阅读数：" +
+                                (row.AvgReadNum||0) +
+                                "<br />" +
+                                "最近头条阅读数：" +
+                                (row.LastReadNum||0) +
+                                "<br />" +
+                                "最近发文日期：" +
+                                date ;
                         }
                     },
+                   
                     {
                         field: 'MediaTagStr',
                         title: '@Html.DisplayNameFor(d=>d.MediaTagStr)',

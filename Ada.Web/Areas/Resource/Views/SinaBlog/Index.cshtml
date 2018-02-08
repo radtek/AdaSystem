@@ -1,13 +1,16 @@
 ﻿
 @using System.Web.Optimization
 @using Ada.Core.Infrastructure
+@using Ada.Services.Admin
 @using Ada.Services.Resource
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
     ViewBag.Title = "微博资源";
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
     var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("sinablog");
     var adpositions = meidaType.AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
+    var yesnos = fieldService.GetFieldsByKey("YesOrNo").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 @Html.Partial("Bread")
 
@@ -82,6 +85,12 @@
                         @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control" })
                     </div>
                 </div>
+                @*<div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.HasArticles, Html.DisplayNameFor(d => d.HasArticles).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.HasArticles, yesnos, "请选择", new { @class = "form-control" })
+                    </div>
+                </div>*@
                 <div class="col-sm-6">
                     <div class="form-group">
                         @Html.LabelFor(d => d.MediaNames, Html.DisplayNameFor(d => d.MediaNames).ToString(), new { @class = "control-label" })
@@ -198,23 +207,38 @@
                         {
                             checkbox: true
                         },
+
                     {
-                        field: 'Status',
-                        title: '@Html.DisplayNameFor(d=>d.Status)',
-                        valign: "middle",
-                        formatter: formatter.normalStatus,
-                        align: "center"
+                        field: 'MediaLogo',
+                        //title: '@Html.DisplayNameFor(d=>d.MediaLogo)',
+                        align: "right", valign: "middle",
+                        formatter: function (value, row) {
+                            if (value) {
+                                return '<img alt="' + row.MediaName + '" class="img-circle" src="' + value + '" style="width: 50px; height: 50px;"/>';
+                            } else {
+                                return '<img alt="' + row.MediaName + '" class="img-circle" src="/Images/blog.png" style="width: 50px; height: 50px;"/>';
+                            }
+
+                        }
                     },
                     {
                         field: 'MediaName',
-                        title: '微博名称',
+                        title: '微博',
                         valign: "middle",
                         align: "left",
                         formatter: function (value, row, index) {
+                            var sex = "";
+                            if (row.Sex=='男') {
+                                sex = '<img alt="男" class="img-circle" src="/Images/man.png" style="width: 25px; height: 25px;"/>';
+                            }
+                            if (row.Sex == '女') {
+                                sex = '<img alt="女" class="img-circle" src="/Images/lady.png" style="width: 25px; height: 25px;"/>';
+                            }
                            var url =
                                 "<a class='label' href='https://weibo.com/u/" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
-                            return url +
-                                " <button class='btn btn-warning btn-xs' onclick='details(\"@Url.Action("WeiboArticles","Media")?id="+row.Id+"\");'><i class='fa fa-rss-square'></i> 详情</button>";
+                            var level = formatter.blogLevel(row.AuthenticateType);
+                            return sex+ url + level+
+                                " <button class='btn btn-info btn-xs' onclick='details(\"@Url.Action("WeiboArticles","Media")?id="+row.Id+"\");'>详</button>";
                         }
                     },
                     {
@@ -223,18 +247,38 @@
                         valign: "middle",
                         align: "center"
                     },
-                        {
-                            field: 'Sex',
-                            title: '@Html.DisplayNameFor(d=>d.Sex)',
-                            valign: "middle",
-                            align: "center"
-                        },
                     {
                         field: 'FansNum',
                         title: '@Html.DisplayNameFor(d=>d.FansNum)',
                         valign: "middle",
                         align: "center"
+                        },
+                        {
+                            field: 'TransmitNum',
+                            title: '微博指数（近50篇）',
+                            valign: "middle",
+                            formatter: function (value, row) {
+                                var date = "暂未发文";
+                                if (row.BlogLastPushDate) {
+                                    date = moment(row.BlogLastPushDate).format("YYYY-MM-DD HH:mm");
+                                }
+                                return "点赞数：" +
+                                    (row.LikesNum||0) +
+                                    "<br />" +
+                                    "评论数：" +
+                                    (row.CommentNum||0) +
+                                    "<br />" +
+                                    "转发数：" +
+                                    (row.TransmitNum||0) +
+                                    "<br />" +
+                                    "一周博文数：" +
+                                    (row.WeekArticleCount||0) +
+                                    "<br />" +
+                                    "最近博文日期：" +
+                                    date ;
+                            }
                     },
+                       
                     {
                         field: 'MediaTagStr',
                         title: '@Html.DisplayNameFor(d=>d.MediaTagStr)',
@@ -258,13 +302,13 @@
                         title: '@Html.DisplayNameFor(d=>d.Remark)',
                         align: "center", valign: "middle", formatter: formatter.tooltip
                     },
-                    {
+                    @*{
                         field: 'MediaGroups',
                         title: '@Html.DisplayNameFor(d=>d.MediaGroups)',
                         valign: "middle",
                         formatter: formatterGroup,
                         align: "center"
-                    },
+                    },*@
                     {
                         field: 'LinkManName',
                         title: '@Html.DisplayNameFor(d=>d.LinkManName)',
@@ -286,9 +330,9 @@
                         valign: "middle",
                         align: "center",
                         formatter: function (value) {
-                            return "<a class='btn btn-success btn-sm' href='@Url.Action("Update","Media")?id=" + value + "');' target='_blank'><i class='fa fa-pencil'></i> 编辑</a> " +
-                                "<a class='btn btn-warning btn-sm' href='@Url.Action("Comment", "Media")?id=" + value + "');' target='_blank'><i class='fa fa-commenting'></i> 评价</a> " +
-                                "<button class='btn btn-danger btn-sm' onclick=\"cancle('" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button>";
+                            return "<div class='btn-group'><a class='btn btn-success btn-outline btn-xs' href='@Url.Action("Update","Media")?id=" + value + "');' target='_blank'><i class='fa fa-pencil'></i> 编辑</a> " +
+                                "<a class='btn btn-warning btn-outline btn-xs' href='@Url.Action("Comment", "Media")?id=" + value + "');' target='_blank'><i class='fa fa-commenting'></i> 评价</a> " +
+                                "<button class='btn btn-danger btn-outline btn-xs' onclick=\"cancle('" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button></div>";
                         }
                     }
                 ]

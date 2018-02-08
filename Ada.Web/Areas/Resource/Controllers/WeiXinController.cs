@@ -66,7 +66,7 @@ namespace Resource.Controllers
                     Media media = new Media();
                     media.Id = IdBuilder.CreateIdNum();
                     media.MediaTypeId = "X1711091747220001";
-                    media.LinkManId = linkid;
+                    media.LinkManId = linkid.Trim();
                     media.MediaName = row.GetCell(0)?.ToString();
                     media.MediaID = row.GetCell(1)?.ToString();
                     decimal.TryParse(row.GetCell(2)?.ToString(), out var fans);

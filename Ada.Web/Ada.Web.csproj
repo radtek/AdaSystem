@@ -313,6 +313,7 @@
     <Content Include="Images\a7.jpg" />
     <Content Include="Images\a8.jpg" />
     <Content Include="Images\angular_logo.png" />
+    <Content Include="Images\blog.png" />
     <Content Include="Images\dashboard4_1.jpg" />
     <Content Include="Images\dashboard4_2.jpg" />
     <Content Include="Images\email_1.jpg" />
@@ -1124,6 +1125,7 @@
     <Content Include="Images\gallery\9.jpg" />
     <Content Include="Images\gallery\9s.jpg" />
     <Content Include="Images\header.jpg" />
+    <Content Include="Images\lady.png" />
     <Content Include="Images\landing\avatar1.jpg" />
     <Content Include="Images\landing\avatar2.jpg" />
     <Content Include="Images\landing\avatar3.jpg" />
@@ -1137,6 +1139,7 @@
     <Content Include="Images\landing\iphone.jpg" />
     <Content Include="Images\landing\laptop.png" />
     <Content Include="Images\landing\perspective.png" />
+    <Content Include="Images\man.png" />
     <Content Include="Images\noheader.png" />
     <Content Include="Images\off_canvas.jpg" />
     <Content Include="Images\p1.jpg" />

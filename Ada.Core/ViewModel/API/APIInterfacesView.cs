@@ -55,9 +55,9 @@ namespace Ada.Core.ViewModel.API
         [Display(Name = "通用参数")]
         public string Parameters { get; set; }
         /// <summary>
-        /// 请求速度(毫秒)
+        /// 请求失败重复数
         /// </summary>
-        [Display(Name = "请求速度")]
+        [Display(Name = "请求失败重复数")]
         public int? TimeOut { get; set; }
         /// <summary>
         /// 请求参数

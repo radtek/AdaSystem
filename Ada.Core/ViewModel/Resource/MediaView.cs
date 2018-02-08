@@ -87,6 +87,16 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "最近发布日期")]
         public DateTime? LastPushDate { get; set; }
         /// <summary>
+        /// 最近博文日期
+        /// </summary>
+        [Display(Name = "最近博文日期")]
+        public DateTime? BlogLastPushDate { get; set; }
+        /// <summary>
+        /// 一周博文数
+        /// </summary>
+        [Display(Name = "一周博文数")]
+        public int? WeekArticleCount { get; set; }
+        /// <summary>
         /// 认证类型
         /// </summary>
         [Display(Name = "认证类型")]
@@ -313,6 +323,11 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "配合度")]
         public short? Cooperation { get; set; }
+        /// <summary>
+        /// 是否有文章
+        /// </summary>
+        [Display(Name = "是否有文章")]
+        public bool? HasArticles { get; set; }
         /// <summary>
         /// 媒体评论
         /// </summary>

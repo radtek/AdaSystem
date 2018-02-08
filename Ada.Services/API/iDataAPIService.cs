@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Ada.Core;
 using Ada.Core.Domain.API;
@@ -50,23 +51,31 @@ namespace Ada.Services.API
             for (int i = 1; i <= page; i++)
             {
                 var apiUrl = urlparams + "&pageToken=" + i;
-                string htmlstr;
-                try
+                string htmlstr = string.Empty;
+                int request = 1;
+                while (request <= apiInfo.TimeOut)
                 {
-                    htmlstr = HttpUtility.Get(url + apiUrl);
-                }
-                catch (Exception ex)
-                {
-                    APIRequestRecord exrecord = new APIRequestRecord();
-                    exrecord.Id = IdBuilder.CreateIdNum();
-                    exrecord.RequestParameters = apiUrl;
-                    exrecord.IsSuccess = false;
-                    exrecord.Retcode = "500";
-                    exrecord.ReponseContent = ex.Message;
-                    exrecord.Retmsg = "请求异常";
-                    exrecord.ReponseDate = DateTime.Now;
-                    apiInfo.APIRequestRecords.Add(exrecord);
-                    break;
+                    try
+                    {
+                        htmlstr = HttpUtility.Get(url + apiUrl);
+                        request = 9999;
+                    }
+                    catch (Exception ex)
+                    {
+                        if (request == apiInfo.TimeOut)
+                        {
+                            APIRequestRecord exrecord = new APIRequestRecord();
+                            exrecord.Id = IdBuilder.CreateIdNum();
+                            exrecord.RequestParameters = apiUrl;
+                            exrecord.IsSuccess = false;
+                            exrecord.Retcode = "500";
+                            exrecord.ReponseContent = ex.Message;
+                            exrecord.Retmsg = "请求异常";
+                            exrecord.ReponseDate = DateTime.Now;
+                            apiInfo.APIRequestRecords.Add(exrecord);
+                        }
+                        request++;
+                    }
                 }
                 if (string.IsNullOrWhiteSpace(htmlstr))
                 {
@@ -93,7 +102,7 @@ namespace Ada.Services.API
                     record.ReponseDate = DateTime.Now;
                     apiInfo.APIRequestRecords.Add(record);
                 }
-               
+
                 if (result.retcode != ReturnCode.请求成功)
                 {
                     break;
@@ -146,17 +155,30 @@ namespace Ada.Services.API
                         }
                     }
                 }
+                else
+                {
+                    //请求成功，但记录为空的
+                    APIRequestRecord norecord = new APIRequestRecord();
+                    norecord.Id = IdBuilder.CreateIdNum();
+                    norecord.RequestParameters = apiUrl;
+                    norecord.IsSuccess = result.retcode == ReturnCode.请求成功;
+                    norecord.Retcode = result.retcode.GetHashCode().ToString();
+                    norecord.ReponseContent = htmlstr;
+                    norecord.Retmsg = "请求成功，返回记录为空";
+                    norecord.ReponseDate = DateTime.Now;
+                    apiInfo.APIRequestRecords.Add(norecord);
+                }
                 //如果没有下一页就退出
                 if (result.hasNext == false)
                 {
                     break;
                 }
             }
-            RequestResult requestResult=new RequestResult();
+            RequestResult requestResult = new RequestResult();
             requestResult.AddCount = addCount;
             requestResult.UpdateCount = updateCount;
             requestResult.Message = "采集成功！新增：" + addCount + "篇，更新：" + updateCount + "篇";
-            
+
             _dbContext.SaveChanges();
             //try
             //{
@@ -178,7 +200,7 @@ namespace Ada.Services.API
             //}
             return requestResult;
         }
-        
+
 
         public RequestResult GetWeiBoArticles(WeiBoParams wbparams)
         {
@@ -190,7 +212,7 @@ namespace Ada.Services.API
             {
                 urlparams = "&uid=" + wbparams.UID;
             }
-            
+
             if (!string.IsNullOrWhiteSpace(wbparams.Date))
             {
                 urlparams += "&date=" + wbparams.Date;
@@ -201,24 +223,31 @@ namespace Ada.Services.API
             for (int i = 1; i <= page; i++)
             {
                 var apiUrl = urlparams + "&pageToken=" + i;
-               
-                string htmlstr;
-                try
+                string htmlstr = string.Empty;
+                int request = 1;
+                while (request <= apiInfo.TimeOut)
                 {
-                    htmlstr = HttpUtility.Get(url + apiUrl);
-                }
-                catch (Exception ex)
-                {
-                    APIRequestRecord exrecord = new APIRequestRecord();
-                    exrecord.Id = IdBuilder.CreateIdNum();
-                    exrecord.RequestParameters = apiUrl;
-                    exrecord.IsSuccess = false;
-                    exrecord.Retcode = "500";
-                    exrecord.ReponseContent = ex.Message;
-                    exrecord.Retmsg = "请求异常";
-                    exrecord.ReponseDate = DateTime.Now;
-                    apiInfo.APIRequestRecords.Add(exrecord);
-                    break;
+                    try
+                    {
+                        htmlstr = HttpUtility.Get(url + apiUrl);
+                        request = 9999;
+                    }
+                    catch (Exception ex)
+                    {
+                        if (request == apiInfo.TimeOut)
+                        {
+                            APIRequestRecord exrecord = new APIRequestRecord();
+                            exrecord.Id = IdBuilder.CreateIdNum();
+                            exrecord.RequestParameters = apiUrl;
+                            exrecord.IsSuccess = false;
+                            exrecord.Retcode = "500";
+                            exrecord.ReponseContent = ex.Message;
+                            exrecord.Retmsg = "请求异常";
+                            exrecord.ReponseDate = DateTime.Now;
+                            apiInfo.APIRequestRecords.Add(exrecord);
+                        }
+                        request++;
+                    }
                 }
                 if (string.IsNullOrWhiteSpace(htmlstr))
                 {
@@ -250,6 +279,8 @@ namespace Ada.Services.API
                 {
                     break;
                 }
+
+
                 if (result.data.Count > 0)
                 {
                     var media = _mediaRepository.LoadEntities(d => d.MediaID == wbparams.UID).FirstOrDefault();
@@ -264,7 +295,7 @@ namespace Ada.Services.API
                     media.MediaLogo = mediaInfo.extend?.avatar_large;
                     media.Area = mediaInfo.extend?.location;
                     media.IsAuthenticate = mediaInfo.extend?.verified;
-                    var authType= GetAuthenticateType(mediaInfo.extend?.verified_type);
+                    var authType = GetAuthenticateType(mediaInfo.extend?.verified_type);
                     if (!string.IsNullOrWhiteSpace(authType))
                     {
                         media.AuthenticateType = authType;
@@ -276,7 +307,7 @@ namespace Ada.Services.API
                     }
                     foreach (var articleData in result.data)
                     {
-                        
+
                         var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
                         if (article != null)
                         {
@@ -313,6 +344,23 @@ namespace Ada.Services.API
                         }
                     }
                 }
+                else
+                {
+                    //请求成功，但记录为空的
+                    APIRequestRecord norecord = new APIRequestRecord();
+                    norecord.Id = IdBuilder.CreateIdNum();
+                    norecord.RequestParameters = apiUrl;
+                    norecord.IsSuccess = result.retcode == ReturnCode.请求成功;
+                    norecord.Retcode = result.retcode.GetHashCode().ToString();
+                    norecord.ReponseContent = htmlstr;
+                    norecord.Retmsg = "请求成功，返回记录为空";
+                    norecord.ReponseDate = DateTime.Now;
+                    apiInfo.APIRequestRecords.Add(norecord);
+                }
+                //if (apiInfo.TimeOut > 0 && apiInfo.TimeOut != null)
+                //{
+                //    Thread.Sleep(apiInfo.TimeOut.Value);
+                //}
                 //如果没有下一页就退出
                 if (result.hasNext == false)
                 {
@@ -329,7 +377,7 @@ namespace Ada.Services.API
 
         private string GetAuthenticateType(int? verifiedtype)
         {
-            if (verifiedtype!=null)
+            if (verifiedtype != null)
             {
                 string type = null;
                 switch (verifiedtype)
