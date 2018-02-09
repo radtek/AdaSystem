@@ -48,12 +48,13 @@ namespace Ada.Services.API
             int page = wxparams.PageNum ?? 1;
             int addCount = 0;
             int updateCount = 0;
+            int times = apiInfo.TimeOut ?? 3;
             for (int i = 1; i <= page; i++)
             {
                 var apiUrl = urlparams + "&pageToken=" + i;
                 string htmlstr = string.Empty;
                 int request = 1;
-                while (request <= apiInfo.TimeOut)
+                while (request <= times)
                 {
                     try
                     {
@@ -62,7 +63,7 @@ namespace Ada.Services.API
                     }
                     catch (Exception ex)
                     {
-                        if (request == apiInfo.TimeOut)
+                        if (request == times)
                         {
                             APIRequestRecord exrecord = new APIRequestRecord();
                             exrecord.Id = IdBuilder.CreateIdNum();
@@ -233,12 +234,13 @@ namespace Ada.Services.API
             int page = wbparams.PageNum ?? 1;
             int addCount = 0;
             int updateCount = 0;
+            int times = apiInfo.TimeOut ?? 3;
             for (int i = 1; i <= page; i++)
             {
                 var apiUrl = urlparams + "&pageToken=" + i;
                 string htmlstr = string.Empty;
                 int request = 1;
-                while (request <= apiInfo.TimeOut)
+                while (request <= times)
                 {
                     try
                     {
@@ -247,7 +249,7 @@ namespace Ada.Services.API
                     }
                     catch (Exception ex)
                     {
-                        if (request == apiInfo.TimeOut)
+                        if (request == times)
                         {
                             //异常日期
                             APIRequestRecord exrecord = new APIRequestRecord();

@@ -30,33 +30,40 @@ namespace QuartzTask.Jobs
             Task.Factory.StartNew(() =>
             {
                 _logger.Info("微博自动任务开始：" + DateTime.Now);
-                var medias = _repository.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "sinablog" && d.IsSlide==true);
-                long addcount = 0;
-                long updatecount = 0;
-                foreach (var media in medias)
+                try
                 {
-                    if (string.IsNullOrWhiteSpace(media.MediaID)) continue;
-                    if (!Utils.IsNum(media.MediaID.Trim())) continue;
-                    WeiBoParams wbparams = new WeiBoParams
+                    var medias = _repository.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "sinablog" && d.IsSlide == true).OrderByDescending(d => d.Id).ToList();
+                    long addcount = 0;
+                    long updatecount = 0;
+                    foreach (var media in medias)
                     {
-                        PageNum = 1,
-                        CallIndex = "weibo",
-                        IsLog = false,
-                        UID = media.MediaID.Trim()
-                    };
-                    try
-                    {
-                        var result = _iDataAPIService.GetWeiBoArticles(wbparams);
-                        addcount += result.AddCount;
-                        updatecount += result.UpdateCount;
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.Error("微博" + media.MediaID + "，自动任务失败：" + DateTime.Now, e);
-                    }
+                        if (string.IsNullOrWhiteSpace(media.MediaID)) continue;
+                        if (!Utils.IsNum(media.MediaID.Trim())) continue;
+                        WeiBoParams wbparams = new WeiBoParams
+                        {
+                            PageNum = 1,
+                            CallIndex = "weibo",
+                            IsLog = true,
+                            UID = media.MediaID.Trim()
+                        };
+                        try
+                        {
+                            var result = _iDataAPIService.GetWeiBoArticles(wbparams);
+                            addcount += result.AddCount;
+                            updatecount += result.UpdateCount;
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.Error("微博" + media.MediaID + "，自动任务失败：" + DateTime.Now, e);
+                        }
 
+                    }
+                    _logger.Info("微博自动任务结束：" + DateTime.Now + "，共成功采集新增" + addcount + "文章篇，更新" + updatecount + "文章篇");
                 }
-                _logger.Info("微博自动任务结束：" + DateTime.Now + "，共成功采集新增" + addcount + "文章篇，更新" + updatecount + "文章篇");
+                catch (Exception ex)
+                {
+                    _logger.Info("微博自动任务异常结束！",ex);
+                }
 
 
             });
