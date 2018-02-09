@@ -43,7 +43,7 @@ namespace QuartzTask.Jobs
                         {
                             PageNum = 1,
                             CallIndex = "weibo",
-                            IsLog = true,
+                            IsLog = false,
                             UID = media.MediaID.Trim()
                         };
                         try

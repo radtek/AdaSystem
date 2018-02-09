@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using Ada.Core;
-using Ada.Core.Domain;
-using Ada.Core.Domain.API;
 using Ada.Core.Domain.Resource;
 using Ada.Core.Infrastructure;
 using Ada.Core.ViewModel.API.iDataAPI;
@@ -21,13 +16,11 @@ namespace QuartzTask.Jobs
     {
         private readonly IiDataAPIService _iDataAPIService;
         private readonly IRepository<Media> _repository;
-        //private readonly IRepository<APIRequestRecord> _aPIRequestRecordRepository;
         private readonly ILog _logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public WeiXinArticlesJob()
         {
             _iDataAPIService = EngineContext.Current.Resolve<IiDataAPIService>();
             _repository = EngineContext.Current.Resolve<IRepository<Media>>();
-            //_aPIRequestRecordRepository = EngineContext.Current.Resolve<IRepository<APIRequestRecord>>();
         }
         public void Execute(IJobExecutionContext context)
         {
@@ -42,16 +35,6 @@ namespace QuartzTask.Jobs
                     foreach (var media in medias)
                     {
                         if (string.IsNullOrWhiteSpace(media.MediaID)) continue;
-                        ////如果今天采集了就不采集了
-                        //var start = DateTime.Now.Date;
-                        //var end = DateTime.Now.Date.AddDays(1);
-                        //var temp = _aPIRequestRecordRepository.LoadEntities(d =>
-                        //      d.RequestParameters.Contains(media.MediaID) && d.ReponseDate >= start &&
-                        //      d.ReponseDate < end).FirstOrDefault();
-                        //if (temp!=null)
-                        //{
-                        //    continue;
-                        //}
                         WeiXinProParams wxparams = new WeiXinProParams
                         {
                             PageNum = 10,
