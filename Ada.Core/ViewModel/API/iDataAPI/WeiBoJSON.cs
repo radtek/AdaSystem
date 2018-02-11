@@ -133,5 +133,13 @@ namespace Ada.Core.ViewModel.API.iDataAPI
         /// 认证级别
         /// </summary>
         public int? verified_type { get; set; }
+        /// <summary>
+        /// 认证原因
+        /// </summary>
+        public string verified_reason { get; set; }
+        /// <summary>
+        /// 标签
+        /// </summary>
+        public string ability_tags { get; set; }
     }
 }

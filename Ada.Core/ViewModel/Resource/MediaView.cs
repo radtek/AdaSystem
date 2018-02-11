@@ -329,6 +329,21 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "是否有文章")]
         public bool? HasArticles { get; set; }
         /// <summary>
+        /// 媒体摘要
+        /// </summary>
+        [Display(Name = "媒体摘要")]
+        public string Abstract { get; set; }
+        /// <summary>
+        /// 采集组
+        /// </summary>
+        [Display(Name = "采集组")]
+        public string CollectionGroup { get; set; }
+        /// <summary>
+        /// 最后一次采集时间
+        /// </summary>
+        [Display(Name = "最后一次采集时间")]
+        public DateTime? CollectionDate { get; set; }
+        /// <summary>
         /// 媒体评论
         /// </summary>
         [Display(Name = "媒体评论")]

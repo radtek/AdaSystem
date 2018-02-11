@@ -54,12 +54,12 @@
 
         function refreshTable() {
             $('#table').bootstrapTable('refresh');
-            var status = $("#Status").val();
-            if (status==-1) {
-                $('#table').bootstrapTable('hideColumn','Id');
-            } else {
-                $('#table').bootstrapTable('showColumn', 'Id');
-            }
+            //var status = $("#Status").val();
+            //if (status==-1) {
+            //    $('#table').bootstrapTable('hideColumn','Id');
+            //} else {
+            //    $('#table').bootstrapTable('showColumn', 'Id');
+            //}
         }
         var TableInit = function() {
             var obj = new Object();
@@ -200,7 +200,9 @@
 
                     }
                 ]
-                }).bootstrapTable("hideColumn","Id");
+                })
+                    //.bootstrapTable("hideColumn", "Id")
+                    ;
             };
 
             return obj;

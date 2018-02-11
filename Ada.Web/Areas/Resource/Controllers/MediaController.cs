@@ -211,6 +211,7 @@ namespace Resource.Controllers
                     Sex = d.Sex,
                     Client = d.Client,
                     SEO = d.SEO,
+                    Abstract = d.Abstract,
                     PostNum=d.PostNum,
                     MonthPostNum = d.MonthPostNum,
                     FriendNum = d.FriendNum,

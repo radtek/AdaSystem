@@ -8,9 +8,12 @@ using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Resource;
 using Ada.Core.Tools;
+using Ada.Core.ViewModel.API.iDataAPI;
 using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Filter;
+using Ada.Services.API;
 using Ada.Services.Resource;
+using Newtonsoft.Json;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -21,17 +24,17 @@ namespace Resource.Controllers
         private readonly IMediaService _mediaService;
         private readonly IRepository<Media> _repository;
         private readonly IRepository<MediaTag> _mediaTagRepository;
-
+        private readonly IiDataAPIService _iDataAPIService;
         public WeiXinController(IMediaService mediaService,
             IRepository<Media> repository,
-
-            IRepository<MediaTag> mediaTagRepository
+            IiDataAPIService iDataAPIService,
+        IRepository<MediaTag> mediaTagRepository
 
         )
         {
             _mediaService = mediaService;
             _repository = repository;
-
+            _iDataAPIService = iDataAPIService;
             _mediaTagRepository = mediaTagRepository;
 
         }
@@ -134,7 +137,7 @@ namespace Resource.Controllers
                     media.Transactor = row.GetCell(10)?.ToString();
                     media.TransactorId = row.GetCell(11)?.ToString();
                     media.Status = Consts.StateNormal;
-                    media.IsSlide = false;
+                    media.IsSlide = true;
                     _mediaService.Add(media);
                     count++;
                 }
@@ -178,6 +181,38 @@ namespace Resource.Controllers
                 }
             }
             return Content("共有" + count + "条资源加入采集行列");
+        }
+        [HttpPost]
+        public ActionResult CollectionWeixinInfo(string id)
+        {
+            TestParams testParams = new TestParams();
+            testParams.UID = id;
+            testParams.ApiId = 725;
+            testParams.ReginId = 1;
+            testParams.Apiype = 1;
+            testParams.CallIndex = "test_api";
+            var result = _iDataAPIService.TestApi(testParams);
+            if (string.IsNullOrWhiteSpace(result))
+            {
+                return Json(new { State = 0, Msg = "请求失败" });
+            }
+            var jsonResult = JsonConvert.DeserializeObject<TestJSON>(result);
+            if (jsonResult.error != 0) return Json(new {State = 0, Msg = jsonResult.api_result});
+            var weixinInfos = JsonConvert.DeserializeObject<WeiXinInfosJSON>(jsonResult.api_result);
+            if (weixinInfos.data.Count>0)
+            {
+                var media = _repository.LoadEntities(d => d.MediaID == id).FirstOrDefault();
+                var weixinInfo = weixinInfos.data[0];
+                media.IsAuthenticate = weixinInfo.idVerified;
+                media.MediaName = weixinInfo.screenName;
+                media.MonthPostNum = weixinInfo.monthPostCount;
+                media.MediaLogo = weixinInfo.avatarUrl;
+                media.MediaQR = weixinInfo.qrcodeUrl;
+                media.Content = weixinInfo.biography;
+                _mediaService.Update(media);
+                return Json(new { State = 1, Msg = "更新成功" });
+            }
+            return Json(new { State = 0, Msg = jsonResult.api_result });
         }
     }
 }

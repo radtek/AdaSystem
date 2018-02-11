@@ -38,6 +38,10 @@ namespace Ada.Core.ViewModel
         /// </summary>
         public string Id { get; set; }
         /// <summary>
+        /// 时间范围
+        /// </summary>
+        public string DateRange { get; set; }
+        /// <summary>
         /// 经办人
         /// </summary>
         public List<string> Managers { get; set; }

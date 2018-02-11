@@ -22,7 +22,7 @@ namespace Ada.Services.API
         }
         public void Delete(params string[] ids)
         {
-            var list=new List<APIRequestRecord>();
+            var list = new List<APIRequestRecord>();
             foreach (var id in ids)
             {
                 var log = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -36,7 +36,7 @@ namespace Ada.Services.API
         {
             var allList = _repository.LoadEntities(d => d.IsDelete == false);
             //条件过滤
-           
+
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
                 allList = allList.Where(d => d.RequestParameters.Contains(viewModel.search));
@@ -51,7 +51,22 @@ namespace Ada.Services.API
             }
             if (!string.IsNullOrWhiteSpace(viewModel.Retcode))
             {
-                allList = allList.Where(d => d.Retcode==viewModel.Retcode);
+                allList = allList.Where(d => d.Retcode == viewModel.Retcode);
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.DateRange))
+            {
+                var dateRanges = viewModel.DateRange.Split('至');
+                if (dateRanges.Length == 2)
+                {
+                    DateTime.TryParse(dateRanges[0], out var start);
+                    DateTime.TryParse(dateRanges[1], out var end);
+                    end = end.AddDays(1);
+                    allList = allList.Where(d => d.ReponseDate >= start && d.ReponseDate < end);
+                }
+            }
+            if (viewModel.IsSuccess != null)
+            {
+                allList = allList.Where(d => d.IsSuccess == viewModel.IsSuccess);
             }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;

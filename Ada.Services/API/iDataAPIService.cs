@@ -118,6 +118,7 @@ namespace Ada.Services.API
                     {
                         break;
                     }
+                    media.CollectionDate = DateTime.Now;
                     foreach (var articleData in result.data)
                     {
                         var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
@@ -316,6 +317,8 @@ namespace Ada.Services.API
                     media.MediaLogo = mediaInfo.extend?.avatar_large;
                     media.Area = mediaInfo.extend?.location;
                     media.IsAuthenticate = mediaInfo.extend?.verified;
+                    media.Abstract = mediaInfo.extend?.verified_reason;
+                    media.CollectionDate = DateTime.Now;
                     var authType = GetAuthenticateType(mediaInfo.extend?.verified_type);
                     if (!string.IsNullOrWhiteSpace(authType))
                     {
@@ -397,6 +400,19 @@ namespace Ada.Services.API
             return requestResult;
         }
 
+        public string TestApi(TestParams testParams)
+        {
+            var apiInfo = _apiInterfacesService.GetAPIInterfacesByCallIndex(testParams.CallIndex);
+            IEnumerable<KeyValuePair<string, string>> postdata = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("region_id",testParams.ReginId==null?"1":testParams.ReginId.ToString()),
+                new KeyValuePair<string, string>("api_id",testParams.ApiId.ToString()),
+                new KeyValuePair<string, string>("apitype",testParams.Apiype.ToString()),
+                new KeyValuePair<string, string>("id",testParams.UID)
+            };
+            return HttpUtility.Post(apiInfo.APIUrl, postdata);
+            
+        }
         private string GetAuthenticateType(int? verifiedtype)
         {
             if (verifiedtype != null)

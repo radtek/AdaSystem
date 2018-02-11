@@ -14,7 +14,7 @@ namespace Ada.Data.Mapping.Resource
             Property(s => s.MediaId).HasMaxLength(32);
             Property(s => s.ArticleId).HasMaxLength(128);
             Property(s => s.Title).HasMaxLength(512);
-            Property(s => s.OriginUrl).HasMaxLength(512);
+            Property(s => s.OriginUrl).HasMaxLength(2048);
             Property(s => s.ArticleUrl).HasMaxLength(512);
             Property(s => s.ArticleIdx).HasMaxLength(32);
             Property(s => s.Biz).HasMaxLength(64);

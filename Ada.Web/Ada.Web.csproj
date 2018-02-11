@@ -319,6 +319,7 @@
     <Content Include="Images\email_1.jpg" />
     <Content Include="Images\email_2.jpg" />
     <Content Include="Images\email_3.jpg" />
+    <Content Include="Images\ewm.png" />
     <Content Include="Images\flags\16\Abkhazia.png" />
     <Content Include="Images\flags\16\Afghanistan.png" />
     <Content Include="Images\flags\16\Aland.png" />
@@ -1141,6 +1142,7 @@
     <Content Include="Images\landing\perspective.png" />
     <Content Include="Images\man.png" />
     <Content Include="Images\noheader.png" />
+    <Content Include="Images\nopic.png" />
     <Content Include="Images\off_canvas.jpg" />
     <Content Include="Images\p1.jpg" />
     <Content Include="Images\p2.jpg" />
@@ -1157,6 +1159,7 @@
     <Content Include="Images\p_big2.jpg" />
     <Content Include="Images\p_big3.jpg" />
     <Content Include="Images\zender_logo.png" />
+    <Content Include="Images\weixin.png" />
     <Content Include="Scripts\app\inspinia.js" />
     <Content Include="Scripts\app\skin.config.min.js" />
     <Content Include="Scripts\base.js" />

@@ -537,7 +537,7 @@ namespace Business.Controllers
             if (entity == null) return RedirectToAction("Index");
             entity.RequestSellMoney = viewModel.RequestSellMoney;
             entity.AuditRemark = viewModel.AuditRemark;
-            entity.Status = Consts.AuditPriceState;//进入审核
+            entity.Status = Consts.AuditPriceState;//进入审核 
             _businessOrderDetailService.Update(entity);
             TempData["Msg"] = "申请成功";
             return RedirectToAction("Update", new { id = entity.BusinessOrderId });

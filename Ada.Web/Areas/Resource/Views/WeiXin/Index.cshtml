@@ -34,12 +34,12 @@
                         <div class="row">
                             <div class="col-md-12">
                                 @foreach (var item in tags)
-                    {
-                        <div class="checkbox checkbox-success checkbox-inline">
-                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
-                            <label for="@item.Id">@item.TagName</label>
-                        </div>
-        }
+                                {
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
+                                        <label for="@item.Id">@item.TagName</label>
+                                    </div>
+                                }
                             </div>
                         </div>
 
@@ -151,6 +151,9 @@
     </button>
 </div>
 
+@section StylesFirst {
+    <meta name="referrer" content="never">
+}
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
@@ -162,13 +165,12 @@
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/ladda")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=2018020713")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=2018021113")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
-
 
         });
         var TableInit = function() {
@@ -200,7 +202,29 @@
                     formatSearch: function() {
                         return "微信公众号";
                     },
-                onLoadSuccess: initTooltip,
+                onLoadSuccess: function() {
+                    $("[rel=drevil]").popover({
+                        trigger:'manual',
+                        placement : 'bottom', //placement of the popover. also can use top, bottom, left or right
+                        title : '微信二维码', //this is the top title bar of the popover. add some basic css
+                        html: 'true', //needed to show html of course
+                        animation: false
+                    }).on("mouseenter", function () {
+                        var _this = this;
+                        $(this).popover("show");
+                        $(this).siblings(".popover").on("mouseleave", function () {
+                            $(_this).popover('hide');
+                        });
+                    }).on("mouseleave", function () {
+                        var _this = this;
+                        setTimeout(function () {
+                            if (!$(".popover:hover").length) {
+                                $(_this).popover("hide");
+                            }
+                        }, 100);
+                        });
+                    initTooltip();
+                } ,
                 mobileResponsive: true,
                 queryParams: function (parameters) {
                     parameters.MediaTypeId = '@meidaType.Id';
@@ -210,13 +234,19 @@
                     {
                         checkbox: true
                     },
-                    @*{
-                        field: 'Status',
-                        title: '@Html.DisplayNameFor(d=>d.Status)',
-                        valign: "middle",
-                        formatter: formatter.normalStatus,
-                        align: "center"
-                    },*@
+                    {
+                        field: 'MediaLogo',
+                        //title: '@Html.DisplayNameFor(d=>d.MediaLogo)',
+                        align: "right", valign: "middle",
+                        formatter: function (value, row) {
+                            if (value) {
+                                return '<img alt="' + row.MediaName + '" class="img-circle" src="' + value + '" style="width: 50px; height: 50px;"/>';
+                            } else {
+                                return '<img alt="' + row.MediaName + '" class="img-circle" src="/Images/weixin.png" style="width: 50px; height: 50px;"/>';
+                            }
+
+                        }
+                    },
                     {
                         field: 'MediaName',
                         title: '微信公众号',
@@ -225,8 +255,9 @@
                         formatter: function (value, row) {
                             var url =
                                 "<a class='label' href='http://weixin.sogou.com/weixin?type=1&query=" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
-                            return url +
-                                " <button class='btn btn-warning btn-xs' onclick='details(\"@Url.Action("WeiXinArticles","Media")?id="+row.Id+"\");'>详</button>";
+                            return " <button class='btn btn-success btn-xs' data-toggle='tooltip' data-placement='bottom' title='更新微信信息' onclick='updatewx(\"@Url.Action("CollectionWeixinInfo")?id=" + row.MediaID +"\");'><i class='fa fa-arrow-circle-up'></i></button> "+ url +
+                                " <button class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看微信详情' onclick='details(\"@Url.Action("WeiXinArticles","Media")?id=" + row.Id + "\");'>详</button>" +
+                                " <img rel='drevil' data-content='<div id=\"popOverBox\"><img src=\"" + (row.MediaQR || '/Images/nopic.png') +"\" width=\"100\" height=\"100\" /></div>'  src='/Images/ewm.png' style='width: 20px; height: 20px;'/>";
                         }
                     },
 
@@ -258,11 +289,14 @@
                                 "最近头条阅读数：" +
                                 (row.LastReadNum||0) +
                                 "<br />" +
+                                "月发文篇数：" +
+                                (row.MonthPostNum || 0) +
+                                "<br />" +
                                 "最近发文日期：" +
                                 date ;
                         }
                     },
-                   
+
                     {
                         field: 'MediaTagStr',
                         title: '@Html.DisplayNameFor(d=>d.MediaTagStr)',
@@ -276,11 +310,11 @@
                         formatter: formatterPrice,
                         //align: "center"
                     },
-                    @*{
+                    {
                         field: 'Content',
                         title: '@Html.DisplayNameFor(d=>d.Content)',
                         align: "center", valign: "middle", formatter: formatter.tooltip
-                    },*@
+                    },
                     {
                         field: 'Remark',
                         title: '@Html.DisplayNameFor(d=>d.Remark)',

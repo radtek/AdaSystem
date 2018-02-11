@@ -1,8 +1,12 @@
 ﻿
 @using System.Web.Optimization
+@using Ada.Core.Infrastructure
+@using Ada.Services.Admin
 @model Ada.Core.ViewModel.API.APIRequestRecordView
 @{
     ViewBag.Title = "请求记录";
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var yesnos = fieldService.GetFieldsByKey("YesOrNo").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 @Html.Partial("Bread")
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
@@ -20,27 +24,37 @@
             <form id="searchFrm" action="@Url.Action("Export")" method="post">
                 @Html.AntiForgeryToken()
 
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                     <div class="form-group">
                         @Html.LabelFor(d => d.APIName, Html.DisplayNameFor(d => d.APIName).ToString(), new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.APIName, new { @class = "form-control" })
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                     <div class="form-group">
                         @Html.LabelFor(d => d.Retcode, Html.DisplayNameFor(d => d.Retcode).ToString(), new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.Retcode, new { @class = "form-control" })
                     </div>
                 </div>
 
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                     <div class="form-group">
                         @Html.LabelFor(d => d.Retmsg, Html.DisplayNameFor(d => d.Retmsg).ToString(), new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.Retmsg, new { @class = "form-control" })
                     </div>
                 </div>
-
-
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.IsSuccess, Html.DisplayNameFor(d => d.IsSuccess).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.IsSuccess, yesnos, "请选择", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.DateRange, "响应时间：", new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.DateRange, new { @class = "form-control", @readonly = "" })
+                    </div>
+                </div>
 
                 <div class="row">
                     <div class="col-sm-12 text-center">
@@ -79,16 +93,19 @@
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
     @Styles.Render("~/plugins/laddaStyles")
+    @Styles.Render("~/plugins/dateRangeStyles")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/ladda")
-<script type="text/javascript">
+    @Scripts.Render("~/plugins/dateRange")
+    <script type="text/javascript">
 
         $(document).ready(function() {
             var table = new TableInit();
             table.Init();
+            initDateRange($("#DateRange"));
         });
         var TableInit = function() {
             var obj = new Object();
@@ -245,7 +262,7 @@
             });
 
         }
-</script>
+    </script>
 }
 
 

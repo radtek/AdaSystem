@@ -293,6 +293,14 @@
     <Compile Include="Migrations\201801310726083_API.Designer.cs">
       <DependentUpon>201801310726083_API.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802110421095_UserMediaFilet.cs" />
+    <Compile Include="Migrations\201802110421095_UserMediaFilet.Designer.cs">
+      <DependentUpon>201802110421095_UserMediaFilet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802110432226_UserMediaFilet20180211.cs" />
+    <Compile Include="Migrations\201802110432226_UserMediaFilet20180211.Designer.cs">
+      <DependentUpon>201802110432226_UserMediaFilet20180211.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -447,6 +455,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801310726083_API.resx">
       <DependentUpon>201801310726083_API.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802110421095_UserMediaFilet.resx">
+      <DependentUpon>201802110421095_UserMediaFilet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802110432226_UserMediaFilet20180211.resx">
+      <DependentUpon>201802110432226_UserMediaFilet20180211.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

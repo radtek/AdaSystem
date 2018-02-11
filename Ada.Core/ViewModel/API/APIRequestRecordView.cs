@@ -49,5 +49,15 @@ namespace Ada.Core.ViewModel.API
         /// </summary>
         [Display(Name = "API名称")]
         public string APIName { get; set; }
+        /// <summary>
+        /// 响应时间
+        /// </summary>
+        [Display(Name = "响应时间")]
+        public DateTime? ReponseDateStart { get; set; }
+        /// <summary>
+        /// 响应时间
+        /// </summary>
+        [Display(Name = "响应时间")]
+        public DateTime? ReponseDateEnd { get; set; }
     }
 }

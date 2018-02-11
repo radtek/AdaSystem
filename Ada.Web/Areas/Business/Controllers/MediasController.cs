@@ -155,9 +155,9 @@ namespace Business.Controllers
                     }
                     
                     jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.PriceDate);
-                    if (!string.IsNullOrWhiteSpace(media.Content))
+                    if (!string.IsNullOrWhiteSpace(media.Abstract))
                     {
-                        jo.Add("媒体内容", media.Content);
+                        jo.Add("媒体摘要", media.Abstract);
                     }
                     if (!string.IsNullOrWhiteSpace(media.Remark))
                     {

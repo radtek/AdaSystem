@@ -124,6 +124,11 @@ namespace Ada.Core.Domain.Resource
         [Display(Name = "关注数")]
         public int? FriendNum { get; set; }
         /// <summary>
+        /// 媒体摘要
+        /// </summary>
+        [Display(Name = "媒体摘要")]
+        public string Abstract { get; set; }
+        /// <summary>
         /// 媒体说明
         /// </summary>
         [Display(Name = "媒体说明")]
@@ -153,6 +158,21 @@ namespace Ada.Core.Domain.Resource
         /// </summary>
         [Display(Name = "是否采集")]
         public bool? IsSlide { get; set; }
+        /// <summary>
+        /// 采集组
+        /// </summary>
+        [Display(Name = "采集组")]
+        public string CollectionGroup { get; set; }
+        /// <summary>
+        /// 最后一次采集时间
+        /// </summary>
+        [Display(Name = "最后一次采集时间")]
+        public DateTime? CollectionDate { get; set; }
+        /// <summary>
+        /// 是否轮播
+        /// </summary>
+        [Display(Name = "是否轮播")]
+        public bool? IsLoop { get; set; }
         /// <summary>
         /// 是否推荐
         /// </summary>

@@ -32,7 +32,7 @@ namespace QuartzTask.Jobs
                 _logger.Info("微博自动任务开始：" + DateTime.Now);
                 try
                 {
-                    var medias = _repository.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "sinablog" && d.IsSlide == true).OrderByDescending(d => d.Id).ToList();
+                    var medias = _repository.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "sinablog" && d.IsSlide == true).OrderBy(d => d.Id).ToList();
                     long addcount = 0;
                     long updatecount = 0;
                     foreach (var media in medias)

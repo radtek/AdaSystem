@@ -243,3 +243,24 @@ function collection() {
     });
 
 }
+function updatewx(url) {
+    $.ajax({
+        type: "post",
+        url: url,
+        success: function (res) {
+            if (res.State == 1) {
+                $("#table").bootstrapTable('refresh');
+            } else {
+                swal("操作提醒", res.Msg, "warning");
+            }
+        },
+        error: function () {
+            swal("操作失败", "系统错误", "error");
+        },
+        beforeSend: function () {
+        },
+        complete: function () {
+        }
+    });
+
+}

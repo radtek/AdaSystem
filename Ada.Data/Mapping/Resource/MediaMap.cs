@@ -49,7 +49,8 @@ namespace Ada.Data.Mapping.Resource
             Property(s => s.Efficiency).HasMaxLength(32);
             Property(s => s.ResourceType).HasMaxLength(32);
             Property(s => s.Channel).HasMaxLength(32);
-
+            Property(s => s.Abstract).HasMaxLength(1024);
+            Property(s => s.CollectionGroup).HasMaxLength(32);
             Property(s => s.AddedDate);
             Property(s => s.AddedBy).HasMaxLength(32);
             Property(s => s.AddedById).HasMaxLength(32);

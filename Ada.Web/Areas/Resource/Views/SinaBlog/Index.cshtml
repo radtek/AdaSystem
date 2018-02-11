@@ -241,10 +241,10 @@
                                 sex = '<img alt="女" class="img-circle" src="/Images/lady.png" style="width: 25px; height: 25px;"/>';
                             }
                            var url =
-                                "<a class='label' href='https://weibo.com/u/" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
+                               "<a class='label' href='https://weibo.com/u/" + row.MediaID + "' target='_blank' title='" + (row.Abstract||'暂无摘要')+"'><i class='fa fa-link'></i> " + value + "</a>";
                             var level = formatter.blogLevel(row.AuthenticateType);
                             return sex+ url + level+
-                                " <button class='btn btn-info btn-xs' onclick='details(\"@Url.Action("WeiboArticles","Media")?id="+row.Id+"\");'>详</button>";
+                                " <button class='btn btn-info btn-xs' onclick='details(\"@Url.Action("WeiboArticles","Media")?id=" + row.Id + "\");'>详</button>" ;
                         }
                     },
                     {
