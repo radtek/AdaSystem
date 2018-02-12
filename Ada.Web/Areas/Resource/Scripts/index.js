@@ -243,7 +243,7 @@ function collection() {
     });
 
 }
-function updatewx(url) {
+function collectWeiXinFree(url) {
     $.ajax({
         type: "post",
         url: url,
@@ -262,5 +262,57 @@ function updatewx(url) {
         complete: function () {
         }
     });
+}
+function collectWeiXin(url) {
+    var arrselections = $("#table").bootstrapTable('getSelections');
+    if (arrselections.length <= 0) {
+        swal("操作提醒", "请选择需采集的微信号", "warning");
+        return;
+    }
+    var ids = [];
+    $.each(arrselections,
+        function (k, v) {
+            ids.push(v.MediaID);
+        });
+    swal({
+        title: "您确定吗?",
+        text: "确认要采集这" + arrselections.length+"个微信号吗?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
 
+    }, function () {
+        $.ajax({
+            type: "post",
+            headers: {
+                '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
+            },
+            url: url,
+            data: { CallIndex: "weixin", UID: ids.join(',') },
+            success: function (data) {
+                if (data.State == 1) {
+                    $("#table").bootstrapTable('refresh');
+                    swal({
+                        title: "操作成功",
+                        text: data.Msg,
+                        timer: 2000,
+                        type: "success",
+                        showConfirmButton: false
+                    });
+                } else {
+                    swal("操作提醒", data.Msg, "warning");
+                }
+            },
+            error: function () {
+                swal("操作失败", "系统错误", "error");
+            },
+            complete: function () {
+
+            }
+        });
+    });
 }

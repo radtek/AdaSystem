@@ -29,7 +29,7 @@ namespace QuartzTask.Jobs
         {
             Task.Factory.StartNew(() =>
             {
-                _logger.Info("微博自动任务开始：" + DateTime.Now);
+                _logger.Info("微博文章自动任务开始：" + DateTime.Now);
                 try
                 {
                     var medias = _repository.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "sinablog" && d.IsSlide == true).OrderBy(d => d.Id).ToList();
@@ -44,7 +44,9 @@ namespace QuartzTask.Jobs
                             PageNum = 1,
                             CallIndex = "weibo",
                             IsLog = false,
-                            UID = media.MediaID.Trim()
+                            UID = media.MediaID.Trim(),
+                            Transactor = "系统自动",
+                            TransactorId = "系统自动"
                         };
                         try
                         {
@@ -58,11 +60,11 @@ namespace QuartzTask.Jobs
                         }
 
                     }
-                    _logger.Info("微博自动任务结束：" + DateTime.Now + "，共成功采集新增" + addcount + "文章篇，更新" + updatecount + "文章篇");
+                    _logger.Info("微博文章自动任务结束：" + DateTime.Now + "，共成功采集新增" + addcount + "文章篇，更新" + updatecount + "文章篇");
                 }
                 catch (Exception ex)
                 {
-                    _logger.Info("微博自动任务异常结束！",ex);
+                    _logger.Info("微博文章自动任务异常结束！", ex);
                 }
 
 

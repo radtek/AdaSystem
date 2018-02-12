@@ -33,5 +33,15 @@ namespace Ada.Core.ViewModel.API.iDataAPI
         /// </summary>
         [Display(Name = "是否记录日志")]
         public bool IsLog { get; set; }
+        /// <summary>
+        /// 采集人员
+        /// </summary>
+        [Display(Name = "采集人员")]
+        public string TransactorId { get; set; }
+        /// <summary>
+        /// 采集人员
+        /// </summary>
+        [Display(Name = "采集人员")]
+        public string Transactor { get; set; }
     }
 }

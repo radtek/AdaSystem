@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
+using Ada.Core.Domain.API;
 using Ada.Core.Domain.Customer;
 using Ada.Core.Domain.Resource;
 using Ada.Core.Tools;
@@ -34,6 +35,7 @@ namespace Resource.Controllers
         private readonly IiDataAPIService _iDataAPIService;
         private readonly ISettingService _settingService;
         private readonly IRepository<Media> _repository;
+        private readonly IRepository<APIRequestRecord> _apiRequestRecordRepository;
         private readonly IRepository<MediaType> _mediaTypeRepository;
         private readonly IRepository<MediaPrice> _mediaPriceRepository;
         private readonly IRepository<MediaTag> _mediaTagRepository;
@@ -46,7 +48,8 @@ namespace Resource.Controllers
             IRepository<MediaTag> mediaTagRepository,
             IRepository<MediaType> mediaTypeRepository,
             ISettingService settingService,
-            IiDataAPIService iDataAPIService)
+            IiDataAPIService iDataAPIService,
+            IRepository<APIRequestRecord> apiRequestRecordRepository)
         {
             _mediaPriceService = mediaPriceService;
             _mediaService = mediaService;
@@ -57,6 +60,7 @@ namespace Resource.Controllers
             _mediaTypeRepository = mediaTypeRepository;
             _settingService = settingService;
             _iDataAPIService = iDataAPIService;
+            _apiRequestRecordRepository = apiRequestRecordRepository;
         }
 
         public ActionResult Index()
@@ -204,28 +208,28 @@ namespace Resource.Controllers
                     IsComment = d.IsComment,
                     FansNum = Utils.ShowFansNum(d.FansNum),
                     ChannelType = d.ChannelType,
-                    LastReadNum = d.MediaArticles.Where(l=>l.IsTop==true && l.Media.MediaType.CallIndex == "weixin").OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount,
-                    AvgReadNum = (int?) d.MediaArticles.Where(l => l.IsTop == true && l.Media.MediaType.CallIndex == "weixin").OrderByDescending(a=>a.PublishDate).Where(aa=>aa.PublishDate>DateTime.Now.Date.AddDays(-10)).Average(aaa=>aaa.ViewCount),
+                    LastReadNum = d.MediaArticles.Where(l => l.IsTop == true && l.Media.MediaType.CallIndex == "weixin").OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount,
+                    AvgReadNum = (int?)d.MediaArticles.Where(l => l.IsTop == true && l.Media.MediaType.CallIndex == "weixin").OrderByDescending(a => a.PublishDate).Where(aa => aa.PublishDate > DateTime.Now.Date.AddDays(-10)).Average(aaa => aaa.ViewCount),
                     PublishFrequency = d.PublishFrequency,
                     Areas = d.Area,
                     Sex = d.Sex,
                     Client = d.Client,
                     SEO = d.SEO,
                     Abstract = d.Abstract,
-                    PostNum=d.PostNum,
+                    PostNum = d.PostNum,
                     MonthPostNum = d.MonthPostNum,
                     FriendNum = d.FriendNum,
                     Efficiency = d.Efficiency,
                     ResourceType = d.ResourceType,
                     Channel = d.Channel,
-                    LastPushDate = d.MediaArticles.Where(l => l.IsTop == true&&l.Media.MediaType.CallIndex=="weixin").OrderByDescending(a=>a.PublishDate).FirstOrDefault()?.PublishDate,
+                    LastPushDate = d.LastPushDate,
                     AuthenticateType = d.AuthenticateType,
                     Platform = d.Platform,
-                    TransmitNum = (int?) d.MediaArticles.Where(aa=>aa.Media.MediaType.CallIndex== "sinablog").OrderByDescending(a=>a.PublishDate).Take(50).Average(aaa=>aaa.ShareCount),
+                    TransmitNum = (int?)d.MediaArticles.Where(aa => aa.Media.MediaType.CallIndex == "sinablog").OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ShareCount),
                     CommentNum = (int?)d.MediaArticles.Where(aa => aa.Media.MediaType.CallIndex == "sinablog").OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount),
                     LikesNum = (int?)d.MediaArticles.Where(aa => aa.Media.MediaType.CallIndex == "sinablog").OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount),
                     BlogLastPushDate = d.MediaArticles.Where(l => l.Media.MediaType.CallIndex == "sinablog").OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate,
-                    WeekArticleCount=d.MediaArticles.OrderByDescending(a => a.PublishDate).Count(l => l.Media.MediaType.CallIndex == "sinablog"&& l.PublishDate > DateTime.Now.Date.AddDays(-7)),
+                    WeekArticleCount = d.MediaArticles.OrderByDescending(a => a.PublishDate).Count(l => l.Media.MediaType.CallIndex == "sinablog" && l.PublishDate > DateTime.Now.Date.AddDays(-7)),
                     Content = d.Content,
                     Remark = d.Remark,
                     Status = d.Status,
@@ -741,7 +745,7 @@ namespace Resource.Controllers
         public ActionResult WeiXinProCollection(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            WeiXinProParams view=new WeiXinProParams();
+            WeiXinProParams view = new WeiXinProParams();
             view.UID = entity.MediaID;
             view.CallIndex = "weixinpro";
             view.PageNum = 1;
@@ -751,10 +755,20 @@ namespace Resource.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult WeiXinProCollection(WeiXinProParams viewModel)
         {
+            var premission = PremissionData();
+            if (premission.Count > 0)
+            {
+                if (CheckRequest(viewModel.CallIndex, true))
+                {
+                    return Json(new { State = 0, Msg = "今日请求采集微信文章次数已用完" });
+                }
+            }
+            viewModel.TransactorId = CurrentManager.Id;
+            viewModel.Transactor = CurrentManager.UserName;
             var msg = _iDataAPIService.GetWeiXinArticles(viewModel);
             return Json(new { State = 1, Msg = msg.Message });
         }
-        
+
         public ActionResult WeiboArticles(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -773,7 +787,34 @@ namespace Resource.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult WeiboCollection(WeiBoParams viewModel)
         {
+            var premission = PremissionData();
+            if (premission.Count > 0)
+            {
+                if (CheckRequest(viewModel.CallIndex))
+                {
+                    return Json(new { State = 0, Msg = "今日请求采集微博文章次数已用完" });
+                }
+            }
+            viewModel.TransactorId = CurrentManager.Id;
+            viewModel.Transactor = CurrentManager.UserName;
             var msg = _iDataAPIService.GetWeiBoArticles(viewModel);
+            return Json(new { State = 1, Msg = msg.Message });
+        }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult WeixinCollection(BaseParams baseParams)
+        {
+            var premission = PremissionData();
+            if (premission.Count > 0)
+            {
+                if (CheckRequest(baseParams.CallIndex))
+                {
+                    return Json(new { State = 0, Msg = "今日请求采集微信信息次数已用完" });
+                }
+            }
+            baseParams.TransactorId = CurrentManager.Id;
+            baseParams.Transactor = CurrentManager.UserName;
+            var msg = _iDataAPIService.GetWeinXinInfo(baseParams);
             return Json(new { State = 1, Msg = msg.Message });
         }
         private Media IsExist(MediaView viewModel, out string msg, bool isSelf = false, bool isDelete = false)
@@ -850,6 +891,21 @@ namespace Resource.Controllers
             if (media == null) return null;
             msg = viewModel.MediaName + "，此媒体账号已存在！";
             return media;
+        }
+
+        private bool CheckRequest(string apiCallIndex, bool isArticle = false)
+        {
+            var setting = _settingService.GetSetting<WeiGuang>();
+            var start = DateTime.Now.Date;
+            var end = DateTime.Now.Date.AddDays(1);
+            var count = _apiRequestRecordRepository.LoadEntities(d =>
+                  d.AddedById == CurrentManager.Id && d.APIInterfaces.CallIndex == apiCallIndex &&
+                  d.ReponseDate >= start && d.ReponseDate < end).Count();
+            if (isArticle)
+            {
+                return count > setting.RequestArticleCount;
+            }
+            return count > setting.RequestMediaCount;
         }
     }
 }

@@ -48,5 +48,15 @@ namespace Ada.Core.ViewModel.API.iDataAPI
         /// 账号名称
         /// </summary>
         public string screenName { get; set; }
+        /// <summary>
+        /// 最后推送信息
+        /// </summary>
+        public LastPost lastPost { get; set; }
+    }
+
+    public class LastPost
+    {
+        public string url { get; set; }
+        public string date { get; set; }
     }
 }

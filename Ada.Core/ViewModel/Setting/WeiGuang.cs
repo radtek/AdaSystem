@@ -23,6 +23,8 @@ namespace Ada.Core.ViewModel.Setting
             Percentage2 = 0.12M;
             ReturnDays1 = 183;
             ReturnDays2 = 365;
+            RequestArticleCount = 1;
+            RequestMediaCount = 1;
         }
         /// <summary>
         /// 媒介资源查询数
@@ -69,5 +71,15 @@ namespace Ada.Core.ViewModel.Setting
         /// </summary>
         [Display(Name = "回款天数")]
         public int ReturnDays2 { get; set; }
+        /// <summary>
+        /// 每日限定采集文章次数
+        /// </summary>
+        [Display(Name = "每日限定采集文章次数")]
+        public int RequestArticleCount { get; set; }
+        /// <summary>
+        /// 每日限定采集资源次数
+        /// </summary>
+        [Display(Name = "每日限定采集资源次数")]
+        public int RequestMediaCount { get; set; }
     }
 }

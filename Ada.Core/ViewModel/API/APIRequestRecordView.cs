@@ -59,5 +59,10 @@ namespace Ada.Core.ViewModel.API
         /// </summary>
         [Display(Name = "响应时间")]
         public DateTime? ReponseDateEnd { get; set; }
+        /// <summary>
+        /// 采集人
+        /// </summary>
+        [Display(Name = "采集人")]
+        public string AddBy { get; set; }
     }
 }

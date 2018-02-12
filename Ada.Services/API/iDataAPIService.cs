@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,6 +26,108 @@ namespace Ada.Services.API
             _apiInterfacesService = apiInterfacesService;
             _dbContext = dbContext;
             _mediaRepository = mediaRepository;
+        }
+
+        public RequestResult GetWeinXinInfo(BaseParams baseParams)
+        {
+            var apiInfo = _apiInterfacesService.GetAPIInterfacesByCallIndex(baseParams.CallIndex);
+            string url = string.Format(apiInfo.APIUrl + "?apikey={0}", apiInfo.Token);
+            int times = apiInfo.TimeOut ?? 3;
+            var ids = baseParams.UID.Split(',');
+            int updateCount = 0;
+            foreach (var id in ids)
+            {
+                int request = 1;
+                string urlparams = "&id=" + id;
+                var apiUrl = url + urlparams;
+                string htmlstr = string.Empty;
+                while (request <= times)
+                {
+                    try
+                    {
+                        htmlstr = HttpUtility.Get(apiUrl);
+                        request = 9999;
+                    }
+                    catch (Exception ex)
+                    {
+                        if (request == times)
+                        {
+                            APIRequestRecord exrecord = new APIRequestRecord();
+                            exrecord.Id = IdBuilder.CreateIdNum();
+                            exrecord.RequestParameters = urlparams;
+                            exrecord.IsSuccess = false;
+                            exrecord.Retcode = "500";
+                            exrecord.ReponseContent = ex.Message;
+                            exrecord.Retmsg = "请求异常";
+                            exrecord.ReponseDate = DateTime.Now;
+                            apiInfo.APIRequestRecords.Add(exrecord);
+                        }
+                        request++;
+                    }
+                }
+                if (!string.IsNullOrWhiteSpace(htmlstr))
+                {
+                    var result = JsonConvert.DeserializeObject<WeiXinInfosJSON>(htmlstr);
+                    //失败日志
+                    if (result.retcode != ReturnCode.请求成功)
+                    {
+                        APIRequestRecord record = new APIRequestRecord();
+                        record.Id = IdBuilder.CreateIdNum();
+                        record.IsSuccess = false;
+                        record.RequestParameters = urlparams;
+                        record.Retcode = result.retcode.GetHashCode().ToString();
+                        record.Retmsg = result.message;
+                        record.ReponseContent = htmlstr;
+                        record.ReponseDate = DateTime.Now;
+                        record.AddedById = baseParams.TransactorId;
+                        record.AddedBy = baseParams.Transactor;
+                        apiInfo.APIRequestRecords.Add(record);
+                    }
+                    if (result.retcode == ReturnCode.请求成功)
+                    {
+                        //成功日志
+                        if (baseParams.IsLog)
+                        {
+                            APIRequestRecord record = new APIRequestRecord();
+                            record.Id = IdBuilder.CreateIdNum();
+                            record.IsSuccess = true;
+                            record.RequestParameters = urlparams;
+                            record.Retcode = result.retcode.GetHashCode().ToString();
+                            record.Retmsg = result.message;
+                            //record.ReponseContent = "当前采集文章数：" + result.data.Count;
+                            record.ReponseDate = DateTime.Now;
+                            record.AddedById = baseParams.TransactorId;
+                            record.AddedBy = baseParams.Transactor;
+                            apiInfo.APIRequestRecords.Add(record);
+                        }
+                        if (result.data.Count > 0)
+                        {
+                            var media = _mediaRepository.LoadEntities(d => d.MediaID == id && d.IsDelete == false).FirstOrDefault();
+                            if (media != null)
+                            {
+                                var weixinInfo = result.data[0];
+                                media.IsAuthenticate = weixinInfo.idVerified;
+                                media.MediaName = weixinInfo.screenName;
+                                media.MonthPostNum = weixinInfo.monthPostCount;
+                                media.MediaLogo = weixinInfo.avatarUrl;
+                                media.MediaQR = weixinInfo.qrcodeUrl;
+                                media.Content = weixinInfo.biography;
+                                media.CollectionDate = DateTime.Now;
+                                if (DateTime.TryParse(weixinInfo.lastPost?.date, out var date))
+                                {
+                                    media.LastPushDate = date;
+                                }
+                                updateCount++;
+                            }
+                        }
+                    }
+                }
+                _dbContext.SaveChanges();
+            }
+            RequestResult requestResult = new RequestResult();
+            requestResult.UpdateCount = updateCount;
+            requestResult.Message = "采集成功！更新：" + updateCount + "个微信号";
+            return requestResult;
         }
         public RequestResult GetWeiXinArticles(WeiXinProParams wxparams)
         {
@@ -95,6 +198,8 @@ namespace Ada.Services.API
                     record.Retmsg = result.message;
                     record.ReponseContent = "当前采集文章数：" + result.data.Count;
                     record.ReponseDate = DateTime.Now;
+                    record.AddedById = wxparams.TransactorId;
+                    record.AddedBy = wxparams.Transactor;
                     apiInfo.APIRequestRecords.Add(record);
                 }
                 //失败日志
@@ -108,6 +213,8 @@ namespace Ada.Services.API
                     record.Retmsg = result.message;
                     record.ReponseContent = htmlstr;
                     record.ReponseDate = DateTime.Now;
+                    record.AddedById = wxparams.TransactorId;
+                    record.AddedBy = wxparams.Transactor;
                     apiInfo.APIRequestRecords.Add(record);
                     break;
                 }
@@ -283,6 +390,8 @@ namespace Ada.Services.API
                     record.Retmsg = result.message;
                     record.ReponseContent = "当前采集文章数：" + result.data.Count;
                     record.ReponseDate = DateTime.Now;
+                    record.AddedById = wbparams.TransactorId;
+                    record.AddedBy = wbparams.Transactor;
                     apiInfo.APIRequestRecords.Add(record);
                 }
                 //失败日志
@@ -296,6 +405,8 @@ namespace Ada.Services.API
                     record.Retmsg = result.message;
                     record.ReponseContent = htmlstr;
                     record.ReponseDate = DateTime.Now;
+                    record.AddedById = wbparams.TransactorId;
+                    record.AddedBy = wbparams.Transactor;
                     apiInfo.APIRequestRecords.Add(record);
                     break;
                 }

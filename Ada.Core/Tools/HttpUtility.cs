@@ -38,6 +38,15 @@ namespace Ada.Core.Tools
                 return task.Result.Content.ReadAsStringAsync().Result;
             }
         }
+        public static T GetJson<T>(string url)
+        {
+            string resultStr = Get(url);
+            if (string.IsNullOrWhiteSpace(resultStr))
+            {
+                throw new ApplicationException("转换JSON失败，字符串信息为空");
+            }
+            return JsonConvert.DeserializeObject<T>(resultStr);
+        }
         public static async Task<T> GetJsonAsync<T>(string url)
         {
             string resultStr = await GetAsync(url);

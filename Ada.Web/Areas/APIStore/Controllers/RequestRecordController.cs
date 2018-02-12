@@ -37,7 +37,9 @@ namespace APIStore.Controllers
                     IsSuccess = d.IsSuccess,
                     ReponseContent=d.ReponseContent,
                     ReponseDate = d.ReponseDate,
-                    APIName = d.APIInterfaces.APIName
+                    APIName = d.APIInterfaces.APIName,
+                    AddBy = d.AddedBy
+                    
                 })
             }, JsonRequestBehavior.AllowGet);
         }

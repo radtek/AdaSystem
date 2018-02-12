@@ -100,7 +100,7 @@
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/ladda")
     @Scripts.Render("~/plugins/dateRange")
-    <script type="text/javascript">
+<script type="text/javascript">
 
         $(document).ready(function() {
             var table = new TableInit();
@@ -174,7 +174,13 @@
                             formatter: function (value) {
                                 return moment(value).format("YYYY-MM-DD HH:mm:ss");
                             }
-                        }
+                        },
+                        {
+                            field: 'AddBy',
+                            title: '@Html.DisplayNameFor(d => d.AddBy)',
+                            align: "center", valign: "middle"
+                        },
+
                     ]
                 });
             };
@@ -262,7 +268,7 @@
             });
 
         }
-    </script>
+</script>
 }
 
 

@@ -183,7 +183,7 @@ namespace Resource.Controllers
             return Content("共有" + count + "条资源加入采集行列");
         }
         [HttpPost]
-        public ActionResult CollectionWeixinInfo(string id)
+        public ActionResult CollectionWeixinInfoFree(string id)
         {
             TestParams testParams = new TestParams();
             testParams.UID = id;
@@ -209,10 +209,16 @@ namespace Resource.Controllers
                 media.MediaLogo = weixinInfo.avatarUrl;
                 media.MediaQR = weixinInfo.qrcodeUrl;
                 media.Content = weixinInfo.biography;
+                media.CollectionDate = DateTime.Now;
+                if (DateTime.TryParse(weixinInfo.lastPost?.date, out var date))
+                {
+                    media.LastPushDate = date;
+                }
                 _mediaService.Update(media);
                 return Json(new { State = 1, Msg = "更新成功" });
             }
             return Json(new { State = 0, Msg = jsonResult.api_result });
         }
+        
     }
 }

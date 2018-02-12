@@ -149,6 +149,9 @@
     <button type="button" class="btn btn-primary btn-outline" onclick="collectArticle('@Url.Action("WeiXinProCollection","Media")');">
         <i class="fa fa-cloud"></i> 采集文章
     </button>
+    <button type="button" class="btn btn-primary btn-outline" onclick="collectWeiXin('@Url.Action("WeixinCollection","Media")');">
+        <i class="fa fa-cloud"></i> 采集微信
+    </button>
 </div>
 
 @section StylesFirst {
@@ -165,7 +168,7 @@
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/ladda")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=2018021113")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=2018021213")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -195,7 +198,7 @@
                 showRefresh: true,                  //是否显示刷新按钮
                 minimumCountColumns: 2,             //最少允许的列数
                 clickToSelect: true,                //是否启用点击选中行
-                singleSelect: true,                  //设置True 将禁止多选
+                singleSelect: false,                  //设置True 将禁止多选
                 uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
                 showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
                 cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
@@ -253,9 +256,13 @@
                         valign: "middle",
                         align: "left",
                         formatter: function (value, row) {
+                            @*var update =
+                                " <button class='btn btn-success btn-xs' data-toggle='tooltip' data-placement='bottom' title='更新微信信息' onclick='collectWeiXinFree(\"@Url.Action("CollectionWeixinInfoFree")?id=" +
+                                    row.MediaID +
+                                    "\");'><i class='fa fa-arrow-circle-up'></i></button> ";*@
                             var url =
                                 "<a class='label' href='http://weixin.sogou.com/weixin?type=1&query=" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
-                            return " <button class='btn btn-success btn-xs' data-toggle='tooltip' data-placement='bottom' title='更新微信信息' onclick='updatewx(\"@Url.Action("CollectionWeixinInfo")?id=" + row.MediaID +"\");'><i class='fa fa-arrow-circle-up'></i></button> "+ url +
+                            return  url +
                                 " <button class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看微信详情' onclick='details(\"@Url.Action("WeiXinArticles","Media")?id=" + row.Id + "\");'>详</button>" +
                                 " <img rel='drevil' data-content='<div id=\"popOverBox\"><img src=\"" + (row.MediaQR || '/Images/nopic.png') +"\" width=\"100\" height=\"100\" /></div>'  src='/Images/ewm.png' style='width: 20px; height: 20px;'/>";
                         }
@@ -279,7 +286,7 @@
                         title: '微信指数（近十天）',
                         valign: "middle",
                         formatter: function (value, row) {
-                            var date = "暂未发文";
+                            var date = "暂未发文或未采集更新";
                             if (row.LastPushDate) {
                                 date = moment(row.LastPushDate).format("YYYY-MM-DD HH:mm");
                             }
