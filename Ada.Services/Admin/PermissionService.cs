@@ -140,7 +140,8 @@ namespace Ada.Services.Admin
                 IconCls = d.IconCls,
                 TreePath = d.TreePath,
                 Url = GetUrl(d.ActionId),
-                Taxis = d.Taxis
+                Taxis = d.Taxis,
+                IsBlank = d.IsBlank
             }).OrderBy(d => d.Taxis).ToList();
         }
 

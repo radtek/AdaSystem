@@ -7,103 +7,105 @@
 }
 
 <nav class="navbar-default navbar-static-side" role="navigation">
-  <div class="sidebar-collapse">
-    <ul class="nav" id="side-menu">
-      <li class="nav-header">
-        <div class="dropdown profile-element">
-          <span>
-            <img alt="个人照片" class="img-circle" src="@image" style="width: 48px; height: 48px;"/>
-          </span>
-          <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-            <span class="clear">
-              <span class="block m-t-xs">
-                <strong class="font-bold">@manager.UserName</strong> [@manager.Organizations]
-              </span>
+    <div class="sidebar-collapse">
+        <ul class="nav" id="side-menu">
+            <li class="nav-header">
+                <div class="dropdown profile-element">
+                    <span>
+                        <img alt="个人照片" class="img-circle" src="@image" style="width: 48px; height: 48px;" />
+                    </span>
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <span class="clear">
+                            <span class="block m-t-xs">
+                                <strong class="font-bold">@manager.UserName</strong> [@manager.Organizations]
+                            </span>
 
-              <span class="text-muted text-xs block">@manager.RoleName <b class="caret"></b></span>
-            </span>
-          </a>
-          <ul class="dropdown-menu animated fadeInRight m-t-xs">
-              @*<li><a href="@Url.Action("Profile", "AppViews")">Profile</a></li>
-        <li><a href="@Url.Action("Contacts", "AppViews")">Contacts</a></li>*@
-              @*<li><a href="#modal-changepwd" data-toggle="modal">修改密码</a></li>*@
-              <li class="divider"></li>
-              @foreach (var item in manager.RoleList)
-              {
-                <li><a href="@Url.Action("ChangeRole","Manager",new{area="Admin",id=item.Id})"><i class="fa fa-caret-square-o-right"></i> @item.RoleName</a></li>
-              }
-              <li class="divider"></li>
-              <li><a href="javascript:;" id="changepwd"><i class="fa fa-pencil-square-o"></i> 修改密码</a></li>
-              <li><a href="javascript:;" id="changeimage"><i class="fa fa-picture-o"></i> 修改头像</a></li>
-              <li class="divider"></li>
-              <li><a href="@Url.Action("Quit", "Login",new{area=""})"><i class="fa fa-sign-out"></i> 退出</a></li>
-          </ul>
-        </div>
-        <div class="logo-element">
-          VG+
-        </div>
-      </li>
+                            <span class="text-muted text-xs block">@manager.RoleName <b class="caret"></b></span>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                        @*<li><a href="@Url.Action("Profile", "AppViews")">Profile</a></li>
+                            <li><a href="@Url.Action("Contacts", "AppViews")">Contacts</a></li>*@
+                        @*<li><a href="#modal-changepwd" data-toggle="modal">修改密码</a></li>*@
+                        <li class="divider"></li>
+                        @foreach (var item in manager.RoleList)
+                        {
+                            <li><a href="@Url.Action("ChangeRole","Manager",new{area="Admin",id=item.Id})"><i class="fa fa-caret-square-o-right"></i> @item.RoleName</a></li>
+                        }
+                        <li class="divider"></li>
+                        <li><a href="javascript:;" id="changepwd"><i class="fa fa-pencil-square-o"></i> 修改密码</a></li>
+                        <li><a href="javascript:;" id="changeimage"><i class="fa fa-picture-o"></i> 修改头像</a></li>
+                        <li class="divider"></li>
+                        <li><a href="@Url.Action("Quit", "Login",new{area=""})"><i class="fa fa-sign-out"></i> 退出</a></li>
+                    </ul>
+                </div>
+                <div class="logo-element">
+                    VG+
+                </div>
+            </li>
 
-      @foreach (var menu in menus)
+            @foreach (var menu in menus)
             {
                 if (string.IsNullOrWhiteSpace(menu.ParentId))//一级菜单
                 {
                     var icon = string.IsNullOrWhiteSpace(menu.IconCls) ? "fa-bars" : menu.IconCls;
+                    var isblank = menu.IsBlank == true ? "target='_blank'" : "";
                     if (menu.Url != null)
                     {
                         var isLinkurl = !string.IsNullOrWhiteSpace(menu.Url.LinkUrl);
                         if (isLinkurl)
                         {
-                      <li class="special_link @Html.IsSelected(menu.Url.Area)">
-                        <a href="@menu.Url.LinkUrl" target="_blank">
-                          <i class="fa @icon"></i> <span class="nav-label"> @menu.Name</span>
-                        </a>
-                      </li>
-            }
-            else
-            {
-                      <li class="@Html.IsSelected(menu.Url.Area)">
-                        <a href="@Url.Action(menu.Url.Action, menu.Url.Colltroller, new { area = menu.Url.Area })">
-                          <i class="fa @icon"></i> <span class="nav-label"> @menu.Name</span>
-                        </a>
-                      </li>
-            }
+                            <li class="special_link @Html.IsSelected(menu.Url.Area)">
+                                <a href="@menu.Url.LinkUrl" target="_blank">
+                                    <i class="fa @icon"></i> <span class="nav-label"> @menu.Name</span>
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="@Html.IsSelected(menu.Url.Area)">
+                                <a href="@Url.Action(menu.Url.Action, menu.Url.Colltroller, new { area = menu.Url.Area })" @Html.Raw(isblank)>
+                                    <i class="fa @icon"></i> <span class="nav-label"> @menu.Name</span>
+                                </a>
+                            </li>
+                        }
 
-          }
-          else
-          {
-            var first = menus.FirstOrDefault(d => d.ParentId == menu.Id && d.Url != null);
-            var area = "";
-            if (first != null)
-            {
-              area = first.Url.Area;
-            }
-            <li class="@Html.IsSelected(area: area)">
-              <a href="javascript:;"><i class="fa @icon"></i> <span class="nav-label"> @menu.Name</span><span class="fa arrow"></span></a>
-              <ul class="nav nav-second-level collapse @Html.IsSelected(area: area, cssClass: "in")">
-                @foreach (var menu2 in menus.Where(d => d.ParentId == menu.Id))//二级菜单
-                {
-                  var icon2 = string.IsNullOrWhiteSpace(menu2.IconCls) ? "fa-bars" : menu2.IconCls;
-                  if (menu2.Url != null)
-                  {
-                    var url = string.IsNullOrWhiteSpace(menu2.Url.LinkUrl) ? Url.Action(menu2.Url.Action, menu2.Url.Colltroller, new { area = menu2.Url.Area }) : menu2.Url.LinkUrl;
-                        <li class="@Html.IsSelected(controller: menu2.Url.Colltroller)">
-                          <a href="@url"><i class="fa @icon2"></i> @menu2.Name</a>
+                    }
+                    else
+                    {
+                        var first = menus.FirstOrDefault(d => d.ParentId == menu.Id && d.Url != null);
+                        var area = "";
+                        if (first != null)
+                        {
+                            area = first.Url.Area;
+                        }
+                        <li class="@Html.IsSelected(area: area)">
+                            <a href="javascript:;"><i class="fa @icon"></i> <span class="nav-label"> @menu.Name</span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse @Html.IsSelected(area: area, cssClass: "in")">
+                                @foreach (var menu2 in menus.Where(d => d.ParentId == menu.Id))//二级菜单
+                                {
+                                    var icon2 = string.IsNullOrWhiteSpace(menu2.IconCls) ? "fa-bars" : menu2.IconCls;
+                                    if (menu2.Url != null)
+                                    {
+                                        var url = string.IsNullOrWhiteSpace(menu2.Url.LinkUrl) ? Url.Action(menu2.Url.Action, menu2.Url.Colltroller, new { area = menu2.Url.Area }) : menu2.Url.LinkUrl;
+                                        var isblank2 = menu2.IsBlank == true ? "target='_blank'" : "";
+                                        <li class="@Html.IsSelected(controller: menu2.Url.Colltroller)">
+                                            <a href="@url" @Html.Raw(isblank2)><i class="fa @icon2"></i> @menu2.Name</a>
+                                        </li>
+                                    }
+                                }
+                            </ul>
                         </li>
-                  }
+                    }
+
                 }
-              </ul>
-            </li>
-          }
+            }
+            @*<li class="special_link @Html.IsSelected(controller: "Default")">
+                  <a href="@Url.Action("Index", "Default",new{area=""})" target="_blank"><i class="fa fa-star"></i> <span class="nav-label">江西微广</span></a>
+                </li>*@
 
-        }
-      }
-      @*<li class="special_link @Html.IsSelected(controller: "Default")">
-        <a href="@Url.Action("Index", "Default",new{area=""})" target="_blank"><i class="fa fa-star"></i> <span class="nav-label">江西微广</span></a>
-      </li>*@
-
-    </ul>
-  </div>
+        </ul>
+    </div>
 </nav>
 
 

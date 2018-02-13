@@ -44,7 +44,11 @@ namespace Ada.Core.Domain.Admin
         /// </summary>
         [Display(Name = "隐藏")]
         public bool? IsVisable { get; set; }
-
+        /// <summary>
+        /// 是否新窗口
+        /// </summary>
+        [Display(Name = "是否新窗口")]
+        public bool? IsBlank { get; set; }
         /// <summary>
         /// 图标样式
         /// </summary>

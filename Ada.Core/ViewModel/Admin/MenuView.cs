@@ -31,6 +31,8 @@ namespace Ada.Core.ViewModel.Admin
         public int? Taxis { get; set; }
         [Display(Name = "隐藏")]
         public bool? IsVisable { get; set; }
+        [Display(Name = "是否新窗口")]
+        public bool? IsBlank { get; set; }
 
     }
 

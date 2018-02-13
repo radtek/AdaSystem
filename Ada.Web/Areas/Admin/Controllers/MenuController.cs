@@ -65,7 +65,8 @@ namespace Admin.Controllers
                 Taxis = entity.Taxis,
                 ActionId = entity.ActionId,
                 IsVisable = entity.IsVisable,
-                IconCls = entity.IconCls
+                IconCls = entity.IconCls,
+                IsBlank = entity.IsBlank
 
             }, JsonRequestBehavior.AllowGet);
         }
@@ -81,6 +82,7 @@ namespace Admin.Controllers
                 entity.Taxis = viewModel.Taxis;
                 entity.ActionId = viewModel.ActionId;
                 entity.IsVisable = viewModel.IsVisable;
+                entity.IsBlank = viewModel.IsBlank;
                 entity.IconCls = viewModel.IconCls;
                 entity.ParentId = viewModel.ParentId;
                 entity.ModifiedById = CurrentManager.Id;
@@ -102,7 +104,8 @@ namespace Admin.Controllers
                     AddedBy = CurrentManager.UserName,
                     AddedById = CurrentManager.Id,
                     AddedDate = DateTime.Now,
-                    IconCls = viewModel.IconCls
+                    IconCls = viewModel.IconCls,
+                    IsBlank = viewModel.IsBlank
 
                 };
                 _menuService.Add(entity);
