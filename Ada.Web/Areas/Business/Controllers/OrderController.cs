@@ -265,7 +265,7 @@ namespace Business.Controllers
                 Status = d.Status ?? Consts.StateLock,
                 PurchaseStatus = GetPurchaseOrderDetail(d.Id)?.Status,
                 GetPurchaseOrderDetail(d.Id)?.PurchaseMoney
-            });
+            }).OrderByDescending(d=>d.Id);
             entity.OrderDetails = JsonConvert.SerializeObject(orderDetails);
 
             return View(entity);

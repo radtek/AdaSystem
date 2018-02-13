@@ -145,21 +145,35 @@ function initData() {
                 align: "center", valign: "middle",
                 editable: { mode: "inline", emptytext: '请输入' }
             },
+            //{
+            //    field: 'PrePublishDate',
+            //    title: '预出刊日期',
+            //    align: "center", valign: "middle",
+            //    editable: {
+            //        type: 'combodate',
+            //        mode: "inline",
+            //        emptytext: '请输入',
+            //        format: 'YYYY-MM-DD',
+            //        viewformat: 'YYYY-MM-DD',
+            //        template: 'YYYY 年 MM 月 DD 日',
+            //        combodate: {
+            //            minYear: moment().format('YYYY'),
+            //            maxYear: moment().add(1, "years").format('YYYY'),
+            //            minuteStep: 1
+            //        }
+            //    }
+            //},
             {
                 field: 'PrePublishDate',
                 title: '预出刊日期',
                 align: "center", valign: "middle",
                 editable: {
-                    type: 'combodate',
-                    mode: "inline",
-                    emptytext: '请输入',
-                    format: 'YYYY-MM-DD',
-                    viewformat: 'YYYY-MM-DD',
-                    template: 'YYYY 年 MM 月 DD 日',
-                    combodate: {
-                        minYear: moment().format('YYYY'),
-                        maxYear: moment().add(1, "years").format('YYYY'),
-                        minuteStep: 1
+                    mode: "inline", emptytext: '请输入', validate: function (value) {
+                        var reg = /^(\d{4})-(0\d{1}|1[0-2])-(0\d{1}|[12]\d{1}|3[01])$/;
+                        if (!reg.test(value)) {
+                            return '请输入有效的日期格式（如：2018-01-01）';
+                        }
+                        
                     }
                 }
             },

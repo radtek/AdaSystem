@@ -12,6 +12,7 @@ using Ada.Core.Domain.Resource;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel.API;
 using Ada.Core.ViewModel.API.iDataAPI;
+using log4net;
 using Newtonsoft.Json;
 
 namespace Ada.Services.API
@@ -21,6 +22,7 @@ namespace Ada.Services.API
         private readonly IDbContext _dbContext;
         private readonly IAPIInterfacesService _apiInterfacesService;
         private readonly IRepository<Media> _mediaRepository;
+        public ILog Log { get; set; }
         public iDataAPIService(IAPIInterfacesService apiInterfacesService, IDbContext dbContext, IRepository<Media> mediaRepository)
         {
             _apiInterfacesService = apiInterfacesService;
@@ -122,7 +124,9 @@ namespace Ada.Services.API
                         }
                     }
                 }
+                
                 _dbContext.SaveChanges();
+                Log.Info("DB:"+_dbContext.GetHashCode());
             }
             RequestResult requestResult = new RequestResult();
             requestResult.UpdateCount = updateCount;

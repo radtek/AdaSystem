@@ -15,6 +15,7 @@ using Quartz;
 
 namespace QuartzTask.Jobs
 {
+    [DisallowConcurrentExecution]
     public class WeiboArticlesJob : IJob
     {
         private readonly IiDataAPIService _iDataAPIService;

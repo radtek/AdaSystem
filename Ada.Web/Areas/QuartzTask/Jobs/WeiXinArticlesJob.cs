@@ -12,6 +12,7 @@ using Quartz;
 namespace QuartzTask.Jobs
 {
     //抓微信文章
+    [DisallowConcurrentExecution]
     public class WeiXinArticlesJob : IJob
     {
         private readonly IiDataAPIService _iDataAPIService;
