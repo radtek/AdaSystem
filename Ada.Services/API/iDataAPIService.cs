@@ -126,7 +126,6 @@ namespace Ada.Services.API
                 }
                 
                 _dbContext.SaveChanges();
-                Log.Info("DB:"+_dbContext.GetHashCode());
             }
             RequestResult requestResult = new RequestResult();
             requestResult.UpdateCount = updateCount;
@@ -434,12 +433,12 @@ namespace Ada.Services.API
                     media.IsAuthenticate = mediaInfo.extend?.verified;
                     media.Abstract = mediaInfo.extend?.verified_reason;
                     media.CollectionDate = DateTime.Now;
-                    var authType = GetAuthenticateType(mediaInfo.extend?.verified_type);
+                    var authType = Utils.BlogAuthenticateType(mediaInfo.extend?.verified_type);
                     if (!string.IsNullOrWhiteSpace(authType))
                     {
                         media.AuthenticateType = authType;
                     }
-                    var sex = GetSex(mediaInfo.extend?.gender);
+                    var sex = Utils.BlogSex(mediaInfo.extend?.gender);
                     if (!string.IsNullOrWhiteSpace(sex))
                     {
                         media.Sex = sex;
@@ -528,53 +527,6 @@ namespace Ada.Services.API
             return HttpUtility.Post(apiInfo.APIUrl, postdata);
             
         }
-        private string GetAuthenticateType(int? verifiedtype)
-        {
-            if (verifiedtype != null)
-            {
-                string type = null;
-                switch (verifiedtype)
-                {
-                    case 0:
-                        type = "黄V";
-                        break;
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                    case 6:
-                    case 7:
-                    case 8:
-                        type = "蓝V";
-                        break;
-                    case 200:
-                    case 220:
-                    case 400:
-                        type = "达人";
-                        break;
-                }
-
-                return type;
-            }
-
-            return null;
-        }
-        private string GetSex(string sex)
-        {
-            if (string.IsNullOrWhiteSpace(sex)) return null;
-            string temp = null;
-            switch (sex)
-            {
-                case "m":
-                    temp = "男";
-                    break;
-                case "f":
-                    temp = "女";
-                    break;
-            }
-            return temp;
-
-        }
+        
     }
 }

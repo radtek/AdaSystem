@@ -1,68 +1,128 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.SqlServer;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Ada.Core;
+using Ada.Core.Domain.API;
 using Ada.Core.Domain.Resource;
 using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel.API.iDataAPI;
+using Ada.Data;
 using Ada.Services.API;
 using log4net;
+using Newtonsoft.Json;
 using Quartz;
+using HttpUtility = Ada.Core.Tools.HttpUtility;
 
 namespace QuartzTask.Jobs
 {
     [DisallowConcurrentExecution]
     public class WeiXinInfoJob : IJob
     {
-        private readonly IiDataAPIService _iDataAPIService;
-        private readonly IRepository<Media> _repository;
         private readonly ILog _logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public WeiXinInfoJob()
-        {
-            _iDataAPIService = EngineContext.Current.Resolve<IiDataAPIService>();
-            _repository = EngineContext.Current.Resolve<IRepository<Media>>();
-        }
         public void Execute(IJobExecutionContext context)
         {
-            Task.Factory.StartNew(() =>
+            using (var db = new AdaEFDbcontext())
             {
-                _logger.Info("微信信息自动任务开始：" + DateTime.Now);
-                try
+                var media = db.Set<Media>().FirstOrDefault(d =>
+                      d.IsDelete == false && d.MediaType.CallIndex == "weixin" && d.IsSlide == true &&
+                      (d.CollectionDate == null || SqlFunctions.DateDiff("day", d.CollectionDate, DateTime.Now) > 1));
+                if (media != null)
                 {
-                    var medias = _repository.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "weixin" && d.IsSlide == true).OrderBy(d => d.Id).ToList();
-                    foreach (var media in medias)
+                    media.CollectionDate = DateTime.Now;
+                    try
                     {
-                        if (string.IsNullOrWhiteSpace(media.MediaID)) continue;
-                        BaseParams wxparams = new BaseParams
+                        if (!string.IsNullOrWhiteSpace(media.MediaID))
                         {
-                            CallIndex = "weixin",
-                            IsLog = false,
-                            UID = media.MediaID.Trim(),
-                            Transactor = "系统自动",
-                            TransactorId = "系统自动"
-                        };
-                        try
-                        {
-                            _iDataAPIService.GetWeinXinInfo(wxparams);
-                        }
-                        catch (Exception e)
-                        {
-                            _logger.Error("微信信息" + media.MediaID + "，自动任务失败：" + DateTime.Now, e);
+                            //获取api信息
+                            var apiInfo = db.Set<APIInterfaces>().FirstOrDefault(d => d.CallIndex == "weixin");
+                            if (apiInfo != null)
+                            {
+                                string url = string.Format(apiInfo.APIUrl + "?apikey={0}&id={1}", apiInfo.Token,
+                                    media.MediaID);
+                                int times = apiInfo.TimeOut ?? 3;
+                                int request = 1;
+                                string htmlstr = string.Empty;
+                                while (request <= times)
+                                {
+                                    try
+                                    {
+                                        htmlstr = HttpUtility.Get(url);
+                                        request = 9999;
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        if (request == times)
+                                        {
+                                            APIRequestRecord exrecord = new APIRequestRecord();
+                                            exrecord.Id = IdBuilder.CreateIdNum();
+                                            exrecord.RequestParameters = media.MediaID;
+                                            exrecord.IsSuccess = false;
+                                            exrecord.Retcode = "500";
+                                            exrecord.ReponseContent = ex.Message;
+                                            exrecord.Retmsg = "请求异常";
+                                            exrecord.ReponseDate = DateTime.Now;
+                                            apiInfo.APIRequestRecords.Add(exrecord);
+                                        }
+
+                                        request++;
+                                    }
+                                }
+                                if (!string.IsNullOrWhiteSpace(htmlstr))
+                                {
+                                    var result = JsonConvert.DeserializeObject<WeiXinInfosJSON>(htmlstr);
+                                    //失败日志
+                                    if (result.retcode != ReturnCode.请求成功)
+                                    {
+                                        APIRequestRecord record = new APIRequestRecord();
+                                        record.Id = IdBuilder.CreateIdNum();
+                                        record.IsSuccess = false;
+                                        record.RequestParameters = media.MediaID;
+                                        record.Retcode = result.retcode.GetHashCode().ToString();
+                                        record.Retmsg = result.message;
+                                        record.ReponseContent = htmlstr;
+                                        record.ReponseDate = DateTime.Now;
+                                        record.AddedById = "系统自动";
+                                        record.AddedBy = "系统自动";
+                                        apiInfo.APIRequestRecords.Add(record);
+                                    }
+
+                                    if (result.data.Count > 0)
+                                    {
+                                        var weixinInfo = result.data[0];
+                                        media.IsAuthenticate = weixinInfo.idVerified;
+                                        media.MediaName = weixinInfo.screenName;
+                                        media.MonthPostNum = weixinInfo.monthPostCount;
+                                        media.MediaLogo = weixinInfo.avatarUrl;
+                                        media.MediaQR = weixinInfo.qrcodeUrl;
+                                        media.Content = weixinInfo.biography;
+                                        if (DateTime.TryParse(weixinInfo.lastPost?.date, out var date))
+                                        {
+                                            media.LastPushDate = date;
+                                        }
+                                    }
+                                }
+                            }
+
                         }
 
                     }
-                    _logger.Info("微信信息自动任务结束：" + DateTime.Now );
+                    catch (Exception ex)
+                    {
+                        _logger.Error("微信信息" + media.MediaID + "，自动任务失败", ex);
+                    }
+                    db.SaveChanges();
                 }
-                catch (Exception ex)
+                else
                 {
-                    _logger.Info("微信信息自动任务异常结束！", ex);
+                    _logger.Info("今日已无微信信息更新");
                 }
+            }
 
-
-            });
         }
     }
 }

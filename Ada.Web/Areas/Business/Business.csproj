@@ -136,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\offer.js" />
+    <Content Include="Scripts\orderpro.js" />
     <Content Include="Scripts\order.js" />
     <Content Include="Scripts\invoice.js" />
     <Content Include="Scripts\linkman.js" />

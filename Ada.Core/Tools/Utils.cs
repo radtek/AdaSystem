@@ -137,7 +137,7 @@ namespace Ada.Core.Tools
         }
         #endregion
 
-        #region 获取新浪微博ID
+        #region 新浪微博
         /// <summary>
         /// 获取新浪微博ID
         /// </summary>
@@ -174,6 +174,54 @@ namespace Ada.Core.Tools
                 return Convert.ToInt32(fans);
             }
             return fans.HasValue ? Convert.ToInt32(fans*baseNum) : 0;
+        }
+        public static string BlogAuthenticateType(int? verifiedtype)
+        {
+            if (verifiedtype != null)
+            {
+                string type = null;
+                switch (verifiedtype)
+                {
+                    case 0:
+                        type = "黄V";
+                        break;
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                        type = "蓝V";
+                        break;
+                    case 200:
+                    case 220:
+                    case 400:
+                        type = "达人";
+                        break;
+                }
+
+                return type;
+            }
+
+            return null;
+        }
+        public static string BlogSex(string sex)
+        {
+            if (string.IsNullOrWhiteSpace(sex)) return null;
+            string temp = null;
+            switch (sex)
+            {
+                case "m":
+                    temp = "男";
+                    break;
+                case "f":
+                    temp = "女";
+                    break;
+            }
+            return temp;
+
         }
         #endregion
 
