@@ -109,6 +109,13 @@ function initData() {
                 }
             },
             {
+                field: 'Number',  
+                title: '序号',
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }  
+            }, 
+            {
                 field: 'MediaTypeName',
                 title: '媒体类型',
                 align: "center", valign: "middle",
@@ -119,7 +126,7 @@ function initData() {
             {
                 field: 'MediaName',
                 title: '媒体名称',
-                align: "center", valign: "middle"
+                align: "center", valign: "middle", sortable:true
 
             },
             {
