@@ -89,5 +89,10 @@ namespace Ada.Core.ViewModel.QuartzTask
         /// </summary>
         [Display(Name = "起始时间")]
         public string StartAndEnd { get; set; }
+        /// <summary>
+        /// 时间范围(小时)
+        /// </summary>
+        [Display(Name = "时间范围(小时)")]
+        public int? Times { get; set; }
     }
 }

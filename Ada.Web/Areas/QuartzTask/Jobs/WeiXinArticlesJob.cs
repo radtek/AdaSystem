@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Ada.Core;
 using Ada.Core.Domain.API;
+using Ada.Core.Domain.QuartzTask;
 using Ada.Core.Domain.Resource;
 using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
@@ -23,15 +24,19 @@ namespace QuartzTask.Jobs
         private readonly ILog _logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public void Execute(IJobExecutionContext context)
         {
-            //Task.Factory.StartNew(() =>
-            //{
-
-            //});
             using (var db = new AdaEFDbcontext())
             {
+                var name = context.JobDetail.Key.Name;
+                var group = context.JobDetail.Key.Group;
+                var job = db.Set<Job>().FirstOrDefault(d => d.GroupName == group && d.JobName == name);
+                int hour = 24;
+                if (job != null)
+                {
+                    hour = job.Taxis ?? 24;
+                }
                 var media = db.Set<Media>().FirstOrDefault(d =>
                       d.IsDelete == false && d.MediaType.CallIndex == "weixin" && d.IsSlide == true &&
-                      (d.CollectionDate == null || SqlFunctions.DateDiff("day", d.CollectionDate, DateTime.Now) > 2));
+                      (d.CollectionDate == null || SqlFunctions.DateDiff("hour", d.CollectionDate, DateTime.Now) > hour));
                 if (media != null)
                 {
                     media.CollectionDate = DateTime.Now;
@@ -148,16 +153,27 @@ namespace QuartzTask.Jobs
                                 }
                             }
                         }
+                        //改变工作计划时间
+                        if (context.NextFireTimeUtc != null)
+                        {
+                            if (job != null)
+                            {
+                                job.NextTime = context.NextFireTimeUtc.Value.ToLocalTime().DateTime;
+                                job.Remark = "获取微信文章任务正在运行中，本次成功更新：" + media.MediaName + "-" + media.MediaID;
+                            }
+                        }
+                        db.SaveChanges();
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error("微信文章" + media.MediaID + "，自动任务失败", ex);
+                        _logger.Error("获取【" + media.MediaName + "-" + media.MediaID + "】微信文章任务异常", ex);
                     }
-                    db.SaveChanges();
+                    
                 }
                 else
                 {
-                    _logger.Info("今日已无微信文章更新");
+                    if (job != null) job.Remark = "获取微信文章任务暂无可更新的资源数据！更新时间：" + DateTime.Now;
+                    db.SaveChanges();
                 }
             }
         }

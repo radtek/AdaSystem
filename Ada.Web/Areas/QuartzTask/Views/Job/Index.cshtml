@@ -99,10 +99,10 @@
                             field: 'Remark',
                             title: '@Html.DisplayNameFor(d => d.Remark)',
                             align: "center", valign: "middle",
-                            formatter: formatter.tooltip
+                            //formatter: formatter.tooltip
                         },
 
-                        {
+                        @*{
                             field: 'StartTime',
                             title: '@Html.DisplayNameFor(d => d.StartTime)',
                             align: "center", valign: "middle",
@@ -115,6 +115,17 @@
                         {
                             field: 'EndTime',
                             title: '@Html.DisplayNameFor(d => d.EndTime)',
+                            align: "center", valign: "middle",
+                            formatter: function (value) {
+                                if (value) {
+                                    return moment(value).format("YYYY-MM-DD HH:mm:ss");
+                                }
+                            }
+                        }*@
+                        
+                        {
+                            field: 'NextTime',
+                            title: '@Html.DisplayNameFor(d => d.NextTime)',
                             align: "center", valign: "middle",
                             formatter: function (value) {
                                 if (value) {

@@ -47,7 +47,8 @@ namespace QuartzTask.Controllers
                     EndTime = d.EndTime,
                     NextTime = d.NextTime,
                     PreTime = d.PreTime,
-                    Remark = d.Remark
+                    Remark = d.Remark,
+                    Times = d.Taxis
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -78,6 +79,7 @@ namespace QuartzTask.Controllers
             entity.StartTime = viewModel.StartTime;
             entity.EndTime = viewModel.EndTime;
             entity.Remark = viewModel.Remark;
+            entity.Taxis = viewModel.Times;
             _jobService.Add(entity);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
@@ -93,6 +95,7 @@ namespace QuartzTask.Controllers
             entity.TriggerName = item.TriggerName;
             entity.Cron = item.Cron;
             //entity.TriggerState = item.TriggerState;
+            entity.Times = item.Taxis;
             entity.StartTime = item.StartTime;
             entity.EndTime = item.EndTime;
             entity.Remark = item.Remark;
@@ -120,6 +123,7 @@ namespace QuartzTask.Controllers
             entity.StartTime = viewModel.StartTime;
             entity.EndTime = viewModel.EndTime;
             entity.Remark = viewModel.Remark;
+            entity.Taxis = viewModel.Times;
             _jobService.Update(entity);
             TempData["Msg"] = "操作成功";
             return RedirectToAction("Index");
