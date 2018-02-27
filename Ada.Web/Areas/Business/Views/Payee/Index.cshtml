@@ -37,7 +37,7 @@
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/lightboxGallery")
-<script type="text/javascript">
+    <script type="text/javascript">
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
@@ -111,7 +111,14 @@
                     {
                         field: 'VerificationMoney',
                         title: '@Html.DisplayNameFor(d=>d.VerificationMoney)',
-                        align: "center", valign: "middle"
+                        //align: "center",
+                        valign: "middle",
+                        formatter: function(value,row) {
+                            if (value>0) {
+                                //核销快捷
+                                return "<a class='btn btn-warning btn-xs' href='@Url.Action("Add","WriteOff")?name=" + row.LinkManName +"' target='_blank'>"+value+"</a>";
+                            }
+                        }
                     },
                     {
                         field: 'VerificationStatus',
@@ -195,7 +202,7 @@
             });
         }
 
-</script>
+    </script>
 }
 
 

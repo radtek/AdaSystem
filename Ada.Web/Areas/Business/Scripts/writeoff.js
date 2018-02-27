@@ -340,6 +340,7 @@ function initItem() {
         strictSearch: true,
         uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
         //mobileResponsive: true,
+        searchText: initName,
         queryParams: function (parameters) {
             parameters.VerificationStatus = false;
             return parameters;
@@ -371,7 +372,10 @@ function initItem() {
             {
                 field: 'OrderNum',
                 title: '订单编号',
-                align: "center", valign: "middle"
+                align: "center", valign: "middle",
+                formatter: function (value, row) {
+                    return "<a class='label' href='/Business/Order/Update?id=" + row.Id + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
+                }
             },
             {
                 field: 'Remark',

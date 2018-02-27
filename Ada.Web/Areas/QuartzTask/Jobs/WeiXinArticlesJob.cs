@@ -3,6 +3,7 @@ using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Threading.Tasks;
 using Ada.Core;
+using Ada.Core.Domain;
 using Ada.Core.Domain.API;
 using Ada.Core.Domain.QuartzTask;
 using Ada.Core.Domain.Resource;
@@ -35,7 +36,7 @@ namespace QuartzTask.Jobs
                     hour = job.Taxis ?? 24;
                 }
                 var media = db.Set<Media>().FirstOrDefault(d =>
-                      d.IsDelete == false && d.MediaType.CallIndex == "weixin" && d.IsSlide == true &&
+                      d.IsDelete == false && d.MediaType.CallIndex == "weixin" && d.IsSlide == true && d.Status == Consts.StateNormal &&
                       (d.CollectionDate == null || SqlFunctions.DateDiff("hour", d.CollectionDate, DateTime.Now) > hour));
                 if (media != null)
                 {
@@ -89,17 +90,17 @@ namespace QuartzTask.Jobs
                                     //失败日志
                                     if (result.retcode != ReturnCode.请求成功)
                                     {
-                                        APIRequestRecord record = new APIRequestRecord();
-                                        record.Id = IdBuilder.CreateIdNum();
-                                        record.IsSuccess = false;
-                                        record.RequestParameters = media.MediaID;
-                                        record.Retcode = result.retcode.GetHashCode().ToString();
-                                        record.Retmsg = result.message;
-                                        record.ReponseContent = htmlstr;
-                                        record.ReponseDate = DateTime.Now;
-                                        record.AddedById = "系统自动";
-                                        record.AddedBy = "系统自动";
-                                        apiInfo.APIRequestRecords.Add(record);
+                                        //APIRequestRecord record = new APIRequestRecord();
+                                        //record.Id = IdBuilder.CreateIdNum();
+                                        //record.IsSuccess = false;
+                                        //record.RequestParameters = media.MediaID;
+                                        //record.Retcode = result.retcode.GetHashCode().ToString();
+                                        //record.Retmsg = result.message;
+                                        //record.ReponseContent = htmlstr;
+                                        //record.ReponseDate = DateTime.Now;
+                                        //record.AddedById = "系统自动";
+                                        //record.AddedBy = "系统自动";
+                                        //apiInfo.APIRequestRecords.Add(record);
                                         break;
                                     }
                                     if (result.data.Count > 0)
@@ -167,6 +168,7 @@ namespace QuartzTask.Jobs
                     catch (Exception ex)
                     {
                         _logger.Error("获取【" + media.MediaName + "-" + media.MediaID + "】微信文章任务异常", ex);
+                        db.SaveChanges();
                     }
                     
                 }

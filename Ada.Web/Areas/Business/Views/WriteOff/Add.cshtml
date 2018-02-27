@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = "销售核销";
     ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "核销明细", Value = Url.Action("Index") } };
+    var initName = ViewBag.Name == null ? "" : ViewBag.Name;
 }
 @Html.Partial("Bread")
 
@@ -104,12 +105,13 @@
     @Scripts.Render("~/plugins/lodash")
     <script type="text/javascript">
         var linkmanapi = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})",
-            transactorapi="@Url.Action("GetList", "Manager", new {area = "Admin"})",
+            transactorapi = "@Url.Action("GetList", "Manager", new {area = "Admin"})",
+            initName = '@initName';
             payeeapi = '@Url.Action("GetList", "Payee")',
             orderapi = '@Url.Action("GetDetails", "Order")',
             itemapi = '@Url.Action("GetList", "Order")';
     </script>
-    <script src="@Url.Content("~/Areas/Business/Scripts/writeoff.js?v=201801142")"></script>
+    <script src="@Url.Content("~/Areas/Business/Scripts/writeoff.js?v=201801145")"></script>
 }
 
 

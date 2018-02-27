@@ -104,13 +104,7 @@ namespace Business.Controllers
                 {
                     var jo = new JObject();
                     jo.Add("主键", string.IsNullOrWhiteSpace(media.Id)?"不存在的资源":media.Id);
-                    foreach (var mediaMediaPrice in media.MediaPrices)
-                    {
-                        jo.Add(mediaMediaPrice.AdPositionName, mediaMediaPrice.PurchasePrice);
-                        //jo.Add(mediaMediaPrice.AdPositionName + "更新日期", mediaMediaPrice.PriceDate);
-                        //jo.Add(mediaMediaPrice.AdPositionName + "失效日期", mediaMediaPrice.InvalidDate);
-                    }
-                    jo.Add("媒体类型",  media.MediaType?.TypeName);
+                    jo.Add("媒体类型", media.MediaType?.TypeName);
                     if (!string.IsNullOrWhiteSpace(media.Platform))
                     {
                         jo.Add("平台", media.Platform);
@@ -128,6 +122,10 @@ namespace Business.Controllers
                     {
                         jo.Add("媒体ID", media.MediaID);
                     }
+                    if (media.MediaTags.Count>0)
+                    {
+                        jo.Add("媒体分类", string.Join(",",media.MediaTags.Select(d=>d.TagName)));
+                    }
                     if (!string.IsNullOrWhiteSpace(media.MediaLink))
                     {
                         jo.Add("媒体链接", media.MediaLink);
@@ -141,6 +139,14 @@ namespace Business.Controllers
                     {
                         jo.Add("地区", media.Area);
                     }
+                    if (media.IsAuthenticate!=null)
+                    {
+                        jo.Add("是否认证", media.IsAuthenticate.Value?"是":"否");
+                    }
+                    if (!string.IsNullOrWhiteSpace(media.AuthenticateType))
+                    {
+                        jo.Add("微博认证", media.AuthenticateType);
+                    }
                     if (!string.IsNullOrWhiteSpace(media.ResourceType))
                     {
                         jo.Add("资源类型", media.ResourceType);
@@ -153,11 +159,20 @@ namespace Business.Controllers
                     {
                         jo.Add("收录效果", media.SEO);
                     }
-                    
+                    foreach (var mediaMediaPrice in media.MediaPrices)
+                    {
+                        jo.Add(mediaMediaPrice.AdPositionName, mediaMediaPrice.PurchasePrice);
+                        //jo.Add(mediaMediaPrice.AdPositionName + "更新日期", mediaMediaPrice.PriceDate);
+                        //jo.Add(mediaMediaPrice.AdPositionName + "失效日期", mediaMediaPrice.InvalidDate);
+                    }
                     jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.PriceDate);
                     if (!string.IsNullOrWhiteSpace(media.Abstract))
                     {
                         jo.Add("媒体摘要", media.Abstract);
+                    }
+                    if (!string.IsNullOrWhiteSpace(media.Content))
+                    {
+                        jo.Add("媒体说明", media.Content);
                     }
                     if (!string.IsNullOrWhiteSpace(media.Remark))
                     {

@@ -168,6 +168,7 @@
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/ladda")
+    @Scripts.Render("~/plugins/clipboard")
     <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=2018021213")"></script>
     <script type="text/javascript">
 
@@ -198,12 +199,12 @@
                 showRefresh: true,                  //是否显示刷新按钮
                 minimumCountColumns: 2,             //最少允许的列数
                 clickToSelect: true,                //是否启用点击选中行
-                singleSelect: false,                  //设置True 将禁止多选
+                singleSelect: true,                  //设置True 将禁止多选
                 uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
                 showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
                 cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
                     formatSearch: function() {
-                        return "微信公众号";
+                        return "公众号名称或微信号";
                     },
                 onLoadSuccess: function() {
                     $("[rel=drevil]").popover({
@@ -227,6 +228,7 @@
                         }, 100);
                         });
                     initTooltip();
+                    new Clipboard('.btn-white');
                 } ,
                 mobileResponsive: true,
                 queryParams: function (parameters) {
@@ -261,10 +263,13 @@
                                     row.MediaID +
                                     "\");'><i class='fa fa-arrow-circle-up'></i></button> ";*@
                             var url =
-                                "<a class='label' href='http://weixin.sogou.com/weixin?type=1&query=" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
-                            return  url +
-                                " <button class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看微信详情' onclick='details(\"@Url.Action("WeiXinArticles","Media")?id=" + row.Id + "\");'>详</button>" +
-                                " <img rel='drevil' data-content='<div id=\"popOverBox\"><img src=\"" + (row.MediaQR || '/Images/nopic.png') +"\" width=\"100\" height=\"100\" /></div>'  src='/Images/ewm.png' style='width: 20px; height: 20px;'/>";
+                                "<a class='label' href='http://weixin.sogou.com/weixin?type=1&query=" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> <span id='"+row.Id+"'>" + value + "</span></a>";
+                            return url +
+                                "<div class='p-xxs'><button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#"+row.Id+"'><i class='fa fa-copy'></i></button>" +
+                                " <button class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看微信详情' onclick='details(\"@Url.Action("WeiXinArticles","Media")?id=" +
+                                row.Id +
+                                "\");'>详</button>"+
+                            " <img rel='drevil' data-content='<div id=\"popOverBox\"><img src=\"" + (row.MediaQR || '/Images/nopic.png') +"\" width=\"100\" height=\"100\" /></div>'  src='/Images/ewm.png' style='width: 20px; height: 20px;'/></div>";
                         }
                     },
 
@@ -286,7 +291,7 @@
                         title: '微信指数（近十天）',
                         valign: "middle",
                         formatter: function (value, row) {
-                            var date = "暂未发文或未采集更新";
+                            var date = "--";
                             if (row.LastPushDate) {
                                 date = moment(row.LastPushDate).format("YYYY-MM-DD HH:mm");
                             }

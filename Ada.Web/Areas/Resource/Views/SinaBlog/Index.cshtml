@@ -163,6 +163,7 @@
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/ladda")
+    @Scripts.Render("~/plugins/clipboard")
     <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=2018020713")"></script>
     <script type="text/javascript">
 
@@ -201,10 +202,13 @@
                 //detailView: true,                   //设置为 true 可以显示详细页面模式。
                 //detailFormatter: detailFormatter,
                     formatSearch: function() {
-                        return "微博名称";
+                        return "微博名称或UID";
                     },
                 mobileResponsive:true,
-                onLoadSuccess: initTooltip,
+                onLoadSuccess: function() {
+                    initTooltip();
+                    new Clipboard('.btn-white');
+                    },
                     queryParams: function (parameters) {
                         parameters.MediaTypeId = '@meidaType.Id';
                         return searchFrm.queryParams(parameters);
@@ -241,10 +245,12 @@
                                 sex = '<img alt="女" class="img-circle" src="/Images/lady.png" style="width: 25px; height: 25px;"/>';
                             }
                            var url =
-                               "<a class='label' href='https://weibo.com/u/" + row.MediaID + "' target='_blank' title='" + (row.Abstract||'暂无摘要')+"'><i class='fa fa-link'></i> " + value + "</a>";
+                               "<a class='label' href='https://weibo.com/u/" + row.MediaID + "' target='_blank' title='" + (row.Abstract || '暂无摘要') + "'><i class='fa fa-link'></i> <span id='" + row.Id + "'>" + value + "</span></a>";
                             var level = formatter.blogLevel(row.AuthenticateType);
-                            return sex+ url + level+
-                                " <button class='btn btn-info btn-xs' onclick='details(\"@Url.Action("WeiboArticles","Media")?id=" + row.Id + "\");'>详</button>" ;
+                            return sex + url +
+                                "<div class='p-xxs'><button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" +
+                                level +
+                                " <button class='btn btn-info btn-xs' onclick='details(\"@Url.Action("WeiboArticles","Media")?id=" + row.Id + "\");'>详</button></div>" ;
                         }
                     },
                     {
@@ -271,7 +277,7 @@
                             title: '微博指数（近50篇）',
                             valign: "middle",
                             formatter: function (value, row) {
-                                var date = "暂未发文";
+                                var date = "--";
                                 if (row.BlogLastPushDate) {
                                     date = moment(row.BlogLastPushDate).format("YYYY-MM-DD HH:mm");
                                 }

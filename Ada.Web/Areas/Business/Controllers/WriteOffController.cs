@@ -62,11 +62,12 @@ namespace Business.Controllers
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             return PartialView("Detail", entity);
         }
-        public ActionResult Add()
+        public ActionResult Add(string name)
         {
             BusinessWriteOffView viewModel = new BusinessWriteOffView();
             viewModel.Transactor = CurrentManager.UserName;
             viewModel.TransactorId = CurrentManager.Id;
+            ViewBag.Name = name;
             return View(viewModel);
         }
         /// <summary>

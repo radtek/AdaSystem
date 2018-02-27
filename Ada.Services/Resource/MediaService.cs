@@ -53,7 +53,7 @@ namespace Ada.Services.Resource
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.MediaName.Contains(viewModel.search));
+                allList = allList.Where(d => d.MediaName.Contains(viewModel.search)||d.MediaID.Contains(viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaName))
             {

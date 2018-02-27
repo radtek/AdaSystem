@@ -47,7 +47,7 @@ namespace Ada.Core.ViewModel.API.iDataAPI
         /// <summary>
         /// 下一页码
         /// </summary>
-        public int? pageToken { get; set; }
+        public string pageToken { get; set; }
         /// <summary>
         /// 是否有下一页
         /// </summary>
