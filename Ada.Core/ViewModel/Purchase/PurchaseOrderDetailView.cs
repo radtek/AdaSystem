@@ -17,6 +17,11 @@ namespace Ada.Core.ViewModel.Purchase
         [Display(Name = "销售明细单")]
         public string BusinessOrderDetailId { get; set; }
         /// <summary>
+        /// 销售单
+        /// </summary>
+        [Display(Name = "销售单")]
+        public string BusinessOrderId { get; set; }
+        /// <summary>
         /// 优惠金额
         /// </summary>
         [Display(Name = "优惠金额")]

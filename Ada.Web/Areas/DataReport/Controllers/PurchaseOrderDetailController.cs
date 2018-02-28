@@ -35,6 +35,7 @@ namespace DataReport.Controllers
                     LinkManName = d.LinkManName,
                     LinkManId = d.LinkManId,
                     PurchaseOrderNum = d.PurchaseOrder.OrderNum,
+                    BusinessOrderId = d.PurchaseOrder.BusinessOrderId,
                     BusinessBy = d.PurchaseOrder.BusinessBy,
                     MediaTypeName = d.MediaTypeName,
                     MediaName = d.MediaName,
