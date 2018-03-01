@@ -179,7 +179,7 @@ namespace Resource.Controllers
                 jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
                 jo.Add("媒体说明", media.Content);
                 jo.Add("备注说明", media.Remark);
-                jo.Add("价格有效期", "");
+                jo.Add("价格有效期", media.MediaPrices.FirstOrDefault()?.InvalidDate);
                 foreach (var mediaMediaPrice in media.MediaPrices)
                 {
                     jo.Add(mediaMediaPrice.AdPositionName, mediaMediaPrice.PurchasePrice);

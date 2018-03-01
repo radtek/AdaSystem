@@ -17,7 +17,8 @@
             </div>
         </div>
         <div class="ibox-content">
-            <form id="searchFrm" onSubmit="javascript:searchFrm.search(this,event);">
+            <form id="searchFrm" action="@Url.Action("Export")" method="post">
+                @Html.AntiForgeryToken()
                 <div class="row">
                     <div class="col-sm-3">
                         <div class="form-group">
@@ -54,7 +55,7 @@
                 <div class="row">
                     <div class="col-sm-12 text-center">
                         <div class="form-group">
-                            <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 搜索</button>
+                            <button class="btn btn-primary" type="button" onclick="$('#table').bootstrapTable('refresh');"><i class="fa fa-search"></i> 搜索</button>
                             <button class="btn btn-warning" type="button" onclick="resetDate();searchFrm.reset($('#searchFrm'));"><i class="fa fa-repeat"></i> 重置</button>
                         </div>
                     </div>
@@ -73,7 +74,11 @@
         </div>
     </div>
 </div>
-
+<div id="toolbar" class="btn-group">
+    <button type="button" class="btn btn-primary btn-outline" onclick="exportDate();">
+        <i class="fa fa-download"></i> 导出数据
+    </button>
+</div>
 
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")

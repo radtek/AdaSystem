@@ -247,7 +247,15 @@ function initPayee() {
             }
         ]
     });
-    checkOn($payeeTable, payeeSelections);
+    checkOn($payeeTable, payeeSelections, sumPayee);
+}
+function sumPayee() {
+    var payeeMoney = 0;
+    $.each(payeeSelections.rows,
+        function (k, v) {
+            payeeMoney += v.VerificationMoney;
+        });
+    $("#payeemoney").text(" [已选：" + payeeMoney + " 元]");
 }
 //订单明细
 function initOrder() {
@@ -311,13 +319,33 @@ function initOrder() {
             }
             ,
             {
+                field: 'PublishDate',
+                title: '出刊日期',
+                align: "center", valign: "middle",
+                formatter: function (value) {
+                    if (value) {
+                        return moment(value).format("YYYY-MM-DD");
+                    }
+                }
+            }
+            ,
+            {
                 field: 'VerificationMoney',
                 title: '未核销金额',
                 align: "center", valign: "middle"
             }
         ]
     });
-    checkOn($orderTable, orderSelections);
+    checkOn($orderTable, orderSelections, sumOrder);
+}
+
+function sumOrder() {
+    var orderMoney = 0;
+    $.each(orderSelections.rows,
+        function (k, v) {
+            orderMoney += v.VerificationMoney;
+        });
+    $("#ordermoney").text(" [已选：" + orderMoney+" 元]");
 }
 //项目列表
 function initItem() {

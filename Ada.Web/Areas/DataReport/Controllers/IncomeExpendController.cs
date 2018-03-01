@@ -7,6 +7,7 @@ using Ada.Core.Domain;
 using Ada.Core.ViewModel.Finance;
 using Ada.Framework.Filter;
 using Ada.Services.Finance;
+using Newtonsoft.Json.Linq;
 
 namespace DataReport.Controllers
 {
@@ -47,6 +48,34 @@ namespace DataReport.Controllers
 
                 })
             }, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Export(ReceiptExpenditureView viewModel)
+        {
+            viewModel.limit = 5000;
+            var result = _expenseDetailService.LoadEntitiesFilter(viewModel).ToList();
+            JArray jObjects = new JArray();
+            foreach (var item in result)
+            {
+                var jo = new JObject();
+                jo.Add("单据日期", item.Expense.BillDate);
+                jo.Add("业务员", item.Expense.Employe == "请输入关键字" ? "" : item.Expense.Employe);
+                jo.Add("收支项目", item.IncomeExpend.SubjectName);
+                jo.Add("结算账户", item.SettleAccount.SettleName);
+                if (item.IncomeExpend.SubjectType == Consts.StateNormal)
+                {
+                    jo.Add("收入金额", item.Money);
+                }
+                if (item.IncomeExpend.SubjectType == Consts.StateLock)
+                {
+                    jo.Add("支出金额", item.Money);
+                }
+                
+                
+                jObjects.Add(jo);
+            }
+            return File(ExportData(jObjects.ToString()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
         }
     }
 }

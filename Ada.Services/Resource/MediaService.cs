@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
+using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Resource;
@@ -186,11 +187,8 @@ namespace Ada.Services.Resource
         }
         //public IQueryable<MediaView> LoadEntitiesFilters(MediaView viewModel)
         //{
-        //    var allList = _repository.LoadEntities(d => d.IsDelete == false);
-        //    if (viewModel.Managers != null && viewModel.Managers.Count > 0)
-        //    {
-        //        allList = allList.Where(d => viewModel.Managers.Contains(d.TransactorId));
-        //    }
+        //    var allList = _repository.LoadEntities(d => d.IsDelete == false&&d.Status==Consts.StateNormal);
+            
         //    if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeIndex))
         //    {
         //        allList = allList.Where(d => d.MediaType.CallIndex == viewModel.MediaTypeIndex);
@@ -207,10 +205,7 @@ namespace Ada.Services.Resource
         //    {
         //        allList = allList.Where(d => d.MediaName.Contains(viewModel.MediaName));
         //    }
-        //    if (viewModel.HasArticles != null)
-        //    {
-        //        allList = !viewModel.HasArticles.Value ? allList.Where(d => d.MediaArticles.Count == 0) : allList.Where(d => d.MediaArticles.Count > 0);
-        //    }
+            
         //    if (viewModel.IsSlide != null)
         //    {
         //        allList = allList.Where(d => d.IsSlide == viewModel.IsSlide);
@@ -268,16 +263,8 @@ namespace Ada.Services.Resource
         //        allList = allList.Where(d => mediaIDs.Contains(d.MediaID));
         //    }
 
-        //    var result = from m in allList
-        //        from p in m.MediaPrices
-        //        from a in m.MediaArticles
-        //        group a by a.Media into g
-                
-        //        select new MediaView()
-        //        {
-        //            LastReadNum = g.OrderByDescending(d=>d.PublishDate).FirstOrDefault().ViewCount
-        //        };
-
+        //    var temp = allList.GroupBy(d => d.TransactorId);
+           
         //    viewModel.total = allList.Count();
         //    int offset = viewModel.offset ?? 0;
         //    int rows = viewModel.limit ?? 10;

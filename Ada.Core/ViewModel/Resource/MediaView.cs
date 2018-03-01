@@ -339,6 +339,11 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "采集组")]
         public string CollectionGroup { get; set; }
         /// <summary>
+        /// 价格类型
+        /// </summary>
+        [Display(Name = "价格类型")]
+        public string PriceType { get; set; }
+        /// <summary>
         /// 最后一次采集时间
         /// </summary>
         [Display(Name = "最后一次采集时间")]

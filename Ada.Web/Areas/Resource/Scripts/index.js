@@ -81,29 +81,7 @@ function cancle(id) {
         });
     });
 }
-function exportDate() {
-    swal({
-        title: "您确定吗?",
-        text: "确认要导出数据吗?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        closeOnConfirm: false,
-        showLoaderOnConfirm: true
-    }, function () {
-        $('#searchFrm')[0].submit();
-        swal({
-            title: "数据正在导出中...",
-            text: "请耐心等待",
-            timer: 2000,
-            showConfirmButton: false
-        });
 
-    });
-
-}
 function upLoadFile() {
 
     var fileObj = document.getElementById("upfile").files[0]; // js 获取文件对象

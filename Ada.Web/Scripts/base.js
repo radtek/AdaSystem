@@ -411,7 +411,7 @@ function initSelect(id, opt, $obj) {
 }
 
 //注册选中事件
-function checkOn(table, obj) {
+function checkOn(table, obj,fun) {
     var mark;
     var union = function (array, ids) {
         $.each(ids, function (i, id) {
@@ -464,6 +464,9 @@ function checkOn(table, obj) {
                 funcs = $.inArray(e.type, ['check', 'check-all']) > -1 ? 'unions' : 'differences';
             obj.ids = d[func](obj.ids, ids);
             obj.rows = r[funcs](obj.rows, rowarry);
+            if (fun) {
+                fun();
+            }
         });
 }
 function goBackOrClose() {
@@ -528,5 +531,27 @@ function initDateRange($datepicker) {
     });
     $datepicker.on('cancel.daterangepicker', function (ev, picker) {
         $(this).val('');
+    });
+}
+
+function exportDate() {
+    swal({
+        title: "您确定吗?",
+        text: "确认要导出数据吗?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
+    }, function () {
+        $('#searchFrm')[0].submit();
+        swal({
+            title: "数据正在导出中...",
+            text: "请耐心等待",
+            timer: 2000,
+            showConfirmButton: false
+        });
     });
 }

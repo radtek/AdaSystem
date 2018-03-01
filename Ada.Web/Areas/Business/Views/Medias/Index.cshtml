@@ -47,7 +47,7 @@
         {
             @Html.AntiForgeryToken()
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <div class="form-group">
                         @Html.LabelFor(d => d.MediaTypeId, Html.DisplayNameFor(d => d.MediaTypeId).ToString(), new { @class = "control-label" })
                         <select name="MediaTypeId" class="form-control" id="MediaTypeId">
@@ -68,36 +68,36 @@
 
                     </div>
                 </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
-                        @Html.DropDownListFor(d => d.AdPositionName, adaPostions, "不限", new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart).ToString(), new { @class = "control-label" })
-                        <div class="input-daterange input-group">
-                            @Html.TextBoxFor(d => d.PriceStart, new { @class = "form-control" })
-                            <span class="input-group-addon">至</span>
-                            @Html.TextBoxFor(d => d.PriceEnd, new { @class = "form-control" })
+                @*<div class="col-sm-4">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
+                            @Html.DropDownListFor(d => d.AdPositionName, adaPostions, "不限", new { @class = "form-control" })
                         </div>
-
                     </div>
-                </div>
-                <div class="col-sm-4">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart).ToString(), new { @class = "control-label" })
+                            <div class="input-daterange input-group">
+                                @Html.TextBoxFor(d => d.PriceStart, new { @class = "form-control" })
+                                <span class="input-group-addon">至</span>
+                                @Html.TextBoxFor(d => d.PriceEnd, new { @class = "form-control" })
+                            </div>
+
+                        </div>
+                    </div>*@
+                <div class="col-sm-3">
                     <div class="form-group">
                         @Html.LabelFor(d => d.Platform, Html.DisplayNameFor(d => d.Platform).ToString(), new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.Platform, new { @class = "form-control" })
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <div class="form-group">
                         @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName).ToString(), new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <div class="form-group">
                         @Html.LabelFor(d => d.MediaID, Html.DisplayNameFor(d => d.MediaID).ToString(), new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control" })
@@ -175,13 +175,13 @@
                 </div>
 
             </div>
-
-
+            <input type="hidden" name="Submit.Export" id="export" value=""/>
+            @Html.HiddenFor(d=>d.PriceType)
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
                         <button class="btn btn-primary" name="Submit.Search" value="search" type="submit"><i class="fa fa-search"></i> 开始搜索</button>
-                        <button class="btn btn-white" name="Submit.Export" value="export" type="submit"><i class="fa fa-download"></i> 导出数据</button>
+                        <button class="btn btn-white" type="button" onclick="exportData();"><i class="fa fa-download"></i> 导出数据</button>
                     </div>
                 </div>
             </div>
@@ -210,13 +210,11 @@
                             <thead>
                                 <tr>
                                     <th>媒体类型</th>
-                                    <th>媒体名称</th>
+                                    <th>媒体信息</th>
                                     <th data-breakpoints="xs sm">媒体分类</th>
                                     <th data-breakpoints="xs sm">粉丝数</th>
                                     <th data-breakpoints="xs">媒体价格</th>
-                                    @*<th data-breakpoints="all" data-title="媒体内容">媒体内容</th>*@
-                                    <th data-breakpoints="all" data-title="性别">性别</th>
-                                    <th data-breakpoints="all" data-title="区域">区域</th>
+                                    <th data-breakpoints="all" data-title="媒体说明">媒体说明</th>
                                     <th data-breakpoints="all" data-title="媒体备注">媒体备注</th>
                                     <th data-breakpoints="xs sm">经办媒介</th>
                                 </tr>
@@ -224,10 +222,24 @@
                             <tbody>
                                 @foreach (var item in Model.Medias)
                                 {
+                                    if (string.IsNullOrWhiteSpace(item.Id))
+                                    {
+                                        continue;
+                                    }
                                     <tr>
                                         <td>@item.MediaType.TypeName</td>
                                         @{
                                             var mediaName = item.MediaName;
+                                            var sex = "";
+                                            if (item.Sex == "男")
+                                            {
+                                                sex = "<img alt='男' class='img-circle' src='/Images/man.png' style='width: 25px; height: 25px;'/>";
+                                            }
+                                            if (item.Sex == "女")
+                                            {
+                                                sex = "<img alt='女' class='img-circle' src='/Images/lady.png' style='width: 25px; height: 25px;'/>";
+                                            }
+                                            var detail= " <button class='btn btn-info btn-xs'>详</button>";
                                             switch (item.MediaType.CallIndex)
                                             {
                                                 case "website":
@@ -235,6 +247,14 @@
                                                     break;
                                                 case "weixin":
                                                     mediaName = item.MediaName + " [ " + item.MediaID + " ]";
+                                                    break;
+                                                case "sinablog":
+                                                    var area = "";
+                                                    if (!string.IsNullOrWhiteSpace(item.Area)) {
+                                                        area = "<div class='p-xxs'><span class='badge badge-info'><i class='fa fa-map-marker'></i> " + item.Area + "</span></div>";
+                                                    }
+
+                                                    mediaName = sex + "<a class='label' href='https://weibo.com/u/" + item.MediaID + "' target='_blank' title='" + item.Abstract + "'><i class='fa fa-link'></i> <span id='" + item.Id + "'>" + item.MediaName + "</span></a>"+ detail + area;
                                                     break;
                                                 case "headline":
                                                 case "webcast":
@@ -244,7 +264,7 @@
                                             }
                                         }
                                         <td>
-                                            @mediaName  <a class='btn btn-warning btn-circle btn-xs' href='@Url.Action("Comment", "Media",new{area="Resource",id=item.Id})' target='_blank' title='评价'><i class='fa fa-commenting'></i></a>
+                                            @Html.Raw(mediaName)  <a class='btn btn-warning btn-circle btn-xs' href='@Url.Action("Comment", "Media",new{area="Resource",id=item.Id})' target='_blank' title='评价'><i class='fa fa-commenting'></i></a>
                                         </td>
                                         <td>@string.Join(",", item.MediaTags.Select(d => d.TagName))</td>
                                         <td>@item.FansNum</td>
@@ -252,12 +272,10 @@
                                             @foreach (var price in item.MediaPrices)
                                             {
                                                 var str = price.AdPositionName + "：¥ " + price.PurchasePrice + "　　有效期至：" + price.InvalidDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"));
-                                                <div class="bg-info">@str</div>
+                                                <div class="p-xxs"><span class="label label-info">@str</span></div>
                                             }
                                         </td>
-                                        @*<td>@item.Content</td>*@
-                                        <td>@item.Sex</td>
-                                        <td>@item.Area</td>
+                                        <td>@item.Content</td>
                                         <td>@item.Remark</td>
                                         <td>@item.Transactor</td>
                                     </tr>
@@ -300,21 +318,51 @@
             //        form.submit();
             //    }
             //        });
-            $("#MediaTypeId").change(function () {
-                var $adpostion = $("#AdPositionName");
-                $adpostion.empty();
-                if ($(this).val()) {
-                    var selectdata = $(this).find('option:selected').attr("data-value");
-                    var arr = JSON.parse(selectdata);
-                    $adpostion.append("<option value=''>不限</option>");
-                    $.each(arr,
-                        function(k, v) {
-                            $adpostion.append("<option value='" + v + "'>" + v + "</option>");
-                        });
-                } else {
-                    $adpostion.append("<option value=''>不限</option>");
-                }
-            });
+            //$("#MediaTypeId").change(function () {
+            //    var $adpostion = $("#AdPositionName");
+            //    $adpostion.empty();
+            //    if ($(this).val()) {
+            //        var selectdata = $(this).find('option:selected').attr("data-value");
+            //        var arr = JSON.parse(selectdata);
+            //        $adpostion.append("<option value=''>不限</option>");
+            //        $.each(arr,
+            //            function(k, v) {
+            //                $adpostion.append("<option value='" + v + "'>" + v + "</option>");
+            //            });
+            //    } else {
+            //        $adpostion.append("<option value=''>不限</option>");
+            //    }
+            //});
         });
+
+        function exportData() {
+
+            swal({ 
+                title: "媒体资源导出", 
+                text: "请选择导出的价格类型", 
+                    type: "warning",
+                    showCancelButton: true, 
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "销售价导出", 
+                    cancelButtonText: "成本价导出",
+                    closeOnConfirm: false, 
+                    closeOnCancel: false	
+                },
+                function(isConfirm){ 
+                    if (isConfirm) {
+                        $("#PriceType").val("1");
+                    } else { 
+                        $("#PriceType").val("0");
+                    }
+                    $("#export").val("export");
+                    $('form')[0].submit();
+                    $("#export").val("");
+                    swal({
+                        title: "数据正在导出中...",
+                        text: "请耐心等待"
+                    });
+                    
+                });
+        }
     </script>
 }

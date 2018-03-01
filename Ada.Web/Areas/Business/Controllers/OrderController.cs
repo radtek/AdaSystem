@@ -103,6 +103,7 @@ namespace Business.Controllers
                     MediaName = d.MediaName,
                     MediaTypeName = d.MediaTypeName,
                     AdPositionName = d.AdPositionName,
+                    PublishDate = GetPurchaseOrderDetail(d.Id)?.PublishDate,
                     Money = d.Money
 
                 })
