@@ -115,7 +115,7 @@ namespace Resource.Controllers
             var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
             if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
             {
-                var names = viewModel.MediaNames.Split(',').ToList();
+                var names = viewModel.MediaNames.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
                 int i = 0;
                 foreach (var name in names)
                 {
@@ -139,7 +139,7 @@ namespace Resource.Controllers
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
             {
-                var ids = viewModel.MediaIDs.Split(',').ToList();
+                var ids = viewModel.MediaIDs.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
                 int i = 0;
                 foreach (var id in ids)
                 {

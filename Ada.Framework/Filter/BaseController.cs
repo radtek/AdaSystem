@@ -151,7 +151,7 @@ namespace Ada.Framework.Filter
         /// </summary>
         public bool IsPremission(Action action)
         {
-            return _permissionService.Authorize(action,CurrentManager.Id);
+            return _permissionService.Authorize(action, CurrentManager.Id);
         }
         /// <summary>
         /// 导出数据

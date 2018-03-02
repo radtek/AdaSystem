@@ -46,65 +46,67 @@
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
-            <div class="row">
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.MediaTypeId, Html.DisplayNameFor(d => d.MediaTypeId).ToString(), new { @class = "control-label" })
-                        <select name="MediaTypeId" class="form-control" id="MediaTypeId">
-                            <option value="">请选择</option>
-                            @foreach (var item in mediaTypes)
-                            {
-                                if (item.Id == Model.MediaTypeId)
-                                {
-                                    <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))' selected="selected">@item.TypeName</option>
-                                }
-                                else
-                                {
-                                    <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))'>@item.TypeName</option>
-                                }
+        <div class="row">
+            <div class="col-sm-2">
+                <div class="form-group">
+                    @Html.LabelFor(d => d.MediaTypeId, Html.DisplayNameFor(d => d.MediaTypeId).ToString(), new { @class = "control-label" })
+                    <select name="MediaTypeId" class="form-control" id="MediaTypeId">
+                        <option value="">请选择</option>
+                        @foreach (var item in mediaTypes)
+                {
+                    if (item.Id == Model.MediaTypeId)
+                    {
+                        <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))' selected="selected">@item.TypeName</option>
+            }
+            else
+            {
+                <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))'>@item.TypeName</option>
+    }
 
-                            }
-                        </select>
+}
+                    </select>
 
-                    </div>
                 </div>
-                @*<div class="col-sm-4">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
-                            @Html.DropDownListFor(d => d.AdPositionName, adaPostions, "不限", new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart).ToString(), new { @class = "control-label" })
-                            <div class="input-daterange input-group">
-                                @Html.TextBoxFor(d => d.PriceStart, new { @class = "form-control" })
-                                <span class="input-group-addon">至</span>
-                                @Html.TextBoxFor(d => d.PriceEnd, new { @class = "form-control" })
-                            </div>
-
-                        </div>
-                    </div>*@
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.Platform, Html.DisplayNameFor(d => d.Platform).ToString(), new { @class = "control-label" })
-                        @Html.TextBoxFor(d => d.Platform, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName).ToString(), new { @class = "control-label" })
-                        @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        @Html.LabelFor(d => d.MediaID, Html.DisplayNameFor(d => d.MediaID).ToString(), new { @class = "control-label" })
-                        @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control" })
-                    </div>
-                </div>
-
             </div>
+           
+            <div class="col-sm-2">
+                <div class="form-group">
+                    @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName).ToString(), new { @class = "control-label" })
+                    @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="form-group">
+                    @Html.LabelFor(d => d.MediaID, Html.DisplayNameFor(d => d.MediaID).ToString(), new { @class = "control-label" })
+                    @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="form-group">
+                    @Html.LabelFor(d => d.Platform, Html.DisplayNameFor(d => d.Platform).ToString(), new { @class = "control-label" })
+                    @Html.TextBoxFor(d => d.Platform, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="form-group">
+                    @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
+                    @Html.DropDownListFor(d => d.AdPositionName, adaPostions, "不限", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="form-group">
+                    @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart).ToString(), new { @class = "control-label" })
+                    <div class="input-daterange input-group">
+                        @Html.TextBoxFor(d => d.PriceStart, new { @class = "form-control" })
+                        <span class="input-group-addon">至</span>
+                        @Html.TextBoxFor(d => d.PriceEnd, new { @class = "form-control" })
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
 
 
             <div class="panel-group" id="accordion">
@@ -175,8 +177,8 @@
                 </div>
 
             </div>
-            <input type="hidden" name="Submit.Export" id="export" value=""/>
-            @Html.HiddenFor(d=>d.PriceType)
+            <input type="hidden" name="Submit.Export" id="export" value="" />
+            @Html.HiddenFor(d => d.PriceType)
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
@@ -239,7 +241,7 @@
                                             {
                                                 sex = "<img alt='女' class='img-circle' src='/Images/lady.png' style='width: 25px; height: 25px;'/>";
                                             }
-                                            var detail= " <button class='btn btn-info btn-xs'>详</button>";
+                                            var detail = " <button class='btn btn-info btn-xs'>详</button>";
                                             switch (item.MediaType.CallIndex)
                                             {
                                                 case "website":
@@ -250,11 +252,12 @@
                                                     break;
                                                 case "sinablog":
                                                     var area = "";
-                                                    if (!string.IsNullOrWhiteSpace(item.Area)) {
+                                                    if (!string.IsNullOrWhiteSpace(item.Area))
+                                                    {
                                                         area = "<div class='p-xxs'><span class='badge badge-info'><i class='fa fa-map-marker'></i> " + item.Area + "</span></div>";
                                                     }
 
-                                                    mediaName = sex + "<a class='label' href='https://weibo.com/u/" + item.MediaID + "' target='_blank' title='" + item.Abstract + "'><i class='fa fa-link'></i> <span id='" + item.Id + "'>" + item.MediaName + "</span></a>"+ detail + area;
+                                                    mediaName = sex + "<a class='label' href='https://weibo.com/u/" + item.MediaID + "' target='_blank' title='" + item.Abstract + "'><i class='fa fa-link'></i> <span id='" + item.Id + "'>" + item.MediaName + "</span></a>" + detail + area;
                                                     break;
                                                 case "headline":
                                                 case "webcast":
@@ -318,40 +321,40 @@
             //        form.submit();
             //    }
             //        });
-            //$("#MediaTypeId").change(function () {
-            //    var $adpostion = $("#AdPositionName");
-            //    $adpostion.empty();
-            //    if ($(this).val()) {
-            //        var selectdata = $(this).find('option:selected').attr("data-value");
-            //        var arr = JSON.parse(selectdata);
-            //        $adpostion.append("<option value=''>不限</option>");
-            //        $.each(arr,
-            //            function(k, v) {
-            //                $adpostion.append("<option value='" + v + "'>" + v + "</option>");
-            //            });
-            //    } else {
-            //        $adpostion.append("<option value=''>不限</option>");
-            //    }
-            //});
+            $("#MediaTypeId").change(function () {
+                var $adpostion = $("#AdPositionName");
+                $adpostion.empty();
+                if ($(this).val()) {
+                    var selectdata = $(this).find('option:selected').attr("data-value");
+                    var arr = JSON.parse(selectdata);
+                    $adpostion.append("<option value=''>不限</option>");
+                    $.each(arr,
+                        function(k, v) {
+                            $adpostion.append("<option value='" + v + "'>" + v + "</option>");
+                        });
+                } else {
+                    $adpostion.append("<option value=''>不限</option>");
+                }
+            });
         });
 
         function exportData() {
 
-            swal({ 
-                title: "媒体资源导出", 
-                text: "请选择导出的价格类型", 
+            swal({
+                title: "媒体资源导出",
+                text: "请选择导出的价格类型",
                     type: "warning",
-                    showCancelButton: true, 
+                    showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "销售价导出", 
+                    confirmButtonText: "销售价导出",
                     cancelButtonText: "成本价导出",
-                    closeOnConfirm: false, 
-                    closeOnCancel: false	
+                    closeOnConfirm: false,
+                    closeOnCancel: false
                 },
-                function(isConfirm){ 
+                function(isConfirm){
                     if (isConfirm) {
                         $("#PriceType").val("1");
-                    } else { 
+                    } else {
                         $("#PriceType").val("0");
                     }
                     $("#export").val("export");
@@ -361,7 +364,7 @@
                         title: "数据正在导出中...",
                         text: "请耐心等待"
                     });
-                    
+
                 });
         }
     </script>

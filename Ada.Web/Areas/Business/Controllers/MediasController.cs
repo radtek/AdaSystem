@@ -1,25 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Resource;
+using Ada.Core.Tools;
 using Ada.Core.ViewModel.Resource;
 using Ada.Core.ViewModel.Setting;
 using Ada.Framework.Filter;
 using Ada.Services.Admin;
 using Ada.Services.Resource;
 using Ada.Services.Setting;
-using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using DataTable = System.Data.DataTable;
 
 namespace Business.Controllers
 {
@@ -53,15 +47,16 @@ namespace Business.Controllers
             Stopwatch watcher = new Stopwatch();
             watcher.Start();
             viewModel.Status = Consts.StateNormal;
-            viewModel.limit = setting.BusinessSeachRows;
+            var isExport = export == "export";
+            viewModel.limit = isExport? setting.BusinessExportRows: setting.BusinessSeachRows;
             var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
-            viewModel.Medias = result;
+            
             watcher.Stop();
-            List<string> noDatas = new List<string>();
+            //List<string> noDatas = new List<string>();
             //找到没有的
             if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
             {
-                var names = viewModel.MediaNames.Split(',').ToList();
+                var names = viewModel.MediaNames.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
                 int i = 0;
                 foreach (var name in names)
                 {
@@ -74,7 +69,7 @@ namespace Business.Controllers
                             MediaName = name,
                             Taxis = i
                         });
-                        noDatas.Add(name);
+                        //noDatas.Add(name);
                     }
                     else
                     {
@@ -86,7 +81,7 @@ namespace Business.Controllers
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
             {
-                var ids = viewModel.MediaIDs.Split(',').ToList();
+                var ids = viewModel.MediaIDs.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
                 int i = 0;
                 foreach (var id in ids)
                 {
@@ -99,7 +94,7 @@ namespace Business.Controllers
                             MediaID = id,
                             Taxis = i
                         });
-                        noDatas.Add(id);
+                        //noDatas.Add(id);
                     }
                     else
                     {
@@ -109,10 +104,8 @@ namespace Business.Controllers
                 }
             }
 
-            if (export == "export")
+            if (isExport)
             {
-                viewModel.limit = setting.BusinessExportRows;
-
                 JArray jObjects = new JArray();
                 var priceRange = _fieldService.GetFieldsByKey("ExportPrice").ToList();
                 var priceType = viewModel.PriceType;
@@ -150,7 +143,7 @@ namespace Business.Controllers
                     {
                         jo.Add("性别", media.Sex);
                     }
-                    jo.Add("粉丝数", media.FansNum ?? 0);
+                    jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
                     if (!string.IsNullOrWhiteSpace(media.Area))
                     {
                         jo.Add("地区", media.Area);
@@ -214,23 +207,19 @@ namespace Business.Controllers
                 }
                 return File(ExportData(jObjects.ToString()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
             }
-            else
+            viewModel.Medias = result.OrderBy(d => d.Taxis).ToList();
+            if (!result.Any())
             {
-
-                if (!result.Any())
-                {
-                    ModelState.AddModelError("message", "没有查询到相关媒体信息！");
-                    return View(viewModel);
-                }
-
-                var noDataStr = string.Empty;
-                if (noDatas.Count > 0)
-                {
-                    noDataStr = "其中以下资源不存在系统中：" + string.Join(",", noDatas);
-                }
-                ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + viewModel.total + "条。注：查询结果最多显示" + setting.BusinessSeachRows + "条。" + noDataStr);
+                ModelState.AddModelError("message", "没有查询到相关媒体信息！");
                 return View(viewModel);
             }
+            //var noDataStr = string.Empty;
+            //if (noDatas.Count > 0)
+            //{
+            //    noDataStr = "其中以下资源不存在系统中：" + string.Join(",", noDatas);
+            //}
+            ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + viewModel.total + "条。注：查询结果最多显示" + setting.BusinessSeachRows + "条。");
+            return View(viewModel);
         }
         private decimal SetSalePrice(decimal price, IEnumerable<Field> priceRanges)
         {
