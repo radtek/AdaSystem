@@ -114,8 +114,8 @@ $(function () {
                     function (k, v) {
                         payeeMoney += v.VerificationMoney;
                     });
-                $("#OrderMoney").val(orderMoney);
-                $("#PayeeMoney").val(payeeMoney);
+                $("#OrderMoney").val(Math.toFixMoney(orderMoney));
+                $("#PayeeMoney").val(Math.toFixMoney(payeeMoney));
                 $("#Payees").val(payeeSelections.ids.join(","));
                 $("#Orders").val(orderSelections.ids.join(","));
 
@@ -255,7 +255,7 @@ function sumPayee() {
         function (k, v) {
             payeeMoney += v.VerificationMoney;
         });
-    $("#payeemoney").text(" [已选：" + payeeMoney + " 元]");
+    $("#payeemoney").text(" [已选：" + Math.toFixMoney(payeeMoney) + " 元]");
 }
 //订单明细
 function initOrder() {
@@ -345,7 +345,7 @@ function sumOrder() {
         function (k, v) {
             orderMoney += v.VerificationMoney;
         });
-    $("#ordermoney").text(" [已选：" + orderMoney+" 元]");
+    $("#ordermoney").text(" [已选：" + Math.toFixMoney(orderMoney)+" 元]");
 }
 //项目列表
 function initItem() {

@@ -281,7 +281,7 @@ namespace Resource.Controllers
             IWorkbook wk = new XSSFWorkbook(file.InputStream);
             //1.获取第一个工作表
             ISheet sheet = wk.GetSheetAt(0);
-            if (sheet.LastRowNum <= 1)
+            if (sheet.LastRowNum < 1)
             {
                 return Json(new { State = 0, Msg = "此文件没有导入数据，请填充数据再进行导入" });
             }
@@ -349,12 +349,30 @@ namespace Resource.Controllers
                 }
                 //备注
                 media.Remark = row.GetCell(9)?.ToString();
-
-                if (!DateTime.TryParse(row.GetCell(10)?.ToString(), out var date))
+                DateTime date;
+                try
+                {
+                    if (!string.IsNullOrWhiteSpace(row.GetCell(10)?.ToString()))
+                    {
+                        date = row.GetCell(10).DateCellValue;
+                    }
+                    else
+                    {
+                        date = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
+                            DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+                    }
+                    
+                }
+                catch (Exception)
                 {
                     date = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
                         DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
                 }
+                
+                //if (!DateTime.TryParse(update, out var date))
+                //{
+                    
+                //}
                 for (int j = 0; j < adpostionNames.Count; j++)
                 {
 

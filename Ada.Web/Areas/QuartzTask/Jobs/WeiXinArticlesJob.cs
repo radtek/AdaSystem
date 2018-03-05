@@ -49,10 +49,10 @@ namespace QuartzTask.Jobs
                             var apiInfo = db.Set<APIInterfaces>().FirstOrDefault(d => d.CallIndex == "weixinpro");
                             if (apiInfo != null)
                             {
-                                string url = string.Format(apiInfo.APIUrl + "?apikey={0}&uid={1}&range=w", apiInfo.Token,
+                                string url = string.Format(apiInfo.APIUrl + "?apikey={0}&uid={1}&range=d", apiInfo.Token,
                                     media.MediaID);
                                 int times = apiInfo.TimeOut ?? 3;
-                                int page = 6;
+                                int page = 1;
                                 for (int i = 1; i <= page; i++)
                                 {
                                     var apiUrl = url + "&pageToken=" + i;
