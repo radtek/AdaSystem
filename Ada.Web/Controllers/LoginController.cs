@@ -24,6 +24,7 @@ namespace Ada.Web.Controllers
         private readonly IRepository<BusinessOrderDetail> _temp;
         private readonly IRepository<Media> _media;
         private readonly IRepository<MediaArticle> _mediaArticle;
+        private readonly IRepository<MediaPrice> _mediaPrice;
         private readonly IRepository<PurchaseOrderDetail> _ptemp;
         private readonly IDbContext _dbContext;
         private readonly ISignals _signals;
@@ -33,7 +34,8 @@ namespace Ada.Web.Controllers
             IRepository<BusinessOrderDetail> temp,
             IRepository<PurchaseOrderDetail> ptemp,
             IRepository<Media> media,
-            IRepository<MediaArticle> mediaArticle)
+            IRepository<MediaArticle> mediaArticle,
+            IRepository<MediaPrice> mediaPrice)
         {
             _repository = repository;
             _dbContext = dbContext;
@@ -42,6 +44,7 @@ namespace Ada.Web.Controllers
             _temp = temp;
             _media = media;
             _mediaArticle = mediaArticle;
+            _mediaPrice = mediaPrice;
         }
         public ActionResult Index()
         {
@@ -212,6 +215,18 @@ namespace Ada.Web.Controllers
             return Content("存在重复资源：" + string.Join(",", ids)+"，媒体ID是空的："+string.Join(",",isnulls));
 
 
+        }
+
+        public ActionResult Test()
+        {
+            // var meidas = _media.LoadEntities(d => d.IsDelete == false);
+            var temp= _mediaPrice.LoadEntities(d => d.IsDelete == false);
+
+            // return Json(temp.Select(d=>d.Select(a=>a.AdPositionName)));
+            var students = from p in temp
+                           group p by p.MediaId into what
+                select what;
+            return Json(students,JsonRequestBehavior.AllowGet);
         }
        
     }

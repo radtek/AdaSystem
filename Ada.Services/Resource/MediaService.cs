@@ -60,6 +60,14 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.MediaName.Contains(viewModel.MediaName));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.Content))
+            {
+                allList = allList.Where(d => d.Content.Contains(viewModel.Content));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.Remark))
+            {
+                allList = allList.Where(d => d.Remark.Contains(viewModel.Remark));
+            }
             if (viewModel.HasArticles!=null)
             {
                 if (!viewModel.HasArticles.Value)
