@@ -49,8 +49,8 @@ namespace Business.Controllers
             viewModel.Status = Consts.StateNormal;
             var isExport = export == "export";
             viewModel.limit = isExport? setting.BusinessExportRows: setting.BusinessSeachRows;
-            var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
-            
+            var results = _mediaService.LoadEntitiesFilter(viewModel).ToList();
+
             watcher.Stop();
             //List<string> noDatas = new List<string>();
             //找到没有的
@@ -60,11 +60,11 @@ namespace Business.Controllers
                 int i = 0;
                 foreach (var name in names)
                 {
-                    var temp = result.FirstOrDefault(d =>
+                    var temp = results.FirstOrDefault(d =>
                         d.MediaName.Equals(name, StringComparison.CurrentCultureIgnoreCase));
                     if (temp == null)
                     {
-                        result.Add(new Media
+                        results.Add(new Media
                         {
                             MediaName = name,
                             Taxis = i
@@ -85,11 +85,11 @@ namespace Business.Controllers
                 int i = 0;
                 foreach (var id in ids)
                 {
-                    var temp = result.FirstOrDefault(d =>
+                    var temp = results.FirstOrDefault(d =>
                         d.MediaID.Equals(id, StringComparison.CurrentCultureIgnoreCase));
                     if (temp == null)
                     {
-                        result.Add(new Media
+                        results.Add(new Media
                         {
                             MediaID = id,
                             Taxis = i
@@ -109,7 +109,7 @@ namespace Business.Controllers
                 JArray jObjects = new JArray();
                 var priceRange = _fieldService.GetFieldsByKey("ExportPrice").ToList();
                 var priceType = viewModel.PriceType;
-                foreach (var media in result.OrderBy(d => d.Taxis))
+                foreach (var media in results.OrderBy(d => d.Taxis))
                 {
                     var jo = new JObject();
                     jo.Add("主键", string.IsNullOrWhiteSpace(media.Id) ? "不存在的资源" : media.Id);
@@ -148,21 +148,46 @@ namespace Business.Controllers
                     {
                         jo.Add("地区", media.Area);
                     }
-                    if (media.MonthPostNum != null)
+
+                    if (media.MediaType?.CallIndex == "weixin")
                     {
                         jo.Add("月发文篇数", media.MonthPostNum);
                     }
-                    if (media.LastPushDate!=null)
+                    if (media.MediaType?.CallIndex == "weixin")
                     {
-                        jo.Add("最近微信发文日期", media.LastPushDate);
+                        jo.Add("最近微信发文日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
                     }
-                    if (media.PostNum != null)
+                    if (media.MediaType?.CallIndex == "sinablog")
                     {
                         jo.Add("微博数", media.PostNum);
                     }
-                    if (media.FriendNum != null)
+                    if (media.MediaType?.CallIndex == "weixin")
                     {
-                        jo.Add("转发数", media.FriendNum);
+                        jo.Add("最近头条阅读数", media.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount);
+                    }
+                    if (media.MediaType?.CallIndex == "weixin")
+                    {
+                        jo.Add("十天平均阅读数", Convert.ToInt32(media.MediaArticles.Where(l => l.IsTop == true && l.PublishDate > DateTime.Now.Date.AddDays(-10)).Average(aaa => aaa.ViewCount)));
+                    }
+                    if (media.MediaType?.CallIndex == "sinablog")
+                    {
+                        jo.Add("转发数",Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ShareCount)) );
+                    }
+                    if (media.MediaType?.CallIndex == "sinablog")
+                    {
+                        jo.Add("评论数", Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount)));
+                    }
+                    if (media.MediaType?.CallIndex == "sinablog")
+                    {
+                        jo.Add("点赞数", Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount)));
+                    }
+                    if (media.MediaType?.CallIndex == "sinablog")
+                    {
+                        jo.Add("最近博文日期", media.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate.Value.ToString("yyyy-MM-dd"));
+                    }
+                    if (media.MediaType?.CallIndex == "sinablog")
+                    {
+                        jo.Add("一周博文数", media.MediaArticles.OrderByDescending(a => a.PublishDate).Count(l => l.PublishDate > DateTime.Now.Date.AddDays(-7)));
                     }
                     if (media.IsAuthenticate != null)
                     {
@@ -207,8 +232,8 @@ namespace Business.Controllers
                 }
                 return File(ExportData(jObjects.ToString()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
             }
-            viewModel.Medias = result.OrderBy(d => d.Taxis).ToList();
-            if (!result.Any())
+            viewModel.Medias = results.OrderBy(d => d.Taxis).ToList();
+            if (!results.Any())
             {
                 ModelState.AddModelError("message", "没有查询到相关媒体信息！");
                 return View(viewModel);

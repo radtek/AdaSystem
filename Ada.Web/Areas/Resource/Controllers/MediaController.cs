@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.SqlServer;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -198,18 +199,21 @@ namespace Resource.Controllers
             return Json(new
             {
                 viewModel.total,
+                //rows = result
                 rows = result.Select(d => new MediaView
                 {
                     Id = d.Id,
-                    MediaName = SetMediaName(d),
+                    MediaName = d.MediaName,
                     MediaID = d.MediaID,
+                    MediaTypeIndex = d.MediaType.CallIndex,
+                    MediaTypeName = d.MediaType.TypeName,
                     IsAuthenticate = d.IsAuthenticate,
                     IsOriginal = d.IsOriginal,
                     IsComment = d.IsComment,
-                    FansNum = Utils.ShowFansNum(d.FansNum),
+                    FansNum = d.FansNum,
                     ChannelType = d.ChannelType,
-                    LastReadNum = d.MediaArticles.Where(l => l.IsTop == true && l.Media.MediaType.CallIndex == "weixin").OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount,
-                    AvgReadNum = (int?)d.MediaArticles.Where(l => l.IsTop == true && l.Media.MediaType.CallIndex == "weixin").OrderByDescending(a => a.PublishDate).Where(aa => aa.PublishDate > DateTime.Now.Date.AddDays(-10)).Average(aaa => aaa.ViewCount),
+                    LastReadNum = d.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount,
+                    AvgReadNum = (int?)d.MediaArticles.Where(l => l.IsTop == true && l.PublishDate > DateTime.Now.Date.AddDays(-10)).Average(a => a.ViewCount),
                     PublishFrequency = d.PublishFrequency,
                     Areas = d.Area,
                     Sex = d.Sex,
@@ -225,11 +229,11 @@ namespace Resource.Controllers
                     LastPushDate = d.LastPushDate,
                     AuthenticateType = d.AuthenticateType,
                     Platform = d.Platform,
-                    TransmitNum = (int?)d.MediaArticles.Where(aa => aa.Media.MediaType.CallIndex == "sinablog").OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ShareCount),
-                    CommentNum = (int?)d.MediaArticles.Where(aa => aa.Media.MediaType.CallIndex == "sinablog").OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount),
-                    LikesNum = (int?)d.MediaArticles.Where(aa => aa.Media.MediaType.CallIndex == "sinablog").OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount),
-                    BlogLastPushDate = d.MediaArticles.Where(l => l.Media.MediaType.CallIndex == "sinablog").OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate,
-                    WeekArticleCount = d.MediaArticles.OrderByDescending(a => a.PublishDate).Count(l => l.Media.MediaType.CallIndex == "sinablog" && l.PublishDate > DateTime.Now.Date.AddDays(-7)),
+                    TransmitNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ShareCount),
+                    CommentNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount),
+                    LikesNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount),
+                    BlogLastPushDate = d.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate,
+                    WeekArticleCount = d.MediaArticles.OrderByDescending(a => a.PublishDate).Count(l => l.PublishDate > DateTime.Now.Date.AddDays(-7)),
                     Content = d.Content,
                     Remark = d.Remark,
                     Status = d.Status,
@@ -241,7 +245,7 @@ namespace Resource.Controllers
                     LinkManName = d.LinkMan.Name,
                     Transactor = d.Transactor,
                     MediaGroups = d.MediaGroups.Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
-                    MediaTagStr = string.Join(",", d.MediaTags.Select(t => t.TagName)),
+                    MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).ToList(),
                     MediaPrices = d.MediaPrices.Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = p.PurchasePrice }).ToList()
                 })
             }, JsonRequestBehavior.AllowGet);
@@ -361,17 +365,17 @@ namespace Resource.Controllers
                         date = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
                             DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
                     }
-                    
+
                 }
                 catch (Exception)
                 {
                     date = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
                         DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
                 }
-                
+
                 //if (!DateTime.TryParse(update, out var date))
                 //{
-                    
+
                 //}
                 for (int j = 0; j < adpostionNames.Count; j++)
                 {

@@ -147,18 +147,7 @@ formatter.purchaseStatus = function (value, row, index) {
     }
     return "";
 };
-formatter.blogLevel = function (value) {
-    if (value == "黄V") {
-        return " <span class='label label-warning'>V</span>";
-    } else if (value == "蓝V") {
-        return " <span class='label label-success'>V</span>";
-    } else if (value == "金V") {
-        return " <span class='label label-danger'>V</span>";
-    } else if (value == "达人") {
-        return " <span><i class='fa fa-star text-danger'></i></span>";
-    }
-    return "";
-};
+
 formatter.url = function (value, row, index) {
     if (value) {
         return "<a class='label' href='" + value + "' target='_blank'><i class='fa fa-link'></i> 浏览</a>";

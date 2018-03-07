@@ -124,7 +124,7 @@
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=20180123")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201801238")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -180,13 +180,7 @@
                         field: 'MediaName',
                         title: '资源名称',
                         valign: "middle",
-                        align: "left",
-                        formatter: function(value,row) {
-                            return value +
-                                " <a class='btn btn-warning btn-circle btn-xs' href='@Url.Action("Comment", "Media")?id=" +
-                                row.Id +
-                                "' target='_blank' title='评价'><i class='fa fa-commenting'></i></a>";
-                        }
+                        align: "left"
                     },
 
                    
@@ -224,10 +218,7 @@
                         title: '操作',
                         valign: "middle",
                         align: "center",
-                        formatter: function (value) {
-                            return "<a class='btn btn-success btn-sm' href='@Url.Action("Update","Media")?id=" + value + "');' target='_blank'><i class='fa fa-pencil'></i> 编辑</a> " +
-                                "<button class='btn btn-danger btn-sm' onclick=\"cancle('" + value +"');\"><i class='fa fa-trash-o'></i> 删除</button>";
-                        }
+                        formatter: formatterOperation
                     }
                 ]
             });

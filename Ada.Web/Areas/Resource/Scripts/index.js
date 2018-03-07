@@ -1,4 +1,4 @@
-﻿$(function() {
+﻿$(function () {
     $('#uploadModal').on('shown.bs.modal',
         function () {
 
@@ -23,11 +23,26 @@ function formatterPrice(value, row, index) {
     var result = "";
     $.each(value,
         function (k, v) {
-            result += "<span class='label label-info'>" + v.AdPositionName + "：" + (v.PurchasePrice == 0 ? "不接单" : v.PurchasePrice) + "　　有效期至：" + (v.InvalidDate ? moment(v.InvalidDate).format("YYYY-MM-DD") : "") + "</span><br/>";
+            result += "<div class='p-xxs'><span class='label label-info'>" + v.AdPositionName + "：" + (v.PurchasePrice == 0 ? "不接单" : v.PurchasePrice) + "　　有效期至：" + (v.InvalidDate ? moment(v.InvalidDate).format("YYYY-MM-DD") : "") + "</span></div>";
         });
     return result;
 }
+function formatterTag(value) {
+    var arr = [];
+    $.each(value,
+        function (k, v) {
+            arr.push("<span class='label label-success'><i class='fa fa-tag'></i> " + v.TagName + "</span>");
+        });
+    return arr.join(' ');
+}
 
+function formatterFans(value) {
+    var fans = 0;
+    if (value) {
+        fans = value * 1.0 / 10000;
+    }
+    return "<span class='label label-danger'><i class='fa fa-users'></i> 粉丝：" + fans.toFixed(1) + " 万</span>";
+}
 function formatterGroup(value, row, index) {
     var result = "";
     $.each(value,
@@ -35,6 +50,151 @@ function formatterGroup(value, row, index) {
             result += "<button class='btn btn-warning btn-xs' onclick=\"groupDetail('" + v.Id + "');\"><i class='fa fa-object-group'></i> " + v.GroupName + "</button> ";
         });
     return result;
+}
+function formatterWeiXin(value, row) {
+    var url =
+        "<div class='p-xxs'><a class='label' href='http://weixin.sogou.com/weixin?type=1&query=" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> <span id='" + row.Id + "'>" + value + " - " + row.MediaID + "</span></a></div>";
+    var tags = "<div class='p-xxs'>" + formatterTag(row.MediaTags) + "</div>";
+    var fans = "<div class='p-xxs'>" + formatterFans(row.FansNum) + "</div>";
+    return url +
+        "<div class='p-xxs'><button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" +
+        " <button class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看微信详情' onclick='details(\"/Resource/Media/WeiXinArticles/" + row.Id + "\");'>详</button>" +
+        " <img rel='drevil' data-content='<div id=\"popOverBox\"><img src=\"" + (row.MediaQR || '/Images/nopic.png') + "\" width=\"100\" height=\"100\" /></div>'  src='/Images/ewm.png' style='width: 20px; height: 20px;'/></div>" + tags + fans;
+}
+function formatterBlog(value, row) {
+    var sex = "";
+    if (row.Sex == '男') {
+        sex = '<img alt="男" class="img-circle" src="/Images/man.png" style="width: 25px; height: 25px;"/>';
+    }
+    if (row.Sex == '女') {
+        sex = '<img alt="女" class="img-circle" src="/Images/lady.png" style="width: 25px; height: 25px;"/>';
+    }
+    var url =
+        "<div class='p-xxs'>" + sex + "<a class='label' href='https://weibo.com/u/" + row.MediaID + "' target='_blank' title='" + (row.Abstract || '暂无摘要') + "'><i class='fa fa-link'></i> <span id='" + row.Id + "'>" + value + "</span></a>" +
+        " <button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" +
+        "</div>";;
+    var tags = "";
+    if (row.MediaTags) {
+        tags = "<div class='p-xxs'>" + formatterTag(row.MediaTags) + "</div>";
+    }
+
+    var fans = "<div class='p-xxs'>" + formatterFans(row.FansNum) + "</div>";
+    var level = formatterblogLevel(row.AuthenticateType);
+    var area = "";
+    if (row.Areas) {
+        area = " <span class='label label-info'><i class='fa fa-map-marker'></i> " + row.Areas + "</span>";
+    }
+    return url +
+        "<div class='p-xxs'>" + level + area +
+        " <button class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看微博详情' onclick='details(\"/Resource/Media/WeiboArticles/" + row.Id + "\");'>详</button>" +
+        "</div>" + tags + fans;
+}
+
+function formatterMediaName(value, row) {
+    var sex = "";
+    if (row.Sex == '男') {
+        sex = '<img alt="男" class="img-circle" src="/Images/man.png" style="width: 25px; height: 25px;"/>';
+    }
+    if (row.Sex == '女') {
+        sex = '<img alt="女" class="img-circle" src="/Images/lady.png" style="width: 25px; height: 25px;"/>';
+    }
+    var name = value;
+    switch (row.MediaTypeIndex) {
+        case "website":
+            name = value + " - " + row.Client + " - " + row.Channel;
+            break;
+        case "zhihu":
+            name = "<a class='label' href='https://www.zhihu.com/people/" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>" ;
+            break; 
+        case "headline":
+        case "webcast":
+        case "brush":
+            name = row.Platform + " - " + value;
+            break;
+    }
+    if (row.MediaLink) {
+        name = "<a class='label' href='" + row.MediaLink + "' target='_blank'><i class='fa fa-link'></i> " + name + "</a>";
+    }
+    var url =
+        "<div class='p-xxs'>" + sex + name +
+        " <button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" +
+        "</div>";;
+    var tags = "";
+    if (row.MediaTags) {
+        tags = "<div class='p-xxs'>" + formatterTag(row.MediaTags) + "</div>";
+    }
+    var fans = "";
+    if (row.FansNum) {
+        fans = "<div class='p-xxs'>" + formatterFans(row.FansNum) + "</div>";
+    }
+    var area = "";
+    if (row.Areas) {
+        area = "<div class='p-xxs'><span class='label label-info'><i class='fa fa-map-marker'></i> " + row.Areas + "</span></div>";
+    }
+    return url + area + tags + fans;
+}
+
+
+
+
+function formatterWeiXinData(value, row) {
+    var date = "--";
+    if (row.LastPushDate) {
+        date = moment(row.LastPushDate).format("YYYY-MM-DD HH:mm");
+    }
+    return "<div class='p-xxs'><span class='label label-info'>十天平均阅读数：" +
+        (row.AvgReadNum || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>最近头条阅读数：" +
+        (row.LastReadNum || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>月发文篇数：" +
+        (row.MonthPostNum || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>最近发文日期：" +
+        date + "</div>";
+}
+function formatterBlogData(value, row) {
+    var date = "--";
+    if (row.BlogLastPushDate) {
+        date = moment(row.BlogLastPushDate).format("YYYY-MM-DD HH:mm");
+    }
+    return "<div class='p-xxs'><span class='label label-info'>平均点赞数：" +
+        (row.LikesNum || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>平均评论数：" +
+        (row.CommentNum || 0) +
+        "</div>" +
+        //"<div class='p-xxs'><span class='label label-info'>平均转发数：" +
+        //(row.TransmitNum || 0) +
+        //"</div>" +
+        "<div class='p-xxs'><span class='label label-info'>一周博文数：" +
+        (row.WeekArticleCount || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>最近博文日期：" +
+        date + "</div>";
+}
+function formatterblogLevel(value) {
+    if (value == "黄V") {
+        return " <span class='label label-warning'>V</span>";
+    } else if (value == "蓝V") {
+        return " <span class='label label-success'>V</span>";
+    } else if (value == "金V") {
+        return " <span class='label label-danger'>V</span>";
+    } else if (value == "达人") {
+        return " <span><i class='fa fa-star text-danger'></i></span>";
+    }
+    return "";
+};
+function formatterRemark(value, row) {
+    return "<div class='p-xxs'><span class='label label-info' data-toggle='tooltip' data-placement='bottom' title='" + (row.Content || '暂无信息') + "'>媒体说明</div>" +
+        "<div class='p-xxs'><span class='label label-info'  data-toggle='tooltip' data-placement='bottom' title='" + (row.Remark || '暂无信息') + "'>媒介备注</div>";
+}
+
+function formatterOperation(value) {
+    return "<div class='btn-group'><a class='btn btn-success btn-outline btn-xs' href='/Resource/Media/Update/" + value + "');' target='_blank'><i class='fa fa-pencil'></i> 编辑</a> " +
+        "<a class='btn btn-warning btn-outline btn-xs' href='/Resource/Media/Comment/" + value + "');' target='_blank'><i class='fa fa-commenting'></i> 评价</a> " +
+        "<button class='btn btn-danger btn-outline btn-xs' onclick=\"cancle('" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button></div>";
 }
 //撤销
 function cancle(id) {
@@ -157,7 +317,7 @@ function collectArticle(url) {
         swal("操作提醒", "请选择有效数据", "warning");
         return;
     }
-    $("#modalView").load(url+"/" + arrselections[0].Id,
+    $("#modalView").load(url + "/" + arrselections[0].Id,
         function () {
             $('#modalView .modal').on('shown.bs.modal', function () {
                 collection();
@@ -169,7 +329,6 @@ function collectArticle(url) {
 
 }
 function details(url) {
-
     $("#modalView").load(url,
         function () {
             //$('#modalView .modal').on('shown.bs.modal', function () {
@@ -179,8 +338,8 @@ function details(url) {
             //});
             $('#modalView .modal').modal('show');
         });
-
 }
+
 function collection() {
     $("#modalView form").validate({
         submitHandler: function (form) {
@@ -254,7 +413,7 @@ function collectWeiXin(url) {
         });
     swal({
         title: "您确定吗?",
-        text: "确认要采集这" + arrselections.length+"个微信号吗?",
+        text: "确认要采集这" + arrselections.length + "个微信号吗?",
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#DD6B55",

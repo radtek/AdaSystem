@@ -353,6 +353,11 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "媒体评论")]
         public List<MediaCommentView> MediaCommentViews { get; set; }
+        /// <summary>
+        /// 排序
+        /// </summary>
+        [Display(Name = "排序")]
+        public int? Taxis { get; set; }
     }
 
 }

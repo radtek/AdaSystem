@@ -6,7 +6,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">【@Model.MediaName - @Model.MediaID】最近十篇发布文章</h4>
+                <h4 class="modal-title">【@Model.MediaName - @Model.MediaID】最近发布文章</h4>
             </div>
             <div class="modal-body">
                 @if (Model.MediaArticles.Any())
@@ -34,7 +34,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.MediaArticles.OrderByDescending(d => d.PublishDate).Take(10))
+                                @foreach (var item in Model.MediaArticles.OrderByDescending(d => d.PublishDate).ThenByDescending(d=>d.IsTop).Take(16))
                                 {
                                     <tr>
                                         @{

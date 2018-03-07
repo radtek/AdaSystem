@@ -169,7 +169,7 @@
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/ladda")
     @Scripts.Render("~/plugins/clipboard")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=2018031213")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201803128132")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -239,17 +239,14 @@
                     {
                         checkbox: true
                     },
+                    
                     {
                         field: 'MediaLogo',
-                        //title: '@Html.DisplayNameFor(d=>d.MediaLogo)',
                         align: "right", valign: "middle",
                         formatter: function (value, row) {
-                            if (value) {
-                                return '<img alt="' + row.MediaName + '" class="img-circle" src="' + value + '" style="width: 50px; height: 50px;"/>';
-                            } else {
-                                return '<img alt="' + row.MediaName + '" class="img-circle" src="/Images/weixin.png" style="width: 50px; height: 50px;"/>';
-                            }
-
+                            var logo = value || "/Images/weixin.png";
+                            var state = "<div class='p-xxs'>" + formatter.normalStatus(row.Status) + "</div>";
+                            return '<img alt="' + row.MediaName + '" class="img-circle" src="' + logo + '" style="width: 50px; height: 50px;"/>' + state;
                         }
                     },
                     {
@@ -257,63 +254,13 @@
                         title: '微信公众号',
                         valign: "middle",
                         align: "left",
-                        formatter: function (value, row) {
-                            @*var update =
-                                " <button class='btn btn-success btn-xs' data-toggle='tooltip' data-placement='bottom' title='更新微信信息' onclick='collectWeiXinFree(\"@Url.Action("CollectionWeixinInfoFree")?id=" +
-                                    row.MediaID +
-                                    "\");'><i class='fa fa-arrow-circle-up'></i></button> ";*@
-                            var url =
-                                "<a class='label' href='http://weixin.sogou.com/weixin?type=1&query=" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> <span id='"+row.Id+"'>" + value + "</span></a>";
-                            return url +
-                                "<div class='p-xxs'><button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#"+row.Id+"'><i class='fa fa-copy'></i></button>" +
-                                " <button class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看微信详情' onclick='details(\"@Url.Action("WeiXinArticles","Media")?id=" +
-                                row.Id +
-                                "\");'>详</button>"+
-                            " <img rel='drevil' data-content='<div id=\"popOverBox\"><img src=\"" + (row.MediaQR || '/Images/nopic.png') +"\" width=\"100\" height=\"100\" /></div>'  src='/Images/ewm.png' style='width: 20px; height: 20px;'/></div>";
-                        }
-                    },
-
-                    {
-                        field: 'FansNum',
-                        title: '@Html.DisplayNameFor(d=>d.FansNum)',
-                        valign: "middle",
-                        ////align: "center",
-                        formatter: function (value) {
-                            var fans = "暂无数据";
-                            if (value) {
-                                fans = value + " 万";
-                            }
-                            return "<span class='label label-info'>" + fans+"</span>";
-                        }
+                        formatter: formatterWeiXin
                     },
                     {
                         field: 'AvgReadNum',
-                        title: '微信指数（近十天）',
+                        title: '微信指数',
                         valign: "middle",
-                        formatter: function (value, row) {
-                            var date = "--";
-                            if (row.LastPushDate) {
-                                date = moment(row.LastPushDate).format("YYYY-MM-DD HH:mm");
-                            }
-                            return "平均头条阅读数：" +
-                                (row.AvgReadNum||0) +
-                                "<br />" +
-                                "最近头条阅读数：" +
-                                (row.LastReadNum||0) +
-                                "<br />" +
-                                "月发文篇数：" +
-                                (row.MonthPostNum || 0) +
-                                "<br />" +
-                                "最近发文日期：" +
-                                date ;
-                        }
-                    },
-
-                    {
-                        field: 'MediaTagStr',
-                        title: '@Html.DisplayNameFor(d=>d.MediaTagStr)',
-                        valign: "middle",
-                        align: "center"
+                        formatter: formatterWeiXinData
                     },
                     {
                         field: 'MediaPrices',
@@ -324,20 +271,17 @@
                     },
                     {
                         field: 'Content',
-                        title: '@Html.DisplayNameFor(d=>d.Content)',
-                        align: "center", valign: "middle", formatter: formatter.tooltip
-                    },
-                    {
-                        field: 'Remark',
-                        title: '@Html.DisplayNameFor(d=>d.Remark)',
-                        align: "center", valign: "middle", formatter: formatter.tooltip
+                        title: '媒体信息',
+                        //align: "center",
+                        valign: "middle",
+                        formatter: formatterRemark
                     },
                     {
                         field: 'MediaGroups',
                         title: '@Html.DisplayNameFor(d=>d.MediaGroups)',
                         valign: "middle",
                         formatter: formatterGroup,
-                        align: "center"
+                        //align: "center"
                     },
                     {
                         field: 'LinkManName',
@@ -359,11 +303,7 @@
                         title: '操作',
                         valign: "middle",
                         align: "center",
-                        formatter: function (value) {
-                            return "<div class='btn-group'><a class='btn btn-success btn-outline btn-xs' href='@Url.Action("Update","Media")?id=" + value + "');' target='_blank'><i class='fa fa-pencil'></i> 编辑</a> " +
-                                "<a class='btn btn-warning btn-outline btn-xs' href='@Url.Action("Comment", "Media")?id=" + value + "');' target='_blank'><i class='fa fa-commenting'></i> 评价</a> " +
-                                "<button class='btn btn-danger btn-outline btn-xs' onclick=\"cancle('" + value +"');\"><i class='fa fa-trash-o'></i> 删除</button></div>";
-                        }
+                        formatter: formatterOperation
                     }
                 ]
             });

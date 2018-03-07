@@ -263,10 +263,10 @@
                                                 <span class='label'>关闭</span>
                                             }
                                         </td>
-                                        <td>@item.MediaType.TypeName</td>
+                                        <td>@item.MediaTypeName</td>
                                         @{
                                             var mediaName = item.MediaName;
-                                            switch (item.MediaType.CallIndex)
+                                            switch (item.MediaTypeIndex)
                                             {
                                                 case "website":
                                                     mediaName = item.MediaName + "-" + item.Client + "-" + item.Channel;

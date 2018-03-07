@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -13,6 +14,7 @@ using Ada.Core.Domain.Resource;
 using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel.Admin;
+using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Caching;
 using log4net;
 
@@ -169,7 +171,7 @@ namespace Ada.Web.Controllers
         public ActionResult UpdateMedia()
         {
 
-            var medias = _media.LoadEntities(d => d.IsDelete==false&&d.MediaType.CallIndex=="weixin").ToList();
+            var medias = _media.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "weixin").ToList();
             //int start = medias.Count;
             //var last = medias.Distinct(new FastPropertyComparer<Media>("MediaID"));
             //var end = last.Count();
@@ -183,7 +185,7 @@ namespace Ada.Web.Controllers
                 }
             }
             _dbContext.SaveChanges();
-            return Content("成功更新"+i+"个");
+            return Content("成功更新" + i + "个");
             //return Content("原有：" + start + ",去重后：" + end);
 
 
@@ -192,7 +194,7 @@ namespace Ada.Web.Controllers
         public ActionResult CheckMedia()
         {
 
-            var m = _media.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex== "sinablog").ToList();
+            var m = _media.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "sinablog").ToList();
             List<string> ids = new List<string>();
             List<string> isnulls = new List<string>();
             foreach (var item in m)
@@ -206,28 +208,49 @@ namespace Ada.Web.Controllers
                     d.MediaID.Equals(item.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
                     d.IsDelete == false &&
                     d.MediaTypeId == item.MediaTypeId && d.Id != item.Id).FirstOrDefault();
-                if (temp!=null)
+                if (temp != null)
                 {
                     ids.Add(item.MediaID);
                 }
             }
 
-            return Content("存在重复资源：" + string.Join(",", ids)+"，媒体ID是空的："+string.Join(",",isnulls));
+            return Content("存在重复资源：" + string.Join(",", ids) + "，媒体ID是空的：" + string.Join(",", isnulls));
 
 
         }
 
         public ActionResult Test()
         {
-            // var meidas = _media.LoadEntities(d => d.IsDelete == false);
-            var temp= _mediaPrice.LoadEntities(d => d.IsDelete == false);
+            var meidas = _media.LoadEntities(d => d.IsDelete == false && d.MediaID == "izhenai");
 
-            // return Json(temp.Select(d=>d.Select(a=>a.AdPositionName)));
-            var students = from p in temp
-                           group p by p.MediaId into what
-                select what;
-            return Json(students,JsonRequestBehavior.AllowGet);
+            var atricles = _mediaArticle.LoadEntities(d => true).GroupBy(d => d.MediaId).Select(d => new
+            {
+                d.Key,
+                LinkCount = d.Sum(a => a.LikeCount)
+            });
+
+            return Content(atricles.ToString());
+            ////var atricles = _mediaArticle.LoadEntities(d => true).GroupBy(d => d.MediaId).Select(d => new MediaView
+            ////{
+            ////    MediaName = d.Key.MediaName,
+            ////    Id=d.Key.Id,
+            ////    LastReadNum = d.Where(l => l.IsTop == true && l.Media.MediaType.CallIndex == "weixin").OrderByDescending(a => a.PublishDate).FirstOrDefault().ViewCount,
+            ////});
+            ////var temp = meidas.Join(atricles, m => m.Id, a => a.Key, (m, d) => new MediaView()
+            ////{
+            ////    MediaName = m.MediaName,
+            ////    LastReadNum= d.Where(l => l.IsTop == true && l.Media.MediaType.CallIndex == "weixin").OrderByDescending(a => a.PublishDate).FirstOrDefault().ViewCount
+            ////});
+            //var temp = meidas.Select(d => new MediaView
+            //{
+            //    MediaName = d.MediaName,
+            //    LastReadNum= d.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).FirstOrDefault().ViewCount,
+            //    AvgReadNum= (int?) d.MediaArticles.Where(a => SqlFunctions.DateDiff("day", a.PublishDate, DateTime.Now) <= 10).Average(a => a.ViewCount),
+
+            //});
+
+            //return Json(temp,JsonRequestBehavior.AllowGet);
         }
-       
+
     }
 }
