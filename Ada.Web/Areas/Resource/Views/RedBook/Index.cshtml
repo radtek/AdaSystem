@@ -77,6 +77,12 @@
                         @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control" })
                     </div>
                 </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.MediaNames, Html.DisplayNameFor(d => d.MediaNames).ToString(), new { @class = "control-label" })
+                        @Html.TextAreaFor(d => d.MediaNames, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-12 text-center">
                         <div class="form-group">

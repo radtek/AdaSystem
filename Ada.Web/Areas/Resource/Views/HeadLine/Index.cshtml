@@ -31,12 +31,12 @@
                         <div class="row">
                             <div class="col-md-12">
                                 @foreach (var item in tags)
-                                {
-                                    <div class="checkbox checkbox-success checkbox-inline">
-                                        <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
-                                        <label for="@item.Id">@item.TagName</label>
-                                    </div>
-                                }
+                    {
+                        <div class="checkbox checkbox-success checkbox-inline">
+                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
+                            <label for="@item.Id">@item.TagName</label>
+                        </div>
+        }
                             </div>
                         </div>
 
@@ -80,6 +80,12 @@
                     <div class="form-group">
                         @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor).ToString(), new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.MediaNames, Html.DisplayNameFor(d => d.MediaNames).ToString(), new { @class = "control-label" })
+                        @Html.TextAreaFor(d => d.MediaNames, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
                     </div>
                 </div>
                 <div class="row">
