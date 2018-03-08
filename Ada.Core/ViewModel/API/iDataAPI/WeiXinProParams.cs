@@ -9,7 +9,12 @@ namespace Ada.Core.ViewModel.API.iDataAPI
 {
    public class WeiXinProParams:BaseParams
     {
-       
+
+        /// <summary>
+        /// 获取微信内容API
+        /// </summary>
+        [Display(Name = "获取微信内容API")]
+        public string CallIndexWeiXinInfo { get; set; }
         /// <summary>
         /// 文章链接(需base64处理，最多5条链接，并且同为一个公众号)
         /// </summary>

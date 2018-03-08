@@ -164,9 +164,9 @@ namespace Ada.Services.Resource
             string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
             if (order == "desc")
             {
-                return allList.OrderByDescending(d => d.LinkManId).Skip(offset).Take(rows);
+                return allList.OrderByDescending(d => d.Id).Skip(offset).Take(rows);
             }
-            return allList.OrderBy(d => d.LinkManId).Skip(offset).Take(rows);
+            return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
         }
         public IQueryable<MediaView> LoadEntitiesFilters(MediaView viewModel)
         {
@@ -295,7 +295,7 @@ namespace Ada.Services.Resource
                 FansNum = d.FansNum,
                 ChannelType = d.ChannelType,
                 LastReadNum = d.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).FirstOrDefault().ViewCount,
-                AvgReadNum = (int?) d.MediaArticles.Where(a => SqlFunctions.DateDiff("day", a.PublishDate, DateTime.Now) <= 10).Average(a => a.ViewCount),
+                AvgReadNum = (int?) d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(10).Average(a => a.ViewCount),
                 PublishFrequency = d.PublishFrequency,
                 Areas = d.Area,
                 Sex = d.Sex,

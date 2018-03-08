@@ -221,15 +221,18 @@ namespace Ada.Web.Controllers
 
         public ActionResult Test()
         {
-            var meidas = _media.LoadEntities(d => d.IsDelete == false && d.MediaID == "izhenai");
+            string[] where = { "X1712181402100028", "X1712181349560012", "X1712181221160001", "X1712181337340002" };
+            var meidas = _media.LoadEntities(d =>
+                d.IsDelete == false &&
+                where.Contains(d.TransactorId) &&
+                d.MediaType.CallIndex == "weixin" &&
+                d.IsSlide == true &&
+                d.Status == Consts.StateNormal &&
+                (d.CollectionDate == null || SqlFunctions.DateDiff("hour", d.CollectionDate, DateTime.Now) > 0)).Count();
 
-            var atricles = _mediaArticle.LoadEntities(d => true).GroupBy(d => d.MediaId).Select(d => new
-            {
-                d.Key,
-                LinkCount = d.Sum(a => a.LikeCount)
-            });
+            
 
-            return Content(atricles.ToString());
+            return Content(meidas.ToString());
             ////var atricles = _mediaArticle.LoadEntities(d => true).GroupBy(d => d.MediaId).Select(d => new MediaView
             ////{
             ////    MediaName = d.Key.MediaName,

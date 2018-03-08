@@ -38,7 +38,7 @@ namespace Business.Controllers
         public ActionResult Index(MediaView viewModel)
         {
             var export = Request.Form["Submit.Export"];
-            if (string.IsNullOrWhiteSpace(viewModel.MediaTypeId))
+            if (string.IsNullOrWhiteSpace(viewModel.MediaTypeIndex))
             {
                 ModelState.AddModelError("message", "请先选择媒体类型！");
                 return View(viewModel);

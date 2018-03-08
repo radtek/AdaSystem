@@ -98,18 +98,18 @@ function formatterMediaName(value, row) {
     if (row.Sex == '女') {
         sex = '<img alt="女" class="img-circle" src="/Images/lady.png" style="width: 25px; height: 25px;"/>';
     }
-    var name = value;
+    var name = "<span id='" + row.Id + "'>" + value + "</span>";
     switch (row.MediaTypeIndex) {
         case "website":
-            name = value + " - " + row.Client + " - " + row.Channel;
+            name = "<span id='" + row.Id + "'>" + value + " - " + row.Client + " - " + row.Channel + "</span>";
             break;
         case "zhihu":
-            name = "<a class='label' href='https://www.zhihu.com/people/" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>" ;
-            break; 
+            name = "<a class='label' href='https://www.zhihu.com/people/" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> <span id='" + row.Id + "'>" + value + "</span></a>";
+            break;
         case "headline":
         case "webcast":
         case "brush":
-            name = row.Platform + " - " + value;
+            name = "<span id='" + row.Id + "'>" + row.Platform + " - " + value + "</span>";
             break;
     }
     if (row.MediaLink) {
@@ -142,7 +142,7 @@ function formatterWeiXinData(value, row) {
     if (row.LastPushDate) {
         date = moment(row.LastPushDate).format("YYYY-MM-DD HH:mm");
     }
-    return "<div class='p-xxs'><span class='label label-info'>十天平均阅读数：" +
+    return "<div class='p-xxs'><span class='label label-info'>近十篇平均阅读数：" +
         (row.AvgReadNum || 0) +
         "</div>" +
         "<div class='p-xxs'><span class='label label-info'>最近头条阅读数：" +
@@ -159,10 +159,10 @@ function formatterBlogData(value, row) {
     if (row.BlogLastPushDate) {
         date = moment(row.BlogLastPushDate).format("YYYY-MM-DD HH:mm");
     }
-    return "<div class='p-xxs'><span class='label label-info'>平均点赞数：" +
+    return "<div class='p-xxs'><span class='label label-info'>近50篇平均点赞数：" +
         (row.LikesNum || 0) +
         "</div>" +
-        "<div class='p-xxs'><span class='label label-info'>平均评论数：" +
+        "<div class='p-xxs'><span class='label label-info'>近50篇平均评论数：" +
         (row.CommentNum || 0) +
         "</div>" +
         //"<div class='p-xxs'><span class='label label-info'>平均转发数：" +
@@ -429,7 +429,7 @@ function collectWeiXin(url) {
                 '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
             },
             url: url,
-            data: { CallIndex: "weixin", UID: ids.join(',') },
+            data: { CallIndex: "weixin", CallIndexWeiXinInfo: "weixinpro", UID: ids.join(',') },
             success: function (data) {
                 if (data.State == 1) {
                     $("#table").bootstrapTable('refresh');

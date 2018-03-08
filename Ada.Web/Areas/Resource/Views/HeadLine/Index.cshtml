@@ -31,12 +31,12 @@
                         <div class="row">
                             <div class="col-md-12">
                                 @foreach (var item in tags)
-                    {
-                        <div class="checkbox checkbox-success checkbox-inline">
-                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
-                            <label for="@item.Id">@item.TagName</label>
-                        </div>
-        }
+                                {
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
+                                        <label for="@item.Id">@item.TagName</label>
+                                    </div>
+                                }
                             </div>
                         </div>
 
@@ -131,7 +131,8 @@
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/ladda")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201801248")"></script>
+    @Scripts.Render("~/plugins/clipboard")
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=2018012428")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -178,7 +179,10 @@
                         return searchFrm.queryParams(parameters);
                     },
                 mobileResponsive:true,
-                onLoadSuccess: initTooltip,
+                    onLoadSuccess: function() {
+                        initTooltip();
+                        new Clipboard('.btn-white');
+                    } ,
                 columns: [
                     {
                         field: 'Status',
@@ -195,7 +199,7 @@
                         align: "left",
                         formatter: formatterMediaName
                     },
-                   
+
                     {
                         field: 'MediaPrices',
                         title: '@Html.DisplayNameFor(d=>d.MediaPrices)',

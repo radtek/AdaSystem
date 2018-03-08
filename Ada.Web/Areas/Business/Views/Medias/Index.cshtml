@@ -2,6 +2,7 @@
 @using Ada.Core
 @using Ada.Core.Domain.Resource
 @using Ada.Core.Infrastructure
+@using Ada.Core.Tools
 @using Ada.Core.ViewModel.Resource
 @using Ada.Services.Admin
 @using Ada.Services.Resource
@@ -13,9 +14,9 @@
     var mediaTypes = repository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis).ToList();
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
     List<SelectListItem> adaPostions = new List<SelectListItem>();
-    if (!string.IsNullOrWhiteSpace(Model.MediaTypeId))
+    if (!string.IsNullOrWhiteSpace(Model.MediaTypeIndex))
     {
-        var mediaType = repository.LoadEntities(d => d.Id == Model.MediaTypeId).FirstOrDefault();
+        var mediaType = repository.LoadEntities(d => d.CallIndex == Model.MediaTypeIndex).FirstOrDefault();
         adaPostions = mediaType.AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name }).ToList();
     }
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
@@ -46,67 +47,67 @@
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
-        <div class="row">
-            <div class="col-sm-2">
-                <div class="form-group">
-                    @Html.LabelFor(d => d.MediaTypeId, Html.DisplayNameFor(d => d.MediaTypeId).ToString(), new { @class = "control-label" })
-                    <select name="MediaTypeId" class="form-control" id="MediaTypeId">
-                        <option value="">请选择</option>
-                        @foreach (var item in mediaTypes)
-                {
-                    if (item.Id == Model.MediaTypeId)
-                    {
-                        <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))' selected="selected">@item.TypeName</option>
-            }
-            else
-            {
-                <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))'>@item.TypeName</option>
-    }
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.MediaTypeIndex, Html.DisplayNameFor(d => d.MediaTypeIndex).ToString(), new { @class = "control-label" })
+                        <select name="MediaTypeIndex" class="form-control" id="MediaTypeIndex">
+                            <option value="">请选择</option>
+                            @foreach (var item in mediaTypes)
+                            {
+                                if (item.CallIndex == Model.MediaTypeIndex)
+                                {
+                                    <option value="@item.CallIndex" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))' selected="selected">@item.TypeName</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.CallIndex" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))'>@item.TypeName</option>
+                                }
 
-}
-                    </select>
+                            }
+                        </select>
 
-                </div>
-            </div>
-           
-            <div class="col-sm-2">
-                <div class="form-group">
-                    @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName).ToString(), new { @class = "control-label" })
-                    @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <div class="form-group">
-                    @Html.LabelFor(d => d.MediaID, Html.DisplayNameFor(d => d.MediaID).ToString(), new { @class = "control-label" })
-                    @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control" })
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <div class="form-group">
-                    @Html.LabelFor(d => d.Platform, Html.DisplayNameFor(d => d.Platform).ToString(), new { @class = "control-label" })
-                    @Html.TextBoxFor(d => d.Platform, new { @class = "form-control" })
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <div class="form-group">
-                    @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
-                    @Html.DropDownListFor(d => d.AdPositionName, adaPostions, "不限", new { @class = "form-control" })
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <div class="form-group">
-                    @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart).ToString(), new { @class = "control-label" })
-                    <div class="input-daterange input-group">
-                        @Html.TextBoxFor(d => d.PriceStart, new { @class = "form-control" })
-                        <span class="input-group-addon">至</span>
-                        @Html.TextBoxFor(d => d.PriceEnd, new { @class = "form-control" })
                     </div>
-
                 </div>
+
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName).ToString(), new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.MediaID, Html.DisplayNameFor(d => d.MediaID).ToString(), new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Platform, Html.DisplayNameFor(d => d.Platform).ToString(), new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.Platform, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.AdPositionName, adaPostions, "不限", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart).ToString(), new { @class = "control-label" })
+                        <div class="input-daterange input-group">
+                            @Html.TextBoxFor(d => d.PriceStart, new { @class = "form-control" })
+                            <span class="input-group-addon">至</span>
+                            @Html.TextBoxFor(d => d.PriceEnd, new { @class = "form-control" })
+                        </div>
+
+                    </div>
+                </div>
+
+
             </div>
-
-
-        </div>
 
 
             <div class="panel-group" id="accordion">
@@ -160,13 +161,13 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             @foreach (var item in tags)
-                    {
-                        var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
-                        <div class="checkbox checkbox-success checkbox-inline">
-                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
-                            <label for="@item.Id">@item.TagName</label>
-                        </div>
-}
+                                            {
+                                                var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
+                                                <div class="checkbox checkbox-success checkbox-inline">
+                                                    <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
+                                                    <label for="@item.Id">@item.TagName</label>
+                                                </div>
+                                            }
                                         </div>
                                     </div>
 
@@ -223,14 +224,17 @@
                         <table class="table">
                             <thead>
                                 <tr>
+
                                     <th>媒体类型</th>
                                     <th>媒体信息</th>
-                                    <th data-breakpoints="xs sm">媒体分类</th>
-                                    <th data-breakpoints="xs sm">粉丝数</th>
+                                    @if (Model.MediaTypeIndex == "weixin" || Model.MediaTypeIndex == "sinablog")
+                                    {
+                                        <th data-breakpoints="xs">媒体指数</th>
+                                    }
                                     <th data-breakpoints="xs">媒体价格</th>
                                     <th data-breakpoints="all" data-title="媒体说明">媒体说明</th>
                                     <th data-breakpoints="all" data-title="媒体备注">媒体备注</th>
-                                    <th data-breakpoints="xs sm">经办媒介</th>
+                                    <th data-breakpoints="xs">经办媒介</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -241,52 +245,150 @@
                                         continue;
                                     }
                                     <tr>
-                                        <td>@item.MediaType.TypeName</td>
-                                        @{
-                                            var mediaName = item.MediaName;
-                                            var sex = "";
-                                            if (item.Sex == "男")
-                                            {
-                                                sex = "<img alt='男' class='img-circle' src='/Images/man.png' style='width: 25px; height: 25px;'/>";
-                                            }
-                                            if (item.Sex == "女")
-                                            {
-                                                sex = "<img alt='女' class='img-circle' src='/Images/lady.png' style='width: 25px; height: 25px;'/>";
-                                            }
-                                            var detail = " <button class='btn btn-info btn-xs'>详</button>";
-                                            switch (item.MediaType.CallIndex)
-                                            {
-                                                case "website":
-                                                    mediaName = item.MediaName + "-" + item.Client + "-" + item.Channel;
-                                                    break;
-                                                case "weixin":
-                                                    mediaName = item.MediaName + " [ " + item.MediaID + " ]";
-                                                    break;
-                                                case "sinablog":
-                                                    var area = "";
-                                                    if (!string.IsNullOrWhiteSpace(item.Area))
-                                                    {
-                                                        area = "<div class='p-xxs'><span class='badge badge-info'><i class='fa fa-map-marker'></i> " + item.Area + "</span></div>";
-                                                    }
 
-                                                    mediaName = sex + "<a class='label' href='https://weibo.com/u/" + item.MediaID + "' target='_blank' title='" + item.Abstract + "'><i class='fa fa-link'></i> <span id='" + item.Id + "'>" + item.MediaName + "</span></a>" + detail + area;
-                                                    break;
-                                                case "headline":
-                                                case "webcast":
-                                                case "brush":
-                                                    mediaName = "[ " + item.Platform + " ] " + item.MediaName;
-                                                    break;
+
+
+
+
+                                        @if (Model.MediaTypeIndex == "weixin" || Model.MediaTypeIndex == "sinablog")
+                                        {
+
+                                            if (Model.MediaTypeIndex == "weixin")
+                                            {
+                                                var logo = string.IsNullOrWhiteSpace(item.MediaLogo) ? "/Images/weixin.png" : item.MediaLogo;
+                                                <td>
+                                                    <img class="img-circle" src="@logo" style="width: 60px; height: 60px;" />
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                var logo = string.IsNullOrWhiteSpace(item.MediaLogo) ? "/Images/blog.png" : item.MediaLogo;
+                                                <td>
+                                                    <img class="img-circle" src="@logo" style="width: 60px; height: 60px;" />
+                                                </td>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <td>@item.MediaType.TypeName</td>
+                                        }
+                                        <td>
+
+                                            <div class='p-xxs'>
+                                                @if (!string.IsNullOrWhiteSpace(item.Sex))
+                                                {
+                                                    if (item.Sex == "男")
+                                                    {
+                                                        <img alt="男" class="img-circle" src="/Images/man.png" style="width: 25px; height: 25px;" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img alt="女" class="img-circle" src="/Images/lady.png" style="width: 25px; height: 25px;" />
+                                                    }
+                                                }
+                                                @if (item.MediaType.CallIndex == "weixin")
+                                                {
+                                                    <a class='label' href='http://weixin.sogou.com/weixin?type=1&query=@item.MediaID' target='_blank'><i class='fa fa-link'></i> @item.MediaName - @item.MediaID</a>
+                                                    <button class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看微信详情' onclick='details("/Resource/Media/WeiXinArticles/@item.Id");'>详</button>
+                                                }
+                                                else if (item.MediaType.CallIndex == "sinablog")
+                                                {
+                                                    <a class='label' href='https://weibo.com/u/@item.MediaID' target='_blank' data-toggle='tooltip' data-placement='bottom' title='@item.Abstract'><i class='fa fa-link'></i> @item.MediaName</a>
+                                                    <button class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看微博详情' onclick='details("/Resource/Media/WeiboArticles/@item.Id");'>详</button>
+                                                }
+                                                else if (item.MediaType.CallIndex == "zhihu")
+                                                {
+                                                    <a class='label' href='https://www.zhihu.com/people/@item.MediaID' target='_blank'><i class='fa fa-link'></i> @item.MediaName</a>
+                                                }
+                                                else
+                                                {
+                                                    if (!string.IsNullOrWhiteSpace(item.MediaLink))
+                                                    {
+                                                        <a class='label' href='@item.MediaLink' target='_blank'><i class='fa fa-link'></i>@item.Platform @item.MediaName @item.Client @item.Channel</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        @item.Platform @item.MediaName @item.Client @item.Channel
+                                                    }
+                                                }
+                                            </div>
+                                            @if (!string.IsNullOrWhiteSpace(item.Area))
+                                            {
+                                                <div class='p-xxs'>
+                                                    <span class='label label-info'><i class='fa fa-map-marker'></i> @item.Area</span>
+                                                </div>
+                                            }
+                                            @if (item.MediaTags.Count > 0)
+                                            {
+                                                <div class='p-xxs'>
+                                                    @foreach (var tag in item.MediaTags.Take(5))
+                                                    {
+                                                        <span class='label label-success'><i class='fa fa-tag'></i> @tag.TagName</span>
+                                                    }
+                                                </div>
+                                            }
+                                            @if (item.FansNum != null)
+                                            {
+                                                <div class='p-xxs'>
+                                                    <span class='label label-danger'><i class='fa fa-users'></i> 粉丝：@Utils.ShowFansNum(item.FansNum) 万</span>
+                                                </div>
+                                            }
+                                        </td>
+                                        @if (Model.MediaTypeIndex == "weixin" || Model.MediaTypeIndex == "sinablog")
+                                        {
+
+                                            if (Model.MediaTypeIndex == "weixin")
+                                            {
+
+                                                <td>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>近10篇平均阅读数：@Convert.ToInt32(item.MediaArticles.OrderByDescending(a => a.PublishDate).Take(10).Average(aaa => aaa.ViewCount))</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        @{
+                                                            var viecount = item.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount;
+                                                        }
+                                                        <span class='label label-info'>最近头条阅读数：@viecount</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>月发文篇数：@item.MonthPostNum</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>最近微信发文日期：@item.LastPushDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"))</span>
+                                                    </div>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>近50篇平均转发数：@Convert.ToInt32(item.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ShareCount))</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>近50篇平均评论数：@Convert.ToInt32(item.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount))</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>近50篇平均点赞数：@Convert.ToInt32(item.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount))</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>微博数：@item.PostNum</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>一周博文数：@item.MediaArticles.OrderByDescending(a => a.PublishDate).Count(l => l.PublishDate > DateTime.Now.Date.AddDays(-7))</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        @{
+                                                            var lastDate = item.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate.Value.ToString("yyyy-MM-dd");
+                                                        }
+                                                        <span class='label label-info'>最近博文日期：@lastDate</span>
+                                                    </div>
+                                                </td>
                                             }
                                         }
                                         <td>
-                                            @Html.Raw(mediaName)  <a class='btn btn-warning btn-circle btn-xs' href='@Url.Action("Comment", "Media",new{area="Resource",id=item.Id})' target='_blank' title='评价'><i class='fa fa-commenting'></i></a>
-                                        </td>
-                                        <td>@string.Join(",", item.MediaTags.Select(d => d.TagName))</td>
-                                        <td>@item.FansNum</td>
-                                        <td>
                                             @foreach (var price in item.MediaPrices)
                                             {
-                                                var str = price.AdPositionName + "：¥ " + price.PurchasePrice + "　　有效期至：" + price.InvalidDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"));
+                                                var str = price.AdPositionName + "：" + price.PurchasePrice + "　有效期至：" + price.InvalidDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"));
                                                 <div class="p-xxs"><span class="label label-info">@str</span></div>
                                             }
                                         </td>
@@ -311,7 +413,9 @@
 
 
 </div>
-
+@section StylesFirst {
+    <meta name="referrer" content="never">
+}
 @section Styles {
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
     @Styles.Render("~/plugins/footableV3Styles")
@@ -319,6 +423,7 @@
 
 @section Scripts {
     @Scripts.Render("~/plugins/footableV3")
+
     <script type="text/javascript">
         $(function() {
             @if (Model.Medias.Count > 0)
@@ -333,7 +438,7 @@
             //        form.submit();
             //    }
             //        });
-            $("#MediaTypeId").change(function () {
+            $("#MediaTypeIndex").change(function () {
                 var $adpostion = $("#AdPositionName");
                 $adpostion.empty();
                 if ($(this).val()) {
@@ -377,6 +482,13 @@
                         text: "请耐心等待"
                     });
 
+                });
+        }
+
+        function details(url) {
+            $("#modalView").load(url,
+                function () {
+                    $('#modalView .modal').modal('show');
                 });
         }
     </script>

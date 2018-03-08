@@ -213,7 +213,7 @@ namespace Resource.Controllers
                     FansNum = d.FansNum,
                     ChannelType = d.ChannelType,
                     LastReadNum = d.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount,
-                    AvgReadNum = (int?)d.MediaArticles.Where(l => l.IsTop == true && l.PublishDate > DateTime.Now.Date.AddDays(-10)).Average(a => a.ViewCount),
+                    AvgReadNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(10).Average(a => a.ViewCount),
                     PublishFrequency = d.PublishFrequency,
                     Areas = d.Area,
                     Sex = d.Sex,
@@ -824,7 +824,7 @@ namespace Resource.Controllers
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
-        public ActionResult WeixinCollection(BaseParams baseParams)
+        public ActionResult WeixinCollection(WeiXinProParams baseParams)
         {
             var premission = PremissionData();
             if (premission.Count > 0)
@@ -836,7 +836,7 @@ namespace Resource.Controllers
             }
             baseParams.TransactorId = CurrentManager.Id;
             baseParams.Transactor = CurrentManager.UserName;
-            var msg = _iDataAPIService.GetWeinXinInfo(baseParams);
+            var msg = _iDataAPIService.GetWeiXinInfoPro(baseParams);
             return Json(new { State = 1, Msg = msg.Message });
         }
         private Media IsExist(MediaView viewModel, out string msg, bool isSelf = false, bool isDelete = false)

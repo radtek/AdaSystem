@@ -15,5 +15,6 @@ namespace Ada.Services.API
       RequestResult GetWeiBoArticles(WeiBoParams wbparams);
       string TestApi(TestParams testParams);
       RequestResult GetWeinXinInfo(BaseParams baseParams);
+      RequestResult GetWeiXinInfoPro(WeiXinProParams wxparams);
   }
 }

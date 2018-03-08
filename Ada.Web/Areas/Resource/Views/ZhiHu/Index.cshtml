@@ -126,7 +126,8 @@
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/ladda")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201801248")"></script>
+    @Scripts.Render("~/plugins/clipboard")
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201801448")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -166,7 +167,10 @@
                         return "知乎名称";
                     },
                 mobileResponsive:true,
-                onLoadSuccess: initTooltip,
+                    onLoadSuccess: function() {
+                        initTooltip();
+                        new Clipboard('.btn-white');
+                    } ,
                     queryParams: function (parameters) {
                         parameters.MediaTypeId = '@meidaType.Id';
                         return searchFrm.queryParams(parameters);

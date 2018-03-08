@@ -126,7 +126,8 @@
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/ladda")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=2018012418")"></script>
+    @Scripts.Render("~/plugins/clipboard")
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=2018012438")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -171,7 +172,10 @@
                         return searchFrm.queryParams(parameters);
                     },
                 mobileResponsive:true,
-                onLoadSuccess: initTooltip,
+                    onLoadSuccess: function() {
+                        initTooltip();
+                        new Clipboard('.btn-white');
+                    } ,
                 columns: [
                     {
                         field: 'Status',

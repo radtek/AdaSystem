@@ -149,7 +149,8 @@
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/ladda")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201801248")"></script>
+    @Scripts.Render("~/plugins/clipboard")
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201801148")"></script>
 
     <script type="text/javascript">
 
@@ -194,7 +195,10 @@
                         parameters.MediaTypeId = '@meidaType.Id';
                         return searchFrm.queryParams(parameters);
                     },
-                onLoadSuccess: initTooltip,
+                    onLoadSuccess: function() {
+                       initTooltip();
+                        new Clipboard('.btn-white');
+                    } ,
                 columns: [
                     {
                         field: 'Status',

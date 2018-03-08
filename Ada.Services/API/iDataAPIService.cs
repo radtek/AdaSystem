@@ -325,8 +325,213 @@ namespace Ada.Services.API
             //}
             return requestResult;
         }
+        /// <summary>
+        /// 先更新微信信息，再更新文章内容
+        /// </summary>
+        /// <param name="wxparams"></param>
+        /// <returns></returns>
+        public RequestResult GetWeiXinInfoPro(WeiXinProParams wxparams)
+        {
+            var apiInfo = _apiInterfacesService.GetAPIInterfacesByCallIndex(wxparams.CallIndex);
+            string url = string.Format(apiInfo.APIUrl + "?apikey={0}", apiInfo.Token);
+            int times = apiInfo.TimeOut ?? 3;
+            int request = 1;
+            string urlparams = "&id=" + wxparams.UID;
+            var apiUrl = url + urlparams;
+            string htmlstr = string.Empty;
+            int addCount = 0;
+            int updateCount = 0;
+            while (request <= times)
+            {
+                try
+                {
+                    htmlstr = HttpUtility.Get(apiUrl);
+                    request = 9999;
+                }
+                catch (Exception ex)
+                {
+                    if (request == times)
+                    {
+                        APIRequestRecord exrecord = new APIRequestRecord();
+                        exrecord.Id = IdBuilder.CreateIdNum();
+                        exrecord.RequestParameters = urlparams;
+                        exrecord.IsSuccess = false;
+                        exrecord.Retcode = "500";
+                        exrecord.ReponseContent = ex.Message;
+                        exrecord.Retmsg = "请求异常";
+                        exrecord.ReponseDate = DateTime.Now;
+                        apiInfo.APIRequestRecords.Add(exrecord);
+                    }
+                    request++;
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(htmlstr))
+            {
+                var result = JsonConvert.DeserializeObject<WeiXinInfosJSON>(htmlstr);
+                //失败日志
+                if (result.retcode != ReturnCode.请求成功)
+                {
+                    APIRequestRecord record = new APIRequestRecord();
+                    record.Id = IdBuilder.CreateIdNum();
+                    record.IsSuccess = false;
+                    record.RequestParameters = urlparams;
+                    record.Retcode = result.retcode.GetHashCode().ToString();
+                    record.Retmsg = result.message;
+                    record.ReponseContent = htmlstr;
+                    record.ReponseDate = DateTime.Now;
+                    record.AddedById = wxparams.TransactorId;
+                    record.AddedBy = wxparams.Transactor;
+                    apiInfo.APIRequestRecords.Add(record);
+                }
+                if (result.retcode == ReturnCode.请求成功)
+                {
+                    //成功日志
+                    if (wxparams.IsLog)
+                    {
+                        APIRequestRecord record = new APIRequestRecord();
+                        record.Id = IdBuilder.CreateIdNum();
+                        record.IsSuccess = true;
+                        record.RequestParameters = urlparams;
+                        record.Retcode = result.retcode.GetHashCode().ToString();
+                        record.Retmsg = result.message;
+                        //record.ReponseContent = "当前采集文章数：" + result.data.Count;
+                        record.ReponseDate = DateTime.Now;
+                        record.AddedById = wxparams.TransactorId;
+                        record.AddedBy = wxparams.Transactor;
+                        apiInfo.APIRequestRecords.Add(record);
+                    }
+                    if (result.data.Count > 0)
+                    {
+                        var media = _mediaRepository.LoadEntities(d => d.MediaID == wxparams.UID && d.IsDelete == false).FirstOrDefault();
+                        if (media != null)
+                        {
+                            var lastPost = media.LastPushDate;
+                            //是否要更新文章
+                            var isUpdateArticle = lastPost == null;
 
+                            var weixinInfo = result.data[0];
+                            media.IsAuthenticate = weixinInfo.idVerified;
+                            media.MediaName = weixinInfo.screenName;
+                            media.MonthPostNum = weixinInfo.monthPostCount;
+                            media.MediaLogo = weixinInfo.avatarUrl;
+                            media.MediaQR = weixinInfo.qrcodeUrl;
+                            media.Content = weixinInfo.biography;
+                            media.CollectionDate = DateTime.Now;
+                            if (DateTime.TryParse(weixinInfo.lastPost?.date, out var date))
+                            {
+                                media.LastPushDate = date;
+                            }
+                            if (!isUpdateArticle)
+                            {
+                                if (date != lastPost.Value)
+                                {
+                                    isUpdateArticle = true;
+                                }
+                            }
+                            //更新文章
+                            if (isUpdateArticle)
+                            {
+                                var apiArticle = _apiInterfacesService.GetAPIInterfacesByCallIndex(wxparams.CallIndexWeiXinInfo);
+                                //更新日期范围
+                                var start = DateTime.Now.AddDays(-2).ToString("yyyy-MM-dd");
+                                var end = DateTime.Now.ToString("yyyy-MM-dd");
+                                var timeSpan = DateTime.Now - date;
+                                if (timeSpan.TotalDays > 2)
+                                {
+                                    start = date.AddDays(-2).ToString("yyyy-MM-dd");
+                                    end = date.ToString("yyyy-MM-dd");
+                                }
+                                string urlArticle = string.Format(apiArticle.APIUrl + "?apikey={0}&uid={1}&pageToken=1&beginDate={2}&endDate={3}", apiArticle.Token,
+                                    wxparams.UID, start, end);
+                                string htmlstrArticle = string.Empty;
+                                int requestArticle = 1;
+                                int timesArticle = apiArticle.TimeOut ?? 3;
+                                while (requestArticle <= timesArticle)
+                                {
+                                    try
+                                    {
+                                        htmlstrArticle = HttpUtility.Get(urlArticle);
+                                        requestArticle = 9999;
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        if (requestArticle == timesArticle)
+                                        {
+                                            APIRequestRecord exrecord = new APIRequestRecord();
+                                            exrecord.Id = IdBuilder.CreateIdNum();
+                                            exrecord.RequestParameters = wxparams.UID;
+                                            exrecord.IsSuccess = false;
+                                            exrecord.Retcode = "500";
+                                            exrecord.ReponseContent = ex.Message;
+                                            exrecord.Retmsg = "请求异常";
+                                            exrecord.ReponseDate = DateTime.Now;
+                                            apiArticle.APIRequestRecords.Add(exrecord);
+                                        }
+                                        requestArticle++;
+                                    }
+                                }
+                                if (!string.IsNullOrWhiteSpace(htmlstrArticle))
+                                {
+                                    var resultArticle = JsonConvert.DeserializeObject<WeiXinProJSON>(htmlstrArticle);
+                                    if (resultArticle.data.Count > 0)
+                                    {
+                                        foreach (var articleData in resultArticle.data)
+                                        {
+                                            var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
+                                            if (article != null)
+                                            {
+                                                article.ArticleIdx = articleData.idx;
+                                                article.ArticleUrl = articleData.url;
+                                                article.IsOriginal = articleData.original;
+                                                article.Biz = articleData.biz;
+                                                article.CommentCount = articleData.commentCount;
+                                                article.Content = articleData.content;
+                                                article.IsTop = articleData.isTop;
+                                                article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
+                                                    ? (DateTime?)null
+                                                    : DateTime.Parse(articleData.publishDateStr);
+                                                article.LikeCount = articleData.likeCount;
+                                                article.ViewCount = articleData.viewCount;
+                                                article.Title = articleData.title;
+                                                updateCount++;
+                                            }
+                                            else
+                                            {
+                                                article = new MediaArticle();
+                                                article.Id = IdBuilder.CreateIdNum();
+                                                article.ArticleId = articleData.id;
+                                                article.ArticleIdx = articleData.idx;
+                                                article.ArticleUrl = articleData.url;
+                                                article.IsOriginal = articleData.original;
+                                                article.Biz = articleData.biz;
+                                                article.CommentCount = articleData.commentCount;
+                                                article.Content = articleData.content;
+                                                article.IsTop = articleData.isTop;
+                                                article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
+                                                    ? (DateTime?)null
+                                                    : DateTime.Parse(articleData.publishDateStr);
+                                                article.LikeCount = articleData.likeCount;
+                                                article.ViewCount = articleData.viewCount;
+                                                article.Title = articleData.title;
+                                                media.MediaArticles.Add(article);
+                                                addCount++;
+                                            }
+                                        }
+                                    }
+                                }
 
+                            }
+                        }
+                    }
+                }
+            }
+            RequestResult requestResult = new RequestResult();
+            requestResult.AddCount = addCount;
+            requestResult.UpdateCount = updateCount;
+            requestResult.Message = "采集成功！新增：" + addCount + "篇，更新：" + updateCount + "篇";
+            _dbContext.SaveChanges();
+            return requestResult;
+        }
         public RequestResult GetWeiBoArticles(WeiBoParams wbparams)
         {
             var apiInfo = _apiInterfacesService.GetAPIInterfacesByCallIndex(wbparams.CallIndex);
