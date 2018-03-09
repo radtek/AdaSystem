@@ -67,10 +67,20 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "最近头条阅读数")]
         public int? LastReadNum { get; set; }
         /// <summary>
-        /// 十天平均阅读数
+        /// 近十篇平均阅读数
         /// </summary>
-        [Display(Name = "十天平均阅读数")]
+        [Display(Name = "近十篇平均阅读数")]
         public int? AvgReadNum { get; set; }
+        /// <summary>
+        /// 近十篇平均阅读数
+        /// </summary>
+        [Display(Name = "近十篇平均阅读数")]
+        public int? AvgReadNumStart { get; set; }
+        /// <summary>
+        /// 近十篇平均阅读数
+        /// </summary>
+        [Display(Name = "近十篇平均阅读数")]
+        public int? AvgReadNumEnd { get; set; }
         /// <summary>
         /// 十天发布频率
         /// </summary>
@@ -358,6 +368,11 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "排序")]
         public int? Taxis { get; set; }
+        /// <summary>
+        /// 是否媒体组
+        /// </summary>
+        [Display(Name = "是否媒体组")]
+        public bool? IsGroup { get; set; }
     }
 
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Text;
@@ -17,17 +18,20 @@ namespace Ada.Services.Resource
     {
         private readonly IDbContext _dbContext;
         private readonly IRepository<Media> _repository;
+        private readonly IRepository<MediaArticle> _mediaArticleRepository;
         private readonly IRepository<Manager> _managerRepository;
         private readonly IRepository<MediaComment> _mediaCommentRepository;
-        public MediaService(IRepository<Media> repository, 
-            IDbContext dbContext, 
-            IRepository<Manager> managerRepository, 
-            IRepository<MediaComment> mediaCommentRepository)
+        public MediaService(IRepository<Media> repository,
+            IDbContext dbContext,
+            IRepository<Manager> managerRepository,
+            IRepository<MediaComment> mediaCommentRepository,
+            IRepository<MediaArticle> mediaArticleRepository)
         {
             _repository = repository;
             _dbContext = dbContext;
             _managerRepository = managerRepository;
             _mediaCommentRepository = mediaCommentRepository;
+            _mediaArticleRepository = mediaArticleRepository;
         }
 
         public void Add(Media entity)
@@ -60,7 +64,7 @@ namespace Ada.Services.Resource
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.MediaName.Contains(viewModel.search)||d.MediaID.Contains(viewModel.search));
+                allList = allList.Where(d => d.MediaName.Contains(viewModel.search) || d.MediaID.Contains(viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaName))
             {
@@ -74,14 +78,31 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.Remark.Contains(viewModel.Remark));
             }
-            if (viewModel.HasArticles!=null)
+            if (viewModel.HasArticles != null)
             {
-                allList = !viewModel.HasArticles.Value ? allList.Where(d => d.MediaArticles.Count == 0) : allList.Where(d => d.MediaArticles.Count > 0);
+                allList = !viewModel.HasArticles.Value ? allList.Where(d => !d.MediaArticles.Any()) : allList.Where(d => d.MediaArticles.Any());
             }
             if (viewModel.IsSlide != null)
             {
                 allList = allList.Where(d => d.IsSlide == viewModel.IsSlide);
             }
+            if (viewModel.IsGroup != null)
+            {
+                allList = viewModel.IsGroup.Value ? allList.Where(d => d.MediaGroups.Any()) : allList.Where(d => !d.MediaGroups.Any());
+            }
+
+            //if (viewModel.AvgReadNumStart!=null)
+            //{
+            //    allList = allList.Include(d => d.MediaArticles).Where(d =>
+            //        d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(10).Average(a => a.ViewCount) >=
+            //        viewModel.AvgReadNumStart);
+            //}
+            //if (viewModel.AvgReadNumEnd != null)
+            //{
+            //    allList = allList.Include(d => d.MediaArticles).Where(d =>
+            //        d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(10).Average(a => a.ViewCount) <=
+            //        viewModel.AvgReadNumEnd);
+            //}
             if (!string.IsNullOrWhiteSpace(viewModel.Areas))
             {
                 allList = allList.Where(d => d.Area.Contains(viewModel.Areas));
@@ -125,7 +146,7 @@ namespace Ada.Services.Resource
             if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
             {
                 viewModel.MediaNames = viewModel.MediaNames.Trim().Replace("\r\n", ",").Replace("，", ",").Replace(" ", ",");
-                var mediaNames = viewModel.MediaNames.Split(',').Distinct().Where(d=>!string.IsNullOrWhiteSpace(d)).ToList();
+                var mediaNames = viewModel.MediaNames.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
                 allList = allList.Where(d => mediaNames.Contains(d.MediaName));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
@@ -137,9 +158,9 @@ namespace Ada.Services.Resource
             if (viewModel.MediaTagIds != null)
             {
                 allList = from m in allList
-                    from t in m.MediaTags
-                    where viewModel.MediaTagIds.Contains(t.Id)
-                    select m;
+                          from t in m.MediaTags
+                          where viewModel.MediaTagIds.Contains(t.Id)
+                          select m;
             }
             if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
             {
@@ -281,7 +302,7 @@ namespace Ada.Services.Resource
                         viewModel.PriceEnd);
                 }
             }
-           
+
             var result = allList.Select(d => new MediaView
             {
                 Id = d.Id,
@@ -295,7 +316,7 @@ namespace Ada.Services.Resource
                 FansNum = d.FansNum,
                 ChannelType = d.ChannelType,
                 LastReadNum = d.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).FirstOrDefault().ViewCount,
-                AvgReadNum = (int?) d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(10).Average(a => a.ViewCount),
+                AvgReadNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(10).Average(a => a.ViewCount),
                 PublishFrequency = d.PublishFrequency,
                 Areas = d.Area,
                 Sex = d.Sex,
@@ -365,10 +386,10 @@ namespace Ada.Services.Resource
                               TransactorImage = m.Image,
                               Organization = o.OrganizationName
                           };
-            
-            return allList.OrderByDescending(d => d.CommentDate).Skip(0).Take(page*20);
+
+            return allList.OrderByDescending(d => d.CommentDate).Skip(0).Take(page * 20);
         }
 
-       
+
     }
 }

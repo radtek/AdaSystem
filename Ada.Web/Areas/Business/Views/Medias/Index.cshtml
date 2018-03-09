@@ -21,7 +21,7 @@
     }
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var seos = fieldService.GetFieldsByKey("SEO").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
-
+    var yesnos = fieldService.GetFieldsByKey("YesOrNo").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var resourceTypes = fieldService.GetFieldsByKey("ResourceType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -119,42 +119,60 @@
                     </div>
                     <div id="collapse" class="panel-collapse collapse">
                         <div class="panel-body">
-                            <div class="col-sm-2">
+                            @*<div class="col-sm-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.AvgReadNum, Html.DisplayNameFor(d => d.AvgReadNum).ToString(), new { @class = "control-label" })
+                                    <div class="input-daterange input-group">
+                                        @Html.TextBoxFor(d => d.AvgReadNumStart, new { @class = "form-control" })
+                                        <span class="input-group-addon">至</span>
+                                        @Html.TextBoxFor(d => d.AvgReadNumEnd, new { @class = "form-control" })
+                                    </div>
+
+                                </div>
+                            </div>*@
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.IsGroup, Html.DisplayNameFor(d => d.IsGroup).ToString(), new { @class = "control-label" })
+                                    @Html.DropDownListFor(d => d.IsGroup, yesnos, "请选择", new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
                                 <div class="form-group">
                                     @Html.LabelFor(d => d.Areas, Html.DisplayNameFor(d => d.Areas).ToString(), new { @class = "control-label" })
                                     @Html.TextBoxFor(d => d.Areas, new { @class = "form-control" })
                                 </div>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <div class="form-group">
                                     @Html.LabelFor(d => d.Content, Html.DisplayNameFor(d => d.Content).ToString(), new { @class = "control-label" })
                                     @Html.TextBoxFor(d => d.Content, new { @class = "form-control" })
                                 </div>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <div class="form-group">
                                     @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "control-label" })
                                     @Html.TextBoxFor(d => d.Remark, new { @class = "form-control" })
                                 </div>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <div class="form-group">
                                     @Html.LabelFor(d => d.SEO, Html.DisplayNameFor(d => d.SEO).ToString(), new { @class = "control-label" })
                                     @Html.DropDownListFor(d => d.SEO, seos, "请选择", new { @class = "form-control" })
                                 </div>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <div class="form-group">
                                     @Html.LabelFor(d => d.ResourceType, Html.DisplayNameFor(d => d.ResourceType).ToString(), new { @class = "control-label" })
                                     @Html.DropDownListFor(d => d.ResourceType, resourceTypes, "请选择", new { @class = "form-control" })
                                 </div>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <div class="form-group">
                                     @Html.LabelFor(d => d.Efficiency, Html.DisplayNameFor(d => d.Efficiency).ToString(), new { @class = "control-label" })
                                     @Html.TextBoxFor(d => d.Efficiency, new { @class = "form-control" })
                                 </div>
                             </div>
+
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "control-label" })
@@ -232,6 +250,7 @@
                                         <th data-breakpoints="xs">媒体指数</th>
                                     }
                                     <th data-breakpoints="xs">媒体价格</th>
+                                    <th data-breakpoints="xs">媒体组</th>
                                     <th data-breakpoints="all" data-title="媒体说明">媒体说明</th>
                                     <th data-breakpoints="all" data-title="媒体备注">媒体备注</th>
                                     <th data-breakpoints="xs">经办媒介</th>
@@ -392,6 +411,12 @@
                                                 <div class="p-xxs"><span class="label label-info">@str</span></div>
                                             }
                                         </td>
+                                        <td>
+                                            @foreach (var group in item.MediaGroups)
+                                            {
+                                                <button class='btn btn-warning btn-xs' onclick="groupDetail('@group.Id');"><i class='fa fa-object-group'></i>@group.GroupName</button>
+                                            }
+                                        </td>
                                         <td>@item.Content</td>
                                         <td>@item.Remark</td>
                                         <td>@item.Transactor</td>
@@ -490,6 +515,18 @@
                 function () {
                     $('#modalView .modal').modal('show');
                 });
+        }
+        function groupDetail(id) {
+            $("#modalView").load("/Resource/MediaGroup/Detail/" + id,
+                function () {
+                    $('#modalView .modal').on('shown.bs.modal', function () {
+                        $('[data-toggle="tooltip"]').tooltip();
+                    }).on('hidden.bs.modal', function () {
+
+                    });
+                    $('#modalView .modal').modal('show');
+                });
+
         }
     </script>
 }

@@ -180,7 +180,8 @@ namespace Resource.Controllers
                 jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
                 jo.Add("媒体说明", media.Content);
                 jo.Add("备注说明", media.Remark);
-                jo.Add("价格有效期", media.MediaPrices.FirstOrDefault()?.InvalidDate);
+                var date = media.MediaPrices.FirstOrDefault()?.InvalidDate;
+                jo.Add("价格有效期", date?.ToString("yyyy-MM-dd") ?? "");
                 foreach (var mediaMediaPrice in media.MediaPrices)
                 {
                     jo.Add(mediaMediaPrice.AdPositionName, mediaMediaPrice.PurchasePrice);
@@ -319,23 +320,6 @@ namespace Resource.Controllers
                 {
                     continue;
                 }
-                ////媒体ID
-                //if (row.GetCell(5) != null)
-                //{
-                //    //校验ID
-                //    var mediaId = row.GetCell(5).ToString().Trim();
-                //    var temp = _repository.LoadEntities(d =>
-                //        d.MediaID.Equals(mediaId, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
-                //        d.MediaTypeId == media.MediaTypeId && d.Id != media.Id).FirstOrDefault();
-                //    if (temp != null)
-                //    {
-                //        media.IsDelete = true;
-                //    }
-                //    else
-                //    {
-                //        media.MediaID = row.GetCell(5).ToString().Trim();
-                //    }
-                //}
                 //修改粉丝
                 decimal.TryParse(row.GetCell(6)?.ToString(), out var fansNum);
                 media.FansNum = Utils.SetFansNum(fansNum);
@@ -353,30 +337,12 @@ namespace Resource.Controllers
                 }
                 //备注
                 media.Remark = row.GetCell(9)?.ToString();
-                DateTime date;
-                try
-                {
-                    if (!string.IsNullOrWhiteSpace(row.GetCell(10)?.ToString()))
-                    {
-                        date = row.GetCell(10).DateCellValue;
-                    }
-                    else
-                    {
-                        date = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
-                            DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
-                    }
-
-                }
-                catch (Exception)
+                if (!DateTime.TryParse(row.GetCell(10)?.ToString(),out var date))
                 {
                     date = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
-                        DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+                               DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
                 }
-
-                //if (!DateTime.TryParse(update, out var date))
-                //{
-
-                //}
+                
                 for (int j = 0; j < adpostionNames.Count; j++)
                 {
 
