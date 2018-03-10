@@ -421,6 +421,7 @@ namespace Ada.Services.API
                             {
                                 media.LastPushDate = date;
                             }
+                            
                             if (!isUpdateArticle)
                             {
                                 if (date != lastPost.Value)
@@ -429,7 +430,7 @@ namespace Ada.Services.API
                                 }
                             }
                             //更新文章
-                            if (isUpdateArticle)
+                            if (isUpdateArticle&& weixinInfo.lastPost!=null)
                             {
                                 var apiArticle = _apiInterfacesService.GetAPIInterfacesByCallIndex(wxparams.CallIndexWeiXinInfo);
                                 //更新日期范围

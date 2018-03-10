@@ -94,7 +94,7 @@ namespace QuartzTask.Jobs
                                         }
                                     }
                                     //更新文章
-                                    if (isUpdateArticle)
+                                    if (isUpdateArticle&& weixinInfo.lastPost != null)
                                     {
                                         //更新日期范围
                                         var start = DateTime.Now.AddDays(-2).ToString("yyyy-MM-dd");
