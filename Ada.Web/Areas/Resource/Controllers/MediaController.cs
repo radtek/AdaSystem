@@ -73,32 +73,80 @@ namespace Resource.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(MediaView viewModel)
         {
-            var export = Request.Form["Submit.Export"];
-            if (string.IsNullOrWhiteSpace(viewModel.MediaTypeId))
+            if (string.IsNullOrWhiteSpace(viewModel.MediaTypeIndex))
             {
                 ModelState.AddModelError("message", "请先选择媒体类型！");
                 return View(viewModel);
             }
-            viewModel.Managers = PremissionData();
             var setting = _settingService.GetSetting<WeiGuang>();
-            if (export == "export")
-            {
-                viewModel.limit = setting.PurchaseExportRows;
-                return File(ExportData(ExportExcel(viewModel)), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
-            }
-
             Stopwatch watcher = new Stopwatch();
             watcher.Start();
+            viewModel.Status = Consts.StateNormal;
             viewModel.limit = setting.PurchaseSeachRows;
-            var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
-            viewModel.Medias = result;
+            var results = _mediaService.LoadEntitiesFilter(viewModel).ToList();
+            //找到没有的
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
+            {
+                var names = viewModel.MediaNames.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
+                int i = 0;
+                foreach (var name in names)
+                {
+                    var temp = results.FirstOrDefault(d =>
+                        d.MediaName.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+                    if (temp == null)
+                    {
+                        results.Add(new Media
+                        {
+                            MediaName = name,
+                            Taxis = i
+                        });
+                        //noDatas.Add(name);
+                    }
+                    else
+                    {
+                        temp.Taxis = i;
+                    }
+
+                    i++;
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
+            {
+                var ids = viewModel.MediaIDs.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
+                int i = 0;
+                foreach (var id in ids)
+                {
+                    var temp = results.FirstOrDefault(d =>
+                        d.MediaID.Equals(id, StringComparison.CurrentCultureIgnoreCase));
+                    if (temp == null)
+                    {
+                        results.Add(new Media
+                        {
+                            MediaID = id,
+                            Taxis = i
+                        });
+                        //noDatas.Add(id);
+                    }
+                    else
+                    {
+                        temp.Taxis = i;
+                    }
+                    i++;
+                }
+            }
             watcher.Stop();
-            if (!result.Any())
+            viewModel.Medias = results.OrderBy(d => d.Taxis).ToList();
+            if (!results.Any())
             {
                 ModelState.AddModelError("message", "没有查询到相关媒体信息！");
                 return View(viewModel);
             }
-            ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + viewModel.total + "条。注：查询结果最多显示" + setting.PurchaseSeachRows + "条");
+            //var noDataStr = string.Empty;
+            //if (noDatas.Count > 0)
+            //{
+            //    noDataStr = "其中以下资源不存在系统中：" + string.Join(",", noDatas);
+            //}
+            ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + viewModel.total + "条。注：查询结果最多显示" + setting.PurchaseSeachRows + "条。");
             return View(viewModel);
         }
         [HttpPost]
@@ -193,6 +241,7 @@ namespace Resource.Controllers
 
             return jObjects.ToString();
         }
+        [HttpPost]
         public ActionResult GetList(MediaView viewModel)
         {
             viewModel.Managers = PremissionData();

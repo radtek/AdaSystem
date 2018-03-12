@@ -86,16 +86,21 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.IsSlide == viewModel.IsSlide);
             }
+            if (viewModel.Status != null)
+            {
+                allList = allList.Where(d => d.Status == viewModel.Status);
+            }
             if (viewModel.IsGroup != null)
             {
                 allList = viewModel.IsGroup.Value ? allList.Where(d => d.MediaGroups.Any()) : allList.Where(d => !d.MediaGroups.Any());
             }
 
-            //if (viewModel.AvgReadNumStart!=null)
+            //if (viewModel.AvgReadNumStart != null)
             //{
             //    allList = allList.Include(d => d.MediaArticles).Where(d =>
             //        d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(10).Average(a => a.ViewCount) >=
             //        viewModel.AvgReadNumStart);
+                
             //}
             //if (viewModel.AvgReadNumEnd != null)
             //{

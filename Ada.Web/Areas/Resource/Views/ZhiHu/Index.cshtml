@@ -1,6 +1,7 @@
 ﻿
 @using System.Web.Optimization
 @using Ada.Core.Infrastructure
+@using Ada.Services.Admin
 @using Ada.Services.Resource
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
@@ -8,6 +9,8 @@
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
     var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("zhihu");
     var adpositions = meidaType.AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var status = fieldService.GetFieldsByKey("Status").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 @Html.Partial("Bread")
 
@@ -51,6 +54,12 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
+                        @Html.LabelFor(d => d.MediaID, Html.DisplayNameFor(d => d.MediaID).ToString(), new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
                         @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
                         @Html.DropDownListFor(d => d.AdPositionName, adpositions, "不限", new { @class = "form-control" })
                     </div>
@@ -63,6 +72,30 @@
                             <span class="input-group-addon">至</span>
                             @Html.TextBoxFor(d => d.PriceEnd, new { @class = "form-control" })
                         </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Areas, Html.DisplayNameFor(d => d.Areas).ToString(), new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.Areas, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Content, Html.DisplayNameFor(d => d.Content).ToString(), new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.Content, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.Remark, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.Status, status, "请选择", new { @class = "form-control" })
                     </div>
                 </div>
                 <div class="col-sm-2">
@@ -152,6 +185,7 @@
             obj.Init = function() {
                 $('#table').bootstrapTable({
                     url: '@Url.Action("GetList","Media")',       //请求后台的URL（*）
+                    method: 'post',
                     classes: "table table-no-bordered",
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色

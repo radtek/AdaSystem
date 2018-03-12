@@ -1,27 +1,27 @@
 ﻿@using System.Web.Optimization
 @using Ada.Core
-@using Ada.Core.Domain
 @using Ada.Core.Domain.Resource
 @using Ada.Core.Infrastructure
+@using Ada.Core.Tools
 @using Ada.Core.ViewModel.Resource
 @using Ada.Services.Admin
 @using Ada.Services.Resource
 @using Microsoft.Ajax.Utilities
 @model MediaView
 @{
-    ViewBag.Title = "媒体资源";
+    ViewBag.Title = "媒体查询";
     var repository = EngineContext.Current.Resolve<IRepository<MediaType>>();
     var mediaTypes = repository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis).ToList();
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
     List<SelectListItem> adaPostions = new List<SelectListItem>();
-    if (!string.IsNullOrWhiteSpace(Model.MediaTypeId))
+    if (!string.IsNullOrWhiteSpace(Model.MediaTypeIndex))
     {
-        var mediaType = repository.LoadEntities(d => d.Id == Model.MediaTypeId).FirstOrDefault();
+        var mediaType = repository.LoadEntities(d => d.CallIndex == Model.MediaTypeIndex).FirstOrDefault();
         adaPostions = mediaType.AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name }).ToList();
     }
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var seos = fieldService.GetFieldsByKey("SEO").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
-
+    var yesnos = fieldService.GetFieldsByKey("YesOrNo").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var resourceTypes = fieldService.GetFieldsByKey("ResourceType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -37,190 +37,196 @@
         </ol>
     </div>
     <div class="col-lg-2">
+
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
-    <div class="ibox">
-        <div class="ibox-content m-b-sm border-bottom">
 
-            @using (Html.BeginForm())
-            {
-                @Html.AntiForgeryToken()
+    <div class="ibox-content m-b-sm border-bottom">
 
-
-
-
-
-
-                <div class="row">
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.MediaTypeId, Html.DisplayNameFor(d => d.MediaTypeId).ToString(), new { @class = "control-label" })
-                            <select name="MediaTypeId" class="form-control" id="MediaTypeId">
-                                <option value="">请选择</option>
-                                @foreach (var item in mediaTypes)
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.MediaTypeIndex, Html.DisplayNameFor(d => d.MediaTypeIndex).ToString(), new { @class = "control-label" })
+                        <select name="MediaTypeIndex" class="form-control" id="MediaTypeIndex">
+                            <option value="">请选择</option>
+                            @foreach (var item in mediaTypes)
+                            {
+                                if (item.CallIndex == Model.MediaTypeIndex)
                                 {
-                                    if (item.Id == Model.MediaTypeId)
-                                    {
-                                        <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))' selected="selected">@item.TypeName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@item.Id" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))'>@item.TypeName</option>
-                                    }
-
+                                    <option value="@item.CallIndex" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))' selected="selected">@item.TypeName</option>
                                 }
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
-                            @Html.DropDownListFor(d => d.AdPositionName, adaPostions, "不限", new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart).ToString(), new { @class = "control-label" })
-                            <div class="input-daterange input-group">
-                                @Html.TextBoxFor(d => d.PriceStart, new { @class = "form-control" })
-                                <span class="input-group-addon">至</span>
-                                @Html.TextBoxFor(d => d.PriceEnd, new { @class = "form-control" })
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName).ToString(), new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.Platform, Html.DisplayNameFor(d => d.Platform).ToString(), new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.Platform, new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName).ToString(), new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.MediaID, Html.DisplayNameFor(d => d.MediaID).ToString(), new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            @Html.LabelFor(d => d.Channel, Html.DisplayNameFor(d => d.Channel).ToString(), new { @class = "control-label" })
-                            @Html.TextBoxFor(d => d.Channel, new { @class = "form-control" })
-                        </div>
+                                else
+                                {
+                                    <option value="@item.CallIndex" data-value='@Html.Raw(Json.Encode(item.AdPositions.Select(d => d.Name)))'>@item.TypeName</option>
+                                }
+
+                            }
+                        </select>
+
                     </div>
                 </div>
 
-                <div class="panel-group" id="accordion">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse">更多条件</a>
-                            </h4>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName).ToString(), new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.MediaID, Html.DisplayNameFor(d => d.MediaID).ToString(), new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Platform, Html.DisplayNameFor(d => d.Platform).ToString(), new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.Platform, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.AdPositionName, adaPostions, "不限", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart).ToString(), new { @class = "control-label" })
+                        <div class="input-daterange input-group">
+                            @Html.TextBoxFor(d => d.PriceStart, new { @class = "form-control" })
+                            <span class="input-group-addon">至</span>
+                            @Html.TextBoxFor(d => d.PriceEnd, new { @class = "form-control" })
                         </div>
-                        <div id="collapse" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <div class="col-sm-3">
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse">更多条件</a>
+                        </h4>
+                    </div>
+                    <div id="collapse" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            @*<div class="col-sm-3">
                                     <div class="form-group">
-                                        @Html.LabelFor(d => d.Areas, Html.DisplayNameFor(d => d.Areas).ToString(), new { @class = "control-label" })
-                                        @Html.TextBoxFor(d => d.Areas, new { @class = "form-control" })
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group">
-                                        @Html.LabelFor(d => d.SEO, Html.DisplayNameFor(d => d.SEO).ToString(), new { @class = "control-label" })
-                                        @Html.DropDownListFor(d => d.SEO, seos, "请选择", new { @class = "form-control" })
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group">
-                                        @Html.LabelFor(d => d.ResourceType, Html.DisplayNameFor(d => d.ResourceType).ToString(), new { @class = "control-label" })
-                                        @Html.DropDownListFor(d => d.ResourceType, resourceTypes, "请选择", new { @class = "form-control" })
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="form-group">
-                                        @Html.LabelFor(d => d.Efficiency, Html.DisplayNameFor(d => d.Efficiency).ToString(), new { @class = "control-label" })
-                                        @Html.TextBoxFor(d => d.Efficiency, new { @class = "form-control" })
-                                    </div>
-                                </div>
-                                <div class="col-sm-12">
-                                    <div class="form-group">
-                                        @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "control-label" })
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                @foreach (var item in tags)
-                                                {
-                                                    var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
-                                                    <div class="checkbox checkbox-success checkbox-inline">
-                                                        <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
-                                                        <label for="@item.Id">@item.TagName</label>
-                                                    </div>
-                                                }
-                                            </div>
+                                        @Html.LabelFor(d => d.AvgReadNum, Html.DisplayNameFor(d => d.AvgReadNum).ToString(), new { @class = "control-label" })
+                                        <div class="input-daterange input-group">
+                                            @Html.TextBoxFor(d => d.AvgReadNumStart, new { @class = "form-control" })
+                                            <span class="input-group-addon">至</span>
+                                            @Html.TextBoxFor(d => d.AvgReadNumEnd, new { @class = "form-control" })
                                         </div>
 
                                     </div>
+                                </div>*@
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.IsGroup, Html.DisplayNameFor(d => d.IsGroup).ToString(), new { @class = "control-label" })
+                                    @Html.DropDownListFor(d => d.IsGroup, yesnos, "请选择", new { @class = "form-control" })
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        @Html.LabelFor(d => d.MediaNames, Html.DisplayNameFor(d => d.MediaNames).ToString(), new { @class = "control-label" })
-                                        @Html.TextAreaFor(d => d.MediaNames, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
-                                    </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.Areas, Html.DisplayNameFor(d => d.Areas).ToString(), new { @class = "control-label" })
+                                    @Html.TextBoxFor(d => d.Areas, new { @class = "form-control" })
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        @Html.LabelFor(d => d.MediaIDs, Html.DisplayNameFor(d => d.MediaIDs).ToString(), new { @class = "control-label" })
-                                        @Html.TextAreaFor(d => d.MediaIDs, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.Content, Html.DisplayNameFor(d => d.Content).ToString(), new { @class = "control-label" })
+                                    @Html.TextBoxFor(d => d.Content, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "control-label" })
+                                    @Html.TextBoxFor(d => d.Remark, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.SEO, Html.DisplayNameFor(d => d.SEO).ToString(), new { @class = "control-label" })
+                                    @Html.DropDownListFor(d => d.SEO, seos, "请选择", new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.ResourceType, Html.DisplayNameFor(d => d.ResourceType).ToString(), new { @class = "control-label" })
+                                    @Html.DropDownListFor(d => d.ResourceType, resourceTypes, "请选择", new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.Efficiency, Html.DisplayNameFor(d => d.Efficiency).ToString(), new { @class = "control-label" })
+                                    @Html.TextBoxFor(d => d.Efficiency, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "control-label" })
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            @foreach (var item in tags)
+                                            {
+                                                var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
+                                                <div class="checkbox checkbox-success checkbox-inline">
+                                                    <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
+                                                    <label for="@item.Id">@item.TagName</label>
+                                                </div>
+                                            }
+                                        </div>
                                     </div>
+
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.MediaNames, Html.DisplayNameFor(d => d.MediaNames).ToString(), new { @class = "control-label" })
+                                    @Html.TextAreaFor(d => d.MediaNames, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.MediaIDs, Html.DisplayNameFor(d => d.MediaIDs).ToString(), new { @class = "control-label" })
+                                    @Html.TextAreaFor(d => d.MediaIDs, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <button class="btn btn-success btn-sm" type="submit"><i class="fa fa-search"></i> 查询数据</button>
-                            <button class="btn btn-primary btn-sm" type="submit" name="submit.Export" value="export"><i class="fa fa-download"></i> 导出数据</button>
-                            <button class="btn btn-white btn-sm" type="button" data-toggle="modal" data-target="#uploadModal"><i class="fa fa-upload"></i> 更新导入</button>
-                        </div>
-
-                    </div>
-
-                    <div class="col-sm-12">
-                        <div class="alert alert-warning">
-                            <strong>注意事项：</strong>导出导入的文件后缀名为[.xlsx]，导入资源的文件一定为导出资源的文件，其他文件排版格式会出错。
-                        </div>
-
-                    </div>
                 </div>
 
-            }
+            </div>
+            <input type="hidden" name="Submit.Export" id="export" value="" />
+            @Html.HiddenFor(d => d.PriceType)
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <button class="btn btn-primary" name="Submit.Search" value="search" type="submit"><i class="fa fa-search"></i> 开始搜索</button>
+                    </div>
+                </div>
+            </div>
 
-        </div>
+        }
+
+
 
     </div>
-
-
 
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
-                <div class="ibox-title">
-                    <button class="btn btn-warning btn-sm" type="button" onclick="addMedia();"><i class="fa fa-plus"></i> 新增媒体</button>
-                </div>
                 <div class="ibox-content">
                     <div class="sk-spinner sk-spinner-wave">
                         <div class="sk-rect2"></div>
@@ -235,277 +241,246 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th data-breakpoints="xs sm">媒体状态</th>
-                                    <th>媒体类型</th>
-                                    <th>媒体名称</th>
 
-                                    <th data-breakpoints="all" data-title="媒体分类">媒体分类</th>
-                                    <th data-breakpoints="xs sm">媒体组</th>
-                                    <th data-breakpoints="xs sm">粉丝数</th>
+                                    <th>媒体类型</th>
+                                    <th>媒体信息</th>
+                                    @if (Model.MediaTypeIndex == "weixin" || Model.MediaTypeIndex == "sinablog")
+                                    {
+                                        <th data-breakpoints="xs">媒体指数</th>
+                                    }
                                     <th data-breakpoints="xs">媒体价格</th>
-                                    <th data-breakpoints="all" data-title="媒体内容">媒体内容</th>
+                                    <th data-breakpoints="xs">媒体组</th>
+                                    <th data-breakpoints="all" data-title="媒体说明">媒体说明</th>
                                     <th data-breakpoints="all" data-title="媒体备注">媒体备注</th>
-                                    <th data-breakpoints="xs sm">经办媒介</th>
-                                    <th data-breakpoints="xs sm">操作</th>
+                                    <th data-breakpoints="xs">经办媒介</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model.Medias)
                                 {
+                                    if (string.IsNullOrWhiteSpace(item.Id))
+                                    {
+                                        continue;
+                                    }
                                     <tr>
-                                        <td>
-                                            @if (item.Status == Consts.StateNormal)
+                                        @if (Model.MediaTypeIndex == "weixin" || Model.MediaTypeIndex == "sinablog")
+                                        {
+
+                                            if (Model.MediaTypeIndex == "weixin")
                                             {
-                                                <span class='label label-primary'>正常</span>
+                                                var logo = string.IsNullOrWhiteSpace(item.MediaLogo) ? "/Images/weixin.png" : item.MediaLogo;
+                                                <td>
+                                                    <img class="img-circle" src="@logo" style="width: 60px; height: 60px;" />
+                                                </td>
                                             }
                                             else
                                             {
-                                                <span class='label'>关闭</span>
+                                                var logo = string.IsNullOrWhiteSpace(item.MediaLogo) ? "/Images/blog.png" : item.MediaLogo;
+                                                <td>
+                                                    <img class="img-circle" src="@logo" style="width: 60px; height: 60px;" />
+                                                </td>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <td>@item.MediaType.TypeName</td>
+                                        }
+                                        <td>
+
+                                            <div class='p-xxs'>
+                                                @if (!string.IsNullOrWhiteSpace(item.Sex))
+                                                {
+                                                    if (item.Sex == "男")
+                                                    {
+                                                        <img alt="男" class="img-circle" src="/Images/man.png" style="width: 25px; height: 25px;" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img alt="女" class="img-circle" src="/Images/lady.png" style="width: 25px; height: 25px;" />
+                                                    }
+                                                }
+                                                @if (item.MediaType.CallIndex == "weixin")
+                                                {
+                                                    <a class='label' href='http://weixin.sogou.com/weixin?type=1&query=@item.MediaID' target='_blank'><i class='fa fa-link'></i> @item.MediaName - @item.MediaID</a>
+                                                    <button class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看微信详情' onclick='details("/Resource/Media/WeiXinArticles/@item.Id");'>详</button>
+                                                }
+                                                else if (item.MediaType.CallIndex == "sinablog")
+                                                {
+                                                    <a class='label' href='https://weibo.com/u/@item.MediaID' target='_blank' data-toggle='tooltip' data-placement='bottom' title='@item.Abstract'><i class='fa fa-link'></i> @item.MediaName</a>
+                                                    <button class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看微博详情' onclick='details("/Resource/Media/WeiboArticles/@item.Id");'>详</button>
+                                                }
+                                                else if (item.MediaType.CallIndex == "zhihu")
+                                                {
+                                                    <a class='label' href='https://www.zhihu.com/people/@item.MediaID' target='_blank'><i class='fa fa-link'></i> @item.MediaName</a>
+                                                }
+                                                else
+                                                {
+                                                    if (!string.IsNullOrWhiteSpace(item.MediaLink))
+                                                    {
+                                                        <a class='label' href='@item.MediaLink' target='_blank'><i class='fa fa-link'></i>@item.Platform @item.MediaName @item.Client @item.Channel</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        @item.Platform @item.MediaName @item.Client @item.Channel
+                                                    }
+                                                }
+                                            </div>
+                                            @if (!string.IsNullOrWhiteSpace(item.Area))
+                                            {
+                                                <div class='p-xxs'>
+                                                    <span class='label label-info'><i class='fa fa-map-marker'></i> @item.Area</span>
+                                                </div>
+                                            }
+                                            @if (item.MediaTags.Count > 0)
+                                            {
+                                                <div class='p-xxs'>
+                                                    @foreach (var tag in item.MediaTags.Take(5))
+                                                    {
+                                                        <span class='label label-success'><i class='fa fa-tag'></i> @tag.TagName</span>
+                                                    }
+                                                </div>
+                                            }
+                                            @if (item.FansNum != null)
+                                            {
+                                                <div class='p-xxs'>
+                                                    <span class='label label-danger'><i class='fa fa-users'></i> 粉丝：@Utils.ShowFansNum(item.FansNum) 万</span>
+                                                </div>
                                             }
                                         </td>
-                                        <td>@item.MediaTypeName</td>
-                                        @{
-                                            var mediaName = item.MediaName;
-                                            switch (item.MediaTypeIndex)
+                                        @if (Model.MediaTypeIndex == "weixin" || Model.MediaTypeIndex == "sinablog")
+                                        {
+
+                                            if (Model.MediaTypeIndex == "weixin")
                                             {
-                                                case "website":
-                                                    mediaName = item.MediaName + "-" + item.Client + "-" + item.Channel;
-                                                    break;
-                                                case "weixin":
-                                                    mediaName = item.MediaName + " [ " + item.MediaID + " ]";
-                                                    break;
-                                                case "headline":
-                                                case "webcast":
-                                                case "brush":
-                                                    mediaName = "[ " + item.Platform + " ] " + item.MediaName;
-                                                    break;
+
+                                                <td>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>近10篇平均阅读数：@Convert.ToInt32(item.MediaArticles.OrderByDescending(a => a.PublishDate).Take(10).Average(aaa => aaa.ViewCount))</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        @{
+                                                            var viecount = item.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount;
+                                                        }
+                                                        <span class='label label-info'>最近头条阅读数：@viecount</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>月发文篇数：@item.MonthPostNum</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>最近微信发文日期：@item.LastPushDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"))</span>
+                                                    </div>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>近50篇平均转发数：@Convert.ToInt32(item.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ShareCount))</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>近50篇平均评论数：@Convert.ToInt32(item.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount))</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>近50篇平均点赞数：@Convert.ToInt32(item.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount))</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>微博数：@item.PostNum</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>一周博文数：@item.MediaArticles.OrderByDescending(a => a.PublishDate).Count(l => l.PublishDate > DateTime.Now.Date.AddDays(-7))</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        @{
+                                                            var lastDate = item.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate.Value.ToString("yyyy-MM-dd");
+                                                        }
+                                                        <span class='label label-info'>最近博文日期：@lastDate</span>
+                                                    </div>
+                                                </td>
                                             }
                                         }
                                         <td>
-                                            @mediaName  <a class='btn btn-warning btn-circle btn-xs' href='@Url.Action("Comment", "Media",new{id=item.Id})' target='_blank' title='评价'><i class='fa fa-commenting'></i></a>
+                                            @foreach (var price in item.MediaPrices)
+                                            {
+                                                var str = price.AdPositionName + "：" + price.PurchasePrice + "　有效期至：" + price.InvalidDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"));
+                                                <div class="p-xxs"><span class="label label-info">@str</span></div>
+                                            }
                                         </td>
-
-                                        <td>@string.Join(",", item.MediaTags.Select(d => d.TagName))</td>
                                         <td>
                                             @foreach (var group in item.MediaGroups)
                                             {
-                                                <button class='btn btn-warning btn-xs' onclick="groupDetail('@group.Id');"><i class='fa fa-object-group'></i> @group.GroupName</button>
-                                            }
-                                        </td>
-                                        <td>@item.FansNum</td>
-                                        <td>
-                                            @foreach (var price in item.MediaPrices)
-                                            {
-                                                var str = price.AdPositionName + "：¥ " + price.PurchasePrice + "　　有效期至：" + price.InvalidDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"));
-                                                <div class="bg-info">@str</div>
+                                                <button class='btn btn-warning btn-xs' onclick="groupDetail('@group.Id');"><i class='fa fa-object-group'></i>@group.GroupName</button>
                                             }
                                         </td>
                                         <td>@item.Content</td>
                                         <td>@item.Remark</td>
                                         <td>@item.Transactor</td>
-                                        <td>
-                                            <a class='btn btn-success btn-sm' href='@Url.Action("Update", new {id = item.Id})' target='_blank'><i class='fa fa-pencil'></i> 编辑</a>
-
-                                            <button class='btn btn-danger btn-sm' onclick="cancle('@item.Id');"><i class='fa fa-trash-o'></i> 删除</button>
-                                        </td>
                                     </tr>
                                 }
-
-
                             </tbody>
                         </table>
-
                     }
-
-
-
                 </div>
             </div>
         </div>
     </div>
 
-    @Html.Partial("Import")
 
 </div>
+@section StylesFirst {
+    <meta name="referrer" content="never">
+}
 @section Styles {
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
     @Styles.Render("~/plugins/footableV3Styles")
-    @Styles.Render("~/plugins/jasnyBootstrapStyles")
-    @Styles.Render("~/plugins/laddaStyles")
 }
+
 @section Scripts {
     @Scripts.Render("~/plugins/footableV3")
-    @Scripts.Render("~/plugins/jasnyBootstrap")
-    @Scripts.Render("~/plugins/ladda")
-    <script>
-        $(function() {
-            $('#uploadModal').on('shown.bs.modal',
-                function() {
 
-                                                    }).on('hidden.bs.modal',
-                                                    function() {
-                    $('.fileinput').fileinput("clear");
-                                                    });
-                                                    @if (Model.Medias.Count > 0)
+    <script type="text/javascript">
+        $(function() {
+            @if (Model.Medias.Count > 0)
             {
                 <text>
                     $('.table').footable();
                 </text>
             }
-            $("#MediaTypeId").change(function() {
-                                                        var $adpostion = $("#AdPositionName");
+            $("#MediaTypeIndex").change(function () {
+                var $adpostion = $("#AdPositionName");
                 $adpostion.empty();
-                                                        if ($(this).val()) {
-                                                            var selectdata = $(this).find('option:selected').attr("data-value");
-                                                            var arr = JSON.parse(selectdata);
+                if ($(this).val()) {
+                    var selectdata = $(this).find('option:selected').attr("data-value");
+                    var arr = JSON.parse(selectdata);
                     $adpostion.append("<option value=''>不限</option>");
                     $.each(arr,
                         function(k, v) {
                             $adpostion.append("<option value='" + v + "'>" + v + "</option>");
-                                                            });
-                                                        } else {
-                    $adpostion.append("<option value=''>不限</option>");
-                                                        }
-                                                    });
-                                                });
-
-                                                function upLoadFile() {
-
-                                                    var fileObj = document.getElementById("upfile").files[0]; // js 获取文件对象
-                                                    if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
-                                                        swal("操作失败", "请选择文件", "warning");
-                                                        return;
-                                                    }
-                                                    if (!checkFileExt(fileObj.name)) {
-                                                        swal("操作失败", "只支持xlsx后缀文件", "warning");
-                                                        return;
-                                                    }
-                                                    var formFile = new FormData();
-                                                    formFile.append("upfile", fileObj); //加入文件对象
-                                                    var data = formFile;
-                                                    var subBtn = $('.ladda-button').ladda();
-            $.ajax({
-                                                        url: "@Url.Action("Import")",
-                data: data,
-                type: "Post",
-                dataType: "json",
-                cache: false, //上传文件无需缓存
-                processData: false, //用于对data参数进行序列化处理 这里必须false
-                contentType: false, //必须
-                success: function(result) {
-                                                            if (result.State == 1) {
-                                                                swal({
-                                                                    title: "操作成功",
-                            text: data.Msg,
-                            timer: 2000,
-                            type: "success",
-                            showConfirmButton: false
-                                                                });
-                                                            } else {
-                                                                swal("操作失败", result.Msg, "error");
-                                                            }
-                                                        },
-                error: function() {
-                                                            swal("操作失败", "系统错误", "error");
-                                                        },
-                beforeSend: function() {
-                                                            subBtn.ladda('start');
-                                                        },
-                complete: function() {
-                                                            subBtn.ladda('stop');
-                                                        }
-                                                    });
-        }
-
-        function checkFileExt(filename) {
-            var flag = false; //状态
-            var arr = ["xlsx"];
-            //取出上传文件的扩展名
-            var index = filename.lastIndexOf(".");
-            var ext = filename.substr(index + 1);
-            //循环比较
-            for (var i = 0; i < arr.length; i++) {
-                if (ext == arr[i]) {
-                    flag = true; //一旦找到合适的，立即退出循环
-                    break;
-                }
-            }
-            return flag;
-        }
-
-        function groupDetail(id) {
-            $("#modalView").load("@Url.Action("Detail", "MediaGroup")?id=" + id,
-                function() {
-                    $('#modalView .modal').on('shown.bs.modal',
-                        function() {
-                            $('[data-toggle="tooltip"]').tooltip();
-                        }).on('hidden.bs.modal',
-                        function() {
-
                         });
+                } else {
+                    $adpostion.append("<option value=''>不限</option>");
+                }
+            });
+        });
+
+        
+
+        function details(url) {
+            $("#modalView").load(url,
+                function () {
+                    $('#modalView .modal').modal('show');
+                });
+        }
+        function groupDetail(id) {
+            $("#modalView").load("/Resource/MediaGroup/Detail/" + id,
+                function () {
+                    $('#modalView .modal').on('shown.bs.modal', function () {
+                        $('[data-toggle="tooltip"]').tooltip();
+                    }).on('hidden.bs.modal', function () {
+
+                    });
                     $('#modalView .modal').modal('show');
                 });
 
         }
-
-        function addMedia() {
-            var mediaId = $("#MediaTypeId").val();
-            if (mediaId) {
-                window.open("@Url.Action("Add")?id=" + mediaId);
-            } else {
-                swal("操作警告", "请选择媒体类型", "warning");
-            }
-        }
-
-        //撤销
-        function cancle(id) {
-            swal({
-                    title: "您确定吗?",
-                    text: "确认要删除此数据吗?",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
-                    closeOnConfirm: false,
-                    showLoaderOnConfirm: true
-                },
-                function() {
-                    $.ajax({
-                        type: "post",
-                        headers: {
-                            '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                        },
-                        url: "@Url.Action("Delete")",
-                        data: { "id": id },
-                        success: function(data) {
-                            if (data.State == 1) {
-                                swal({
-                                        title: "操作成功",
-                                        text: data.Msg,
-                                        type: "success"
-                                    },
-                                    function(isConfirm) {
-                                        if (isConfirm) {
-                                            window.location.reload();
-                                        }
-                                    });
-
-                            } else {
-                                swal("操作提醒", data.Msg, "warning");
-                            }
-                        },
-                        error: function() {
-                            swal("操作失败", "系统错误", "error");
-                        },
-                        complete: function() {
-
-                        }
-                    });
-                });
-        }
     </script>
 }
-
-
-
