@@ -164,7 +164,9 @@ namespace Ada.Framework.Filter
             byte[] bytes;
             using (var workbook = new XLWorkbook())
             {
-                workbook.Worksheets.Add(dt, "江西微广");
+                var ws = workbook.Worksheets.Add(dt, "江西微广");
+                //remove AutoFilter
+                //ws.Tables.FirstOrDefault().ShowAutoFilter = false;
                 using (var ms = new MemoryStream())
                 {
                     workbook.SaveAs(ms);

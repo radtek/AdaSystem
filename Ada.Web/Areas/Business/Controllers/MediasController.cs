@@ -167,7 +167,7 @@ namespace Business.Controllers
                     }
                     if (media.MediaType?.CallIndex == "weixin")
                     {
-                        jo.Add("十天平均阅读数", Convert.ToInt32(media.MediaArticles.Where(l => l.IsTop == true && l.PublishDate > DateTime.Now.Date.AddDays(-10)).Average(aaa => aaa.ViewCount)));
+                        jo.Add("近十篇平均阅读数", Convert.ToInt32(media.MediaArticles.Where(l => l.IsTop == true && l.PublishDate > DateTime.Now.Date.AddDays(-10)).Average(aaa => aaa.ViewCount)));
                     }
                     if (media.MediaType?.CallIndex == "sinablog")
                     {
@@ -230,7 +230,8 @@ namespace Business.Controllers
                     jo.Add("经办媒介", media.Transactor);
                     jObjects.Add(jo);
                 }
-                return File(ExportData(jObjects.ToString()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
+                // application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+                return File(ExportData(jObjects.ToString()), "application/vnd.ms-excel", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
             }
             viewModel.Medias = results.OrderBy(d => d.Taxis).ToList();
             if (!results.Any())
