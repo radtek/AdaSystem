@@ -266,7 +266,7 @@ namespace Business.Controllers
                 Status = d.Status ?? Consts.StateLock,
                 PurchaseStatus = GetPurchaseOrderDetail(d.Id)?.Status,
                 GetPurchaseOrderDetail(d.Id)?.PurchaseMoney
-            }).OrderByDescending(d=>d.Id);
+            }).OrderByDescending(d => d.Id);
             entity.OrderDetails = JsonConvert.SerializeObject(orderDetails);
 
             return View(entity);
@@ -372,7 +372,7 @@ namespace Business.Controllers
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            if (entity.AuditStatus != Consts.StateNormal)
+            if (entity.AuditStatus != Consts.StateNormal || entity.BusinessOrderDetails.Count == 0)
             {
                 foreach (var entityBusinessOrderDetail in entity.BusinessOrderDetails)
                 {
@@ -518,7 +518,7 @@ namespace Business.Controllers
         public ActionResult EditMoney(string id)
         {
             var entity = _businessOrderDetailRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            BusinessOrderDetailView detail=new BusinessOrderDetailView();
+            BusinessOrderDetailView detail = new BusinessOrderDetailView();
             detail.Id = id;
             detail.SellMoney = entity.SellMoney;
             detail.RequestSellMoney = 0;
@@ -710,7 +710,7 @@ namespace Business.Controllers
             entity.LinkManName = viewModel.LinkManName;
             entity.Transactor = CurrentManager.UserName;
             entity.TransactorId = CurrentManager.Id;
-            entity.Tax = viewModel.Tax??0;
+            entity.Tax = viewModel.Tax ?? 0;
             entity.OrderDate = DateTime.Now;
             //媒介订单
             PurchaseOrder purchase = new PurchaseOrder();
@@ -728,7 +728,7 @@ namespace Business.Controllers
             for (int i = 1; i <= sheet.LastRowNum; i++)
             {
                 IRow row = sheet.GetRow(i);
-                if (row==null)
+                if (row == null)
                 {
                     continue;
                 }
@@ -737,7 +737,7 @@ namespace Business.Controllers
                 var channal = row.GetCell(2)?.ToString();
                 var adpositon = row.GetCell(5)?.ToString();
                 //根据资源找价格
-                if (string.IsNullOrWhiteSpace(mediaName)|| string.IsNullOrWhiteSpace(client) ||string.IsNullOrWhiteSpace(channal) ||string.IsNullOrWhiteSpace(adpositon))
+                if (string.IsNullOrWhiteSpace(mediaName) || string.IsNullOrWhiteSpace(client) || string.IsNullOrWhiteSpace(channal) || string.IsNullOrWhiteSpace(adpositon))
                 {
                     continue;
                 }
@@ -756,12 +756,12 @@ namespace Business.Controllers
                 detail.Status = Consts.StateNormal;//已转单
                 detail.AdPositionName = adpositon;
                 decimal.TryParse(row.GetCell(3)?.ToString(), out var money);
-                
+
                 detail.SellMoney = money;
                 detail.Tax = entity.Tax;
-                detail.TaxMoney = detail.SellMoney*(detail.Tax / 100);
+                detail.TaxMoney = detail.SellMoney * (detail.Tax / 100);
                 detail.Money = detail.SellMoney * (1 + detail.Tax / 100);
-                
+
                 detail.CostMoney = mediaPrice.PurchasePrice;
                 DateTime.TryParse(row.GetCell(8)?.ToString(), out var date);
                 detail.PrePublishDate = date;

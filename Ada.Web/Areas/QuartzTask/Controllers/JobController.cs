@@ -80,6 +80,11 @@ namespace QuartzTask.Controllers
             entity.EndTime = viewModel.EndTime;
             entity.Remark = viewModel.Remark;
             entity.Taxis = viewModel.Times;
+            entity.ApiUrl = viewModel.ApiUrl;
+            entity.AppId = viewModel.AppId;
+            entity.Params = viewModel.Params;
+            entity.Token = viewModel.Token;
+            
             _jobService.Add(entity);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
@@ -99,6 +104,10 @@ namespace QuartzTask.Controllers
             entity.StartTime = item.StartTime;
             entity.EndTime = item.EndTime;
             entity.Remark = item.Remark;
+            entity.ApiUrl = item.ApiUrl;
+            entity.AppId = item.AppId;
+            entity.Params = item.Params;
+            entity.Token = item.Token;
             return View(entity);
         }
         [HttpPost]
@@ -124,6 +133,10 @@ namespace QuartzTask.Controllers
             entity.EndTime = viewModel.EndTime;
             entity.Remark = viewModel.Remark;
             entity.Taxis = viewModel.Times;
+            entity.ApiUrl = viewModel.ApiUrl;
+            entity.AppId = viewModel.AppId;
+            entity.Params = viewModel.Params;
+            entity.Token = viewModel.Token;
             _jobService.Update(entity);
             TempData["Msg"] = "操作成功";
             return RedirectToAction("Index");

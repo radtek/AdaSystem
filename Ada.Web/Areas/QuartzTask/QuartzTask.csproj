@@ -123,13 +123,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\JobController.cs" />
-    <Compile Include="Jobs\WeiXinJobByLL.cs" />
-    <Compile Include="Jobs\WeiXinJobByHW.cs" />
-    <Compile Include="Jobs\WeiXinJobByML.cs" />
-    <Compile Include="Jobs\WeiXinJobByHXHG.cs" />
     <Compile Include="Jobs\WeiboArticlesJob.cs" />
     <Compile Include="Jobs\WeiXinArticlesJob.cs" />
-    <Compile Include="Jobs\WeiXinCollection.cs" />
     <Compile Include="Jobs\WeiXinInfoJob.cs" />
     <Compile Include="Models\AppStartLoad.cs" />
     <Compile Include="Models\IQuartzService.cs" />
