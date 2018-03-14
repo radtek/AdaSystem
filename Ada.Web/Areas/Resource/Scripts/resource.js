@@ -36,12 +36,13 @@ $(function () {
 
     });
     $('.input-group.date').datepicker({
-        todayBtn: "linked",
-        keyboardNavigation: false,
-        forceParse: false,
+        //todayBtn: "linked",
+        //keyboardNavigation: false,
+        //forceParse: false,
         autoclose: true,
         language: "zh-CN",
-        orientation: "bottom right",
+        //format: "yyyy-mm-dd",
+        //orientation: "bottom center",
         todayHighlight: true
     });
 

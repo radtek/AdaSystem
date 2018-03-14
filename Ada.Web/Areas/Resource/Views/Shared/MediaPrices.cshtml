@@ -1,0 +1,90 @@
+﻿@using Ada.Core.Infrastructure
+@using Ada.Services.Resource
+@model Ada.Core.ViewModel.Resource.MediaView
+@{
+    var mediaTypeService = EngineContext.Current.Resolve<IMediaTypeService>();
+    var prices = mediaTypeService.GetMediaTypeByCallIndex(Model.MediaTypeIndex).AdPositions.ToList();
+}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                广告位
+            </th>
+            <th>
+                采购价格
+            </th>
+            @*<th>
+                    价格日期
+                </th>
+                <th>
+                    失效日期
+                </th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < prices.Count; i++)
+        {
+            <tr>
+                @{
+
+                    var price = Model.MediaPrices?.FirstOrDefault(d => d.AdPositionName == prices[i].Name);
+                    var id = price == null ? "" : price.Id;
+                    var purchasePrice = price == null ? 0 : price.PurchasePrice;
+
+                }
+                <td>
+                    <input name="MediaPrices[@i].Id" type="hidden" value="@id" />
+                    <input name="MediaPrices[@i].AdPositionId" type="hidden" value="@prices[i].Id" />
+                    <input class="form-control" name="MediaPrices[@i].AdPositionName" readonly="readonly" type="text" value="@prices[i].Name" />
+                </td>
+                <td>
+                    <input class="form-control" name="MediaPrices[@i].PurchasePrice" placeholder="¥0.00" type="text" value="@purchasePrice" />
+                </td>
+                @*<td>
+                        <div class="input-group date">
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <input class="form-control" name="MediaPrices[@i].PriceDate" type="text" value="@priceDate" />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group date">
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            <input class="form-control" name="MediaPrices[@i].InvalidDate" type="text" value="@invalidDate" />
+                        </div>
+                    </td>*@
+            </tr>
+        }
+
+    </tbody>
+
+</table>
+
+
+
+<div class="col-sm-6">
+    <div class="form-group">
+        @Html.LabelFor(d => d.PriceUpdateDate, Html.DisplayNameFor(d => d.PriceUpdateDate).ToString(), new { @class = "control-label" })
+        <div class="input-group date">
+            <span class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+            </span>
+            @Html.TextBoxFor(d => d.PriceUpdateDate, new { @class = "form-control" })
+        </div>
+    </div>
+</div>
+<div class="col-sm-6">
+    <div class="form-group">
+        @Html.LabelFor(d => d.PriceInvalidDate, Html.DisplayNameFor(d => d.PriceInvalidDate).ToString(), new { @class = "control-label" })
+        <div class="input-group date">
+            <span class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+            </span>
+            @Html.TextBoxFor(d => d.PriceInvalidDate, new { @class = "form-control" })
+        </div>
+    </div>
+</div>

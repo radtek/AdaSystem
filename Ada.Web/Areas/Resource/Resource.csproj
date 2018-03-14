@@ -202,6 +202,7 @@
     <Content Include="Views\Shared\WeiXinArticles.cshtml" />
     <Content Include="Views\Shared\WeiboCollection.cshtml" />
     <Content Include="Views\Shared\WeiboArticles.cshtml" />
+    <Content Include="Views\Shared\MediaPrices.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

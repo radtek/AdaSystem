@@ -106,6 +106,17 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
+                        @Html.LabelFor(d => d.PriceInvalidDate, Html.DisplayNameFor(d => d.PriceInvalidDate).ToString(), new { @class = "control-label" })
+                        <div class="input-group date">
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            @Html.TextBoxFor(d => d.PriceInvalidDate, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
                         @Html.LabelFor(d => d.HasArticles, Html.DisplayNameFor(d => d.HasArticles).ToString(), new { @class = "control-label" })
                         @Html.DropDownListFor(d => d.HasArticles, yesnos, "请选择", new { @class = "form-control" })
                     </div>
@@ -116,6 +127,7 @@
                         @Html.DropDownListFor(d => d.IsSlide, yesnos, "请选择", new { @class = "form-control" })
                     </div>
                 </div>
+
                 <div class="col-sm-6">
                     <div class="form-group">
                         @Html.LabelFor(d => d.MediaNames, Html.DisplayNameFor(d => d.MediaNames).ToString(), new { @class = "control-label" })
@@ -181,6 +193,7 @@
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
     @Styles.Render("~/plugins/jasnyBootstrapStyles")
     @Styles.Render("~/plugins/laddaStyles")
+    @Styles.Render("~/plugins/dataPickerStyles")
 }
 
 @section Scripts {
@@ -188,7 +201,8 @@
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/ladda")
     @Scripts.Render("~/plugins/clipboard")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201803128134")"></script>
+    @Scripts.Render("~/plugins/dataPicker")
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201803128135")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -259,7 +273,7 @@
                     {
                         checkbox: true
                     },
-                    
+
                     {
                         field: 'MediaLogo',
                         align: "right", valign: "middle",

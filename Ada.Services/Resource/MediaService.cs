@@ -49,7 +49,7 @@ namespace Ada.Services.Resource
         public IQueryable<Media> LoadEntitiesFilter(MediaView viewModel)
         {
             var allList = _repository.LoadEntities(d => d.IsDelete == false);
-
+            var isInclud = false;
             if (viewModel.Managers != null && viewModel.Managers.Count > 0)
             {
                 allList = allList.Where(d => viewModel.Managers.Contains(d.TransactorId));
@@ -169,6 +169,11 @@ namespace Ada.Services.Resource
             }
             if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
             {
+                if (!isInclud)
+                {
+                    allList = allList.Include(d => d.MediaPrices);
+                    isInclud = true;
+                }
                 if (viewModel.PriceStart != null)
                 {
                     allList = allList.Where(d =>
@@ -182,7 +187,17 @@ namespace Ada.Services.Resource
                         viewModel.PriceEnd);
                 }
             }
-
+            if (viewModel.PriceInvalidDate!=null)
+            {
+                if (!isInclud)
+                {
+                    allList = allList.Include(d => d.MediaPrices);
+                }
+                var endDate = viewModel.PriceInvalidDate.Value.AddDays(1);
+                allList = allList.Where(d =>
+                    d.MediaPrices.FirstOrDefault().InvalidDate <
+                    endDate);
+            }
             //allList = allList.Distinct();
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;

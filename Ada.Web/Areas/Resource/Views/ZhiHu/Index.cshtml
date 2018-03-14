@@ -100,6 +100,17 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
+                        @Html.LabelFor(d => d.PriceInvalidDate, Html.DisplayNameFor(d => d.PriceInvalidDate).ToString(), new { @class = "control-label" })
+                        <div class="input-group date">
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            @Html.TextBoxFor(d => d.PriceInvalidDate, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
                         @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName).ToString(), new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control" })
                     </div>
@@ -165,6 +176,7 @@
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
     @Styles.Render("~/plugins/jasnyBootstrapStyles")
     @Styles.Render("~/plugins/laddaStyles")
+    @Styles.Render("~/plugins/dataPickerStyles")
 }
 
 @section Scripts {
@@ -172,7 +184,8 @@
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/ladda")
     @Scripts.Render("~/plugins/clipboard")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201801448")"></script>
+    @Scripts.Render("~/plugins/dataPicker")
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201803128135")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -236,7 +249,7 @@
                         align: "left",
                         formatter: formatterMediaName
                     },
-                   
+
                     {
                         field: 'MediaPrices',
                         title: '@Html.DisplayNameFor(d=>d.MediaPrices)',

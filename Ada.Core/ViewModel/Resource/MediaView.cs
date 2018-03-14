@@ -373,6 +373,16 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "是否媒体组")]
         public bool? IsGroup { get; set; }
+        /// <summary>
+        /// 价格更新日期
+        /// </summary>
+        [Display(Name = "更新日期")]
+        public DateTime? PriceUpdateDate { get; set; }
+        /// <summary>
+        /// 价格失效日期
+        /// </summary>
+        [Display(Name = "失效日期")]
+        public DateTime? PriceInvalidDate { get; set; }
     }
 
 }

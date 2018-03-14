@@ -34,12 +34,12 @@
                         <div class="row">
                             <div class="col-md-12">
                                 @foreach (var item in tags)
-                    {
-                        <div class="checkbox checkbox-success checkbox-inline">
-                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
-                            <label for="@item.Id">@item.TagName</label>
-                        </div>
-        }
+                                {
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
+                                        <label for="@item.Id">@item.TagName</label>
+                                    </div>
+                                }
                             </div>
                         </div>
 
@@ -95,6 +95,17 @@
                     <div class="form-group">
                         @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status).ToString(), new { @class = "control-label" })
                         @Html.DropDownListFor(d => d.Status, status, "请选择", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.PriceInvalidDate, Html.DisplayNameFor(d => d.PriceInvalidDate).ToString(), new { @class = "control-label" })
+                        <div class="input-group date">
+                            <span class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                            @Html.TextBoxFor(d => d.PriceInvalidDate, new { @class = "form-control" })
+                        </div>
                     </div>
                 </div>
                 <div class="col-sm-2">
@@ -158,6 +169,7 @@
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
     @Styles.Render("~/plugins/jasnyBootstrapStyles")
     @Styles.Render("~/plugins/laddaStyles")
+    @Styles.Render("~/plugins/dataPickerStyles")
 }
 
 @section Scripts {
@@ -165,7 +177,8 @@
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/ladda")
     @Scripts.Render("~/plugins/clipboard")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=2018012428")"></script>
+    @Scripts.Render("~/plugins/dataPicker")
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201803128135")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {

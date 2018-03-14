@@ -6,6 +6,11 @@
         function () {
             $('.fileinput').fileinput("clear");
         });
+    $('.input-group.date').datepicker({
+        autoclose: true,
+        language: "zh-CN",
+        todayHighlight: true
+    });
 });
 function groupDetail(id) {
     $("#modalView").load("/Resource/MediaGroup/Detail/" + id,

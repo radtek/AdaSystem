@@ -1,12 +1,9 @@
 ﻿@using Ada.Core.Infrastructure
 @using Ada.Services.Admin
 @using Ada.Services.Resource
-@using Microsoft.Ajax.Utilities
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
-    var mediaTypeService = EngineContext.Current.Resolve<IMediaTypeService>();
-    var prices = mediaTypeService.GetMediaTypeByCallIndex(Model.MediaTypeIndex).AdPositions.ToList();
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
     var channelTypes = fieldService.GetFieldsByKey("ChannelType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var cooperations = fieldService.GetFieldsByKey("Cooperation").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
@@ -74,13 +71,13 @@
                                 @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
                                     @foreach (var item in tags)
-            {
-                var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
-                        <div class="checkbox checkbox-success checkbox-inline">
-                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
-                            <label for="@item.Id">@item.TagName</label>
-                        </div>
-}
+                                    {
+                                        var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
+                                        <div class="checkbox checkbox-success checkbox-inline">
+                                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
+                                            <label for="@item.Id">@item.TagName</label>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                             <div class="form-group">
@@ -195,76 +192,8 @@
                 </div>
                 <div id="tab-3" class="tab-pane">
                     <div class="panel-body">
-                        <div class="">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            广告位
-                                        </th>
-                                        <th>
-                                            采购价格
-                                        </th>
-                                        <th>
-                                            价格日期
-                                        </th>
-                                        <th>
-                                            失效日期
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @for (int i = 0; i < prices.Count; i++)
-                                    {
-                                        <tr>
-                                            @{
-
-                                                var price = Model.MediaPrices?.FirstOrDefault(d => d.AdPositionName == prices[i].Name);
-                                                var id = price == null ? "" : price.Id;
-                                                var purchasePrice = price == null ? 0 : price.PurchasePrice;
-                                                var priceDate = DateTime.Now.ToString("yyyy年MM月dd日");
-                                                if (price?.PriceDate != null)
-                                                {
-                                                    priceDate = price.PriceDate.Value.ToString("yyyy年MM月dd日");
-                                                }
-                                                var invalidDate = "";
-                                                if (price?.InvalidDate != null)
-                                                {
-                                                    invalidDate = price.InvalidDate.Value.ToString("yyyy年MM月dd日");
-                                                }
-                                            }
-                                            <td>
-                                                <input name="MediaPrices[@i].Id" type="hidden" value="@id" />
-                                                <input name="MediaPrices[@i].AdPositionId" type="hidden" value="@prices[i].Id" />
-                                                <input class="form-control" name="MediaPrices[@i].AdPositionName" readonly="readonly" type="text" value="@prices[i].Name" />
-                                            </td>
-                                            <td>
-                                                <input class="form-control" name="MediaPrices[@i].PurchasePrice" placeholder="¥0.00" type="text" value="@purchasePrice" />
-                                            </td>
-                                            <td>
-                                                <div class="input-group date">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </span>
-                                                    <input class="form-control" name="MediaPrices[@i].PriceDate" type="text" value="@priceDate" />
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group date">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </span>
-                                                    <input class="form-control" name="MediaPrices[@i].InvalidDate" type="text" value="@invalidDate" />
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    }
-
-                                </tbody>
-
-                            </table>
-                        </div>
-                        
+                        @Html.Partial("MediaPrices",Model)
+                       
                     </div>
                 </div>
             </div>

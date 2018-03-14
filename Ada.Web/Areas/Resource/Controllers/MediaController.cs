@@ -479,6 +479,9 @@ namespace Resource.Controllers
             viewModel.Status = Consts.StateNormal;
             viewModel.Transactor = CurrentManager.UserName;
             viewModel.TransactorId = CurrentManager.Id;
+            viewModel.PriceUpdateDate=DateTime.Now.Date;
+            viewModel.PriceInvalidDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
+                DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)).Date;
             return View(viewModel);
         }
         [HttpPost]
@@ -558,9 +561,9 @@ namespace Resource.Controllers
                 price.Id = IdBuilder.CreateIdNum();
                 price.AdPositionId = viewModelMediaPrice.AdPositionId;
                 price.AdPositionName = viewModelMediaPrice.AdPositionName;
-                price.InvalidDate = viewModelMediaPrice.InvalidDate;
+                price.InvalidDate = viewModel.PriceInvalidDate;
                 price.PurchasePrice = viewModelMediaPrice.PurchasePrice;
-                price.PriceDate = viewModelMediaPrice.PriceDate;
+                price.PriceDate = viewModel.PriceUpdateDate;
                 entity.MediaPrices.Add(price);
             }
             //媒体分类
@@ -637,10 +640,12 @@ namespace Resource.Controllers
                 Id = d.Id,
                 AdPositionName = d.AdPositionName,
                 AdPositionId = d.AdPositionId,
-                PriceDate = d.PriceDate,
-                InvalidDate = d.InvalidDate,
+                //PriceDate = d.PriceDate,
+                //InvalidDate = d.InvalidDate,
                 PurchasePrice = d.PurchasePrice
             }).ToList();
+            entity.PriceUpdateDate = item.MediaPrices.FirstOrDefault()?.PriceDate;
+            entity.PriceInvalidDate = item.MediaPrices.FirstOrDefault()?.InvalidDate;
             return View(entity);
         }
         [HttpPost]
@@ -723,16 +728,16 @@ namespace Resource.Controllers
                     price.Id = IdBuilder.CreateIdNum();
                     price.AdPositionId = viewModelMediaPrice.AdPositionId;
                     price.AdPositionName = viewModelMediaPrice.AdPositionName;
-                    price.InvalidDate = viewModelMediaPrice.InvalidDate;
+                    price.InvalidDate = viewModel.PriceInvalidDate;
                     price.PurchasePrice = viewModelMediaPrice.PurchasePrice;
-                    price.PriceDate = viewModelMediaPrice.PriceDate;
+                    price.PriceDate = viewModel.PriceUpdateDate;
                     entity.MediaPrices.Add(price);
                 }
                 else
                 {
                     var price = _mediaPriceRepository.LoadEntities(d => d.Id == viewModelMediaPrice.Id).FirstOrDefault();
-                    price.InvalidDate = viewModelMediaPrice.InvalidDate;
-                    price.PriceDate = viewModelMediaPrice.PriceDate;
+                    price.InvalidDate = viewModel.PriceInvalidDate;
+                    price.PriceDate = viewModel.PriceUpdateDate;
                     price.PurchasePrice = viewModelMediaPrice.PurchasePrice;
                 }
             }
