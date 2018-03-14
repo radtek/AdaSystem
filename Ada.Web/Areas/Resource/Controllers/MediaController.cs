@@ -386,10 +386,16 @@ namespace Resource.Controllers
                 }
                 //备注
                 media.Remark = row.GetCell(9)?.ToString();
-                if (!DateTime.TryParse(row.GetCell(10)?.ToString(),out var date))
+                var priceDate = row.GetCell(10).CellType == CellType.Numeric;
+                DateTime date;
+                if (!priceDate)
                 {
                     date = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
                                DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+                }
+                else
+                {
+                    date = row.GetCell(10).DateCellValue;
                 }
                 
                 for (int j = 0; j < adpostionNames.Count; j++)
@@ -399,7 +405,7 @@ namespace Resource.Controllers
                     var mediaPrice = _mediaPriceRepository
                         .LoadEntities(d => d.MediaId == id && d.AdPositionName == name).FirstOrDefault();
                     if (mediaPrice == null) continue;
-                    decimal.TryParse(row.GetCell(startPrice + j).ToString(), out var price);
+                    decimal.TryParse(row.GetCell(startPrice + j)?.ToString(), out var price);
                     mediaPrice.PurchasePrice = price;
                     mediaPrice.PriceDate = DateTime.Now;
                     mediaPrice.InvalidDate = date;

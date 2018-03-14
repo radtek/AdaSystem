@@ -70,6 +70,15 @@ namespace Customer.Controllers
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
                 return View(viewModel);
             }
+            //校验唯一性
+            var temp = _repository
+                .LoadEntities(d => d.Name.Equals(viewModel.Name, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false&&d.CommpanyId==viewModel.CommpanyId)
+                .FirstOrDefault();
+            if (temp != null)
+            {
+                ModelState.AddModelError("message", "该公司的联系人：" + viewModel.Name + "，已存在！");
+                return View(viewModel);
+            }
             LinkMan entity = new LinkMan();
             entity.Id = IdBuilder.CreateIdNum();
             entity.AddedById = CurrentManager.Id;
@@ -119,6 +128,15 @@ namespace Customer.Controllers
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
+                return View(viewModel);
+            }
+            //校验唯一性
+            var temp = _repository
+                .LoadEntities(d => d.Name.Equals(viewModel.Name, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false && d.CommpanyId == viewModel.CommpanyId&&d.Id!=viewModel.Id)
+                .FirstOrDefault();
+            if (temp != null)
+            {
+                ModelState.AddModelError("message", "该公司的联系人：" + viewModel.Name + "，已存在！");
                 return View(viewModel);
             }
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
