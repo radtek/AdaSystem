@@ -1,0 +1,85 @@
+﻿@using System.Web.Optimization
+@using Ada.Core
+@using Ada.Core.Domain.Resource
+@using Ada.Core.Infrastructure
+@model Ada.Core.ViewModel.Resource.MediaDevelopView
+@{
+    ViewBag.Title = "申请开发";
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "媒体资源开发", Value = Url.Action("Index") } };
+    var repository = EngineContext.Current.Resolve<IRepository<MediaType>>();
+    var mediaTypes = repository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis).Take(6).Select(d => new SelectListItem() { Text = d.TypeName, Value = d.Id });
+}
+@Html.Partial("Bread")
+
+
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <p class="bg-danger">@Html.ValidationMessage("message") </p>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <a class="btn btn-outline btn-default btn-sm" href="javascript:goBackOrClose();"><i class="fa fa-reply"></i> 返回</a>
+                        <button class="btn btn-primary btn-sm" type="submit" data-style="slide-right"><i class="fa fa-floppy-o"></i> 保存</button>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="sk-spinner sk-spinner-wave">
+                            <div class="sk-rect2"></div>
+                            <div class="sk-rect3"></div>
+                            <div class="sk-rect4"></div>
+                            <div class="sk-rect5"></div>
+                        </div>
+                        <div class="form-horizontal">
+
+
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.MediaTypeId, Html.DisplayNameFor(d => d.MediaTypeId).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(d => d.MediaTypeId, mediaTypes, "请选择", new { @class = "form-control", required = "" })
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    <span class="help-block m-b-4px">注：如需申请多个媒体，请分行输入，一行一个.</span>
+                                    @Html.TextAreaFor(d => d.MediaName, new { @class = "form-control", required = "", rows = "15", placeholder = "请输入要申请的媒体名称" })
+
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Content, Html.DisplayNameFor(d => d.Content).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextAreaFor(d => d.Content, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            @Html.HiddenFor(d => d.Id)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $(".wrapper.wrapper-content form").validate({
+                submitHandler: function (form) {
+                    $('.wrapper.wrapper-content .ibox').children('.ibox-content').toggleClass('sk-loading');
+                    form.submit();
+                }
+            });
+        });
+
+    </script>
+}
+
+

@@ -31,6 +31,10 @@ namespace Boss.Controllers
             foreach (var id in arr)
             {
                 var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+                if (entity.VerificationStatus==Consts.StateNormal)
+                {
+                    return Json(new { State = 0, Msg = entity.MediaName+"，此订单已核销！审核失败" });
+                }
                 entity.Status = Consts.StateOK;
                 entity.SellMoney = entity.RequestSellMoney;
                 entity.VerificationMoney = entity.SellMoney;

@@ -25,8 +25,6 @@ namespace Ada.Web.Controllers
         private readonly IRepository<Manager> _repository;
         private readonly IRepository<BusinessOrderDetail> _temp;
         private readonly IRepository<Media> _media;
-        private readonly IRepository<MediaArticle> _mediaArticle;
-        private readonly IRepository<MediaPrice> _mediaPrice;
         private readonly IRepository<PurchaseOrderDetail> _ptemp;
         private readonly IDbContext _dbContext;
         private readonly ISignals _signals;
@@ -37,7 +35,8 @@ namespace Ada.Web.Controllers
             IRepository<PurchaseOrderDetail> ptemp,
             IRepository<Media> media,
             IRepository<MediaArticle> mediaArticle,
-            IRepository<MediaPrice> mediaPrice)
+            IRepository<MediaPrice> mediaPrice,
+            IRepository<BusinessOrder> businessOrder)
         {
             _repository = repository;
             _dbContext = dbContext;
@@ -45,8 +44,6 @@ namespace Ada.Web.Controllers
             _ptemp = ptemp;
             _temp = temp;
             _media = media;
-            _mediaArticle = mediaArticle;
-            _mediaPrice = mediaPrice;
         }
         public ActionResult Index()
         {
@@ -137,6 +134,28 @@ namespace Ada.Web.Controllers
             }
 
             return Content("未找到重复订单，销售订单数：" + business + "，采购订单数：" + purchase);
+
+
+        }
+        public ActionResult CheckOrderMoney()
+        {
+
+            var business = _temp
+                .LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false && d.Status != 0).ToList();
+            List<string> temp=new List<string>();
+            foreach (var businessOrderDetail in business)
+            {
+                var sell = businessOrderDetail.SellMoney;
+                var verificationMoney = businessOrderDetail.VerificationMoney;
+                var confirmMoney = businessOrderDetail.ConfirmVerificationMoney;
+                var total = verificationMoney + confirmMoney;
+                if (sell!= total)
+                {
+                    temp.Add("订单ID："+businessOrderDetail.Id+"，媒体名称："+businessOrderDetail.MediaName);
+                }
+            }
+
+            return Content("金额不一致的订单：" + string.Join("&",temp) );
 
 
         }

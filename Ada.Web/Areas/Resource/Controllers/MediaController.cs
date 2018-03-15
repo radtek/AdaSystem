@@ -298,7 +298,7 @@ namespace Resource.Controllers
                     MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).ToList(),
                     MediaPrices = d.MediaPrices.Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = p.PurchasePrice }).ToList()
                 })
-            }, JsonRequestBehavior.AllowGet);
+            });
         }
 
 

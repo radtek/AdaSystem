@@ -75,6 +75,9 @@
     <Compile Include="Mapping\Business\BusinessOrderDetailMap.cs" />
     <Compile Include="Mapping\Business\BusinessReturnOrderMap.cs" />
     <Compile Include="Mapping\Business\BusinessOrderMap.cs" />
+    <Compile Include="Mapping\Business\OrderDetailCommentMap.cs" />
+    <Compile Include="Mapping\Business\OfferRatioDetailMap.cs" />
+    <Compile Include="Mapping\Business\OfferRatioMap.cs" />
     <Compile Include="Mapping\Customer\FollowUpMap.cs" />
     <Compile Include="Mapping\Customer\PayAccountMap.cs" />
     <Compile Include="Mapping\Customer\LinkManMap.cs" />
@@ -99,11 +102,13 @@
     <Compile Include="Mapping\QuartzTask\JobMap.cs" />
     <Compile Include="Mapping\Resource\MediaCommentMap.cs" />
     <Compile Include="Mapping\Resource\MediaArticleMap.cs" />
+    <Compile Include="Mapping\Resource\MediaDevelopProgressMap.cs" />
     <Compile Include="Mapping\Resource\MediaPriceMap.cs" />
     <Compile Include="Mapping\Resource\MediaMap.cs" />
     <Compile Include="Mapping\Resource\MediaGroupMap.cs" />
     <Compile Include="Mapping\Resource\MediaTagMap.cs" />
     <Compile Include="Mapping\Resource\AdPositionMap.cs" />
+    <Compile Include="Mapping\Resource\MediaDevelopMap.cs" />
     <Compile Include="Mapping\Resource\MediaTypeMap.cs" />
     <Compile Include="Mapping\WeiXin\WeiXinRequestReocrdMap.cs" />
     <Compile Include="Mapping\WeiXin\WeiXinKeywordMatchMap.cs" />
@@ -305,6 +310,10 @@
     <Compile Include="Migrations\201802130430580_MenuUpdate.Designer.cs">
       <DependentUpon>201802130430580_MenuUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201803150459295_UserProfile20180315.cs" />
+    <Compile Include="Migrations\201803150459295_UserProfile20180315.Designer.cs">
+      <DependentUpon>201803150459295_UserProfile20180315.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -468,6 +477,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201802130430580_MenuUpdate.resx">
       <DependentUpon>201802130430580_MenuUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803150459295_UserProfile20180315.resx">
+      <DependentUpon>201803150459295_UserProfile20180315.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

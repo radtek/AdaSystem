@@ -16,6 +16,7 @@ namespace Ada.Core.Domain.Business
         public BusinessOrderDetail()
         {
             BusinessWriteOffs=new HashSet<BusinessWriteOff>();
+            OrderDetailComments=new HashSet<OrderDetailComment>();
         }
         /// <summary>
         /// 税额
@@ -135,5 +136,6 @@ namespace Ada.Core.Domain.Business
         public string BusinessOrderId { get; set; }
         public virtual BusinessOrder BusinessOrder { get; set; }
         public virtual ICollection<BusinessWriteOff> BusinessWriteOffs { get; set; }
+        public virtual ICollection<OrderDetailComment> OrderDetailComments { get; set; }
     }
 }

@@ -13,6 +13,7 @@ namespace Ada.Core.Domain.Resource
         {
             Medias=new HashSet<Media>();
             AdPositions=new HashSet<AdPosition>();
+            MediaDevelops=new HashSet<MediaDevelop>();
         }
         /// <summary>
         /// 类型名称
@@ -34,8 +35,14 @@ namespace Ada.Core.Domain.Resource
         /// </summary>
         [Display(Name = "封面图片")]
         public string Image { get; set; }
+        /// <summary>
+        /// 是否评论
+        /// </summary>
+        [Display(Name = "是否评论")]
+        public bool? IsComment { get; set; }
 
         public virtual ICollection<Media> Medias { get; set; }
+        public virtual ICollection<MediaDevelop> MediaDevelops { get; set; }
         public virtual ICollection<AdPosition> AdPositions { get; set; }
     }
 }

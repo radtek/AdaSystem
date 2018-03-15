@@ -101,6 +101,9 @@
     <Compile Include="Domain\Business\BusinessWriteOff.cs" />
     <Compile Include="Domain\Business\BusinessInvoice.cs" />
     <Compile Include="Domain\Business\BusinessInvoiceDetail.cs" />
+    <Compile Include="Domain\Business\OfferRatio.cs" />
+    <Compile Include="Domain\Business\OfferRatioDetail.cs" />
+    <Compile Include="Domain\Business\OrderDetailComment.cs" />
     <Compile Include="Domain\Customer\Commpany.cs" />
     <Compile Include="Domain\Customer\LinkMan.cs" />
     <Compile Include="Domain\Business\BusinessOffer.cs" />
@@ -132,6 +135,8 @@
     <Compile Include="Domain\API\APIInterfaces.cs" />
     <Compile Include="Domain\Resource\MediaArticle.cs" />
     <Compile Include="Domain\Resource\MediaComment.cs" />
+    <Compile Include="Domain\Resource\MediaDevelop.cs" />
+    <Compile Include="Domain\Resource\MediaDevelopProgress.cs" />
     <Compile Include="Domain\Resource\MediaGroup.cs" />
     <Compile Include="Domain\Resource\MediaPrice.cs" />
     <Compile Include="Domain\Resource\AdPosition.cs" />
@@ -190,6 +195,7 @@
     <Compile Include="ViewModel\Business\BusinessPayeeView.cs" />
     <Compile Include="ViewModel\Business\BusinessPaymentView.cs" />
     <Compile Include="ViewModel\Resource\MediaCommentView.cs" />
+    <Compile Include="ViewModel\Resource\MediaDevelopView.cs" />
     <Compile Include="ViewModel\Statistics\BusinessTotal.cs" />
     <Compile Include="ViewModel\Business\BusinessWriteOffDetailView.cs" />
     <Compile Include="ViewModel\Business\BusinessWriteOffView.cs" />
