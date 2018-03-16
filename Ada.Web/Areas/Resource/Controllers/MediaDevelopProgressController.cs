@@ -19,12 +19,14 @@ namespace Resource.Controllers
     {
         private readonly IMediaDevelopService _service;
         private readonly IRepository<MediaDevelop> _repository;
+        private readonly IRepository<Media> _mediaRepository;
         public MediaDevelopProgressController(IMediaDevelopService service,
             IRepository<Media> mediaRepository,
             IRepository<MediaDevelop> repository)
         {
             _service = service;
             _repository = repository;
+            _mediaRepository = mediaRepository;
         }
         public ActionResult Index()
         {
@@ -78,7 +80,10 @@ namespace Resource.Controllers
         [AdaValidateAntiForgeryToken]
         public ActionResult Finish(string id)
         {
+            
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            //校验库中是否存在
+
             //进度记录
             MediaDevelopProgress progress = new MediaDevelopProgress();
             progress.Id = IdBuilder.CreateIdNum();

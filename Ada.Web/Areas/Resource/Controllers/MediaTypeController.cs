@@ -44,7 +44,9 @@ namespace Resource.Controllers
         }
         public ActionResult Add()
         {
-            return View();
+            MediaTypeView viewModel=new MediaTypeView();
+            viewModel.IsComment = false;
+            return View(viewModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -64,6 +66,7 @@ namespace Resource.Controllers
             entity.CallIndex = viewModel.CallIndex;
             entity.Taxis = viewModel.Taxis;
             entity.Image = viewModel.Image;
+            entity.IsComment = viewModel.IsComment;
             _mediaTypeService.Add(entity,viewModel.AdPositions);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
@@ -77,6 +80,7 @@ namespace Resource.Controllers
             entity.TypeName = item.TypeName;
             entity.Taxis = item.Taxis;
             entity.Image = item.Image;
+            entity.IsComment = item.IsComment;
             entity.AdPositions = item.AdPositions.Select(d => d.Name).ToList();
             return View(entity);
         }
@@ -97,6 +101,7 @@ namespace Resource.Controllers
             entity.CallIndex = viewModel.CallIndex;
             entity.Taxis = viewModel.Taxis;
             entity.Image = viewModel.Image;
+            entity.IsComment = viewModel.IsComment;
             _mediaTypeService.Update(entity,viewModel.AdPositions);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");

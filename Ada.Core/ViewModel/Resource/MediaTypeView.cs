@@ -30,6 +30,11 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "封面图片")]
         public string Image { get; set; }
         /// <summary>
+        /// 是否评论
+        /// </summary>
+        [Display(Name = "是否评论")]
+        public bool? IsComment { get; set; }
+        /// <summary>
         /// 广告位
         /// </summary>
         [Display(Name = "广告位")]
