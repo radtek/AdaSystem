@@ -43,12 +43,12 @@ namespace Ada.Services.Resource
             _dbContext.SaveChanges();
         }
 
-        public IQueryable<MediaDevelop> LoadEntitiesFilter(MediaDevelopView viewModel)
+        public IQueryable<MediaDevelop> LoadEntitiesFilter(MediaDevelopView viewModel,bool isTransactor=false)
         {
             var allList = _repository.LoadEntities(d => d.IsDelete == false);
             if (viewModel.Managers != null && viewModel.Managers.Count > 0)
             {
-                allList = allList.Where(d => viewModel.Managers.Contains(d.TransactorId));
+                allList = isTransactor ? allList.Where(d => viewModel.Managers.Contains(d.TransactorId)) : allList.Where(d => viewModel.Managers.Contains(d.SubById));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeId))
             {

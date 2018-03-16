@@ -18,14 +18,12 @@ namespace Resource.Controllers
     public class MediaDevelopController : BaseController
     {
         private readonly IMediaDevelopService _service;
-        private readonly IRepository<Media> _mediaRepository;
         private readonly IRepository<MediaDevelop> _repository;
         public MediaDevelopController(IMediaDevelopService service,
             IRepository<Media> mediaRepository,
             IRepository<MediaDevelop> repository)
         {
             _service = service;
-            _mediaRepository = mediaRepository;
             _repository = repository;
         }
         public ActionResult Index()
@@ -46,6 +44,7 @@ namespace Resource.Controllers
                     MediaName = d.MediaName,
                     MediaID = d.MediaID,
                     MediaTypeName = d.MediaType.TypeName,
+                    Transactor = d.Transactor,
                     Platform = d.Platform,
                     Content = d.Content,
                     Status = d.Status,
@@ -85,11 +84,23 @@ namespace Resource.Controllers
                 entity.Status = Consts.StateLock;//待开发
                 entity.MediaTypeId = viewModel.MediaTypeId;
                 entity.SubDate=DateTime.Now;
+                //进度记录
+                MediaDevelopProgress progress=new MediaDevelopProgress();
+                progress.Id = IdBuilder.CreateIdNum();
+                progress.ProgressContent = "已提交申请";
+                progress.Remark = "等待媒介认领资源。";
+                progress.ProgressDate=DateTime.Now;
+                entity.MediaDevelopProgresses.Add(progress);
                 list.Add(entity);
             }
             _service.AddRange(list);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Add");
+        }
+        public ActionResult Progress(string id)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            return PartialView("MediaDevelopProgress",entity);
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
@@ -98,7 +109,7 @@ namespace Resource.Controllers
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             if (entity.Status!=Consts.StateLock)
             {
-                return Json(new { State = 0, Msg = "此媒体正在开发中，无法删除，如需删除请联系媒介进行删除！" });
+                return Json(new { State = 0, Msg = "此媒体正在开发中，无法删除。如需删除请联系媒介撤销开发后，再进行删除！" });
             }
             _service.Delete(entity);
             return Json(new { State = 1, Msg = "删除成功" });

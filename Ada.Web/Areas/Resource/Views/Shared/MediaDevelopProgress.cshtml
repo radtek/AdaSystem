@@ -1,0 +1,36 @@
+﻿@using Ada.Core.Tools
+@model Ada.Core.Domain.Resource.MediaDevelop
+
+<div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">【@Model.MediaName】开发进度</h4>
+            </div>
+            <div class="modal-body">
+                @foreach (var item in Model.MediaDevelopProgresses.OrderByDescending(d=>d.ProgressDate))
+                {
+                    <div class="timeline-item">
+                        <div class="row">
+                            <div class="col-xs-3 date">
+                                <i class="fa fa-clock-o"></i>
+                                @item.ProgressDate.Value.ToString("MM/dd")
+                                <br />
+                                <small class="text-navy">@Utils.ToRead(item.ProgressDate)</small>
+                            </div>
+                            <div class="col-xs-7 content">
+                                <p class="m-b-xs"><strong>@item.ProgressContent</strong></p>
+                                <p>@item.Remark</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>

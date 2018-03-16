@@ -11,7 +11,7 @@ namespace Ada.Services.Resource
 {
    public interface IMediaDevelopService : IDependency
     {
-        IQueryable<MediaDevelop> LoadEntitiesFilter(MediaDevelopView viewModel);
+        IQueryable<MediaDevelop> LoadEntitiesFilter(MediaDevelopView viewModel, bool isTransactor = false);
         void Add(MediaDevelop entity);
         void AddRange(IList<MediaDevelop> entities);
         void Update(MediaDevelop entity);

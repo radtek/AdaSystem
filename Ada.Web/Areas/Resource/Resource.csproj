@@ -149,7 +149,9 @@
     <Compile Include="Controllers\BrushController.cs" />
     <Compile Include="Controllers\HeadLineController.cs" />
     <Compile Include="Controllers\MediaController.cs" />
+    <Compile Include="Controllers\MediaDevelopAllotController.cs" />
     <Compile Include="Controllers\MediaDevelopController.cs" />
+    <Compile Include="Controllers\MediaDevelopProgressController.cs" />
     <Compile Include="Controllers\MediaGroupController.cs" />
     <Compile Include="Controllers\MediaTagController.cs" />
     <Compile Include="Controllers\MediaTypeController.cs" />
@@ -206,6 +208,10 @@
     <Content Include="Views\Shared\MediaPrices.cshtml" />
     <Content Include="Views\MediaDevelop\Index.cshtml" />
     <Content Include="Views\MediaDevelop\Add.cshtml" />
+    <Content Include="Views\Shared\MediaDevelopProgress.cshtml" />
+    <Content Include="Views\MediaDevelopAllot\Index.cshtml" />
+    <Content Include="Views\MediaDevelopProgress\Index.cshtml" />
+    <Content Include="Views\MediaDevelopProgress\AddMediaDevelopProgress.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
