@@ -15,6 +15,7 @@ using Ada.Framework.Filter;
 using Ada.Framework.UploadFile;
 using Ada.Services.Business;
 using Ada.Services.Purchase;
+using DocumentFormat.OpenXml.Office.Word;
 using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 using NPOI.SS.UserModel;
@@ -32,6 +33,7 @@ namespace Business.Controllers
         private readonly IRepository<PurchaseOrder> _purchaseOrderRepository;
         private readonly IRepository<PurchaseOrderDetail> _purchaseOrderDetailRepository;
         private readonly IRepository<MediaType> _mediaTypeRepository;
+        private readonly IOrderDetailCommentService _orderDetailCommentService;
         private readonly IRepository<MediaPrice> _mediaPriceRepository;
         public OrderController(IBusinessOrderService businessOrderService,
             IRepository<BusinessOrder> repository,
@@ -43,7 +45,8 @@ namespace Business.Controllers
             IBusinessPayeeService businessPayeeService,
             IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository,
             IRepository<MediaPrice> mediaPriceRepository,
-            IBusinessOrderDetailService businessOrderDetailService
+            IBusinessOrderDetailService businessOrderDetailService,
+            IOrderDetailCommentService orderDetailCommentService
         )
         {
             _businessOrderService = businessOrderService;
@@ -55,6 +58,7 @@ namespace Business.Controllers
             _purchaseOrderDetailRepository = purchaseOrderDetailRepository;
             _mediaPriceRepository = mediaPriceRepository;
             _businessOrderDetailService = businessOrderDetailService;
+            _orderDetailCommentService = orderDetailCommentService;
         }
         public ActionResult Index()
         {
@@ -815,6 +819,35 @@ namespace Business.Controllers
                 lostStr = "其中以下资源不存在，部分订单导入失败：【" + string.Join("，", losts) + "】";
             }
             return Json(new { State = 1, Msg = "成功导入" + count + "篇网稿订单。" + lostStr });
+        }
+
+        public ActionResult Comment(string id)
+        {
+            var oreder = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            //var count = oredr.BusinessOrderDetails.Count(d => d.MediaPrice.Media.MediaType.IsComment == true);
+            return View(oreder);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Comment(CommentsView comments)
+        {
+            //
+            List<OrderDetailComment> list=new List<OrderDetailComment>();
+            foreach (var comment in comments.OrderComments)
+            {
+                OrderDetailComment item=new OrderDetailComment();
+                item.CommentDate=DateTime.Now;
+                item.BusinessOrderDetailId = comment.BusinessOrderDetailId;
+                item.Score = comment.Score;
+                item.Content = comment.Content;
+                item.Transactor = CurrentManager.UserName;
+                item.TransactorId = CurrentManager.Id;
+                item.Id = IdBuilder.CreateIdNum();
+                list.Add(item);
+            }
+            _orderDetailCommentService.Add(list);
+            var order = _repository.LoadEntities(d => d.Id == comments.OrderId).FirstOrDefault();
+            return View(order);
         }
 
     }

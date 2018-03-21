@@ -194,6 +194,7 @@
     <Compile Include="ViewModel\Business\BusinessOrderView.cs" />
     <Compile Include="ViewModel\Business\BusinessPayeeView.cs" />
     <Compile Include="ViewModel\Business\BusinessPaymentView.cs" />
+    <Compile Include="ViewModel\Business\OrderDetailCommentView.cs" />
     <Compile Include="ViewModel\Resource\MediaCommentView.cs" />
     <Compile Include="ViewModel\Resource\MediaDevelopProgressView.cs" />
     <Compile Include="ViewModel\Resource\MediaDevelopView.cs" />

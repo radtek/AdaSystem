@@ -63,7 +63,7 @@ function formatterWeiXin(value, row) {
     var fans = "<div class='p-xxs'>" + formatterFans(row.FansNum) + "</div>";
     return url +
         "<div class='p-xxs'><button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" +
-        " <button class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看微信详情' onclick='details(\"/Resource/Media/WeiXinArticles/" + row.Id + "\");'>详</button>" +
+        " <a class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看详情' href='/Resource/Media/Detail/" + row.Id + "' target='_blank'>详</a>" +
         " <img rel='drevil' data-content='<div id=\"popOverBox\"><img src=\"" + (row.MediaQR || '/Images/nopic.png') + "\" width=\"100\" height=\"100\" /></div>'  src='/Images/ewm.png' style='width: 20px; height: 20px;'/></div>" + tags + fans;
 }
 function formatterBlog(value, row) {
@@ -91,7 +91,7 @@ function formatterBlog(value, row) {
     }
     return url +
         "<div class='p-xxs'>" + level + area +
-        " <button class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看微博详情' onclick='details(\"/Resource/Media/WeiboArticles/" + row.Id + "\");'>详</button>" +
+        " <a class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看详情' href='/Resource/Media/Detail/" + row.Id + "' target='_blank'>详</a>" +
         "</div>" + tags + fans;
 }
 
@@ -120,9 +120,16 @@ function formatterMediaName(value, row) {
     if (row.MediaLink) {
         name = "<a class='label' href='" + row.MediaLink + "' target='_blank'><i class='fa fa-link'></i> " + name + "</a>";
     }
+    var info = "";
+    if (row.IsComment) {
+        info =
+            " <a class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看详情' href='/Resource/Media/Detail/" +
+            row.Id +
+            "' target='_blank'>详</a>";
+    }
     var url =
         "<div class='p-xxs'>" + sex + name +
-        " <button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" +
+        " <button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" +info+
         "</div>";;
     var tags = "";
     if (row.MediaTags) {

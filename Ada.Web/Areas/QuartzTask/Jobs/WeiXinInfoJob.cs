@@ -151,6 +151,7 @@ namespace QuartzTask.Jobs
                                         media.MediaLogo = weixinInfo.avatarUrl;
                                         media.MediaQR = weixinInfo.qrcodeUrl;
                                         media.Content = weixinInfo.biography;
+                                        media.Abstract = weixinInfo.idVerifiedInfo;
                                         if (DateTime.TryParse(weixinInfo.lastPost?.date, out var date))
                                         {
                                             media.LastPushDate = date;

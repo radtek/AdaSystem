@@ -279,8 +279,9 @@ function initOrder() {
         mobileResponsive: true,
         queryParams: function (parameters) {
             parameters.BusinessOrderId = orderIds;
-            parameters.VerificationStatus = 0;//已核销
+            parameters.VerificationStatus = 0;//未核销
             parameters.Status = 2;//已完成
+            parameters.IsComment = true;//已评论
             return parameters;
         },
         //onClickRow: function () {

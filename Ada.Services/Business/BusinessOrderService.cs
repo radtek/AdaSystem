@@ -70,16 +70,24 @@ namespace Ada.Services.Business
             }
             if (viewModel.OrderStatus != null)
             {
-                if (viewModel.OrderStatus.Value)
+                if (viewModel.OrderStatus == 1)//已完成
                 {
                     allList = from o in allList
                               where o.Status == Consts.StateNormal && o.BusinessOrderDetails.Count == o.BusinessOrderDetails.Count(b => b.Status == Consts.StateOK) && o.BusinessOrderDetails.Count > 0
                               select o;
                 }
-                else
+                else if (viewModel.OrderStatus == 0)//待处理
                 {
                     allList = from o in allList
                               where o.BusinessOrderDetails.Count != o.BusinessOrderDetails.Count(b => b.Status == Consts.StateOK) || o.BusinessOrderDetails.Count == 0
+                              select o;
+                }
+                else if (viewModel.OrderStatus == 2)//待评价
+                {
+                    allList = from o in allList
+                                  //from c in o.BusinessOrderDetails
+                                  //where c.MediaPrice.Media.MediaType.IsComment == true && c.OrderDetailComments.Count == 0 && c.Status == Consts.StateOK
+                              where o.BusinessOrderDetails.Count(d => d.MediaPrice.Media.MediaType.IsComment == true && d.Status == Consts.StateOK && d.OrderDetailComments.Count == 0) > 0
                               select o;
                 }
 
@@ -90,16 +98,16 @@ namespace Ada.Services.Business
                 if (viewModel.VerificationStatus.Value)
                 {
                     allList = from o in allList
-                        where o.BusinessOrderDetails.Count == o.BusinessOrderDetails.Count(b => b.VerificationStatus == Consts.StateNormal) && o.BusinessOrderDetails.Count > 0
-                        select o;
+                              where o.BusinessOrderDetails.Count == o.BusinessOrderDetails.Count(b => b.VerificationStatus == Consts.StateNormal) && o.BusinessOrderDetails.Count > 0
+                              select o;
                 }
                 else
                 {
                     allList = from o in allList
-                        where o.BusinessOrderDetails.Count != o.BusinessOrderDetails.Count(b => b.VerificationStatus == Consts.StateNormal) && o.BusinessOrderDetails.Count >0
-                        select o;
+                              where o.BusinessOrderDetails.Count != o.BusinessOrderDetails.Count(b => b.VerificationStatus == Consts.StateNormal) && o.BusinessOrderDetails.Count > 0
+                              select o;
                 }
-               
+
             }
             if (viewModel.AuditStatus != null)
             {

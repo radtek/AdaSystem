@@ -212,6 +212,8 @@
     <Content Include="Views\MediaDevelopAllot\Index.cshtml" />
     <Content Include="Views\MediaDevelopProgress\Index.cshtml" />
     <Content Include="Views\MediaDevelopProgress\AddMediaDevelopProgress.cshtml" />
+    <Content Include="Views\Shared\Comments.cshtml" />
+    <Content Include="Views\Media\Detail.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -13,7 +13,8 @@ namespace Ada.Services.Resource
     {
         IQueryable<Media> LoadEntitiesFilter(MediaView viewModel);
         IQueryable<MediaView> LoadEntitiesFilters(MediaView viewModel);
-        IQueryable<MediaCommentView> LoadComments(string id, int page = 1);
+        IQueryable<MediaCommentView> LoadComments(string id,  int pageindex, int pagesize, out int total);
+        IQueryable<MediaCommentView> LoadComments(MediaCommentView viewModel);
         void Add(Media entity);
         void Update(Media entity);
         void Delete(Media entity);

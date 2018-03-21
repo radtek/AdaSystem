@@ -84,7 +84,7 @@ namespace Ada.Core.ViewModel.Business
         /// 订单处理状态
         /// </summary>
         [Display(Name = "订单处理状态")]
-        public bool? OrderStatus { get; set; }
+        public short? OrderStatus { get; set; }
 
         /// <summary>
         /// 审核人

@@ -54,7 +54,7 @@ namespace Ada.Services.Business
             }
             if (!string.IsNullOrWhiteSpace(viewModel.LinkManId))
             {
-                allList = allList.Where(d => d.BusinessOrder.LinkManId==viewModel.LinkManId);
+                allList = allList.Where(d => d.BusinessOrder.LinkManId == viewModel.LinkManId);
             }
             if (!string.IsNullOrWhiteSpace(viewModel.OrderRemark))
             {
@@ -114,9 +114,9 @@ namespace Ada.Services.Business
             {
 
                 allList = from b in allList
-                    from p in purchaseOrderDetails
-                    where b.Id == p.BusinessOrderDetailId && p.Transactor.Contains(viewModel.MediaByPurchase)
-                    select b;
+                          from p in purchaseOrderDetails
+                          where b.Id == p.BusinessOrderDetailId && p.Transactor.Contains(viewModel.MediaByPurchase)
+                          select b;
             }
             if (viewModel.PublishDateStart != null)
             {
@@ -136,6 +136,14 @@ namespace Ada.Services.Business
             if (viewModel.AuditStatus != null)
             {
                 allList = allList.Where(d => d.AuditStatus == viewModel.AuditStatus);
+            }
+            if (viewModel.IsComment != null)
+            {
+                if (viewModel.IsComment.Value)
+                {
+                    allList = allList.Where(d => d.OrderDetailComments.Count > 0 || d.MediaPrice.Media.MediaType.IsComment == false);
+                }
+
             }
             viewModel.total = allList.Count();
             viewModel.TotalMoney = allList.Sum(d => d.Money);
@@ -185,12 +193,12 @@ namespace Ada.Services.Business
                 TotalSellMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.SellMoney),
                 TotalVerificationMoney =
                     orders.Where(d => d.TransactorId == transactorId).Sum(d => d.VerificationMoney),
-                TotalConfirmVerificationMoney = 
+                TotalConfirmVerificationMoney =
                     orders.Where(d => d.TransactorId == transactorId).Sum(d => d.ConfirmVerificationMoney),
                 TotalPurchaseMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.PurchaseMoney),
                 TotalProfitMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.ProfitMoney)
             };
-            if (item.TotalSellMoney==null||item.TotalSellMoney==0)
+            if (item.TotalSellMoney == null || item.TotalSellMoney == 0)
             {
                 item.Profit = 0;
             }
@@ -198,7 +206,7 @@ namespace Ada.Services.Business
             {
                 item.Profit = item.TotalProfitMoney / item.TotalSellMoney * 100;
             }
-            
+
             return item;
         }
         /// <summary>
@@ -240,7 +248,7 @@ namespace Ada.Services.Business
                        where p.Status == Consts.PurchaseStatusSuccess &&
                              b.Status == Consts.StateOK &&
                              b.Id == p.BusinessOrderDetailId &&
-                             p.PublishDate >= viewModel.PublishDateStart 
+                             p.PublishDate >= viewModel.PublishDateStart
                              && p.PublishDate < endDay
                        select new BusinessOrderDetailView
                        {

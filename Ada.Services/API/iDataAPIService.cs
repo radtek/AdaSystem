@@ -114,6 +114,7 @@ namespace Ada.Services.API
                                 media.MediaLogo = weixinInfo.avatarUrl;
                                 media.MediaQR = weixinInfo.qrcodeUrl;
                                 media.Content = weixinInfo.biography;
+                                media.Abstract = weixinInfo.idVerifiedInfo;
                                 media.CollectionDate = DateTime.Now;
                                 if (DateTime.TryParse(weixinInfo.lastPost?.date, out var date))
                                 {
@@ -415,6 +416,7 @@ namespace Ada.Services.API
                             media.MonthPostNum = weixinInfo.monthPostCount;
                             media.MediaLogo = weixinInfo.avatarUrl;
                             media.MediaQR = weixinInfo.qrcodeUrl;
+                            media.Abstract = weixinInfo.idVerifiedInfo;
                             media.Content = weixinInfo.biography;
                             media.CollectionDate = DateTime.Now;
                             if (DateTime.TryParse(weixinInfo.lastPost?.date, out var date))

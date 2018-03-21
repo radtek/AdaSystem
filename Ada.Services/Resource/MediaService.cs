@@ -90,6 +90,10 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.Status == viewModel.Status);
             }
+            if (viewModel.IsAuthenticate != null)
+            {
+                allList = allList.Where(d => d.IsAuthenticate == viewModel.IsAuthenticate);
+            }
             if (viewModel.IsGroup != null)
             {
                 allList = viewModel.IsGroup.Value ? allList.Where(d => d.MediaGroups.Any()) : allList.Where(d => !d.MediaGroups.Any());
@@ -100,7 +104,7 @@ namespace Ada.Services.Resource
             //    allList = allList.Include(d => d.MediaArticles).Where(d =>
             //        d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(10).Average(a => a.ViewCount) >=
             //        viewModel.AvgReadNumStart);
-                
+
             //}
             //if (viewModel.AvgReadNumEnd != null)
             //{
@@ -187,7 +191,7 @@ namespace Ada.Services.Resource
                         viewModel.PriceEnd);
                 }
             }
-            if (viewModel.PriceInvalidDate!=null)
+            if (viewModel.PriceInvalidDate != null)
             {
                 if (!isInclud)
                 {
@@ -388,14 +392,13 @@ namespace Ada.Services.Resource
             _dbContext.SaveChanges();
         }
 
-        public IQueryable<MediaCommentView> LoadComments(string id, int page = 1)
+        public IQueryable<MediaCommentView> LoadComments(string id, int pageindex, int pagesize, out int total)
         {
             var mediaComments = _mediaCommentRepository.LoadEntities(d => d.MediaId == id);
             var managers = _managerRepository.LoadEntities(d => true);
 
             var allList = from c in mediaComments
                           from m in managers
-                          from o in m.Organizations
                           where c.TransactorId == m.Id
                           select new MediaCommentView()
                           {
@@ -404,12 +407,43 @@ namespace Ada.Services.Resource
                               Score = c.Score,
                               CommentDate = c.CommentDate,
                               TransactorImage = m.Image,
-                              Organization = o.OrganizationName
+                              Organization = m.Organizations.FirstOrDefault().OrganizationName
                           };
-
-            return allList.OrderByDescending(d => d.CommentDate).Skip(0).Take(page * 20);
+            total = mediaComments.Count();
+            return allList.OrderByDescending(d => d.CommentDate).Skip(0).Take(pageindex * pagesize);
         }
+        public IQueryable<MediaCommentView> LoadComments(MediaCommentView viewModel)
+        {
+            var mediaComments = _mediaCommentRepository.LoadEntities(d => d.IsDelete == false);
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaId))
+            {
+                mediaComments = mediaComments.Where(d => d.MediaId == viewModel.MediaId);
+            }
+            var managers = _managerRepository.LoadEntities(d => true);
 
+            var allList = from c in mediaComments
+                          from m in managers
+                          where c.TransactorId == m.Id
+                          select new MediaCommentView()
+                          {
+                              Transactor = c.Transactor,
+                              Content = c.Content,
+                              Score = c.Score,
+                              CommentDate = c.CommentDate,
+                              TransactorImage = m.Image,
+                              Organization = m.Organizations.FirstOrDefault().OrganizationName
+                          };
+            viewModel.total = mediaComments.Count();
+            viewModel.AvgScore = mediaComments.Average(d => d.Score);
+            int offset = viewModel.offset ?? 0;
+            int rows = viewModel.limit ?? 10;
+            string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
+            if (order == "desc")
+            {
+                return allList.OrderByDescending(d => d.CommentDate).Skip(offset).Take(rows);
+            }
+            return allList.OrderBy(d => d.CommentDate).Skip(offset).Take(rows);
+        }
 
     }
 }

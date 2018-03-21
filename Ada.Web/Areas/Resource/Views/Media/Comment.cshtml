@@ -9,7 +9,8 @@
     sorce = Math.Round((double)sorce, 1);
     var service = EngineContext.Current.Resolve<IMediaService>();
     int page = ViewBag.Page ?? 1;
-    var comments = service.LoadComments(Model.Id, page);
+    int pageSize = 20;
+    var comments = service.LoadComments(Model.Id, page, pageSize, out int total);
 }
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
@@ -137,7 +138,7 @@
                 <div class="ibox-content">
 
                     <div>
-                        @if (Model.MediaComments.Count > 0)
+                        @if (total > 0)
                         {
                             <div class="feed-activity-list">
                                 @foreach (var item in comments)
@@ -155,11 +156,11 @@
                                             <small>
                                                 @for (int i = 0; i < item.Score; i++)
                                                 {
-                                                    <span class="btn btn-danger btn-xs"><i class="fa fa-star"></i></span>
+                                                    <i class="fa fa-star text-danger"></i>
                                                 }
                                                 @for (int i = 0; i < 5 - item.Score; i++)
                                                 {
-                                                    <span class="btn btn-default btn-xs"><i class="fa fa-star"></i></span>
+                                                    <i class="fa fa-star text-muted"></i>
                                                 }
 
 
@@ -174,7 +175,7 @@
 
 
                             </div>
-                            if (Model.MediaComments.Count > 20)
+                            if (total > 20)
                             {
                                 <a class="btn btn-primary btn-block m" href="@Url.Action("Comment",new{id=Model.Id,page=page+1})"><i class="fa fa-arrow-down"></i> 显示更多评论</a>
                             }

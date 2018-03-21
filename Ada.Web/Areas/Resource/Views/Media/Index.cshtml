@@ -156,6 +156,12 @@
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
+                                    @Html.LabelFor(d => d.IsAuthenticate, Html.DisplayNameFor(d => d.IsAuthenticate).ToString(), new { @class = "control-label" })
+                                    @Html.DropDownListFor(d => d.IsAuthenticate, yesnos, "请选择", new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
                                     @Html.LabelFor(d => d.SEO, Html.DisplayNameFor(d => d.SEO).ToString(), new { @class = "control-label" })
                                     @Html.DropDownListFor(d => d.SEO, seos, "请选择", new { @class = "form-control" })
                                 </div>
@@ -213,7 +219,11 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
-                        <button class="btn btn-primary" name="Submit.Search" value="search" type="submit"><i class="fa fa-search"></i> 开始搜索</button>
+                        <button class="btn btn-primary btn-outline" name="Submit.Search" value="search" type="submit"><i class="fa fa-search"></i> 开始搜索</button>
+                        <a id="btn_add" class="btn btn-success btn-outline" href="@Url.Action("Add","MediaDevelop")" target="_blank">
+                            <i class="fa fa-plus"></i> 申请开发
+                        </a>
+                        <button class="btn btn-danger btn-outline pull-right" type="button" onclick="exportData();"><i class="fa fa-download"></i> 导出数据</button>
                     </div>
                 </div>
             </div>
@@ -263,6 +273,11 @@
                                         continue;
                                     }
                                     <tr>
+
+
+
+
+
                                         @if (Model.MediaTypeIndex == "weixin" || Model.MediaTypeIndex == "sinablog")
                                         {
 
@@ -301,28 +316,36 @@
                                                 }
                                                 @if (item.MediaType.CallIndex == "weixin")
                                                 {
-                                                    <a class='label' href='http://weixin.sogou.com/weixin?type=1&query=@item.MediaID' target='_blank'><i class='fa fa-link'></i> @item.MediaName - @item.MediaID</a>
-                                                    <button class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看微信详情' onclick='details("/Resource/Media/WeiXinArticles/@item.Id");'>详</button>
+                                                    <a class='label' href='http://weixin.sogou.com/weixin?type=1&query=@item.MediaID' target='_blank'><i class='fa fa-link'></i> <span id="@item.Id">@item.MediaName - @item.MediaID</span></a>
+                                                    <button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#@item.Id'><i class='fa fa-copy'></i></button>
+
                                                 }
                                                 else if (item.MediaType.CallIndex == "sinablog")
                                                 {
-                                                    <a class='label' href='https://weibo.com/u/@item.MediaID' target='_blank' data-toggle='tooltip' data-placement='bottom' title='@item.Abstract'><i class='fa fa-link'></i> @item.MediaName</a>
-                                                    <button class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看微博详情' onclick='details("/Resource/Media/WeiboArticles/@item.Id");'>详</button>
+                                                    <a class='label' href='https://weibo.com/u/@item.MediaID' target='_blank' data-toggle='tooltip' data-placement='bottom' title='@item.Abstract'><i class='fa fa-link'></i> <span id="@item.Id">@item.MediaName</span></a>
+                                                    <button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#@item.Id'><i class='fa fa-copy'></i></button>
+                                                    
                                                 }
                                                 else if (item.MediaType.CallIndex == "zhihu")
                                                 {
-                                                    <a class='label' href='https://www.zhihu.com/people/@item.MediaID' target='_blank'><i class='fa fa-link'></i> @item.MediaName</a>
+                                                    <a class='label' href='https://www.zhihu.com/people/@item.MediaID' target='_blank'><i class='fa fa-link'></i> <span id="@item.Id">@item.MediaName</span></a>
+                                                    <button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#@item.Id'><i class='fa fa-copy'></i></button>
                                                 }
                                                 else
                                                 {
                                                     if (!string.IsNullOrWhiteSpace(item.MediaLink))
                                                     {
-                                                        <a class='label' href='@item.MediaLink' target='_blank'><i class='fa fa-link'></i>@item.Platform @item.MediaName @item.Client @item.Channel</a>
+                                                        <a class='label' href='@item.MediaLink' target='_blank'><i class='fa fa-link'></i> <span id="@item.Id">@item.Platform @item.MediaName @item.Client @item.Channel</span></a>
+                                                        <button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#@item.Id'><i class='fa fa-copy'></i></button>
                                                     }
                                                     else
                                                     {
                                                         @item.Platform @item.MediaName @item.Client @item.Channel
                                                     }
+                                                }
+                                                @if (item.MediaType.IsComment == true)
+                                                {
+                                                    <a class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看媒体详情' href='@Url.Action("Detail",new{id=item.Id})' target="_blank">详</a>
                                                 }
                                             </div>
                                             @if (!string.IsNullOrWhiteSpace(item.Area))
@@ -346,6 +369,7 @@
                                                     <span class='label label-danger'><i class='fa fa-users'></i> 粉丝：@Utils.ShowFansNum(item.FansNum) 万</span>
                                                 </div>
                                             }
+
                                         </td>
                                         @if (Model.MediaTypeIndex == "weixin" || Model.MediaTypeIndex == "sinablog")
                                         {
@@ -416,9 +440,15 @@
                                         <td>@item.Transactor</td>
                                     </tr>
                                 }
+
+
                             </tbody>
                         </table>
+
                     }
+
+
+
                 </div>
             </div>
         </div>
@@ -436,15 +466,22 @@
 
 @section Scripts {
     @Scripts.Render("~/plugins/footableV3")
-
+    @Scripts.Render("~/plugins/clipboard")
     <script type="text/javascript">
         $(function() {
             @if (Model.Medias.Count > 0)
             {
                 <text>
-                    $('.table').footable();
+            $('.table').footable();
+            new Clipboard('.btn-white');
                 </text>
             }
+            //$(".wrapper.wrapper-content form").validate({
+            //    submitHandler: function(form) {
+            //        $('.row .ibox').children('.ibox-content').toggleClass('sk-loading');
+            //        form.submit();
+            //    }
+            //        });
             $("#MediaTypeIndex").change(function () {
                 var $adpostion = $("#AdPositionName");
                 $adpostion.empty();
@@ -462,12 +499,41 @@
             });
         });
 
-        
+        function exportData() {
+
+            swal({
+                title: "媒体资源导出",
+                text: "请选择导出的价格类型",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "销售价导出",
+                    cancelButtonText: "成本价导出",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function(isConfirm){
+                    if (isConfirm) {
+                        $("#PriceType").val("1");
+                    } else {
+                        $("#PriceType").val("0");
+                    }
+                    $("#export").val("export");
+                    $('form')[0].submit();
+                    $("#export").val("");
+                    swal({
+                        title: "数据正在导出中...",
+                        text: "请耐心等待"
+                    });
+
+                });
+        }
 
         function details(url) {
             $("#modalView").load(url,
                 function () {
                     $('#modalView .modal').modal('show');
+
                 });
         }
         function groupDetail(id) {
@@ -482,5 +548,9 @@
                 });
 
         }
+
+
+
+
     </script>
 }

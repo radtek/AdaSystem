@@ -178,15 +178,12 @@
     @Scripts.Render("~/plugins/ladda")
     @Scripts.Render("~/plugins/clipboard")
     @Scripts.Render("~/plugins/dataPicker")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201803128135")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201803228135")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
-            //2.初始化Button的点击事件
-            var oButtonInit = new ButtonInit();
-            oButtonInit.Init();
 
         });
         var TableInit = function() {

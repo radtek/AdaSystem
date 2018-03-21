@@ -244,6 +244,11 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "申请修改金额")]
         public decimal? RequestSellMoney { get; set; }
+        /// <summary>
+        /// 是否评论
+        /// </summary>
+        [Display(Name = "是否评论")]
+        public bool? IsComment { get; set; }
 
     }
 }

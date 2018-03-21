@@ -82,11 +82,13 @@
     <Compile Include="Business\BusinessOfferService.cs" />
     <Compile Include="Business\BusinessInvoiceService.cs" />
     <Compile Include="Business\BusinessOrderDetailService.cs" />
+    <Compile Include="Business\OrderDetailCommentService.cs" />
     <Compile Include="Business\BusinessWriteOffService.cs" />
     <Compile Include="Business\BusinessPaymentService.cs" />
     <Compile Include="Business\BusinessPayeeService.cs" />
     <Compile Include="Business\IBusinessOfferService.cs" />
     <Compile Include="Business\IBusinessOrderDetailService.cs" />
+    <Compile Include="Business\IOrderDetailCommentService.cs" />
     <Compile Include="Business\IBusinessOrderService.cs" />
     <Compile Include="Business\BusinessOrderService.cs" />
     <Compile Include="Business\IBusinessInvoiceService.cs" />

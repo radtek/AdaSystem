@@ -5,16 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ada.Core.ViewModel.Resource
+namespace Ada.Core.ViewModel.Business
 {
-   public class MediaCommentView:BaseView
+   public class OrderDetailCommentView
     {
-
-        /// <summary>
-        /// 平均分
-        /// </summary>
-        [Display(Name = "平均分")]
-        public double? AvgScore { get; set; }
         /// <summary>
         /// 评分
         /// </summary>
@@ -31,6 +25,21 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "评价人")]
         public string Transactor { get; set; }
         /// <summary>
+        /// 评价人
+        /// </summary>
+        [Display(Name = "评价人")]
+        public string TransactorId { get; set; }
+        /// <summary>
+        /// 评价日期
+        /// </summary>
+        [Display(Name = "评价日期")]
+        public DateTime? CommentDate { get; set; }
+        /// <summary>
+        /// 媒体名称
+        /// </summary>
+        [Display(Name = "媒体名称")]
+        public string BusinessOrderDetailId { get; set; }
+        /// <summary>
         /// 头像
         /// </summary>
         [Display(Name = "头像")]
@@ -40,15 +49,11 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "所属机构")]
         public string Organization { get; set; }
-        /// <summary>
-        /// 媒体资源
-        /// </summary>
-        [Display(Name = "媒体资源")]
-        public string MediaId { get; set; }
-        /// <summary>
-        /// 评价日期
-        /// </summary>
-        [Display(Name = "评价日期")]
-        public DateTime? CommentDate { get; set; }
+    }
+
+    public class CommentsView
+    {
+        public string OrderId { get; set; }
+        public List<OrderDetailCommentView> OrderComments { get; set; }
     }
 }

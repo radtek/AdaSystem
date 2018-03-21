@@ -1,0 +1,218 @@
+﻿
+@using System.Web.Optimization
+@using Ada.Core.Domain
+@using Ada.Core.Tools
+@model Ada.Core.Domain.Business.BusinessOrder
+@{
+    ViewBag.Title = "评价订单";
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "销售订单", Value = Url.Action("Index") } };
+    var orders = Model.BusinessOrderDetails.Where(d => d.MediaPrice.Media.MediaType.IsComment == true && d.OrderDetailComments.Count == 0&&d.Status==Consts.StateOK).ToList();
+}
+@Html.Partial("Bread")
+
+<div class="wrapper wrapper-content">
+
+    <p class="bg-danger">@Html.ValidationMessage("message") </p>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>@Model.Remark</h5>
+                </div>
+                <div class="ibox-content">
+                    @if (orders.Any())
+                    {
+                        <div class="sk-spinner sk-spinner-wave">
+                            <div class="sk-rect2"></div>
+                            <div class="sk-rect3"></div>
+                            <div class="sk-rect4"></div>
+                            <div class="sk-rect5"></div>
+                        </div>
+                        using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="form-horizontal">
+                                <input type="hidden" name="OrderId" value="@Model.Id" />
+                                @for (int i = 0; i < orders.Count; i++)
+                                {
+                                    var item = orders.ToList()[i];
+                                    var start1 = "start1" + item.Id;
+                                    var start2 = "start2" + item.Id;
+                                    var start3 = "start3" + item.Id;
+                                    var start4 = "start4" + item.Id;
+                                    var start5 = "start5" + item.Id;
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">
+                                            <span class="text-info"><i class='fa @item.MediaPrice.Media.MediaType.Image'></i> @item.MediaName</span><br />
+                                            <small class="text-muted block">广告位：@item.AdPositionName</small>
+                                            <small class="text-muted block">销售价：@item.SellMoney 元</small>
+                                        </label>
+                                        <input name="OrderComments[@i].BusinessOrderDetailId" type="hidden" value="@item.Id" />
+                                        <div class="col-sm-10">
+                                            <div class="radio radio-info radio-inline">
+                                                <input type="radio" id='@start1' value="1" name="OrderComments[@i].Score">
+                                                <label for="@start1">
+                                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                                    <span class="text-muted"><i class="fa fa-star"></i></span>
+                                                    <span class="text-muted"><i class="fa fa-star"></i></span>
+                                                    <span class="text-muted"><i class="fa fa-star"></i></span>
+                                                    <span class="text-muted"><i class="fa fa-star"></i></span>
+                                                </label>
+                                            </div>
+                                            <div class="radio radio-info radio-inline">
+                                                <input type="radio" id="@start2" value="2" name="OrderComments[@i].Score">
+                                                <label for="@start2">
+                                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                                    <span class="text-muted"><i class="fa fa-star"></i></span>
+                                                    <span class="text-muted"><i class="fa fa-star"></i></span>
+                                                    <span class="text-muted"><i class="fa fa-star"></i></span>
+                                                </label>
+                                            </div>
+                                            <div class="radio radio-info radio-inline">
+                                                <input type="radio" id="@start3" value="3" name="OrderComments[@i].Score">
+                                                <label for="@start3">
+                                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                                    <span class="text-muted"><i class="fa fa-star"></i></span>
+                                                    <span class="text-muted"><i class="fa fa-star"></i></span>
+                                                </label>
+                                            </div>
+                                            <div class="radio radio-info radio-inline">
+                                                <input type="radio" id="@start4" value="4" name="OrderComments[@i].Score">
+                                                <label for="@start4">
+                                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                                    <span class="text-muted"><i class="fa fa-star"></i></span>
+                                                </label>
+                                            </div>
+                                            <div class="radio radio-info radio-inline">
+                                                <input type="radio" id="@start5" value="5" name="OrderComments[@i].Score">
+                                                <label for="@start5">
+                                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                                    <span class="text-danger"><i class="fa fa-star"></i></span>
+                                                </label>
+                                            </div>
+                                            <div class="m-t-xs">
+                                                <textarea class="form-control" placeholder="请输入您的评论" rows="3" required="" name="OrderComments[@i].Content"></textarea>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                }
+
+
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <a class="btn btn-outline btn-default" href="javascript:goBackOrClose();"><i class="fa fa-reply"></i> 关闭返回</a>
+                                        <button class="btn btn-primary" type="submit"><i class="fa fa-comment"></i> 发表评价</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            评价成功！ <a class="alert-link" href="javascript:window.close();">返回关闭</a>.
+                        </div>
+
+                        <div class="feed-activity-list">
+                            @foreach (var item in Model.BusinessOrderDetails.Where(d => d.MediaPrice.Media.MediaType.IsComment == true).ToList())
+                            {
+                                foreach (var comment in item.OrderDetailComments)
+                                {
+                                    <div class="feed-element">
+                                        <div class="pull-left">
+                                            <i class="fa @item.MediaPrice.Media.MediaType.Image fa-3x"></i>
+                                        </div>
+                                        <div class="media-body">
+                                            <small class="pull-right">@Utils.ToRead(comment.CommentDate)</small>
+                                            <strong>@item.MediaName</strong><br>
+                                            <small>
+                                                @for (int i = 0; i < comment.Score; i++)
+                                                {
+                                                    <span class="btn btn-danger btn-xs"><i class="fa fa-star"></i></span>
+                                                }
+                                                @for (int i = 0; i < 5 - comment.Score; i++)
+                                                {
+                                                    <span class="btn btn-default btn-xs"><i class="fa fa-star"></i></span>
+                                                }
+
+
+                                            </small>
+                                            <div class="well">
+                                                @comment.Content
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                }
+                                
+                            }
+
+
+                        </div>
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+
+
+}
+@section Scripts {
+    @*@Scripts.Render("~/plugins/dateTimePickerScript")*@
+
+    <script>
+        $(function() {
+            $(".wrapper.wrapper-content form").validate({
+                rules: {
+                    @for(int i = 0; i < orders.Count; i++)
+                    {
+                        <text>
+                            "OrderComments[@i].Score": "required",
+                        </text>
+                    }
+                },
+                messages: {
+                    @for(int i = 0; i < orders.Count; i++)
+                    {
+                        <text>
+                    "OrderComments[@i].Score": { "required": "必须选择一个评分" },
+                    "OrderComments[@i].Content": {"required":"必须填写评价内容"},
+                        </text>
+                    }
+                },
+                errorPlacement: function (error, element) { //指定错误信息位置
+                    if (element.is(':radio') || element.is(':checkbox')) { //如果是radio或checkbox
+                        var eid = element.attr('name'); //获取元素的name属性
+                        error.appendTo(element.parent().parent()); //将错误信息添加当前元素的父结点后面
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function (form) {
+                    $('.wrapper.wrapper-content .ibox').children('.ibox-content').toggleClass('sk-loading');
+                    form.submit();
+                }
+            });
+        });
+
+    </script>
+
+}

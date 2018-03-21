@@ -86,8 +86,9 @@
     <div class="form-inline" role="form">
         <div class="form-group">
             <select name="Status" class="form-control" id="OrderStatus">
-                <option value="false">待处理</option>
-                <option value="true">已完成</option>
+                <option value="0">待处理</option>
+                <option value="1">已完成</option>
+                <option value="2">待评价</option>
             </select>
             
             <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")" target='_blank'>
@@ -324,9 +325,15 @@
                         field: 'Id',
                         title: '操作',
                         align: "center", valign: "middle",
-                        formatter: function (value,row) {
-                            return "<a class='btn btn-white btn-sm' href='javascript:;' onclick=\"initDetails('" + value + "');\");'><i class='fa fa-search'></i> 明细 <span class='badge badge-warning'>" + row.OrderDetailCount + "</span></a> " +
-                                "<a class='btn btn-success btn-sm' href='@Url.Action("Update")?id=" + value + "');' target='_blank'><i class='fa fa-pencil'></i> 处理订单</a>";
+                        formatter: function (value, row) {
+                            var comment = $("#OrderStatus").val();
+                            if (comment==2) {
+                                return "<a class='btn btn-warning btn-sm' href='@Url.Action("Comment")?id=" + value + "');' target='_blank'><i class='fa fa-commenting'></i> 评价订单</a>";
+                            } else {
+                                return "<a class='btn btn-white btn-sm' href='javascript:;' onclick=\"initDetails('" + value + "');\");'><i class='fa fa-search'></i> 明细 <span class='badge badge-warning'>" + row.OrderDetailCount + "</span></a> " +
+                                    "<a class='btn btn-success btn-sm' href='@Url.Action("Update")?id=" + value + "');' target='_blank'><i class='fa fa-pencil'></i> 处理订单</a>";
+                            }
+                            
                         }
 
                     }

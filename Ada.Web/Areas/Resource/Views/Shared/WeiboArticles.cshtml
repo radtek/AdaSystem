@@ -1,75 +1,182 @@
 ﻿@using Ada.Core.Tools
 @model Ada.Core.Domain.Resource.Media
+@{
+    var update = Model.CollectionDate?.ToString("yyyy-MM-dd");
+    var pushdate = Model.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate?.ToString("yyyy-MM-dd");
+    var start = DateTime.Now.Date.AddDays(-7);
+    var end = DateTime.Now.AddDays(1).Date;
 
-<div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">【@Model.MediaName】最近二十篇博文</h4>
+    var articles = Model.MediaArticles.Where(d => d.PublishDate >= start && d.PublishDate < end).Select(d => new
+    {
+        Date = d.PublishDate.Value.ToString("MM-dd"),
+        Read = d.ShareCount,
+        Like = d.LikeCount,
+        Comment=d.CommentCount
+    }).GroupBy(d => d.Date).Select(d => new
+    {
+        Date = d.Key,
+        AveRead = Convert.ToInt32(d.Average(l => l.Read)),
+        AvgLike = Convert.ToInt32(d.Average(l => l.Like)),
+        AvgComment = Convert.ToInt32(d.Average(l => l.Comment))
+    }).OrderBy(d => d.Date).ToList();
+}
+
+<div class="row">
+
+    <div class="col-lg-3">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>近50篇平均点赞数</h5>
             </div>
-            <div class="modal-body">
-                @if (Model.MediaArticles.Any())
-                {
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        内容
-                                    </th>
-                                    <th>
-                                        转发数
-                                    </th>
-                                    <th>
-                                        评论数
-                                    </th>
-                                    <th>
-                                        点赞数
-                                    </th>
-                                    <th>
-                                        发布时间
-                                    </th>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.MediaArticles.OrderByDescending(d => d.PublishDate).Take(20))
-                                {
-                                    <tr>
-                                        @{
-                                            var dateTime = item.PublishDate?.ToString("yyyy-MM-dd HH:mm:ss") ?? string.Empty;
-                                            var title = Utils.CutString(item.Content, 60);
-                                        }
-                                        <td>
-                                            <a class='label' href='@item.ArticleUrl' target='_blank'><i class='fa fa-link'></i> @title</a>
-                                        </td>
-                                        <td>@item.ShareCount</td>
-                                        <td>@item.CommentCount</td>
-                                        <td>@item.LikeCount</td>
-                                        <td>@dateTime</td>
-                                    </tr>
-                                }
-
-
-                            </tbody>
-                        </table>
+            <div class="ibox-content">
+                <h1 class="no-margins">@Convert.ToInt32(Model.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount))</h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>近50篇平均评论数</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins">@Convert.ToInt32(Model.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount))</h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>微博总数</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins">@Model.PostNum</h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>最近发文日期</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins">@pushdate</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h3>近一周平均阅读数，点赞数 <small>更新日期：@update</small></h3>
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="flot-chart" style="height: 350px;">
+                            <div class="flot-chart-content" id="flot-dashboard-chart"></div>
+                        </div>
                     </div>
-
-                }
-                else
-                {
-                    <p class="text-center"><strong>暂无发布微博或未采集更新</strong></p>
-                }
-
-
+                </div>
             </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox">
+            <div class="ibox-title">
+                <h3>最近发布文章情况 <small>更新日期：@update</small></h3>
+            </div>
+            <div class="ibox-content">
+                <table class="table" data-empty="暂无文章数据">
+                    <thead>
+                        <tr>
+                            <th>文章信息</th>
+                            <th data-breakpoints="xs sm">转发数</th>
+                            <th data-breakpoints="xs sm">评论数</th>
+                            <th data-breakpoints="xs sm">点赞数</th>
+                            <th data-breakpoints="xs sm">发布日期</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.MediaArticles.OrderByDescending(d => d.PublishDate).Take(10))
+                        {
+                            <tr>
+                                @{
+                                    var dateTime = item.PublishDate?.ToString("yyyy-MM-dd HH:mm:ss") ?? string.Empty;
+                                    var title = Utils.CutString(item.Content, 30);
+                                }
+                                <td>
+                                    <a class='label' href='@item.ArticleUrl' target='_blank'><i class='fa fa-link'></i> @title</a>
+                                </td>
+                                <td>@item.ShareCount</td>
+                                <td>@item.CommentCount</td>
+                                <td>@item.LikeCount</td>
+                                <td>@dateTime</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
 
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
             </div>
         </div>
     </div>
 </div>
 
+<script>
+            function initCharts() {
+                var myChart = echarts.init(document.getElementById('flot-dashboard-chart'));
+                var option = {
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['转发数','评论数']
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            magicType : {show: true, type: ['line', 'bar']},
+                            restore : {show: true}
+                        }
+                    },
+                    calculable: true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : @Html.Raw(Json.Encode(articles.Select(d => d.Date)))
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            name: '转发数',
+                            min: 0,
+                            max: @articles.Max(d => d.AveRead)
+                        }, {
+                            type: 'value',
+                            name: '评论数',
+                            min: 0,
+                            max: @articles.Max(d => d.AvgComment)
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'转发数',
+                            type:'bar',
+                            data:@Html.Raw(Json.Encode(articles.Select(d => d.AveRead)))
+
+                        },
+                        {
+                            name:'评论数',
+                            type: 'bar',
+                            yAxisIndex: 1,
+                            data:@Html.Raw(Json.Encode(articles.Select(d => d.AvgComment)))
+
+                        }
+                    ]
+                };
+                myChart.setOption(option);
+            }
+</script>

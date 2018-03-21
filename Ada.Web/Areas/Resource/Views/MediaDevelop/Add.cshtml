@@ -45,7 +45,7 @@
                             <div class="form-group">
                                 @Html.LabelFor(d => d.MediaName, Html.DisplayNameFor(d => d.MediaName).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
-                                    <span class="help-block m-b-4px">注：如需申请多个媒体，请分行输入，一行一个.</span>
+                                    <span class="help-block m-b-4px">注：如需申请多个媒体，请分行输入，一行一个；微信名称请按【微信名称 微信ID】格式输入，例如：唇红领白  LadyLifeJun</span>
                                     @Html.TextAreaFor(d => d.MediaName, new { @class = "form-control", required = "", rows = "15", placeholder = "请输入要申请的媒体名称" })
 
                                 </div>
