@@ -19,8 +19,8 @@
         AvgLike = Convert.ToInt32(d.Average(l => l.Like)),
         AvgComment = Convert.ToInt32(d.Average(l => l.Comment))
     }).OrderBy(d => d.Date).ToList();
-    var maxRead = articles.Max(d => d.AveRead);
-    var maxComment = articles.Max(d => d.AvgComment);
+    var maxRead = articles.Count>0? articles.Max(d => d.AveRead):0;
+    var maxComment = articles.Count > 0 ? articles.Max(d => d.AvgComment):0;
 }
 
 <div class="row">
