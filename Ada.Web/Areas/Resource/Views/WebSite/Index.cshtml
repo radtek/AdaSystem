@@ -11,7 +11,7 @@
     var adpositions = meidaType.AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var seos = fieldService.GetFieldsByKey("SEO").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
-
+    var yesnos = fieldService.GetFieldsByKey("YesOrNo").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var resourceTypes = fieldService.GetFieldsByKey("ResourceType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 @Html.Partial("Bread")
@@ -31,50 +31,69 @@
 
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="MediaTypeId" value="@meidaType.Id" />
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <div class="form-group">
                         @Html.LabelFor(d => d.MediaName, "门户名称", new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
                     </div>
                 </div>
 
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <div class="form-group">
                         @Html.LabelFor(d => d.Channel, Html.DisplayNameFor(d => d.Channel).ToString(), new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.Channel, new { @class = "form-control" })
                     </div>
                 </div>
-                <div class="col-sm-3">
+
+                <div class="col-sm-2">
                     <div class="form-group">
                         @Html.LabelFor(d => d.Areas, Html.DisplayNameFor(d => d.Areas).ToString(), new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.Areas, new { @class = "form-control" })
                     </div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.IsTop, Html.DisplayNameFor(d => d.IsTop).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.IsTop, yesnos, "请选择", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.IsHot, Html.DisplayNameFor(d => d.IsHot).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.IsHot, yesnos, "请选择", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.IsRecommend, Html.DisplayNameFor(d => d.IsRecommend).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.IsRecommend, yesnos, "请选择", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
                     <div class="form-group">
                         @Html.LabelFor(d => d.SEO, Html.DisplayNameFor(d => d.SEO).ToString(), new { @class = "control-label" })
                         @Html.DropDownListFor(d => d.SEO, seos, "请选择", new { @class = "form-control" })
                     </div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <div class="form-group">
                         @Html.LabelFor(d => d.ResourceType, Html.DisplayNameFor(d => d.ResourceType).ToString(), new { @class = "control-label" })
                         @Html.DropDownListFor(d => d.ResourceType, resourceTypes, "请选择", new { @class = "form-control" })
                     </div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <div class="form-group">
                         @Html.LabelFor(d => d.Efficiency, Html.DisplayNameFor(d => d.Efficiency).ToString(), new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.Efficiency, new { @class = "form-control" })
                     </div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <div class="form-group">
                         @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName).ToString(), new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control" })
                     </div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <div class="form-group">
                         @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor).ToString(), new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control" })
@@ -150,7 +169,7 @@
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/ladda")
     @Scripts.Render("~/plugins/clipboard")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201802148")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201802141")"></script>
 
     <script type="text/javascript">
 
@@ -202,11 +221,9 @@
                     } ,
                 columns: [
                     {
-                        field: 'Status',
-                        title: '@Html.DisplayNameFor(d=>d.Status)',
-                        valign: "middle",
-                        formatter: formatter.normalStatus,
-                        align: "center"
+                        field: 'MediaLogo',
+                        align: "right", valign: "middle",
+                        formatter: formatterLogo
                     },
 
                     {

@@ -19,6 +19,8 @@
         AvgLike = Convert.ToInt32(d.Average(l => l.Like)),
         AvgComment = Convert.ToInt32(d.Average(l => l.Comment))
     }).OrderBy(d => d.Date).ToList();
+    var maxRead = articles.Max(d => d.AveRead);
+    var maxComment = articles.Max(d => d.AvgComment);
 }
 
 <div class="row">
@@ -153,12 +155,12 @@
                             type: 'value',
                             name: '转发数',
                             min: 0,
-                            max: @articles.Max(d => d.AveRead)
+                            max: @maxRead
                         }, {
                             type: 'value',
                             name: '评论数',
                             min: 0,
-                            max: @articles.Max(d => d.AvgComment)
+                            max: @maxComment
                         }
                     ],
                     series : [

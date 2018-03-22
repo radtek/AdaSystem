@@ -1,4 +1,35 @@
-﻿$(function () {
+﻿var operation = {};
+//撤销
+operation.cancle = function (id) {
+    swal({
+        title: "您确定吗?",
+        text: "确认要删除此数据吗?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true,
+
+    }, function () {
+        ajaxFun("/Resource/Media/Delete/" + id);
+    });
+}
+//置顶
+operation.top = function (id) {
+    ajaxFun("/Resource/Media/Top/" + id);
+}
+//优质
+operation.hot = function (id) {
+    ajaxFun("/Resource/Media/Hot/" + id);
+}
+//推荐
+operation.recommend = function (id) {
+    ajaxFun("/Resource/Media/Recommend/" + id);
+}
+
+$(function () {
     $('#uploadModal').on('shown.bs.modal',
         function () {
 
@@ -36,9 +67,9 @@ function formatterTag(value) {
     var arr = [];
     $.each(value,
         function (k, v) {
-            arr.push("<span class='label label-success'><i class='fa fa-tag'></i> " + v.TagName + "</span>");
+            arr.push("<span class='btn btn-success btn-xs btn-outline'><i class='fa fa-tag'></i> " + v.TagName + "</span>");
         });
-    return arr.join(' ');
+    return "<div class='p-xxs'>" + arr.join(' ') + "</div>";
 }
 
 function formatterFans(value) {
@@ -46,7 +77,7 @@ function formatterFans(value) {
     if (value) {
         fans = value * 1.0 / 10000;
     }
-    return "<span class='label label-danger'><i class='fa fa-users'></i> 粉丝：" + fans.toFixed(1) + " 万</span>";
+    return "<span class='btn btn-danger btn-xs btn-outline'><i class='fa fa-users'></i> 粉丝：" + fans.toFixed(1) + " 万</span>";
 }
 function formatterGroup(value, row, index) {
     var result = "";
@@ -56,16 +87,48 @@ function formatterGroup(value, row, index) {
         });
     return result;
 }
+
+function formatterLogo(value, row) {
+
+    var logo = "<i class='fa " + row.MediaTypeLogo + " fa-4x'></i>";
+    if (value) {
+        logo = '<img alt="' +
+            row.MediaName +
+            '" class="img-circle" src="' +
+            value +
+            '" style="width: 60px; height: 60px;"/>';
+    }
+    var arr = [];
+    if (row.IsTop) {
+        arr.push('<span class="badge badge-success">顶</span>');
+    }
+    if (row.IsHot) {
+        arr.push('<span class="badge badge-warning">优</span>');
+    }
+    if (row.IsRecommend) {
+        arr.push('<span class="badge badge-danger">荐</span>');
+    }
+    var vg = '';
+    if (arr.length > 0) {
+        vg = "<div class='p-xxs text-center'>" + arr.join(' ') + "</div>";
+    }
+    //var state = "<div class='p-xxs text-center'>" + vg + "</div>";//+ formatter.normalStatus(row.Status)
+    return '<div class="p-xxs text-center">' + logo + '</div>' + vg;
+}
 function formatterWeiXin(value, row) {
     var url =
         "<div class='p-xxs'><a class='label' href='http://weixin.sogou.com/weixin?type=1&query=" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> <span id='" + row.Id + "'>" + value + " - " + row.MediaID + "</span></a></div>";
-    var tags = "<div class='p-xxs'>" + formatterTag(row.MediaTags) + "</div>";
+    var tags = formatterTag(row.MediaTags);
     var fans = "<div class='p-xxs'>" + formatterFans(row.FansNum) + "</div>";
     return url +
-        "<div class='p-xxs'><button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" +
-        " <a class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看详情' href='/Resource/Media/Detail/" + row.Id + "' target='_blank'>详</a>" +
-        " <img rel='drevil' data-content='<div id=\"popOverBox\"><img src=\"" + (row.MediaQR || '/Images/nopic.png') + "\" width=\"100\" height=\"100\" /></div>'  src='/Images/ewm.png' style='width: 20px; height: 20px;'/></div>" + tags + fans;
+        "<div class='p-xxs'>" +
+        "<button class='btn btn-white btn-sm' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" +
+        " <img rel='drevil' data-content='<div id=\"popOverBox\"><img src=\"" + (row.MediaQR || '/Images/nopic.png') + "\" width=\"100\" height=\"100\" /></div>'  src='/Images/ewm.png' style='width: 20px; height: 20px;'/>" +
+        " <a class='btn btn-warning  btn-outline btn-sm' data-toggle='tooltip' data-placement='bottom' title='查看详情' href='/Resource/Media/Detail/" + row.Id + "' target='_blank'>详情</a>" +
+        "</div>" +
+        tags + fans;
 }
+
 function formatterBlog(value, row) {
     var sex = "";
     if (row.Sex == '男') {
@@ -80,18 +143,18 @@ function formatterBlog(value, row) {
         "</div>";;
     var tags = "";
     if (row.MediaTags) {
-        tags = "<div class='p-xxs'>" + formatterTag(row.MediaTags) + "</div>";
+        tags = formatterTag(row.MediaTags);
     }
 
     var fans = "<div class='p-xxs'>" + formatterFans(row.FansNum) + "</div>";
     var level = formatterblogLevel(row.AuthenticateType);
     var area = "";
     if (row.Areas) {
-        area = " <span class='label label-info'><i class='fa fa-map-marker'></i> " + row.Areas + "</span>";
+        area = " <span class='btn btn-info btn-outline btn-sm'><i class='fa fa-map-marker'></i> " + row.Areas + "</span>";
     }
     return url +
         "<div class='p-xxs'>" + level + area +
-        " <a class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看详情' href='/Resource/Media/Detail/" + row.Id + "' target='_blank'>详</a>" +
+        " <a class='btn btn-warning  btn-outline btn-sm' data-toggle='tooltip' data-placement='bottom' title='查看详情' href='/Resource/Media/Detail/" + row.Id + "' target='_blank'>详情</a>" +
         "</div>" + tags + fans;
 }
 
@@ -123,17 +186,17 @@ function formatterMediaName(value, row) {
     var info = "";
     if (row.IsComment) {
         info =
-            " <a class='btn btn-warning btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看详情' href='/Resource/Media/Detail/" +
+            " <a class='btn btn-warning  btn-outline btn-sm' data-toggle='tooltip' data-placement='bottom' title='查看详情' href='/Resource/Media/Detail/" +
             row.Id +
-            "' target='_blank'>详</a>";
+            "' target='_blank'>详情</a>";
     }
     var url =
         "<div class='p-xxs'>" + sex + name +
-        " <button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" +info+
+        " <button class='btn btn-white btn-sm' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" + info +
         "</div>";;
     var tags = "";
     if (row.MediaTags) {
-        tags = "<div class='p-xxs'>" + formatterTag(row.MediaTags) + "</div>";
+        tags = formatterTag(row.MediaTags);
     }
     var fans = "";
     if (row.FansNum) {
@@ -141,7 +204,7 @@ function formatterMediaName(value, row) {
     }
     var area = "";
     if (row.Areas) {
-        area = "<div class='p-xxs'><span class='label label-info'><i class='fa fa-map-marker'></i> " + row.Areas + "</span></div>";
+        area = "<div class='p-xxs'><span class='btn btn-info  btn-outline btn-sm'><i class='fa fa-map-marker'></i> " + row.Areas + "</span></div>";
     }
     return url + area + tags + fans;
 }
@@ -203,54 +266,50 @@ function formatterRemark(value, row) {
         "<div class='p-xxs'><span class='label label-info'  data-toggle='tooltip' data-placement='bottom' title='" + (row.Remark || '暂无信息') + "'>媒介备注</div>";
 }
 
-function formatterOperation(value) {
-    return "<div class='btn-group'><a class='btn btn-success btn-outline btn-xs' href='/Resource/Media/Update/" + value + "');' target='_blank'><i class='fa fa-pencil'></i> 编辑</a> " +
-        "<a class='btn btn-warning btn-outline btn-xs' href='/Resource/Media/Comment/" + value + "');' target='_blank'><i class='fa fa-commenting'></i> 评价</a> " +
-        "<button class='btn btn-danger btn-outline btn-xs' onclick=\"cancle('" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button></div>";
+function formatterOperation(value, row) {
+    var tj = row.IsRecommend ? 'warning' : 'default', yz = row.IsHot ? 'warning' : 'default', zd = row.IsTop ? 'warning' : 'default';
+    return "<div class='p-xxs'><div class='btn-group'>" +
+        "<button class='btn btn-" + tj + " btn-outline btn-xs' onclick=\"operation.recommend('" + value + "');\"><i class='fa fa-thumbs-up'></i> 推荐</button>" +
+        "<button class='btn btn-" + yz + " btn-outline btn-xs' onclick=\"operation.hot('" + value + "');\"><i class='fa fa-diamond'></i> 优质</button>" +
+        "<button class='btn btn-" + zd + " btn-outline btn-xs' onclick=\"operation.top('" + value + "');\"><i class='fa fa-trophy'></i> 置顶</button>" +
+        "</div></div>" +
+        "<div class='p-xxs'><div class='btn-group'>" +
+        "<a class='btn btn-success btn-outline btn-xs' href='/Resource/Media/Update/" + value + "');' target='_blank'><i class='fa fa-pencil'></i> 编辑</a> " +
+        "<a class='btn btn-success btn-outline btn-xs' href='/Resource/Media/Comment/" + value + "');' target='_blank'><i class='fa fa-commenting'></i> 评价</a> " +
+        "<button class='btn btn-success btn-outline btn-xs' onclick=\"operation.cancle('" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button>" +
+        "</div></div>";
 }
-//撤销
-function cancle(id) {
-    swal({
-        title: "您确定吗?",
-        text: "确认要删除此数据吗?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        closeOnConfirm: false,
-        showLoaderOnConfirm: true,
 
-    }, function () {
-        $.ajax({
-            type: "post",
-            headers: {
-                '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-            },
-            url: "/Resource/Media/Delete",
-            data: { "id": id },
-            success: function (data) {
-                if (data.State == 1) {
-                    $("#table").bootstrapTable('refresh');
-                    swal({
-                        title: "操作成功",
-                        text: data.Msg,
-                        timer: 2000,
-                        type: "success",
-                        showConfirmButton: false
-                    });
 
-                } else {
-                    swal("操作提醒", data.Msg, "warning");
-                }
-            },
-            error: function () {
-                swal("操作失败", "系统错误", "error");
-            },
-            complete: function () {
+function ajaxFun(url, data) {
+    $.ajax({
+        type: "post",
+        headers: {
+            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
+        },
+        url: url,
+        data: data || {},
+        success: function (data) {
+            if (data.State == 1) {
+                $("#table").bootstrapTable('refresh');
+                swal({
+                    title: "操作成功",
+                    text: data.Msg,
+                    timer: 1000,
+                    type: "success",
+                    showConfirmButton: false
+                });
 
+            } else {
+                swal("操作提醒", data.Msg, "warning");
             }
-        });
+        },
+        error: function () {
+            swal("操作失败", "系统错误", "error");
+        },
+        complete: function () {
+
+        }
     });
 }
 

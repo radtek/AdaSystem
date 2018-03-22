@@ -171,11 +171,9 @@
                 },
                 columns: [
                     {
-                        field: 'Status',
-                        title: '@Html.DisplayNameFor(d=>d.Status)',
-                        valign: "middle",
-                        formatter: formatter.normalStatus,
-                        align: "center"
+                        field: 'MediaLogo',
+                        align: "right", valign: "middle",
+                        formatter: formatterLogo
                     },
                     {
                         field: 'MediaName',

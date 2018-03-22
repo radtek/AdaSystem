@@ -157,9 +157,9 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "人气值")]
         public int? ClickNum { get; set; }
         /// <summary>
-        /// 是否热门
+        /// 是否优质
         /// </summary>
-        [Display(Name = "是否热门")]
+        [Display(Name = "是否优质")]
         public bool? IsHot { get; set; }
         /// <summary>
         /// 是否置顶
@@ -232,6 +232,11 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "媒体类别")]
         public string MediaTypeIndex { get; set; }
+        /// <summary>
+        /// 媒体类别标识
+        /// </summary>
+        [Display(Name = "媒体类别标识")]
+        public string MediaTypeLogo { get; set; }
         /// <summary>
         /// 媒体类别
         /// </summary>

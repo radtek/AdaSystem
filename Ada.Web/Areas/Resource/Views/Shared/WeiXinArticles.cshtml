@@ -9,17 +9,19 @@
     {
         Date = d.PublishDate.Value.ToString("yyyy-MM-dd")
     }).GroupBy(d => d.Date).Count();
-    var articles = Model.MediaArticles.Where(d => d.PublishDate >= start && d.PublishDate < end&&d.IsTop==true).Select(d => new
+    var articles = Model.MediaArticles.Where(d => d.PublishDate >= start && d.PublishDate < end && d.IsTop == true).Select(d => new
     {
-        Date=d.PublishDate.Value.ToString("MM-dd"),
-        Read=d.ViewCount,
-        Like=d.LikeCount
-    }).GroupBy(d => d.Date).Select(d=>new
+        Date = d.PublishDate.Value.ToString("MM-dd"),
+        Read = d.ViewCount,
+        Like = d.LikeCount
+    }).GroupBy(d => d.Date).Select(d => new
     {
-        Date=d.Key,
-        AveRead= d.Average(l => l.Read),
-        AvgLike= d.Average(l => l.Like)
-    }).OrderBy(d=>d.Date).ToList();
+        Date = d.Key,
+        AveRead = d.Average(l => l.Read),
+        AvgLike = d.Average(l => l.Like)
+    }).OrderBy(d => d.Date).ToList();
+    var maxRead = articles.Max(d => d.AveRead) ?? 0;
+    var maxLike = articles.Max(d => d.AvgLike) ?? 0;
 }
 
 <div class="row">
@@ -162,12 +164,12 @@
                             type: 'value',
                             name: '阅读数',
                             min: 0,
-                            max: @articles.Max(d => d.AveRead)
+                            max: @maxRead
                         }, {
                             type: 'value',
                             name: '点赞数',
                             min: 0,
-                            max: @articles.Max(d => d.AvgLike)
+                            max: @maxLike
                         }
                     ],
                     series : [

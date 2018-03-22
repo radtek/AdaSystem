@@ -470,6 +470,7 @@ namespace Resource.Controllers
                     MediaName = d.MediaName,
                     MediaID = d.MediaID,
                     MediaTypeIndex = d.MediaType.CallIndex,
+                    MediaTypeLogo = d.MediaType.Image,
                     MediaTypeName = d.MediaType.TypeName,
                     IsAuthenticate = d.IsAuthenticate,
                     IsOriginal = d.IsOriginal,
@@ -501,7 +502,9 @@ namespace Resource.Controllers
                     Content = d.Content,
                     Remark = d.Remark,
                     Status = d.Status,
-                    
+                    IsHot = d.IsHot,
+                    IsRecommend = d.IsRecommend,
+                    IsTop = d.IsTop,
                     ApiUpDate = d.ApiUpDate,
                     MediaLink = d.MediaLink,
                     MediaLogo = d.MediaLogo,
@@ -768,12 +771,12 @@ namespace Resource.Controllers
             entity.Remark = viewModel.Remark;
             entity.Status = viewModel.Status;
             entity.ClickNum = viewModel.ClickNum;
-            entity.IsHot = viewModel.IsHot;
             entity.IsSlide = true;
-            entity.IsRecommend = viewModel.IsRecommend;
             entity.MediaTypeId = viewModel.MediaTypeId;
             entity.LinkManId = viewModel.LinkManId;
-
+            entity.IsHot = false;
+            entity.IsRecommend = false;
+            entity.IsTop = false;
             //媒体价格
             foreach (var viewModelMediaPrice in viewModel.MediaPrices)
             {
@@ -845,9 +848,6 @@ namespace Resource.Controllers
             entity.Remark = item.Remark;
             entity.Status = item.Status;
             entity.ClickNum = item.ClickNum;
-            entity.IsHot = item.IsHot;
-            //entity.IsSlide = item.IsSlide;
-            entity.IsRecommend = item.IsRecommend;
 
             //联系人
             entity.LinkManId = item.LinkManId;
@@ -923,10 +923,7 @@ namespace Resource.Controllers
             entity.Remark = viewModel.Remark;
             entity.Status = viewModel.Status;
             entity.ClickNum = viewModel.ClickNum;
-            entity.IsHot = viewModel.IsHot;
             //entity.IsSlide = viewModel.IsSlide;
-            entity.IsRecommend = viewModel.IsRecommend;
-            entity.Cooperation = viewModel.Cooperation;
             //联系人
             entity.LinkManId = viewModel.LinkManId;
             //标签
@@ -976,6 +973,69 @@ namespace Resource.Controllers
             _mediaService.Delete(entity);
             return Json(new { State = 1, Msg = "删除成功" });
         }
+        /// <summary>
+        /// 置顶
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult Top(string id)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (entity.IsTop==null||entity.IsTop==false)
+            {
+                entity.IsTop = true;
+            }
+            else
+            {
+                entity.IsTop = false;
+            }
+            _mediaService.Update(entity);
+            return Json(new { State = 1, Msg = "操作成功" });
+        }
+        /// <summary>
+        /// 推荐
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult Recommend(string id)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (entity.IsRecommend == null || entity.IsRecommend == false)
+            {
+                entity.IsRecommend = true;
+            }
+            else
+            {
+                entity.IsRecommend = false;
+            }
+            _mediaService.Update(entity);
+            return Json(new { State = 1, Msg = "操作成功" });
+        }
+        /// <summary>
+        /// 优质
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult Hot(string id)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (entity.IsHot == null || entity.IsHot == false)
+            {
+                entity.IsHot = true;
+            }
+            else
+            {
+                entity.IsHot = false;
+            }
+            _mediaService.Update(entity);
+            return Json(new { State = 1, Msg = "操作成功" });
+        }
         public ActionResult Comment(string id, int page = 1)
         {
             ViewBag.Page = page;
@@ -999,11 +1059,7 @@ namespace Resource.Controllers
             _mediaService.Update(entity);
             return View(entity);
         }
-        public ActionResult WeiXinArticles(string id)
-        {
-            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            return PartialView("WeiXinArticles", entity);
-        }
+      
         public ActionResult WeiXinProCollection(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -1036,11 +1092,6 @@ namespace Resource.Controllers
             return Json(new { State = 1, Msg = msg.Message });
         }
 
-        public ActionResult WeiboArticles(string id)
-        {
-            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            return PartialView("WeiboArticles", entity);
-        }
         public ActionResult WeiboCollection(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

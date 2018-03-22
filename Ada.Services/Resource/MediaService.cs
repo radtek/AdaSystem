@@ -82,6 +82,18 @@ namespace Ada.Services.Resource
             {
                 allList = !viewModel.HasArticles.Value ? allList.Where(d => !d.MediaArticles.Any()) : allList.Where(d => d.MediaArticles.Any());
             }
+            if (viewModel.IsTop != null)
+            {
+                allList = allList.Where(d => d.IsTop == viewModel.IsTop);
+            }
+            if (viewModel.IsHot != null)
+            {
+                allList = allList.Where(d => d.IsHot == viewModel.IsHot);
+            }
+            if (viewModel.IsRecommend != null)
+            {
+                allList = allList.Where(d => d.IsRecommend == viewModel.IsRecommend);
+            }
             if (viewModel.IsSlide != null)
             {
                 allList = allList.Where(d => d.IsSlide == viewModel.IsSlide);
@@ -209,9 +221,9 @@ namespace Ada.Services.Resource
             string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
             if (order == "desc")
             {
-                return allList.OrderByDescending(d => d.Id).Skip(offset).Take(rows);
+                return allList.OrderByDescending(d=>d.IsTop).ThenByDescending(d => d.IsHot).ThenByDescending(d=>d.IsRecommend).ThenByDescending(d => d.Id).Skip(offset).Take(rows);
             }
-            return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
+            return allList.OrderByDescending(d => d.IsTop).ThenByDescending(d => d.IsHot).ThenByDescending(d => d.IsRecommend).ThenBy(d => d.Id).Skip(offset).Take(rows);
         }
         public IQueryable<MediaView> LoadEntitiesFilters(MediaView viewModel)
         {

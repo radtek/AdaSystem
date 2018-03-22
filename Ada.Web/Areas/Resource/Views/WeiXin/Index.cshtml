@@ -106,6 +106,24 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
+                        @Html.LabelFor(d => d.IsTop, Html.DisplayNameFor(d => d.IsTop).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.IsTop, yesnos, "请选择", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.IsHot, Html.DisplayNameFor(d => d.IsHot).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.IsHot, yesnos, "请选择", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.IsRecommend, Html.DisplayNameFor(d => d.IsRecommend).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.IsRecommend, yesnos, "请选择", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
                         @Html.LabelFor(d => d.PriceInvalidDate, Html.DisplayNameFor(d => d.PriceInvalidDate).ToString(), new { @class = "control-label" })
                         <div class="input-group date">
                             <span class="input-group-addon">
@@ -127,7 +145,7 @@
                         @Html.DropDownListFor(d => d.IsSlide, yesnos, "请选择", new { @class = "form-control" })
                     </div>
                 </div>
-
+                <div class="col-sm-12"></div>
                 <div class="col-sm-6">
                     <div class="form-group">
                         @Html.LabelFor(d => d.MediaNames, Html.DisplayNameFor(d => d.MediaNames).ToString(), new { @class = "control-label" })
@@ -202,7 +220,7 @@
     @Scripts.Render("~/plugins/ladda")
     @Scripts.Render("~/plugins/clipboard")
     @Scripts.Render("~/plugins/dataPicker")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201803228135")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201803228131")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -277,11 +295,8 @@
                     {
                         field: 'MediaLogo',
                         align: "right", valign: "middle",
-                        formatter: function (value, row) {
-                            var logo = value || "/Images/weixin.png";
-                            var state = "<div class='p-xxs'>" + formatter.normalStatus(row.Status) + "</div>";
-                            return '<img alt="' + row.MediaName + '" class="img-circle" src="' + logo + '" style="width: 50px; height: 50px;"/>' + state;
-                        }
+                        formatter: formatterLogo
+                        
                     },
                     {
                         field: 'MediaName',

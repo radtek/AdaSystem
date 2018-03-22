@@ -1158,6 +1158,9 @@
     <Content Include="Images\p_big1.jpg" />
     <Content Include="Images\p_big2.jpg" />
     <Content Include="Images\p_big3.jpg" />
+    <Content Include="Images\top.png" />
+    <Content Include="Images\tuijian.png" />
+    <Content Include="Images\youzhi.png" />
     <Content Include="Images\zender_logo.png" />
     <Content Include="Images\weixin.png" />
     <Content Include="Scripts\app\inspinia.js" />

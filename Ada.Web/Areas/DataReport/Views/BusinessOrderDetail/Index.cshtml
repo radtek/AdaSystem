@@ -242,10 +242,7 @@
                         title: '@Html.DisplayNameFor(d=>d.MediaName)',
                         align: "left", valign: "middle",
                         formatter: function(value,row) {
-                            return "["+row.MediaTypeName+"] "+ value +
-                                " <a class='btn btn-warning btn-circle btn-xs' href='@Url.Action("Comment", "Media",new{area="Resource"})?id=" +
-                                row.MediaPriceId +
-                                "' target='_blank' title='评价'><i class='fa fa-commenting'></i></a>";
+                            return "["+row.MediaTypeName+"] "+ value;
                         },
                         footerFormatter: function (data) {
                             var lirun = 0;

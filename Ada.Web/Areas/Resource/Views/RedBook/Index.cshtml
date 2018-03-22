@@ -11,6 +11,7 @@
     var adpositions = meidaType.AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var status = fieldService.GetFieldsByKey("Status").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var yesnos = fieldService.GetFieldsByKey("YesOrNo").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 @Html.Partial("Bread")
 
@@ -34,12 +35,12 @@
                         <div class="row">
                             <div class="col-md-12">
                                 @foreach (var item in tags)
-                                {
-                                    <div class="checkbox checkbox-success checkbox-inline">
-                                        <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
-                                        <label for="@item.Id">@item.TagName</label>
-                                    </div>
-                                }
+                    {
+                        <div class="checkbox checkbox-success checkbox-inline">
+                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
+                            <label for="@item.Id">@item.TagName</label>
+                        </div>
+        }
                             </div>
                         </div>
 
@@ -90,6 +91,24 @@
                     <div class="form-group">
                         @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status).ToString(), new { @class = "control-label" })
                         @Html.DropDownListFor(d => d.Status, status, "请选择", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.IsTop, Html.DisplayNameFor(d => d.IsTop).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.IsTop, yesnos, "请选择", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.IsHot, Html.DisplayNameFor(d => d.IsHot).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.IsHot, yesnos, "请选择", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.IsRecommend, Html.DisplayNameFor(d => d.IsRecommend).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.IsRecommend, yesnos, "请选择", new { @class = "form-control" })
                     </div>
                 </div>
                 <div class="col-sm-2">
@@ -173,7 +192,7 @@
     @Scripts.Render("~/plugins/ladda")
     @Scripts.Render("~/plugins/clipboard")
     @Scripts.Render("~/plugins/dataPicker")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201803228135")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201803228131")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -225,11 +244,9 @@
                     } ,
                 columns: [
                     {
-                        field: 'Status',
-                        title: '@Html.DisplayNameFor(d=>d.Status)',
-                        valign: "middle",
-                        formatter: formatter.normalStatus,
-                        align: "center"
+                        field: 'MediaLogo',
+                        align: "right", valign: "middle",
+                        formatter: formatterLogo
                     },
                     {
                         field: 'MediaName',
