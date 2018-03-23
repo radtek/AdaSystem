@@ -115,6 +115,9 @@ namespace QuartzTask.Jobs
                     if (media != null)
                     {
                         media.CollectionDate = DateTime.Now;
+                        var viewCount = media.MediaArticles.Where(d => d.IsTop == true).OrderByDescending(d => d.PublishDate).Take(10)
+                            .Average(d => d.ViewCount);
+                        media.AvgReadNum = Convert.ToInt32(viewCount);
                         var lastPost = media.LastPushDate;
                         //是否要更新文章
                         var isUpdateArticle = lastPost == null;

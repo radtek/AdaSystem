@@ -404,8 +404,12 @@ namespace Ada.Services.API
                     if (result.data.Count > 0)
                     {
                         var media = _mediaRepository.LoadEntities(d => d.MediaID == wxparams.UID && d.IsDelete == false).FirstOrDefault();
+                        //阅读数
+                        
                         if (media != null)
                         {
+                            var viewCount = media.MediaArticles.Where(d=>d.IsTop==true).OrderByDescending(d => d.PublishDate).Take(10)
+                                .Average(d => d.ViewCount);
                             var lastPost = media.LastPushDate;
                             //是否要更新文章
                             var isUpdateArticle = lastPost == null;
@@ -418,6 +422,7 @@ namespace Ada.Services.API
                             media.MediaQR = weixinInfo.qrcodeUrl;
                             media.Abstract = weixinInfo.idVerifiedInfo;
                             media.Content = weixinInfo.biography;
+                            media.AvgReadNum = Convert.ToInt32(viewCount);
                             media.CollectionDate = DateTime.Now;
                             if (DateTime.TryParse(weixinInfo.lastPost?.date, out var date))
                             {
@@ -628,6 +633,7 @@ namespace Ada.Services.API
                     {
                         break;
                     }
+
                     //根据第一个数据更新微博信息
                     var mediaInfo = result.data[0].from;
                     media.MediaName = mediaInfo.name;

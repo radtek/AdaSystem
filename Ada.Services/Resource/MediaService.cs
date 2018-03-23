@@ -111,19 +111,14 @@ namespace Ada.Services.Resource
                 allList = viewModel.IsGroup.Value ? allList.Where(d => d.MediaGroups.Any()) : allList.Where(d => !d.MediaGroups.Any());
             }
 
-            //if (viewModel.AvgReadNumStart != null)
-            //{
-            //    allList = allList.Include(d => d.MediaArticles).Where(d =>
-            //        d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(10).Average(a => a.ViewCount) >=
-            //        viewModel.AvgReadNumStart);
-
-            //}
-            //if (viewModel.AvgReadNumEnd != null)
-            //{
-            //    allList = allList.Include(d => d.MediaArticles).Where(d =>
-            //        d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(10).Average(a => a.ViewCount) <=
-            //        viewModel.AvgReadNumEnd);
-            //}
+            if (viewModel.AvgReadNumStart != null)
+            {
+                allList = allList.Where(d =>d.AvgReadNum >=viewModel.AvgReadNumStart);
+            }
+            if (viewModel.AvgReadNumEnd != null)
+            {
+                allList = allList.Where(d =>d.AvgReadNum <=viewModel.AvgReadNumEnd);
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.Areas))
             {
                 allList = allList.Where(d => d.Area.Contains(viewModel.Areas));

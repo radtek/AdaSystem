@@ -283,7 +283,7 @@ namespace Resource.Controllers
                     }
                     if (media.MediaType?.CallIndex == "weixin")
                     {
-                        jo.Add("近十篇平均阅读数", Convert.ToInt32(media.MediaArticles.Where(l => l.IsTop == true && l.PublishDate > DateTime.Now.Date.AddDays(-10)).Average(aaa => aaa.ViewCount)));
+                        jo.Add("近十篇平均阅读数", Convert.ToInt32(media.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(d=>d.PublishDate).Take(10).Average(aaa => aaa.ViewCount)));
                     }
                     if (media.MediaType?.CallIndex == "sinablog")
                     {
@@ -478,7 +478,7 @@ namespace Resource.Controllers
                     FansNum = d.FansNum,
                     ChannelType = d.ChannelType,
                     LastReadNum = d.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount,
-                    AvgReadNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(10).Average(a => a.ViewCount),
+                    AvgReadNum = (int?)d.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).Take(10).Average(a => a.ViewCount),
                     PublishFrequency = d.PublishFrequency,
                     Areas = d.Area,
                     Sex = d.Sex,
@@ -906,12 +906,9 @@ namespace Resource.Controllers
             entity.IsOriginal = viewModel.IsOriginal;
             entity.IsComment = viewModel.IsComment;
             entity.FansNum = Utils.SetFansNum(viewModel.FansNum);
-            entity.LastReadNum = viewModel.LastReadNum;
-            entity.AvgReadNum = viewModel.AvgReadNum;
             entity.PostNum = viewModel.PostNum;
             entity.MonthPostNum = viewModel.MonthPostNum;
             entity.FriendNum = viewModel.FriendNum;
-            entity.PublishFrequency = viewModel.PublishFrequency;
             entity.Area = viewModel.Areas;
             entity.ChannelType = viewModel.ChannelType;
             entity.LastPushDate = viewModel.LastPushDate;

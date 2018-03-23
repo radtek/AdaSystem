@@ -119,17 +119,17 @@
                     </div>
                     <div id="collapse" class="panel-collapse collapse">
                         <div class="panel-body">
-                            @*<div class="col-sm-3">
-            <div class="form-group">
-                @Html.LabelFor(d => d.AvgReadNum, Html.DisplayNameFor(d => d.AvgReadNum).ToString(), new { @class = "control-label" })
-                <div class="input-daterange input-group">
-                    @Html.TextBoxFor(d => d.AvgReadNumStart, new { @class = "form-control" })
-                    <span class="input-group-addon">至</span>
-                    @Html.TextBoxFor(d => d.AvgReadNumEnd, new { @class = "form-control" })
-                </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.AvgReadNum, Html.DisplayNameFor(d => d.AvgReadNum).ToString(), new { @class = "control-label" })
+                                    <div class="input-daterange input-group">
+                                        @Html.TextBoxFor(d => d.AvgReadNumStart, new { @class = "form-control" })
+                                        <span class="input-group-addon">至</span>
+                                        @Html.TextBoxFor(d => d.AvgReadNumEnd, new { @class = "form-control" })
+                                    </div>
 
-            </div>
-        </div>*@
+                                </div>
+                            </div>
                             <div class="col-sm-2">
                                 <div class="form-group">
                                     @Html.LabelFor(d => d.IsGroup, Html.DisplayNameFor(d => d.IsGroup).ToString(), new { @class = "control-label" })
@@ -203,13 +203,13 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             @foreach (var item in tags)
-                    {
-                        var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
-                        <div class="checkbox checkbox-success checkbox-inline">
-                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
-                            <label for="@item.Id">@item.TagName</label>
-                        </div>
-}
+                                            {
+                                                var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
+                                                <div class="checkbox checkbox-success checkbox-inline">
+                                                    <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
+                                                    <label for="@item.Id">@item.TagName</label>
+                                                </div>
+                                            }
                                         </div>
                                     </div>
 

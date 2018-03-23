@@ -76,6 +76,17 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
+                        @Html.LabelFor(d => d.AvgReadNum, Html.DisplayNameFor(d => d.AvgReadNum).ToString(), new { @class = "control-label" })
+                        <div class="input-daterange input-group">
+                            @Html.TextBoxFor(d => d.AvgReadNumStart, new { @class = "form-control" })
+                            <span class="input-group-addon">至</span>
+                            @Html.TextBoxFor(d => d.AvgReadNumEnd, new { @class = "form-control" })
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
                         @Html.LabelFor(d => d.Content, Html.DisplayNameFor(d => d.Content).ToString(), new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.Content, new { @class = "form-control" })
                     </div>
