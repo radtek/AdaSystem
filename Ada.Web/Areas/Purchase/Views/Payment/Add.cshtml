@@ -23,7 +23,7 @@
                         <button class="btn btn-primary btn-sm ladda-button" type="submit" data-style="slide-right"><i class="fa fa-floppy-o"></i> 保存</button>
                     </div>
                     <div class="ibox-content">
-                       @Html.Partial("PaymentEdit")
+                        @Html.Partial("PaymentEdit")
                     </div>
                 </div>
             </div>
@@ -37,6 +37,7 @@
     @Styles.Render("~/plugins/bootstrapTableStyle")
     @Styles.Render("~/plugins/bootstrapEditTableStyle")
     @Styles.Render("~/plugins/select2Styles")
+    @Styles.Render("~/plugins/dateRangeStyles")
 }
 @section Scripts {
     @Scripts.Render("~/plugins/dateTimePickerScript")
@@ -44,7 +45,8 @@
     @Scripts.Render("~/plugins/bootstrapEditTableScript")
     @Scripts.Render("~/plugins/select2")
     @Scripts.Render("~/plugins/lodash")
-<script>
+    @Scripts.Render("~/plugins/dateRange")
+    <script>
         var orders = @Html.Raw(string.IsNullOrWhiteSpace(Model.OrderDetails) ?"[]": Model.OrderDetails),
             pays = @Html.Raw(string.IsNullOrWhiteSpace(Model.PayDetails) ?"[]": Model.PayDetails),
             paymentTypes = @Html.Raw(Json.Encode(paymentTypes)),
@@ -53,6 +55,6 @@
             linkmanUrl = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})",
             managerUrl = "@Url.Action("GetList", "Manager", new {area = "Admin"})",
             isReadonly = @Model.AuditStatus;
-</script>
-    <script src="@Url.Content("~/Areas/Purchase/Scripts/payment.js?v=2018011411352")"></script>
+    </script>
+    <script src="@Url.Content("~/Areas/Purchase/Scripts/payment.js?v=2018011411357")"></script>
 }

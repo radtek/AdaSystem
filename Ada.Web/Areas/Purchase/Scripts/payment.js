@@ -412,6 +412,7 @@ function showOrder() {
                         classes: "table table-no-bordered",
                         cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                         url: orderapi,
+                        toolbar: '#ordertoolbar', 
                         pagination: true,                   //是否显示分页（*）
                         sortable: true,                     //是否启用排序
                         sortOrder: "desc",                   //排序方式
@@ -429,6 +430,8 @@ function showOrder() {
                         queryParams: function (parameters) {
                             parameters.LinkManId = linkman;
                             parameters.IsPayment = false;
+                            parameters.PublishDateStart = $("#PublishDateStart").val();
+                            parameters.PublishDateEnd = $("#PublishDateEnd").val();
                             return parameters;
                         },
                         formatSearch: function () {
@@ -490,6 +493,7 @@ function showOrder() {
                             }
                         ]
                     });
+                    initDate();
                     //注册选中事件
                     checkOn($ordertable, selections);
                 }).on('hidden.bs.modal', function () {
@@ -505,4 +509,66 @@ function showOrder() {
         swal("操作提醒", "请先选择供应商", "warning");
     }
 
+}
+
+function initDate() {
+    var $datepicker = $('#datepicker');
+    $datepicker.daterangepicker({
+        autoUpdateInput: false,
+        opens: "center",
+        linkedCalendars: false,
+        ranges: {
+            '本月': [moment().startOf('month'), moment().endOf('month')],
+            '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        locale: {
+            format: 'YYYY-MM-DD',
+            separator: "至",
+            applyLabel: "确认",
+            cancelLabel: "取消",
+            fromLabel: "从",
+            toLabel: "到",
+            customRangeLabel: "自定义",
+            weekLabel: "周",
+            daysOfWeek: [
+                "日",
+                "一",
+                "二",
+                "三",
+                "四",
+                "五",
+                "六"
+            ],
+            monthNames: [
+                "一月",
+                "二月",
+                "三月",
+                "四月",
+                "五月",
+                "六月",
+                "七月",
+                "八月",
+                "九月",
+                "十月",
+                "十一月",
+                "十二月"
+            ],
+            firstDay: 1
+        }
+    },
+        function (start, end, label) {
+            $("#PublishDateStart").val(start.format('YYYY-MM-DD'));
+            $("#PublishDateEnd").val(end.format('YYYY-MM-DD'));
+            $ordertable.bootstrapTable("refresh");
+        });
+
+    $datepicker.on('apply.daterangepicker', function (ev, picker) {
+        $(this).val(picker.startDate.format('YYYY-MM-DD') + '至' + picker.endDate.format('YYYY-MM-DD'));
+    });
+    $datepicker.on('cancel.daterangepicker', function (ev, picker) {
+        $(this).val('');
+        $('#PublishDateStart').val('');
+        $('#PublishDateEnd').val('');
+        $ordertable.bootstrapTable("refresh");
+    });
 }
