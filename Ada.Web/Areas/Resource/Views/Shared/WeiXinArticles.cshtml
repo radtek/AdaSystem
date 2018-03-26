@@ -32,7 +32,7 @@
                 <h5>近十篇平均阅读数</h5>
             </div>
             <div class="ibox-content">
-                <h1 class="no-margins">@Convert.ToInt32(Model.MediaArticles.OrderByDescending(a => a.PublishDate).Take(10).Average(aaa => aaa.ViewCount))</h1>
+                <h1 class="no-margins">@Convert.ToInt32(Model.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).Take(10).Average(aaa => aaa.ViewCount))</h1>
             </div>
         </div>
     </div>

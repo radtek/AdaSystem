@@ -401,7 +401,7 @@
 
                                                 <td>
                                                     <div class='p-xxs'>
-                                                        <span class='label label-info'>近10篇平均阅读数：@Convert.ToInt32(item.MediaArticles.OrderByDescending(a => a.PublishDate).Take(10).Average(aaa => aaa.ViewCount))</span>
+                                                        <span class='label label-info'>近10篇平均阅读数：@Convert.ToInt32(item.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).Take(10).Average(aaa => aaa.ViewCount))</span>
                                                     </div>
                                                     <div class='p-xxs'>
                                                         @{

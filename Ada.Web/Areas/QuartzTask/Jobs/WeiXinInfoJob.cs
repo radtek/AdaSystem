@@ -160,10 +160,22 @@ namespace QuartzTask.Jobs
                                             media.LastPushDate = date;
                                             if (!isUpdateArticle)
                                             {
+                                                //如果最后一次发布日期和存储的最后一次发布日期不一致，就更新
                                                 if (date != lastPost.Value)
                                                 {
                                                     isUpdateArticle = true;
                                                 }
+                                                else
+                                                {
+                                                    //如果最后一次发布日期与存储的最后一次发布日期一致，但最后一次发布日期与当前时间在2天范围内，也更新
+                                                    var now2Day = DateTime.Now.Date.AddDays(-2);
+                                                    if (date>= now2Day)
+                                                    {
+                                                        isUpdateArticle = true;
+                                                    }
+                                                }
+                                                
+                                                
                                             }
                                         }
                                         //更新文章
