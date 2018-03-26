@@ -73,13 +73,13 @@ namespace Ada.Services.Business
                 if (viewModel.OrderStatus == 1)//已完成
                 {
                     allList = from o in allList
-                              where o.Status == Consts.StateNormal && o.BusinessOrderDetails.Count == o.BusinessOrderDetails.Count(b => b.Status == Consts.StateOK) && o.BusinessOrderDetails.Count > 0
+                              where o.Status == Consts.StateNormal && o.BusinessOrderDetails.Count(b => b.Status != Consts.StateError) == o.BusinessOrderDetails.Count(b => b.Status == Consts.StateOK) && o.BusinessOrderDetails.Count > 0
                               select o;
                 }
                 else if (viewModel.OrderStatus == 0)//待处理
                 {
                     allList = from o in allList
-                              where o.BusinessOrderDetails.Count != o.BusinessOrderDetails.Count(b => b.Status == Consts.StateOK) || o.BusinessOrderDetails.Count == 0
+                              where o.BusinessOrderDetails.Count(b => b.Status != Consts.StateError) != o.BusinessOrderDetails.Count(b => b.Status == Consts.StateOK) || o.BusinessOrderDetails.Count == 0
                               select o;
                 }
                 else if (viewModel.OrderStatus == 2)//待评价

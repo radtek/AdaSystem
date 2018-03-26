@@ -86,9 +86,9 @@ namespace Ada.Services.Purchase
             {
                 allList = allList.Where(d => d.AuditStatus == viewModel.AuditStatus);
             }
-            if (viewModel.IsPayment == false)//过滤没有请款的
+            if (viewModel.IsPayment == false)//过滤没有请款的，并且采购失败的
             {
-                allList = allList.Where(d => d.PurchasePaymentOrderDetails.Count == 0);
+                allList = allList.Where(d => d.PurchasePaymentOrderDetails.Count == 0 && d.Status != Consts.PurchaseStatusFail);
             }
             if (viewModel.PublishDateStart != null)
             {

@@ -17,13 +17,17 @@ namespace Ada.Core.Domain
         /// </summary>
         Locked = 0,
         /// <summary>
-        /// 失败|拒绝|待确认
+        /// 拒绝|待确认
         /// </summary>
         Error = -1,
         /// <summary>
         /// 成功
         /// </summary>
-        Success = 2
+        Success = 2,
+        /// <summary>
+        /// 失败
+        /// </summary>
+        Fail = 3
     }
     public enum AuditEnum
     {

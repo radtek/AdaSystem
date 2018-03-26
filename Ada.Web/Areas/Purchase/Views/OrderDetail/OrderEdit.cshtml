@@ -217,7 +217,16 @@
                                 <div class="col-sm-2">
                                     @if (Model.AuditStatus == Consts.StateNormal)
                                     {
-                                        <input type="text" readonly="readonly" value="已完成" class="form-control" />
+                                        var status = "未知状态";
+                                        if (Model.Status==Consts.PurchaseStatusSuccess)
+                                        {
+                                            status = "已完成";
+                                        }
+                                        if (Model.Status == Consts.PurchaseStatusFail)
+                                        {
+                                            status = "采购失败";
+                                        }
+                                        <input type="text" readonly="readonly" value="@status" class="form-control" />
                                         @Html.HiddenFor(d => d.Status)
                                     }
                                     else

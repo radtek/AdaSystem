@@ -175,6 +175,13 @@ namespace Purchase.Controllers
             }
 
             entity.Remark = viewModel.Remark;
+            if (entity.Status==Consts.PurchaseStatusFail)
+            {
+                var businessOrder = _businessOrderDetailRepository
+                    .LoadEntities(d => d.Id == entity.BusinessOrderDetailId).FirstOrDefault();
+                businessOrder.Status = Consts.StateFail;//订单失败
+                entity.AuditStatus = Consts.StateNormal;
+            }
             _purchaseOrderDetailService.Update(entity);
             TempData["Msg"] = "更新成功";
             return View(viewModel);
