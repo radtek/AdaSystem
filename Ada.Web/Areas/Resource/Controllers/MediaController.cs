@@ -283,7 +283,7 @@ namespace Resource.Controllers
                     }
                     if (media.MediaType?.CallIndex == "weixin")
                     {
-                        jo.Add("近十篇平均阅读数", Convert.ToInt32(media.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(d=>d.PublishDate).Take(10).Average(aaa => aaa.ViewCount)));
+                        jo.Add("近十篇平均阅读数", Convert.ToInt32(media.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(d => d.PublishDate).Take(10).Average(aaa => aaa.ViewCount)));
                     }
                     if (media.MediaType?.CallIndex == "sinablog")
                     {
@@ -603,27 +603,40 @@ namespace Resource.Controllers
                 }
                 //备注
                 media.Remark = row.GetCell(9)?.ToString();
-                var priceDate = row.GetCell(10).CellType == CellType.Numeric;
-                DateTime date;
-                if (!priceDate)
+                DateTime date= new DateTime(DateTime.Now.Year, DateTime.Now.Month,
+                    DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+                if (row.GetCell(10)!=null)
                 {
-                    date = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
-                               DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+                    var cellType = row.GetCell(10).CellType;
+                    if (cellType == CellType.String)
+                    {
+                        DateTime.TryParse(row.GetCell(10)?.ToString(), out date);
+                    }
+                    if (cellType == CellType.Numeric)
+                    {
+                        date = row.GetCell(10).DateCellValue;
+                    }
                 }
-                else
-                {
-                    date = row.GetCell(10).DateCellValue;
-                }
-
                 for (int j = 0; j < adpostionNames.Count; j++)
                 {
-
                     var name = adpostionNames[j];
                     var mediaPrice = _mediaPriceRepository
                         .LoadEntities(d => d.MediaId == id && d.AdPositionName == name).FirstOrDefault();
                     if (mediaPrice == null) continue;
-                    decimal.TryParse(row.GetCell(startPrice + j)?.ToString(), out var price);
-                    mediaPrice.PurchasePrice = price;
+                    var tempCell = row.GetCell(startPrice + j);
+                    double tempPrice = 0;
+                    if (tempCell!=null)
+                    {
+                        if (tempCell.CellType==CellType.Formula|| tempCell.CellType == CellType.Numeric)
+                        {
+                            tempPrice = tempCell.NumericCellValue;
+                        }
+                        if (tempCell.CellType == CellType.String)
+                        {
+                            double.TryParse(tempCell.ToString(), out tempPrice);
+                        }
+                    }
+                    mediaPrice.PurchasePrice = Convert.ToDecimal(tempPrice);
                     mediaPrice.PriceDate = DateTime.Now;
                     mediaPrice.InvalidDate = date;
 
@@ -980,7 +993,7 @@ namespace Resource.Controllers
         public ActionResult Top(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            if (entity.IsTop==null||entity.IsTop==false)
+            if (entity.IsTop == null || entity.IsTop == false)
             {
                 entity.IsTop = true;
             }
@@ -1056,7 +1069,7 @@ namespace Resource.Controllers
             _mediaService.Update(entity);
             return View(entity);
         }
-      
+
         public ActionResult WeiXinProCollection(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
