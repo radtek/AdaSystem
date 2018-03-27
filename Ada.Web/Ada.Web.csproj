@@ -171,6 +171,79 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\usercenter\css\styles.multipage-real-estate.css" />
+    <Content Include="Assets\usercenter\img-temp\1920x1080\img1.jpg" />
+    <Content Include="Assets\usercenter\img-temp\1920x1080\img10.jpg" />
+    <Content Include="Assets\usercenter\img-temp\1920x1080\img11.jpg" />
+    <Content Include="Assets\usercenter\img-temp\1920x1080\img2.jpg" />
+    <Content Include="Assets\usercenter\img-temp\1920x1080\img3.jpg" />
+    <Content Include="Assets\usercenter\img-temp\1920x1080\img4.jpg" />
+    <Content Include="Assets\usercenter\img-temp\1920x1080\img5.jpg" />
+    <Content Include="Assets\usercenter\img-temp\1920x1080\img6.jpg" />
+    <Content Include="Assets\usercenter\img-temp\1920x1080\img7.jpg" />
+    <Content Include="Assets\usercenter\img-temp\1920x1080\img8.jpg" />
+    <Content Include="Assets\usercenter\img-temp\1920x1080\img9.jpg" />
+    <Content Include="Assets\usercenter\img-temp\1920x800\img2.jpg" />
+    <Content Include="Assets\usercenter\img-temp\1920x800\img3.jpg" />
+    <Content Include="Assets\usercenter\img-temp\200x200\img1.jpg" />
+    <Content Include="Assets\usercenter\img-temp\200x200\img2.jpg" />
+    <Content Include="Assets\usercenter\img-temp\200x200\img3.jpg" />
+    <Content Include="Assets\usercenter\img-temp\200x200\img4.jpg" />
+    <Content Include="Assets\usercenter\img-temp\200x200\img5.jpg" />
+    <Content Include="Assets\usercenter\img-temp\200x200\img6.jpg" />
+    <Content Include="Assets\usercenter\img-temp\200x200\img7.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img1.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img10.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img11.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img12.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img13.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img14.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img15.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img16.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img17.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img18.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img19.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img2.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img20.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img21.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img22.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img3.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img4.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img5.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img6.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img7.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img8.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x250\img9.jpg" />
+    <Content Include="Assets\usercenter\img-temp\400x450\img1.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x450\img1.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x450\img10.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x450\img11.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x450\img12.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x450\img13.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x450\img14.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x450\img15.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x450\img16.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x450\img17.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x450\img2.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x450\img3.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x450\img4.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x450\img5.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x450\img6.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x450\img7.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x450\img8.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x450\img9.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x550\img1.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x550\img2.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x550\img3.jpg" />
+    <Content Include="Assets\usercenter\img-temp\600x550\img4.jpg" />
+    <Content Include="Assets\usercenter\img-temp\900x400\img1.jpg" />
+    <Content Include="Assets\usercenter\img-temp\900x400\img2.jpg" />
+    <Content Include="Assets\usercenter\img-temp\900x400\img3.jpg" />
+    <Content Include="Assets\usercenter\img-temp\900x900\img1.jpg" />
+    <Content Include="Assets\usercenter\img-temp\900x900\img2.jpg" />
+    <Content Include="Assets\usercenter\img-temp\900x900\img3.jpg" />
+    <Content Include="Assets\usercenter\img\bg\map-sketch.jpg" />
+    <Content Include="Assets\usercenter\img\icons\pin\marker.png" />
     <Content Include="Assets\css\custom.css" />
     <Content Include="Assets\css\unify-components.css" />
     <Content Include="Assets\css\unify-core.css" />
@@ -2609,6 +2682,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -2795,6 +2869,7 @@
     <Content Include="Views\Shared\UploadImage.cshtml" />
     <Content Include="Views\Shared\ChangePassword.cshtml" />
     <Content Include="Views\Shared\Bread.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2807,6 +2882,8 @@
     <Folder Include="Assets\images\" />
     <Folder Include="Assets\img-temp\899x631\" />
     <Folder Include="Assets\media-temp\" />
+    <Folder Include="Assets\usercenter\img\bg\grid\" />
+    <Folder Include="Assets\usercenter\img\bg\marker\" />
     <Folder Include="Assets\vendor\revolution-slider\assets\css\" />
     <Folder Include="Assets\website\img\bg\grid\" />
     <Folder Include="Assets\website\img\bg\marker\" />
