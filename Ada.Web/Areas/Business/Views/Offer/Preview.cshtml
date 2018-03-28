@@ -4,7 +4,6 @@
 @using Ada.Services.Setting
 @model Ada.Core.Domain.Business.BusinessOffer
 @{
-    //Layout = "~/Views/Shared/_Layout_Home.cshtml";
     ViewBag.Title = "报价预览";
     ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "销售报价", Value = Url.Action("Index") } };
     var setting = EngineContext.Current.Resolve<ISettingService>().GetSetting<Site>();

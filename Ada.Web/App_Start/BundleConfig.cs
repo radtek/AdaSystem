@@ -505,6 +505,106 @@ namespace Ada.Web
             // 百度Echarts
             bundles.Add(new ScriptBundle("~/plugins/echarts").Include(
                 "~/Scripts/plugins/echarts/echarts.min.js"));
+
+
+            //===========================前端=============================
+            //bootstrap 4.0
+            bundles.Add(new StyleBundle("~/WebGlobal/bootstrapStyle").Include(
+                "~/Assets/vendor/bootstrap/bootstrap.css"));
+            bundles.Add(new ScriptBundle("~/WebGlobal/Jquery").Include(
+                "~/Assets/vendor/jquery/jquery.min.js"));
+            bundles.Add(new ScriptBundle("~/WebGlobal/bootstrapScript").Include(
+                "~/Assets/vendor/jquery-migrate/jquery-migrate.min.js", 
+                "~/Assets/vendor/popper.min.js",
+                "~/Assets/vendor/bootstrap/bootstrap.js"));
+            //Plugins
+            bundles.Add(new StyleBundle("~/WebPlugins/fontawesomeStyle").Include(
+                "~/Assets/vendor/icon-awesome/css/font-awesome.min.css"));
+
+            bundles.Add(new StyleBundle("~/WebPlugins/iconlineproStyle").Include(
+                "~/Assets/vendor/icon-line-pro/style.css"));
+
+            bundles.Add(new StyleBundle("~/WebPlugins/iconhsStyle").Include(
+                "~/Assets/vendor/icon-hs/style.css"));
+
+            bundles.Add(new StyleBundle("~/WebPlugins/iconlinesimpleStyle").Include(
+                "~/Assets/vendor/icon-line/css/simple-line-icons.css"));
+
+            bundles.Add(new StyleBundle("~/WebPlugins/animateStyle").Include(
+                "~/Assets/vendor/animate.css"));
+
+            bundles.Add(new StyleBundle("~/WebPlugins/hsmegamenuStyle").Include(
+                "~/Assets/vendor/hs-megamenu/src/hs.megamenu.css"));
+            bundles.Add(new ScriptBundle("~/WebPlugins/hsmegamenuScript").Include(
+                "~/Assets/vendor/hs-megamenu/src/hs.megamenu.js"));
+
+
+            bundles.Add(new StyleBundle("~/WebPlugins/hamburgersStyle").Include(
+                "~/Assets/vendor/hamburgers/hamburgers.min.css"));
+
+            bundles.Add(new StyleBundle("~/WebPlugins/chosenStyle").Include(
+                "~/Assets/vendor/chosen/chosen.css"));
+            bundles.Add(new ScriptBundle("~/WebPlugins/chosenScript").Include(
+                "~/Assets/vendor/chosen/chosen.jquery.js"));
+
+            bundles.Add(new StyleBundle("~/WebPlugins/slickStyle").Include(
+                "~/Assets/vendor/slick-carousel/slick/slick.css"));
+            bundles.Add(new ScriptBundle("~/WebPlugins/slickScript").Include(
+                "~/Assets/vendor/slick-carousel/slick/slick.js"));
+
+            bundles.Add(new StyleBundle("~/WebPlugins/fancyboxStyle").Include(
+                "~/Assets/vendor/fancybox/jquery.fancybox.min.css"));
+            bundles.Add(new ScriptBundle("~/WebPlugins/fancyboxScript").Include(
+                "~/Assets/vendor/fancybox/jquery.fancybox.min.js"));
+
+            //Theme multipage-real-estate
+            bundles.Add(new StyleBundle("~/WebTheme/realestateStyle").Include(
+                "~/Assets/theme/real-estate/css/styles.multipage-real-estate.css"));
+
+            //Jquery UI
+            bundles.Add(new ScriptBundle("~/WebJquaryUI/widgetScript").Include(
+                "~/Assets/vendor/jquery-ui/ui/widget.js"));
+            bundles.Add(new ScriptBundle("~/WebJquaryUI/widgetmenuScript").Include(
+                "~/Assets/vendor/jquery-ui/ui/widgets/menu.js"));
+            bundles.Add(new ScriptBundle("~/WebJquaryUI/widgetmouseScript").Include(
+                "~/Assets/vendor/jquery-ui/ui/widgets/mouse.js"));
+            bundles.Add(new ScriptBundle("~/WebJquaryUI/widgetsliderScript").Include(
+                "~/Assets/vendor/jquery-ui/ui/widgets/slider.js"));
+            bundles.Add(new ScriptBundle("~/WebJquaryUI/versionScript").Include(
+                "~/Assets/vendor/jquery-ui/ui/version.js"));
+            bundles.Add(new ScriptBundle("~/WebJquaryUI/keycodeScript").Include(
+                "~/Assets/vendor/jquery-ui/ui/keycode.js"));
+            bundles.Add(new ScriptBundle("~/WebJquaryUI/positionScript").Include(
+                "~/Assets/vendor/jquery-ui/ui/position.js"));
+            bundles.Add(new ScriptBundle("~/WebJquaryUI/uniqueidScript").Include(
+                "~/Assets/vendor/jquery-ui/ui/unique-id.js"));
+            bundles.Add(new ScriptBundle("~/WebJquaryUI/safeactiveelementScript").Include(
+                "~/Assets/vendor/jquery-ui/ui/safe-active-element.js"));
+            bundles.Add(new ScriptBundle("~/WebJquaryUI/widgetdatepickerScript").Include(
+                "~/Assets/vendor/jquery-ui/ui/widgets/datepicker.js"));
+
+            //Unify JS
+            bundles.Add(new ScriptBundle("~/WebUnify/core").Include(
+                "~/Assets/js/hs.core.js"));
+            bundles.Add(new ScriptBundle("~/WebUnify/header").Include(
+                "~/Assets/js/components/hs.header.js"));
+            bundles.Add(new ScriptBundle("~/WebUnify/hamburgers").Include(
+                "~/Assets/js/helpers/hs.hamburgers.js"));
+            bundles.Add(new ScriptBundle("~/WebUnify/dropdown").Include(
+                "~/Assets/js/components/hs.dropdown.js"));
+            bundles.Add(new ScriptBundle("~/WebUnify/slider").Include(
+                "~/Assets/js/components/hs.slider.js"));
+            bundles.Add(new ScriptBundle("~/WebUnify/select").Include(
+                "~/Assets/js/components/hs.select.js"));
+            bundles.Add(new ScriptBundle("~/WebUnify/carousel").Include(
+                "~/Assets/js/components/hs.carousel.js"));
+            bundles.Add(new ScriptBundle("~/WebUnify/popup").Include(
+                "~/Assets/js/components/hs.popup.js"));
+            bundles.Add(new ScriptBundle("~/WebUnify/datepicker").Include(
+                "~/Assets/js/components/hs.datepicker.js"));
+            bundles.Add(new ScriptBundle("~/WebUnify/goto").Include(
+                "~/Assets/js/components/hs.go-to.js"));
+
         }
     }
 }
