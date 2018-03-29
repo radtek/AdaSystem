@@ -62,6 +62,11 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "粉丝数")]
         public decimal? FansNum { get; set; }
         /// <summary>
+        /// 粉丝数
+        /// </summary>
+        [Display(Name = "粉丝数")]
+        public string FansNumRange { get; set; }
+        /// <summary>
         /// 最近头条阅读数
         /// </summary>
         [Display(Name = "最近头条阅读数")]
@@ -71,6 +76,11 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "近十篇平均阅读数")]
         public int? AvgReadNum { get; set; }
+        /// <summary>
+        /// 近十篇平均阅读数
+        /// </summary>
+        [Display(Name = "近十篇平均阅读数")]
+        public string AvgReadNumRange { get; set; }
         /// <summary>
         /// 近十篇平均阅读数
         /// </summary>
@@ -257,7 +267,11 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "媒体价格")]
         public List<MediaPriceView> MediaPrices { get; set; }
-
+        /// <summary>
+        /// 价格范围
+        /// </summary>
+        [Display(Name = "价格范围")]
+        public string PriceRange { get; set; }
         /// <summary>
         /// 价格范围
         /// </summary>

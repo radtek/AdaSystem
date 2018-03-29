@@ -1,7 +1,22 @@
 ﻿@using System.Web.Optimization
+@using Ada.Core
+@using Ada.Core.Domain.Resource
+@using Ada.Core.Infrastructure
+@using Ada.Core.Tools
+@using Ada.Services.Resource
+@model List<Ada.Core.Domain.Resource.Media>
 @{
     Layout = "~/Views/Shared/_Layout_Web.cshtml";
     ViewBag.Title = "微信公众号";
+    var repository = EngineContext.Current.Resolve<IRepository<MediaType>>();
+    var mediaType = repository.LoadEntities(d => d.CallIndex == "weixin").FirstOrDefault();
+    var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
+    var tagSize = 1;
+    var tagPages = tags.Count / tagSize;
+    if (tags.Count % tagSize > 0)
+    {
+        tagPages++;
+    }
 }
 
 <!-- Breadcrumbs & Search -->
@@ -9,20 +24,9 @@
     <div class="g-pos-rel g-z-index-1">
         <!-- Breadcrumbs -->
         <div class="container-fluid g-py-50">
-            @*<ul class="u-list-inline g-font-weight-500 mb-2">
-                    <li class="list-inline-item g-mr-5">
-                        <a class="u-link-v5 g-color-gray-dark-v5 g-color-main--hover" href="#">Home</a>
-                        <i class="g-color-gray-light-v2 g-ml-5 fa fa-angle-right"></i>
-                    </li>
-                    <li class="list-inline-item g-mr-5">
-                        <a class="u-link-v5 g-color-gray-dark-v5 g-color-main--hover" href="#">Listing</a>
-                        <i class="g-color-gray-light-v2 g-ml-5 fa fa-angle-right"></i>
-                    </li>
-                    <li class="list-inline-item g-color-primary">
-                        <span>List View</span>
-                    </li>
-                </ul>*@
-            <h1 class="h2 mb-0">微信公众号</h1>
+            <h1 class="h2 mb-0">
+                <i class="fa @mediaType.Image"></i> 微信公众号
+            </h1>
         </div>
         <!-- End Breadcrumbs -->
         <div class="container-fluid g-pb-10">
@@ -30,163 +34,56 @@
                 <!-- Input Group -->
                 <form class="g-bg-white g-pa-30">
                     <div class="row g-mx-0--md">
-                        <div class="col-md-6 col-lg-8 g-px-0--md g-mb-30">
-                            <input class="form-control rounded-0 g-brd-gray-light-v3 g-px-20 g-py-15" type="text" placeholder="Search by City, Address, ZIP ...">
-                        </div>
-                        <!-- Input Group -->
-                        <div class="col-sm-6 col-md-3 col-lg-2 g-px-0--md g-mb-30">
-                            <select class="js-custom-select w-100 u-select-v1 g-min-width-150 g-brd-left-none--md g-brd-gray-light-v3 g-bg-white g-color-main g-color-primary--hover g-pt-12 g-pb-13" required
-                                    data-placeholder="All Cities"
-                                    data-open-icon="fa fa-angle-down"
-                                    data-close-icon="fa fa-angle-up">
-                                <option></option>
-                                <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="NY">New York</option>
-                                <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="VC">Vancouver</option>
-                                <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="LN">London</option>
-                                <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="BR">Berlin</option>
-                                <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="ML">Milan</option>
-                                <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="PR">Paris</option>
-                                <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="MS">Moscow</option>
-                            </select>
-                        </div>
-                        <!-- End Input Group -->
-                        <!-- Input Group -->
-                        <div class="col-sm-6 col-md-3 col-lg-2 g-px-0--md g-mb-30">
-                            <select class="js-custom-select w-100 u-select-v1 g-min-width-150 g-brd-left-none--md g-brd-gray-light-v3 g-bg-white g-color-main g-color-primary--hover g-pt-12 g-pb-13" required
-                                    data-placeholder="All Areas"
-                                    data-open-icon="fa fa-angle-down"
-                                    data-close-icon="fa fa-angle-up">
-                                <option></option>
-                                <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="NR">North</option>
-                                <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="NTE">Northeast</option>
-                                <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="NTW">Northwest</option>
-                                <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="EA">East</option>
-                                <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="SO">South</option>
-                                <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="SOE">Southeast</option>
-                                <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="SOW">Southwest</option>
-                                <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="WE">West</option>
-                            </select>
-                        </div>
-                        <!-- End Input Group -->
-                    </div>
-                    <div class="row">
-                        <div class="col-6 col-lg-3 g-mb-30">
-                            <!-- Input Group -->
-                            <div class="input-group-btn">
-                                <select class="js-custom-select u-select-v1 w-100 g-brd-gray-light-v3 g-bg-white g-color-main g-color-primary--hover g-py-12" required
-                                        data-placeholder="All Status"
-                                        data-open-icon="fa fa-angle-down"
-                                        data-close-icon="fa fa-angle-up">
-                                    <option></option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="FR">For Rent</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="FS">For Sale</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="FC">Foreclosure</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="NC">New Construction</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="NL">New Listing</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="OH">Open House</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="RP">Reduced Price</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="RS">Resale</option>
-                                </select>
-                            </div>
-                            <!-- End Input Group -->
-                        </div>
-                        <div class="col-6 col-lg-3 g-mb-30">
-                            <!-- Input Group -->
-                            <div class="input-group-btn">
-                                <select class="js-custom-select u-select-v1 w-100 g-brd-gray-light-v3 g-bg-white g-color-main g-color-primary--hover g-py-12" required
-                                        data-placeholder="All Types"
-                                        data-open-icon="fa fa-angle-down"
-                                        data-close-icon="fa fa-angle-up">
-                                    <option></option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="AP">Apartment</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="CO">Condo</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="FA">Farm</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="LO">Loft</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="LO">Lot</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="MU">Multi Family Home</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="SI">Single Family Home</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="TO">Townhouse</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="VI">Villa</option>
-                                </select>
-                            </div>
-                            <!-- End Input Group -->
-                        </div>
-                        <div class="col-6 col-lg-3 g-mb-30">
-                            <!-- Input Group -->
-                            <div class="input-group-btn">
-                                <select class="js-custom-select u-select-v1 w-100 g-brd-gray-light-v3 g-bg-white g-color-main g-color-primary--hover g-py-12" required
-                                        data-placeholder="Beds"
-                                        data-open-icon="fa fa-angle-down"
-                                        data-close-icon="fa fa-angle-up">
-                                    <option></option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="1">1</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="2">2</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="3">3</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="4">4</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="5">5</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="6">6</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="7">7</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="8">8</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="9">9</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="10">10</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="ANY">Any</option>
-                                </select>
-                            </div>
-                            <!-- End Input Group -->
-                        </div>
-                        <div class="col-6 col-lg-3 g-mb-30">
-                            <!-- Input Group -->
-                            <div class="input-group-btn">
-                                <select class="js-custom-select u-select-v1 w-100 g-brd-gray-light-v3 g-bg-white g-color-main g-color-primary--hover g-py-12" required
-                                        data-placeholder="Baths"
-                                        data-open-icon="fa fa-angle-down"
-                                        data-close-icon="fa fa-angle-up">
-                                    <option></option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="1">1</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="2">2</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="3">3</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="4">4</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="5">5</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="6">6</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="7">7</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="8">8</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="9">9</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="10">10</option>
-                                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="ANY2">Any</option>
-                                </select>
-                            </div>
-                            <!-- End Input Group -->
+                        <div class="col-md-6 col-lg-12 g-px-0--md g-mb-30">
+                            <input class="form-control rounded-0 g-brd-gray-light-v3 g-px-20 g-py-15" type="text" placeholder="公众号名称，微信号 关键字">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6 col-lg-3 g-mb-30">
-                            <input class="form-control rounded-0 g-brd-gray-light-v3 g-px-20 g-py-15" type="text" placeholder="Min Area (sqft)">
+                        <div class="col-sm-6 col-lg-3 g-mb-30">
+                            <h2 class="h6 g-font-weight-600 mb-4">粉丝数 (<span id="rangeFans">0</span>) 万</h2>
+                            <div id="rangeFans1" class="u-slider-v1-3"
+                                 data-result-container="rangeFans"
+                                 data-range="true"
+                                 data-default="0, 1000"
+                                 data-min="0"
+                                 data-max="1000"></div>
                         </div>
-                        <div class="col-6 col-lg-3 g-mb-30">
-                            <input class="form-control rounded-0 g-brd-gray-light-v3 g-px-20 g-py-15" type="text" placeholder="Max Area (sqft)">
+                        <div class="col-sm-6 col-lg-3 g-mb-30">
+                            <h2 class="h6 g-font-weight-600 mb-4">头条平均阅读量 (<span id="rangeRead">0</span>)</h2>
+                            <div id="rangeRead1" class="u-slider-v1-3"
+                                 data-result-container="rangeRead"
+                                 data-range="true"
+                                 data-default="0, 100001"
+                                 data-min="0"
+                                 data-max="100001"></div>
                         </div>
                         <div class="col-sm-6 col-lg-2 g-mb-30">
-                            <!-- Radio Group -->
-                            <div class="btn-group justified-content">
-                                <label class="u-check">
-                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" name="radGroupBtn1_1" type="radio" checked="">
-                                    <span class="btn btn-md btn-block u-btn-outline-white g-brd-gray-light-v3 g-brd-primary--checked g-color-main g-color-primary--checked g-bg-white g-font-size-default rounded-0 g-py-13">Buy</span>
-                                </label>
-                                <label class="u-check">
-                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" name="radGroupBtn1_1" type="radio">
-                                    <span class="btn btn-md btn-block u-btn-outline-white g-brd-gray-light-v3 g-brd-primary--checked g-color-main g-color-primary--checked g-bg-white g-font-size-default rounded-0 g-py-13">Rent</span>
-                                </label>
+                            <!-- Input Group -->
+                            <div class="input-group-btn">
+                                <select class="js-custom-select u-select-v1 w-100 g-brd-gray-light-v3 g-bg-white g-color-main g-color-primary--hover g-py-12" required
+                                        data-placeholder="广告位"
+                                        data-open-icon="fa fa-angle-down"
+                                        data-close-icon="fa fa-angle-up">
+                                    <option></option>
+                                    @foreach (var item in mediaType.AdPositions)
+                                    {
+                                        <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="@item.Name">@item.Name</option>
+                                    }
+
+
+
+                                </select>
                             </div>
-                            <!-- End Radio Group -->
+                            <!-- End Input Group -->
                         </div>
                         <div class="col-sm-6 col-lg-4 g-mb-30">
-                            <h2 class="h6 g-font-weight-600 mb-4">Price Range $(<span id="rangeSliderAmount3">0</span>)</h2>
-                            <div id="rangeSlider1" class="u-slider-v1-3"
-                                 data-result-container="rangeSliderAmount3"
+                            <h2 class="h6 g-font-weight-600 mb-4">价格范围 ¥(<span id="rangePrice">0</span>)</h2>
+                            <div id="rangePrice1" class="u-slider-v1-3"
+                                 data-result-container="rangePrice"
                                  data-range="true"
-                                 data-default="30, 3500000"
+                                 data-default="0, 1000000"
                                  data-min="0"
-                                 data-max="3500000"></div>
+                                 data-max="1000000"></div>
                         </div>
                     </div>
                     <!-- Accordion -->
@@ -217,204 +114,27 @@
                         <div id="accordion-12-1-body-01" class="collapse" role="tabpanel" aria-labelledby="accordion-12-1-heading-01">
                             <div class="u-accordion__body g-pt-30 g-pa-0">
                                 <div class="row">
-                                    <div class="col-sm-4 col-md-3 col-lg-2">
-                                        <!-- Features List -->
-                                        <ul class="list-unstyled mb-0">
-                                            <li class="my-2">
-                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                    </span>
-                                                    Barbecue
-                                                </label>
-                                            </li>
-                                            <li class="my-2">
-                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                    </span>
-                                                    Outdoor Shower
-                                                </label>
-                                            </li>
-                                            <li class="my-2">
-                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                    </span>
-                                                    Washer
-                                                </label>
-                                            </li>
-                                        </ul>
-                                        <!-- End Features List -->
-                                    </div>
-                                    <div class="col-sm-4 col-md-3 col-lg-2">
-                                        <!-- Features List -->
-                                        <ul class="list-unstyled mb-0">
-                                            <li class="my-2">
-                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                    </span>
-                                                    Barbecue
-                                                </label>
-                                            </li>
-                                            <li class="my-2">
-                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                    </span>
-                                                    Outdoor Shower
-                                                </label>
-                                            </li>
-                                            <li class="my-2">
-                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                    </span>
-                                                    Wi-Fi
-                                                </label>
-                                            </li>
-                                        </ul>
-                                        <!-- End Features List -->
-                                    </div>
-                                    <div class="col-sm-4 col-md-3 col-lg-2">
-                                        <!-- Features List -->
-                                        <ul class="list-unstyled mb-0">
-                                            <li class="my-2">
-                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                    </span>
-                                                    Dryer
-                                                </label>
-                                            </li>
-                                            <li class="my-2">
-                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                    </span>
-                                                    Refrigerator
-                                                </label>
-                                            </li>
-                                            <li class="my-2">
-                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                    </span>
-                                                    Wi-Fi
-                                                </label>
-                                            </li>
-                                        </ul>
-                                        <!-- End Features List -->
-                                    </div>
-                                    <div class="col-sm-4 col-md-3 col-lg-2">
-                                        <!-- Features List -->
-                                        <ul class="list-unstyled mb-0">
-                                            <li class="my-2">
-                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                    </span>
-                                                    Gym
-                                                </label>
-                                            </li>
-                                            <li class="my-2">
-                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                    </span>
-                                                    Sauna
-                                                </label>
-                                            </li>
-                                            <li class="my-2">
-                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                    </span>
-                                                    Garden
-                                                </label>
-                                            </li>
-                                        </ul>
-                                        <!-- End Features List -->
-                                    </div>
-                                    <div class="col-sm-4 col-md-3 col-lg-2">
-                                        <!-- Features List -->
-                                        <ul class="list-unstyled mb-0">
-                                            <li class="my-2">
-                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                    </span>
-                                                    Laundry
-                                                </label>
-                                            </li>
-                                            <li class="my-2">
-                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                    </span>
-                                                    Swimming Pool
-                                                </label>
-                                            </li>
-                                            <li class="my-2">
-                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                    </span>
-                                                    Garage
-                                                </label>
-                                            </li>
-                                        </ul>
-                                        <!-- End Features List -->
-                                    </div>
-                                    <div class="col-sm-4 col-md-3 col-lg-2">
-                                        <!-- Features List -->
-                                        <ul class="list-unstyled mb-0">
-                                            <li class="my-2">
-                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                    </span>
-                                                    Lawn
-                                                </label>
-                                            </li>
-                                            <li class="my-2">
-                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                    </span>
-                                                    TV Cable
-                                                </label>
-                                            </li>
-                                            <li class="my-2">
-                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                    </span>
-                                                    Computer
-                                                </label>
-                                            </li>
-                                        </ul>
-                                        <!-- End Features List -->
-                                    </div>
+                                    @for (int i = 0; i < tagPages; i++)
+                                    {
+                                        <div class="col-xs-2 col-lg-1">
+                                            <!-- Features List -->
+                                            <ul class="list-unstyled mb-0">
+                                                @foreach (var item in tags.OrderBy(d => d.Taxis).Skip(i * tagSize).Take(tagSize))
+                                                {
+                                                    <li class="my-2">
+                                                        <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
+                                                            <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
+                                                            <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
+                                                                <i class="fa" data-check-icon="&#xf00c"></i>
+                                                            </span>
+                                                            @item.TagName
+                                                        </label>
+                                                    </li>
+                                                }
+                                            </ul>
+                                            <!-- End Features List -->
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -439,14 +159,14 @@
                 <!-- Input Group -->
                 <div class="input-group-btn">
                     <select class="js-custom-select u-select-v1 g-min-width-150 g-brd-none g-bg-secondary g-color-main g-color-primary--hover g-py-12" required
-                            data-placeholder="Bestseller"
+                            data-placeholder="默认排序"
                             data-open-icon="fa fa-angle-down"
                             data-close-icon="fa fa-angle-up">
-                        <option></option>
-                        <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="BE">Bestseller</option>
-                        <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="TR">Trending</option>
-                        <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="PR">Price low to high</option>
-                        <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="PR">price high to low</option>
+                        <option value="">默认排序</option>
+                        <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="BE">头条从高到低</option>
+                        <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="TR">头条从低到高</option>
+                        <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="PR">头条（原创）从高到低</option>
+                        <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="PR">头条（原创）从低到高</option>
                     </select>
                 </div>
                 <!-- End Input Group -->
@@ -459,144 +179,99 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-lg-10 order-lg-2 g-mb-70">
+            @foreach (var item in Model)
+            {
+                var collectionDate = item.CollectionDate?.ToString("yyyy-MM-dd");
+                var priceDate = item.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd");
+                var lastPushDate = item.LastPushDate?.ToString("yyyy-MM-dd");
+                var avgRead = Convert.ToInt32(item.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).Take(10).Average(aaa => aaa.ViewCount));
+                var lastRead = item.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount;
 
-            <!-- Article -->
-            <article class="d-md-table w-100 g-bg-white g-mb-1">
+                <!-- Article -->
+                <article class="d-md-table w-100 g-bg-white g-mb-1">
+                    <!-- Article Image -->
+                    <div class="d-md-table-cell align-middle g-width-85">
+                        @if (string.IsNullOrWhiteSpace(item.MediaLogo))
+                        {
+                            <i class="fa fa-weixin fa-4x"></i>
+                        }
+                        else
+                        {
+                            <img class="img-fluid img-thumbnail g-rounded-10" src="@item.MediaLogo" alt="@item.MediaName">
+                        }
 
-                <!-- Article Image -->
-                <div class="d-md-table-cell align-middle g-width-85">
-                    <img class="img-fluid img-thumbnail g-rounded-10" src="http://img01.sogoucdn.com/app/a/100520090/oIWsFt-YEUDP35G-lZKDS_1u5fc4" alt="Image Description">
-
-                </div>
-                <!-- End Article Image -->
-                <!-- Article Content -->
-                <div class="d-md-table-cell align-middle g-py-15 g-px-20">
-                    <h3 class="h6 g-color-gray-dark-v2 g-font-weight-700">
-                        小蛮弟Mandy <small class="g-color-gray-dark-v4">tinymandy0723</small>
-                    </h3>
-                    @*<span class="d-block g-color-gray-dark-v5 g-font-style-normal">微信号：tinymandy0723</span>*@
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">粉丝数：30万</span>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">分类：时尚</span>
-                    <span class="d-block">
-                        <span class="u-label g-rounded-3 g-bg-purple u-label--sm g-mr-6 g-mb-15">
-                            <i class="fa fa-telegram g-mr-3"></i>
-                            优质
-                        </span>
-                        <span class="u-label g-rounded-3 g-bg-purple u-label--sm g-mr-6 g-mb-15">
-                            <i class="fa fa-telegram g-mr-3"></i>
-                            推荐
-                        </span>
-                        <span class="u-label g-rounded-3 g-bg-purple u-label--sm g-mr-6 g-mb-15">
-                            <i class="fa fa-telegram g-mr-3"></i>
-                            热门
-                        </span>
-                    </span>
-
-                </div>
-                <!-- End Article Content -->
-                <!-- Price -->
-                <div class="d-md-table-cell align-middle g-py-15 g-px-20">
-                    <h3 class="h6 g-color-gray-dark-v2 g-font-weight-700">
-                        文章情况 <small class="g-color-gray-dark-v4">更新日期：2018-03-04</small>
-                    </h3>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">头条平均阅读数：50000</span>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">最近头条阅读数：50000</span>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">月发文数：60</span>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">最近发文日期：2018-03-04</span>
-                </div>
-
-                <!-- End Price -->
-                <!-- Price -->
-                <div class="d-md-table-cell align-middle g-py-15 g-px-20">
-                    <h3 class="h6 g-color-gray-dark-v2 g-font-weight-700">
-                        参考报价 <small class="g-color-gray-dark-v4"> 有效期：2018-03-04</small>
-                    </h3>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">二条：60</span>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">二条：60</span>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">二条：60</span>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">二条：60</span>
-
-                </div>
-
-                <!-- End Price -->
-                <!-- Actions -->
-                <div class="d-md-table-cell align-middle text-md-right g-pa-20">
-                    <div class="g-mt-minus-10 g-mx-minus-5">
-                        <a class="btn btn-lg u-btn-primary g-font-weight-600 g-font-size-12 text-uppercase g-mx-5 g-mt-10" href="#!">查看详情</a>
                     </div>
-                </div>
-                <!-- End Actions -->
-            </article>
-            <!-- End Article -->
-            <!-- Article -->
-            <article class="d-md-table w-100 g-bg-white g-mb-1">
+                    <!-- End Article Image -->
+                    <!-- Article Content -->
+                    <div class="d-md-table-cell align-middle g-py-15 g-px-20">
+                        <h3 class="h6 g-color-gray-dark-v2 g-font-weight-700">
+                            @item.MediaName
+                        </h3>
+                        <span class="d-block g-color-gray-dark-v5 g-font-style-normal">微信号：@item.MediaID</span>
+                        <span class="d-block g-color-gray-dark-v5 g-font-style-normal">粉丝数：@Utils.ShowFansNum(item.FansNum) 万</span>
+                        <span class="d-block g-color-gray-dark-v5 g-font-style-normal">分类：@string.Join(",", item.MediaTags.Select(d => d.TagName))</span>
+                        <span class="d-block">
+                            @if (item.IsHot == true)
+                            {
+                                <span class="u-label g-rounded-3 g-bg-darkpurple u-label--sm g-mr-6" data-toggle="tooltip"
+                                      data-placement="bottom"
+                                      title="性价比高">
+                                    <i class="fa fa-diamond g-mr-3"></i>
+                                    优质
+                                </span>
+                            }
+                            @if (item.IsRecommend == true)
+                            {
+                                <span class="u-label g-rounded-3 g-bg-red u-label--sm g-mr-6" data-toggle="tooltip"
+                                      data-placement="bottom"
+                                      title="发稿速度快，配合度高">
+                                    <i class="fa fa-thumbs-up g-mr-3"></i>
+                                    推荐
+                                </span>
+                            }
 
-                <!-- Article Image -->
-                <div class="d-md-table-cell align-middle g-width-85">
-                    <i class="fa fa-weixin fa-4x"></i>
 
-                </div>
-                <!-- End Article Image -->
-                <!-- Article Content -->
-                <div class="d-md-table-cell align-middle g-py-15 g-px-20">
-                    <h3 class="h6 g-font-weight-700">
-                        <a class="g-color-gray-dark-v2" href="#!">小蛮弟Mandy</a>
-                    </h3>
-                    <em class="g-color-gray-dark-v5 g-font-style-normal">微信号：tinymandy0723</em>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">粉丝数：30万</span>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">分类：时尚</span>
-                    <span class="d-block">
-                        <span class="u-label g-rounded-3 g-bg-purple g-mr-6 g-mb-15">
-                            <i class="fa fa-telegram g-mr-3"></i>
-                            优质
                         </span>
-                        <span class="u-label g-rounded-3 g-bg-purple g-mr-6 g-mb-15">
-                            <i class="fa fa-telegram g-mr-3"></i>
-                            推荐
-                        </span>
-                        <span class="u-label g-rounded-3 g-bg-purple g-mr-6 g-mb-15">
-                            <i class="fa fa-telegram g-mr-3"></i>
-                            热门
-                        </span>
-                    </span>
 
-                </div>
-                <!-- End Article Content -->
-                <!-- Price -->
-                <div class="d-md-table-cell align-middle g-py-15 g-px-20">
-                    <h3 class="h6 g-color-gray-dark-v2 g-font-weight-700">
-                        文章情况 <small class="g-color-gray-dark-v4">更新日期：2018-03-04</small>
-                    </h3>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">头条平均阅读数：50000</span>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">最近头条阅读数：50000</span>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">月发文数：60</span>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">最近发文日期：2018-03-04</span>
-                </div>
-
-                <!-- End Price -->
-                <!-- Price -->
-                <div class="d-md-table-cell align-middle g-py-15 g-px-20">
-                    <h3 class="h6 g-color-gray-dark-v2 g-font-weight-700">
-                        参考报价 <small class="g-color-gray-dark-v4"> 有效期：2018-03-04</small>
-                    </h3>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">二条：60</span>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">二条：60</span>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">二条：60</span>
-                    <span class="d-block g-color-gray-dark-v5 g-font-style-normal">二条：60</span>
-
-                </div>
-
-                <!-- End Price -->
-                <!-- Actions -->
-                <div class="d-md-table-cell align-middle text-md-right g-pa-20">
-                    <div class="g-mt-minus-10 g-mx-minus-5">
-                        <a class="btn btn-lg u-btn-primary g-font-weight-600 g-font-size-12 text-uppercase g-mx-5 g-mt-10" href="#!">收藏</a>
                     </div>
-                </div>
-                <!-- End Actions -->
-            </article>
-            <!-- End Article -->
+                    <!-- End Article Content -->
+                    <!-- Price -->
 
+                    <div class="d-md-table-cell align-middle g-py-15 g-px-20">
+                        <h3 class="h6 g-color-gray-dark-v2 g-font-weight-700">
+                            文章情况 <small class="g-color-gray-dark-v4">更新日期：@collectionDate</small>
+                        </h3>
+                        <span class="d-block g-color-gray-dark-v5 g-font-style-normal">头条平均阅读数：@avgRead</span>
+                        <span class="d-block g-color-gray-dark-v5 g-font-style-normal">最近头条阅读数：@lastRead</span>
+                        <span class="d-block g-color-gray-dark-v5 g-font-style-normal">月发文数：@item.MonthPostNum</span>
+                        <span class="d-block g-color-gray-dark-v5 g-font-style-normal">最近发文日期：@lastPushDate</span>
+                    </div>
+                    <!-- End Price -->
+                    <!-- Price -->
+                    <div class="d-md-table-cell align-middle g-py-15 g-px-20">
+                        <h3 class="h6 g-color-gray-dark-v2 g-font-weight-700">
+                            参考报价 <small class="g-color-gray-dark-v4"> 有效期：@priceDate</small>
+                        </h3>
+                        @foreach (var price in item.MediaPrices)
+                        {
+                            <span class="d-block g-color-gray-dark-v5 g-font-style-normal">@price.AdPositionName：@price.PurchasePrice</span>
+                        }
+
+
+
+                    </div>
+                    <!-- End Price -->
+                    <!-- Actions -->
+                    <div class="d-md-table-cell align-middle text-md-right g-pa-20">
+                        <div class="g-mt-minus-10 g-mx-minus-5">
+                            <a class="btn btn-lg u-btn-inset u-btn-outline-orange g-font-weight-600 g-font-size-12 text-uppercase g-mx-5 g-mt-10" href="#!">查看详情</a>
+                        </div>
+                    </div>
+                    <!-- End Actions -->
+                </article>
+                <!-- End Article -->
+                <hr class="g-brd-gray-light-v4">
+            }
             <div class="row">
                 <div class="col-lg-12">
                     <!-- Pagination -->
@@ -642,7 +317,6 @@
             </div>
         </div>
         <div class="col-md-5 col-lg-2 order-lg-1 g-mb-70">
-
             <!-- Recently Viewed -->
             <div class="g-bg-secondary g-pa-5 g-mb-30">
                 <div class="g-bg-white g-pa-15">
@@ -699,125 +373,7 @@
 </div>
 <!-- List View -->
 <hr class="g-brd-gray-light-v4">
-<!-- New Lands -->
-<div class="container-fluid text-center g-pt-50 g-pb-80">
-    <h2 class="h4 g-mb-30">热门资源</h2>
-    <!-- Products - Carousel Image -->
-    <div class="js-carousel g-mx-40"
-         data-infinite="true"
-         data-slides-show="3"
-         data-center-mode="true"
-         data-center-padding="60px"
-         data-arrows-classes="u-arrow-v1 g-width-30 g-height-30 g-color-white g-bg-primary g-bg-primary-dark-v1--hover g-absolute-centered--y"
-         data-arrow-left-classes="fa fa-angle-left g-left-minus-40 g-brd-right g-brd-white-opacity-0_1"
-         data-arrow-right-classes="fa fa-angle-right g-right-minus-40"
-         data-responsive='[{
-               "breakpoint": 1800,
-               "settings": {
-                 "slidesToShow": 4
-               }
-             }, {
-               "breakpoint": 1200,
-               "settings": {
-                 "slidesToShow": 3
-               }
-             }, {
-               "breakpoint": 992,
-               "settings": {
-                 "slidesToShow": 2
-               }
-             }, {
-               "breakpoint": 768,
-               "settings": {
-                 "slidesToShow": 1
-               }
-             }, {
-               "breakpoint": 576,
-               "settings": {
-                 "slidesToShow": 1
-               }
-             }, {
-               "breakpoint": 446,
-               "settings": {
-                 "slidesToShow": 1
-               }
-             }]'>
-        <div class="js-slide g-px-10">
-            <a class="u-block-hover" href="#">
-                <span class="d-block u-block-hover u-bg-overlay g-bg-primary-opacity-0_3--hover--after g-transition-0_3 mb-3">
-                    <img class="img-fluid w-100" src="/assets/theme/real-estate/img-temp/400x250/img4.jpg" alt="Image Description">
-                </span>
-            </a>
-            <h3 class="h6 mb-0">London</h3>
-        </div>
-        <div class="js-slide g-px-10">
-            <a class="u-block-hover" href="#">
-                <span class="d-block u-block-hover u-bg-overlay g-bg-primary-opacity-0_3--hover--after g-transition-0_3 mb-3">
-                    <img class="img-fluid w-100" src="/assets/theme/real-estate/img-temp/400x250/img5.jpg" alt="Image Description">
-                </span>
-            </a>
-            <h3 class="h6 mb-0">Liverpool</h3>
-        </div>
-        <div class="js-slide g-px-10">
-            <a class="u-block-hover" href="#">
-                <span class="d-block u-block-hover u-bg-overlay g-bg-primary-opacity-0_3--hover--after g-transition-0_3 mb-3">
-                    <img class="img-fluid w-100" src="/assets/theme/real-estate/img-temp/400x250/img6.jpg" alt="Image Description">
-                </span>
-            </a>
-            <h3 class="h6 mb-0">Manchester</h3>
-        </div>
-        <div class="js-slide g-px-10">
-            <a class="u-block-hover" href="#">
-                <span class="d-block u-block-hover u-bg-overlay g-bg-primary-opacity-0_3--hover--after g-transition-0_3 mb-3">
-                    <img class="img-fluid w-100" src="/assets/theme/real-estate/img-temp/400x250/img7.jpg" alt="Image Description">
-                </span>
-            </a>
-            <h3 class="h6 mb-0">Bristol</h3>
-        </div>
-        <div class="js-slide g-px-10">
-            <a class="u-block-hover" href="#">
-                <span class="d-block u-block-hover u-bg-overlay g-bg-primary-opacity-0_3--hover--after g-transition-0_3 mb-3">
-                    <img class="img-fluid w-100" src="/assets/theme/real-estate/img-temp/400x250/img8.jpg" alt="Image Description">
-                </span>
-            </a>
-            <h3 class="h6 mb-0">Newcastle</h3>
-        </div>
-        <div class="js-slide g-px-10">
-            <a class="u-block-hover" href="#">
-                <span class="d-block u-block-hover u-bg-overlay g-bg-primary-opacity-0_3--hover--after g-transition-0_3 mb-3">
-                    <img class="img-fluid w-100" src="/assets/theme/real-estate/img-temp/400x250/img9.jpg" alt="Image Description">
-                </span>
-            </a>
-            <h3 class="h6 mb-0">Leeds</h3>
-        </div>
-        <div class="js-slide g-px-10">
-            <a class="u-block-hover" href="#">
-                <span class="d-block u-block-hover u-bg-overlay g-bg-primary-opacity-0_3--hover--after g-transition-0_3 mb-3">
-                    <img class="img-fluid w-100" src="/assets/theme/real-estate/img-temp/400x250/img10.jpg" alt="Image Description">
-                </span>
-            </a>
-            <h3 class="h6 mb-0">York</h3>
-        </div>
-        <div class="js-slide g-px-10">
-            <a class="u-block-hover" href="#">
-                <span class="d-block u-block-hover u-bg-overlay g-bg-primary-opacity-0_3--hover--after g-transition-0_3 mb-3">
-                    <img class="img-fluid w-100" src="/assets/theme/real-estate/img-temp/400x250/img11.jpg" alt="Image Description">
-                </span>
-            </a>
-            <h3 class="h6 mb-0">Sheffield</h3>
-        </div>
-        <div class="js-slide g-px-10">
-            <a class="u-block-hover" href="#">
-                <span class="d-block u-block-hover u-bg-overlay g-bg-primary-opacity-0_3--hover--after g-transition-0_3 mb-3">
-                    <img class="img-fluid w-100" src="/assets/theme/real-estate/img-temp/400x250/img12.jpg" alt="Image Description">
-                </span>
-            </a>
-            <h3 class="h6 mb-0">Cambridge</h3>
-        </div>
-    </div>
-    <!-- Products - Carousel Image -->
-</div>
-<!-- End New Lands -->
+
 
 @section Styles {
     @Styles.Render("~/WebPlugins/fontawesomeStyle")
@@ -829,7 +385,7 @@
     @Styles.Render("~/WebPlugins/hamburgersStyle")
     @Styles.Render("~/WebPlugins/chosenStyle")
     @Styles.Render("~/WebPlugins/slickStyle")
-    @Styles.Render("~/WebPlugins/fancyboxStyle")
+    @*@Styles.Render("~/WebPlugins/fancyboxStyle")*@
     @Styles.Render("~/WebTheme/realestateStyle")
 }
 @section Scripts {
@@ -840,7 +396,7 @@
     @Scripts.Render("~/WebJquaryUI/widgetsliderScript")
     @Scripts.Render("~/WebPlugins/chosenScript")
     @Scripts.Render("~/WebPlugins/slickScript")
-    @Scripts.Render("~/WebPlugins/fancyboxScript")
+    @*@Scripts.Render("~/WebPlugins/fancyboxScript")*@
     @Scripts.Render("~/WebJquaryUI/versionScript")
     @Scripts.Render("~/WebJquaryUI/keycodeScript")
     @Scripts.Render("~/WebJquaryUI/positionScript")
@@ -853,20 +409,22 @@
     @Scripts.Render("~/WebUnify/dropdown")
     @Scripts.Render("~/WebUnify/slider")
     @Scripts.Render("~/WebUnify/select")
-    @Scripts.Render("~/WebUnify/carousel")
+    @*@Scripts.Render("~/WebUnify/carousel")*@
     @Scripts.Render("~/WebUnify/popup")
-    @Scripts.Render("~/WebUnify/datepicker")
+    @*@Scripts.Render("~/WebUnify/datepicker")*@
     @Scripts.Render("~/WebUnify/goto")
     <script>
         $(document).on('ready', function () {
             // initialization of range slider
-            $.HSCore.components.HSSlider.init('#rangeSlider1');
+            $.HSCore.components.HSSlider.init('#rangePrice1');
+            $.HSCore.components.HSSlider.init('#rangeFans1');
+            $.HSCore.components.HSSlider.init('#rangeRead1');
             // initialization of carousel
-            $.HSCore.components.HSCarousel.init('[class*="js-carousel"]');
+            //$.HSCore.components.HSCarousel.init('[class*="js-carousel"]');
             // initialization of popups
-            $.HSCore.components.HSPopup.init('.js-fancybox');
-            // initialization of datepicker
-            $.HSCore.components.HSDatepicker.init('#datepickerFrom');
+            //$.HSCore.components.HSPopup.init('.js-fancybox');
+            //// initialization of datepicker
+            //$.HSCore.components.HSDatepicker.init('#datepickerFrom');
         });
     </script>
 }
