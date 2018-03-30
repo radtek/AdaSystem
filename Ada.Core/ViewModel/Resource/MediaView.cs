@@ -65,6 +65,16 @@ namespace Ada.Core.ViewModel.Resource
         /// 粉丝数
         /// </summary>
         [Display(Name = "粉丝数")]
+        public int? FansNumStart { get; set; }
+        /// <summary>
+        /// 粉丝数
+        /// </summary>
+        [Display(Name = "粉丝数")]
+        public int? FansNumEnd { get; set; }
+        /// <summary>
+        /// 粉丝数
+        /// </summary>
+        [Display(Name = "粉丝数")]
         public string FansNumRange { get; set; }
         /// <summary>
         /// 最近头条阅读数

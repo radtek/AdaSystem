@@ -25,7 +25,7 @@ namespace Ada.Core.Domain
         /// </summary>
         public const short StateOK = (short)StatusEnum.Success;
         /// <summary>
-        /// 成功|完成  2
+        /// 失败 3
         /// </summary>
         public const short StateFail = (short)StatusEnum.Fail;
         /// <summary>

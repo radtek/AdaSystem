@@ -2691,6 +2691,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\HtmlHelperExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -2896,7 +2897,6 @@
     <Folder Include="Assets\vendor\revolution-slider\assets\css\" />
     <Folder Include="Assets\website\img\bg\grid\" />
     <Folder Include="Assets\website\img\bg\marker\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ada.Core\Ada.Core.csproj">
@@ -2910,6 +2910,10 @@
     <ProjectReference Include="..\Ada.Framework\Ada.Framework.csproj">
       <Project>{dabbe303-d2a1-4255-adee-c7836054eed7}</Project>
       <Name>Ada.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ada.Services\Ada.Services.csproj">
+      <Project>{290B1457-586C-4AB4-9B82-6DBBA35F5BD5}</Project>
+      <Name>Ada.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

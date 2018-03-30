@@ -605,6 +605,11 @@ namespace Ada.Web
             bundles.Add(new ScriptBundle("~/WebUnify/goto").Include(
                 "~/Assets/js/components/hs.go-to.js"));
 
+            //modals
+            bundles.Add(new StyleBundle("~/WebUnify/modalStyle").Include(
+                "~/Assets/vendor/animate.css", "~/Assets/vendor/custombox/custombox.min.css"));
+            bundles.Add(new ScriptBundle("~/WebUnify/modalScript").Include(
+                "~/Assets/vendor/custombox/custombox.min.js", "~/Assets/js/components/hs.modal-window.js"));
         }
     }
 }

@@ -49,7 +49,7 @@ namespace Ada.Services.Resource
         public IQueryable<Media> LoadEntitiesFilter(MediaView viewModel)
         {
             var allList = _repository.LoadEntities(d => d.IsDelete == false);
-            var isInclud = false;
+            //var isInclud = false;
             if (viewModel.Managers != null && viewModel.Managers.Count > 0)
             {
                 allList = allList.Where(d => viewModel.Managers.Contains(d.TransactorId));
@@ -173,41 +173,63 @@ namespace Ada.Services.Resource
             }
             if (viewModel.MediaTagIds != null)
             {
-                allList = from m in allList
-                          from t in m.MediaTags
-                          where viewModel.MediaTagIds.Contains(t.Id)
-                          select m;
+                //allList = from m in allList
+                //          from t in m.MediaTags
+                //          where viewModel.MediaTagIds.Contains(t.Id)
+                //          select m;
+                allList = allList.Include(d=>d.MediaTags).Where(d => d.MediaTags.Any(t => viewModel.MediaTagIds.Contains(t.Id)));
             }
-            if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
+            //if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
+            //{
+            //    if (!isInclud)
+            //    {
+            //        allList = allList.Include(d => d.MediaPrices);
+            //        isInclud = true;
+            //    }
+            //    if (viewModel.PriceStart != null)
+            //    {
+            //        allList = allList.Where(d =>
+            //            d.MediaPrices.FirstOrDefault(a => a.AdPositionName == viewModel.AdPositionName).PurchasePrice >=
+            //            viewModel.PriceStart);
+            //    }
+            //    if (viewModel.PriceEnd != null)
+            //    {
+            //        allList = allList.Where(d =>
+            //            d.MediaPrices.FirstOrDefault(a => a.AdPositionName == viewModel.AdPositionName).PurchasePrice <=
+            //            viewModel.PriceEnd);
+            //    }
+            //}
+            if (viewModel.PriceStart != null)
             {
-                if (!isInclud)
+                if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
                 {
-                    allList = allList.Include(d => d.MediaPrices);
-                    isInclud = true;
+                    allList = allList.Include(d => d.MediaPrices)
+                        .Where(d => d.MediaPrices.Any(p => p.PurchasePrice >= viewModel.PriceStart&&p.AdPositionName==viewModel.AdPositionName));
                 }
-                if (viewModel.PriceStart != null)
+                else
                 {
-                    allList = allList.Where(d =>
-                        d.MediaPrices.FirstOrDefault(a => a.AdPositionName == viewModel.AdPositionName).PurchasePrice >=
-                        viewModel.PriceStart);
+                    allList = allList.Include(d => d.MediaPrices)
+                        .Where(d => d.MediaPrices.Any(p => p.PurchasePrice >= viewModel.PriceStart));
                 }
-                if (viewModel.PriceEnd != null)
+            }
+            if (viewModel.PriceEnd != null)
+            {
+                if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
                 {
-                    allList = allList.Where(d =>
-                        d.MediaPrices.FirstOrDefault(a => a.AdPositionName == viewModel.AdPositionName).PurchasePrice <=
-                        viewModel.PriceEnd);
+                    allList = allList.Include(d => d.MediaPrices)
+                        .Where(d => d.MediaPrices.Any(p => p.PurchasePrice <= viewModel.PriceEnd && p.AdPositionName == viewModel.AdPositionName));
+                }
+                else
+                {
+                    allList = allList.Include(d => d.MediaPrices)
+                        .Where(d => d.MediaPrices.Any(p => p.PurchasePrice <= viewModel.PriceEnd));
                 }
             }
             if (viewModel.PriceInvalidDate != null)
             {
-                if (!isInclud)
-                {
-                    allList = allList.Include(d => d.MediaPrices);
-                }
                 var endDate = viewModel.PriceInvalidDate.Value.AddDays(1);
-                allList = allList.Where(d =>
-                    d.MediaPrices.FirstOrDefault().InvalidDate <
-                    endDate);
+                allList = allList.Include(d=>d.MediaPrices).Where(d =>
+                    d.MediaPrices.Any(p=>p.InvalidDate<endDate));
             }
             //allList = allList.Distinct();
             viewModel.total = allList.Count();

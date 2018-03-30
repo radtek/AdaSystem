@@ -154,36 +154,44 @@ namespace Purchase.Controllers
             var tax = entity.Tax ?? 0;
             entity.Money = entity.PurchaseMoney * (1 + tax / 100);
             entity.Status = viewModel.Status;
-            if (viewModel.PublishDate != null && !string.IsNullOrWhiteSpace(viewModel.PublishLink) && entity.PurchaseMoney > 0)
-            {
-                entity.Status = Consts.PurchaseStatusSuccess;
-            }
-            if (entity.Status == Consts.PurchaseStatusSuccess)
-            {
-                if (entity.PublishDate == null || string.IsNullOrWhiteSpace(viewModel.PublishLink))
-                {
-                    ModelState.AddModelError("message", "出刊日期或出刊链接不能为空");
-                    return View(viewModel);
-                }
-
-                if (entity.PurchaseMoney <= 0 || entity.PurchaseMoney == null)
-                {
-                    ModelState.AddModelError("message", "无税金额不能为0元");
-                    return View(viewModel);
-                }
-                entity.AuditStatus = Consts.StateNormal;
-            }
-
-            entity.Remark = viewModel.Remark;
+            var businessOrder = _businessOrderDetailRepository
+                .LoadEntities(d => d.Id == entity.BusinessOrderDetailId).FirstOrDefault();
             if (entity.Status==Consts.PurchaseStatusFail)
             {
-                var businessOrder = _businessOrderDetailRepository
-                    .LoadEntities(d => d.Id == entity.BusinessOrderDetailId).FirstOrDefault();
+                
                 businessOrder.Status = Consts.StateFail;//订单失败
                 entity.AuditStatus = Consts.StateNormal;
             }
+            else
+            {
+                if (businessOrder.Status != Consts.StateOK)
+                {
+                    businessOrder.Status = Consts.StateNormal;
+                }
+                if (viewModel.PublishDate != null && !string.IsNullOrWhiteSpace(viewModel.PublishLink) && entity.PurchaseMoney > 0)
+                {
+                    entity.Status = Consts.PurchaseStatusSuccess;
+                }
+                if (entity.Status == Consts.PurchaseStatusSuccess)
+                {
+                    if (entity.PublishDate == null || string.IsNullOrWhiteSpace(viewModel.PublishLink))
+                    {
+                        ModelState.AddModelError("message", "出刊日期或出刊链接不能为空");
+                        return View(viewModel);
+                    }
+
+                    if (entity.PurchaseMoney <= 0 || entity.PurchaseMoney == null)
+                    {
+                        ModelState.AddModelError("message", "无税金额不能为0元");
+                        return View(viewModel);
+                    }
+                    entity.AuditStatus = Consts.StateNormal;
+                }
+            }
+            entity.Remark = viewModel.Remark;
             _purchaseOrderDetailService.Update(entity);
             TempData["Msg"] = "更新成功";
+            viewModel.AuditStatus = entity.AuditStatus;
             return View(viewModel);
         }
         [HttpPost]

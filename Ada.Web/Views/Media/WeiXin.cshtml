@@ -1,10 +1,13 @@
-﻿@using System.Web.Optimization
+﻿@using System.Web.MVC
+@using System.Web.MVC.Html
+@using System.Web.Optimization
 @using Ada.Core
 @using Ada.Core.Domain.Resource
 @using Ada.Core.Infrastructure
 @using Ada.Core.Tools
 @using Ada.Services.Resource
-@model List<Ada.Core.Domain.Resource.Media>
+@using Ada.Web.Models
+@model Ada.Core.ViewModel.Resource.MediaView
 @{
     Layout = "~/Views/Shared/_Layout_Web.cshtml";
     ViewBag.Title = "微信公众号";
@@ -32,116 +35,136 @@
         <div class="container-fluid g-pb-10">
             <div class="g-bg-secondary g-pa-5">
                 <!-- Input Group -->
-                <form class="g-bg-white g-pa-30">
-                    <div class="row g-mx-0--md">
-                        <div class="col-md-6 col-lg-12 g-px-0--md g-mb-30">
-                            <input class="form-control rounded-0 g-brd-gray-light-v3 g-px-20 g-py-15" type="text" placeholder="公众号名称，微信号 关键字">
-                        </div>
+                @using (Html.BeginForm("WeiXin", "Media", FormMethod.Post, new { @class = "searchfrm g-bg-white g-pa-30" }))
+    {
+            @Html.AntiForgeryToken()
+var priceMin = Model.PriceStart ?? 0;
+var priceMax = Model.PriceEnd ?? 1000000;
+var fansMin = Model.FansNumStart ?? 0;
+var fansMax = Model.FansNumEnd ?? 1000;
+var readMin = Model.AvgReadNumStart ?? 0;
+var readMax = Model.AvgReadNumEnd ?? 100001;
+            <div class="row g-mx-0--md">
+                <div class="col-md-6 col-lg-12 g-px-0--md g-mb-30">
+                    @Html.TextBoxFor(d => d.MediaName, new { placeholder = "公众号名称，微信号 关键字", @class = "form-control rounded-0 g-brd-gray-light-v3 g-px-20 g-py-15" })
+                   
+                </div>
+            </div>
+            <div class="row g-mx-0--md">
+                <div class="col-md-6 col-lg-12 g-px-0--md g-mb-30">
+                    @Html.TextAreaFor(d=>d.MediaNames,3,1,new{@class="form-control form-control-md rounded-0", placeholder = "批量查找公众号，注：微信名称或者微信号 用逗号分开；或者换行输入，一行一个" })
+                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-lg-3 g-mb-30">
+                    <h2 class="h6 g-font-weight-600 mb-4">粉丝数 (<span id="rangeFans">0</span>) 万</h2>
+                    <div id="rangeFans1" class="u-slider-v1-3"
+                         data-result-container="rangeFans"
+                         data-range="true"
+                         data-default="@fansMin, @fansMax"
+                         data-min="0"
+                         data-max="1000"></div>
+                </div>
+                <div class="col-sm-6 col-lg-3 g-mb-30">
+                    <h2 class="h6 g-font-weight-600 mb-4">头条平均阅读量 (<span id="rangeRead">0</span>)</h2>
+                    <div id="rangeRead1" class="u-slider-v1-3"
+                         data-result-container="rangeRead"
+                         data-range="true"
+                         data-default="@readMin, @readMax"
+                         data-min="0"
+                         data-max="100001"></div>
+                </div>
+                <div class="col-sm-6 col-lg-2 g-mb-30">
+                    <!-- Input Group -->
+                    <div class="input-group-btn">
+                        <select name="@Html.IdFor(d=>d.AdPositionName)" class="js-custom-select u-select-v1 w-100 g-brd-gray-light-v3 g-bg-white g-color-main g-color-primary--hover g-py-12"
+                                data-placeholder="请选择广告位"
+                                data-open-icon="fa fa-angle-down"
+                                data-close-icon="fa fa-angle-up">
+                            <option value="">广告位(不限)</option>
+                            @foreach (var item in mediaType.AdPositions)
+                {
+                    var selected = item.Name == Model.AdPositionName ? "selected" : string.Empty;
+                    <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="@item.Name" @selected>@item.Name</option>
+    }
+                        </select>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-6 col-lg-3 g-mb-30">
-                            <h2 class="h6 g-font-weight-600 mb-4">粉丝数 (<span id="rangeFans">0</span>) 万</h2>
-                            <div id="rangeFans1" class="u-slider-v1-3"
-                                 data-result-container="rangeFans"
-                                 data-range="true"
-                                 data-default="0, 1000"
-                                 data-min="0"
-                                 data-max="1000"></div>
-                        </div>
-                        <div class="col-sm-6 col-lg-3 g-mb-30">
-                            <h2 class="h6 g-font-weight-600 mb-4">头条平均阅读量 (<span id="rangeRead">0</span>)</h2>
-                            <div id="rangeRead1" class="u-slider-v1-3"
-                                 data-result-container="rangeRead"
-                                 data-range="true"
-                                 data-default="0, 100001"
-                                 data-min="0"
-                                 data-max="100001"></div>
-                        </div>
-                        <div class="col-sm-6 col-lg-2 g-mb-30">
-                            <!-- Input Group -->
-                            <div class="input-group-btn">
-                                <select class="js-custom-select u-select-v1 w-100 g-brd-gray-light-v3 g-bg-white g-color-main g-color-primary--hover g-py-12" required
-                                        data-placeholder="广告位"
-                                        data-open-icon="fa fa-angle-down"
-                                        data-close-icon="fa fa-angle-up">
-                                    <option></option>
-                                    @foreach (var item in mediaType.AdPositions)
-                                    {
-                                        <option class="g-brd-none g-color-main g-color-white--hover g-color-white--active g-bg-primary--hover g-bg-primary--active" value="@item.Name">@item.Name</option>
-                                    }
+                    <!-- End Input Group -->
+                </div>
+                <div class="col-sm-6 col-lg-4 g-mb-30">
+                    <h2 class="h6 g-font-weight-600 mb-4">价格范围 ¥(<span id="rangePrice">0</span>)</h2>
+                    <div id="rangePrice1" class="u-slider-v1-3"
+                         data-result-container="rangePrice"
+                         data-range="true"
+                         data-default="@priceMin, @priceMax"
+                         data-min="0"
+                         data-max="1000000"></div>
+                </div>
+            </div>
+            <!-- Accordion -->
+            <div id="accordion-12-1" role="tablist" aria-multiselectable="true">
+                <!-- Card -->
+                <div class="row align-items-center">
+                    <div class="col-6">
+                        <button class="btn u-btn-primary g-color-white g-bg-primary-dark-v1--hover g-font-weight-600 rounded-0 g-px-35 g-py-12" type="submit">
+                            搜索
+                        </button>
 
-
-
-                                </select>
-                            </div>
-                            <!-- End Input Group -->
-                        </div>
-                        <div class="col-sm-6 col-lg-4 g-mb-30">
-                            <h2 class="h6 g-font-weight-600 mb-4">价格范围 ¥(<span id="rangePrice">0</span>)</h2>
-                            <div id="rangePrice1" class="u-slider-v1-3"
-                                 data-result-container="rangePrice"
-                                 data-range="true"
-                                 data-default="0, 1000000"
-                                 data-min="0"
-                                 data-max="1000000"></div>
-                        </div>
+                        <a class="btn u-btn-primary u-btn-outline-orange g-font-weight-600 rounded-0 g-px-35 g-py-12" href="javascript:window.location.href='@Url.Action("WeiXin")';">
+                            重置
+                        </a>
                     </div>
-                    <!-- Accordion -->
-                    <div id="accordion-12-1" role="tablist" aria-multiselectable="true">
-                        <!-- Card -->
-                        <div class="row align-items-center">
-                            <div class="col-6">
-                                <button class="btn u-btn-primary g-color-white g-bg-primary-dark-v1--hover g-font-weight-600 rounded-0 g-px-35 g-py-12" type="submit">
-                                    搜索
-                                </button>
-                            </div>
-                            <div class="col-6">
-                                <div id="accordion-12-1-heading-01" class="float-right u-accordion__header g-pa-0" role="tab">
-                                    <span class="d-block g-font-weight-600 g-font-size-15 mb-0">
-                                        <a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover" href="#accordion-12-1-body-01" data-toggle="collapse" data-parent="#accordion-12-1" aria-expanded="false" aria-controls="accordion-12-1-body-01">
-                                            更多筛选条件
-                                            <span class="u-accordion__control-icon ml-2">
-                                                <i class="fa fa-caret-up">
-                                                </i>
-                                                <i class="fa fa-caret-down">
-                                                </i>
-                                            </span>
-                                        </a>
+                    <div class="col-6">
+                        <div id="accordion-12-1-heading-01" class="float-right u-accordion__header g-pa-0" role="tab">
+                            <span class="d-block g-font-weight-600 g-font-size-15 mb-0">
+                                <a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover" href="#accordion-12-1-body-01" data-toggle="collapse" data-parent="#accordion-12-1" aria-expanded="false" aria-controls="accordion-12-1-body-01">
+                                    更多筛选条件
+                                    <span class="u-accordion__control-icon ml-2">
+                                        <i class="fa fa-caret-up">
+                                        </i>
+                                        <i class="fa fa-caret-down">
+                                        </i>
                                     </span>
-                                </div>
-                            </div>
+                                </a>
+                            </span>
                         </div>
-                        <div id="accordion-12-1-body-01" class="collapse" role="tabpanel" aria-labelledby="accordion-12-1-heading-01">
-                            <div class="u-accordion__body g-pt-30 g-pa-0">
-                                <div class="row">
-                                    @for (int i = 0; i < tagPages; i++)
-                                    {
-                                        <div class="col-xs-2 col-lg-1">
-                                            <!-- Features List -->
-                                            <ul class="list-unstyled mb-0">
-                                                @foreach (var item in tags.OrderBy(d => d.Taxis).Skip(i * tagSize).Take(tagSize))
-                                                {
-                                                    <li class="my-2">
-                                                        <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
-                                                            <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                                                            <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                                <i class="fa" data-check-icon="&#xf00c"></i>
-                                                            </span>
-                                                            @item.TagName
-                                                        </label>
-                                                    </li>
-                                                }
-                                            </ul>
-                                            <!-- End Features List -->
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Card -->
                     </div>
-                    <!-- End Accordion -->
-                </form>
+                </div>
+                <div id="accordion-12-1-body-01" class="collapse" role="tabpanel" aria-labelledby="accordion-12-1-heading-01">
+                    <div class="u-accordion__body g-pt-30 g-pa-0">
+                        <div class="row">
+                            @for (int i = 0; i < tagPages; i++)
+                {
+                    <div class="col-sm-4 col-md-6 col-lg-1">
+                        <!-- Features List -->
+                        <ul class="list-unstyled mb-0">
+                            @foreach (var item in tags.OrderBy(d => d.Taxis).Skip(i * tagSize).Take(tagSize))
+                {
+                    var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked" : "";
+                    <li class="my-2">
+                        <label class="form-check-inline u-check d-block u-link-v5 g-color-gray-dark-v4 g-color-primary--hover g-font-weight-500 g-pl-30">
+                            <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" name="MediaTagIds" value="@item.Id" type="checkbox" @isChecked>
+                            <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
+                                <i class="fa" data-check-icon="&#xf00c"></i>
+                            </span>
+                            @item.TagName
+                        </label>
+                    </li>
+    }
+                        </ul>
+                        <!-- End Features List -->
+                    </div>
+    }
+                        </div>
+                    </div>
+                </div>
+                <!-- End Card -->
+            </div>
+            <!-- End Accordion -->
+
+}
+
                 <!-- End Input Group -->
             </div>
         </div>
@@ -149,7 +172,7 @@
 </div>
 <!-- End Breadcrumbs & Search -->
 <!-- Filters -->
-<div class="container-fluid g-pb-20">
+@*<div class="container-fluid g-pb-20">
     <div class="row d-flex align-items-center">
         <div class="col-md-8 col-lg-6 g-mb-30">
         </div>
@@ -158,7 +181,7 @@
                 <h2 class="h6 g-font-weight-600 mr-4 mb-0">排序规则:</h2>
                 <!-- Input Group -->
                 <div class="input-group-btn">
-                    <select class="js-custom-select u-select-v1 g-min-width-150 g-brd-none g-bg-secondary g-color-main g-color-primary--hover g-py-12" required
+                    <select class="js-custom-select u-select-v1 g-min-width-150 g-brd-none g-bg-secondary g-color-main g-color-primary--hover g-py-12" 
                             data-placeholder="默认排序"
                             data-open-icon="fa fa-angle-down"
                             data-close-icon="fa fa-angle-up">
@@ -173,20 +196,25 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 <!-- End Filters -->
 <!-- List View -->
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-lg-10 order-lg-2 g-mb-70">
-            @foreach (var item in Model)
+            @foreach (var item in Model.Medias)
             {
                 var collectionDate = item.CollectionDate?.ToString("yyyy-MM-dd");
                 var priceDate = item.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd");
                 var lastPushDate = item.LastPushDate?.ToString("yyyy-MM-dd");
                 var avgRead = Convert.ToInt32(item.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).Take(10).Average(aaa => aaa.ViewCount));
                 var lastRead = item.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount;
-
+                var tagstrs = string.Join(",", item.MediaTags.Select(d => d.TagName));
+                if (item.MediaTags.Count>6)
+                {
+                    tagstrs = string.Join(",", item.MediaTags.Take(6).Select(d => d.TagName))+" ...";
+                }
+                
                 <!-- Article -->
                 <article class="d-md-table w-100 g-bg-white g-mb-1">
                     <!-- Article Image -->
@@ -209,7 +237,7 @@
                         </h3>
                         <span class="d-block g-color-gray-dark-v5 g-font-style-normal">微信号：@item.MediaID</span>
                         <span class="d-block g-color-gray-dark-v5 g-font-style-normal">粉丝数：@Utils.ShowFansNum(item.FansNum) 万</span>
-                        <span class="d-block g-color-gray-dark-v5 g-font-style-normal">分类：@string.Join(",", item.MediaTags.Select(d => d.TagName))</span>
+                        <span class="d-block g-color-gray-dark-v5 g-font-style-normal">分类：@tagstrs</span>
                         <span class="d-block">
                             @if (item.IsHot == true)
                             {
@@ -277,17 +305,18 @@
                     <!-- Pagination -->
                     <nav class="text-center g-mt-30" aria-label="Page Navigation">
                         <ul class="list-inline">
-                            <li class="list-inline-item float-sm-left">
-                                <a class="u-pagination-v1__item u-pagination-v1-2 u-pagination-v1-2--nav g-pa-12-21" href="#!" aria-label="Previous">
-                                    <span aria-hidden="true">
-                                        <i class="fa fa-angle-left g-mr-5"></i>
+                            @Html.ShowPageNavigate(Convert.ToInt32(Model.total),Convert.ToInt32(Model.offset))
+                            @*<li class='list-inline-item float-sm-left'>
+                                <a class='u-pagination-v1__item u-pagination-v1-2 u-pagination-v1-2--nav g-pa-12-21' href='#!' aria-label='Previous'>
+                                    <span aria-hidden='true'>
+                                        <i class='fa fa-angle-left g-mr-5'></i>
                                         上一页
                                     </span>
-                                    <span class="sr-only">上一页</span>
+                                    <span class='sr-only'>上一页</span>
                                 </a>
                             </li>
-                            <li class="list-inline-item g-hidden-sm-down">
-                                <a class="u-pagination-v1__item u-pagination-v1-2 u-pagination-v1-2--active g-brd-gray-light-v3 bilan g-brd-primary--hover g-pa-12-19" href="#!">1</a>
+                            <li class='list-inline-item g-hidden-sm-down'>
+                                <a class='u-pagination-v1__item u-pagination-v1-2 u-pagination-v1-2--active g-brd-gray-light-v3 bilan g-brd-primary--hover g-pa-12-19' href='#!'>1</a>
                             </li>
                             <li class="list-inline-item g-hidden-sm-down">
                                 <a class="u-pagination-v1__item u-pagination-v1-2 g-brd-gray-light-v3 bilan g-brd-primary--hover g-pa-12-19" href="#!">2</a>
@@ -309,7 +338,7 @@
                                     </span>
                                     <span class="sr-only">下一页</span>
                                 </a>
-                            </li>
+                            </li>*@
                         </ul>
                     </nav>
                     <!-- End Pagination -->
@@ -389,6 +418,7 @@
     @Styles.Render("~/WebTheme/realestateStyle")
 }
 @section Scripts {
+    @Scripts.Render("~/plugins/validate")
     @Scripts.Render("~/WebPlugins/hsmegamenuScript")
     @Scripts.Render("~/WebJquaryUI/widgetScript")
     @Scripts.Render("~/WebJquaryUI/widgetmenuScript")
@@ -419,6 +449,14 @@
             $.HSCore.components.HSSlider.init('#rangePrice1');
             $.HSCore.components.HSSlider.init('#rangeFans1');
             $.HSCore.components.HSSlider.init('#rangeRead1');
+            $(".searchfrm").validate({
+                submitHandler: function (form) {
+
+                    filtr(form);
+                    //alert($(form).serialize());
+                    form.submit();
+                }
+            });
             // initialization of carousel
             //$.HSCore.components.HSCarousel.init('[class*="js-carousel"]');
             // initialization of popups
@@ -426,5 +464,25 @@
             //// initialization of datepicker
             //$.HSCore.components.HSDatepicker.init('#datepickerFrom');
         });
+
+        function filtr(form) {
+            //获取算中数据
+            var fans = $("#rangeFans").text(), read = $("#rangeRead").text(), price = $("#rangePrice").text();
+            if (fans !='0 - 1000') {
+                $(form).append("<input name='FansNumRange' type='hidden' value='" + fans + "'>");
+            }
+            if (read != '0 - 100001') {
+                $(form).append("<input name='AvgReadNumRange' type='hidden' value='" + read + "'>");
+            }
+            if (price != '0 - 1000000') {
+                $(form).append("<input name='PriceRange' type='hidden' value='" + price + "'>");
+            }
+        }
+        function nextPage(page) {
+            var $form = $(".searchfrm");
+            filtr($form[0]);
+            $form.append("<input name='offset' type='hidden' value='" + page + "'>");
+            $form[0].submit();
+        }
     </script>
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.Diagnostics;
 using System.IO;
@@ -165,7 +166,7 @@ namespace Resource.Controllers
             viewModel.Status = Consts.StateNormal;
             var isExport = export == "export";
             viewModel.limit = isExport ? setting.BusinessExportRows : setting.BusinessSeachRows;
-            var results = _mediaService.LoadEntitiesFilter(viewModel).ToList();
+            var results = _mediaService.LoadEntitiesFilter(viewModel).AsNoTracking().ToList();
 
             watcher.Stop();
             //List<string> noDatas = new List<string>();
@@ -459,7 +460,7 @@ namespace Resource.Controllers
         public ActionResult GetList(MediaView viewModel)
         {
             viewModel.Managers = PremissionData();
-            var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
+            var result = _mediaService.LoadEntitiesFilter(viewModel).AsNoTracking().ToList();
             return Json(new
             {
                 viewModel.total,
