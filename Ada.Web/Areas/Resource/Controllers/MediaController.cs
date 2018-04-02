@@ -623,12 +623,11 @@ namespace Resource.Controllers
                     var name = adpostionNames[j];
                     var mediaPrice = _mediaPriceRepository
                         .LoadEntities(d => d.MediaId == id && d.AdPositionName == name).FirstOrDefault();
-                    if (mediaPrice == null) continue;
                     var tempCell = row.GetCell(startPrice + j);
                     double tempPrice = 0;
-                    if (tempCell!=null)
+                    if (tempCell != null)
                     {
-                        if (tempCell.CellType==CellType.Formula|| tempCell.CellType == CellType.Numeric)
+                        if (tempCell.CellType == CellType.Formula || tempCell.CellType == CellType.Numeric)
                         {
                             tempPrice = tempCell.NumericCellValue;
                         }
@@ -637,9 +636,30 @@ namespace Resource.Controllers
                             double.TryParse(tempCell.ToString(), out tempPrice);
                         }
                     }
-                    mediaPrice.PurchasePrice = Convert.ToDecimal(tempPrice);
-                    mediaPrice.PriceDate = DateTime.Now;
-                    mediaPrice.InvalidDate = date;
+                    if (mediaPrice == null)
+                    {
+                       var newPrice= media.MediaType.AdPositions.FirstOrDefault(d => d.Name == name);
+                        if (newPrice!=null)
+                        {
+                            media.MediaPrices.Add(new MediaPrice()
+                            {
+                                Id = IdBuilder.CreateIdNum(),
+                                PurchasePrice = Convert.ToDecimal(tempPrice),
+                                PriceDate = DateTime.Now,
+                                InvalidDate = date,
+                                AdPositionName = newPrice.Name,
+                                AdPositionId = newPrice.Id
+                            });
+                        }
+                    }
+                    else
+                    {
+                        mediaPrice.PurchasePrice = Convert.ToDecimal(tempPrice);
+                        mediaPrice.PriceDate = DateTime.Now;
+                        mediaPrice.InvalidDate = date;
+                    }
+                    
+                    
 
                 }
             }
