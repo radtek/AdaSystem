@@ -96,7 +96,7 @@ namespace Resource.Controllers
                     //价格
                     MediaPrice price1 = new MediaPrice();
                     price1.Id = IdBuilder.CreateIdNum();
-                    price1.AdPositionId = "X1801181040520021";
+                    price1.AdPositionId = "X1804021439498531";
                     price1.AdPositionName = "普通笔记";
                     price1.InvalidDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
                     decimal.TryParse(row.GetCell(7)?.ToString(), out var pt1);
@@ -106,7 +106,7 @@ namespace Resource.Controllers
 
                     MediaPrice price2 = new MediaPrice();
                     price2.Id = IdBuilder.CreateIdNum();
-                    price2.AdPositionId = "X1801181040520022";
+                    price2.AdPositionId = "X1804021439498532";
                     price2.AdPositionName = "长笔记";
                     price2.InvalidDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
                     decimal.TryParse(row.GetCell(8)?.ToString(), out var pt2);
@@ -114,6 +114,15 @@ namespace Resource.Controllers
                     price2.PriceDate = DateTime.Now;
                     media.MediaPrices.Add(price2);
 
+                    MediaPrice price3 = new MediaPrice();
+                    price3.Id = IdBuilder.CreateIdNum();
+                    price3.AdPositionId = "X1804021439498533";
+                    price3.AdPositionName = "视频";
+                    price3.InvalidDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+                    decimal.TryParse(row.GetCell(9)?.ToString(), out var pt3);
+                    price3.PurchasePrice = pt3;
+                    price3.PriceDate = DateTime.Now;
+                    media.MediaPrices.Add(price3);
 
                     var tags = row.GetCell(6)?.ToString();
                     if (!string.IsNullOrWhiteSpace(tags))
@@ -130,11 +139,11 @@ namespace Resource.Controllers
                         }
                     }
                     media.Area= row.GetCell(5)?.ToString();
-                    media.Remark = row.GetCell(9)?.ToString();
-                    media.Content = row.GetCell(10)?.ToString();
+                    media.Remark = row.GetCell(10)?.ToString();
+                    media.Content = row.GetCell(11)?.ToString();
 
-                    media.Transactor = row.GetCell(11)?.ToString();
-                    media.TransactorId = row.GetCell(12)?.ToString();
+                    media.Transactor = row.GetCell(12)?.ToString();
+                    media.TransactorId = row.GetCell(13)?.ToString();
                     media.Status = Consts.StateNormal;
                     media.IsSlide = true;
                     _mediaService.Add(media);

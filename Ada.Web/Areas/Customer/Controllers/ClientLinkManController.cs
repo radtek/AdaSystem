@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain.Customer;
+using Ada.Core.Tools;
 using Ada.Core.ViewModel.Customer;
 using Ada.Framework.Filter;
 using Ada.Services.Customer;
@@ -148,6 +149,10 @@ namespace Customer.Controllers
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (entity.IsLock==false)
+            {
+                return Json(new { State = 0, Msg = "此账户已开通会员，无法删除。请锁定账户后，再进行删除" });
+            }
             entity.DeletedBy = CurrentManager.UserName;
             entity.DeletedById = CurrentManager.Id;
             entity.DeletedDate = DateTime.Now;
@@ -188,6 +193,55 @@ namespace Customer.Controllers
             _followUpService.Add(entity);
             TempData["Msg"] = "跟进成功";
             return RedirectToAction("Index");
+        }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult CreateAccount(LinkManView viewModel)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(entity.LoginName))
+            {
+                return Json(new { State = 0, Msg = "登陆账户名称不能为空" });
+            }
+            entity.LoginName = viewModel.LoginName.Trim();
+            //校验唯一性
+            var temp = _repository
+                .LoadEntities(d => d.LoginName.Equals(entity.LoginName, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false && d.IsLock != true)
+                .FirstOrDefault();
+            if (temp != null)
+            {
+                return Json(new { State = 0, Msg = entity.LoginName + ",此账户名称已被占用!" });
+            }
+            entity.IsLock = false;
+            entity.Password = Encrypt.Encode(viewModel.Password);
+            _linkManService.Update(entity);
+            return Json(new { State = 1, Msg = "创建成功" });
+        }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult LockAccount(string id)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            entity.IsLock = true;
+            _linkManService.Update(entity);
+            return Json(new { State = 1, Msg = "锁定成功" });
+        }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult ResetPassword(string id, string p)
+        {
+            if (string.IsNullOrWhiteSpace(p))
+            {
+                return Json(new { State = 0, Msg = "密码不能为空" });
+            }
+            if (p.Length < 6)
+            {
+                return Json(new { State = 0, Msg = "密码长度不能少于6位" });
+            }
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            entity.Password = Encrypt.Encode(p);
+            _linkManService.Update(entity);
+            return Json(new { State = 1, Msg = "重置成功" });
         }
     }
 }

@@ -38,12 +38,12 @@ namespace DataReport.Controllers
             ViewBag.End = end;
             var startDate = DateTime.Parse(start);
             var endDate = DateTime.Parse(end);
-            var managers = _managerService.GetByOrganizationName("业务部");
+            
             var view = new BusinessOrderDetailView();
             view.PublishDateStart = startDate;
             view.PublishDateEnd = endDate;
-            var model = _businessOrderDetailService.BusinessPerformance(managers.ToList(), view);
-            return View(model);
+            var model = _businessOrderDetailService.BusinessPerformanceGroupByUser(view);
+            return View(model.ToList());
         }
     }
 }

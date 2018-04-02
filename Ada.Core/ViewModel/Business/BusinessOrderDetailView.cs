@@ -4,11 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ada.Core.ViewModel.Admin;
 
 namespace Ada.Core.ViewModel.Business
 {
     public class BusinessOrderDetailView : BaseView
     {
+        
         /// <summary>
         /// 税额
         /// </summary>
@@ -79,6 +81,11 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "出刊日期")]
         public DateTime? PublishDate { get; set; }
+        /// <summary>
+        /// 出刊日期
+        /// </summary>
+        [Display(Name = "出刊日期")]
+        public string PublishDateStr { get; set; }
         /// <summary>
         /// 预出刊日期
         /// </summary>
@@ -159,6 +166,16 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "预出刊日期")]
         public DateTime? PrePublishDateEnd { get; set; }
+        /// <summary>
+        /// 所属部门
+        /// </summary>
+        [Display(Name = "所属部门")]
+        public string OrganizationId { get; set; }
+        /// <summary>
+        /// 所属部门
+        /// </summary>
+        [Display(Name = "所属部门")]
+        public string OrganizationName { get; set; }
         /// <summary>
         /// 经办业务
         /// </summary>

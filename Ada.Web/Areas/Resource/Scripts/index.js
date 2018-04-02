@@ -171,9 +171,6 @@ function formatterMediaName(value, row) {
         case "website":
             name = "<span id='" + row.Id + "'>" + value + " - " + row.Client + " - " + row.Channel + "</span>";
             break;
-        case "zhihu":
-            name = "<a class='label' href='https://www.zhihu.com/people/" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> <span id='" + row.Id + "'>" + value + "</span></a>";
-            break;
         case "headline":
         case "webcast":
         case "brush":

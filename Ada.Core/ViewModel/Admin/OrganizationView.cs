@@ -25,6 +25,11 @@ namespace Ada.Core.ViewModel.Admin
         [Display(Name = "主键")]
         public string Id { get; set; }
         /// <summary>
+        /// 树路径
+        /// </summary>
+        [Display(Name = "树路径")]
+        public string TreePath { get; set; }
+        /// <summary>
         /// 排序
         /// </summary>
         [Display(Name = "排序")]

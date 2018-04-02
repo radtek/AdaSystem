@@ -751,7 +751,15 @@ namespace Resource.Controllers
 
             entity.MediaName = viewModel.MediaName.Trim();
             entity.MediaID = string.IsNullOrWhiteSpace(viewModel.MediaID) ? null : viewModel.MediaID.Trim();
-            entity.MediaLink = viewModel.MediaLink;
+            if (viewModel.MediaTypeIndex=="zhihu")
+            {
+                entity.MediaLink = "https://www.zhihu.com/people/"+ entity.MediaID;
+            }
+            else
+            {
+                entity.MediaLink = viewModel.MediaLink;
+            }
+            
             entity.MediaLogo = viewModel.MediaLogo;
             entity.MediaQR = viewModel.MediaQR;
             entity.Sex = viewModel.Sex;
@@ -829,6 +837,7 @@ namespace Resource.Controllers
 
             entity.MediaName = item.MediaName;
             entity.MediaID = item.MediaID;
+            
             entity.MediaLink = item.MediaLink;
             entity.MediaLogo = item.MediaLogo;
             entity.MediaQR = item.MediaQR;
@@ -906,7 +915,14 @@ namespace Resource.Controllers
 
             entity.MediaName = viewModel.MediaName.Trim();
             entity.MediaID = string.IsNullOrWhiteSpace(viewModel.MediaID) ? null : viewModel.MediaID.Trim();
-            entity.MediaLink = viewModel.MediaLink;
+            if (viewModel.MediaTypeIndex == "zhihu")
+            {
+                entity.MediaLink = "https://www.zhihu.com/people/" + entity.MediaID;
+            }
+            else
+            {
+                entity.MediaLink = viewModel.MediaLink;
+            }
             entity.MediaLogo = viewModel.MediaLogo;
             entity.MediaQR = viewModel.MediaQR;
             entity.Client = viewModel.Client;

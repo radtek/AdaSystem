@@ -138,9 +138,28 @@
                 <div class="ibox-title">
                     <h5>近四月销售概况</h5>
                 </div>
-                <div id="business">
 
-                </div>
+                @foreach (var item in Model.BusinessPerformances.OrderByDescending(d => d.Month).Take(4))
+                {
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <small class="stats-label">月份</small>
+                                <h4>@item.Month</h4>
+                            </div>
+                            <div class="col-xs-4">
+                                <small class="stats-label">销售额</small>
+                                <h4><i class="fa fa-jpy "></i> @item.TotalSellMoney</h4>
+                            </div>
+                            <div class="col-xs-4">
+                                <small class="stats-label">利润值</small>
+                                <h4><i class="fa fa-jpy "></i> @item.TotalProfitMoney</h4>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
             </div>
         </div>
     </div>
@@ -389,7 +408,7 @@
                 xAxis : [
                     {
                         type : 'category',
-                        data : []
+                        data : @Html.Raw(Json.Encode(Model.BusinessPerformances.Select(d => d.Month)))
                     }
                 ],
                 yAxis : [
@@ -401,19 +420,19 @@
                     {
                         name:'未核销',
                         type:'bar',
-                        data:[]
+                        data:@Html.Raw(Json.Encode(Model.BusinessPerformances.Select(d => d.TotalVerificationMoney)))
 
                     },
                     {
                         name:'已核销',
                         type:'bar',
-                        data:[]
+                        data:@Html.Raw(Json.Encode(Model.BusinessPerformances.Select(d => d.TotalConfirmVerificationMoney)))
 
                     }
                 ]
             };
             myChart.setOption(option);
-            $.ajax({
+            @*$.ajax({
                 type: "get",
                 url: "@Url.Action("GetBusinessIncome")",
                 //data: {},
@@ -423,12 +442,12 @@
                     $.each(data,
                         function(k, v) {
                             months.push(v.Month);
-                            confirmVerificationMoneys.push(v.BusinessOrderDetailView.TotalConfirmVerificationMoney ||
+                            confirmVerificationMoneys.push(v.TotalConfirmVerificationMoney ||
                                 0);
-                            verificationMoneys.push(v.BusinessOrderDetailView.TotalVerificationMoney ||
+                            verificationMoneys.push(v.TotalVerificationMoney ||
                                 0);
 
-                            if (v.Sort<4) {
+                            if (k<4) {
                                 $("#business").prepend('<div class="ibox-content">' +
                                     '<div class="row">' +
                                     '<div class="col-xs-4">' +
@@ -437,11 +456,11 @@
                                     '</div>' +
                                     '<div class="col-xs-4">' +
                                     '<small class="stats-label">销售额</small>' +
-                                    '<h4><i class="fa fa-jpy "></i> ' + (v.BusinessOrderDetailView.TotalSellMoney || 0)+'</h4>' +
+                                    '<h4><i class="fa fa-jpy "></i> ' + (v.TotalSellMoney || 0)+'</h4>' +
                                     '</div>' +
                                     '<div class="col-xs-4">' +
                                     '<small class="stats-label">利润值</small>' +
-                                    '<h4><i class="fa fa-jpy "></i> ' + (v.BusinessOrderDetailView.TotalProfitMoney || 0)+'</h4>' +
+                                    '<h4><i class="fa fa-jpy "></i> ' + (v.TotalProfitMoney || 0)+'</h4>' +
                                     '</div>' +
                                     '</div>' +
                                     '</div>');
@@ -475,7 +494,7 @@
                 beforeSend: function() {
                     myChart.showLoading();
                 }
-            });
+            });*@
         }
     </script>
 }

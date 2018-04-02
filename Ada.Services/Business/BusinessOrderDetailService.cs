@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.ViewModel.Admin;
 using Ada.Core.ViewModel.Business;
+using Ada.Core.ViewModel.Statistics;
 
 namespace Ada.Services.Business
 {
@@ -18,16 +20,22 @@ namespace Ada.Services.Business
 
         private readonly IRepository<BusinessOrderDetail> _repository;
         private readonly IDbContext _dbContext;
+        private readonly IRepository<Manager> _managerRepository;
+        private readonly IRepository<Organization> _organizationRepository;
         private readonly IRepository<PurchaseOrderDetail> _purchaseOrderDetailRepository;
         public BusinessOrderDetailService(
             IDbContext dbContext,
             IRepository<BusinessOrderDetail> repository,
-            IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository
+            IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository,
+            IRepository<Manager> managerRepository,
+            IRepository<Organization> organizationRepository
             )
         {
             _repository = repository;
             _purchaseOrderDetailRepository = purchaseOrderDetailRepository;
             _dbContext = dbContext;
+            _managerRepository = managerRepository;
+            _organizationRepository = organizationRepository;
         }
 
 
@@ -163,123 +171,182 @@ namespace Ada.Services.Business
         }
 
 
-        /// <summary>
-        /// 根据人员集合获取订单明细统计数
-        /// </summary>
-        /// <param name="managers"></param>
-        /// <returns></returns>
-        public List<BusinessOrderDetailView> BusinessPerformance(List<ManagerView> managers, BusinessOrderDetailView viewModel)
-        {
-            List<BusinessOrderDetailView> list = new List<BusinessOrderDetailView>();
-            foreach (var manager in managers)
-            {
-                var item = BusinessPerformance(manager.Id, viewModel);
-                item.Transactor = manager.UserName;
-                list.Add(item);
-            }
-            return list;
-        }
-        /// <summary>
-        /// 根据个人已完成的订单明细统计数
-        /// </summary>
-        /// <param name="transactorId"></param>
-        /// <returns></returns>
-        public BusinessOrderDetailView BusinessPerformance(string transactorId, BusinessOrderDetailView viewModel)
-        {
-            var orders = GetBusinessOrderDetails(viewModel);
-            BusinessOrderDetailView item = new BusinessOrderDetailView
-            {
-                TransactorId = transactorId,
-                TotalSellMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.SellMoney),
-                TotalVerificationMoney =
-                    orders.Where(d => d.TransactorId == transactorId).Sum(d => d.VerificationMoney),
-                TotalConfirmVerificationMoney =
-                    orders.Where(d => d.TransactorId == transactorId).Sum(d => d.ConfirmVerificationMoney),
-                TotalPurchaseMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.PurchaseMoney),
-                TotalProfitMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.ProfitMoney)
-            };
-            if (item.TotalSellMoney == null || item.TotalSellMoney == 0)
-            {
-                item.Profit = 0;
-            }
-            else
-            {
-                item.Profit = item.TotalProfitMoney / item.TotalSellMoney * 100;
-            }
+        ///// <summary>
+        ///// 根据人员集合获取订单明细统计数
+        ///// </summary>
+        ///// <param name="managers"></param>
+        ///// <returns></returns>
+        //public List<BusinessOrderDetailView> BusinessPerformance(List<ManagerView> managers, BusinessOrderDetailView viewModel)
+        //{
+        //    List<BusinessOrderDetailView> list = new List<BusinessOrderDetailView>();
+        //    foreach (var manager in managers)
+        //    {
+        //        var item = BusinessPerformance(manager.Id, viewModel);
+        //        item.Transactor = manager.UserName;
+        //        list.Add(item);
+        //    }
+        //    return list;
+        //}
+        ///// <summary>
+        ///// 根据个人已完成的订单明细统计数
+        ///// </summary>
+        ///// <param name="transactorId"></param>
+        ///// <returns></returns>
+        //public BusinessOrderDetailView BusinessPerformance(string transactorId, BusinessOrderDetailView viewModel)
+        //{
+        //    var orders = GetBusinessOrderDetails(viewModel);
+        //    BusinessOrderDetailView item = new BusinessOrderDetailView
+        //    {
+        //        TransactorId = transactorId,
+        //        TotalSellMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.SellMoney),
+        //        TotalVerificationMoney =
+        //            orders.Where(d => d.TransactorId == transactorId).Sum(d => d.VerificationMoney),
+        //        TotalConfirmVerificationMoney =
+        //            orders.Where(d => d.TransactorId == transactorId).Sum(d => d.ConfirmVerificationMoney),
+        //        TotalPurchaseMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.PurchaseMoney),
+        //        TotalProfitMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.ProfitMoney)
+        //    };
+        //    if (item.TotalSellMoney == null || item.TotalSellMoney == 0)
+        //    {
+        //        item.Profit = 0;
+        //    }
+        //    else
+        //    {
+        //        item.Profit = item.TotalProfitMoney / item.TotalSellMoney * 100;
+        //    }
 
-            return item;
-        }
+        //    return item;
+        //}
+        ///// <summary>
+        ///// 所有数据订单明细数据
+        ///// </summary>
+        ///// <param name="viewModel"></param>
+        ///// <returns></returns>
+        //public IQueryable<BusinessOrderDetailView> BusinessPerformance(BusinessOrderDetailView viewModel)
+        //{
+        //    var orders = GetBusinessOrderDetails(viewModel);
+        //    //BusinessOrderDetailView item = new BusinessOrderDetailView
+        //    //{
+        //    //    TotalSellMoney = orders.Sum(d => d.SellMoney),
+        //    //    TotalVerificationMoney =
+        //    //        orders.Sum(d => d.VerificationMoney),
+        //    //    TotalConfirmVerificationMoney =
+        //    //        orders.Sum(d => d.ConfirmVerificationMoney),
+        //    //    TotalPurchaseMoney = orders.Sum(d => d.PurchaseMoney),
+        //    //    TotalProfitMoney = orders.Sum(d => d.ProfitMoney)
+        //    //};
+        //    //item.Profit = item.TotalProfitMoney / item.TotalSellMoney * 100;
+        //    var result = orders.GroupBy(d => d.Transactor).Select(d => new BusinessOrderDetailView
+        //    {
+        //        Transactor = d.Key,
+        //        TotalSellMoney = d.Sum(o => o.SellMoney),
+        //        TotalVerificationMoney = d.Sum(o => o.VerificationMoney),
+        //        TotalConfirmVerificationMoney = d.Sum(o => o.ConfirmVerificationMoney),
+        //        TotalPurchaseMoney = d.Sum(o => o.PurchaseMoney),
+        //        TotalProfitMoney = d.Sum(o => o.ProfitMoney),
+        //        Profit = d.Sum(o => o.ProfitMoney) / d.Sum(o => o.SellMoney) * 100,
+
+        //    });
+        //    return result;
+        //}
         /// <summary>
-        /// 所有数据订单明细数据
+        /// 销售业绩统计(按经办人分组)
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        public BusinessOrderDetailView BusinessPerformance(BusinessOrderDetailView viewModel)
-        {
-            var orders = GetBusinessOrderDetails(viewModel);
-            BusinessOrderDetailView item = new BusinessOrderDetailView
-            {
-                TotalSellMoney = orders.Sum(d => d.SellMoney),
-                TotalVerificationMoney =
-                    orders.Sum(d => d.VerificationMoney),
-                TotalConfirmVerificationMoney =
-                    orders.Sum(d => d.ConfirmVerificationMoney),
-                TotalPurchaseMoney = orders.Sum(d => d.PurchaseMoney),
-                TotalProfitMoney = orders.Sum(d => d.ProfitMoney)
-            };
-            item.Profit = item.TotalProfitMoney / item.TotalSellMoney * 100;
-            return item;
-        }
-        /// <summary>
-        /// 获取所有的已完成的销售订单明细
-        /// </summary>
-        /// <param name="viewModel"></param>
-        /// <returns></returns>
-        private IQueryable<BusinessOrderDetailView> GetBusinessOrderDetails(BusinessOrderDetailView viewModel)
+        public IQueryable<BusinessPerformance> BusinessPerformanceGroupByUser(BusinessOrderDetailView viewModel)
         {
             var purchaseOrders = _purchaseOrderDetailRepository.LoadEntities(d => d.IsDelete == false && d.PurchaseOrder.IsDelete == false);
             var businessOrders = _repository.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false);
+            //过滤日期
             if (viewModel.PublishDateStart != null && viewModel.PublishDateEnd != null)
             {
                 var endDay = viewModel.PublishDateEnd.Value.AddDays(1);
-                return from b in businessOrders
-                       from p in purchaseOrders
-                           //双方都是已完成的状态
-                       where p.Status == Consts.PurchaseStatusSuccess &&
-                             b.Status == Consts.StateOK &&
-                             b.Id == p.BusinessOrderDetailId &&
-                             p.PublishDate >= viewModel.PublishDateStart
-                             && p.PublishDate < endDay
-                       select new BusinessOrderDetailView
-                       {
-                           SellMoney = b.SellMoney,
-                           VerificationMoney = b.VerificationMoney,
-                           ConfirmVerificationMoney = b.ConfirmVerificationMoney,
-                           PurchaseMoney = p.PurchaseMoney,
-                           ProfitMoney = b.SellMoney - p.PurchaseMoney,
-                           Transactor = b.BusinessOrder.Transactor,
-                           TransactorId = b.BusinessOrder.TransactorId
-
-                       };
+                purchaseOrders = purchaseOrders.Where(d =>
+                    d.PublishDate >= viewModel.PublishDateStart && d.PublishDate < endDay);
             }
-            return from b in businessOrders
-                   from p in purchaseOrders
-                       //双方都是已完成的状态
-                   where p.Status == Consts.PurchaseStatusSuccess &&
-                         b.Status == Consts.StateOK &&
-                         b.Id == p.BusinessOrderDetailId
-                   select new BusinessOrderDetailView
-                   {
-                       SellMoney = b.SellMoney,
-                       VerificationMoney = b.VerificationMoney,
-                       ConfirmVerificationMoney = b.ConfirmVerificationMoney,
-                       PurchaseMoney = p.PurchaseMoney,
-                       ProfitMoney = b.SellMoney - p.PurchaseMoney,
-                       Transactor = b.BusinessOrder.Transactor,
-                       TransactorId = b.BusinessOrder.TransactorId
+            //过滤部门
+            if (!string.IsNullOrWhiteSpace(viewModel.OrganizationName))
+            {
+                var organization = _organizationRepository
+                    .LoadEntities(d => d.OrganizationName == viewModel.OrganizationName).FirstOrDefault();
+                if (organization != null)
+                {
+                    var mangers = _managerRepository.LoadEntities(d => d.IsDelete == false && d.Status == Consts.StateNormal);
+                    businessOrders = from b in businessOrders
+                                     from m in mangers
+                                     where b.BusinessOrder.TransactorId == m.Id && m.Organizations.Any(o => o.TreePath.Contains(organization.Id))
+                                     select b;
+                }
 
-                   };
+            }
+            return (from b in businessOrders
+                          from p in purchaseOrders
+                              //双方都是已完成的状态
+                          where p.Status == Consts.PurchaseStatusSuccess &&
+                                b.Status == Consts.StateOK &&
+                                b.Id == p.BusinessOrderDetailId
+                          select new BusinessOrderDetailView
+                          {
+                              SellMoney = b.SellMoney,
+                              VerificationMoney = b.VerificationMoney,
+                              ConfirmVerificationMoney = b.ConfirmVerificationMoney,
+                              PurchaseMoney = p.PurchaseMoney,
+                              ProfitMoney = b.SellMoney - p.PurchaseMoney,
+                              Transactor = b.BusinessOrder.Transactor,
+                              TransactorId = b.BusinessOrder.TransactorId
+                          }).GroupBy(d => d.Transactor).Select(d => new BusinessPerformance
+                          {
+                              Transactor = d.Key,
+                              TotalSellMoney = d.Sum(o => o.SellMoney),
+                              TotalVerificationMoney = d.Sum(o => o.VerificationMoney),
+                              TotalConfirmVerificationMoney = d.Sum(o => o.ConfirmVerificationMoney),
+                              TotalPurchaseMoney = d.Sum(o => o.PurchaseMoney),
+                              TotalProfitMoney = d.Sum(o => o.ProfitMoney),
+                              Profit = d.Sum(o => o.ProfitMoney) / d.Sum(o => o.SellMoney) * 100,
 
+                          });
+        }
+        /// <summary>
+        /// 销售业绩统计(按月份分组)
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        public IQueryable<BusinessPerformance> BusinessPerformanceGroupByDate(BusinessOrderDetailView viewModel)
+        {
+            var purchaseOrders = _purchaseOrderDetailRepository.LoadEntities(d => d.IsDelete == false && d.PurchaseOrder.IsDelete == false);
+            var businessOrders = _repository.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false);
+            if (!string.IsNullOrWhiteSpace(viewModel.TransactorId))
+            {
+                businessOrders = businessOrders.Where(d => d.BusinessOrder.TransactorId == viewModel.TransactorId);
+            }
+            return (from b in businessOrders
+                    from p in purchaseOrders
+                        //双方都是已完成的状态
+                    where p.Status == Consts.PurchaseStatusSuccess &&
+                          b.Status == Consts.StateOK &&
+                          b.Id == p.BusinessOrderDetailId
+                    select new BusinessOrderDetailView
+                    {
+                        SellMoney = b.SellMoney,
+                        VerificationMoney = b.VerificationMoney,
+                        ConfirmVerificationMoney = b.ConfirmVerificationMoney,
+                        PurchaseMoney = p.PurchaseMoney,
+                        ProfitMoney = b.SellMoney - p.PurchaseMoney,
+                        PublishDateStr = SqlFunctions.DateName("yyyy", p.PublishDate)
+                                         + "年" +
+                                         SqlFunctions.StringConvert((decimal)SqlFunctions.DatePart("mm", p.PublishDate)).Trim()+"月"
+                        
+                    }).GroupBy(d => d.PublishDateStr).Select(d => new BusinessPerformance
+                    {
+                        Month = d.Key,
+                        TotalSellMoney = d.Sum(o => o.SellMoney),
+                        TotalVerificationMoney = d.Sum(o => o.VerificationMoney),
+                        TotalConfirmVerificationMoney = d.Sum(o => o.ConfirmVerificationMoney),
+                        TotalPurchaseMoney = d.Sum(o => o.PurchaseMoney),
+                        TotalProfitMoney = d.Sum(o => o.ProfitMoney)
+                        
+                    });
         }
         public void Update(BusinessOrderDetail entity)
         {

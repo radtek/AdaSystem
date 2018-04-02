@@ -169,15 +169,21 @@
     </div>
     <div class="row">
         <div class="col-lg-12">
-            <div class="ibox float-e-margins">
+            <div class="ibox float-e-margins" id="iboxAdd">
                 <div class="ibox-title">
-                    <h5>媒体资源开发排行榜（@DateTime.Now.Month 月）</h5>
+                    <h5>媒体资源开发排行榜</h5>
                     <div class="ibox-tools">
-
-                        @*<a href="javascript:;">
-                            <i class="fa fa-refresh"></i>
-                        </a>*@
-
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy-MM")</span> <i class="fa fa-chevron-down"></i></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            @for (int i = 0; i < 12; i++)
+                            {
+                                <li>
+                                    <a href="javascript:getTop('@DateTime.Now.AddMonths(-i).ToString("yyyy-MM")');">@DateTime.Now.AddMonths(-i).ToString("yyyy-MM")</a>
+                                </li>
+                            }
+                        </ul>
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -205,7 +211,7 @@
                                 index++;
                             }
                         </tbody>
-                        <tbody></tbody>
+
                     </table>
                 </div>
             </div>
@@ -262,6 +268,35 @@
             };
 
             myChart.setOption(option);
+        }
+        function getTop(date) {
+            var $top = $("#iboxAdd"), $table = $("#iboxAdd tbody");
+            $("#iboxAdd .currentdate").text(date);
+            $.ajax({
+                type: "get",
+                url: "@Url.Action("GetAddTop")",
+                data: { date:date },
+                success: function (data) {
+                    $table.empty();
+                    $.each(data,
+                        function(k, v) {
+                            $table.append('<tr>' +
+                                '<td class="text-center">' + (k + 1) + '</td>' +
+                                '<td>' + v.Transactor+'</td>' +
+                                '<td>' + v.MediasCount+'</td>' +
+                                '</tr>');
+                        });
+                },
+                error: function () {
+                    //swal("操作失败", "系统错误", "error");
+                },
+                complete: function () {
+                    $top.children('.ibox-content').toggleClass('sk-loading');
+                },
+                beforeSend: function() {
+                    $top.children('.ibox-content').toggleClass('sk-loading');
+                }
+            });
         }
     </script>
 }
