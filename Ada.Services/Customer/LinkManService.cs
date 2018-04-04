@@ -1,11 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Ada.Core;
 using Ada.Core.Domain.Customer;
+using Ada.Core.Tools;
 using Ada.Core.ViewModel.Customer;
 
 namespace Ada.Services.Customer
 {
-   public class LinkManService : ILinkManService
+    public class LinkManService : ILinkManService
     {
         private readonly IDbContext _dbContext;
         private readonly IRepository<LinkMan> _repository;
@@ -23,7 +25,7 @@ namespace Ada.Services.Customer
             {
                 allList = allList.Where(d => viewModel.Managers.Contains(d.TransactorId));
             }
-            if (viewModel.IsBusiness!=null)
+            if (viewModel.IsBusiness != null)
             {
                 allList = allList.Where(d => d.Commpany.IsBusiness == viewModel.IsBusiness);
             }
@@ -82,6 +84,15 @@ namespace Ada.Services.Customer
         {
             _repository.Delete(entity);
             _dbContext.SaveChanges();
+        }
+
+        public LinkMan CheackUser(string name, string pwd)
+        {
+            pwd = Encrypt.Encode(pwd.Trim());
+            var user = _repository.LoadEntities(d =>
+                  d.LoginName.Equals(name.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
+                  d.IsLock == false && d.Password == pwd).FirstOrDefault();
+            return user;
         }
     }
 }

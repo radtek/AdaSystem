@@ -82,7 +82,7 @@
                         @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control" })
                     </div>
                 </div>
-                
+
                 <div class="col-sm-2">
                     <div class="form-group">
                         @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
@@ -102,7 +102,7 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
-                        @Html.LabelFor(d => d.AvgReadNum, Html.DisplayNameFor(d => d.AvgReadNum).ToString(), new { @class = "control-label" })
+                        @Html.LabelFor(d => d.AvgReadNum, "平均阅读数", new { @class = "control-label" })
                         <div class="input-daterange input-group">
                             @Html.TextBoxFor(d => d.AvgReadNumStart, new { @class = "form-control" })
                             <span class="input-group-addon">至</span>
@@ -272,7 +272,7 @@
 
                                     <th>媒体类型</th>
                                     <th>媒体信息</th>
-                                    @if (Model.MediaTypeIndex == "weixin" || Model.MediaTypeIndex == "sinablog")
+                                    @if (Model.MediaTypeIndex == "weixin" || Model.MediaTypeIndex == "sinablog" || Model.MediaTypeIndex == "douyin")
                                     {
                                         <th data-breakpoints="xs">媒体指数</th>
                                     }
@@ -393,7 +393,7 @@
                                             }
 
                                         </td>
-                                        @if (Model.MediaTypeIndex == "weixin" || Model.MediaTypeIndex == "sinablog")
+                                        @if (Model.MediaTypeIndex == "weixin" || Model.MediaTypeIndex == "sinablog" || Model.MediaTypeIndex == "douyin")
                                         {
 
                                             if (Model.MediaTypeIndex == "weixin")
@@ -417,7 +417,7 @@
                                                     </div>
                                                 </td>
                                             }
-                                            else
+                                            if (Model.MediaTypeIndex == "sinablog")
                                             {
                                                 <td>
                                                     <div class='p-xxs'>
@@ -440,6 +440,29 @@
                                                             var lastDate = item.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate.Value.ToString("yyyy-MM-dd");
                                                         }
                                                         <span class='label label-info'>最近博文日期：@lastDate</span>
+                                                    </div>
+                                                </td>
+                                            }
+                                            if (Model.MediaTypeIndex == "douyin")
+                                            {
+                                                <td>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>平均浏览数：@Convert.ToInt32(item.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ViewCount))</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>平均评论数：@Convert.ToInt32(item.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount))</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>平均点赞数：@Convert.ToInt32(item.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount))</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>发布视频总数：@item.PostNum</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        @{
+                                                            var lastDate = item.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate.Value.ToString("yyyy-MM-dd");
+                                                        }
+                                                        <span class='label label-info'>最近视频日期：@lastDate</span>
                                                     </div>
                                                 </td>
                                             }

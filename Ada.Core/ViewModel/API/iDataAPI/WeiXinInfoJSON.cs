@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Ada.Core.ViewModel.API.iDataAPI
 {
-   public class WeiXinInfosJSON:iDataJsonResult
+   
+
+    public class WeiXinInfosJSON : iDataJsonResult
     {
         public WeiXinInfosJSON()
         {
@@ -59,4 +61,6 @@ namespace Ada.Core.ViewModel.API.iDataAPI
         public string url { get; set; }
         public string date { get; set; }
     }
+
+
 }

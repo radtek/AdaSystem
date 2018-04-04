@@ -181,6 +181,7 @@
     <Compile Include="ViewModel\API\iDataAPI\iDataAPIJSON.cs" />
     <Compile Include="ViewModel\API\iDataAPI\TestJSON.cs" />
     <Compile Include="ViewModel\API\iDataAPI\TestParams.cs" />
+    <Compile Include="ViewModel\API\iDataAPI\DouYinJSON.cs" />
     <Compile Include="ViewModel\API\iDataAPI\WeiXinInfoJSON.cs" />
     <Compile Include="ViewModel\API\RequestResult.cs" />
     <Compile Include="ViewModel\API\iDataAPI\WeiBoJSON.cs" />

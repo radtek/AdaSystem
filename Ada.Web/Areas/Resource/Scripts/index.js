@@ -246,6 +246,26 @@ function formatterBlogData(value, row) {
         "<div class='p-xxs'><span class='label label-info'>最近博文日期：" +
         date + "</div>";
 }
+function formatterDouYinData(value, row) {
+    var date = "--";
+    if (row.BlogLastPushDate) {
+        date = moment(row.BlogLastPushDate).format("YYYY-MM-DD HH:mm");
+    }
+    return "<div class='p-xxs'><span class='label label-info'>平均点赞数：" +
+        (row.LikesNum || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>平均浏览数：" +
+        (row.AvgReadNumDouYin || 0) +
+        "</div>" +
+        //"<div class='p-xxs'><span class='label label-info'>平均评论数：" +
+        //(row.CommentNum || 0) +
+        //"</div>" +
+        "<div class='p-xxs'><span class='label label-info'>总视频数：" +
+        (row.PostNum || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>最近视频日期：" +
+        date + "</div>";
+}
 function formatterblogLevel(value) {
     if (value == "黄V") {
         return " <span class='label label-warning'>V</span>";

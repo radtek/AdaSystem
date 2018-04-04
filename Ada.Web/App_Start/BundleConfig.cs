@@ -582,7 +582,13 @@ namespace Ada.Web
                 "~/Assets/vendor/jquery-ui/ui/safe-active-element.js"));
             bundles.Add(new ScriptBundle("~/WebJquaryUI/widgetdatepickerScript").Include(
                 "~/Assets/vendor/jquery-ui/ui/widgets/datepicker.js"));
-
+            //Unify Css
+            bundles.Add(new StyleBundle("~/WebUnify/coreStyle").Include(
+                "~/Assets/css/unify-core.css"));
+            bundles.Add(new StyleBundle("~/WebUnify/componentsStyle").Include(
+                "~/Assets/css/unify-components.css"));
+            bundles.Add(new StyleBundle("~/WebUnify/globalsStyle").Include(
+                "~/Assets/css/unify-globals.css"));
             //Unify JS
             bundles.Add(new ScriptBundle("~/WebUnify/core").Include(
                 "~/Assets/js/hs.core.js"));

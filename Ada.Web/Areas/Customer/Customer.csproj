@@ -151,6 +151,7 @@
     <Content Include="Views\ClientLinkMan\FollowUp.cshtml" />
     <Content Include="Views\FollowUp\Index.cshtml" />
     <Content Include="Views\Shared\LinkManDetail.cshtml" />
+    <Content Include="Views\ClientLinkMan\CreateAccount.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

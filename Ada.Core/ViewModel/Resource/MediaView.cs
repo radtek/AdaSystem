@@ -89,6 +89,11 @@ namespace Ada.Core.ViewModel.Resource
         /// <summary>
         /// 近十篇平均阅读数
         /// </summary>
+        [Display(Name = "近50篇平均阅读数")]
+        public int? AvgReadNumDouYin { get; set; }
+        /// <summary>
+        /// 近十篇平均阅读数
+        /// </summary>
         [Display(Name = "近十篇平均阅读数")]
         public string AvgReadNumRange { get; set; }
         /// <summary>

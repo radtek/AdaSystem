@@ -16,5 +16,7 @@ namespace Ada.Services.Customer
         /// <param name="viewModel"></param>
         /// <returns></returns>
         IQueryable<LinkMan> LoadEntitiesFilter(LinkManView viewModel);
-    }
+
+       LinkMan CheackUser(string name, string pwd);
+   }
 }

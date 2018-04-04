@@ -194,6 +194,21 @@ namespace Customer.Controllers
             TempData["Msg"] = "跟进成功";
             return RedirectToAction("Index");
         }
+        /// <summary>
+        /// 开通会员
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        public ActionResult CreateAccount(string id)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            LinkManView view=new LinkManView();
+            view.Id = id;
+            view.Name = entity.Name;
+            view.Password = "wglh666666";
+            return PartialView("CreateAccount", view);
+        }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
         public ActionResult CreateAccount(LinkManView viewModel)
@@ -202,6 +217,10 @@ namespace Customer.Controllers
             if (string.IsNullOrWhiteSpace(entity.LoginName))
             {
                 return Json(new { State = 0, Msg = "登陆账户名称不能为空" });
+            }
+            if (entity.Password.Trim().Length < 6)
+            {
+                return Json(new { State = 0, Msg = "密码长度不能少于6位" });
             }
             entity.LoginName = viewModel.LoginName.Trim();
             //校验唯一性
@@ -213,7 +232,7 @@ namespace Customer.Controllers
                 return Json(new { State = 0, Msg = entity.LoginName + ",此账户名称已被占用!" });
             }
             entity.IsLock = false;
-            entity.Password = Encrypt.Encode(viewModel.Password);
+            entity.Password = Encrypt.Encode(viewModel.Password.Trim());
             _linkManService.Update(entity);
             return Json(new { State = 1, Msg = "创建成功" });
         }
@@ -222,26 +241,26 @@ namespace Customer.Controllers
         public ActionResult LockAccount(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (entity.IsLock==null)
+            {
+                return Json(new { State = 0, Msg = "此用户还未开通会员，请先开通会员" });
+            }
             entity.IsLock = true;
             _linkManService.Update(entity);
             return Json(new { State = 1, Msg = "锁定成功" });
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
-        public ActionResult ResetPassword(string id, string p)
+        public ActionResult ResetPassword(string id)
         {
-            if (string.IsNullOrWhiteSpace(p))
-            {
-                return Json(new { State = 0, Msg = "密码不能为空" });
-            }
-            if (p.Length < 6)
-            {
-                return Json(new { State = 0, Msg = "密码长度不能少于6位" });
-            }
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            entity.Password = Encrypt.Encode(p);
+            if (entity.IsLock == null)
+            {
+                return Json(new { State = 0, Msg = "此用户还未开通会员，请先开通会员" });
+            }
+            entity.Password = Encrypt.Encode("wglh666666");
             _linkManService.Update(entity);
-            return Json(new { State = 1, Msg = "重置成功" });
+            return Json(new { State = 1, Msg = "密码已重置为：wglh666666" });
         }
     }
 }

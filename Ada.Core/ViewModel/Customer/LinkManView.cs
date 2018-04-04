@@ -65,9 +65,9 @@ namespace Ada.Core.ViewModel.Customer
         [Display(Name = "OpenId")]
         public string OpenId { get; set; }
         /// <summary>
-        /// 密码
+        /// 登陆密码
         /// </summary>
-        [Display(Name = "密码")]
+        [Display(Name = "登陆密码")]
         public string Password { get; set; }
         /// <summary>
         /// 登陆账户

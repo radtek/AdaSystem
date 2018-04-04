@@ -8,6 +8,7 @@ using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Resource;
+using Ada.Web.Models;
 
 namespace Ada.Web.Controllers
 {

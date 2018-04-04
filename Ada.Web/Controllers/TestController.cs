@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity.SqlServer;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
@@ -24,6 +25,8 @@ namespace Ada.Web.Controllers
     {
         private readonly IRepository<BusinessOrderDetail> _temp;
         private readonly IRepository<Media> _media;
+        private readonly IRepository<MediaPrice> _mediaPrice;
+        private readonly IRepository<MediaType> _mediaType;
         private readonly IRepository<PurchaseOrderDetail> _ptemp;
         private readonly IDbContext _dbContext;
 
@@ -34,14 +37,17 @@ namespace Ada.Web.Controllers
             IRepository<Media> media,
             IRepository<MediaArticle> mediaArticle,
             IRepository<MediaPrice> mediaPrice,
-            IRepository<BusinessOrder> businessOrder)
+            IRepository<BusinessOrder> businessOrder,
+            IRepository<MediaType> mediaType)
         {
             _dbContext = dbContext;
             _ptemp = ptemp;
             _temp = temp;
             _media = media;
+            _mediaType = mediaType;
+            _mediaPrice = mediaPrice;
         }
-        
+
         public ActionResult CheckOrder()
         {
 
@@ -73,20 +79,20 @@ namespace Ada.Web.Controllers
 
             var business = _temp
                 .LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false && d.Status != 0).ToList();
-            List<string> temp=new List<string>();
+            List<string> temp = new List<string>();
             foreach (var businessOrderDetail in business)
             {
                 var sell = businessOrderDetail.SellMoney;
                 var verificationMoney = businessOrderDetail.VerificationMoney;
                 var confirmMoney = businessOrderDetail.ConfirmVerificationMoney;
                 var total = verificationMoney + confirmMoney;
-                if (sell!= total)
+                if (sell != total)
                 {
-                    temp.Add("订单ID："+businessOrderDetail.Id+"，媒体名称："+businessOrderDetail.MediaName);
+                    temp.Add("订单ID：" + businessOrderDetail.Id + "，媒体名称：" + businessOrderDetail.MediaName);
                 }
             }
 
-            return Content("金额不一致的订单：" + string.Join("&",temp) );
+            return Content("金额不一致的订单：" + string.Join("&", temp));
 
 
         }
@@ -180,7 +186,7 @@ namespace Ada.Web.Controllers
                 d.Status == Consts.StateNormal &&
                 (d.CollectionDate == null || SqlFunctions.DateDiff("hour", d.CollectionDate, DateTime.Now) > 0)).Count();
 
-            
+
 
             return Content(meidas.ToString());
             ////var atricles = _mediaArticle.LoadEntities(d => true).GroupBy(d => d.MediaId).Select(d => new MediaView
@@ -205,5 +211,94 @@ namespace Ada.Web.Controllers
             //return Json(temp,JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult DouYinUpdate1()
+        {
+            var douyins = _mediaPrice.LoadEntities(d => d.Media.Platform == "抖音" && d.Media.IsDelete == false&&d.AdPositionName=="转发价格");
+            var count = douyins.Count();
+            //删除转发价格
+            _mediaPrice.Remove(douyins);
+            _dbContext.SaveChanges();
+            return Content("删除" + count + "条");
+            //var type = _mediaType.LoadEntities(d => d.CallIndex == "douyin").FirstOrDefault();
+            //if (type != null)
+            //{
+            //    foreach (var douyin in douyins)
+            //    {
+
+            //        douyin.Media.MediaTypeId = type.Id;
+            //        if (douyin.AdPositionName=="线上直播")
+            //        {
+            //            douyin
+            //        }
+            //    }
+            //}
+
+        }
+        public ActionResult DouYinUpdate2()
+        {
+            var douyins = _media.LoadEntities(d => d.Platform == "抖音" && d.IsDelete == false).ToList();
+            var type = _mediaType.LoadEntities(d => d.CallIndex == "douyin").FirstOrDefault();
+            var count = 0;
+            if (type != null)
+            {
+                foreach (var douyin in douyins)
+                {
+                    douyin.MediaTypeId = type.Id;
+                    var uid = GetDouYinId(douyin.MediaLink);
+                    douyin.MediaID = string.IsNullOrWhiteSpace(uid) ?null: uid;
+                    count++;
+                }
+            }
+            _dbContext.SaveChanges();
+            return Content("更新抖音类型" + count + "条");
+
+        }
+        public ActionResult DouYinUpdate3()
+        {
+            var douyins = _mediaPrice.LoadEntities(d => d.Media.MediaType.CallIndex == "douyin" && d.Media.IsDelete == false);
+            var count = 0;
+            foreach (var douyin in douyins)
+            {
+
+                if (douyin.AdPositionName == "线上直播")
+                {
+                    douyin.AdPositionName = "线上活动";
+                    douyin.AdPositionId = "X1804031723448509";
+                }
+                if (douyin.AdPositionName == "线下直播")
+                {
+                    douyin.AdPositionName = "线下活动";
+                    douyin.AdPositionId = "X1804031723448510";
+                }
+                if (douyin.AdPositionName == "直发价格")
+                {
+                    douyin.AdPositionName = "直发";
+                    douyin.AdPositionId = "X1804031723448511";
+                }
+                if (douyin.AdPositionName == "原创价格")
+                {
+                    douyin.AdPositionName = "原创";
+                    douyin.AdPositionId = "X1804031723448512";
+                }
+
+                count++;
+            }
+            _dbContext.SaveChanges();
+            return Content("更新抖音价格" + count + "条");
+        }
+
+        private string GetDouYinId(string url)
+        {
+            string result = string.Empty;
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return result;
+            }
+            Match match = Regex.Match(url, @"/share/user/(\d+)", RegexOptions.ECMAScript);
+            result = match.Groups[1].Value;
+            
+            return result;
+
+        }
     }
 }

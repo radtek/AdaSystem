@@ -90,6 +90,10 @@ namespace Ada.Services.Purchase
             {
                 allList = allList.Where(d => d.PurchasePaymentOrderDetails.Count == 0 && d.Status != Consts.PurchaseStatusFail);
             }
+            if (viewModel.IsPayment == true)//过滤没有请款的，并且采购失败的
+            {
+                allList = allList.Where(d => d.PurchasePaymentOrderDetails.Count>0);
+            }
             if (viewModel.PublishDateStart != null)
             {
                 allList = allList.Where(d => d.PublishDate >= viewModel.PublishDateStart);

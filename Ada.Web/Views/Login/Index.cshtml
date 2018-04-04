@@ -1,100 +1,85 @@
 ﻿@using System.Web.Optimization
+@using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Setting
+@using Ada.Services.Setting
+@model Ada.Web.Models.LoginModel
 @{
-    Layout = "~/Views/Shared/_Layout_Web.cshtml";
-    ViewBag.Title = "会员登陆";
+    Layout = null;
+    var setting = EngineContext.Current.Resolve<ISettingService>().GetSetting<Site>();
 }
-<!-- Login - Heading -->
-<div class="g-max-width-645 text-center g-pt-100 mx-auto g-mb-80">
-    <h1 class="mb-0">欢迎回到微广!</h1>
-</div>
-<!-- End Login - Heading -->
-<!-- Login -->
-<div class="container g-pb-30">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-4 text-center g-mb-70">
-            <h2 class="h5 mb-4">登录到您的账户</h2>
-            <!-- Login Form -->
-            <form class="g-mb-30">
-                <div class="g-mb-20">
-                    <input class="form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v3 g-brd-primary--hover rounded-0 g-py-13 g-px-15" type="text" placeholder="输入用户名">
-                </div>
-                <div class="g-mb-20">
-                    <input class="form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v3 g-brd-primary--hover rounded-0 g-py-13 g-px-15" type="password" placeholder="输入您的密码">
-                </div>
-                <button class="btn btn-block u-btn-primary g-color-white g-bg-primary-dark-v1--hover g-font-weight-600 g-font-size-12 text-uppercase rounded-0 g-px-25 g-py-15" type="submit">登陆</button>
-            </form>
-            <!-- End Login Form -->
-            <div class="d-flex justify-content-between g-mb-10">
-                <a class="d-block g-mb-10" href="javascript:;"></a>
-                <a class="d-block g-mb-10" href="page-forgot-password-1.html">忘记密码?</a>
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>江西微广 | 会员登陆</title>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/font-awesome/css")
+</head>
+
+<body class="gray-bg">
+
+    <div class="loginColumns animated fadeInDown">
+        <div class="row">
+
+            <div class="col-md-6">
+                <h2 class="font-bold">欢迎回到微广！</h2>
+
+                <p>
+                    从社交媒体平台的日常维护到内容扩展 微广为不同的客户量身订制最专业而全面的社交媒体方案.
+                </p>
+
+                <p>
+                    微广拥有独家KOL资源库，并与多位KOL保持长期良好的合作关系 经专人一对一合理高效安排KOL搭配，为客户制造最大化传播效果.
+                </p>
+
+                <p>
+                    客户第一，细节至上，熟悉媒介策略，精准解读需求，助力推广触达精准受众群体.
+                </p>
+
+
             </div>
-            @*<p class="g-font-size-12">请查看我们的 <a class="g-color-text g-text-underline" href="#">声明</a></p>*@
+            <div class="col-md-6">
+                <div class="ibox-content">
+                    @using (Html.BeginForm("Index", "Login", FormMethod.Post, new { @class = "m-t" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            @Html.TextBoxFor(d => d.LoginName, new { @class = "form-control", placeholder = "输入用户名" })
+                            @Html.ValidationMessageFor(model => model.LoginName, null, new { @class = "help-block m-b-none text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.PasswordFor(d => d.PassWord, new { @class = "form-control", placeholder = "输入您的密码" })
+                            @Html.ValidationMessageFor(model => model.PassWord, null, new { @class = "help-block m-b-none text-danger" })
+                        </div>
+                        <button class="btn btn-primary block full-width m-b" type="submit">登陆</button>
+                        @Html.ValidationMessage("error", new { @class = "bg-danger" })
+
+                        
+
+                        <p class="text-muted text-center">
+                            <small>忘记密码或还没有会员账号?</small>
+                        </p>
+                        <a class="btn btn-sm btn-white btn-block" href="@Url.Action("Index","Default")#contact-section">请联系我们</a>
+                    }
+                </div>
+            </div>
         </div>
-        <div class="col-md-6 col-lg-5 ml-lg-5 g-mb-70">
-            <!-- Icon Block -->
-            <div class="media g-mb-30">
-                <div class="d-flex mr-3">
-                    <span class="u-icon-v1 u-icon-size--lg g-color-text">
-                        <i class="icon-finance-047 u-line-icon-pro"></i>
-                    </span>
-                </div>
-                <div class="media-body">
-                    <h3 class="h5">社交媒体</h3>
-                    <p>从社交媒体平台的日常维护到内容扩展 微广为不同的客户量身订制最专业而全面的社交媒体方案.</p>
-                </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-6">
+                @setting.CompanyName
             </div>
-            <!-- End Icon Block -->
-            <!-- Icon Block -->
-            <div class="media g-mb-30">
-                <div class="d-flex mr-3">
-                    <span class="u-icon-v1 u-icon-size--lg g-color-text">
-                        <i class="icon-finance-075 u-line-icon-pro"></i>
-                    </span>
-                </div>
-                <div class="media-body">
-                    <h3 class="h5">意见领袖集中购买</h3>
-                    <p>微广拥有独家KOL资源库，并与多位KOL保持长期良好的合作关系 经专人一对一合理高效安排KOL搭配，为客户制造最大化传播效果.</p>
-                </div>
+            <div class="col-md-6 text-right">
+                <small>© 2015 - @DateTime.Now.Year</small>
             </div>
-            <!-- End Icon Block -->
-            <!-- Icon Block -->
-            <div class="media">
-                <div class="d-flex mr-3">
-                    <span class="u-icon-v1 u-icon-size--lg g-color-text">
-                        <i class="icon-finance-084 u-line-icon-pro"></i>
-                    </span>
-                </div>
-                <div class="media-body">
-                    <h3 class="h5">高效</h3>
-                    <p>客户第一，细节至上，熟悉媒介策略，精准解读需求，助力推广触达精准受众群体.</p>
-                </div>
-            </div>
-            <!-- End Icon Block -->
         </div>
     </div>
-</div>
-<!-- Login -->
+
+</body>
+
+</html>
 
 
-@section Styles {
-    @Styles.Render("~/WebPlugins/fontawesomeStyle")
-    @Styles.Render("~/WebPlugins/iconlinesimpleStyle")
-    @Styles.Render("~/WebPlugins/iconlineproStyle")
-    @Styles.Render("~/WebPlugins/iconhsStyle")
-    @Styles.Render("~/WebPlugins/animateStyle")
-    @Styles.Render("~/WebPlugins/hsmegamenuStyle")
-    @Styles.Render("~/WebPlugins/hamburgersStyle")
-    @Styles.Render("~/WebPlugins/chosenStyle")
-    @Styles.Render("~/WebTheme/realestateStyle")
-}
-@section Scripts {
-    @Scripts.Render("~/WebPlugins/hsmegamenuScript")
-    @Scripts.Render("~/WebPlugins/chosenScript")
-    @Scripts.Render("~/WebUnify/core")
-    @Scripts.Render("~/WebUnify/header")
-    @Scripts.Render("~/WebUnify/hamburgers")
-    @Scripts.Render("~/WebUnify/dropdown")
-    @Scripts.Render("~/WebUnify/select")
-    @Scripts.Render("~/WebUnify/goto")
-
-}

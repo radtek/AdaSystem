@@ -79,81 +79,6 @@ namespace Resource.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(MediaView viewModel)
         {
-            //if (string.IsNullOrWhiteSpace(viewModel.MediaTypeIndex))
-            //{
-            //    ModelState.AddModelError("message", "请先选择媒体类型！");
-            //    return View(viewModel);
-            //}
-            //var setting = _settingService.GetSetting<WeiGuang>();
-            //Stopwatch watcher = new Stopwatch();
-            //watcher.Start();
-            //viewModel.Status = Consts.StateNormal;
-            //viewModel.limit = setting.PurchaseSeachRows;
-            //var results = _mediaService.LoadEntitiesFilter(viewModel).ToList();
-            ////找到没有的
-            //if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
-            //{
-            //    var names = viewModel.MediaNames.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
-            //    int i = 0;
-            //    foreach (var name in names)
-            //    {
-            //        var temp = results.FirstOrDefault(d =>
-            //            d.MediaName.Equals(name, StringComparison.CurrentCultureIgnoreCase));
-            //        if (temp == null)
-            //        {
-            //            results.Add(new Media
-            //            {
-            //                MediaName = name,
-            //                Taxis = i
-            //            });
-            //            //noDatas.Add(name);
-            //        }
-            //        else
-            //        {
-            //            temp.Taxis = i;
-            //        }
-
-            //        i++;
-            //    }
-            //}
-            //if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
-            //{
-            //    var ids = viewModel.MediaIDs.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
-            //    int i = 0;
-            //    foreach (var id in ids)
-            //    {
-            //        var temp = results.FirstOrDefault(d =>
-            //            d.MediaID.Equals(id, StringComparison.CurrentCultureIgnoreCase));
-            //        if (temp == null)
-            //        {
-            //            results.Add(new Media
-            //            {
-            //                MediaID = id,
-            //                Taxis = i
-            //            });
-            //            //noDatas.Add(id);
-            //        }
-            //        else
-            //        {
-            //            temp.Taxis = i;
-            //        }
-            //        i++;
-            //    }
-            //}
-            //watcher.Stop();
-            //viewModel.Medias = results.OrderBy(d => d.Taxis).ToList();
-            //if (!results.Any())
-            //{
-            //    ModelState.AddModelError("message", "没有查询到相关媒体信息！");
-            //    return View(viewModel);
-            //}
-            ////var noDataStr = string.Empty;
-            ////if (noDatas.Count > 0)
-            ////{
-            ////    noDataStr = "其中以下资源不存在系统中：" + string.Join(",", noDatas);
-            ////}
-            //ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + viewModel.total + "条。注：查询结果最多显示" + setting.PurchaseSeachRows + "条。");
-            //return View(viewModel);
             var export = Request.Form["Submit.Export"];
             if (string.IsNullOrWhiteSpace(viewModel.MediaTypeIndex))
             {
@@ -274,9 +199,9 @@ namespace Resource.Controllers
                     {
                         jo.Add("最近微信发文日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
                     }
-                    if (media.MediaType?.CallIndex == "sinablog")
+                    if (media.MediaType?.CallIndex == "sinablog" || media.MediaType?.CallIndex == "douyin")
                     {
-                        jo.Add("微博数", media.PostNum);
+                        jo.Add("发布作品总数", media.PostNum);
                     }
                     if (media.MediaType?.CallIndex == "weixin")
                     {
@@ -288,19 +213,23 @@ namespace Resource.Controllers
                     }
                     if (media.MediaType?.CallIndex == "sinablog")
                     {
-                        jo.Add("转发数", Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ShareCount)));
+                        jo.Add("平均转发数", Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ShareCount)));
                     }
-                    if (media.MediaType?.CallIndex == "sinablog")
+                    if (media.MediaType?.CallIndex == "douyin")
                     {
-                        jo.Add("评论数", Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount)));
+                        jo.Add("平均浏览数", Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ViewCount)));
                     }
-                    if (media.MediaType?.CallIndex == "sinablog")
+                    if (media.MediaType?.CallIndex == "sinablog" || media.MediaType?.CallIndex == "douyin")
                     {
-                        jo.Add("点赞数", Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount)));
+                        jo.Add("平均评论数", Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount)));
                     }
-                    if (media.MediaType?.CallIndex == "sinablog")
+                    if (media.MediaType?.CallIndex == "sinablog" || media.MediaType?.CallIndex == "douyin")
                     {
-                        jo.Add("最近博文日期", media.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate.Value.ToString("yyyy-MM-dd"));
+                        jo.Add("平均点赞数", Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount)));
+                    }
+                    if (media.MediaType?.CallIndex == "sinablog"|| media.MediaType?.CallIndex == "douyin")
+                    {
+                        jo.Add("最近发布日期", media.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate.Value.ToString("yyyy-MM-dd"));
                     }
                     if (media.MediaType?.CallIndex == "sinablog")
                     {
@@ -498,6 +427,7 @@ namespace Resource.Controllers
                     TransmitNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ShareCount),
                     CommentNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount),
                     LikesNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount),
+                    AvgReadNumDouYin = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ViewCount),
                     BlogLastPushDate = d.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate,
                     WeekArticleCount = d.MediaArticles.OrderByDescending(a => a.PublishDate).Count(l => l.PublishDate > DateTime.Now.Date.AddDays(-7)),
                     Content = d.Content,

@@ -131,7 +131,19 @@
     </div>
     @if (Model.MediaArticles.Any())
     {
-        @(Model.MediaType.CallIndex == "weixin" ? Html.Partial("WeiXinArticles", Model) : Html.Partial("WeiboArticles", Model))
+        if (Model.MediaType.CallIndex == "weixin")
+        {
+            @Html.Partial("WeiXinArticles", Model)
+        }
+        if (Model.MediaType.CallIndex == "sinablog")
+        {
+            @Html.Partial("WeiboArticles", Model)
+        }
+        if (Model.MediaType.CallIndex == "douyin")
+        {
+            @Html.Partial("DouYinArticles", Model)
+        }
+        
     }
 
 

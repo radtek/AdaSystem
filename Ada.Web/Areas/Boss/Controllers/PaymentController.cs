@@ -73,9 +73,8 @@ namespace Boss.Controllers
             viewModel.Image = entity.Image;
             viewModel.Remark = entity.Remark;
             ViewBag.LinkMan = entity.BusinessPayee.LinkMan;
-            var account = entity.BusinessPayee.LinkMan.PayAccounts.FirstOrDefault(d =>
-                d.AccountName.Equals(viewModel.AccountName, StringComparison.CurrentCultureIgnoreCase) &&
-                d.AccountNum.Equals(viewModel.AccountNum, StringComparison.CurrentCultureIgnoreCase)
+            var account = entity.BusinessPayee.LinkMan.PayAccounts.FirstOrDefault(d =>d.AccountName==viewModel.AccountName &&
+                d.AccountNum==viewModel.AccountNum
                 && d.IsDelete == false);
             if (account==null)
             {
@@ -98,10 +97,10 @@ namespace Boss.Controllers
             {
                 
                 //判断是否增加账户
-                var account = entity.BusinessPayee.LinkMan.PayAccounts.FirstOrDefault(d =>
-                    d.AccountName.Equals(viewModel.AccountName, StringComparison.CurrentCultureIgnoreCase) &&
-                    d.AccountNum.Equals(viewModel.AccountNum, StringComparison.CurrentCultureIgnoreCase)
-                    && d.IsDelete == false);
+                var account = entity.BusinessPayee.LinkMan.PayAccounts.FirstOrDefault(d => 
+                     d.AccountName == viewModel.AccountName &&
+                     d.AccountNum == viewModel.AccountNum && 
+                     d.IsDelete == false);
                 if (account == null)
                 {
                     PayAccount payAccount = new PayAccount();
