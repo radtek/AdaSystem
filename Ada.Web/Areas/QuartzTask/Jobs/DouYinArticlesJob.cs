@@ -137,6 +137,10 @@ namespace QuartzTask.Jobs
                                 job.Remark = "获取抖音文章任务正在运行中，本次成功更新：" + media.MediaName + "-" + media.MediaID;
                             }
                         }
+                        media.AvgReadNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate)
+                            .Take(50).Average(aaa => aaa.ViewCount));
+                        media.CommentNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate)
+                            .Take(50).Average(aaa => aaa.CommentCount));
                         db.SaveChanges();
                     }
                     catch (Exception ex)

@@ -5,10 +5,6 @@
     var pushdate = Model.LastPushDate?.ToString("yyyy-MM-dd");
     var start = DateTime.Now.Date.AddDays(-30);
     var end = DateTime.Now.AddDays(1).Date;
-    var count = Model.MediaArticles.Where(d => d.PublishDate >= start && d.PublishDate < end).Select(d => new
-    {
-        Date = d.PublishDate.Value.ToString("yyyy-MM-dd")
-    }).GroupBy(d => d.Date).Count();
     var articles = Model.MediaArticles.Where(d => d.PublishDate >= start && d.PublishDate < end && d.IsTop == true).Select(d => new
     {
         Date = d.PublishDate.Value.ToString("MM-dd"),
@@ -32,7 +28,7 @@
                 <h5>近十篇平均阅读数</h5>
             </div>
             <div class="ibox-content">
-                <h1 class="no-margins">@Convert.ToInt32(Model.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).Take(10).Average(aaa => aaa.ViewCount))</h1>
+                <h1 class="no-margins">@Model.AvgReadNum</h1>
             </div>
         </div>
     </div>
@@ -42,7 +38,7 @@
                 <h5>近30天发布频次</h5>
             </div>
             <div class="ibox-content">
-                <h1 class="no-margins">@count</h1>
+                <h1 class="no-margins">@Model.PublishFrequency</h1>
             </div>
         </div>
     </div>

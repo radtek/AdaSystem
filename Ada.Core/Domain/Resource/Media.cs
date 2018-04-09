@@ -109,14 +109,14 @@ namespace Ada.Core.Domain.Resource
         [Display(Name = "点赞数")]
         public int? LikesNum { get; set; }
         /// <summary>
-        /// 微博数
+        /// 作品数
         /// </summary>
-        [Display(Name = "微博数")]
+        [Display(Name = "作品数")]
         public int? PostNum { get; set; }
         /// <summary>
-        /// 月发文数
+        /// 平均发布数
         /// </summary>
-        [Display(Name = "月发文数")]
+        [Display(Name = "平均发布数")]
         public int? MonthPostNum { get; set; }
         /// <summary>
         /// 关注数

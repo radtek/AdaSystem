@@ -45,8 +45,9 @@ namespace Ada.Framework.Filter
         {
             base.OnActionExecuting(filterContext);
             //如果打了允许的标签就无须验证权限
-            if (filterContext.ActionDescriptor.IsDefined(typeof(AllowAnonymousAttribute), false)
-                && filterContext.ActionDescriptor.ControllerDescriptor.IsDefined(typeof(AllowAnonymousAttribute), false))
+           
+            if (filterContext.ActionDescriptor.IsDefined(typeof(AllowAnonymousAttribute), true)
+                || filterContext.ActionDescriptor.ControllerDescriptor.IsDefined(typeof(AllowAnonymousAttribute), true))
             {
                 return;
             }

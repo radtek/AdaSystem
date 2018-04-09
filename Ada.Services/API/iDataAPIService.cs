@@ -408,8 +408,7 @@ namespace Ada.Services.API
                         
                         if (media != null)
                         {
-                            var viewCount = media.MediaArticles.Where(d=>d.IsTop==true).OrderByDescending(d => d.PublishDate).Take(10)
-                                .Average(d => d.ViewCount);
+                            
                             var lastPost = media.LastPushDate;
                             //是否要更新文章
                             var isUpdateArticle = lastPost == null;
@@ -422,7 +421,6 @@ namespace Ada.Services.API
                             media.MediaQR = weixinInfo.qrcodeUrl;
                             media.Abstract = weixinInfo.idVerifiedInfo;
                             media.Content = weixinInfo.biography;
-                            media.AvgReadNum = Convert.ToInt32(viewCount);
                             media.CollectionDate = DateTime.Now;
                             if (DateTime.TryParse(weixinInfo.lastPost?.date, out var date))
                             {
@@ -539,6 +537,20 @@ namespace Ada.Services.API
                                 }
 
                             }
+                            //更新统计数据
+                            var viewCount = media.MediaArticles.Where(d => d.IsTop == true).OrderByDescending(d => d.PublishDate).Take(10)
+                                .Average(d => d.ViewCount);
+                            media.AvgReadNum = Convert.ToInt32(viewCount);
+                            media.LastReadNum = media.MediaArticles.Where(l => l.IsTop == true)
+                                .OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount;
+                            var start30 = DateTime.Now.Date.AddDays(-30);
+                            var end30 = DateTime.Now.AddDays(1).Date;
+                            var count = media.MediaArticles.Where(d => d.PublishDate >= start30 && d.PublishDate < end30).Select(d => new
+                            {
+                                Date = d.PublishDate.Value.ToString("yyyy-MM-dd")
+                            }).GroupBy(d => d.Date).Count();
+                            media.PublishFrequency = count;
+
                         }
                     }
                 }
@@ -636,9 +648,10 @@ namespace Ada.Services.API
                     apiInfo.APIRequestRecords.Add(record);
                     break;
                 }
+                var media = _mediaRepository.LoadEntities(d => d.MediaID == wbparams.UID && d.IsDelete == false).FirstOrDefault();
                 if (result.data.Count > 0)
                 {
-                    var media = _mediaRepository.LoadEntities(d => d.MediaID == wbparams.UID && d.IsDelete == false).FirstOrDefault();
+                    
                     if (media == null)
                     {
                         break;
@@ -706,24 +719,23 @@ namespace Ada.Services.API
                         }
                     }
                 }
-                else
+                //更新统计数据
+                if (media != null)
                 {
-                    //第一页请求成功，但记录为空的
-                    if (!string.IsNullOrWhiteSpace(wbparams.UID) && i == 1)
-                    {
-                        var media = _mediaRepository.LoadEntities(d => d.MediaID == wbparams.UID && d.IsDelete == false).FirstOrDefault();
-                        if (media != null) media.IsSlide = false;
-                    }
-                    APIRequestRecord norecord = new APIRequestRecord();
-                    norecord.Id = IdBuilder.CreateIdNum();
-                    norecord.RequestParameters = apiUrl;
-                    norecord.IsSuccess = result.retcode == ReturnCode.请求成功;
-                    norecord.Retcode = result.retcode.GetHashCode().ToString();
-                    norecord.ReponseContent = htmlstr;
-                    norecord.Retmsg = "请求成功，返回记录为空";
-                    norecord.ReponseDate = DateTime.Now;
-                    apiInfo.APIRequestRecords.Add(norecord);
+                    media.TransmitNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate)
+                        .Take(50)
+                        .Average(aaa => aaa.ShareCount));
+                    media.CommentNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate)
+                        .Take(50).Average(aaa => aaa.CommentCount));
+                    media.LikesNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50)
+                        .Average(aaa => aaa.LikeCount));
+                    media.LastPushDate = media.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()
+                        ?.PublishDate;
+                    var weekDate = DateTime.Now.Date.AddDays(-7);
+                    media.MonthPostNum = media.MediaArticles.OrderByDescending(a => a.PublishDate)
+                        .Count(l => l.PublishDate > weekDate);
                 }
+
                 //如果没有下一页就退出
                 if (result.hasNext == false)
                 {

@@ -190,50 +190,37 @@ namespace Resource.Controllers
                     {
                         jo.Add("地区", media.Area);
                     }
-
-                    if (media.MediaType?.CallIndex == "weixin")
-                    {
-                        jo.Add("月发文篇数", media.MonthPostNum);
-                    }
-                    if (media.MediaType?.CallIndex == "weixin")
-                    {
-                        jo.Add("最近微信发文日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
-                    }
-                    if (media.MediaType?.CallIndex == "sinablog" || media.MediaType?.CallIndex == "douyin")
+                    if (media.PostNum != null)
                     {
                         jo.Add("发布作品总数", media.PostNum);
                     }
-                    if (media.MediaType?.CallIndex == "weixin")
+                    if (media.LastReadNum != null)
                     {
-                        jo.Add("最近头条阅读数", media.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount);
+                        jo.Add("最近浏览数", media.LastReadNum);
                     }
-                    if (media.MediaType?.CallIndex == "weixin")
+                    if (media.TransmitNum != null)
                     {
-                        jo.Add("近十篇平均阅读数", Convert.ToInt32(media.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(d => d.PublishDate).Take(10).Average(aaa => aaa.ViewCount)));
+                        jo.Add("平均转发数", media.TransmitNum);
                     }
-                    if (media.MediaType?.CallIndex == "sinablog")
+                    if (media.AvgReadNum != null)
                     {
-                        jo.Add("平均转发数", Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ShareCount)));
+                        jo.Add("平均浏览数", media.AvgReadNum);
                     }
-                    if (media.MediaType?.CallIndex == "douyin")
+                    if (media.CommentNum != null)
                     {
-                        jo.Add("平均浏览数", Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ViewCount)));
+                        jo.Add("平均评论数", media.CommentNum);
                     }
-                    if (media.MediaType?.CallIndex == "sinablog" || media.MediaType?.CallIndex == "douyin")
+                    if (media.LikesNum != null)
                     {
-                        jo.Add("平均评论数", Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount)));
+                        jo.Add("平均点赞数", media.LikesNum);
                     }
-                    if (media.MediaType?.CallIndex == "sinablog" || media.MediaType?.CallIndex == "douyin")
+                    if (media.LastPushDate != null)
                     {
-                        jo.Add("平均点赞数", Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount)));
+                        jo.Add("最近发布日期", media.LastPushDate.Value.ToString("yyyy-MM-dd"));
                     }
-                    if (media.MediaType?.CallIndex == "sinablog"|| media.MediaType?.CallIndex == "douyin")
+                    if (media.MonthPostNum != null)
                     {
-                        jo.Add("最近发布日期", media.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate.Value.ToString("yyyy-MM-dd"));
-                    }
-                    if (media.MediaType?.CallIndex == "sinablog")
-                    {
-                        jo.Add("一周博文数", media.MediaArticles.OrderByDescending(a => a.PublishDate).Count(l => l.PublishDate > DateTime.Now.Date.AddDays(-7)));
+                        jo.Add("平均发布数", media.MonthPostNum);
                     }
                     if (media.IsAuthenticate != null)
                     {
@@ -265,7 +252,7 @@ namespace Resource.Controllers
                         }
                         jo.Add(mediaMediaPrice.AdPositionName, price);
                     }
-                    jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.PriceDate);
+                    jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.PriceDate?.ToString("yyyy-MM-dd"));
                     if (!string.IsNullOrWhiteSpace(media.Abstract))
                     {
                         jo.Add("媒体摘要", media.Abstract);
@@ -407,8 +394,8 @@ namespace Resource.Controllers
                     IsComment = d.MediaType.IsComment,
                     FansNum = d.FansNum,
                     ChannelType = d.ChannelType,
-                    LastReadNum = d.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount,
-                    AvgReadNum = (int?)d.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).Take(10).Average(a => a.ViewCount),
+                    LastReadNum = d.LastReadNum,
+                    AvgReadNum = d.AvgReadNum,
                     PublishFrequency = d.PublishFrequency,
                     Areas = d.Area,
                     Sex = d.Sex,
@@ -424,12 +411,9 @@ namespace Resource.Controllers
                     LastPushDate = d.LastPushDate,
                     AuthenticateType = d.AuthenticateType,
                     Platform = d.Platform,
-                    TransmitNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ShareCount),
-                    CommentNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount),
-                    LikesNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount),
-                    AvgReadNumDouYin = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ViewCount),
-                    BlogLastPushDate = d.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate,
-                    WeekArticleCount = d.MediaArticles.OrderByDescending(a => a.PublishDate).Count(l => l.PublishDate > DateTime.Now.Date.AddDays(-7)),
+                    TransmitNum = d.TransmitNum,
+                    CommentNum = d.CommentNum,
+                    LikesNum = d.LikesNum,
                     Content = d.Content,
                     Remark = d.Remark,
                     Status = d.Status,
@@ -534,9 +518,9 @@ namespace Resource.Controllers
                 }
                 //备注
                 media.Remark = row.GetCell(9)?.ToString();
-                DateTime date= new DateTime(DateTime.Now.Year, DateTime.Now.Month,
+                DateTime date = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
                     DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
-                if (row.GetCell(10)!=null)
+                if (row.GetCell(10) != null)
                 {
                     var cellType = row.GetCell(10).CellType;
                     if (cellType == CellType.String)
@@ -568,8 +552,8 @@ namespace Resource.Controllers
                     }
                     if (mediaPrice == null)
                     {
-                       var newPrice= media.MediaType.AdPositions.FirstOrDefault(d => d.Name == name);
-                        if (newPrice!=null)
+                        var newPrice = media.MediaType.AdPositions.FirstOrDefault(d => d.Name == name);
+                        if (newPrice != null)
                         {
                             media.MediaPrices.Add(new MediaPrice()
                             {
@@ -588,8 +572,8 @@ namespace Resource.Controllers
                         mediaPrice.PriceDate = DateTime.Now;
                         mediaPrice.InvalidDate = date;
                     }
-                    
-                    
+
+
 
                 }
             }
@@ -701,43 +685,31 @@ namespace Resource.Controllers
 
             entity.MediaName = viewModel.MediaName.Trim();
             entity.MediaID = string.IsNullOrWhiteSpace(viewModel.MediaID) ? null : viewModel.MediaID.Trim();
-            if (viewModel.MediaTypeIndex=="zhihu")
+            if (viewModel.MediaTypeIndex == "zhihu")
             {
-                entity.MediaLink = "https://www.zhihu.com/people/"+ entity.MediaID;
+                entity.MediaLink = "https://www.zhihu.com/people/" + entity.MediaID;
             }
             else
             {
                 entity.MediaLink = viewModel.MediaLink;
             }
-            
-            entity.MediaLogo = viewModel.MediaLogo;
-            entity.MediaQR = viewModel.MediaQR;
+
+
             entity.Sex = viewModel.Sex;
             entity.Platform = viewModel.Platform;
             entity.IsAuthenticate = viewModel.IsAuthenticate;
             entity.IsOriginal = viewModel.IsOriginal;
             entity.IsComment = viewModel.IsComment;
-
             entity.FansNum = Utils.SetFansNum(viewModel.FansNum);
-            entity.LastReadNum = viewModel.LastReadNum;
-            entity.AvgReadNum = viewModel.AvgReadNum;
-            entity.PublishFrequency = viewModel.PublishFrequency;
             entity.Area = viewModel.Areas;
             entity.ChannelType = viewModel.ChannelType;
-            entity.LastPushDate = viewModel.LastPushDate;
             entity.AuthenticateType = viewModel.AuthenticateType;
-            entity.TransmitNum = viewModel.TransmitNum;
-            entity.CommentNum = viewModel.CommentNum;
-            entity.LikesNum = viewModel.LikesNum;
             entity.Client = viewModel.Client;
             entity.SEO = viewModel.SEO;
             entity.Efficiency = viewModel.Efficiency;
             entity.ResourceType = viewModel.ResourceType;
             entity.Channel = viewModel.Channel;
             entity.Cooperation = viewModel.Cooperation;
-            entity.PostNum = viewModel.PostNum;
-            entity.MonthPostNum = viewModel.MonthPostNum;
-            entity.FriendNum = viewModel.FriendNum;
 
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
@@ -787,7 +759,7 @@ namespace Resource.Controllers
 
             entity.MediaName = item.MediaName;
             entity.MediaID = item.MediaID;
-            
+
             entity.MediaLink = item.MediaLink;
             entity.MediaLogo = item.MediaLogo;
             entity.MediaQR = item.MediaQR;
@@ -873,8 +845,7 @@ namespace Resource.Controllers
             {
                 entity.MediaLink = viewModel.MediaLink;
             }
-            entity.MediaLogo = viewModel.MediaLogo;
-            entity.MediaQR = viewModel.MediaQR;
+
             entity.Client = viewModel.Client;
             entity.SEO = viewModel.SEO;
             entity.Efficiency = viewModel.Efficiency;
@@ -886,16 +857,9 @@ namespace Resource.Controllers
             entity.IsOriginal = viewModel.IsOriginal;
             entity.IsComment = viewModel.IsComment;
             entity.FansNum = Utils.SetFansNum(viewModel.FansNum);
-            entity.PostNum = viewModel.PostNum;
-            entity.MonthPostNum = viewModel.MonthPostNum;
-            entity.FriendNum = viewModel.FriendNum;
             entity.Area = viewModel.Areas;
             entity.ChannelType = viewModel.ChannelType;
-            entity.LastPushDate = viewModel.LastPushDate;
             entity.AuthenticateType = viewModel.AuthenticateType;
-            entity.TransmitNum = viewModel.TransmitNum;
-            entity.CommentNum = viewModel.CommentNum;
-            entity.LikesNum = viewModel.LikesNum;
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
             entity.Status = viewModel.Status;
@@ -1112,6 +1076,52 @@ namespace Resource.Controllers
             var msg = _iDataAPIService.GetWeiXinInfoPro(baseParams);
             return Json(new { State = 1, Msg = msg.Message });
         }
+        [AllowAnonymous]
+        public ActionResult FenPei()
+        {
+            string path = Server.MapPath("~/upload/fenpei.xlsx");
+            int count = 0;
+            using (FileStream ms = new FileStream(path, FileMode.Open))
+            {
+                //创建工作薄
+                IWorkbook wk = new XSSFWorkbook(ms);
+                //1.获取第一个工作表
+                ISheet sheet = wk.GetSheetAt(0);
+                if (sheet.LastRowNum <= 1)
+                {
+                    return Content("此文件没有导入数据，请填充数据再进行导入");
+                }
+
+                for (int i = 1; i <= sheet.LastRowNum; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+                    var id = row.GetCell(0)?.ToString();
+                    if (string.IsNullOrWhiteSpace(id))
+                    {
+                        continue;
+                    }
+
+                    var media = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+                    if (media != null)
+                    {
+                        var t1 = row.GetCell(1)?.ToString();
+                        var t2 = row.GetCell(2)?.ToString();
+                        if (!string.IsNullOrWhiteSpace(t1) && !string.IsNullOrWhiteSpace(t2))
+                        {
+                            media.Transactor = t1;
+                            media.TransactorId = t2;
+                        }
+                        count++;
+                    }
+
+
+
+                }
+
+                _dbContext.SaveChanges();
+            }
+            return Content("成功更新" + count + "条资源");
+        }
         private Media IsExist(MediaView viewModel, out string msg, bool isSelf = false, bool isDelete = false)
         {
             msg = string.Empty;
@@ -1123,6 +1133,7 @@ namespace Resource.Controllers
                 case "weixin":
                 case "zhihu":
                 case "sinablog":
+                case "douyin":
                     whereLambda = d =>
                           d.MediaID.Equals(viewModel.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == isDelete &&
                           d.MediaTypeId == viewModel.MediaTypeId;

@@ -7,35 +7,87 @@ using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Resource;
+using Ada.Core.Tools;
 using Ada.Core.ViewModel.Resource;
+using Ada.Framework.Filter;
+using Ada.Services.Resource;
 using Ada.Web.Models;
 
 namespace Ada.Web.Controllers
 {
-    public class MediaController : Controller
+    public class MediaController : UserCenterController
     {
         private readonly IRepository<Media> _repository;
-        public MediaController(IRepository<Media> repository)
+        private readonly IMediaService _service;
+        public MediaController(IRepository<Media> repository, IMediaService service)
         {
             _repository = repository;
+            _service = service;
         }
         public ActionResult WeiXin()
         {
-            var model = new MediaView();
-            GetData(model);
-            return View(model);
+            return View();
+        }
+        public ActionResult WeiBo()
+        {
+            return View();
+        }
+        public ActionResult DouYin()
+        {
+            return View();
+        }
+        public ActionResult ZhiHu()
+        {
+            return View();
+        }
+        public ActionResult RedBook()
+        {
+            return View();
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult WeiXin(MediaView viewModel)
+        [AdaValidateAntiForgeryToken]
+        public ActionResult GetList(MediaView viewModel)
         {
-            //var routeValues = ControllerContext.RouteData.Values;
-            //if (viewModel!=null)
-            //{
-            //    routeValues["MediaName"] = viewModel.MediaName;
-            //}
-            GetData(viewModel);
-            return View(viewModel);
+            viewModel.Status = Consts.StateNormal;
+            var result = _service.LoadEntitiesFilter(viewModel).Include(d=>d.MediaPrices).Include(d=>d.MediaTags).AsNoTracking().ToList();
+            return Json(new
+            {
+                viewModel.total,
+                rows = result.Select(d => new MediaView
+                {
+                    Id = d.Id,
+                    MediaName = d.MediaName,
+                    MediaTypeIndex = d.MediaType.CallIndex,
+                    MediaID = d.MediaID,
+                    IsAuthenticate = d.IsAuthenticate,
+                    IsOriginal = d.IsOriginal,
+                    FansNum = Utils.ShowFansNum(d.FansNum),
+                    ChannelType = d.ChannelType,
+                    LastReadNum = d.LastReadNum,
+                    AvgReadNum = d.AvgReadNum,
+                    Areas = d.Area,
+                    Sex = d.Sex,
+                    Abstract = d.Abstract,
+                    PostNum = d.PostNum,
+                    MonthPostNum = d.MonthPostNum,
+                    FriendNum = d.FriendNum,
+                    Channel = d.Channel,
+                    LastPushDate = d.LastPushDate,
+                    AuthenticateType = d.AuthenticateType,
+                    Platform = d.Platform,
+                    TransmitNum = d.TransmitNum,
+                    CommentNum = d.CommentNum,
+                    LikesNum = d.LikesNum,
+                    Content = d.Content,
+                    Remark = d.Remark,
+                    IsHot = d.IsHot,
+                    IsRecommend = d.IsRecommend,
+                    IsTop = d.IsTop,
+                    MediaLogo = d.MediaLogo,
+                    MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).Take(6).ToList(),
+                    MediaPrices = d.MediaPrices.Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = p.PurchasePrice }).ToList()
+                })
+            });
         }
 
         private void GetData(MediaView viewModel)

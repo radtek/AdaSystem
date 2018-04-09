@@ -2,7 +2,7 @@
 @model Ada.Core.Domain.Resource.Media
 @{
     var update = Model.CollectionDate?.ToString("yyyy-MM-dd");
-    var pushdate = Model.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate?.ToString("yyyy-MM-dd");
+    var pushdate = Model.LastPushDate?.ToString("yyyy-MM-dd");
     var start = DateTime.Now.Date.AddDays(-7);
     var end = DateTime.Now.AddDays(1).Date;
 
@@ -31,7 +31,7 @@
                 <h5>近50篇平均点赞数</h5>
             </div>
             <div class="ibox-content">
-                <h1 class="no-margins">@Convert.ToInt32(Model.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount))</h1>
+                <h1 class="no-margins">@Model.LikesNum</h1>
             </div>
         </div>
     </div>
@@ -41,7 +41,7 @@
                 <h5>近50篇平均评论数</h5>
             </div>
             <div class="ibox-content">
-                <h1 class="no-margins">@Convert.ToInt32(Model.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount))</h1>
+                <h1 class="no-margins">@Model.CommentNum</h1>
             </div>
         </div>
     </div>

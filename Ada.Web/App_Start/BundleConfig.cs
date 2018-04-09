@@ -472,7 +472,8 @@ namespace Ada.Web
             // base Script
             bundles.Add(new ScriptBundle("~/bundles/base").Include(
                 "~/Scripts/base.js"));
-
+            bundles.Add(new ScriptBundle("~/bundles/web").Include(
+                "~/Scripts/web.js"));
             //Bootstrap Table
             bundles.Add(new StyleBundle("~/plugins/bootstrapTableStyle").Include(
                 "~/Content/plugins/bootstrap-table/bootstrap-table.min.css"));

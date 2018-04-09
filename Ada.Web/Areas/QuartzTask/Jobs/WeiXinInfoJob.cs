@@ -115,9 +115,7 @@ namespace QuartzTask.Jobs
                     if (media != null)
                     {
                         media.CollectionDate = DateTime.Now;
-                        var viewCount = media.MediaArticles.Where(d => d.IsTop == true).OrderByDescending(d => d.PublishDate).Take(10)
-                            .Average(d => d.ViewCount);
-                        media.AvgReadNum = Convert.ToInt32(viewCount);
+                        
                         var lastPost = media.LastPushDate;
                         //是否要更新文章
                         var isUpdateArticle = lastPost == null;
@@ -264,7 +262,22 @@ namespace QuartzTask.Jobs
                                 job.NextTime = context.NextFireTimeUtc.Value.ToLocalTime().DateTime;
                                 job.Remark = "获取微信基本信息任务正在运行中，本次成功更新：" + media.MediaName + "-" + media.MediaID;
                             }
+
+                            //更新统计数据
+                            var viewCount = media.MediaArticles.Where(d => d.IsTop == true).OrderByDescending(d => d.PublishDate).Take(10)
+                                .Average(d => d.ViewCount);
+                            media.AvgReadNum = Convert.ToInt32(viewCount);
+                            media.LastReadNum = media.MediaArticles.Where(l => l.IsTop == true)
+                                .OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount;
+                            var start30 = DateTime.Now.Date.AddDays(-30);
+                            var end30 = DateTime.Now.AddDays(1).Date;
+                            var count = media.MediaArticles.Where(d => d.PublishDate >= start30 && d.PublishDate < end30).Select(d => new
+                            {
+                                Date = d.PublishDate.Value.ToString("yyyy-MM-dd")
+                            }).GroupBy(d => d.Date).Count();
+                            media.PublishFrequency = count;
                             db.SaveChanges();
+                            
                         }
                         catch (Exception ex)
                         {

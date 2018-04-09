@@ -3,21 +3,12 @@ using System.Collections.Generic;
 using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
-using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Business;
-using Ada.Core.Domain.Log;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.Domain.Resource;
-using Ada.Core.Infrastructure;
-using Ada.Core.Tools;
-using Ada.Core.ViewModel.Admin;
-using Ada.Core.ViewModel.Resource;
-using Ada.Framework.Caching;
-using log4net;
 
 namespace Ada.Web.Controllers
 {
@@ -286,6 +277,8 @@ namespace Ada.Web.Controllers
             _dbContext.SaveChanges();
             return Content("更新抖音价格" + count + "条");
         }
+
+        
 
         private string GetDouYinId(string url)
         {

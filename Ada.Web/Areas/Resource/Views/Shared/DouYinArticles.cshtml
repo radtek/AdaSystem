@@ -28,30 +28,30 @@
     <div class="col-lg-2">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h5>近50个视频平均浏览数</h5>
+                <h5>平均浏览数</h5>
             </div>
             <div class="ibox-content">
-                <h1 class="no-margins">@Convert.ToInt32(Model.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ViewCount))</h1>
+                <h1 class="no-margins">@Model.AvgReadNum</h1>
             </div>
         </div>
     </div>
     <div class="col-lg-2">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h5>近50个视频平均点赞数</h5>
+                <h5>平均点赞数</h5>
             </div>
             <div class="ibox-content">
-                <h1 class="no-margins">@Convert.ToInt32(Model.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount))</h1>
+                <h1 class="no-margins">@Model.LikesNum</h1>
             </div>
         </div>
     </div>
     <div class="col-lg-2">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h5>近50个视频平均评论数</h5>
+                <h5>平均评论数</h5>
             </div>
             <div class="ibox-content">
-                <h1 class="no-margins">@Convert.ToInt32(Model.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount))</h1>
+                <h1 class="no-margins">@Model.CommentNum</h1>
             </div>
         </div>
     </div>

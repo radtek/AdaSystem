@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
@@ -173,32 +175,9 @@ namespace Ada.Services.Resource
             }
             if (viewModel.MediaTagIds != null)
             {
-                //allList = from m in allList
-                //          from t in m.MediaTags
-                //          where viewModel.MediaTagIds.Contains(t.Id)
-                //          select m;
                 allList = allList.Include(d=>d.MediaTags).Where(d => d.MediaTags.Any(t => viewModel.MediaTagIds.Contains(t.Id)));
             }
-            //if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
-            //{
-            //    if (!isInclud)
-            //    {
-            //        allList = allList.Include(d => d.MediaPrices);
-            //        isInclud = true;
-            //    }
-            //    if (viewModel.PriceStart != null)
-            //    {
-            //        allList = allList.Where(d =>
-            //            d.MediaPrices.FirstOrDefault(a => a.AdPositionName == viewModel.AdPositionName).PurchasePrice >=
-            //            viewModel.PriceStart);
-            //    }
-            //    if (viewModel.PriceEnd != null)
-            //    {
-            //        allList = allList.Where(d =>
-            //            d.MediaPrices.FirstOrDefault(a => a.AdPositionName == viewModel.AdPositionName).PurchasePrice <=
-            //            viewModel.PriceEnd);
-            //    }
-            //}
+           
             if (viewModel.PriceStart != null)
             {
                 if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
@@ -244,13 +223,11 @@ namespace Ada.Services.Resource
         }
         public IQueryable<MediaView> LoadEntitiesFilters(MediaView viewModel)
         {
+            
             var allList = _repository.LoadEntities(d => d.IsDelete == false);
-            if (viewModel.Managers != null && viewModel.Managers.Count > 0)
-            {
-                allList = allList.Where(d => viewModel.Managers.Contains(d.TransactorId));
-            }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeIndex))
             {
+                
                 allList = allList.Where(d => d.MediaType.CallIndex == viewModel.MediaTypeIndex);
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeId))
@@ -265,62 +242,62 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.MediaName.Contains(viewModel.MediaName));
             }
-            if (!string.IsNullOrWhiteSpace(viewModel.Content))
-            {
-                allList = allList.Where(d => d.Content.Contains(viewModel.Content));
-            }
-            if (!string.IsNullOrWhiteSpace(viewModel.Remark))
-            {
-                allList = allList.Where(d => d.Remark.Contains(viewModel.Remark));
-            }
-            if (viewModel.HasArticles != null)
-            {
-                allList = !viewModel.HasArticles.Value ? allList.Where(d => d.MediaArticles.Count == 0) : allList.Where(d => d.MediaArticles.Count > 0);
-            }
-            if (viewModel.IsSlide != null)
-            {
-                allList = allList.Where(d => d.IsSlide == viewModel.IsSlide);
-            }
+            //if (!string.IsNullOrWhiteSpace(viewModel.Content))
+            //{
+            //    allList = allList.Where(d => d.Content.Contains(viewModel.Content));
+            //}
+            //if (!string.IsNullOrWhiteSpace(viewModel.Remark))
+            //{
+            //    allList = allList.Where(d => d.Remark.Contains(viewModel.Remark));
+            //}
+            //if (viewModel.HasArticles != null)
+            //{
+            //    allList = !viewModel.HasArticles.Value ? allList.Where(d => d.MediaArticles.Count == 0) : allList.Where(d => d.MediaArticles.Count > 0);
+            //}
+            //if (viewModel.IsSlide != null)
+            //{
+            //    allList = allList.Where(d => d.IsSlide == viewModel.IsSlide);
+            //}
             if (!string.IsNullOrWhiteSpace(viewModel.Areas))
             {
                 allList = allList.Where(d => d.Area.Contains(viewModel.Areas));
             }
-            if (!string.IsNullOrWhiteSpace(viewModel.SEO))
-            {
-                allList = allList.Where(d => d.SEO.Contains(viewModel.SEO));
-            }
-            if (!string.IsNullOrWhiteSpace(viewModel.Efficiency))
-            {
-                allList = allList.Where(d => d.Efficiency.Contains(viewModel.Efficiency));
-            }
-            if (!string.IsNullOrWhiteSpace(viewModel.ResourceType))
-            {
-                allList = allList.Where(d => d.ResourceType.Contains(viewModel.ResourceType));
-            }
+            //if (!string.IsNullOrWhiteSpace(viewModel.SEO))
+            //{
+            //    allList = allList.Where(d => d.SEO.Contains(viewModel.SEO));
+            //}
+            //if (!string.IsNullOrWhiteSpace(viewModel.Efficiency))
+            //{
+            //    allList = allList.Where(d => d.Efficiency.Contains(viewModel.Efficiency));
+            //}
+            //if (!string.IsNullOrWhiteSpace(viewModel.ResourceType))
+            //{
+            //    allList = allList.Where(d => d.ResourceType.Contains(viewModel.ResourceType));
+            //}
             if (!string.IsNullOrWhiteSpace(viewModel.Platform))
             {
                 allList = allList.Where(d => d.Platform.Contains(viewModel.Platform));
             }
-            if (!string.IsNullOrWhiteSpace(viewModel.Channel))
-            {
-                allList = allList.Where(d => d.Channel.Contains(viewModel.Channel));
-            }
+            //if (!string.IsNullOrWhiteSpace(viewModel.Channel))
+            //{
+            //    allList = allList.Where(d => d.Channel.Contains(viewModel.Channel));
+            //}
             if (!string.IsNullOrWhiteSpace(viewModel.MediaID))
             {
                 allList = allList.Where(d => d.MediaID.Contains(viewModel.MediaID));
             }
-            if (!string.IsNullOrWhiteSpace(viewModel.LinkManId))
-            {
-                allList = allList.Where(d => d.LinkManId == viewModel.LinkManId);
-            }
-            if (!string.IsNullOrWhiteSpace(viewModel.LinkManName))
-            {
-                allList = allList.Where(d => d.LinkMan.Name.Contains(viewModel.LinkManName));
-            }
-            if (!string.IsNullOrWhiteSpace(viewModel.Transactor))
-            {
-                allList = allList.Where(d => d.Transactor.Contains(viewModel.Transactor));
-            }
+            //if (!string.IsNullOrWhiteSpace(viewModel.LinkManId))
+            //{
+            //    allList = allList.Where(d => d.LinkManId == viewModel.LinkManId);
+            //}
+            //if (!string.IsNullOrWhiteSpace(viewModel.LinkManName))
+            //{
+            //    allList = allList.Where(d => d.LinkMan.Name.Contains(viewModel.LinkManName));
+            //}
+            //if (!string.IsNullOrWhiteSpace(viewModel.Transactor))
+            //{
+            //    allList = allList.Where(d => d.Transactor.Contains(viewModel.Transactor));
+            //}
             if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
             {
                 viewModel.MediaNames = viewModel.MediaNames.Trim().Replace("\r\n", ",").Replace("，", ",").Replace(" ", ",");
@@ -335,76 +312,108 @@ namespace Ada.Services.Resource
             }
             if (viewModel.MediaTagIds != null)
             {
-                allList = from m in allList
-                          from t in m.MediaTags
-                          where viewModel.MediaTagIds.Contains(t.Id)
-                          select m;
+                allList = allList.Include(d => d.MediaTags).Where(d => d.MediaTags.Any(t => viewModel.MediaTagIds.Contains(t.Id)));
             }
-            if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
-            {
-                if (viewModel.PriceStart != null)
-                {
-                    allList = allList.Where(d =>
-                        d.MediaPrices.FirstOrDefault(a => a.AdPositionName == viewModel.AdPositionName).PurchasePrice >=
-                        viewModel.PriceStart);
-                }
-                if (viewModel.PriceEnd != null)
-                {
-                    allList = allList.Where(d =>
-                        d.MediaPrices.FirstOrDefault(a => a.AdPositionName == viewModel.AdPositionName).PurchasePrice <=
-                        viewModel.PriceEnd);
-                }
-            }
+            //if (viewModel.PriceStart != null)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
+            //    {
+            //        allList = allList.Include(d => d.MediaPrices)
+            //            .Where(d => d.MediaPrices.Any(p => p.PurchasePrice >= viewModel.PriceStart && p.AdPositionName == viewModel.AdPositionName));
+            //    }
+            //    else
+            //    {
+            //        allList = allList.Include(d => d.MediaPrices)
+            //            .Where(d => d.MediaPrices.Any(p => p.PurchasePrice >= viewModel.PriceStart));
+            //    }
+            //}
+            //if (viewModel.PriceEnd != null)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
+            //    {
+            //        allList = allList.Include(d => d.MediaPrices)
+            //            .Where(d => d.MediaPrices.Any(p => p.PurchasePrice <= viewModel.PriceEnd && p.AdPositionName == viewModel.AdPositionName));
+            //    }
+            //    else
+            //    {
+            //        allList = allList.Include(d => d.MediaPrices)
+            //            .Where(d => d.MediaPrices.Any(p => p.PurchasePrice <= viewModel.PriceEnd));
+            //    }
+            //}
+            //if (viewModel.PriceInvalidDate != null)
+            //{
+            //    var endDate = viewModel.PriceInvalidDate.Value.AddDays(1);
+            //    allList = allList.Include(d => d.MediaPrices).Where(d =>
+            //        d.MediaPrices.Any(p => p.InvalidDate < endDate));
+            //}
 
-            var result = allList.Select(d => new MediaView
-            {
-                Id = d.Id,
-                MediaName = d.MediaName,
-                MediaID = d.MediaID,
-                MediaTypeIndex = d.MediaType.CallIndex,
-                MediaTypeName = d.MediaType.TypeName,
-                IsAuthenticate = d.IsAuthenticate,
-                IsOriginal = d.IsOriginal,
-                IsComment = d.IsComment,
-                FansNum = d.FansNum,
-                ChannelType = d.ChannelType,
-                LastReadNum = d.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).FirstOrDefault().ViewCount,
-                AvgReadNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(10).Average(a => a.ViewCount),
-                PublishFrequency = d.PublishFrequency,
-                Areas = d.Area,
-                Sex = d.Sex,
-                Client = d.Client,
-                SEO = d.SEO,
-                Abstract = d.Abstract,
-                PostNum = d.PostNum,
-                MonthPostNum = d.MonthPostNum,
-                FriendNum = d.FriendNum,
-                Efficiency = d.Efficiency,
-                ResourceType = d.ResourceType,
-                Channel = d.Channel,
-                LastPushDate = d.LastPushDate,
-                AuthenticateType = d.AuthenticateType,
-                Platform = d.Platform,
-                TransmitNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ShareCount),
-                CommentNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount),
-                LikesNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount),
-                BlogLastPushDate = d.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault().PublishDate,
-                WeekArticleCount = d.MediaArticles.OrderByDescending(a => a.PublishDate).Count(l => SqlFunctions.DateDiff("day", l.PublishDate, DateTime.Now) <= 7),
-                Content = d.Content,
-                Remark = d.Remark,
-                Status = d.Status,
-                ApiUpDate = d.ApiUpDate,
-                MediaLink = d.MediaLink,
-                MediaLogo = d.MediaLogo,
-                MediaQR = d.MediaQR,
-                LinkManId = d.LinkManId,
-                LinkManName = d.LinkMan.Name,
-                Transactor = d.Transactor,
-                MediaGroups = d.MediaGroups.Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
-                MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).ToList(),
-                MediaPrices = d.MediaPrices.Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = p.PurchasePrice }).ToList()
-            });
-
+            //var result = allList.Select(d => new MediaView
+            //{
+            //    Id = d.Id,
+            //    MediaName = d.MediaName,
+            //    MediaID = d.MediaID,
+            //    MediaTypeIndex = d.MediaType.CallIndex,
+            //    MediaTypeName = d.MediaType.TypeName,
+            //    IsAuthenticate = d.IsAuthenticate,
+            //    IsOriginal = d.IsOriginal,
+            //    IsComment = d.IsComment,
+            //    FansNum = d.FansNum,
+            //    ChannelType = d.ChannelType,
+            //    LastReadNum = d.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).FirstOrDefault().ViewCount,
+            //    AvgReadNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(10).Average(a => a.ViewCount),
+            //    PublishFrequency = d.PublishFrequency,
+            //    Areas = d.Area,
+            //    Sex = d.Sex,
+            //    Client = d.Client,
+            //    SEO = d.SEO,
+            //    Abstract = d.Abstract,
+            //    PostNum = d.PostNum,
+            //    MonthPostNum = d.MonthPostNum,
+            //    FriendNum = d.FriendNum,
+            //    Efficiency = d.Efficiency,
+            //    ResourceType = d.ResourceType,
+            //    Channel = d.Channel,
+            //    LastPushDate = d.LastPushDate,
+            //    AuthenticateType = d.AuthenticateType,
+            //    Platform = d.Platform,
+            //    TransmitNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ShareCount),
+            //    CommentNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount),
+            //    LikesNum = (int?)d.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount),
+            //    BlogLastPushDate = d.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault().PublishDate,
+            //    WeekArticleCount = d.MediaArticles.OrderByDescending(a => a.PublishDate).Count(l => SqlFunctions.DateDiff("day", l.PublishDate, DateTime.Now) <= 7),
+            //    Content = d.Content,
+            //    Remark = d.Remark,
+            //    Status = d.Status,
+            //    ApiUpDate = d.ApiUpDate,
+            //    MediaLink = d.MediaLink,
+            //    MediaLogo = d.MediaLogo,
+            //    MediaQR = d.MediaQR,
+            //    LinkManId = d.LinkManId,
+            //    LinkManName = d.LinkMan.Name,
+            //    Transactor = d.Transactor,
+            //    MediaGroups = d.MediaGroups.Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
+            //    MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).ToList(),
+            //    MediaPrices = d.MediaPrices.Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = p.PurchasePrice }).ToList()
+            //});
+            var result = allList.SelectMany(d => d.MediaArticles.Select(a => new
+                {
+                    a.Media,
+                    a.CommentCount,
+                    a.ViewCount,
+                    a.LikeCount,
+                    a.IsTop,
+                    a.IsOriginal,
+                    a.PublishDate,
+                    a.ShareCount
+                }))
+                .GroupBy(d =>d.Media ).Select(d => new MediaView()
+                {
+                    MediaName = d.Key.MediaName,
+                    MediaID = d.Key.MediaID,
+                    Id = d.Key.Id,
+                    LastReadNum=d.Where(dd=>dd.IsTop==true).OrderByDescending(ddd=>ddd.PublishDate).FirstOrDefault().ViewCount,
+                    AvgReadNums= d.OrderByDescending(dd => dd.PublishDate).Take(10).Average(ddd => ddd.ViewCount)
+                });
             viewModel.total = result.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;

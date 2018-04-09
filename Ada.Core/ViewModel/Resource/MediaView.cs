@@ -89,8 +89,18 @@ namespace Ada.Core.ViewModel.Resource
         /// <summary>
         /// 近十篇平均阅读数
         /// </summary>
+        [Display(Name = "近十篇平均阅读数")]
+        public double? AvgReadNums { get; set; }
+        /// <summary>
+        /// 近十篇平均阅读数
+        /// </summary>
         [Display(Name = "近50篇平均阅读数")]
         public int? AvgReadNumDouYin { get; set; }
+        /// <summary>
+        /// 近十篇平均阅读数
+        /// </summary>
+        [Display(Name = "近50篇平均阅读数")]
+        public double? AvgReadNumDouYins { get; set; }
         /// <summary>
         /// 近十篇平均阅读数
         /// </summary>
@@ -142,15 +152,30 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "转发数")]
         public int? TransmitNum { get; set; }
         /// <summary>
+        /// 平均转发数
+        /// </summary>
+        [Display(Name = "平均转发数")]
+        public double? AvgTransmitNum { get; set; }
+        /// <summary>
         /// 评论数
         /// </summary>
         [Display(Name = "评论数")]
         public int? CommentNum { get; set; }
         /// <summary>
+        /// 平均评论数
+        /// </summary>
+        [Display(Name = "平均评论数")]
+        public double? AvgCommentNum { get; set; }
+        /// <summary>
         /// 点赞数
         /// </summary>
         [Display(Name = "点赞数")]
         public int? LikesNum { get; set; }
+        /// <summary>
+        /// 平均点赞数
+        /// </summary>
+        [Display(Name = "平均点赞数")]
+        public double? AvgLikesNum { get; set; }
         /// <summary>
         /// 微博数
         /// </summary>

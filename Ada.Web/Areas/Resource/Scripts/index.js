@@ -228,8 +228,8 @@ function formatterWeiXinData(value, row) {
 }
 function formatterBlogData(value, row) {
     var date = "--";
-    if (row.BlogLastPushDate) {
-        date = moment(row.BlogLastPushDate).format("YYYY-MM-DD HH:mm");
+    if (row.LastPushDate) {
+        date = moment(row.LastPushDate).format("YYYY-MM-DD HH:mm");
     }
     return "<div class='p-xxs'><span class='label label-info'>近50篇平均点赞数：" +
         (row.LikesNum || 0) +
@@ -241,30 +241,24 @@ function formatterBlogData(value, row) {
         //(row.TransmitNum || 0) +
         //"</div>" +
         "<div class='p-xxs'><span class='label label-info'>一周博文数：" +
-        (row.WeekArticleCount || 0) +
+        (row.MonthPostNum || 0) +
         "</div>" +
         "<div class='p-xxs'><span class='label label-info'>最近博文日期：" +
         date + "</div>";
 }
 function formatterDouYinData(value, row) {
-    var date = "--";
-    if (row.BlogLastPushDate) {
-        date = moment(row.BlogLastPushDate).format("YYYY-MM-DD HH:mm");
-    }
-    return "<div class='p-xxs'><span class='label label-info'>平均点赞数：" +
-        (row.LikesNum || 0) +
+    return  "<div class='p-xxs'><span class='label label-info'>平均浏览数：" +
+        (row.AvgReadNum || 0) +
         "</div>" +
-        "<div class='p-xxs'><span class='label label-info'>平均浏览数：" +
-        (row.AvgReadNumDouYin || 0) +
+        "<div class='p-xxs'><span class='label label-info'>平均评论数：" +
+        (row.CommentNum || 0) +
         "</div>" +
-        //"<div class='p-xxs'><span class='label label-info'>平均评论数：" +
-        //(row.CommentNum || 0) +
-        //"</div>" +
+        "<div class='p-xxs'><span class='label label-info'>关注数：" +
+        (row.FriendNum || 0) +
+        "</div>" +
         "<div class='p-xxs'><span class='label label-info'>总视频数：" +
         (row.PostNum || 0) +
-        "</div>" +
-        "<div class='p-xxs'><span class='label label-info'>最近视频日期：" +
-        date + "</div>";
+        "</div>" ;
 }
 function formatterblogLevel(value) {
     if (value == "黄V") {

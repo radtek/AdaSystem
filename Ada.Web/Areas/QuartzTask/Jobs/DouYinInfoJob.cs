@@ -68,7 +68,7 @@ namespace QuartzTask.Jobs
                                             {
                                                 APIRequestRecord exrecord = new APIRequestRecord();
                                                 exrecord.Id = IdBuilder.CreateIdNum();
-                                                exrecord.RequestParameters = media.MediaID;
+                                                exrecord.RequestParameters = media.MediaName;
                                                 exrecord.IsSuccess = false;
                                                 exrecord.Retcode = "500";
                                                 exrecord.ReponseContent = ex.Message;
@@ -120,6 +120,7 @@ namespace QuartzTask.Jobs
                                 job.Remark = "获取抖音用户信息任务正在运行中，本次成功更新：" + media.MediaName + "-" + media.MediaID;
                             }
                         }
+
                         db.SaveChanges();
                     }
                     catch (Exception ex)

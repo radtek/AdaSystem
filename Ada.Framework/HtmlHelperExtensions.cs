@@ -23,7 +23,22 @@ namespace Ada.Framework
             return area == currentArea && controller == currentController && action == currentAction ?
                 cssClass : string.Empty;
         }
+        public static string IsActive(this HtmlHelper html, string controller = null, string action = null, string cssClass = null)
+        {
 
+            if (String.IsNullOrEmpty(cssClass))
+                cssClass = "active";
+            string currentAction = html.ViewContext.RouteData.Values["action"].ToString().ToLower();
+            string currentController = html.ViewContext.RouteData.Values["controller"].ToString().ToLower();
+           
+            if (String.IsNullOrEmpty(controller))
+                controller = currentController;
+            if (String.IsNullOrEmpty(action))
+                action = currentAction;
+
+            return  controller.ToLower() == currentController && action.ToLower() == currentAction ?
+                cssClass : string.Empty;
+        }
         public static string PageClass(this HtmlHelper html)
         {
             string currentAction = (string)html.ViewContext.RouteData.Values["action"];

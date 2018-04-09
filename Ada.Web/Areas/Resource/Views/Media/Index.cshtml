@@ -395,25 +395,23 @@
                                         </td>
                                         @if (Model.MediaTypeIndex == "weixin" || Model.MediaTypeIndex == "sinablog" || Model.MediaTypeIndex == "douyin")
                                         {
-
+                                            var lastDate = item.LastPushDate?.ToString("yyyy-MM-dd");
+                                             
                                             if (Model.MediaTypeIndex == "weixin")
                                             {
 
                                                 <td>
                                                     <div class='p-xxs'>
-                                                        <span class='label label-info'>近10篇平均阅读数：@Convert.ToInt32(item.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).Take(10).Average(aaa => aaa.ViewCount))</span>
+                                                        <span class='label label-info'>近10篇平均阅读数：@item.AvgReadNum</span>
                                                     </div>
                                                     <div class='p-xxs'>
-                                                        @{
-                                                            var viecount = item.MediaArticles.Where(l => l.IsTop == true).OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount;
-                                                        }
-                                                        <span class='label label-info'>最近头条阅读数：@viecount</span>
+                                                        <span class='label label-info'>最近头条阅读数：@item.LastReadNum</span>
                                                     </div>
                                                     <div class='p-xxs'>
                                                         <span class='label label-info'>月发文篇数：@item.MonthPostNum</span>
                                                     </div>
                                                     <div class='p-xxs'>
-                                                        <span class='label label-info'>最近微信发文日期：@item.LastPushDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"))</span>
+                                                        <span class='label label-info'>最近微信发文日期：@lastDate</span>
                                                     </div>
                                                 </td>
                                             }
@@ -421,24 +419,21 @@
                                             {
                                                 <td>
                                                     <div class='p-xxs'>
-                                                        <span class='label label-info'>近50篇平均转发数：@Convert.ToInt32(item.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ShareCount))</span>
+                                                        <span class='label label-info'>近50篇平均转发数：@item.TransmitNum</span>
                                                     </div>
                                                     <div class='p-xxs'>
-                                                        <span class='label label-info'>近50篇平均评论数：@Convert.ToInt32(item.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount))</span>
+                                                        <span class='label label-info'>近50篇平均评论数：@item.CommentNum</span>
                                                     </div>
                                                     <div class='p-xxs'>
-                                                        <span class='label label-info'>近50篇平均点赞数：@Convert.ToInt32(item.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount))</span>
+                                                        <span class='label label-info'>近50篇平均点赞数：@item.LikesNum</span>
                                                     </div>
                                                     <div class='p-xxs'>
-                                                        <span class='label label-info'>微博数：@item.PostNum</span>
+                                                        <span class='label label-info'>微博总数：@item.PostNum</span>
                                                     </div>
                                                     <div class='p-xxs'>
-                                                        <span class='label label-info'>一周博文数：@item.MediaArticles.OrderByDescending(a => a.PublishDate).Count(l => l.PublishDate > DateTime.Now.Date.AddDays(-7))</span>
+                                                        <span class='label label-info'>一周博文数：@item.MonthPostNum</span>
                                                     </div>
                                                     <div class='p-xxs'>
-                                                        @{
-                                                            var lastDate = item.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate.Value.ToString("yyyy-MM-dd");
-                                                        }
                                                         <span class='label label-info'>最近博文日期：@lastDate</span>
                                                     </div>
                                                 </td>
@@ -447,21 +442,18 @@
                                             {
                                                 <td>
                                                     <div class='p-xxs'>
-                                                        <span class='label label-info'>平均浏览数：@Convert.ToInt32(item.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.ViewCount))</span>
+                                                        <span class='label label-info'>平均浏览数：@item.AvgReadNum</span>
                                                     </div>
                                                     <div class='p-xxs'>
-                                                        <span class='label label-info'>平均评论数：@Convert.ToInt32(item.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.CommentCount))</span>
+                                                        <span class='label label-info'>平均评论数：@item.CommentNum</span>
                                                     </div>
                                                     <div class='p-xxs'>
-                                                        <span class='label label-info'>平均点赞数：@Convert.ToInt32(item.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50).Average(aaa => aaa.LikeCount))</span>
+                                                        <span class='label label-info'>平均点赞数：@item.LikesNum</span>
                                                     </div>
                                                     <div class='p-xxs'>
                                                         <span class='label label-info'>发布视频总数：@item.PostNum</span>
                                                     </div>
                                                     <div class='p-xxs'>
-                                                        @{
-                                                            var lastDate = item.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate.Value.ToString("yyyy-MM-dd");
-                                                        }
                                                         <span class='label label-info'>最近视频日期：@lastDate</span>
                                                     </div>
                                                 </td>

@@ -4,7 +4,7 @@
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
     Layout = "~/Views/Shared/_Layout_Web.cshtml";
-    ViewBag.Title = "微信公众号";
+    ViewBag.Title = "小红书";
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
 
 }
@@ -115,12 +115,12 @@
                     headers: { "__RequestVerificationToken": $("input[name='__RequestVerificationToken']").val() }
                 },
                     formatSearch: function() {
-                        return "公众号名称或微信号";
+                        return "小红书名称";
                     },
                onLoadSuccess: initTooltip ,
                 mobileResponsive: true,
                 queryParams: function (parameters) {
-                    parameters.MediaTypeIndex = 'weixin';
+                    parameters.MediaTypeIndex = 'redbook';
                     return searchFrm.queryParams(parameters);
                 },
                 columns: [
@@ -134,18 +134,12 @@
                     },
                     {
                         field: 'MediaName',
-                        title: '微信公众号',
+                        title: '小红书账号',
                         valign: "middle",
                         align: "left",
                         formatter: formatter.mediaInfo
                     },
-                    {
-                        field: 'AvgReadNum',
-                        title: '微信指数',
-                        valign: "middle",
-                        align: "left",
-                        formatter: formatter.mediaData
-                    },
+                    
                     {
                         field: 'MediaPrices',
                         title: '参考价格',
@@ -168,4 +162,7 @@
         });
     </script>
 }
+
+
+
 

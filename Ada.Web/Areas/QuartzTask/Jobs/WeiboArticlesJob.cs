@@ -176,6 +176,18 @@ namespace QuartzTask.Jobs
                                 job.Remark = "获取微博文章任务正在运行中，本次成功更新：" + media.MediaName + "-" + media.MediaID;
                             }
                         }
+
+                        media.TransmitNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50)
+                            .Average(aaa => aaa.ShareCount));
+                        media.CommentNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate)
+                            .Take(50).Average(aaa => aaa.CommentCount));
+                        media.LikesNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50)
+                            .Average(aaa => aaa.LikeCount));
+                        media.LastPushDate = media.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate;
+                        var weekDate = DateTime.Now.Date.AddDays(-7);
+                        media.MonthPostNum = media.MediaArticles.OrderByDescending(a => a.PublishDate)
+                            .Count(l => l.PublishDate > weekDate);
+
                         db.SaveChanges();
                     }
                     catch (Exception ex)
