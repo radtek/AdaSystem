@@ -42,7 +42,7 @@ namespace Ada.Web.Controllers
             viewModel.LoginName = user.LoginName;
             viewModel.Phone = user.Phone;
             Session["User"] = SerializeHelper.SerializeToString(viewModel);
-            return RedirectToAction("WeiXin", "Media");
+            return RedirectToAction("Index", "UserCenter");
         }
     }
 }

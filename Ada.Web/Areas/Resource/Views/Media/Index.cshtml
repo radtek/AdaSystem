@@ -391,12 +391,17 @@
                                                     <span class='btn btn-danger btn-outline btn-xs'><i class='fa fa-users'></i> 粉丝：@Utils.ShowFansNum(item.FansNum) 万</span>
                                                 </div>
                                             }
-
+                                            @if (item.MediaType.IsComment == true)
+                                            {
+                                                <div class='p-xxs'>
+                                                    <a class='btn btn-warning btn-outline btn-xs' href="@Url.Action("Comment",new{id=item.Id})" target="_blank"><i class='fa fa-comment'></i> 发表评论</a>
+                                                </div>
+                                            }
                                         </td>
                                         @if (Model.MediaTypeIndex == "weixin" || Model.MediaTypeIndex == "sinablog" || Model.MediaTypeIndex == "douyin")
                                         {
                                             var lastDate = item.LastPushDate?.ToString("yyyy-MM-dd");
-                                             
+
                                             if (Model.MediaTypeIndex == "weixin")
                                             {
 

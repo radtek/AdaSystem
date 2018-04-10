@@ -9,63 +9,66 @@
         </div>
         <div class="navbar-collapse collapse" id="navbar">
             <ul class="nav navbar-nav">
-                <li class="@Html.IsActive("media","weixin")">
-                    <a aria-expanded="false" role="button" href="@Url.Action("WeiXin","Media")"> 微信公众号</a>
+                <li class="@Html.IsActive("usercenter","index")">
+                    <a aria-expanded="false" role="button" href="@Url.Action("Index","UserCenter")"> 会员中心</a>
                 </li>
-                <li class="@Html.IsActive("media","weibo")">
-                    <a aria-expanded="false" role="button" href="@Url.Action("WeiBo","Media")"> 新浪微博</a>
+                <li class="@Html.IsActive("media", "weixin")">
+                    <a aria-expanded="false" role="button" href="@Url.Action("WeiXin", "Media")"> 微信公众号</a>
                 </li>
-                <li class="@Html.IsActive("media","douyin")">
-                    <a aria-expanded="false" role="button" href="@Url.Action("DouYin","Media")"> 抖音短视频</a>
+                <li class="@Html.IsActive("media", "weibo")">
+                    <a aria-expanded="false" role="button" href="@Url.Action("WeiBo", "Media")"> 新浪微博</a>
                 </li>
-                <li class="@Html.IsActive("media","zhihu")">
-                    <a aria-expanded="false" role="button" href="@Url.Action("ZhiHu","Media")"> 知乎</a>
+                <li class="@Html.IsActive("media", "douyin")">
+                    <a aria-expanded="false" role="button" href="@Url.Action("DouYin", "Media")"> 抖音短视频</a>
                 </li>
-                <li class="@Html.IsActive("media","redbook")">
-                    <a aria-expanded="false" role="button" href="@Url.Action("RedBook","Media")"> 小红书</a>
+                <li class="@Html.IsActive("media", "zhihu")">
+                    <a aria-expanded="false" role="button" href="@Url.Action("ZhiHu", "Media")"> 知乎</a>
                 </li>
-                
+                <li class="@Html.IsActive("media", "redbook")">
+                    <a aria-expanded="false" role="button" href="@Url.Action("RedBook", "Media")"> 小红书</a>
+                </li>
+
                 @*<li class="dropdown">
-                    <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> Menu item <span class="caret"></span></a>
-                    <ul role="menu" class="dropdown-menu">
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> Menu item <span class="caret"></span></a>
-                    <ul role="menu" class="dropdown-menu">
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" aria-expanded="false" role="button" class="dropdown-toggle" data-toggle="dropdown"> Menu item <span class="caret"></span></a>
-                    <ul role="menu" class="dropdown-menu">
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                    </ul>
-                </li>*@
-                <li class="dropdown">
-                    <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> 会员中心 <span class="caret"></span></a>
-                    <ul role="menu" class="dropdown-menu">
-                        <li><a href="">我的订单</a></li>
-                        <li><a href="">我的项目</a></li>
-                        <li><a href="">修改密码</a></li>
-                        
-                    </ul>
-                </li>
+            <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> Menu item <span class="caret"></span></a>
+            <ul role="menu" class="dropdown-menu">
+                <li><a href="">Menu item</a></li>
+                <li><a href="">Menu item</a></li>
+                <li><a href="">Menu item</a></li>
+                <li><a href="">Menu item</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> Menu item <span class="caret"></span></a>
+            <ul role="menu" class="dropdown-menu">
+                <li><a href="">Menu item</a></li>
+                <li><a href="">Menu item</a></li>
+                <li><a href="">Menu item</a></li>
+                <li><a href="">Menu item</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a href="#" aria-expanded="false" role="button" class="dropdown-toggle" data-toggle="dropdown"> Menu item <span class="caret"></span></a>
+            <ul role="menu" class="dropdown-menu">
+                <li><a href="">Menu item</a></li>
+                <li><a href="">Menu item</a></li>
+                <li><a href="">Menu item</a></li>
+                <li><a href="">Menu item</a></li>
+            </ul>
+        </li>*@
+                @*<li class="dropdown">
+            <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> 会员中心 <span class="caret"></span></a>
+            <ul role="menu" class="dropdown-menu">
+                <li><a href="">我的订单</a></li>
+                <li><a href="">我的项目</a></li>
+                <li><a href="">修改密码</a></li>
+
+            </ul>
+        </li>*@
 
             </ul>
             <ul class="nav navbar-top-links navbar-right">
                 <li>
-                    <a href="#">
+                    <a href="@Url.Action("Quit", "UserCenter")">
                         <i class="fa fa-sign-out"></i> 退出
                     </a>
                 </li>

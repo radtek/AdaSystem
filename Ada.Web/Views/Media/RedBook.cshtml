@@ -6,7 +6,7 @@
     Layout = "~/Views/Shared/_Layout_Web.cshtml";
     ViewBag.Title = "小红书";
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
-
+    var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("redbook");
 }
 <div class="row wrapper border-bottom white-bg page-heading m-t-xs">
     <div class="col-lg-10">
@@ -120,7 +120,7 @@
                onLoadSuccess: initTooltip ,
                 mobileResponsive: true,
                 queryParams: function (parameters) {
-                    parameters.MediaTypeIndex = 'redbook';
+                    parameters.MediaTypeId = '@meidaType.Id';
                     return searchFrm.queryParams(parameters);
                 },
                 columns: [

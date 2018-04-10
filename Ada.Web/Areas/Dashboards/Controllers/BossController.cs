@@ -26,6 +26,8 @@ namespace Dashboards.Controllers
         private readonly IRepository<BillPaymentDetail> _billPaymentDetailRepository;
         private readonly IRepository<ExpenseDetail> _expenseDetailDetailRepository;
         private readonly IRepository<MediaPrice> _mediaRepository;
+        private readonly IRepository<OrderDetailComment> _orderDetailCommentRepository;
+        private readonly IRepository<MediaComment> _mediaCommentRepository;
 
         public BossController(IRepository<BusinessOrderDetail> businessRepository,
             IRepository<PurchaseOrderDetail> purchaseRepository,
@@ -33,7 +35,9 @@ namespace Dashboards.Controllers
             IRepository<Receivables> receivablesRepository,
             IRepository<BillPaymentDetail> billPaymentDetailRepository,
             IRepository<ExpenseDetail> expenseDetailDetailRepository,
-            IRepository<MediaPrice> mediaRepository)
+            IRepository<MediaPrice> mediaRepository,
+            IRepository<OrderDetailComment> orderDetailCommentRepository,
+            IRepository<MediaComment> mediaCommentRepository)
         {
             _businessRepository = businessRepository;
             _purchaseRepository = purchaseRepository;
@@ -41,6 +45,8 @@ namespace Dashboards.Controllers
             _billPaymentDetailRepository = billPaymentDetailRepository;
             _expenseDetailDetailRepository = expenseDetailDetailRepository;
             _mediaRepository = mediaRepository;
+            _orderDetailCommentRepository = orderDetailCommentRepository;
+            _mediaCommentRepository = mediaCommentRepository;
         }
         public ActionResult Index()
         {
@@ -92,13 +98,26 @@ namespace Dashboards.Controllers
                   d.Media.IsDelete == false && d.Media.Status == Consts.StateNormal &&
                   (d.Media.MediaType.CallIndex == "weixin" || d.Media.MediaType.CallIndex == "sinablog")).Select(d => new MediaOrder
                   {
-                      TypeName= d.Media.MediaType.TypeName,
-                      MediaName= d.Media.MediaName,
-                      MediaID= d.Media.MediaID,
-                      Count= d.BusinessOrderDetails.Count,
+                      TypeName = d.Media.MediaType.TypeName,
+                      MediaName = d.Media.MediaName,
+                      MediaID = d.Media.MediaID,
+                      Count = d.BusinessOrderDetails.Count,
                       AdPostion = d.AdPositionName,
-                      SellMoney = d.BusinessOrderDetails.Sum(o=>o.SellMoney)
+                      SellMoney = d.BusinessOrderDetails.Sum(o => o.SellMoney)
                   }).OrderByDescending(d => d.Count).Take(20).ToList();
+            //订单 资源评价
+            total.OrderComments = _orderDetailCommentRepository.LoadEntities(d => d.IsDelete == false).GroupBy(d => d.Transactor).Select(d =>
+                  new Comment
+                  {
+                      Transactor = d.Key,
+                      Count = d.Count()
+                  }).OrderByDescending(d => d.Count).ToList();
+            total.MediaComments = _mediaCommentRepository.LoadEntities(d => d.IsDelete == false).GroupBy(d => d.Transactor).Select(d =>
+                new Comment
+                {
+                    Transactor = d.Key,
+                    Count = d.Count()
+                }).OrderByDescending(d => d.Count).ToList();
             return View(total);
         }
     }

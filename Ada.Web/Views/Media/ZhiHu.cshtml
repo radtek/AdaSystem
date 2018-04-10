@@ -7,7 +7,7 @@
     Layout = "~/Views/Shared/_Layout_Web.cshtml";
     ViewBag.Title = "知乎";
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
-
+    var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("zhihu");
 }
 <div class="row wrapper border-bottom white-bg page-heading m-t-xs">
     <div class="col-lg-10">
@@ -121,7 +121,7 @@
                onLoadSuccess: initTooltip ,
                 mobileResponsive: true,
                 queryParams: function (parameters) {
-                    parameters.MediaTypeIndex = 'zhihu';
+                    parameters.MediaTypeId = '@meidaType.Id';
                     return searchFrm.queryParams(parameters);
                 },
                 columns: [

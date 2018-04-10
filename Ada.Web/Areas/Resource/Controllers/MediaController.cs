@@ -200,7 +200,15 @@ namespace Resource.Controllers
                     }
                     if (media.TransmitNum != null)
                     {
-                        jo.Add("平均转发数", media.TransmitNum);
+                        if (media.MediaType.CallIndex=="douyin")
+                        {
+                            jo.Add("平均点赞数", media.TransmitNum);
+                        }
+                        else
+                        {
+                            jo.Add("平均转发数", media.TransmitNum);
+                        }
+                        
                     }
                     if (media.AvgReadNum != null)
                     {
@@ -212,11 +220,26 @@ namespace Resource.Controllers
                     }
                     if (media.LikesNum != null)
                     {
-                        jo.Add("平均点赞数", media.LikesNum);
+                        if (media.MediaType.CallIndex == "douyin")
+                        {
+                            jo.Add("喜欢数", media.LikesNum);
+                        }
+                        else
+                        {
+                            jo.Add("平均点赞数", media.LikesNum);
+                        }
+                        
+                    }
+                    if (media.FriendNum != null)
+                    {
+                        jo.Add("关注数", media.FriendNum);
                     }
                     if (media.LastPushDate != null)
                     {
-                        jo.Add("最近发布日期", media.LastPushDate.Value.ToString("yyyy-MM-dd"));
+                        if (media.MediaType.CallIndex != "douyin")
+                        {
+                            jo.Add("最近发布日期", media.LastPushDate.Value.ToString("yyyy-MM-dd"));
+                        }
                     }
                     if (media.MonthPostNum != null)
                     {
@@ -252,7 +275,7 @@ namespace Resource.Controllers
                         }
                         jo.Add(mediaMediaPrice.AdPositionName, price);
                     }
-                    jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.PriceDate?.ToString("yyyy-MM-dd"));
+                    jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
                     if (!string.IsNullOrWhiteSpace(media.Abstract))
                     {
                         jo.Add("媒体摘要", media.Abstract);

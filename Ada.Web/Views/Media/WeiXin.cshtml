@@ -6,6 +6,7 @@
     Layout = "~/Views/Shared/_Layout_Web.cshtml";
     ViewBag.Title = "微信公众号";
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
+    var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("weixin");
 
 }
 <div class="row wrapper border-bottom white-bg page-heading m-t-xs">
@@ -21,22 +22,38 @@
     <div class="ibox-content m-b-sm border-bottom">
         <div class="row">
             @Html.AntiForgeryToken()
-            <div class="col-sm-4">
+            <div class="col-sm-12">
                 <div class="form-group">
-                    <label class="control-label" for="order_id">Order ID</label>
-                    <input type="text" id="order_id" name="order_id" value="" placeholder="Order ID" class="form-control">
+                    <label class="control-label">媒体分类</label>
+                    <div class="row">
+                        @foreach (var item in tags)
+                {
+                    <div class="col-md-1 col-xs-6">
+                        <div class="checkbox checkbox-success checkbox-inline">
+                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
+                            <label for="@item.Id">@item.TagName</label>
+                        </div>
+                    </div>
+        }
+                    </div>
                 </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <div class="form-group">
-                    <label class="control-label" for="status">Order status</label>
-                    <input type="text" id="status" name="status" value="" placeholder="Status" class="form-control">
+                    <label class="control-label">平均阅读数</label>
+                    <div id="readRange"></div>
                 </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3 col-sm-offset-1">
                 <div class="form-group">
-                    <label class="control-label" for="customer">Customer</label>
-                    <input type="text" id="customer" name="customer" value="" placeholder="Customer" class="form-control">
+                    <label class="control-label">粉丝数</label>
+                    <div id="fansRange"></div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label class="control-label" for="amount1">Amount</label>
+                    <input type="text" id="amount1" name="amount" value="" placeholder="Amount" class="form-control">
                 </div>
             </div>
         </div>
@@ -76,20 +93,50 @@
             </div>
         </div>
     </div>
-
+    <div id="toolbar">
+        <button class="btn btn-primary btn-outline" onclick="resetSearch();">
+            <i class="fa fa-repeat"></i> 重置筛选条件
+        </button>
+        
+    </div>
 
 </div>
 
 @section Styles {
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+    @Styles.Render("~/Content/plugins/ionRangeSlider/ionRangeStyles")
     @Styles.Render("~/plugins/bootstrapTableStyle")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-
+    @Scripts.Render("~/plugins/ionRange")
     <script type="text/javascript">
         $(document).ready(function () {
-
+            $("#readRange").ionRangeSlider({
+                min: 0,
+                max: 100001,
+                type: 'double',
+                //prefix: "$",
+                max_postfix: "+",
+                prettify: false,
+                grid: true,
+                onFinish: function (data) {
+                    console.log(data.from + " "+data.to);
+                }
+            });
+            $("#fansRange").ionRangeSlider({
+                min: 0,
+                max: 500,
+                type: 'double',
+                postfix: " 万",
+                max_postfix: "+",
+                prettify: false,
+                grid: true,
+                onFinish: function (data) {
+                    console.log(data.from + " " + data.to);
+                }
+            });
            $('#table').bootstrapTable({
                 url: '@Url.Action("GetList","Media")', //请求后台的URL（*）
                 method: 'post',
@@ -110,7 +157,8 @@
                 minimumCountColumns: 2,             //最少允许的列数
                 clickToSelect: true,                //是否启用点击选中行
                 singleSelect: true,                  //设置True 将禁止多选
-                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+               uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+               //searchAlign:"left",
                 ajaxOptions:{
                     headers: { "__RequestVerificationToken": $("input[name='__RequestVerificationToken']").val() }
                 },
@@ -120,7 +168,7 @@
                onLoadSuccess: initTooltip ,
                 mobileResponsive: true,
                 queryParams: function (parameters) {
-                    parameters.MediaTypeIndex = 'weixin';
+                    parameters.MediaTypeId = '@meidaType.Id';
                     return searchFrm.queryParams(parameters);
                 },
                 columns: [
@@ -166,6 +214,11 @@
             });
 
         });
+
+        function resetSearch() {
+            $("#readRange").data("ionRangeSlider").reset();
+            $("#fansRange").data("ionRangeSlider").reset();
+        }
     </script>
 }
 

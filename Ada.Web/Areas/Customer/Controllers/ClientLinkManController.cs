@@ -52,7 +52,10 @@ namespace Customer.Controllers
                     Status = d.Status,
                     Address = d.Address,
                     CommpanyName = d.Commpany.Name,
-                    Transactor = d.Transactor
+                    Transactor = d.Transactor,
+                    IsLock = d.IsLock,
+                    LoginName = d.LoginName
+                    
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -149,7 +152,7 @@ namespace Customer.Controllers
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            if (entity.IsLock==false)
+            if (entity.IsLock == false)
             {
                 return Json(new { State = 0, Msg = "此账户已开通会员，无法删除。请锁定账户后，再进行删除" });
             }
@@ -203,9 +206,9 @@ namespace Customer.Controllers
         public ActionResult CreateAccount(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            LinkManView view=new LinkManView();
+            LinkManView view = new LinkManView();
             view.Id = id;
-            view.Name = entity.Name;
+            view.Name = entity.Commpany.Name + " - " + entity.Name;
             view.Password = "wglh666666";
             return PartialView("CreateAccount", view);
         }
@@ -214,11 +217,15 @@ namespace Customer.Controllers
         public ActionResult CreateAccount(LinkManView viewModel)
         {
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
-            if (string.IsNullOrWhiteSpace(entity.LoginName))
+            if (entity==null)
+            {
+                return Json(new { State = 0, Msg = "开通会员的客户联系人不存在！" });
+            }
+            if (string.IsNullOrWhiteSpace(viewModel.LoginName))
             {
                 return Json(new { State = 0, Msg = "登陆账户名称不能为空" });
             }
-            if (entity.Password.Trim().Length < 6)
+            if (viewModel.Password.Trim().Length < 6)
             {
                 return Json(new { State = 0, Msg = "密码长度不能少于6位" });
             }
@@ -234,14 +241,14 @@ namespace Customer.Controllers
             entity.IsLock = false;
             entity.Password = Encrypt.Encode(viewModel.Password.Trim());
             _linkManService.Update(entity);
-            return Json(new { State = 1, Msg = "创建成功" });
+            return Json(new { State = 1, Msg = "开通会员成功!" });
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
         public ActionResult LockAccount(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            if (entity.IsLock==null)
+            if (entity.IsLock == null)
             {
                 return Json(new { State = 0, Msg = "此用户还未开通会员，请先开通会员" });
             }
@@ -251,16 +258,24 @@ namespace Customer.Controllers
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
-        public ActionResult ResetPassword(string id)
+        public ActionResult ResetPassword(string id,string p= "wglh666666")
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             if (entity.IsLock == null)
             {
                 return Json(new { State = 0, Msg = "此用户还未开通会员，请先开通会员" });
             }
-            entity.Password = Encrypt.Encode("wglh666666");
+            if (string.IsNullOrWhiteSpace(p))
+            {
+                p = "wglh666666";
+            }
+            if (p.Length<6)
+            {
+                return Json(new { State = 0, Msg = "密码长度不能少于6位！" });
+            }
+            entity.Password = Encrypt.Encode(p);
             _linkManService.Update(entity);
-            return Json(new { State = 1, Msg = "密码已重置为：wglh666666" });
+            return Json(new { State = 1, Msg = "密码已重置为："+ p });
         }
     }
 }

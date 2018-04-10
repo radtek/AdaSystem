@@ -6,6 +6,7 @@
     Layout = "~/Views/Shared/_Layout_Web.cshtml";
     ViewBag.Title = "新浪微博";
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
+    var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("sinablog");
 
 }
 <div class="row wrapper border-bottom white-bg page-heading m-t-xs">
@@ -120,7 +121,7 @@
                onLoadSuccess: initTooltip ,
                 mobileResponsive: true,
                 queryParams: function (parameters) {
-                    parameters.MediaTypeIndex = 'sinablog';
+                    parameters.MediaTypeId = '@meidaType.Id';
                     return searchFrm.queryParams(parameters);
                 },
                 columns: [

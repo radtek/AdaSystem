@@ -6,23 +6,27 @@ using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
+using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Resource;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Filter;
+using Ada.Services.Admin;
 using Ada.Services.Resource;
 using Ada.Web.Models;
 
 namespace Ada.Web.Controllers
 {
-    public class MediaController : UserCenterController
+    public class MediaController : UserController
     {
         private readonly IRepository<Media> _repository;
         private readonly IMediaService _service;
-        public MediaController(IRepository<Media> repository, IMediaService service)
+        private readonly IFieldService _fieldService;
+        public MediaController(IRepository<Media> repository, IMediaService service, IFieldService fieldService)
         {
             _repository = repository;
             _service = service;
+            _fieldService = fieldService;
         }
         public ActionResult WeiXin()
         {
@@ -49,7 +53,8 @@ namespace Ada.Web.Controllers
         public ActionResult GetList(MediaView viewModel)
         {
             viewModel.Status = Consts.StateNormal;
-            var result = _service.LoadEntitiesFilter(viewModel).Include(d=>d.MediaPrices).Include(d=>d.MediaTags).AsNoTracking().ToList();
+            var priceRange = _fieldService.GetFieldsByKey("ExportPrice").ToList();
+            var result = _service.LoadEntitiesFilter(viewModel).AsNoTracking().ToList();
             return Json(new
             {
                 viewModel.total,
@@ -81,11 +86,12 @@ namespace Ada.Web.Controllers
                     Content = d.Content,
                     Remark = d.Remark,
                     IsHot = d.IsHot,
+                    PublishFrequency = d.PublishFrequency,
                     IsRecommend = d.IsRecommend,
                     IsTop = d.IsTop,
                     MediaLogo = d.MediaLogo,
                     MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).Take(6).ToList(),
-                    MediaPrices = d.MediaPrices.Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = p.PurchasePrice }).ToList()
+                    MediaPrices = d.MediaPrices.Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = SetSalePrice(Convert.ToDecimal(p.PurchasePrice),priceRange) }).ToList()
                 })
             });
         }
@@ -141,6 +147,40 @@ namespace Ada.Web.Controllers
             medias = medias.OrderByDescending(d => d.IsTop).ThenByDescending(d => d.IsHot).ThenByDescending(d => d.IsRecommend).ThenBy(d => d.Id).Skip(viewModel.limit.Value * (viewModel.offset.Value - 1))
                  .Take(viewModel.limit.Value);
             viewModel.Medias = medias.AsNoTracking().ToList();
+        }
+
+        private decimal SetSalePrice(decimal price, IEnumerable<Field> priceRanges)
+        {
+            if (price <= 0) return 0;
+            foreach (var range in priceRanges)
+            {
+                var qj = range.Text.Split('-');
+                if (price >= decimal.Parse(qj[0]) && price <= decimal.Parse(qj[1]))
+                {
+                    return PriceZero(decimal.Parse(range.Value) + price);
+                }
+            }
+            return 0;
+        }
+        private decimal PriceZero(decimal a)
+        {
+            if (a >= 100000)
+            {
+                return (int)a / 1000 * 1000;
+            }
+            if (a >= 10000)
+            {
+                return (int)a / 1000 * 1000;
+            }
+            if (a >= 1000)
+            {
+                return (int)a / 100 * 100;
+            }
+            if (a >= 100)
+            {
+                return (int)a / 100 * 100;
+            }
+            return a;
         }
     }
 }

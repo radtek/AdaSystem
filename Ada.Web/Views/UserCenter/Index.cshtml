@@ -1,0 +1,366 @@
+﻿
+@using System.Web.Optimization
+@using Ada.Core.Domain
+@using Ada.Core.Infrastructure
+@using Ada.Services.Admin
+@model Ada.Core.ViewModel.Statistics.BusinessTotal
+@{
+    ViewBag.Title = "会员中心";
+    Layout = "~/Views/Shared/_Layout_Web.cshtml";
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var purchaseStatus = fieldService.GetFieldsByKey("PurchaseStatus").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+}
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="widget style1 blue-bg">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-check fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 总订单数 </span>
+                        <h2 class="font-bold">@Model.OrderCount</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+
+            <div class="widget style1 white-bg">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-hourglass fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 待转采购单 </span>
+                        <h2 class="font-bold">@Model.Waiting</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+
+            <div class="widget style1 yellow-bg">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-comments fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 采购正处理 </span>
+                        <h2 class="font-bold">@Model.Doing</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+
+            <div class="widget style1 navy-bg">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-handshake-o fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 采购已确认 </span>
+                        <h2 class="font-bold">@Model.Confirm</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-2">
+
+            <div class="widget style1 lazur-bg">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-calendar-o fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 今日预出刊 </span>
+                        <h2 class="font-bold">@Model.Today</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="widget style1 lazur-bg">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-calendar-plus-o fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 明日预出刊 </span>
+                        <h2 class="font-bold">@Model.Tomorrow</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>我的订单</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <label class="control-label" for="MediaName">媒体名称</label>
+                                        <input type="text" id="MediaName" name="MediaName" value="" placeholder="媒体名称关键字" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <label class="control-label" for="PublishDateStr">出刊日期</label>
+                                        <input type="text" id="PublishDateStr" name="PublishDateStr" value="" readonly="" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <label class="control-label" for="PurchaseStatus">采购状态</label>
+                                        <select name="PurchaseStatus" id="PurchaseStatus" class="form-control">
+                                            <option value="" selected="">不限</option>
+                                            @foreach (var item in purchaseStatus)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <table id="table"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+
+@section Styles {
+    @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/dateRangeStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/dateRange")
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var table = new TableInit();
+            table.Init();
+            $("#PurchaseStatus").change(function () {
+                refreshTable();
+            });
+            $("#MediaName").focus(function(){    
+                refreshTable();
+            });
+            var timeoutId = 0;
+            $("#MediaName").off('keyup drop ').on('keyup drop ', function (event) {
+                if ($.inArray(event.keyCode, [37, 38, 39, 40]) > -1) {
+                    return;
+                }
+                clearTimeout(timeoutId); // doesn't matter if it's 0
+                timeoutId = setTimeout(function () {
+                    refreshTable();
+                }, 500);
+            });
+            var isIEBrowser = function () {
+                return !!(navigator.userAgent.indexOf("MSIE ") > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./));
+            };
+            if (isIEBrowser()) {
+                $("#MediaName").off('mouseup').on('mouseup', function (event) {
+                    clearTimeout(timeoutId); // doesn't matter if it's 0
+                    timeoutId = setTimeout(function () {
+                        refreshTable();
+                    }, 500);
+                });
+            }
+            initDate($('#PublishDateStr'));
+        });
+        var TableInit = function() {
+            var obj = new Object();
+            obj.Init = function() {
+                $('#table').bootstrapTable({
+                url: '@Url.Action("GetList")',         //请求后台的URL（*）
+                //toolbar: '#toolbar',                //工具按钮用哪个容器
+                classes: "table table-no-bordered",
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "desc",                   //排序方式
+                sortName: "Id",
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                minimumCountColumns: 2,             //最少允许的列数
+                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
+                mobileResponsive: true,
+                    queryParams: function (parameters) {
+                        parameters.MediaName = $("#MediaName").val();
+                        parameters.PurchaseStatus = $("#PurchaseStatus").val();
+                        parameters.PublishDateStr = $("#PublishDateStr").val();
+                        return searchFrm.queryParams(parameters);
+                    },
+                columns: [
+                    {
+                        field: 'OrderDate',
+                        title: '订单日期',
+                        align: "center", valign: "middle",
+                        formatter: function(value) {
+                            return  moment(value).format("YYYY-MM-DD");
+                        }
+                    },
+                    {
+                        field: 'OrderNum',
+                        title: '订单编号',
+                        align: "center", valign: "middle",
+
+                    },
+                    {
+                        field: 'OrderRemark',
+                        title: '订单摘要',
+                        align: "center", valign: "middle",
+                    }
+                    ,
+
+                    {
+                        field: 'MediaName',
+                        title: '媒体名称',
+                        align: "left", valign: "middle",
+                        formatter: function(value,row) {
+                            return "["+row.MediaTypeName+"] "+ value;
+                        }
+                    },
+                    {
+                        field: 'AdPositionName',
+                        title: '广告位',
+                        align: "center", valign: "middle",
+
+                    },
+                    {
+                        field: 'PrePublishDate',
+                        title: '预出刊日期',
+                        align: "center", valign: "middle",
+                        formatter: function (value) {
+                            if (value) {
+                                return moment(value).format("YYYY-MM-DD");
+                            }
+                        }
+                    },
+                    {
+                        field: 'PublishDate',
+                        title: '出刊日期',
+                        align: "center", valign: "middle",
+                        formatter: function (value) {
+                            if (value) {
+                                return moment(value).format("YYYY-MM-DD");
+                            }
+                        }
+                    },
+                    {
+                        field: 'PublishLink',
+                        title: '出刊链接',
+                        align: "center", valign: "middle",
+                        formatter: formatter.url
+                    },
+                    {
+                        field: 'Transactor',
+                        title: '经办人',
+                        align: "center", valign: "middle",
+                    },
+                    {
+                        field: 'PurchaseStatus',
+                        title: '采购状态',
+                        align: "center", valign: "middle",
+                        formatter: formatter.purchaseStatus
+                    }
+
+
+
+                ]
+            });
+            };
+
+            return obj;
+        };
+
+        function initDate($datepicker) {
+            $datepicker.daterangepicker({
+                autoUpdateInput: false,
+                opens: "center",
+                linkedCalendars: false,
+                ranges: {
+                    '今日': [moment(), moment()],
+                    '昨日': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    '最近7日': [moment().subtract(6, 'days'), moment()],
+                    '最近30日': [moment().subtract(29, 'days'), moment()],
+                    '本月': [moment().startOf('month'), moment().endOf('month')],
+                    '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    separator: " 至 ",
+                    applyLabel: "确认",
+                    cancelLabel: "取消",
+                    fromLabel: "从",
+                    toLabel: "到",
+                    customRangeLabel: "自定义",
+                    weekLabel: "周",
+                    daysOfWeek: [
+                        "日",
+                        "一",
+                        "二",
+                        "三",
+                        "四",
+                        "五",
+                        "六"
+                    ],
+                    monthNames: [
+                        "一月",
+                        "二月",
+                        "三月",
+                        "四月",
+                        "五月",
+                        "六月",
+                        "七月",
+                        "八月",
+                        "九月",
+                        "十月",
+                        "十一月",
+                        "十二月"
+                    ],
+                    firstDay: 1
+                }
+            });
+
+            $datepicker.on('apply.daterangepicker', function (ev, picker) {
+                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' 至 ' + picker.endDate.format('YYYY-MM-DD'));
+                refreshTable();
+            });
+            $datepicker.on('cancel.daterangepicker', function (ev, picker) {
+                $(this).val('');
+                refreshTable();
+            });
+        }
+        
+        function refreshTable() {
+            $('#table').bootstrapTable('refresh');
+        }
+
+    </script>
+}

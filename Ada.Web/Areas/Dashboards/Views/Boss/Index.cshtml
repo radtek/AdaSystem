@@ -126,7 +126,7 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>人气媒体资源排行(微信，微博)</h5>
-                    
+
                 </div>
                 <div class="ibox-content">
 
@@ -149,18 +149,18 @@
                                         var i = 1;
                                         foreach (var item in Model.MediaOrders)
                                         {
-                                    <tr>
-                                        <td class="text-center">@i</td>
-                                        <td class="text-center">
-                                            @item.TypeName
-                                        </td>
-                                        <td class="text-center">@item.MediaName - @item.MediaID</td>
-                                        <td class="text-center">
-                                            @item.AdPostion
-                                        </td>
-                                        <td class="text-center"><span class="label label-primary">@item.Count</span></td>
-                                        <td><span class="label label-warning">@item.SellMoney</span></td>
-                                    </tr>
+                                            <tr>
+                                                <td class="text-center">@i</td>
+                                                <td class="text-center">
+                                                    @item.TypeName
+                                                </td>
+                                                <td class="text-center">@item.MediaName - @item.MediaID</td>
+                                                <td class="text-center">
+                                                    @item.AdPostion
+                                                </td>
+                                                <td class="text-center"><span class="label label-primary">@item.Count</span></td>
+                                                <td><span class="label label-warning">@item.SellMoney</span></td>
+                                            </tr>
                                             i++;
                                         }
                                     }
@@ -176,37 +176,111 @@
             </div>
         </div>
     </div>
-    @*<div class="row">
-            @foreach (var item in Model.MediaTypes)
-            {
-                <div class="col-lg-3">
-                    <div class="widget style1 yellow-bg">
-                        <div class="row">
-                            <div class="col-xs-4">
-                                <i class="fa @item.Image fa-5x"></i>
+
+    <div class="row">
+
+
+        <div class="col-lg-12">
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="ibox float-e-margins" id="ibox1">
+                        <div class="ibox-title">
+                            <h5>销售订单评价情况</h5>
+                            @*<div class="ibox-tools">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-user">
+                                        @for (int i = 0; i < 12; i++)
+                                        {
+                                            <li>
+                                                <a href="javascript:getTop('业务一部','@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")', 'ibox1');">@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")</a>
+                                            </li>
+                                        }
+                                    </ul>
+
+                                </div>*@
+                        </div>
+                        <div class="ibox-content">
+                            <div class="sk-spinner sk-spinner-double-bounce">
+                                <div class="sk-double-bounce1"></div>
+                                <div class="sk-double-bounce2"></div>
                             </div>
-                            <div class="col-xs-8 text-right">
-                                <span> @item.TypeName </span>
-                                <h2 class="font-bold">@item.Taxis</h2>
-                            </div>
+                            <table class="table table-hover margin bottom">
+                                <thead>
+                                    <tr>
+                                        <th>评价人员</th>
+                                        <th>评价次数</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.OrderComments)
+                                    {
+                                        <tr>
+                                            <td>@item.Transactor</td>
+                                            <td><span class="badge badge-success">@item.Count</span></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-            }
+                <div class="col-lg-6">
+                    <div class="ibox float-e-margins" id="ibox2">
+                        <div class="ibox-title">
+                            <h5>媒体资源评价情况</h5>
+                            @*<div class="ibox-tools">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-user">
+                                        @for (int i = 0; i < 12; i++)
+                                        {
+                                            <li>
+                                                <a href="javascript:getTop('业务二部','@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")', 'ibox2');">@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>*@
+                        </div>
+                        <div class="ibox-content">
+                            <div class="sk-spinner sk-spinner-double-bounce">
+                                <div class="sk-double-bounce1"></div>
+                                <div class="sk-double-bounce2"></div>
+                            </div>
+                            <table class="table table-hover margin bottom">
+                                <thead>
+                                    <tr>
 
-        </div>*@
+                                        <th>评价人员</th>
+                                        <th>评价次数</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.MediaComments)
+                                    {
+                                        <tr>
+                                            <td>@item.Transactor</td>
+                                            <td><span class="badge badge-success">@item.Count</span></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
 
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
 
 </div>
 
 
-@*@section Scripts{
 
-        <script>
-            $(function() {
-
-            });
-
-
-        </script>
-    }*@

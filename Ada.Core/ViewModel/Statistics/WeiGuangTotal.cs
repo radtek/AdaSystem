@@ -11,6 +11,12 @@ namespace Ada.Core.ViewModel.Statistics
 {
    public class WeiGuangTotal
     {
+        public WeiGuangTotal()
+        {
+            MediaOrders=new List<MediaOrder>();
+            OrderComments=new List<Comment>();
+            MediaComments=new List<Comment>();
+        }
         /// <summary>
         /// 销售订单
         /// </summary>
@@ -66,6 +72,16 @@ namespace Ada.Core.ViewModel.Statistics
         /// </summary>
         [Display(Name = "资源类型")]
         public List<MediaOrder> MediaOrders { get; set; }
+        /// <summary>
+        /// 订单评价
+        /// </summary>
+        [Display(Name = "订单评价")]
+        public List<Comment> OrderComments { get; set; }
+        /// <summary>
+        /// 资源评价
+        /// </summary>
+        [Display(Name = "资源评价")]
+        public List<Comment> MediaComments { get; set; }
 
     }
 
@@ -76,6 +92,11 @@ namespace Ada.Core.ViewModel.Statistics
         public string MediaID { get; set; }
         public string AdPostion { get; set; }
         public decimal? SellMoney { get; set; }
+        public int? Count { get; set; }
+    }
+    public class Comment
+    {
+        public string Transactor { get; set; }
         public int? Count { get; set; }
     }
 }

@@ -139,7 +139,15 @@ formatter.mediaData = function (value, row) {
     }
     var post = "";
     if (row.PostNum) {
-        post = " <span class='label label-info'>作品总数：" + row.PostNum + "</span>";
+        post = " <span class='label label-info'>发布总数：" + row.PostNum + "</span>";
+    }
+    var friend = "";
+    if (row.FriendNum) {
+        friend = " <span class='label label-info'>关注数：" + row.FriendNum + "</span>";
+    }
+    var frequency = "";
+    if (row.PublishFrequency) {
+        frequency = " <span class='label label-info'>月发布频次：" + row.PublishFrequency + "</span>";
     }
     var lastdate = "";
     if (row.LastPushDate) {
@@ -153,7 +161,18 @@ formatter.mediaData = function (value, row) {
     var line5 = post ? "<div class='p-xxs'>" + post + "</div>" : "";
     var line6 = lastread ? "<div class='p-xxs'>" + lastread + "</div>" : "";
     var line7 = lastdate ? "<div class='p-xxs'>" + lastdate + "</div>" : "";
-    var line = line1 + line2 + line3 + line4 + line5 + line6 + line7;
+    var line8 = friend ? "<div class='p-xxs'>" + friend + "</div>" : "";
+    var line9 = frequency ? "<div class='p-xxs'>" + frequency + "</div>" : "";
+    var line = "";
+    if (row.MediaTypeIndex == "weixin") {
+        line = line1 + line6 + line4 + line9+line7;
+    }
+    if (row.MediaTypeIndex == "sinablog") {
+        line = line2 + line3 + line5 + line7;
+    }
+    if (row.MediaTypeIndex == "douyin") {
+        line = line1 + line3 + line8 + line5;
+    }
     return line || "<span class='label label-warning'>抱歉！暂无相关数据</span>";
 };
 

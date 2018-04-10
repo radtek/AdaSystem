@@ -8,7 +8,7 @@ using Ada.Core.ViewModel.Customer;
 
 namespace Ada.Web.Models
 {
-    public class UserCenterController:Controller
+    public class UserController:Controller
     {
         public LinkManView CurrentUser { get; set; }
         protected override void OnActionExecuting(ActionExecutingContext filterContext)

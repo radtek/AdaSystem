@@ -99,5 +99,10 @@ namespace Ada.Core.ViewModel.Customer
         /// </summary>
         [Display(Name = "经办人员")]
         public string TransactorId { get; set; }
+        /// <summary>
+        /// 是否锁定
+        /// </summary>
+        [Display(Name = "是否锁定")]
+        public bool? IsLock { get; set; }
     }
 }
