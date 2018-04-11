@@ -125,6 +125,7 @@
     <Compile Include="Controllers\JobController.cs" />
     <Compile Include="Jobs\DouYinArticlesJob.cs" />
     <Compile Include="Jobs\DouYinInfoJob.cs" />
+    <Compile Include="Jobs\UpdateMediaSellPriceJob.cs" />
     <Compile Include="Jobs\WeiboArticlesJob.cs" />
     <Compile Include="Jobs\WeiXinArticlesJob.cs" />
     <Compile Include="Jobs\WeiXinInfoJob.cs" />

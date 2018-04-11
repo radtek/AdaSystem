@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
@@ -63,10 +64,11 @@ namespace Ada.Services.Resource
             return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
         }
 
-        public void Update(MediaPrice entity)
+        public int Update(Expression<Func<MediaPrice, bool>> whereLambda, Expression<Func<MediaPrice, MediaPrice>> updateLambda)
         {
-            _repository.Update(entity);
+             var count=  _repository.Update(whereLambda,updateLambda);
             _dbContext.SaveChanges();
+            return count;
         }
     }
 }

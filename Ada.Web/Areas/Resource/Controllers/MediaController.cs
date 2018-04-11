@@ -906,7 +906,7 @@ namespace Resource.Controllers
                     price.AdPositionName = viewModelMediaPrice.AdPositionName;
                     price.InvalidDate = viewModel.PriceInvalidDate;
                     price.PurchasePrice = viewModelMediaPrice.PurchasePrice;
-                    price.SellPrice =  SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), priceRange);
+                    price.SellPrice = SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), priceRange);
                     price.PriceDate = viewModel.PriceUpdateDate;
                     entity.MediaPrices.Add(price);
                 }
@@ -1142,19 +1142,7 @@ namespace Resource.Controllers
             }
             return Content("成功更新" + count + "条资源");
         }
-        [AllowAnonymous]
-        public ActionResult UpdateSellPrice()
-        {
-            var list = _mediaPriceRepository.LoadEntities(d => d.IsDelete==false&&d.Media.IsDelete==false);
-            var priceRange = _fieldService.GetFieldsByKey("ExportPrice").ToList();
-            foreach (var mediaPrice in list)
-            {
-                mediaPrice.SellPrice = SetSalePrice(Convert.ToDecimal(mediaPrice.PurchasePrice), priceRange);
-                _mediaPriceService.Update(mediaPrice);
-            }
-            
-            return Content("成功更新了媒体市场价格");
-        }
+        
         private Media IsExist(MediaView viewModel, out string msg, bool isSelf = false, bool isDelete = false)
         {
             msg = string.Empty;

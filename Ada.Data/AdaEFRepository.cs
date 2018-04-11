@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
+using EntityFramework.Extensions;
 
 namespace Ada.Data
 {
@@ -65,6 +66,17 @@ namespace Ada.Data
                 _context.Entry(entity).Property(keyValuePair.Key).IsModified = true;
             }
         }
+
+        /// <summary>
+        /// 批量更新实体
+        /// </summary>
+        /// <param name="whereLambda">查找表达式</param>
+        /// <param name="updateLambda">更新表达式</param>
+        /// <returns>是否成功</returns>
+        public virtual int Update(Expression<Func<T, bool>> whereLambda, Expression<Func<T, T>> updateLambda)
+        {
+           return _context.Set<T>().Where(whereLambda).Update(updateLambda);
+        }
         #endregion
 
         #region 删除实体
@@ -111,6 +123,15 @@ namespace Ada.Data
         public virtual void Remove(IEnumerable<T> entities)
         {
             _context.Set<T>().RemoveRange(entities);
+        }
+        /// <summary>
+        /// 批量删除实体
+        /// </summary>
+        /// <param name="whereLambda">删除条件</param>
+        /// <returns>删除数目</returns>
+        public virtual void Remove(Expression<Func<T, bool>> whereLambda)
+        {
+            _context.Set<T>().Where(whereLambda).Delete();
         }
         /// <summary>
         /// 批量删除实体(逻辑删除)

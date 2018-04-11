@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
@@ -12,6 +13,8 @@ namespace Ada.Services.Resource
    public interface IMediaPriceService : IDependency
     {
         IQueryable<MediaPrice> LoadEntitiesFilter(MediaView viewModel);
-        void Update(MediaPrice entity);
+
+        int Update(Expression<Func<MediaPrice, bool>> whereLambda,
+            Expression<Func<MediaPrice, MediaPrice>> updateLambda);
     }
 }

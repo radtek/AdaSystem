@@ -313,6 +313,11 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "价格范围")]
         public string PriceRange { get; set; }
         /// <summary>
+        /// 销售价格范围
+        /// </summary>
+        [Display(Name = "销售价格范围")]
+        public string SellPriceRange { get; set; }
+        /// <summary>
         /// 价格范围
         /// </summary>
         [Display(Name = "价格范围")]

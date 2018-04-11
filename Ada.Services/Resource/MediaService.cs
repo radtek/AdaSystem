@@ -177,7 +177,53 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Include(d=>d.MediaTags).Where(d => d.MediaTags.Any(t => viewModel.MediaTagIds.Contains(t.Id)));
             }
-           
+
+            if (!string.IsNullOrWhiteSpace(viewModel.FansNumRange))
+            {
+                var temp = viewModel.FansNumRange.Trim().Replace("至","-").Split('-');
+                var min = Convert.ToInt32(temp[0].Trim())*10000;
+                var max = Convert.ToInt32(temp[1].Trim())*10000;
+                allList = allList.Where(d => d.FansNum >= min && d.FansNum <= max);
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.AvgReadNumRange))
+            {
+                var temp = viewModel.AvgReadNumRange.Trim().Replace("至", "-").Split('-');
+                var min = Convert.ToInt32(temp[0].Trim());
+                var max = Convert.ToInt32(temp[1].Trim());
+                allList = allList.Where(d => d.AvgReadNum >= min && d.AvgReadNum <= max);
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.SellPriceRange))
+            {
+                var temp = viewModel.SellPriceRange.Trim().Replace("至", "-").Split('-');
+                var min = Convert.ToDecimal(temp[0].Trim());
+                var max = Convert.ToDecimal(temp[1].Trim());
+                if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
+                {
+                    allList = allList.Include(d => d.MediaPrices)
+                        .Where(d => d.MediaPrices.Any(p => p.SellPrice >= min&&p.SellPrice<=max && p.AdPositionName == viewModel.AdPositionName));
+                }
+                else
+                {
+                    allList = allList.Include(d => d.MediaPrices)
+                        .Where(d => d.MediaPrices.Any(p => p.SellPrice >= min&&p.SellPrice<=max));
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.PriceRange))
+            {
+                var temp = viewModel.PriceRange.Trim().Replace("至", "-").Split('-');
+                var min = Convert.ToDecimal(temp[0].Trim());
+                var max = Convert.ToDecimal(temp[1].Trim());
+                if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
+                {
+                    allList = allList.Include(d => d.MediaPrices)
+                        .Where(d => d.MediaPrices.Any(p => p.PurchasePrice >= min && p.PurchasePrice <= max && p.AdPositionName == viewModel.AdPositionName));
+                }
+                else
+                {
+                    allList = allList.Include(d => d.MediaPrices)
+                        .Where(d => d.MediaPrices.Any(p => p.PurchasePrice >= min && p.PurchasePrice <= max));
+                }
+            }
             if (viewModel.PriceStart != null)
             {
                 if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))

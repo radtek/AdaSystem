@@ -27,21 +27,21 @@
                     <label class="control-label">媒体分类</label>
                     <div class="row">
                         @foreach (var item in tags)
-                {
-                    <div class="col-md-1 col-xs-6">
-                        <div class="checkbox checkbox-success checkbox-inline">
-                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
-                            <label for="@item.Id">@item.TagName</label>
-                        </div>
-                    </div>
-        }
+                        {
+                            <div class="col-md-1 col-xs-6">
+                                <div class="checkbox checkbox-success checkbox-inline">
+                                    <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
+                                    <label for="@item.Id">@item.TagName</label>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label class="control-label">平均阅读数</label>
-                    <div id="readRange"></div>
+                    <input type="text" id="readRange" name="readRange" value="" />
                 </div>
             </div>
             <div class="col-sm-3 col-sm-offset-1">
@@ -50,10 +50,17 @@
                     <div id="fansRange"></div>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-1">
+                <div class="form-group m-t-xl">
+                    <select class="form-control" name="po">
+                        <option value="">广告位</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-4">
                 <div class="form-group">
-                    <label class="control-label" for="amount1">Amount</label>
-                    <input type="text" id="amount1" name="amount" value="" placeholder="Amount" class="form-control">
+                    <label class="control-label">价格区间 <small class="text-muted">(注：请先选择广告位，再选择区间)</small></label>
+                    <div id="priceRange"></div>
                 </div>
             </div>
         </div>
@@ -97,7 +104,7 @@
         <button class="btn btn-primary btn-outline" onclick="resetSearch();">
             <i class="fa fa-repeat"></i> 重置筛选条件
         </button>
-        
+
     </div>
 
 </div>
@@ -114,27 +121,32 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $("#readRange").ionRangeSlider({
-                min: 0,
-                max: 100001,
                 type: 'double',
-                //prefix: "$",
-                max_postfix: "+",
-                prettify: false,
+                input_values_separator:'-',
+                values: [0, 100, 1000,5000, 10000 ,50000, 100001],
                 grid: true,
                 onFinish: function (data) {
                     console.log(data.from + " "+data.to);
                 }
             });
             $("#fansRange").ionRangeSlider({
-                min: 0,
-                max: 500,
                 type: 'double',
+                input_values_separator: '-',
                 postfix: " 万",
-                max_postfix: "+",
-                prettify: false,
                 grid: true,
+                values: [0, 10, 50, 100, 500, 1000, 5000, 10000],
                 onFinish: function (data) {
-                    console.log(data.from + " " + data.to);
+                    //console.log(data.from + " " + data.to);
+                }
+            });
+            $("#priceRange").ionRangeSlider({
+                type: "double",
+                grid: true,
+                input_values_separator: '-',
+                prefix: "¥",
+                values: [0, 100, 1000, 10000, 50000, 100000,500000,1000000, 5000000],
+                onFinish: function (data) {
+                    //console.log(data.from + " " + data.to);
                 }
             });
            $('#table').bootstrapTable({
@@ -196,7 +208,7 @@
                     },
                     {
                         field: 'MediaPrices',
-                        title: '参考价格',
+                        title: '广告位参考价格',
                         valign: "middle",
                         align: "left",
                         formatter: formatter.mediaPrice,
@@ -216,8 +228,11 @@
         });
 
         function resetSearch() {
+            alert($("#readRange").val());
             $("#readRange").data("ionRangeSlider").reset();
             $("#fansRange").data("ionRangeSlider").reset();
+            $("#priceRange").data("ionRangeSlider").reset();
+
         }
     </script>
 }

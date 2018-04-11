@@ -53,7 +53,6 @@ namespace Ada.Web.Controllers
         public ActionResult GetList(MediaView viewModel)
         {
             viewModel.Status = Consts.StateNormal;
-            var priceRange = _fieldService.GetFieldsByKey("ExportPrice").ToList();
             var result = _service.LoadEntitiesFilter(viewModel).AsNoTracking().ToList();
             return Json(new
             {
