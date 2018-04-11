@@ -5,7 +5,6 @@
 @{
     Layout = "~/Views/Shared/_Layout_Web.cshtml";
     ViewBag.Title = "抖音短视频";
-    var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
     var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("douyin");
 }
 <div class="row wrapper border-bottom white-bg page-heading m-t-xs">
@@ -19,77 +18,26 @@
 
 
     <div class="ibox-content m-b-sm border-bottom">
-        <div class="row">
-            @Html.AntiForgeryToken()
-            <div class="col-sm-4">
-                <div class="form-group">
-                    <label class="control-label" for="order_id">Order ID</label>
-                    <input type="text" id="order_id" name="order_id" value="" placeholder="Order ID" class="form-control">
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="form-group">
-                    <label class="control-label" for="status">Order status</label>
-                    <input type="text" id="status" name="status" value="" placeholder="Status" class="form-control">
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="form-group">
-                    <label class="control-label" for="customer">Customer</label>
-                    <input type="text" id="customer" name="customer" value="" placeholder="Customer" class="form-control">
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-4">
-                <div class="form-group">
-                    <label class="control-label" for="date_added">Date added</label>
-                    <div class="input-group date">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input id="date_added" type="text" class="form-control" value="03/04/2014">
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="form-group">
-                    <label class="control-label" for="date_modified">Date modified</label>
-                    <div class="input-group date">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input id="date_modified" type="text" class="form-control" value="03/06/2014">
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="form-group">
-                    <label class="control-label" for="amount">Amount</label>
-                    <input type="text" id="amount" name="amount" value="" placeholder="Amount" class="form-control">
-                </div>
-            </div>
-        </div>
-
+        @Html.Partial("Filter", meidaType)
     </div>
-
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox">
-                <div class="ibox-content">
-                    <table id="table"></table>
-                </div>
-            </div>
-        </div>
-    </div>
+    @Html.Partial("MediaTable")
 
 
 </div>
 
 @section Styles {
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+    @Styles.Render("~/Content/plugins/ionRangeSlider/ionRangeStyles")
     @Styles.Render("~/plugins/bootstrapTableStyle")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/ionRange")
 
     <script type="text/javascript">
         $(document).ready(function () {
-
+            initFilter();
            $('#table').bootstrapTable({
                 url: '@Url.Action("GetList","Media")', //请求后台的URL（*）
                 method: 'post',

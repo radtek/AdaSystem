@@ -2153,6 +2153,7 @@
     <Content Include="Images\p_big3.jpg" />
     <Content Include="Images\top.png" />
     <Content Include="Images\tuijian.png" />
+    <Content Include="Images\vglogo.png" />
     <Content Include="Images\youzhi.png" />
     <Content Include="Images\zender_logo.png" />
     <Content Include="Images\weixin.png" />
@@ -2912,6 +2913,9 @@
     <Content Include="Views\Media\ZhiHu.cshtml" />
     <Content Include="Views\Media\RedBook.cshtml" />
     <Content Include="Views\UserCenter\Index.cshtml" />
+    <Content Include="Views\Media\Filter.cshtml" />
+    <Content Include="Views\Media\MediaTable.cshtml" />
+    <Content Include="Views\Media\FilterSimple.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

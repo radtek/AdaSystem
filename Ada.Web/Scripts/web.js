@@ -1,4 +1,4 @@
-﻿
+﻿var timeoutId = 0;
 //扩展表单提交成JSON格式数据
 $.fn.serializeObject = function () {
     var o = {};
@@ -45,8 +45,67 @@ searchFrm.queryParams = function (parameters) {
 function initTooltip() {
     $('[data-toggle="tooltip"]').tooltip();
 }
-var formatter = {};
 
+function initFilter() {
+    
+    if ($("#AvgReadNumRange").length>0) {
+        $("#AvgReadNumRange").ionRangeSlider({
+            type: 'double',
+            input_values_separator: '-',
+            values: [0, 100, 1000, 5000, 10000, 50000, 100001],
+            grid: true,
+            onFinish: function (data) {
+                searchTable();
+            }
+        });
+    }
+    if ($("#FansNumRange").length > 0) {
+        $("#FansNumRange").ionRangeSlider({
+            type: 'double',
+            input_values_separator: '-',
+            postfix: " 万",
+            grid: true,
+            values: [0, 10, 50, 100, 500, 1000, 5000, 10000],
+            onFinish: function (data) {
+                searchTable();
+            }
+        });
+    }
+    if ($("#SellPriceRange").length > 0) {
+        $("#SellPriceRange").ionRangeSlider({
+            type: "double",
+            grid: true,
+            input_values_separator: '-',
+            prefix: "¥",
+            values: [0, 100, 1000, 10000, 50000, 100000, 500000, 1000000, 5000000],
+            onFinish: function (data) {
+                searchTable();
+            }
+        });
+    }
+    
+    $("#AdPositionName").add("input[name='MediaTagIds']").add().change(function () {
+        searchTable();
+    });
+}
+
+function resetSearch() {
+    $.each($(".irs-hidden-input"),
+        function(k, v) {
+            $(v).data("ionRangeSlider").reset();
+        });
+    $("form")[0].reset();
+    $('#table').bootstrapTable("resetSearch");
+    searchTable();
+}
+
+function searchTable() {
+    timeoutId = setTimeout(function () {
+        $("#table").bootstrapTable("refresh");
+    }, 500);
+}
+
+var formatter = {};
 formatter.mediaLogo = function (value, row) {
     if (!value) {
         value = "/Images/medialogo/" + row.MediaTypeIndex + ".jpg";
@@ -184,14 +243,11 @@ formatter.mediaData = function (value, row) {
 formatter.mediaOperation = function(value, row) {
 
     return "<div class='p-xxs'><div class='btn-group'>" +
-        "<a class='btn btn-danger btn-outline btn-sm' href='/Resource/Media/Update/" +
-        value +
-        "');' target='_blank'><i class='fa fa-info-circle'></i> 查看详情</a> " +
-        "<button class='btn btn-danger btn-outline btn-sm' onclick=\"operation.cancle('" +
-        value +
-        "');\"><i class='fa fa-cart-arrow-down'></i> 加入分组</button>" +
+        "<button class='btn btn-danger btn-outline btn-sm' onclick='todo();'><i class='fa fa-info-circle'></i> 查看详情</button> " +
+        "<button class='btn btn-danger btn-outline btn-sm' onclick='todo();'><i class='fa fa-cart-arrow-down'></i> 加入分组</button>" +
         "</div></div>";
 };
+
 
 
 
@@ -422,4 +478,8 @@ function exportDate() {
             showConfirmButton: false
         });
     });
+}
+
+function todo() {
+    swal("消息", "敬请期待！", "warning");
 }

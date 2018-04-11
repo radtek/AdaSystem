@@ -28,6 +28,7 @@ namespace Ada.Web.Models
                 return;
             }
             CurrentUser= SerializeHelper.DeserializeToObject<LinkManView>(obj.ToString());
+            ViewBag.CurrentUser = CurrentUser;
         }
     }
 }
