@@ -214,7 +214,7 @@ function formatterWeiXinData(value, row) {
     if (row.LastPushDate) {
         date = moment(row.LastPushDate).format("YYYY-MM-DD HH:mm");
     }
-    return "<div class='p-xxs'><span class='label label-info'>近十篇平均阅读数：" +
+    return "<div class='p-xxs'><span class='label label-info'>平均头条阅读数：" +
         (row.AvgReadNum || 0) +
         "</div>" +
         "<div class='p-xxs'><span class='label label-info'>最近头条阅读数：" +
@@ -231,17 +231,17 @@ function formatterBlogData(value, row) {
     if (row.LastPushDate) {
         date = moment(row.LastPushDate).format("YYYY-MM-DD HH:mm");
     }
-    return "<div class='p-xxs'><span class='label label-info'>近50篇平均点赞数：" +
+    return "<div class='p-xxs'><span class='label label-info'>平均点赞数：" +
         (row.LikesNum || 0) +
         "</div>" +
-        "<div class='p-xxs'><span class='label label-info'>近50篇平均评论数：" +
+        "<div class='p-xxs'><span class='label label-info'>平均评论数：" +
         (row.CommentNum || 0) +
         "</div>" +
-        //"<div class='p-xxs'><span class='label label-info'>平均转发数：" +
-        //(row.TransmitNum || 0) +
-        //"</div>" +
         "<div class='p-xxs'><span class='label label-info'>一周博文数：" +
         (row.MonthPostNum || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>微博总数：" +
+        (row.PostNum || 0) +
         "</div>" +
         "<div class='p-xxs'><span class='label label-info'>最近博文日期：" +
         date + "</div>";
@@ -252,6 +252,9 @@ function formatterDouYinData(value, row) {
         "</div>" +
         "<div class='p-xxs'><span class='label label-info'>平均评论数：" +
         (row.CommentNum || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>平均点赞数：" +
+        (row.LikesNum || 0) +
         "</div>" +
         "<div class='p-xxs'><span class='label label-info'>关注数：" +
         (row.FriendNum || 0) +

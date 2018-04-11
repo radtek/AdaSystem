@@ -93,9 +93,9 @@ namespace QuartzTask.Jobs
                                                 media.FansNum = mediaInfo.fansCount;
                                                 media.PostNum = mediaInfo.videoCount;
                                                 media.MediaLink = mediaInfo.url;
-                                                media.LikesNum = mediaInfo.favoriteCount;
+                                                //media.LikesNum = mediaInfo.favoriteCount;
                                                 media.FriendNum = mediaInfo.followCount;
-                                                media.TransmitNum = mediaInfo.coinCount;
+                                                //media.TransmitNum = mediaInfo.coinCount;
                                                 media.MediaLogo = mediaInfo.avatarUrl;
                                                 media.IsAuthenticate = mediaInfo.idVerified;
                                                 var sex = Utils.BlogSex(mediaInfo.gender);

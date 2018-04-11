@@ -200,15 +200,10 @@ namespace Resource.Controllers
                     }
                     if (media.TransmitNum != null)
                     {
-                        if (media.MediaType.CallIndex=="douyin")
-                        {
-                            jo.Add("平均点赞数", media.TransmitNum);
-                        }
-                        else
+                        if (media.MediaType.CallIndex != "douyin")
                         {
                             jo.Add("平均转发数", media.TransmitNum);
                         }
-                        
                     }
                     if (media.AvgReadNum != null)
                     {
@@ -220,15 +215,8 @@ namespace Resource.Controllers
                     }
                     if (media.LikesNum != null)
                     {
-                        if (media.MediaType.CallIndex == "douyin")
-                        {
-                            jo.Add("喜欢数", media.LikesNum);
-                        }
-                        else
-                        {
-                            jo.Add("平均点赞数", media.LikesNum);
-                        }
-                        
+                        jo.Add("平均点赞数", media.LikesNum);
+
                     }
                     if (media.FriendNum != null)
                     {

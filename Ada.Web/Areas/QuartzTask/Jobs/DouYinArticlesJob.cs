@@ -141,6 +141,8 @@ namespace QuartzTask.Jobs
                             .Take(50).Average(aaa => aaa.ViewCount));
                         media.CommentNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate)
                             .Take(50).Average(aaa => aaa.CommentCount));
+                        media.LikesNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate)
+                            .Take(50).Average(aaa => aaa.LikeCount));
                         db.SaveChanges();
                     }
                     catch (Exception ex)
