@@ -405,32 +405,35 @@
                                             if (Model.MediaTypeIndex == "weixin")
                                             {
 
-                                                <td>
-                                                    <div class='p-xxs'>
-                                                        <span class='label label-info'>近10篇平均阅读数：@item.AvgReadNum</span>
-                                                    </div>
-                                                    <div class='p-xxs'>
-                                                        <span class='label label-info'>最近头条阅读数：@item.LastReadNum</span>
-                                                    </div>
-                                                    <div class='p-xxs'>
-                                                        <span class='label label-info'>月发文篇数：@item.MonthPostNum</span>
-                                                    </div>
-                                                    <div class='p-xxs'>
-                                                        <span class='label label-info'>最近微信发文日期：@lastDate</span>
-                                                    </div>
-                                                </td>
+                                        <td>
+                                            <div class='p-xxs'>
+                                                <span class='label label-info'>平均头条阅读数：@item.AvgReadNum</span>
+                                            </div>
+                                            <div class='p-xxs'>
+                                                <span class='label label-info'>最近头条阅读数：@item.LastReadNum</span>
+                                            </div>
+                                            <div class='p-xxs'>
+                                                <span class='label label-info'>月发布频次：@item.PublishFrequency</span>
+                                            </div>
+                                            <div class='p-xxs'>
+                                                <span class='label label-info'>月发文篇数：@item.MonthPostNum</span>
+                                            </div>
+                                            <div class='p-xxs'>
+                                                <span class='label label-info'>最近发文日期：@lastDate</span>
+                                            </div>
+                                        </td>
                                             }
                                             if (Model.MediaTypeIndex == "sinablog")
                                             {
                                                 <td>
                                                     <div class='p-xxs'>
-                                                        <span class='label label-info'>近50篇平均转发数：@item.TransmitNum</span>
+                                                        <span class='label label-info'>平均转发数：@item.TransmitNum</span>
                                                     </div>
                                                     <div class='p-xxs'>
-                                                        <span class='label label-info'>近50篇平均评论数：@item.CommentNum</span>
+                                                        <span class='label label-info'>平均评论数：@item.CommentNum</span>
                                                     </div>
                                                     <div class='p-xxs'>
-                                                        <span class='label label-info'>近50篇平均点赞数：@item.LikesNum</span>
+                                                        <span class='label label-info'>平均点赞数：@item.LikesNum</span>
                                                     </div>
                                                     <div class='p-xxs'>
                                                         <span class='label label-info'>微博总数：@item.PostNum</span>
@@ -454,6 +457,9 @@
                                                     </div>
                                                     <div class='p-xxs'>
                                                         <span class='label label-info'>平均点赞数：@item.LikesNum</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>平均分享数：@item.TransmitNum</span>
                                                     </div>
                                                     <div class='p-xxs'>
                                                         <span class='label label-info'>发布视频总数：@item.PostNum</span>

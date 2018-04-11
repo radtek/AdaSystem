@@ -149,6 +149,10 @@ formatter.mediaData = function (value, row) {
     if (row.PublishFrequency) {
         frequency = " <span class='label label-info'>月发布频次：" + row.PublishFrequency + "</span>";
     }
+    var share = "";
+    if (row.TransmitNum) {
+        share = " <span class='label label-info'>平均分享数：" + row.TransmitNum + "</span>";
+    }
     var lastdate = "";
     if (row.LastPushDate) {
         var date = moment(row.LastPushDate).format("YYYY-MM-DD HH:mm");
@@ -163,15 +167,16 @@ formatter.mediaData = function (value, row) {
     var line7 = lastdate ? "<div class='p-xxs'>" + lastdate + "</div>" : "";
     var line8 = friend ? "<div class='p-xxs'>" + friend + "</div>" : "";
     var line9 = frequency ? "<div class='p-xxs'>" + frequency + "</div>" : "";
+    var line10 = share ? "<div class='p-xxs'>" + share + "</div>" : "";
     var line = "";
     if (row.MediaTypeIndex == "weixin") {
         line = line1 + line6 + line4 + line9+line7;
     }
     if (row.MediaTypeIndex == "sinablog") {
-        line = line2 + line3 + line5 + line7;
+        line = line2 + line3 + line10 + line5 + line7;
     }
     if (row.MediaTypeIndex == "douyin") {
-        line = line1 + line3 + line8 + line5;
+        line = line1 + line2 + line3 + line10 + line8 + line5;
     }
     return line || "<span class='label label-warning'>抱歉！暂无相关数据</span>";
 };

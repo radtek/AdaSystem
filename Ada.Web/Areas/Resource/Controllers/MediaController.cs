@@ -198,12 +198,13 @@ namespace Resource.Controllers
                     {
                         jo.Add("最近浏览数", media.LastReadNum);
                     }
+                    if (media.PublishFrequency != null)
+                    {
+                        jo.Add("月发布频次", media.PublishFrequency);
+                    }
                     if (media.TransmitNum != null)
                     {
-                        if (media.MediaType.CallIndex != "douyin")
-                        {
-                            jo.Add("平均转发数", media.TransmitNum);
-                        }
+                        jo.Add("平均转发数", media.TransmitNum);
                     }
                     if (media.AvgReadNum != null)
                     {

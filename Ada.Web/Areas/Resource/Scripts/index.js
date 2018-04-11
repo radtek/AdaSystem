@@ -220,6 +220,9 @@ function formatterWeiXinData(value, row) {
         "<div class='p-xxs'><span class='label label-info'>最近头条阅读数：" +
         (row.LastReadNum || 0) +
         "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>月发文频次：" +
+        (row.PublishFrequency || 0) +
+        "</div>" +
         "<div class='p-xxs'><span class='label label-info'>月发文篇数：" +
         (row.MonthPostNum || 0) +
         "</div>" +
@@ -255,6 +258,9 @@ function formatterDouYinData(value, row) {
         "</div>" +
         "<div class='p-xxs'><span class='label label-info'>平均点赞数：" +
         (row.LikesNum || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>平均分享数：" +
+        (row.TransmitNum || 0) +
         "</div>" +
         "<div class='p-xxs'><span class='label label-info'>关注数：" +
         (row.FriendNum || 0) +
