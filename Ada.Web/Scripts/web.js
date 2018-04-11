@@ -110,7 +110,7 @@ formatter.mediaPrice = function (value, row) {
     var arr = [];
     $.each(value,
         function (k, v) {
-            var price = v.PurchasePrice == 0 ? "不接单" : "<i class='fa fa-jpy'></i> " + v.PurchasePrice;
+            var price = !v.SellPrice ? "不接单" : "<i class='fa fa-jpy'></i> " + v.SellPrice;
             arr.push("<li class='list-group-item p-xxs'><span class='badge badge-success'>" + price + "</span> " + v.AdPositionName + "</li>");
         });
     return "<ul class='list-group m-b-none'>" + arr.join('') + "</ul>";

@@ -12,5 +12,6 @@ namespace Ada.Services.Resource
    public interface IMediaPriceService : IDependency
     {
         IQueryable<MediaPrice> LoadEntitiesFilter(MediaView viewModel);
+        void Update(MediaPrice entity);
     }
 }

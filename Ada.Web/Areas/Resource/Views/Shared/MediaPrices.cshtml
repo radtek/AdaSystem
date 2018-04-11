@@ -14,12 +14,9 @@
             <th>
                 采购价格
             </th>
-            @*<th>
-                    价格日期
-                </th>
-                <th>
-                    失效日期
-                </th>*@
+            <th>
+                销售价格
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -31,7 +28,7 @@
                     var price = Model.MediaPrices?.FirstOrDefault(d => d.AdPositionName == prices[i].Name);
                     var id = price == null ? "" : price.Id;
                     var purchasePrice = price == null ? 0 : price.PurchasePrice;
-
+                    //var sellPrice = price == null ? 0 : price.SellPrice;
                 }
                 <td>
                     <input name="MediaPrices[@i].Id" type="hidden" value="@id" />
@@ -42,21 +39,8 @@
                     <input class="form-control" name="MediaPrices[@i].PurchasePrice" placeholder="请输入价格，无报价输入0" type="text" value="@purchasePrice" />
                 </td>
                 @*<td>
-                        <div class="input-group date">
-                            <span class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                            </span>
-                            <input class="form-control" name="MediaPrices[@i].PriceDate" type="text" value="@priceDate" />
-                        </div>
-                    </td>
-                    <td>
-                        <div class="input-group date">
-                            <span class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                            </span>
-                            <input class="form-control" name="MediaPrices[@i].InvalidDate" type="text" value="@invalidDate" />
-                        </div>
-                    </td>*@
+                    <input class="form-control" name="MediaPrices[@i].SellPrice" placeholder="请输入价格，无报价输入0" type="text" value="@sellPrice" />
+                </td>*@
             </tr>
         }
 

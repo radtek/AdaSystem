@@ -14,9 +14,11 @@ namespace Ada.Services.Resource
     {
 
         private readonly IRepository<MediaPrice> _repository;
-        public MediaPriceService(IRepository<MediaPrice> repository)
+        private readonly IDbContext _dbContext;
+        public MediaPriceService(IDbContext dbContext, IRepository<MediaPrice> repository)
         {
             _repository = repository;
+            _dbContext = dbContext;
         }
         public IQueryable<MediaPrice> LoadEntitiesFilter(MediaView viewModel)
         {
@@ -61,6 +63,10 @@ namespace Ada.Services.Resource
             return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
         }
 
-        
+        public void Update(MediaPrice entity)
+        {
+            _repository.Update(entity);
+            _dbContext.SaveChanges();
+        }
     }
 }

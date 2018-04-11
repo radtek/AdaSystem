@@ -544,6 +544,7 @@ namespace Resource.Controllers
                         date = row.GetCell(10).DateCellValue;
                     }
                 }
+                var priceRange = _fieldService.GetFieldsByKey("ExportPrice").ToList();
                 for (int j = 0; j < adpostionNames.Count; j++)
                 {
                     var name = adpostionNames[j];
@@ -571,6 +572,7 @@ namespace Resource.Controllers
                             {
                                 Id = IdBuilder.CreateIdNum(),
                                 PurchasePrice = Convert.ToDecimal(tempPrice),
+                                SellPrice = SetSalePrice(Convert.ToDecimal(tempPrice), priceRange),
                                 PriceDate = DateTime.Now,
                                 InvalidDate = date,
                                 AdPositionName = newPrice.Name,
@@ -580,7 +582,9 @@ namespace Resource.Controllers
                     }
                     else
                     {
+                        //判断，如果价格更新了，就更新市场价格
                         mediaPrice.PurchasePrice = Convert.ToDecimal(tempPrice);
+                        mediaPrice.SellPrice = SetSalePrice(Convert.ToDecimal(tempPrice), priceRange);
                         mediaPrice.PriceDate = DateTime.Now;
                         mediaPrice.InvalidDate = date;
                     }
@@ -734,6 +738,7 @@ namespace Resource.Controllers
             entity.IsRecommend = false;
             entity.IsTop = false;
             //媒体价格
+            var priceRange = _fieldService.GetFieldsByKey("ExportPrice").ToList();
             foreach (var viewModelMediaPrice in viewModel.MediaPrices)
             {
                 MediaPrice price = new MediaPrice();
@@ -742,6 +747,7 @@ namespace Resource.Controllers
                 price.AdPositionName = viewModelMediaPrice.AdPositionName;
                 price.InvalidDate = viewModel.PriceInvalidDate;
                 price.PurchasePrice = viewModelMediaPrice.PurchasePrice;
+                price.SellPrice = SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), priceRange);
                 price.PriceDate = viewModel.PriceUpdateDate;
                 entity.MediaPrices.Add(price);
             }
@@ -817,8 +823,7 @@ namespace Resource.Controllers
                 Id = d.Id,
                 AdPositionName = d.AdPositionName,
                 AdPositionId = d.AdPositionId,
-                //PriceDate = d.PriceDate,
-                //InvalidDate = d.InvalidDate,
+                SellPrice = d.SellPrice,
                 PurchasePrice = d.PurchasePrice
             }).ToList();
             entity.PriceUpdateDate = item.MediaPrices.FirstOrDefault()?.PriceDate;
@@ -890,6 +895,7 @@ namespace Resource.Controllers
                 }
             }
             //价格
+            var priceRange = _fieldService.GetFieldsByKey("ExportPrice").ToList();
             foreach (var viewModelMediaPrice in viewModel.MediaPrices)
             {
                 if (string.IsNullOrWhiteSpace(viewModelMediaPrice.Id))
@@ -900,6 +906,7 @@ namespace Resource.Controllers
                     price.AdPositionName = viewModelMediaPrice.AdPositionName;
                     price.InvalidDate = viewModel.PriceInvalidDate;
                     price.PurchasePrice = viewModelMediaPrice.PurchasePrice;
+                    price.SellPrice =  SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), priceRange);
                     price.PriceDate = viewModel.PriceUpdateDate;
                     entity.MediaPrices.Add(price);
                 }
@@ -909,6 +916,7 @@ namespace Resource.Controllers
                     price.InvalidDate = viewModel.PriceInvalidDate;
                     price.PriceDate = viewModel.PriceUpdateDate;
                     price.PurchasePrice = viewModelMediaPrice.PurchasePrice;
+                    price.SellPrice = SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), priceRange);
                 }
             }
             _mediaService.Update(entity);
@@ -1133,6 +1141,19 @@ namespace Resource.Controllers
                 _dbContext.SaveChanges();
             }
             return Content("成功更新" + count + "条资源");
+        }
+        [AllowAnonymous]
+        public ActionResult UpdateSellPrice()
+        {
+            var list = _mediaPriceRepository.LoadEntities(d => d.IsDelete==false&&d.Media.IsDelete==false);
+            var priceRange = _fieldService.GetFieldsByKey("ExportPrice").ToList();
+            foreach (var mediaPrice in list)
+            {
+                mediaPrice.SellPrice = SetSalePrice(Convert.ToDecimal(mediaPrice.PurchasePrice), priceRange);
+                _mediaPriceService.Update(mediaPrice);
+            }
+            
+            return Content("成功更新了媒体市场价格");
         }
         private Media IsExist(MediaView viewModel, out string msg, bool isSelf = false, bool isDelete = false)
         {

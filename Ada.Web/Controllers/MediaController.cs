@@ -91,7 +91,7 @@ namespace Ada.Web.Controllers
                     IsTop = d.IsTop,
                     MediaLogo = d.MediaLogo,
                     MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).Take(6).ToList(),
-                    MediaPrices = d.MediaPrices.Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = SetSalePrice(Convert.ToDecimal(p.PurchasePrice),priceRange) }).ToList()
+                    MediaPrices = d.MediaPrices.Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, SellPrice = p.SellPrice }).ToList()
                 })
             });
         }
