@@ -25,7 +25,7 @@ namespace QuartzTask.Jobs
                     var job = db.Set<Job>().FirstOrDefault(d => d.GroupName == group && d.JobName == name);
                     var media = db.Set<MediaPrice>().FirstOrDefault(d =>
                           d.IsDelete == false && d.Media.IsDelete == false && d.SellPrice == null);
-                    var priceRange = db.Set<Field>().Where(d => d.FieldType.CallIndex == "ExportPrice" && d.IsDelete == false)
+                    var priceRange = db.Set<Field>().Where(d => d.FieldType.CallIndex == "SellPriceRange" && d.IsDelete == false)
                         .OrderBy(d => d.Taxis).ToList();
                     if (media != null)
                     {
@@ -62,7 +62,8 @@ namespace QuartzTask.Jobs
                 var qj = range.Text.Split('-');
                 if (price >= decimal.Parse(qj[0]) && price <= decimal.Parse(qj[1]))
                 {
-                    return PriceZero(decimal.Parse(range.Value) + price);
+                    var value = decimal.Parse(range.Value);
+                    return value <= 5 ? PriceZero(value * price) : PriceZero(value + price);
                 }
             }
             return 0;

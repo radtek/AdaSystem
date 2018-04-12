@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.SqlServer;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
+using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.Domain.Resource;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 
 namespace Ada.Web.Controllers
 {
@@ -16,6 +20,7 @@ namespace Ada.Web.Controllers
     {
         private readonly IRepository<BusinessOrderDetail> _temp;
         private readonly IRepository<Media> _media;
+        private readonly IRepository<Field> _fieldRepository;
         private readonly IRepository<MediaPrice> _mediaPrice;
         private readonly IRepository<MediaType> _mediaType;
         private readonly IRepository<PurchaseOrderDetail> _ptemp;
@@ -29,7 +34,8 @@ namespace Ada.Web.Controllers
             IRepository<MediaArticle> mediaArticle,
             IRepository<MediaPrice> mediaPrice,
             IRepository<BusinessOrder> businessOrder,
-            IRepository<MediaType> mediaType)
+            IRepository<MediaType> mediaType,
+            IRepository<Field> fieldRepository)
         {
             _dbContext = dbContext;
             _ptemp = ptemp;
@@ -37,6 +43,7 @@ namespace Ada.Web.Controllers
             _media = media;
             _mediaType = mediaType;
             _mediaPrice = mediaPrice;
+            _fieldRepository = fieldRepository;
         }
 
         public ActionResult CheckOrder()
@@ -204,7 +211,7 @@ namespace Ada.Web.Controllers
 
         public ActionResult DouYinUpdate1()
         {
-            var douyins = _mediaPrice.LoadEntities(d => d.Media.Platform == "抖音" && d.Media.IsDelete == false&&d.AdPositionName=="转发价格");
+            var douyins = _mediaPrice.LoadEntities(d => d.Media.Platform == "抖音" && d.Media.IsDelete == false && d.AdPositionName == "转发价格");
             var count = douyins.Count();
             //删除转发价格
             _mediaPrice.Remove(douyins);
@@ -236,7 +243,7 @@ namespace Ada.Web.Controllers
                 {
                     douyin.MediaTypeId = type.Id;
                     var uid = GetDouYinId(douyin.MediaLink);
-                    douyin.MediaID = string.IsNullOrWhiteSpace(uid) ?null: uid;
+                    douyin.MediaID = string.IsNullOrWhiteSpace(uid) ? null : uid;
                     count++;
                 }
             }
@@ -278,7 +285,52 @@ namespace Ada.Web.Controllers
             return Content("更新抖音价格" + count + "条");
         }
 
-        
+        public ActionResult Temp()
+        {
+            string path = Server.MapPath("~/upload/close.xlsx");
+            int count = 0;
+            using (FileStream ms = new FileStream(path, FileMode.Open))
+            {
+                //创建工作薄
+                IWorkbook wk = new XSSFWorkbook(ms);
+                //1.获取第一个工作表
+                ISheet sheet = wk.GetSheetAt(0);
+                if (sheet.LastRowNum <= 1)
+                {
+                    return Content("此文件没有导入数据，请填充数据再进行导入");
+                }
+                //List<Field> list=new List<Field>();
+                //for (int i = 1; i <= sheet.LastRowNum; i++)
+                //{
+                //    IRow row = sheet.GetRow(i);
+                //    var text = row.GetCell(0)?.ToString();
+                //    var value= row.GetCell(1)?.ToString();
+                //    var sort = row.GetCell(2)?.ToString();
+                //    Field field=new Field();
+                //    field.Id = IdBuilder.CreateIdNum();
+                //    field.FieldTypeId = "X1804120833130019";
+                //    field.Text = text;
+                //    field.Value = value;
+                //    field.Taxis = Convert.ToInt32(sort);
+                //    list.Add(field);
+                //    count++;
+                //}
+                List<string> list = new List<string>();
+                for (int i = 1; i <= sheet.LastRowNum; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+                    var id = row.GetCell(0)?.ToString();
+                    if (!string.IsNullOrWhiteSpace(id))
+                    {
+                        list.Add(id);
+                    }
+                }
+
+                count = _media.Update(d => list.Contains(d.Id), m => new Media() { Status = 0 });
+                _dbContext.SaveChanges();
+            }
+            return Content("导入成功" + count + "条资源");
+        }
 
         private string GetDouYinId(string url)
         {
@@ -289,7 +341,7 @@ namespace Ada.Web.Controllers
             }
             Match match = Regex.Match(url, @"/share/user/(\d+)", RegexOptions.ECMAScript);
             result = match.Groups[1].Value;
-            
+
             return result;
 
         }

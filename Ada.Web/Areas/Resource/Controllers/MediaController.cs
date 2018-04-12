@@ -544,7 +544,7 @@ namespace Resource.Controllers
                         date = row.GetCell(10).DateCellValue;
                     }
                 }
-                var priceRange = _fieldService.GetFieldsByKey("ExportPrice").ToList();
+                var priceRange = _fieldService.GetFieldsByKey("SellPriceRange").ToList();
                 for (int j = 0; j < adpostionNames.Count; j++)
                 {
                     var name = adpostionNames[j];
@@ -738,7 +738,7 @@ namespace Resource.Controllers
             entity.IsRecommend = false;
             entity.IsTop = false;
             //媒体价格
-            var priceRange = _fieldService.GetFieldsByKey("ExportPrice").ToList();
+            var priceRange = _fieldService.GetFieldsByKey("SellPriceRange").ToList();
             foreach (var viewModelMediaPrice in viewModel.MediaPrices)
             {
                 MediaPrice price = new MediaPrice();
@@ -895,7 +895,7 @@ namespace Resource.Controllers
                 }
             }
             //价格
-            var priceRange = _fieldService.GetFieldsByKey("ExportPrice").ToList();
+            var priceRange = _fieldService.GetFieldsByKey("SellPriceRange").ToList();
             foreach (var viewModelMediaPrice in viewModel.MediaPrices)
             {
                 if (string.IsNullOrWhiteSpace(viewModelMediaPrice.Id))
@@ -1142,7 +1142,7 @@ namespace Resource.Controllers
             }
             return Content("成功更新" + count + "条资源");
         }
-        
+
         private Media IsExist(MediaView viewModel, out string msg, bool isSelf = false, bool isDelete = false)
         {
             msg = string.Empty;
@@ -1242,7 +1242,8 @@ namespace Resource.Controllers
                 var qj = range.Text.Split('-');
                 if (price >= decimal.Parse(qj[0]) && price <= decimal.Parse(qj[1]))
                 {
-                    return PriceZero(decimal.Parse(range.Value) + price);
+                    var value = decimal.Parse(range.Value);
+                    return value <= 5 ? PriceZero(value * price) : PriceZero(value + price);
                 }
             }
             return 0;
