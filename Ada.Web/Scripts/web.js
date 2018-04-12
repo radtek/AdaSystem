@@ -52,7 +52,7 @@ function initFilter() {
         $("#AvgReadNumRange").ionRangeSlider({
             type: 'double',
             input_values_separator: '-',
-            values: [0, 100, 1000, 5000, 10000, 50000, 100001],
+            values: [0, 100, 1000, 5000, 10000, 50000, 100001,500000,10000000],
             grid: true,
             onFinish: function (data) {
                 searchTable();

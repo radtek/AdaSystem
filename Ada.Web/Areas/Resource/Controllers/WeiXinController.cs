@@ -125,11 +125,15 @@ namespace Resource.Controllers
                     var tags = row.GetCell(7)?.ToString();
                     if (!string.IsNullOrWhiteSpace(tags))
                     {
-                        var mediaTag = _mediaTagRepository.LoadEntities(d => d.IsDelete == false && d.TagName == tags)
-                            .FirstOrDefault();
-                        if (mediaTag != null)
+                        var arr = tags.Trim().Replace("，", ",").Split(',').ToList();
+                        var mediaTag =
+                            _mediaTagRepository.LoadEntities(d => d.IsDelete == false && arr.Contains(d.TagName));
+                        if (mediaTag.Any())
                         {
-                            media.MediaTags.Add(mediaTag);
+                            foreach (var tag in mediaTag)
+                            {
+                                media.MediaTags.Add(tag);
+                            }
                         }
                     }
 

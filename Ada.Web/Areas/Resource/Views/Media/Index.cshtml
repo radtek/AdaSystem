@@ -286,6 +286,7 @@
                             <tbody>
                                 @foreach (var item in Model.Medias)
                                 {
+                                    var priceDate = item.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd");
                                     if (string.IsNullOrWhiteSpace(item.Id))
                                     {
                                         continue;
@@ -405,23 +406,23 @@
                                             if (Model.MediaTypeIndex == "weixin")
                                             {
 
-                                        <td>
-                                            <div class='p-xxs'>
-                                                <span class='label label-info'>平均头条阅读数：@item.AvgReadNum</span>
-                                            </div>
-                                            <div class='p-xxs'>
-                                                <span class='label label-info'>最近头条阅读数：@item.LastReadNum</span>
-                                            </div>
-                                            <div class='p-xxs'>
-                                                <span class='label label-info'>月发布频次：@item.PublishFrequency</span>
-                                            </div>
-                                            <div class='p-xxs'>
-                                                <span class='label label-info'>月发文篇数：@item.MonthPostNum</span>
-                                            </div>
-                                            <div class='p-xxs'>
-                                                <span class='label label-info'>最近发文日期：@lastDate</span>
-                                            </div>
-                                        </td>
+                                                <td>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>平均头条阅读数：@item.AvgReadNum</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>最近头条阅读数：@item.LastReadNum</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>月发布频次：@item.PublishFrequency</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>月发文篇数：@item.MonthPostNum</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>最近发文日期：@lastDate</span>
+                                                    </div>
+                                                </td>
                                             }
                                             if (Model.MediaTypeIndex == "sinablog")
                                             {
@@ -471,11 +472,15 @@
                                             }
                                         }
                                         <td>
-                                            @foreach (var price in item.MediaPrices)
-                                            {
-                                                var str = price.AdPositionName + "：" + price.PurchasePrice + "　有效期至：" + price.InvalidDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"));
-                                                <div class="p-xxs"><span class="label label-info">@str</span></div>
-                                            }
+                                            <ul class='list-group m-b-none'>
+                                                @foreach (var price in item.MediaPrices)
+                                                {
+
+                                                    <li class='list-group-item p-xxs'><span class='badge badge-success'>成本 : <i class='fa fa-jpy'></i> @price.PurchasePrice</span> <span class='badge badge-warning'>零售 : <i class='fa fa-jpy'></i> @price.SellPrice</span>@price.AdPositionName</li>
+                                                }
+                                                
+                                                <li class='list-group-item p-xxs'><span class='badge'>@priceDate</span>价格有效期</li>
+                                            </ul>
                                         </td>
                                         <td>
                                             @foreach (var group in item.MediaGroups)
