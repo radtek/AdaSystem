@@ -287,7 +287,7 @@ namespace Ada.Web.Controllers
 
         public ActionResult Temp()
         {
-            string path = Server.MapPath("~/upload/close.xlsx");
+            string path = Server.MapPath("~/upload/hot.xlsx");
             int count = 0;
             using (FileStream ms = new FileStream(path, FileMode.Open))
             {
@@ -326,7 +326,7 @@ namespace Ada.Web.Controllers
                     }
                 }
 
-                count = _media.Update(d => list.Contains(d.Id), m => new Media() { Status = 0 });
+                count = _media.Update(d => list.Contains(d.Id), m => new Media() { IsHot = true });
                 _dbContext.SaveChanges();
             }
             return Content("导入成功" + count + "条资源");

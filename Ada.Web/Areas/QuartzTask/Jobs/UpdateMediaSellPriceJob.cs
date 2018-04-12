@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.QuartzTask;
 using Ada.Core.Domain.Resource;
@@ -14,6 +15,7 @@ namespace QuartzTask.Jobs
     public class UpdateMediaSellPriceJob : IJob
     {
         private readonly ILog _logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly System.Web.Caching.Cache _objCache = HttpRuntime.Cache;
         public void Execute(IJobExecutionContext context)
         {
             try
@@ -25,8 +27,15 @@ namespace QuartzTask.Jobs
                     var job = db.Set<Job>().FirstOrDefault(d => d.GroupName == group && d.JobName == name);
                     var media = db.Set<MediaPrice>().FirstOrDefault(d =>
                           d.IsDelete == false && d.Media.IsDelete == false && d.SellPrice == null);
-                    var priceRange = db.Set<Field>().Where(d => d.FieldType.CallIndex == "SellPriceRange" && d.IsDelete == false)
-                        .OrderBy(d => d.Taxis).ToList();
+                    
+                    if (_objCache["SellPriceRange"]==null)
+                    {
+                        var list = db.Set<Field>().Where(d => d.FieldType.CallIndex == "SellPriceRange" && d.IsDelete == false)
+                            .OrderBy(d => d.Taxis).ToList();
+                        _objCache["SellPriceRange"] = list;
+                    }
+                    List<Field> priceRange = (List<Field>) _objCache["SellPriceRange"];
+
                     if (media != null)
                     {
                         media.SellPrice = SetSalePrice(Convert.ToDecimal(media.PurchasePrice), priceRange);
@@ -44,6 +53,7 @@ namespace QuartzTask.Jobs
                     else
                     {
                         if (job != null) job.Remark = "销售价格更新任务暂无可更新的资源数据！更新时间：" + DateTime.Now;
+                        _objCache.Remove("SellPriceRange");
                         db.SaveChanges();
                     }
                 }
