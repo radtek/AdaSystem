@@ -7,6 +7,7 @@ using Ada.Core.Tools;
 using Ada.Core.ViewModel.Customer;
 using Ada.Services.Customer;
 using Ada.Web.Models;
+using Newtonsoft.Json;
 
 namespace Ada.Web.Controllers
 {
@@ -25,6 +26,7 @@ namespace Ada.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(LoginModel loginModel)
         {
+
             if (!ModelState.IsValid)
             {
                 return View(loginModel);
@@ -36,7 +38,7 @@ namespace Ada.Web.Controllers
                 ModelState.AddModelError("error", "用户名或密码有误！");
                 return View(loginModel);
             }
-            LinkManView viewModel=new LinkManView();
+            LinkManView viewModel = new LinkManView();
             viewModel.Id = user.Id;
             viewModel.CommpanyName = user.Commpany.Name;
             viewModel.LoginName = user.LoginName;

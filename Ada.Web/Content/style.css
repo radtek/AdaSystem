@@ -8600,3 +8600,20 @@ body.md-skin {
 .mouse-pointer {
     cursor: pointer;
 }
+
+.logpre {padding: 5px; margin: 5px;border: none; }
+    .logpre .string {
+        color: green;
+    }
+    .logpre .number {
+        color: darkorange;
+    }
+    .logpre .boolean {
+        color: blue;
+    }
+    .logpre .null {
+        color: magenta;
+    }
+    .logpre .key {
+        color: red;
+    }

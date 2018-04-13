@@ -147,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\BrushController.cs" />
+    <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\DouYinController.cs" />
     <Compile Include="Controllers\HeadLineController.cs" />
     <Compile Include="Controllers\MediaController.cs" />
@@ -218,6 +219,7 @@
     <Content Include="Views\Shared\DouYin.cshtml" />
     <Content Include="Views\DouYin\Index.cshtml" />
     <Content Include="Views\Shared\DouYinArticles.cshtml" />
+    <Content Include="Views\Comment\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

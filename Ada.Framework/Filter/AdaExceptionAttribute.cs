@@ -9,10 +9,11 @@ using Ada.Core.Tools;
 using Ada.Core.ViewModel;
 using Ada.Core.ViewModel.Admin;
 using log4net;
+using Newtonsoft.Json;
 
 namespace Ada.Framework.Filter
 {
-   public class AdaExceptionAttribute: HandleErrorAttribute
+    public class AdaExceptionAttribute : HandleErrorAttribute
     {
         public override void OnException(ExceptionContext filterContext)
         {
@@ -26,12 +27,36 @@ namespace Ada.Framework.Filter
             var area = (string)filterContext.RouteData.Values["area"];
             var httpmethod = filterContext.HttpContext.Request.HttpMethod;
             ILog logger = LogManager.GetLogger($"{httpmethod}  {area}/{controller}/{action}");//MethodBase.GetCurrentMethod().DeclaringType
-            var managerSession= filterContext.HttpContext.Session["LoginManager"];
-            string errMsg = "系统异常";
-            if (managerSession!=null)
+            var managerSession = filterContext.HttpContext.Session["LoginManager"];
+            string errMsg = JsonConvert.SerializeObject(new { message = "系统异常" });
+            try
             {
-                var manager = SerializeHelper.DeserializeToObject<ManagerView>(managerSession.ToString());
-                errMsg += "，产生的用户：" + manager.UserName+" ["+manager.RoleName+"]";
+                var userInfo = string.Empty;
+                if (managerSession != null)
+                {
+                    var manager = SerializeHelper.DeserializeToObject<ManagerView>(managerSession.ToString());
+                    userInfo = manager.UserName + " [" + manager.RoleName + "];";
+                }
+                IDictionary<string, string> dc = new Dictionary<string, string>();
+                foreach (var formAllKey in filterContext.HttpContext.Request.Form.AllKeys)
+                {
+                    var temp = filterContext.HttpContext.Request.Form[formAllKey];
+                    dc.Add(formAllKey, temp);
+                }
+
+                var quary = new
+                {
+                    message = "系统异常，详见异常信息",
+                    method = httpmethod,
+                    urlParams = filterContext.HttpContext.Request.Url?.Query,
+                    formParams = dc,
+                    userInfo = userInfo
+                };
+                errMsg = JsonConvert.SerializeObject(quary);
+            }
+            catch
+            {
+                //
             }
             logger.Error(errMsg, ex);
             //跳转到错误页面.

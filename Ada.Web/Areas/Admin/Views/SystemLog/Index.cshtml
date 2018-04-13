@@ -141,7 +141,18 @@
                         {
                             field: 'Message',
                             title: '@Html.DisplayNameFor(d=>d.Message)',
-                            align: "center"
+                            //align: "center",
+                            formatter: function (value) {
+                                if (isJSON(value)) {
+                                    var json = JSON.parse(value);
+                                    var toJson = JSON.stringify(json, null, 2);
+                                    var jsonstr = syntaxHighlight(toJson);
+                                    return "<pre class='logpre'>" + jsonstr + "</pre>";
+                                } else {
+                                    return value;
+                                }
+                                
+                            }
                         },
                         {
                             field: 'Date',

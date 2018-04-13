@@ -360,6 +360,7 @@
                 data: { o: oname,t:date },
                 success: function (data) {
                     $table.empty();
+                    var totalSell = 0, totalProfit = 0;
                     $.each(data,
                         function(k, v) {
                             $table.append('<tr>' +
@@ -367,7 +368,14 @@
                                 '<td><span class="label label-primary">¥ ' + v.TotalSellMoney+'</span></td>' +
                                 '<td><span class="label label-warning">¥ ' +v.TotalProfitMoney+'</span></td>' +
                                 '</tr>');
+                            totalSell += v.TotalSellMoney;
+                            totalProfit += v.TotalProfitMoney;
                         });
+                    $table.append('<tr>' +
+                        '<td class="text-center"></td><td>合计</td>' +
+                        '<td><span class="label label-primary">¥ ' + totalSell.toFixed(2)+'</span></td>' +
+                        '<td><span class="label label-warning">¥ ' + totalProfit.toFixed(2)+'</span></td>' +
+                        '</tr>');
                 },
                 error: function () {
                     //swal("操作失败", "系统错误", "error");

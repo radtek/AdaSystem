@@ -15,6 +15,7 @@ namespace Ada.Web.Controllers
     {
         public ActionResult Index()
         {
+            throw new ApplicationException("测试");
             return View();
         }
     }

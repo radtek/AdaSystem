@@ -333,6 +333,11 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "创建人员")]
         public string AddedBy { get; set; }
         /// <summary>
+        /// 新增日期
+        /// </summary>
+        [Display(Name = "新增日期")]
+        public string AddedDateRange { get; set; }
+        /// <summary>
         /// 经办媒介
         /// </summary>
         [Display(Name = "经办媒介")]
