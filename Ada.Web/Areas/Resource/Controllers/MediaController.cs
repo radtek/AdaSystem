@@ -94,7 +94,7 @@ namespace Resource.Controllers
             var results = _mediaService.LoadEntitiesFilter(viewModel).AsNoTracking().ToList();
 
             watcher.Stop();
-            //List<string> noDatas = new List<string>();
+            List<Media> noDatas = new List<Media>();
             //找到没有的
             if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
             {
@@ -106,7 +106,7 @@ namespace Resource.Controllers
                         d.MediaName.Equals(name, StringComparison.CurrentCultureIgnoreCase));
                     if (temp == null)
                     {
-                        results.Add(new Media
+                        noDatas.Add(new Media
                         {
                             MediaName = name,
                             Taxis = i
@@ -131,7 +131,7 @@ namespace Resource.Controllers
                         d.MediaID.Equals(id, StringComparison.CurrentCultureIgnoreCase));
                     if (temp == null)
                     {
-                        results.Add(new Media
+                        noDatas.Add(new Media
                         {
                             MediaID = id,
                             Taxis = i
@@ -145,12 +145,16 @@ namespace Resource.Controllers
                     i++;
                 }
             }
-
+            
             if (isExport)
             {
                 JArray jObjects = new JArray();
                 var priceRange = _fieldService.GetFieldsByKey("ExportPrice").ToList();
                 var priceType = viewModel.PriceType;
+                if (noDatas.Any())
+                {
+                    results.AddRange(noDatas);
+                }
                 foreach (var media in results.OrderBy(d => d.Taxis))
                 {
                     var jo = new JObject();
@@ -680,7 +684,7 @@ namespace Resource.Controllers
                 price.AdPositionId = viewModelMediaPrice.AdPositionId;
                 price.AdPositionName = viewModelMediaPrice.AdPositionName;
                 price.InvalidDate = viewModel.PriceInvalidDate;
-                price.PurchasePrice = viewModelMediaPrice.PurchasePrice;
+                price.PurchasePrice = Convert.ToDecimal(viewModelMediaPrice.PurchasePrice);
                 price.SellPrice = SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), priceRange);
                 price.PriceDate = viewModel.PriceUpdateDate;
                 entity.MediaPrices.Add(price);
@@ -839,7 +843,7 @@ namespace Resource.Controllers
                     price.AdPositionId = viewModelMediaPrice.AdPositionId;
                     price.AdPositionName = viewModelMediaPrice.AdPositionName;
                     price.InvalidDate = viewModel.PriceInvalidDate;
-                    price.PurchasePrice = viewModelMediaPrice.PurchasePrice;
+                    price.PurchasePrice = Convert.ToDecimal(viewModelMediaPrice.PurchasePrice);
                     price.SellPrice = SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), priceRange);
                     price.PriceDate = viewModel.PriceUpdateDate;
                     entity.MediaPrices.Add(price);
@@ -849,7 +853,7 @@ namespace Resource.Controllers
                     var price = _mediaPriceRepository.LoadEntities(d => d.Id == viewModelMediaPrice.Id).FirstOrDefault();
                     price.InvalidDate = viewModel.PriceInvalidDate;
                     price.PriceDate = viewModel.PriceUpdateDate;
-                    price.PurchasePrice = viewModelMediaPrice.PurchasePrice;
+                    price.PurchasePrice = Convert.ToDecimal(viewModelMediaPrice.PurchasePrice);
                     price.SellPrice = SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), priceRange);
                 }
             }

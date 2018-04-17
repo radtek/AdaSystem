@@ -58,7 +58,7 @@ namespace Ada.Framework.Filter
             {
                 //没登陆
                 filterContext.Result = isAjax
-                    ? Json(new { State = 0, Msg = "您尚未登陆或登陆超时，请重新登陆！" })
+                    ? Json(new { State = 0, Msg = "您尚未登陆或登陆超时，请重新登陆！" },JsonRequestBehavior.AllowGet)
                     : (ActionResult)RedirectToAction("Index", "Login", new { area = "Admin" });
                 return;
             }
@@ -114,7 +114,7 @@ namespace Ada.Framework.Filter
         {
             if (isAjax)
             {
-                return Json(new { State = 0, Msg = httpResultView.Msg });
+                return Json(new { State = 0, Msg = httpResultView.Msg },JsonRequestBehavior.AllowGet);
             }
             ViewResult result = new ViewResult
             {

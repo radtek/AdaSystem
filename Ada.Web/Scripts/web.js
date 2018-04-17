@@ -47,12 +47,12 @@ function initTooltip() {
 }
 
 function initFilter() {
-    
-    if ($("#AvgReadNumRange").length>0) {
+
+    if ($("#AvgReadNumRange").length > 0) {
         $("#AvgReadNumRange").ionRangeSlider({
             type: 'double',
             input_values_separator: '-',
-            values: [0, 100, 1000, 5000, 10000, 50000, 100001,500000,10000000],
+            values: [0, 100, 1000, 5000, 10000, 50000, 100001, 500000, 10000000],
             grid: true,
             onFinish: function (data) {
                 searchTable();
@@ -77,13 +77,13 @@ function initFilter() {
             grid: true,
             input_values_separator: '-',
             prefix: "¥",
-            values: [0, 100, 1000, 10000, 50000, 100000, 500000, 1000000, 5000000],
+            values: [0, 1000, 5000, 10000, 20000, 30000, 40000, 50000, 100000, 500000, 1000000, 5000000],
             onFinish: function (data) {
                 searchTable();
             }
         });
     }
-    
+
     $("#AdPositionName").add("input[name='MediaTagIds']").add().change(function () {
         searchTable();
     });
@@ -91,7 +91,7 @@ function initFilter() {
 
 function resetSearch() {
     $.each($(".irs-hidden-input"),
-        function(k, v) {
+        function (k, v) {
             $(v).data("ionRangeSlider").reset();
         });
     $("form")[0].reset();
@@ -229,7 +229,7 @@ formatter.mediaData = function (value, row) {
     var line10 = share ? "<div class='p-xxs'>" + share + "</div>" : "";
     var line = "";
     if (row.MediaTypeIndex == "weixin") {
-        line = line1 + line6 + line4 + line9+line7;
+        line = line1 + line6 + line4 + line9 + line7;
     }
     if (row.MediaTypeIndex == "sinablog") {
         line = line2 + line3 + line10 + line5 + line7;
@@ -240,10 +240,10 @@ formatter.mediaData = function (value, row) {
     return line || "<span class='label label-warning'>抱歉！暂无相关数据</span>";
 };
 
-formatter.mediaOperation = function(value, row) {
+formatter.mediaOperation = function (value, row) {
 
     return "<div class='p-xxs'><div class='btn-group'>" +
-        "<button class='btn btn-danger btn-outline btn-sm' onclick='todo();'><i class='fa fa-info-circle'></i> 查看详情</button> " +
+        "<a class='btn btn-danger btn-outline btn-sm' href='/Media/Detail/" + value + "' target='_blank'><i class='fa fa-comment'></i> 评价" + row.CommentCount+"</a> " +
         "<button class='btn btn-danger btn-outline btn-sm' onclick='todo();'><i class='fa fa-cart-arrow-down'></i> 加入分组</button>" +
         "</div></div>";
 };
@@ -482,4 +482,75 @@ function exportDate() {
 
 function todo() {
     swal("消息", "敬请期待！", "warning");
+}
+function initScroll(el, callback) {
+    var contentListHeight = $("#" + el + " .feed-activity-list").height();
+    var divHeight = $(this).height();
+    if (contentListHeight < divHeight) {
+        $("#" + el + " .loading").html("没有更多评论了");
+    } else {
+        var timeoutId = 0;
+        $("#" + el).scroll(
+            function () {
+                var currentScrollTop = $(this).scrollTop();
+                contentListHeight = $("#" + el + " .feed-activity-list").height();
+                divHeight = $(this).height();
+                if (currentScrollTop >= contentListHeight - divHeight) {
+                    clearTimeout(timeoutId); // doesn't matter if it's 0
+                    timeoutId = setTimeout(function () {
+                        callback();
+                    }, 600);
+                }
+            });
+    }
+
+}
+function nextPage(el, url, offset) {
+    $.ajax({
+        type: "post",
+        headers: {
+            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
+        },
+        url: url,
+        data: { MediaId: $("#MediaId").val(), offset: offset, limit: $("#PageSize").val() },
+        success: function (data) {
+            $.each(data.rows,
+                function (k, v) {
+                    $("#" + el + " .feed-activity-list").append('<div class="feed-element">' +
+                        '<div class="media-body">' +
+                        '<small class="pull-right">' + moment(v.CommentDate).locale('zh-cn').startOf('hour').fromNow() +
+                        '</small>' +
+                        '<strong>' + v.Transactor +
+                        '</strong>' +
+                        '<br>' +
+                        '<small>' + starHtml(v.Score) +
+                        '</small>' +
+                        '<div class="well">' + v.Content +
+                        '</div>' +
+                        '</div>' +
+                        '</div>');
+                });
+
+        },
+        error: function () {
+
+        },
+        beforeSend: function () {
+
+        },
+        complete: function () {
+
+        }
+    });
+}
+
+function starHtml(score) {
+    var html = "";
+    for (var i = 0; i < score; i++) {
+        html += '<i class="fa fa-star text-danger"></i>';
+    }
+    for (var j = 0; j < 5 - score; j++) {
+        html += '<i class="fa fa-star text-muted"></i>';
+    }
+    return html;
 }

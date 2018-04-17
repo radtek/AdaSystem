@@ -286,12 +286,12 @@
                             <tbody>
                                 @foreach (var item in Model.Medias)
                                 {
-                                    var priceDate = item.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd");
+
                                     if (string.IsNullOrWhiteSpace(item.Id))
                                     {
                                         continue;
                                     }
-
+                                    var priceDate = item.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd");
                                     <tr>
                                         <td>
                                             <div class="p-xxs text-center">

@@ -452,6 +452,11 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "失效日期")]
         public DateTime? PriceInvalidDate { get; set; }
+        /// <summary>
+        /// 评论次数
+        /// </summary>
+        [Display(Name = "评论次数")]
+        public int? CommentCount { get; set; }
     }
 
 }

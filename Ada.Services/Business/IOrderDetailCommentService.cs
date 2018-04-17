@@ -15,6 +15,7 @@ namespace Ada.Services.Business
         void Add(OrderDetailComment entity);
         void Add(IEnumerable<OrderDetailComment> entities);
         void Remove(OrderDetailComment entity);
+        void Remove(string[] ids);
         void Remove(IEnumerable<OrderDetailComment> entities);
         IQueryable<OrderDetailCommentView> LoadComments(string id, int pageindex, int pagesize, out int total);
         IQueryable<MediaCommentView> LoadComments(MediaCommentView viewModel);

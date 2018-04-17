@@ -37,12 +37,10 @@ namespace Ada.Services.Resource
         public IQueryable<MediaComment> LoadEntitiesFilter(MediaCommentView viewModel)
         {
             var allList = _repository.LoadEntities(d => d.IsDelete == false);
-            //var isInclud = false;
-            //if (viewModel.Managers != null && viewModel.Managers.Count > 0)
-            //{
-            //    allList = allList.Where(d => viewModel.Managers.Contains(d.TransactorId));
-            //}
-            
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaId))
+            {
+                allList = allList.Where(d => d.MediaId==viewModel.MediaId);
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
                 allList = allList.Where(d => d.Media.MediaName.Contains(viewModel.search) || d.Media.MediaID.Contains(viewModel.search)&&d.Transactor.Contains(viewModel.search));
@@ -53,14 +51,15 @@ namespace Ada.Services.Resource
                 allList = allList.Where(d => d.Score == viewModel.Score);
             }
             viewModel.total = allList.Count();
+            viewModel.AvgScore = allList.Average(d => d.Score);
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
             string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
             if (order == "desc")
             {
-                return allList.OrderByDescending(d => d.Id).Skip(offset).Take(rows);
+                return allList.OrderByDescending(d => d.CommentDate).Skip(offset).Take(rows);
             }
-            return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
+            return allList.OrderBy(d => d.CommentDate).Skip(offset).Take(rows);
         }
 
 

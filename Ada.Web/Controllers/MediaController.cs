@@ -12,6 +12,7 @@ using Ada.Core.Tools;
 using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Filter;
 using Ada.Services.Admin;
+using Ada.Services.Business;
 using Ada.Services.Resource;
 using Ada.Web.Models;
 
@@ -21,12 +22,18 @@ namespace Ada.Web.Controllers
     {
         private readonly IRepository<Media> _repository;
         private readonly IMediaService _service;
-        private readonly IFieldService _fieldService;
-        public MediaController(IRepository<Media> repository, IMediaService service, IFieldService fieldService)
+        private readonly IMediaCommentService _mediaCommentService;
+        private readonly IOrderDetailCommentService _orderDetailCommentService;
+
+        public MediaController(IRepository<Media> repository,
+            IMediaService service, 
+            IOrderDetailCommentService orderDetailCommentService,
+            IMediaCommentService mediaCommentService)
         {
             _repository = repository;
             _service = service;
-            _fieldService = fieldService;
+            _orderDetailCommentService = orderDetailCommentService;
+            _mediaCommentService = mediaCommentService;
         }
         public ActionResult WeiXin()
         {
@@ -47,6 +54,11 @@ namespace Ada.Web.Controllers
         public ActionResult RedBook()
         {
             return View();
+        }
+        public ActionResult Detail(string id)
+        {
+            var media = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            return View(media);
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
@@ -89,12 +101,52 @@ namespace Ada.Web.Controllers
                     IsRecommend = d.IsRecommend,
                     IsTop = d.IsTop,
                     MediaLogo = d.MediaLogo,
+                    CommentCount = d.MediaComments.Count+d.MediaPrices.Count(c=>c.BusinessOrderDetails.Count(o=>o.OrderDetailComments.Count>0)>0),
                     MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).Take(6).ToList(),
                     MediaPrices = d.MediaPrices.Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, SellPrice = p.SellPrice }).ToList()
                 })
             });
         }
-
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult GetOrderComments(MediaCommentView search)
+        {
+            var result = _orderDetailCommentService.LoadComments(search).ToList();
+            return Json(new
+            {
+                search.total,
+                avgScore = search.AvgScore,
+                rows = result.Select(d => new
+                {
+                    d.Score,
+                    Transactor = HideName(d.Transactor),
+                    d.Content,
+                    d.CommentDate
+                })
+            });
+        }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult GetMediaComments(MediaCommentView search)
+        {
+            var result = _mediaCommentService.LoadEntitiesFilter(search).ToList();
+            return Json(new
+            {
+                search.total,
+                avgScore = search.AvgScore,
+                rows = result.Select(d => new
+                {
+                    d.Score,
+                    Transactor = HideName(d.Transactor),
+                    d.Content,
+                    d.CommentDate
+                })
+            });
+        }
+        private string HideName(string name)
+        {
+            return name.Substring(0, 1) + "**";
+        }
         private void GetData(MediaView viewModel)
         {
             viewModel.offset = viewModel.offset ?? 1;
@@ -132,15 +184,15 @@ namespace Ada.Web.Controllers
                 var temp = viewModel.AvgReadNumRange.Split('-');
                 decimal min = Convert.ToDecimal(temp[0].Trim());
                 decimal max = Convert.ToDecimal(temp[1].Trim());
-                viewModel.AvgReadNumStart = (int?) min;
-                viewModel.AvgReadNumEnd = (int?) max;
+                viewModel.AvgReadNumStart = (int?)min;
+                viewModel.AvgReadNumEnd = (int?)max;
                 medias = medias.Where(d => d.AvgReadNum >= min && d.AvgReadNum <= max);
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
             {
                 viewModel.MediaNames = viewModel.MediaNames.Trim().Replace("\r\n", ",").Replace("，", ",").Replace(" ", ",");
                 var mediaNames = viewModel.MediaNames.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
-                medias = medias.Where(d => mediaNames.Contains(d.MediaName)||mediaNames.Contains(d.MediaID));
+                medias = medias.Where(d => mediaNames.Contains(d.MediaName) || mediaNames.Contains(d.MediaID));
             }
             viewModel.total = medias.Count();
             medias = medias.OrderByDescending(d => d.IsTop).ThenByDescending(d => d.IsHot).ThenByDescending(d => d.IsRecommend).ThenBy(d => d.Id).Skip(viewModel.limit.Value * (viewModel.offset.Value - 1))
@@ -148,38 +200,6 @@ namespace Ada.Web.Controllers
             viewModel.Medias = medias.AsNoTracking().ToList();
         }
 
-        private decimal SetSalePrice(decimal price, IEnumerable<Field> priceRanges)
-        {
-            if (price <= 0) return 0;
-            foreach (var range in priceRanges)
-            {
-                var qj = range.Text.Split('-');
-                if (price >= decimal.Parse(qj[0]) && price <= decimal.Parse(qj[1]))
-                {
-                    return PriceZero(decimal.Parse(range.Value) + price);
-                }
-            }
-            return 0;
-        }
-        private decimal PriceZero(decimal a)
-        {
-            if (a >= 100000)
-            {
-                return (int)a / 1000 * 1000;
-            }
-            if (a >= 10000)
-            {
-                return (int)a / 1000 * 1000;
-            }
-            if (a >= 1000)
-            {
-                return (int)a / 100 * 100;
-            }
-            if (a >= 100)
-            {
-                return (int)a / 100 * 100;
-            }
-            return a;
-        }
+
     }
 }

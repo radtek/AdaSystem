@@ -2932,6 +2932,7 @@
     <Content Include="Views\Media\Filter.cshtml" />
     <Content Include="Views\Media\MediaTable.cshtml" />
     <Content Include="Views\Media\FilterSimple.cshtml" />
+    <Content Include="Views\Media\Detail.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

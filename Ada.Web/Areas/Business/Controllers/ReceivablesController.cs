@@ -128,7 +128,7 @@ namespace Business.Controllers
             if (linkman.PayAccounts.Count > 0)
             {
                 var payAccount = linkman.PayAccounts.Where(d => d.Status != Consts.StateLock)
-                    .FirstOrDefault(d => d.AccountName.Equals(receivables.AccountName, StringComparison.CurrentCultureIgnoreCase));
+                    .FirstOrDefault(d => d.AccountName.Trim().Equals(receivables.AccountName.Trim(), StringComparison.CurrentCultureIgnoreCase));
                 if (payAccount == null)
                 {
                     return Json(new { State = 0, Msg = "客户：[" + viewModel.LinkManName + "] 的收款账户中不存在此账户：" + receivables.AccountName + "，需申请添加收款账户！" });

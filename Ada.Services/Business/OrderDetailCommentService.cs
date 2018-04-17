@@ -43,6 +43,11 @@ namespace Ada.Services.Business
             _repository.Remove(entity);
             _dbContext.SaveChanges();
         }
+        public void Remove(string[] ids)
+        {
+            _repository.Remove(ids);
+            _dbContext.SaveChanges();
+        }
         public void Remove(IEnumerable<OrderDetailComment> entities)
         {
             _repository.Remove(entities);
@@ -74,6 +79,14 @@ namespace Ada.Services.Business
             {
                 mediaComments = mediaComments.Where(d => d.BusinessOrderDetail.MediaPrice.MediaId == viewModel.MediaId);
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.search))
+            {
+                mediaComments = mediaComments.Where(d => d.BusinessOrderDetail.BusinessOrder.Remark.Contains(viewModel.search) || d.BusinessOrderDetail.MediaName.Contains(viewModel.search) && d.Transactor.Contains(viewModel.search));
+            }
+            if (viewModel.Score != null)
+            {
+                mediaComments = mediaComments.Where(d => d.Score == viewModel.Score);
+            }
             var managers = _managerRepository.LoadEntities(d => true);
 
             var allList = from c in mediaComments
@@ -86,7 +99,11 @@ namespace Ada.Services.Business
                     Score = c.Score,
                     CommentDate = c.CommentDate,
                     TransactorImage = m.Image,
-                    Organization = m.Organizations.FirstOrDefault().OrganizationName
+                    Organization = m.Organizations.FirstOrDefault().OrganizationName,
+                    MediaId = c.BusinessOrderDetail.MediaPrice.MediaId,
+                    MediaName = c.BusinessOrderDetail.MediaName,
+                    OrderRemark = c.BusinessOrderDetail.BusinessOrder.Remark
+                    
                 };
             viewModel.total = mediaComments.Count();
             viewModel.AvgScore = mediaComments.Average(d => d.Score);

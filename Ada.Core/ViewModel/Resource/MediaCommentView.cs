@@ -46,9 +46,19 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "媒体资源")]
         public string MediaId { get; set; }
         /// <summary>
+        /// 媒体资源
+        /// </summary>
+        [Display(Name = "媒体资源")]
+        public string MediaName { get; set; }
+        /// <summary>
         /// 评价日期
         /// </summary>
         [Display(Name = "评价日期")]
         public DateTime? CommentDate { get; set; }
+        /// <summary>
+        /// 订单信息
+        /// </summary>
+        [Display(Name = "订单信息")]
+        public string OrderRemark { get; set; }
     }
 }

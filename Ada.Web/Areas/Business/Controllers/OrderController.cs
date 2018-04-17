@@ -199,7 +199,7 @@ namespace Business.Controllers
             entity.OrderDate = viewModel.OrderDate;
             //entity.TotalDiscountMoney = viewModel.DiscountMoney;
             var orderDetails = JsonConvert.DeserializeObject<List<BusinessOrderDetail>>(viewModel.OrderDetails);
-            if (orderDetails.Count >0)
+            if (orderDetails.Count > 0)
             {
                 foreach (var businessOrderDetail in orderDetails)
                 {
@@ -373,7 +373,7 @@ namespace Business.Controllers
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            if (entity.BusinessInvoiceDetails.Count>0)
+            if (entity.BusinessInvoiceDetails.Count > 0)
             {
                 return Json(new { State = 0, Msg = "此订单已开票无法删除" });
             }
@@ -541,6 +541,11 @@ namespace Business.Controllers
         {
             var entity = _businessOrderDetailRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
             if (entity == null) return RedirectToAction("Index");
+            if (entity.VerificationStatus == Consts.StateNormal)
+            {
+                TempData["Msg"] = "该订单已核销，无法改价";
+                return RedirectToAction("Update", new { id = entity.BusinessOrderId });
+            }
             entity.RequestSellMoney = viewModel.RequestSellMoney;
             entity.AuditRemark = viewModel.AuditRemark;
             entity.Status = Consts.AuditPriceState;//进入审核 
@@ -729,6 +734,7 @@ namespace Business.Controllers
             purchase.Status = Consts.StateNormal;
             var count = 0;
             List<string> losts = new List<string>();
+            List<string> heightPrice = new List<string>();
             //处理订单明细
             for (int i = 1; i <= sheet.LastRowNum; i++)
             {
@@ -754,6 +760,13 @@ namespace Business.Controllers
                 if (mediaPrice == null)
                 {
                     losts.Add(mediaName + " - " + client + " - " + channal);
+                    continue;
+                }
+                decimal.TryParse(row.GetCell(4)?.ToString(), out var pmoney);
+                //判断采购金额是否超出成本
+                if (pmoney > mediaPrice.PurchasePrice)
+                {
+                    heightPrice.Add(mediaName + " - " + client + " - " + channal);
                     continue;
                 }
                 BusinessOrderDetail detail = new BusinessOrderDetail();
@@ -800,7 +813,7 @@ namespace Business.Controllers
                 purchaseOrderDetail.LinkManName = mediaPrice.Media.LinkMan.Name;
                 purchaseOrderDetail.Tax = 0;
                 purchaseOrderDetail.TaxMoney = 0;
-                decimal.TryParse(row.GetCell(4)?.ToString(), out var pmoney);
+
                 purchaseOrderDetail.Money = pmoney;
                 purchaseOrderDetail.ConfirmVerificationMoney = 0;
                 purchaseOrderDetail.VerificationMoney = pmoney;
@@ -817,9 +830,14 @@ namespace Business.Controllers
             var lostStr = string.Empty;
             if (losts.Count > 0)
             {
-                lostStr = "其中以下资源不存在，部分订单导入失败：【" + string.Join("，", losts) + "】";
+                lostStr = "其中以下资源不存在：【" + string.Join("，", losts) + "】";
             }
-            return Json(new { State = 1, Msg = "成功导入" + count + "篇网稿订单。" + lostStr });
+            var heightPriceStr = string.Empty;
+            if (heightPrice.Count > 0)
+            {
+                heightPriceStr = "其中以下资源采购成本超出参考成本：【" + string.Join("，", heightPrice) + "】";
+            }
+            return Json(new { State = 1, Msg = "成功导入" + count + "篇网稿订单。" + lostStr + heightPriceStr });
         }
 
         public ActionResult Comment(string id)
@@ -833,11 +851,11 @@ namespace Business.Controllers
         public ActionResult Comment(CommentsView comments)
         {
             //
-            List<OrderDetailComment> list=new List<OrderDetailComment>();
+            List<OrderDetailComment> list = new List<OrderDetailComment>();
             foreach (var comment in comments.OrderComments)
             {
-                OrderDetailComment item=new OrderDetailComment();
-                item.CommentDate=DateTime.Now;
+                OrderDetailComment item = new OrderDetailComment();
+                item.CommentDate = DateTime.Now;
                 item.BusinessOrderDetailId = comment.BusinessOrderDetailId;
                 item.Score = comment.Score;
                 item.Content = comment.Content;
