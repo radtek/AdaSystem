@@ -163,7 +163,7 @@ namespace Ada.Web
             // ionRange styles
             bundles.Add(new StyleBundle("~/Content/plugins/ionRangeSlider/ionRangeStyles").Include(
                       "~/Content/plugins/ionRangeSlider/ion.rangeSlider.css",
-                      "~/Content/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css"));
+                      "~/Content/plugins/ionRangeSlider/ion.rangeSlider.skinModern.css"));
 
             // ionRange 
             bundles.Add(new ScriptBundle("~/plugins/ionRange").Include(

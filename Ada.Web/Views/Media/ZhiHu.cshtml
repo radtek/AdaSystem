@@ -17,11 +17,7 @@
 
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
 
-
-    <div class="ibox-content m-b-sm border-bottom">
-        @Html.Partial("FilterSimple", meidaType)
-    </div>
-    @Html.Partial("MediaTable")
+    @Html.Partial("Filter",meidaType)
 
 
 </div>
@@ -70,6 +66,9 @@
                 mobileResponsive: true,
                 queryParams: function (parameters) {
                     parameters.MediaTypeId = '@meidaType.Id';
+                    $('#toolbar').find('input[name],select[name]').each(function () {
+                        parameters[$(this).attr('name')] = $(this).val();
+                    });
                     return searchFrm.queryParams(parameters);
                 },
                 columns: [

@@ -46,26 +46,41 @@ function initTooltip() {
     $('[data-toggle="tooltip"]').tooltip();
 }
 
-function initFilter() {
+function initFilter(mediaType) {
 
     if ($("#AvgReadNumRange").length > 0) {
+        var maxr = mediaType === "weixin" ? 100001 : 60000000;
         $("#AvgReadNumRange").ionRangeSlider({
             type: 'double',
             input_values_separator: '-',
-            values: [0, 100, 1000, 5000, 10000, 50000, 100001, 500000, 10000000],
+            //values: [0, 100, 1000, 5000, 10000, 50000, 100001, 500000, 10000000],
             grid: true,
+            min: 0,
+            max: maxr,
+            max_postfix: "+",
             onFinish: function (data) {
                 searchTable();
             }
         });
     }
     if ($("#FansNumRange").length > 0) {
+        var maxf = 6000;
+        switch (mediaType) {
+            case "weixin":
+                maxf = 2000;
+                break;
+        }
+
         $("#FansNumRange").ionRangeSlider({
             type: 'double',
             input_values_separator: '-',
             postfix: " 万",
             grid: true,
-            values: [0, 10, 50, 100, 500, 1000, 5000, 10000],
+            min: 0,
+            max: maxf,
+            max_postfix: "+",
+            step: 10,
+            grid_num: 10,
             onFinish: function (data) {
                 searchTable();
             }
@@ -77,26 +92,38 @@ function initFilter() {
             grid: true,
             input_values_separator: '-',
             prefix: "¥",
+            //min: 0,
+            //max: 5000000,
+            max_postfix: "+",
+            step: 10,
+            
             values: [0, 1000, 5000, 10000, 20000, 30000, 40000, 50000, 100000, 500000, 1000000, 5000000],
             onFinish: function (data) {
                 searchTable();
+            },
+            onChange: function (data) {
+                if (!$("#AdPositionName").val()) {
+                    swal("温馨提醒","请您先选择广告位，谢谢","warning");
+                }
             }
         });
     }
 
-    $("#AdPositionName").add("input[name='MediaTagIds']").add().change(function () {
+    $("#AdPositionName").add("input[name='MediaTagIds']").add("#Areas").change(function () {
         searchTable();
     });
 }
 
-function resetSearch() {
+function resetFilter() {
+    
+    $("form")[0].reset();
     $.each($(".irs-hidden-input"),
         function (k, v) {
             $(v).data("ionRangeSlider").reset();
         });
-    $("form")[0].reset();
-    $('#table').bootstrapTable("resetSearch");
-    searchTable();
+    $("#table").bootstrapTable("refresh");
+    //$('#table').bootstrapTable("resetSearch");
+    //searchTable();
 }
 
 function searchTable() {
@@ -194,7 +221,7 @@ formatter.mediaData = function (value, row) {
     }
     var avgpost = "";
     if (row.MonthPostNum) {
-        avgpost = " <span class='label label-info'>平均发文数：" + row.MonthPostNum + "</span>";
+        avgpost = " <span class='label label-info'>月发文数：" + row.MonthPostNum + "</span>";
     }
     var post = "";
     if (row.PostNum) {
@@ -210,12 +237,12 @@ formatter.mediaData = function (value, row) {
     }
     var share = "";
     if (row.TransmitNum) {
-        share = " <span class='label label-info'>平均分享数：" + row.TransmitNum + "</span>";
+        share = " <span class='label label-info'>平均转发数：" + row.TransmitNum + "</span>";
     }
     var lastdate = "";
     if (row.LastPushDate) {
         var date = moment(row.LastPushDate).format("YYYY-MM-DD HH:mm");
-        lastdate = " <span class='label label-info'>最近更新日期：" + date + "</span>";
+        lastdate = " <span class='label label-info'>最近发布日期：" + date + "</span>";
     }
     var line1 = read ? "<div class='p-xxs'>" + read + "</div>" : "";
     var line2 = like ? "<div class='p-xxs'>" + like + "</div>" : "";
@@ -235,7 +262,7 @@ formatter.mediaData = function (value, row) {
         line = line2 + line3 + line10 + line5 + line7;
     }
     if (row.MediaTypeIndex == "douyin") {
-        line = line1 + line2 + line3 + line10 + line8 + line5;
+        line = line1 + line2 + line3 + line10 + line5;
     }
     return line || "<span class='label label-warning'>抱歉！暂无相关数据</span>";
 };
@@ -243,7 +270,7 @@ formatter.mediaData = function (value, row) {
 formatter.mediaOperation = function (value, row) {
 
     return "<div class='p-xxs'><div class='btn-group'>" +
-        "<a class='btn btn-danger btn-outline btn-sm' href='/Media/Detail/" + value + "' target='_blank'><i class='fa fa-comment'></i> 评价" + row.CommentCount+"</a> " +
+        "<a class='btn btn-danger btn-outline btn-sm' href='/Media/Detail/" + value + "' target='_blank'><i class='fa fa-comment'></i> 评价" + row.CommentCount + "</a> " +
         "<button class='btn btn-danger btn-outline btn-sm' onclick='todo();'><i class='fa fa-cart-arrow-down'></i> 加入分组</button>" +
         "</div></div>";
 };

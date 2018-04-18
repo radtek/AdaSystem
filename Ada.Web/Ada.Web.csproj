@@ -1256,8 +1256,11 @@
     <Content Include="Content\plugins\images\spritemap.png" />
     <Content Include="Content\plugins\ionRangeSlider\ion.rangeSlider.css" />
     <Content Include="Content\plugins\ionRangeSlider\ion.rangeSlider.skinFlat.css" />
+    <Content Include="Content\plugins\ionRangeSlider\ion.rangeSlider.skinHTML5.css" />
+    <Content Include="Content\plugins\ionRangeSlider\ion.rangeSlider.skinModern.css" />
     <Content Include="Content\plugins\ionRangeSlider\ion.rangeSlider.skinNice.css" />
     <Content Include="Content\plugins\ionRangeSlider\ion.rangeSlider.skinSimple.css" />
+    <Content Include="Content\plugins\ionRangeSlider\normalize.css" />
     <Content Include="Content\plugins\jasny\jasny-bootstrap.min.css" />
     <Content Include="Content\plugins\jqGrid\ui.jqgrid.css" />
     <Content Include="Content\plugins\jsTree\img\32px.png" />
@@ -2930,8 +2933,6 @@
     <Content Include="Views\Media\RedBook.cshtml" />
     <Content Include="Views\UserCenter\Index.cshtml" />
     <Content Include="Views\Media\Filter.cshtml" />
-    <Content Include="Views\Media\MediaTable.cshtml" />
-    <Content Include="Views\Media\FilterSimple.cshtml" />
     <Content Include="Views\Media\Detail.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

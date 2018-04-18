@@ -152,6 +152,16 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "转发数")]
         public int? TransmitNum { get; set; }
         /// <summary>
+        /// 转发数
+        /// </summary>
+        [Display(Name = "转发数")]
+        public int? TransmitNumMin { get; set; }
+        /// <summary>
+        /// 转发数
+        /// </summary>
+        [Display(Name = "转发数")]
+        public int? TransmitNumMax { get; set; }
+        /// <summary>
         /// 平均转发数
         /// </summary>
         [Display(Name = "平均转发数")]
@@ -161,6 +171,16 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "评论数")]
         public int? CommentNum { get; set; }
+        /// <summary>
+        /// 评论数
+        /// </summary>
+        [Display(Name = "评论数")]
+        public int? CommentNumMin { get; set; }
+        /// <summary>
+        /// 评论数
+        /// </summary>
+        [Display(Name = "评论数")]
+        public int? CommentNumMax { get; set; }
         /// <summary>
         /// 平均评论数
         /// </summary>
@@ -172,6 +192,16 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "点赞数")]
         public int? LikesNum { get; set; }
         /// <summary>
+        /// 点赞数
+        /// </summary>
+        [Display(Name = "点赞数")]
+        public int? LikesNumMin { get; set; }
+        /// <summary>
+        /// 点赞数
+        /// </summary>
+        [Display(Name = "点赞数")]
+        public int? LikesNumMax { get; set; }
+        /// <summary>
         /// 平均点赞数
         /// </summary>
         [Display(Name = "平均点赞数")]
@@ -181,6 +211,16 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "微博数")]
         public int? PostNum { get; set; }
+        /// <summary>
+        /// 微博数
+        /// </summary>
+        [Display(Name = "微博数")]
+        public int? PostNumMin { get; set; }
+        /// <summary>
+        /// 微博数
+        /// </summary>
+        [Display(Name = "微博数")]
+        public int? PostNumMax { get; set; }
         /// <summary>
         /// 月发文数
         /// </summary>
