@@ -73,6 +73,14 @@ namespace Ada.Web.Controllers
             {
                 allList = allList.Where(d => d.BusinessOrder.OrderNum == viewModel.OrderNum);
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.Remark))
+            {
+                allList = allList.Where(d => d.BusinessOrder.Remark.Contains(viewModel.Remark));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeId))
+            {
+                allList = allList.Where(d => d.MediaPrice.Media.MediaTypeId==viewModel.MediaTypeId);
+            }
             if (viewModel.Status != null)
             {
                 allList = allList.Where(d => d.Status == viewModel.Status);

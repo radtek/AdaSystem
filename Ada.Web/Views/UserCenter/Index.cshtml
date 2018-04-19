@@ -2,13 +2,17 @@
 @using System.Web.Optimization
 @using Ada.Core.Domain
 @using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Resource
 @using Ada.Services.Admin
+@using Ada.Services.Resource
 @model Ada.Core.ViewModel.Statistics.BusinessTotal
 @{
     ViewBag.Title = "会员中心";
     Layout = "~/Views/Shared/_Layout_Web.cshtml";
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var tyeService = EngineContext.Current.Resolve<IMediaTypeService>();
     var purchaseStatus = fieldService.GetFieldsByKey("PurchaseStatus").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var types = tyeService.LoadEntitiesFilter(new MediaTypeView()).OrderBy(d=>d.Taxis).Select(d => new SelectListItem { Text = d.TypeName, Value = d.Id }).ToList();
 }
 <div class="wrapper wrapper-content">
     <div class="row">
@@ -108,32 +112,54 @@
                             <h5>我的订单</h5>
                         </div>
                         <div class="ibox-content">
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    <div class="form-group">
-                                        <label class="control-label" for="MediaName">媒体名称</label>
-                                        <input type="text" id="MediaName" name="MediaName" value="" placeholder="媒体名称关键字" class="form-control">
+                            <form id="searchFrm">
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <label class="control-label" for="MediaTypeId">媒体类型</label>
+                                            <select name="MediaTypeId" id="MediaTypeId" class="form-control">
+                                                <option value="" selected="">不限</option>
+                                                @foreach (var item in types)
+                {
+                                <option value="@item.Value">@item.Text</option>
+}
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="form-group">
-                                        <label class="control-label" for="PublishDateStr">出刊日期</label>
-                                        <input type="text" id="PublishDateStr" name="PublishDateStr" value="" readonly="" class="form-control">
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label class="control-label" for="MediaName">媒体名称</label>
+                                            <input type="text" id="MediaName" name="MediaName" value="" placeholder="媒体名称关键字" class="form-control">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="form-group">
-                                        <label class="control-label" for="PurchaseStatus">采购状态</label>
-                                        <select name="PurchaseStatus" id="PurchaseStatus" class="form-control">
-                                            <option value="" selected="">不限</option>
-                                            @foreach (var item in purchaseStatus)
-                                            {
-                                                <option value="@item.Value">@item.Text</option>
-                                            }
-                                        </select>
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <label class="control-label" for="MediaName">项目名称</label>
+                                            <input type="text" id="Remark" name="Remark" value="" placeholder="项目名称关键字" class="form-control">
+                                        </div>
                                     </div>
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <label class="control-label" for="PublishDateStr">出刊日期</label>
+                                            <input type="text" id="PublishDateStr" name="PublishDateStr" value="" readonly="" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <label class="control-label" for="PurchaseStatus">采购状态</label>
+                                            <select name="PurchaseStatus" id="PurchaseStatus" class="form-control">
+                                                <option value="" selected="">不限</option>
+                                                @foreach (var item in purchaseStatus)
+                {
+                                <option value="@item.Value">@item.Text</option>
+}
+                                            </select>
+                                        </div>
+                                    </div>
+
                                 </div>
-                            </div>
+                            </form>
+                            
                             <table id="table"></table>
                         </div>
                     </div>
@@ -160,15 +186,22 @@
 
         $(document).ready(function () {
             var table = new TableInit();
-            table.Init();
-            $("#PurchaseStatus").change(function () {
-                refreshTable();
-            });
-            $("#MediaName").focus(function(){    
-                refreshTable();
-            });
             var timeoutId = 0;
-            $("#MediaName").off('keyup drop ').on('keyup drop ', function (event) {
+            table.Init();
+            $("#PurchaseStatus").add("#MediaTypeId").change(function () {
+                clearTimeout(timeoutId); // doesn't matter if it's 0
+                timeoutId = setTimeout(function () {
+                    refreshTable();
+                }, 500);
+            });
+            $("#MediaName").add("#Remark").focus(function(){    
+                clearTimeout(timeoutId); // doesn't matter if it's 0
+                timeoutId = setTimeout(function () {
+                    refreshTable();
+                }, 500);
+            });
+            
+            $("#MediaName").add("#Remark").off('keyup drop ').on('keyup drop ', function (event) {
                 if ($.inArray(event.keyCode, [37, 38, 39, 40]) > -1) {
                     return;
                 }
@@ -211,9 +244,9 @@
                 cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
                 mobileResponsive: true,
                     queryParams: function (parameters) {
-                        parameters.MediaName = $("#MediaName").val();
-                        parameters.PurchaseStatus = $("#PurchaseStatus").val();
-                        parameters.PublishDateStr = $("#PublishDateStr").val();
+                        //parameters.MediaName = $("#MediaName").val();
+                        //parameters.PurchaseStatus = $("#PurchaseStatus").val();
+                        //parameters.PublishDateStr = $("#PublishDateStr").val();
                         return searchFrm.queryParams(parameters);
                     },
                 columns: [
@@ -225,26 +258,28 @@
                             return  moment(value).format("YYYY-MM-DD");
                         }
                     },
+                    //{
+                    //    field: 'OrderNum',
+                    //    title: '项目编号',
+                    //    align: "center", valign: "middle",
+
+                    //},
                     {
-                        field: 'OrderNum',
-                        title: '订单编号',
+                        field: 'OrderRemark',
+                        title: '所属项目',
+                        align: "center", valign: "middle",
+                    }
+                    ,
+                    {
+                        field: 'MediaTypeName',
+                        title: '媒体类型',
                         align: "center", valign: "middle",
 
                     },
                     {
-                        field: 'OrderRemark',
-                        title: '订单摘要',
-                        align: "center", valign: "middle",
-                    }
-                    ,
-
-                    {
                         field: 'MediaName',
                         title: '媒体名称',
-                        align: "left", valign: "middle",
-                        formatter: function(value,row) {
-                            return "["+row.MediaTypeName+"] "+ value;
-                        }
+                        align: "left", valign: "middle"
                     },
                     {
                         field: 'AdPositionName',
@@ -316,7 +351,7 @@
                     format: 'YYYY-MM-DD',
                     separator: " 至 ",
                     applyLabel: "确认",
-                    cancelLabel: "取消",
+                    cancelLabel: "清除",
                     fromLabel: "从",
                     toLabel: "到",
                     customRangeLabel: "自定义",

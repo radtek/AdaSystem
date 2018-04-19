@@ -27,6 +27,10 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.TypeName.Contains(viewModel.search));
             }
+            if (viewModel.IsComment!=null)
+            {
+                allList = allList.Where(d => d.IsComment==viewModel.IsComment);
+            }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;

@@ -33,14 +33,14 @@ namespace Ada.Core.Domain.Resource
         [Display(Name = "采购价格")]
         public decimal? PurchasePrice { get; set; }
         /// <summary>
-        /// 市场价格
-        /// </summary>
-        [Display(Name = "市场价格")]
-        public decimal? MarketPrice { get; set; }
-        /// <summary>
         /// 销售价格
         /// </summary>
         [Display(Name = "销售价格")]
+        public decimal? MarketPrice { get; set; }
+        /// <summary>
+        /// 零售价格
+        /// </summary>
+        [Display(Name = "零售价格")]
         public decimal? SellPrice { get; set; }
         /// <summary>
         /// 价格日期

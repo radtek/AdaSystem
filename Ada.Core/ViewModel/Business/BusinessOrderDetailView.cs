@@ -107,6 +107,11 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "媒体类型")]
         public string MediaTypeName { get; set; }
         /// <summary>
+        /// 媒体类型
+        /// </summary>
+        [Display(Name = "媒体类型")]
+        public string MediaTypeId { get; set; }
+        /// <summary>
         /// 媒体名称
         /// </summary>
         [Display(Name = "媒体名称")]

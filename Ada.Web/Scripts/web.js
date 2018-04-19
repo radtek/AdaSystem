@@ -27,6 +27,11 @@ searchFrm.reset = function (form) {
     $("#table").bootstrapTable("refresh");
 }
 searchFrm.queryParams = function (parameters) {
+    var mediaBatch = $("#MediaBatch").val();
+    if (mediaBatch) {
+        parameters.MediaBatch = mediaBatch;
+        return parameters;
+    }
     var query = $("#searchFrm").serializeObject();
     $.each(query,
         function (k, v) {
@@ -40,6 +45,9 @@ searchFrm.queryParams = function (parameters) {
             }
 
         });
+    $('#toolbar').find('input[name],select[name]').each(function () {
+        parameters[$(this).attr('name')] = $(this).val();
+    });
     return parameters;
 }
 function initTooltip() {
@@ -47,22 +55,26 @@ function initTooltip() {
 }
 
 function initFilter(mediaType) {
-
-    if ($("#AvgReadNumRange").length > 0) {
-        var maxr = mediaType === "weixin" ? 100001 : 60000000;
-        $("#AvgReadNumRange").ionRangeSlider({
-            type: 'double',
-            input_values_separator: '-',
-            //values: [0, 100, 1000, 5000, 10000, 50000, 100001, 500000, 10000000],
-            grid: true,
-            min: 0,
-            max: maxr,
-            max_postfix: "+",
-            onFinish: function (data) {
-                searchTable();
-            }
-        });
-    }
+    $('#searchModal').on('shown.bs.modal', function () {
+        $("#MediaBatch").val("");
+    }).on('hidden.bs.modal', function () {
+        
+    });
+    //if ($("#AvgReadNumRange").length > 0) {
+    //    var maxr = mediaType === "weixin" ? 100001 : 60000000;
+    //    $("#AvgReadNumRange").ionRangeSlider({
+    //        type: 'double',
+    //        input_values_separator: '-',
+    //        //values: [0, 100, 1000, 5000, 10000, 50000, 100001, 500000, 10000000],
+    //        grid: true,
+    //        min: 0,
+    //        max: maxr,
+    //        max_postfix: "+",
+    //        onFinish: function (data) {
+    //            searchTable();
+    //        }
+    //    });
+    //}
     if ($("#FansNumRange").length > 0) {
         var maxf = 6000;
         switch (mediaType) {
@@ -76,11 +88,12 @@ function initFilter(mediaType) {
             input_values_separator: '-',
             postfix: " 万",
             grid: true,
-            min: 0,
-            max: maxf,
+            values: [0, 1, 5, 10, 20, 40, 80, 120, 200, 1000, maxf],
+           // min: 0,
+            //max: maxf,
             max_postfix: "+",
-            step: 10,
-            grid_num: 10,
+            //step: 10,
+            //grid_num: 10,
             onFinish: function (data) {
                 searchTable();
             }
@@ -92,12 +105,8 @@ function initFilter(mediaType) {
             grid: true,
             input_values_separator: '-',
             prefix: "¥",
-            //min: 0,
-            //max: 5000000,
             max_postfix: "+",
-            step: 10,
-            
-            values: [0, 1000, 5000, 10000, 20000, 30000, 40000, 50000, 100000, 500000, 1000000, 5000000],
+            values: [0,50,100,200,500, 1000,2000, 3000,5000, 10000, 50000, 100000, 1000000,5000000],
             onFinish: function (data) {
                 searchTable();
             },
@@ -270,7 +279,7 @@ formatter.mediaData = function (value, row) {
 formatter.mediaOperation = function (value, row) {
 
     return "<div class='p-xxs'><div class='btn-group'>" +
-        "<a class='btn btn-danger btn-outline btn-sm' href='/Media/Detail/" + value + "' target='_blank'><i class='fa fa-comment'></i> 评价" + row.CommentCount + "</a> " +
+        "<a class='btn btn-danger btn-outline btn-sm' href='/Media/Detail/" + value + "' target='_blank'><i class='fa fa-comment'></i> 评价详情</a> " +
         "<button class='btn btn-danger btn-outline btn-sm' onclick='todo();'><i class='fa fa-cart-arrow-down'></i> 加入分组</button>" +
         "</div></div>";
 };

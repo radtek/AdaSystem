@@ -153,6 +153,14 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.PostNum <= viewModel.PostNumMax);
             }
+            if (viewModel.PublishFrequencyMin != null)
+            {
+                allList = allList.Where(d => d.PublishFrequency >= viewModel.PublishFrequencyMin);
+            }
+            if (viewModel.PublishFrequencyMax != null)
+            {
+                allList = allList.Where(d => d.PublishFrequency <= viewModel.PublishFrequencyMax);
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.Areas))
             {
                 allList = allList.Where(d => d.Area.Contains(viewModel.Areas));
@@ -193,15 +201,21 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.Transactor.Contains(viewModel.Transactor));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaBatch))
+            {
+                viewModel.MediaBatch = viewModel.MediaBatch.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("，", ",").Replace(" ", ",");
+                var mediaNames = viewModel.MediaBatch.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
+                allList = allList.Where(d => mediaNames.Contains(d.MediaName)||mediaNames.Contains(d.MediaID));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
             {
-                viewModel.MediaNames = viewModel.MediaNames.Trim().Replace("\r\n", ",").Replace("，", ",").Replace(" ", ",");
+                viewModel.MediaNames = viewModel.MediaNames.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("，", ",").Replace(" ", ",");
                 var mediaNames = viewModel.MediaNames.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
                 allList = allList.Where(d => mediaNames.Contains(d.MediaName));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
             {
-                viewModel.MediaIDs = viewModel.MediaIDs.Trim().Replace("\r\n", ",").Replace("，", ",").Replace(" ", ",");
+                viewModel.MediaIDs = viewModel.MediaIDs.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("，", ",").Replace(" ", ",");
                 var mediaIDs = viewModel.MediaIDs.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
                 allList = allList.Where(d => mediaIDs.Contains(d.MediaID));
             }

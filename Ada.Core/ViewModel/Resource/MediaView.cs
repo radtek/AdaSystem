@@ -122,6 +122,16 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "十天发布频率")]
         public int? PublishFrequency { get; set; }
         /// <summary>
+        /// 十天发布频率
+        /// </summary>
+        [Display(Name = "十天发布频率")]
+        public int? PublishFrequencyMax { get; set; }
+        /// <summary>
+        /// 十天发布频率
+        /// </summary>
+        [Display(Name = "十天发布频率")]
+        public int? PublishFrequencyMin { get; set; }
+        /// <summary>
         /// 地区
         /// </summary>
         [Display(Name = "地区")]
@@ -497,6 +507,11 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "评论次数")]
         public int? CommentCount { get; set; }
+        /// <summary>
+        /// 批量媒体
+        /// </summary>
+        [Display(Name = "批量媒体")]
+        public string MediaBatch { get; set; }
     }
 
 }

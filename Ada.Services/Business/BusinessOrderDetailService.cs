@@ -85,6 +85,10 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => d.MediaTypeName.Contains(viewModel.MediaTypeName));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeId))
+            {
+                allList = allList.Where(d => d.MediaPrice.Media.MediaTypeId==viewModel.MediaTypeId);
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
             {
                 allList = allList.Where(d => d.AdPositionName.Contains(viewModel.AdPositionName));

@@ -287,7 +287,7 @@ namespace Ada.Web.Controllers
 
         public ActionResult Temp()
         {
-            string path = Server.MapPath("~/upload/sell.xlsx");
+            string path = Server.MapPath("~/upload/hot.xlsx");
             int count = 0;
             using (FileStream ms = new FileStream(path, FileMode.Open))
             {
@@ -299,35 +299,36 @@ namespace Ada.Web.Controllers
                 {
                     return Content("此文件没有导入数据，请填充数据再进行导入");
                 }
-                List<Field> list = new List<Field>();
-                for (int i = 1; i <= sheet.LastRowNum; i++)
-                {
-                    IRow row = sheet.GetRow(i);
-                    var text = row.GetCell(0)?.ToString();
-                    var value = row.GetCell(1)?.ToString();
-                    var sort = row.GetCell(2)?.ToString();
-                    Field field = new Field();
-                    field.Id = IdBuilder.CreateIdNum();
-                    field.FieldTypeId = "X1803011407290060";
-                    field.Text = text;
-                    field.Value = value;
-                    field.Taxis = Convert.ToInt32(sort);
-                    list.Add(field);
-                    count++;
-                }
-                //List<string> list = new List<string>();
+                //List<Field> list = new List<Field>();
                 //for (int i = 1; i <= sheet.LastRowNum; i++)
                 //{
                 //    IRow row = sheet.GetRow(i);
-                //    var id = row.GetCell(0)?.ToString();
-                //    if (!string.IsNullOrWhiteSpace(id))
-                //    {
-                //        list.Add(id);
-                //    }
+                //    var text = row.GetCell(0)?.ToString();
+                //    var value = row.GetCell(1)?.ToString();
+                //    var sort = row.GetCell(2)?.ToString();
+                //    Field field = new Field();
+                //    field.Id = IdBuilder.CreateIdNum();
+                //    field.FieldTypeId = "X1804191503140072";
+                //    field.Text = text;
+                //    field.Value = value;
+                //    field.Taxis = Convert.ToInt32(sort);
+                //    list.Add(field);
+                //    count++;
                 //}
+                //_fieldRepository.Add(list);
+                List<string> list = new List<string>();
+                for (int i = 1; i <= sheet.LastRowNum; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+                    var id = row.GetCell(0)?.ToString();
+                    if (!string.IsNullOrWhiteSpace(id))
+                    {
+                        list.Add(id);
+                    }
+                }
 
-                //count = _media.Update(d => list.Contains(d.Id), m => new Media() { IsHot = true });
-                _fieldRepository.Add(list);
+                count = _media.Update(d => list.Contains(d.Id), m => new Media() { IsHot = true });
+
                 _dbContext.SaveChanges();
             }
             return Content("导入成功" + count + "条资源");

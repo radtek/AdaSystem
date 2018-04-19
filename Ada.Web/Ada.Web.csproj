@@ -2934,6 +2934,9 @@
     <Content Include="Views\UserCenter\Index.cshtml" />
     <Content Include="Views\Media\Filter.cshtml" />
     <Content Include="Views\Media\Detail.cshtml" />
+    <Content Include="Views\Media\FilterWeiXin.cshtml" />
+    <Content Include="Views\Media\FilterBlog.cshtml" />
+    <Content Include="Views\Media\FilterDouYin.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
