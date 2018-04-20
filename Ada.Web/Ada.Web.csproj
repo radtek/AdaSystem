@@ -1244,6 +1244,8 @@
     <Content Include="Content\plugins\images\bootstrap-colorpicker\hue-horizontal.png" />
     <Content Include="Content\plugins\images\bootstrap-colorpicker\hue.png" />
     <Content Include="Content\plugins\images\bootstrap-colorpicker\saturation.png" />
+    <Content Include="Content\plugins\images\input-checked.png" />
+    <Content Include="Content\plugins\images\input-unchecked.png" />
     <Content Include="Content\plugins\images\sort.png" />
     <Content Include="Content\plugins\images\sort_asc.png" />
     <Content Include="Content\plugins\images\sort_desc.png" />
@@ -1263,6 +1265,7 @@
     <Content Include="Content\plugins\ionRangeSlider\normalize.css" />
     <Content Include="Content\plugins\jasny\jasny-bootstrap.min.css" />
     <Content Include="Content\plugins\jqGrid\ui.jqgrid.css" />
+    <Content Include="Content\plugins\jqLabelauty\jquery-labelauty.css" />
     <Content Include="Content\plugins\jsTree\img\32px.png" />
     <Content Include="Content\plugins\jsTree\img\39px.png" />
     <Content Include="Content\plugins\jsTree\img\40px.png" />
@@ -2179,6 +2182,7 @@
     <Content Include="Scripts\app\inspinia.js" />
     <Content Include="Scripts\app\skin.config.min.js" />
     <Content Include="Scripts\plugins\ionRangeSlider\ion.rangeSlider.js" />
+    <Content Include="Scripts\plugins\jqLabelauty\jquery-labelauty.js" />
     <Content Include="Scripts\web.js" />
     <Content Include="Scripts\base.js" />
     <Content Include="Scripts\bootstrap.js" />

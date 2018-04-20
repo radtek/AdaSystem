@@ -6,7 +6,7 @@
     Layout = "~/Views/Shared/_Layout_Web.cshtml";
     ViewBag.Title = "微信公众号";
     var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("weixin");
-    
+
 }
 <div class="row wrapper border-bottom white-bg page-heading m-t-xs">
     <div class="col-lg-10">
@@ -17,21 +17,22 @@
 
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
 
-    @Html.Partial("Filter",meidaType)
+    @Html.Partial("Filter", meidaType)
 
 </div>
 
 @section Styles {
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
-    @Styles.Render("~/Content/plugins/ionRangeSlider/ionRangeStyles")
     @Styles.Render("~/plugins/bootstrapTableStyle")
+    <link href="@Url.Content("~/Content/plugins/jqLabelauty/jquery-labelauty.css")" rel="stylesheet" type="text/css" />
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-    @Scripts.Render("~/plugins/ionRange")
+    <script href="@Url.Content("~/Scripts/plugins/jqLabelauty/jquery-labelauty.js")"></script>
+
     <script type="text/javascript">
-        
+
         $(document).ready(function () {
             initFilter("weixin");
             $('#table').bootstrapTable({
@@ -110,7 +111,7 @@
 
         });
 
-        
+
     </script>
 }
 

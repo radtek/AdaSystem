@@ -14,8 +14,214 @@ $.fn.serializeObject = function () {
         }
     });
     return o;
-};
+}
+$.fn.labelauty = function (options) {
+    /*
+     * Our default settings
+     * Hope you don't need to change anything, with these settings
+     */
+    var settings = $.extend(
+        {
+            // Development Mode
+            // This will activate console debug messages
+            development: false,
 
+            // Trigger Class
+            // This class will be used to apply styles
+            class: "labelauty",
+
+            // Use text label ?
+            // If false, then only an icon represents the input
+            label: true,
+
+            // Separator between labels' messages
+            // If you use this separator for anything, choose a new one
+            separator: "|",
+
+            // Default Checked Message
+            // This message will be visible when input is checked
+            checked_label: "Checked",
+
+            // Default UnChecked Message
+            // This message will be visible when input is unchecked
+            unchecked_label: "Unchecked",
+
+            // Minimum Label Width
+            // This value will be used to apply a minimum width to the text labels
+            minimum_width: false,
+
+            // Use the greatest width between two text labels ?
+            // If this has a true value, then label width will be the greatest between labels
+            same_width: true
+        }, options);
+
+    /*
+     * Let's create the core function
+     * It will try to cover all settings and mistakes of using
+     */
+    return this.each(function () {
+        var $object = $(this);
+        var use_labels = true;
+        var labels;
+        var labels_object;
+        var input_id;
+
+        // Test if object is a check input
+        // Don't mess me up, come on
+        if ($object.is(":checkbox") === false && $object.is(":radio") === false)
+            return this;
+
+        // Add "labelauty" class to all checkboxes
+        // So you can apply some custom styles
+        $object.addClass(settings.class);
+
+        // Get the value of "data-labelauty" attribute
+        // Then, we have the labels for each case (or not, as we will see)
+        labels = $object.attr("data-labelauty");
+
+        use_labels = settings.label;
+
+        // It's time to check if it's going to the right way
+        // Null values, more labels than expected or no labels will be handled here
+        if (use_labels === true) {
+            if (labels == null || labels.length === 0) {
+                // If attribute has no label and we want to use, then use the default labels
+                labels_object = new Array();
+                labels_object[0] = settings.unchecked_label;
+                labels_object[1] = settings.checked_label;
+            }
+            else {
+                // Ok, ok, it's time to split Checked and Unchecked labels
+                // We split, by the "settings.separator" option
+                labels_object = labels.split(settings.separator);
+
+                // Now, let's check if exist _only_ two labels
+                // If there's more than two, then we do not use labels :(
+                // Else, do some additional tests
+                if (labels_object.length > 2) {
+                    use_labels = false;
+                    debug(settings.development, "There's more than two labels. LABELAUTY will not use labels.");
+                }
+                else {
+                    // If there's just one label (no split by "settings.separator"), it will be used for both cases
+                    // Here, we have the possibility of use the same label for both cases
+                    if (labels_object.length === 1)
+                        debug(settings.development, "There's just one label. LABELAUTY will use this one for both cases.");
+                }
+            }
+        }
+
+        /*
+         * Let's begin the beauty
+         */
+
+        // Start hiding ugly checkboxes
+        // Obviously, we don't need native checkboxes :O
+        $object.css({ display: "none" });
+
+        // We don't need more data-labelauty attributes!
+        // Ok, ok, it's just for beauty improvement
+        $object.removeAttr("data-labelauty");
+
+        // Now, grab checkbox ID Attribute for "label" tag use
+        // If there's no ID Attribute, then generate a new one
+        input_id = $object.attr("id");
+
+        if (input_id == null) {
+            var input_id_number = 1 + Math.floor(Math.random() * 1024000);
+            input_id = "labelauty-" + input_id_number;
+
+            // Is there any element with this random ID ?
+            // If exists, then increment until get an unused ID
+            while ($(input_id).length !== 0) {
+                input_id_number++;
+                input_id = "labelauty-" + input_id_number;
+                debug(settings.development, "Holy crap, between 1024 thousand numbers, one raised a conflict. Trying again.");
+            }
+
+            $object.attr("id", input_id);
+        }
+
+        // Now, add necessary tags to make this work
+        // Here, we're going to test some control variables and act properly
+        $object.after(create(input_id, labels_object, use_labels));
+
+        // Now, add "min-width" to label
+        // Let's say the truth, a fixed width is more beautiful than a variable width
+        if (settings.minimum_width !== false)
+            $object.next("label[for=" + input_id + "]").css({ "min-width": settings.minimum_width });
+
+        // Now, add "min-width" to label
+        // Let's say the truth, a fixed width is more beautiful than a variable width
+        if (settings.same_width != false && settings.label == true) {
+            var label_object = $object.next("label[for=" + input_id + "]");
+            var unchecked_width = getRealWidth(label_object.find("span.labelauty-unchecked"));
+            var checked_width = getRealWidth(label_object.find("span.labelauty-checked"));
+
+            if (unchecked_width > checked_width)
+                label_object.find("span.labelauty-checked").width(unchecked_width);
+            else
+                label_object.find("span.labelauty-unchecked").width(checked_width);
+        }
+    });
+}
+
+/*
+ * Tricky code to work with hidden elements, like tabs.
+ * Note: This code is based on jquery.actual plugin.
+ * https://github.com/dreamerslab/jquery.actual
+ */
+function getRealWidth(element) {
+    var width = 0;
+    var $target = element;
+    var style = 'position: absolute !important; top: -1000 !important; ';
+
+    $target = $target.clone().attr('style', style).appendTo('body');
+    width = $target.width(true);
+    $target.remove();
+
+    return width;
+}
+
+function debug(debug, message) {
+    if (debug && window.console && window.console.log)
+        window.console.log("jQuery-LABELAUTY: " + message);
+}
+
+function create(input_id, messages_object, label) {
+    var block;
+    var unchecked_message;
+    var checked_message;
+
+    if (messages_object == null)
+        unchecked_message = checked_message = "";
+    else {
+        unchecked_message = messages_object[0];
+
+        // If checked message is null, then put the same text of unchecked message
+        if (messages_object[1] == null)
+            checked_message = unchecked_message;
+        else
+            checked_message = messages_object[1];
+    }
+
+    if (label == true) {
+        block = '<label for="' + input_id + '">' +
+            '<span class="labelauty-unchecked-image"></span>' +
+            '<span class="labelauty-unchecked">' + unchecked_message + '</span>' +
+            '<span class="labelauty-checked-image"></span>' +
+            '<span class="labelauty-checked">' + checked_message + '</span>' +
+            '</label>';
+    }
+    else {
+        block = '<label for="' + input_id + '">' +
+            '<span class="labelauty-unchecked-image"></span>' +
+            '<span class="labelauty-checked-image"></span>' +
+            '</label>';
+    }
+
+    return block;
+}
 
 var searchFrm = {};
 searchFrm.search = function (form, evt) {
@@ -54,85 +260,55 @@ function initTooltip() {
     $('[data-toggle="tooltip"]').tooltip();
 }
 
-function initFilter(mediaType) {
+function initFilter() {
     $('#searchModal').on('shown.bs.modal', function () {
         $("#MediaBatch").val("");
     }).on('hidden.bs.modal', function () {
-        
+
     });
-    //if ($("#AvgReadNumRange").length > 0) {
-    //    var maxr = mediaType === "weixin" ? 100001 : 60000000;
-    //    $("#AvgReadNumRange").ionRangeSlider({
-    //        type: 'double',
-    //        input_values_separator: '-',
-    //        //values: [0, 100, 1000, 5000, 10000, 50000, 100001, 500000, 10000000],
-    //        grid: true,
-    //        min: 0,
-    //        max: maxr,
-    //        max_postfix: "+",
-    //        onFinish: function (data) {
-    //            searchTable();
-    //        }
-    //    });
-    //}
-    if ($("#FansNumRange").length > 0) {
-        var maxf = 6000;
-        switch (mediaType) {
-            case "weixin":
-                maxf = 2000;
-                break;
-        }
-
-        $("#FansNumRange").ionRangeSlider({
-            type: 'double',
-            input_values_separator: '-',
-            postfix: " 万",
-            grid: true,
-            values: [0, 1, 5, 10, 20, 40, 80, 120, 200, 1000, maxf],
-           // min: 0,
-            //max: maxf,
-            max_postfix: "+",
-            //step: 10,
-            //grid_num: 10,
-            onFinish: function (data) {
-                searchTable();
-            }
-        });
-    }
-    if ($("#SellPriceRange").length > 0) {
-        $("#SellPriceRange").ionRangeSlider({
-            type: "double",
-            grid: true,
-            input_values_separator: '-',
-            prefix: "¥",
-            max_postfix: "+",
-            values: [0,50,100,200,500, 1000,2000, 3000,5000, 10000, 50000, 100000, 1000000,5000000],
-            onFinish: function (data) {
-                searchTable();
-            },
-            onChange: function (data) {
-                if (!$("#AdPositionName").val()) {
-                    swal("温馨提醒","请您先选择广告位，谢谢","warning");
-                }
-            }
-        });
-    }
-
+    $(':input:radio').labelauty();
+    $("input[name='radio']").change(function () {
+        var arr = $(this).val().split('-');
+        $("#FansNumStart").val(arr[0]);
+        $("#FansNumEnd").val(arr[1]);
+        //addFilter("fans", "粉丝数", $(this).data("str"));
+        searchTable();
+    });
+    $("input[name='priceradio']").change(function () {
+        var arr = $(this).val().split('-');
+        $("#PriceStart").val(arr[0]);
+        $("#PriceEnd").val(arr[1]);
+        searchTable();
+    });
     $("#AdPositionName").add("input[name='MediaTagIds']").add("#Areas").change(function () {
         searchTable();
     });
 }
 
-function resetFilter() {
-    
-    $("form")[0].reset();
-    $.each($(".irs-hidden-input"),
+function addFilter(id, name, value) {
+    $.each($(".filters .btn"),
         function (k, v) {
-            $(v).data("ionRangeSlider").reset();
+            var btnData = $(v).data("name");
+            if (btnData == name) {
+                $(v).remove();
+            }
         });
+    $(".filters").append('<button type="button" data-parent="' + id + '" data-name="' + name + '" class="btn btn-warning btn-sm btn-outline" onclick="resetCurrent(this);">' + name + "：" + value +
+        ' <i class="fa fa-close"></i>' +
+        '</button >');
+
+}
+
+function resetFilter() {
+    $("form")[0].reset();
     $("#table").bootstrapTable("refresh");
-    //$('#table').bootstrapTable("resetSearch");
-    //searchTable();
+    //$(".filters").empty();
+}
+function resetCurrent(o) {
+    var parent = $(o).data("parent");
+    $('#' + parent + ' input').val("");
+    $('#' + parent + ' input:radio').attr('checked', false);
+    $(o).remove();
 }
 
 function searchTable() {
@@ -180,7 +356,7 @@ formatter.mediaInfo = function (value, row) {
     if (row.Areas) {
         area = " <span class='btn btn-info btn-outline btn-xs'><i class='fa fa-map-marker'></i> " + row.Areas + "</span>";
     }
-    var fans = "<span class='btn btn-danger btn-xs btn-outline'><i class='fa fa-users'></i> 粉丝：" + row.FansNum.toFixed(1) + " 万</span>";
+    var fans = "<span class='btn btn-danger btn-xs btn-outline'><i class='fa fa-users'></i> 粉丝：" + (row.FansNum ? row.FansNum.toFixed(1) + " 万" : "不详") + "</span>";
     var tags = "";
     if (row.MediaTags) {
         var arr = [];

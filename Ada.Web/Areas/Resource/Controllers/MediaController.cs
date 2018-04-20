@@ -536,8 +536,8 @@ namespace Resource.Controllers
                     {
                         //判断，如果价格更新了，就更新市场价格
                         mediaPrice.PurchasePrice = Convert.ToDecimal(tempPrice);
-                        mediaPrice.SellPrice = SetSalePrice(Convert.ToDecimal(tempPrice), sellPriceRange);
-                        mediaPrice.MarketPrice = SetSalePrice(Convert.ToDecimal(tempPrice), marketPriceRange);
+                        mediaPrice.SellPrice = media.IsTop == true ? mediaPrice.SellPrice : SetSalePrice(Convert.ToDecimal(tempPrice), sellPriceRange);
+                        mediaPrice.MarketPrice = media.IsTop == true ? mediaPrice.SellPrice : SetSalePrice(Convert.ToDecimal(tempPrice), marketPriceRange);
                         mediaPrice.PriceDate = DateTime.Now;
                         mediaPrice.InvalidDate = date;
                     }
@@ -874,8 +874,8 @@ namespace Resource.Controllers
                     price.InvalidDate = viewModel.PriceInvalidDate;
                     price.PriceDate = viewModel.PriceUpdateDate;
                     price.PurchasePrice = Convert.ToDecimal(viewModelMediaPrice.PurchasePrice);
-                    price.SellPrice = SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), sellPriceRange);
-                    price.MarketPrice = SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), marketPriceRange);
+                    price.SellPrice = entity.IsTop == true ? price.SellPrice : SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), sellPriceRange);
+                    price.MarketPrice = entity.IsTop == true ? price.MarketPrice : SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), marketPriceRange);
                 }
             }
             _mediaService.Update(entity);
@@ -954,11 +954,16 @@ namespace Resource.Controllers
             {
                 entity.IsHot = false;
             }
-            var sellPriceRange = _fieldService.GetFieldsByKey(entity.IsHot == true ? "HotSellPriceRange" : "SellPriceRange").ToList();
-            foreach (var entityMediaPrice in entity.MediaPrices)
+
+            if (entity.IsTop != true)
             {
-                entityMediaPrice.SellPrice = SetSalePrice(Convert.ToDecimal(entityMediaPrice.PurchasePrice), sellPriceRange);
+                var sellPriceRange = _fieldService.GetFieldsByKey(entity.IsHot == true ? "HotSellPriceRange" : "SellPriceRange").ToList();
+                foreach (var entityMediaPrice in entity.MediaPrices)
+                {
+                    entityMediaPrice.SellPrice = SetSalePrice(Convert.ToDecimal(entityMediaPrice.PurchasePrice), sellPriceRange);
+                }
             }
+
             _mediaService.Update(entity);
             return Json(new { State = 1, Msg = "操作成功" });
         }

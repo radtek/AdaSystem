@@ -506,7 +506,12 @@ namespace Ada.Web
             // 百度Echarts
             bundles.Add(new ScriptBundle("~/plugins/echarts").Include(
                 "~/Scripts/plugins/echarts/echarts.min.js"));
-
+            // jqLabelauty Styless
+            bundles.Add(new StyleBundle("~/plugins/jqLabelautyStyle").Include(
+                "~/Content/plugins/jqLabelauty/jquery-labelauty.css"));
+            // jqLabelauty
+            bundles.Add(new ScriptBundle("~/plugins/jqLabelautyScript").Include(
+                "~/Scripts/plugins/jqLabelauty/jquery-labelauty.js"));
 
             //===========================前端=============================
             //bootstrap 4.0

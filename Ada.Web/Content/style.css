@@ -3093,6 +3093,10 @@ a.forum-item-title:hover {
   top: 0;
   right: 0;
 }
+.jvectormap-legend-cnt-l {
+    top: 0;
+    left: 0;
+}
 .jvectormap-legend {
   background: black;
   color: white;

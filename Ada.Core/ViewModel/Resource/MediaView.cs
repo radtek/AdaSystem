@@ -376,6 +376,16 @@ namespace Ada.Core.ViewModel.Resource
         /// 价格范围
         /// </summary>
         [Display(Name = "价格范围")]
+        public decimal? SellPriceEnd { get; set; }
+        /// <summary>
+        /// 价格范围
+        /// </summary>
+        [Display(Name = "价格范围")]
+        public decimal? SellPriceStart { get; set; }
+        /// <summary>
+        /// 价格范围
+        /// </summary>
+        [Display(Name = "价格范围")]
         public decimal? PriceEnd { get; set; }
         /// <summary>
         /// 创建人员

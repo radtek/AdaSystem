@@ -313,6 +313,33 @@ namespace Ada.Services.Resource
                         .Where(d => d.MediaPrices.Any(p => p.PurchasePrice <= viewModel.PriceEnd));
                 }
             }
+
+            if (viewModel.SellPriceStart != null)
+            {
+                if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
+                {
+                    allList = allList.Include(d => d.MediaPrices)
+                        .Where(d => d.MediaPrices.Any(p => p.SellPrice >= viewModel.SellPriceStart && p.AdPositionName == viewModel.AdPositionName));
+                }
+                else
+                {
+                    allList = allList.Include(d => d.MediaPrices)
+                        .Where(d => d.MediaPrices.Any(p => p.SellPrice >= viewModel.SellPriceStart));
+                }
+            }
+            if (viewModel.SellPriceEnd != null)
+            {
+                if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
+                {
+                    allList = allList.Include(d => d.MediaPrices)
+                        .Where(d => d.MediaPrices.Any(p => p.SellPrice <= viewModel.SellPriceEnd && p.AdPositionName == viewModel.AdPositionName));
+                }
+                else
+                {
+                    allList = allList.Include(d => d.MediaPrices)
+                        .Where(d => d.MediaPrices.Any(p => p.SellPrice <= viewModel.SellPriceEnd));
+                }
+            }
             if (viewModel.PriceInvalidDate != null)
             {
                 var endDate = viewModel.PriceInvalidDate.Value.AddDays(1);

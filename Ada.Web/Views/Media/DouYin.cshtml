@@ -16,20 +16,19 @@
 
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
 
-    @Html.Partial("Filter",meidaType)
+    @Html.Partial("Filter", meidaType)
 
 
 </div>
-
 @section Styles {
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
-    @Styles.Render("~/Content/plugins/ionRangeSlider/ionRangeStyles")
     @Styles.Render("~/plugins/bootstrapTableStyle")
+    <link href="@Url.Content("~/Content/plugins/jqLabelauty/jquery-labelauty.css")" rel="stylesheet" type="text/css" />
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-    @Scripts.Render("~/plugins/ionRange")
+    <script href="@Url.Content("~/Scripts/plugins/jqLabelauty/jquery-labelauty.js")"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
