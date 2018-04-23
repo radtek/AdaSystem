@@ -92,8 +92,24 @@ namespace Resource.Controllers
             var isExport = export == "export";
             viewModel.limit = isExport ? setting.BusinessExportRows : setting.BusinessSeachRows;
             var results = _mediaService.LoadEntitiesFilter(viewModel).AsNoTracking().ToList();
-
             watcher.Stop();
+            if (isExport)
+            {
+                var jObjects = ExprotTemplate(viewModel, results);
+                return File(ExportData(jObjects.ToString()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
+            }
+            viewModel.Medias = results.OrderBy(d => d.Taxis).ToList();
+            if (!results.Any())
+            {
+                ModelState.AddModelError("message", "没有查询到相关媒体信息！");
+                return View(viewModel);
+            }
+            ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + viewModel.total + "条。注：查询结果最多显示" + setting.BusinessSeachRows + "条。");
+            return View(viewModel);
+        }
+
+        private JArray ExprotTemplate(MediaView viewModel, List<Media> results)
+        {
             List<Media> noDatas = new List<Media>();
             //找到没有的
             if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
@@ -145,20 +161,200 @@ namespace Resource.Controllers
                     i++;
                 }
             }
-
-            if (isExport)
+            JArray jObjects = new JArray();
+            //var priceRange = _fieldService.GetFieldsByKey("ExportPrice").ToList();
+            var priceTypeStr = string.IsNullOrWhiteSpace(viewModel.PriceType) ? "0" : viewModel.PriceType;
+            var priceTypeList = priceTypeStr.Split(',');
+            if (noDatas.Any())
             {
-                JArray jObjects = new JArray();
-                //var priceRange = _fieldService.GetFieldsByKey("ExportPrice").ToList();
-                var priceTypeStr = string.IsNullOrWhiteSpace(viewModel.PriceType) ? "0" : viewModel.PriceType;
-                var priceTypeList = priceTypeStr.Split(',');
-                if (noDatas.Any())
+                results.AddRange(noDatas);
+            }
+            foreach (var media in results.OrderBy(d => d.Taxis))
+            {
+                var jo = new JObject();
+                if (viewModel.MediaTypeIndex == "weixin")
                 {
-                    results.AddRange(noDatas);
+                    jo.Add("主键", string.IsNullOrWhiteSpace(media.Id) ? "不存在的资源" : media.Id);
+                    jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
+                    //jo.Add("媒体类型", media.MediaType?.TypeName);
+                    jo.Add("媒体名称", media.MediaName);
+                    jo.Add("媒体ID", media.MediaID);
+                    jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                    jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
+                    foreach (var priceType in priceTypeList)
+                    {
+                        foreach (var mediaMediaPrice in media.MediaPrices)
+                        {
+                            var price = mediaMediaPrice.PurchasePrice ?? 0;
+                            var priceStr = "【成本】";
+                            if (priceType == "1")
+                            {
+                                price = mediaMediaPrice.MarketPrice ?? 0;
+                                priceStr = "【销售】";
+                            }
+                            if (priceType == "2")
+                            {
+                                price = mediaMediaPrice.SellPrice ?? 0;
+                                priceStr = "【零售】";
+                            }
+                            jo.Add(priceStr + mediaMediaPrice.AdPositionName, price);
+                        }
+                    }
+                    jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
+                    jo.Add("媒体说明", media.Content);
+                    jo.Add("备注说明", media.Remark);
+                    jo.Add("平均浏览数", media.AvgReadNum);
+                    jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
+                    jo.Add("经办媒介", media.Transactor);
                 }
-                foreach (var media in results.OrderBy(d => d.Taxis))
+                else if (viewModel.MediaTypeIndex == "sinablog")
                 {
-                    var jo = new JObject();
+                    jo.Add("主键", string.IsNullOrWhiteSpace(media.Id) ? "不存在的资源" : media.Id);
+                    jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
+                    //jo.Add("媒体类型", media.MediaType?.TypeName);
+                    jo.Add("媒体名称", media.MediaName);
+                    jo.Add("媒体链接", media.MediaLink);
+                    jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                    jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
+                    jo.Add("认证类型", media.AuthenticateType);
+                    foreach (var priceType in priceTypeList)
+                    {
+                        foreach (var mediaMediaPrice in media.MediaPrices)
+                        {
+                            var price = mediaMediaPrice.PurchasePrice ?? 0;
+                            var priceStr = "【成本】";
+                            if (priceType == "1")
+                            {
+                                price = mediaMediaPrice.MarketPrice ?? 0;
+                                priceStr = "【销售】";
+                            }
+                            if (priceType == "2")
+                            {
+                                price = mediaMediaPrice.SellPrice ?? 0;
+                                priceStr = "【零售】";
+                            }
+                            jo.Add(priceStr + mediaMediaPrice.AdPositionName, price);
+                        }
+                    }
+                    jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
+                    jo.Add("媒体摘要", media.Abstract);
+                    jo.Add("媒体说明", media.Content);
+                    jo.Add("备注说明", media.Remark);
+                    jo.Add("平均转发数", media.TransmitNum);
+                    jo.Add("平均评论数", media.CommentNum);
+                    jo.Add("平均点赞数", media.LikesNum);
+                    jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
+                    jo.Add("经办媒介", media.Transactor);
+                }
+                else if (viewModel.MediaTypeIndex == "douyin")
+                {
+                    jo.Add("主键", string.IsNullOrWhiteSpace(media.Id) ? "不存在的资源" : media.Id);
+                    jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
+                    //jo.Add("媒体类型", media.MediaType?.TypeName);
+                    jo.Add("媒体名称", media.MediaName);
+                    jo.Add("媒体链接", media.MediaLink);
+                    jo.Add("性别", media.Sex);
+                    jo.Add("地区", media.Area);
+                    jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                    jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
+                    foreach (var priceType in priceTypeList)
+                    {
+                        foreach (var mediaMediaPrice in media.MediaPrices)
+                        {
+                            var price = mediaMediaPrice.PurchasePrice ?? 0;
+                            var priceStr = "【成本】";
+                            if (priceType == "1")
+                            {
+                                price = mediaMediaPrice.MarketPrice ?? 0;
+                                priceStr = "【销售】";
+                            }
+                            if (priceType == "2")
+                            {
+                                price = mediaMediaPrice.SellPrice ?? 0;
+                                priceStr = "【零售】";
+                            }
+                            jo.Add(priceStr + mediaMediaPrice.AdPositionName, price);
+                        }
+                    }
+                    jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
+                    jo.Add("媒体说明", media.Content);
+                    jo.Add("备注说明", media.Remark);
+                    jo.Add("平均转发数", media.TransmitNum);
+                    jo.Add("平均浏览数", media.AvgReadNum);
+                    jo.Add("平均评论数", media.CommentNum);
+                    jo.Add("平均点赞数", media.LikesNum);
+                    jo.Add("经办媒介", media.Transactor);
+                }
+                else if (viewModel.MediaTypeIndex == "redbook")
+                {
+                    jo.Add("主键", string.IsNullOrWhiteSpace(media.Id) ? "不存在的资源" : media.Id);
+                    jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
+                    //jo.Add("媒体类型", media.MediaType?.TypeName);
+                    jo.Add("媒体名称", media.MediaName);
+                    jo.Add("媒体链接", media.MediaLink);
+                    jo.Add("地区", media.Area);
+                    jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                    foreach (var priceType in priceTypeList)
+                    {
+                        foreach (var mediaMediaPrice in media.MediaPrices)
+                        {
+                            var price = mediaMediaPrice.PurchasePrice ?? 0;
+                            var priceStr = "【成本】";
+                            if (priceType == "1")
+                            {
+                                price = mediaMediaPrice.MarketPrice ?? 0;
+                                priceStr = "【销售】";
+                            }
+                            if (priceType == "2")
+                            {
+                                price = mediaMediaPrice.SellPrice ?? 0;
+                                priceStr = "【零售】";
+                            }
+                            jo.Add(priceStr + mediaMediaPrice.AdPositionName, price);
+                        }
+                    }
+                    jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
+                    jo.Add("媒体说明", media.Content);
+                    jo.Add("备注说明", media.Remark);
+                    jo.Add("平均点赞数", media.LikesNum);
+                    jo.Add("经办媒介", media.Transactor);
+                }
+                else if (viewModel.MediaTypeIndex == "zhihu")
+                {
+                    jo.Add("主键", string.IsNullOrWhiteSpace(media.Id) ? "不存在的资源" : media.Id);
+                    jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
+                    //jo.Add("媒体类型", media.MediaType?.TypeName);
+                    jo.Add("媒体名称", media.MediaName);
+                    jo.Add("媒体ID", media.MediaID);
+                    jo.Add("媒体链接", media.MediaLink);
+                    jo.Add("地区", media.Area);
+                    jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                    foreach (var priceType in priceTypeList)
+                    {
+                        foreach (var mediaMediaPrice in media.MediaPrices)
+                        {
+                            var price = mediaMediaPrice.PurchasePrice ?? 0;
+                            var priceStr = "【成本】";
+                            if (priceType == "1")
+                            {
+                                price = mediaMediaPrice.MarketPrice ?? 0;
+                                priceStr = "【销售】";
+                            }
+                            if (priceType == "2")
+                            {
+                                price = mediaMediaPrice.SellPrice ?? 0;
+                                priceStr = "【零售】";
+                            }
+                            jo.Add(priceStr + mediaMediaPrice.AdPositionName, price);
+                        }
+                    }
+                    jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
+                    jo.Add("媒体说明", media.Content);
+                    jo.Add("备注说明", media.Remark);
+                    jo.Add("经办媒介", media.Transactor);
+                }
+                else
+                {
                     jo.Add("主键", string.IsNullOrWhiteSpace(media.Id) ? "不存在的资源" : media.Id);
                     jo.Add("媒体类型", media.MediaType?.TypeName);
                     jo.Add("平台", media.Platform);
@@ -182,7 +378,7 @@ namespace Resource.Controllers
                         jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
                     }
                     jo.Add("平均发布数", media.MonthPostNum);
-                    jo.Add("认证情况", media.IsAuthenticate);
+                    jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
                     //jo.Add("微博认证", media.AuthenticateType);
                     foreach (var priceType in priceTypeList)
                     {
@@ -229,18 +425,12 @@ namespace Resource.Controllers
                         jo.Add("收录效果", media.SEO);
                     }
                     jo.Add("经办媒介", media.Transactor);
-                    jObjects.Add(jo);
                 }
-                return File(ExportData(jObjects.ToString()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
+
+                jObjects.Add(jo);
             }
-            viewModel.Medias = results.OrderBy(d => d.Taxis).ToList();
-            if (!results.Any())
-            {
-                ModelState.AddModelError("message", "没有查询到相关媒体信息！");
-                return View(viewModel);
-            }
-            ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + viewModel.total + "条。注：查询结果最多显示" + setting.BusinessSeachRows + "条。");
-            return View(viewModel);
+
+            return jObjects;
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -331,7 +521,6 @@ namespace Resource.Controllers
                 }
                 jObjects.Add(jo);
             }
-
             return jObjects.ToString();
         }
         [HttpPost]
@@ -546,6 +735,90 @@ namespace Resource.Controllers
 
                 }
             }
+        }
+        /// <summary>
+        /// 导入更新价格
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Confirm()
+        {
+            UEditorModel uploadConfig = new UEditorModel()
+            {
+                AllowExtensions = UEditorConfig.GetStringList("fileAllowFiles"),
+                PathFormat = UEditorConfig.GetString("filePathFormat"),
+                SizeLimit = UEditorConfig.GetInt("fileMaxSize"),
+                UploadFieldName = UEditorConfig.GetString("fileFieldName")
+            };
+            var file = Request.Files[uploadConfig.UploadFieldName];
+            if (file == null)
+            {
+                return Json(new { State = 0, Msg = "请选择要导入的文件" });
+            }
+            var uploadFileName = file.FileName;
+            var fileExtension = Path.GetExtension(uploadFileName).ToLower();
+            if (!uploadConfig.AllowExtensions.Select(x => x.ToLower()).Contains(fileExtension))
+            {
+                return Json(new { State = 0, Msg = "文件类型不匹配" });
+            }
+            if (!(file.ContentLength < uploadConfig.SizeLimit))
+            {
+                return Json(new { State = 0, Msg = "上传的文件最大只能为：" + uploadConfig.SizeLimit + "B" });
+            }
+            //创建工作薄
+            IWorkbook wk = new XSSFWorkbook(file.InputStream);
+            //1.获取第一个工作表
+            ISheet sheet = wk.GetSheetAt(0);
+            if (sheet.LastRowNum < 1)
+            {
+                return Json(new { State = 0, Msg = "此文件没有导入数据，请填充数据再进行导入" });
+            }
+            List<string> losts = new List<string>();
+            List<string> heightPrice = new List<string>();
+            for (int i = 1; i <= sheet.LastRowNum; i++)
+            {
+                IRow row = sheet.GetRow(i);
+                if (row == null)
+                {
+                    continue;
+                }
+                var mediaName = row.GetCell(0)?.ToString();
+                var client = row.GetCell(1)?.ToString();
+                var channal = row.GetCell(2)?.ToString();
+                var adpositon = row.GetCell(5)?.ToString();
+                //根据资源找价格
+                if (string.IsNullOrWhiteSpace(mediaName) || string.IsNullOrWhiteSpace(client) || string.IsNullOrWhiteSpace(channal) || string.IsNullOrWhiteSpace(adpositon))
+                {
+                    continue;
+                }
+                var mediaPrice = _mediaPriceRepository.LoadEntities(d =>
+                    d.Media.MediaName.Equals(mediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
+                    d.Media.Client.Equals(client.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
+                    d.Media.Channel.Equals(channal.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
+                    d.Media.IsDelete == false && d.AdPositionName == adpositon && d.IsDelete == false).FirstOrDefault();
+                if (mediaPrice == null)
+                {
+                    losts.Add(mediaName + " - " + client + " - " + channal);
+                    continue;
+                }
+                decimal.TryParse(row.GetCell(4)?.ToString(), out var pmoney);
+                //判断采购金额是否超出成本
+                if (pmoney > mediaPrice.PurchasePrice)
+                {
+                    heightPrice.Add(mediaName + " - " + client + " - " + channal);
+                }
+            }
+            var lostStr = string.Empty;
+            if (losts.Count > 0)
+            {
+                lostStr = "共" + losts.Count + "条资源不存在：【" + string.Join("，", losts) + "】";
+            }
+            var heightPriceStr = string.Empty;
+            if (heightPrice.Count > 0)
+            {
+                heightPriceStr = "\r\n\r\n共" + heightPrice.Count + "条超出参考成本：【" + string.Join("，", heightPrice) + "】";
+            }
+            return Json(new { State = 1, Msg = lostStr + heightPriceStr });
         }
         public ActionResult GetMediaPrices(MediaView viewModel)
         {

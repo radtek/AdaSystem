@@ -58,27 +58,31 @@ namespace Ada.Services.Resource
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeIndex))
             {
-                allList = allList.Where(d => d.MediaType.CallIndex == viewModel.MediaTypeIndex);
+                allList = allList.Where(d => d.MediaType.CallIndex == viewModel.MediaTypeIndex.Trim());
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeId))
             {
-                allList = allList.Where(d => d.MediaTypeId == viewModel.MediaTypeId);
+                allList = allList.Where(d => d.MediaTypeId == viewModel.MediaTypeId.Trim());
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.Sex))
+            {
+                allList = allList.Where(d => d.Sex == viewModel.Sex);
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.MediaName.Contains(viewModel.search) || d.MediaID.Contains(viewModel.search));
+                allList = allList.Where(d => d.MediaName.Contains(viewModel.search.Trim()) || d.MediaID.Contains(viewModel.search.Trim()));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaName))
             {
-                allList = allList.Where(d => d.MediaName.Contains(viewModel.MediaName));
+                allList = allList.Where(d => d.MediaName.Contains(viewModel.MediaName.Trim()));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.Content))
             {
-                allList = allList.Where(d => d.Content.Contains(viewModel.Content));
+                allList = allList.Where(d => d.Content.Contains(viewModel.Content.Trim()));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.Remark))
             {
-                allList = allList.Where(d => d.Remark.Contains(viewModel.Remark));
+                allList = allList.Where(d => d.Remark.Contains(viewModel.Remark.Trim()));
             }
             if (viewModel.HasArticles != null)
             {
@@ -163,11 +167,11 @@ namespace Ada.Services.Resource
             }
             if (!string.IsNullOrWhiteSpace(viewModel.Areas))
             {
-                allList = allList.Where(d => d.Area.Contains(viewModel.Areas));
+                allList = allList.Where(d => d.Area.Contains(viewModel.Areas.Trim()));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.SEO))
             {
-                allList = allList.Where(d => d.SEO.Contains(viewModel.SEO));
+                allList = allList.Where(d => d.SEO.Contains(viewModel.SEO.Trim()));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.Efficiency))
             {
@@ -179,7 +183,7 @@ namespace Ada.Services.Resource
             }
             if (!string.IsNullOrWhiteSpace(viewModel.Platform))
             {
-                allList = allList.Where(d => d.Platform.Contains(viewModel.Platform));
+                allList = allList.Where(d => d.Platform.Contains(viewModel.Platform.Trim()));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.Channel))
             {
@@ -187,19 +191,23 @@ namespace Ada.Services.Resource
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaID))
             {
-                allList = allList.Where(d => d.MediaID.Contains(viewModel.MediaID));
+                allList = allList.Where(d => d.MediaID.Contains(viewModel.MediaID.Trim()));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.LinkManId))
             {
-                allList = allList.Where(d => d.LinkManId == viewModel.LinkManId);
+                allList = allList.Where(d => d.LinkManId == viewModel.LinkManId.Trim());
             }
             if (!string.IsNullOrWhiteSpace(viewModel.LinkManName))
             {
-                allList = allList.Where(d => d.LinkMan.Name.Contains(viewModel.LinkManName));
+                allList = allList.Where(d => d.LinkMan.Name.Contains(viewModel.LinkManName.Trim()));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.Transactor))
             {
-                allList = allList.Where(d => d.Transactor.Contains(viewModel.Transactor));
+                allList = allList.Where(d => d.Transactor.Contains(viewModel.Transactor.Trim()));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.AuthenticateType))
+            {
+                allList = allList.Where(d => d.AuthenticateType==viewModel.AuthenticateType);
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaBatch))
             {

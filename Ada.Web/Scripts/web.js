@@ -280,7 +280,7 @@ function initFilter() {
         $("#PriceEnd").val(arr[1]);
         searchTable();
     });
-    $("#AdPositionName").add("input[name='MediaTagIds']").add("#Areas").change(function () {
+    $("select").add("input[name='MediaTagIds']").change(function () {
         searchTable();
     });
 }
@@ -352,6 +352,18 @@ formatter.mediaInfo = function (value, row) {
     if (row.Sex == '女') {
         sex = '<img alt="女" class="img-circle" src="/Images/lady.png" style="width: 25px; height: 25px;"/> ';
     }
+    var isAuth = "";
+    if (row.IsAuthenticate == true) {
+        isAuth = " <span class='label label-primary'>证</span> ";
+    }
+    var aType = "";
+    if (row.AuthenticateType == "黄V") {
+        aType= " <span class='label label-warning'>V</span> ";
+    } else if (row.AuthenticateType == "蓝V") {
+        aType= " <span class='label label-success'>V</span> ";
+    } else if (row.AuthenticateType == "达人") {
+        aType = " <span class='label label-danger'><i class='fa fa-star-o'></i></span> ";
+    }
     var area = "";
     if (row.Areas) {
         area = " <span class='btn btn-info btn-outline btn-xs'><i class='fa fa-map-marker'></i> " + row.Areas + "</span>";
@@ -370,7 +382,7 @@ formatter.mediaInfo = function (value, row) {
     if (row.MediaTypeIndex == "weixin") {
         weixinid = "<span class='btn btn-warning btn-xs btn-outline'><i class='fa fa-weixin'></i> 微信号：" + row.MediaID + " </span>";
     }
-    var line1 = "<div class='p-xxs'>" + sex + value + "</div>";
+    var line1 = "<div class='p-xxs'>" + sex + isAuth+ aType + value + "</div>";
     var line2 = weixinid ? "<div class='p-xxs'>" + weixinid + "</div>" : "";
     var line3 = area ? "<div class='p-xxs'>" + area + "</div>" : "";
     var line4 = tags ? "<div class='p-xxs'>" + tags + "</div>" : "";

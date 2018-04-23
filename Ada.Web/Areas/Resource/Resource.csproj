@@ -220,6 +220,7 @@
     <Content Include="Views\DouYin\Index.cshtml" />
     <Content Include="Views\Shared\DouYinArticles.cshtml" />
     <Content Include="Views\Comment\Index.cshtml" />
+    <Content Include="Views\Shared\Confirm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

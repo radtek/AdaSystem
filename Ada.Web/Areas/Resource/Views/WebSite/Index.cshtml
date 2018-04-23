@@ -105,13 +105,13 @@
                         <div class="row">
                             <div class="col-md-12">
                                 @foreach (var item in tags)
-                    {
+                                {
 
-                        <div class="checkbox checkbox-success checkbox-inline">
-                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
-                            <label for="@item.Id">@item.TagName</label>
-                        </div>
-        }
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
+                                        <label for="@item.Id">@item.TagName</label>
+                                    </div>
+                                }
                             </div>
                         </div>
 
@@ -145,6 +145,7 @@
 
 </div>
 @Html.Partial("Import")
+@Html.Partial("Confirm")
 <div id="toolbar" class="btn-group">
     <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add","Media",new{id=meidaType.Id})" target="_blank">
         <i class="fa fa-plus"></i> 新增网站
@@ -154,6 +155,9 @@
     </button>
     <button type="button" class="btn btn-primary btn-outline" data-toggle="modal" data-target="#uploadModal">
         <i class="fa fa-upload"></i> 更新导入
+    </button>
+    <button type="button" class="btn btn-primary btn-outline" data-toggle="modal" data-target="#confirmModal">
+        <i class="fa fa-check-square-o"></i> 验证资源
     </button>
 </div>
 
@@ -169,7 +173,7 @@
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/ladda")
     @Scripts.Render("~/plugins/clipboard")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201802141")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201802146")"></script>
 
     <script type="text/javascript">
 
@@ -235,7 +239,7 @@
                     },
 
 
-                   
+
                     {
                         field: 'ResourceType',
                         title: '@Html.DisplayNameFor(d=>d.ResourceType)',
@@ -248,7 +252,7 @@
                         valign: "middle",
                         align: "center"
                     },
-                    
+
                     {
                         field: 'MediaPrices',
                         title: '@Html.DisplayNameFor(d=>d.MediaPrices)',
@@ -256,7 +260,7 @@
                         formatter: formatterPrice,
                         //align: "center"
                     },
-                    
+
                     {
                         field: 'Content',
                         title: '媒体信息',

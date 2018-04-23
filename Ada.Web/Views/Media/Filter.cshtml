@@ -7,6 +7,124 @@
     var adpositions = Model.AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var areas = fieldService.GetFieldsByKey("Area").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var priceRange = new List<SelectListItem>();
+    var fansRange = new List<SelectListItem>();
+    switch (Model.CallIndex)
+    {
+        case "weixin":
+            priceRange = new List<SelectListItem>()
+{
+new SelectListItem(){Text = @"500元以下",Value = "1-500"},
+new SelectListItem(){Text = @"500-1000元",Value = "500-1000"},
+new SelectListItem(){Text = @"1000-5000元",Value = "1000-5000"},
+new SelectListItem(){Text = @"5000-10000元",Value = "5000-10000"},
+new SelectListItem(){Text = @"10000-20000元",Value = "10000-20000"},
+new SelectListItem(){Text = @"20000-50000元",Value = "20000-50000"},
+new SelectListItem(){Text = @"50000元以上",Value = "50000-"},
+};
+            fansRange = new List<SelectListItem>()
+{
+new SelectListItem(){Text = @"10万以下",Value = "1-10"},
+new SelectListItem(){Text = @"10-20万",Value = "10-20"},
+new SelectListItem(){Text = @"20-50万",Value = "20-50"},
+new SelectListItem(){Text = @"50-100万",Value = "50-100"},
+new SelectListItem(){Text = @"100-200万",Value = "100-200"},
+new SelectListItem(){Text = @"200万以上",Value = "200-"},
+};
+            break;
+        case "sinablog":
+            priceRange = new List<SelectListItem>()
+{
+new SelectListItem(){Text = @"200元以下",Value = "1-200"},
+new SelectListItem(){Text = @"200-400元",Value = "200-400"},
+new SelectListItem(){Text = @"400-1000元",Value = "400-1000"},
+new SelectListItem(){Text = @"1000-2000元",Value = "1000-2000"},
+new SelectListItem(){Text = @"2000-5000元",Value = "2000-5000"},
+new SelectListItem(){Text = @"5000-10000元",Value = "5000-10000"},
+new SelectListItem(){Text = @"10000-20000元",Value = "10000-20000"},
+new SelectListItem(){Text = @"20000-50000元",Value = "20000-50000"},
+new SelectListItem(){Text = @"50000-100000元",Value = "50000-100000"},
+new SelectListItem(){Text = @"100000元以上",Value = "100000-"},
+};
+            fansRange = new List<SelectListItem>()
+{
+new SelectListItem(){Text = @"10万以下",Value = "1-10"},
+new SelectListItem(){Text = @"10-50万",Value = "10-50"},
+new SelectListItem(){Text = @"50-100万",Value = "50-100"},
+new SelectListItem(){Text = @"100-200万",Value = "100-200"},
+new SelectListItem(){Text = @"200-500万",Value = "200-500"},
+new SelectListItem(){Text = @"500-1000万",Value = "500-1000"},
+new SelectListItem(){Text = @"1000万以上",Value = "1000-"},
+};
+            break;
+        case "douyin":
+            priceRange = new List<SelectListItem>()
+{
+new SelectListItem(){Text = @"2000元以下",Value = "1-2000"},
+new SelectListItem(){Text = @"2000-5000元",Value = "2000-5000"},
+new SelectListItem(){Text = @"5000-10000元",Value = "5000-10000"},
+new SelectListItem(){Text = @"10000-20000元",Value = "10000-20000"},
+new SelectListItem(){Text = @"20000-50000元",Value = "20000-50000"},
+new SelectListItem(){Text = @"50000-100000元",Value = "50000-100000"},
+new SelectListItem(){Text = @"100000元以上",Value = "100000-"},
+};
+            fansRange = new List<SelectListItem>()
+{
+new SelectListItem(){Text = @"10万以下",Value = "1-10"},
+new SelectListItem(){Text = @"10-20万",Value = "10-20"},
+new SelectListItem(){Text = @"20-50万",Value = "20-50"},
+new SelectListItem(){Text = @"50-100万",Value = "50-100"},
+new SelectListItem(){Text = @"100-200万",Value = "100-200"},
+new SelectListItem(){Text = @"200-500万",Value = "200-500"},
+new SelectListItem(){Text = @"500-1000万",Value = "500-1000"},
+new SelectListItem(){Text = @"1000万以上",Value = "1000-"},
+};
+            break;
+        case "zhihu":
+            priceRange = new List<SelectListItem>()
+{
+new SelectListItem(){Text = @"2000元以下",Value = "1-2000"},
+new SelectListItem(){Text = @"2000-5000元",Value = "2000-5000"},
+new SelectListItem(){Text = @"5000-10000元",Value = "5000-10000"},
+new SelectListItem(){Text = @"10000-20000元",Value = "10000-20000"},
+new SelectListItem(){Text = @"20000-50000元",Value = "20000-50000"},
+new SelectListItem(){Text = @"50000元以上",Value = "50000-"},
+};
+            fansRange = new List<SelectListItem>()
+{
+new SelectListItem(){Text = @"10万以下",Value = "1-10"},
+new SelectListItem(){Text = @"10-20万",Value = "10-20"},
+new SelectListItem(){Text = @"20-50万",Value = "20-50"},
+new SelectListItem(){Text = @"50-100万",Value = "50-100"},
+new SelectListItem(){Text = @"100-200万",Value = "100-200"},
+new SelectListItem(){Text = @"200-500万",Value = "200-500"},
+new SelectListItem(){Text = @"500万以上",Value = "500-"},
+};
+            break;
+        case "redbook":
+            priceRange = new List<SelectListItem>()
+{
+new SelectListItem(){Text = @"1000元以下",Value = "1-1000"},
+new SelectListItem(){Text = @"1000-2000元",Value = "1000-2000"},
+new SelectListItem(){Text = @"2000-5000元",Value = "2000-5000"},
+new SelectListItem(){Text = @"5000-10000元",Value = "5000-10000"},
+new SelectListItem(){Text = @"10000-20000元",Value = "10000-20000"},
+new SelectListItem(){Text = @"20000-50000元",Value = "20000-50000"},
+new SelectListItem(){Text = @"50000-100000元",Value = "50000-100000"},
+new SelectListItem(){Text = @"100000元以上",Value = "100000-"},
+};
+            fansRange = new List<SelectListItem>()
+{
+new SelectListItem(){Text = @"10万以下",Value = "1-10"},
+new SelectListItem(){Text = @"10-20万",Value = "10-20"},
+new SelectListItem(){Text = @"20-50万",Value = "20-50"},
+new SelectListItem(){Text = @"50-100万",Value = "50-100"},
+new SelectListItem(){Text = @"100-200万",Value = "100-200"},
+new SelectListItem(){Text = @"200-500万",Value = "200-500"},
+new SelectListItem(){Text = @"500万以上",Value = "500-"},
+};
+            break;
+    }
 }
 
 <form id="searchFrm">
@@ -44,14 +162,13 @@
                         </div>
                         <div class="col-md-6">
                             <ul class="ul-labelauty">
-                                <li><input type="radio" name="priceradio" data-labelauty="50元以下" value="-50"></li>
-                                <li><input type="radio" name="priceradio" data-labelauty="50-100元" value="50-100"></li>
-                                <li><input type="radio" name="priceradio" data-labelauty="100-200元" value="100-200"></li>
-                                <li><input type="radio" name="priceradio" data-labelauty="200-500元" value="200-500"></li>
-                                <li><input type="radio" name="priceradio" data-labelauty="500-1000元" value="500-1000"></li>
-                                <li><input type="radio" name="priceradio" data-labelauty="1000-3000元" value="1000-3000"></li>
-                                <li><input type="radio" name="priceradio" data-labelauty="3000元以上" value="3000-"></li>
+                                @foreach (var item in priceRange)
+                                {
+                                    <li><input type="radio" name="priceradio" data-labelauty="@item.Text" value="@item.Value"></li>
+                                }
+                                
                             </ul>
+                            
                         </div>
                         <div class="col-md-2">
                             <div class="input-daterange input-group">
@@ -66,25 +183,25 @@
                                     </span>
                                 </div>
                             </div>
+                            
+                            
                         </div>
                     </div>
+
                 </div>
             </div>
+            
             <div class="col-sm-12">
                 <div class="form-group" id="fans">
-                    <label class="control-label">粉丝数</label>
+
                     <div class="row">
+                        <label class="control-label col-md-1">粉丝数：</label>
                         <div class="col-md-6">
                             <ul class="ul-labelauty">
-                                <li><input type="radio" name="radio" data-labelauty="1万以下" data-str="1万以下" value="-1"></li>
-                                <li><input type="radio" name="radio" data-labelauty="1-5万" data-str="1-5万" value="1-5"></li>
-                                <li><input type="radio" name="radio" data-labelauty="5-10万" data-str="5-10万" value="5-10"></li>
-                                <li><input type="radio" name="radio" data-labelauty="10-20万" data-str="10-20万" value="10-20"></li>
-                                <li><input type="radio" name="radio" data-labelauty="20-40万" data-str="20-40万" value="20-40"></li>
-                                <li><input type="radio" name="radio" data-labelauty="40-80万" data-str="40-80万" value="40-80"></li>
-                                <li><input type="radio" name="radio" data-labelauty="80-120万" data-str="80-120万" value="80-120"></li>
-                                <li><input type="radio" name="radio" data-labelauty="120-200万" data-str="120-200万" value="120-200"></li>
-                                <li><input type="radio" name="radio" data-labelauty="200万以上" data-str="200万以上" value="200-"></li>
+                                @foreach (var item in fansRange)
+                                {
+                                    <li><input type="radio" name="radio" data-labelauty="@item.Text" value="@item.Value"></li>
+                                }
                             </ul>
                         </div>
                         <div class="col-md-2">
@@ -118,6 +235,32 @@
             </div>
             <div class="ibox-content no-borders">
                 <div class="row">
+                    <div class="col-sm-1">
+                        <div class="form-group">
+                            <label class="control-label">区域</label>
+                            @if (Model.CallIndex == "weixin")
+                            {
+                                <select name="MediaName" class="form-control" id="Areas">
+                                    <option value="">不限区域</option>
+                                    @foreach (var item in areas)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            }
+                            else
+                            {
+                                <select name="Areas" class="form-control" id="Areas">
+                                    <option value="">不限区域</option>
+                                    @foreach (var item in areas)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            }
+
+                        </div>
+                    </div>
 
                     @*<div class="col-sm-5">
                             <div class="form-group">
@@ -142,15 +285,13 @@
             </div>
             <div class="ibox-footer  no-borders">
                 @*<div class="filters inline">
-                    
-                </div>*@
-                
+
+                    </div>*@
+
                 <button type="button" class="btn btn-danger btn-outline" onclick="resetFilter();">
-                    <i class="fa fa-trash-o"></i> 清空筛选
+                    <i class="fa fa-recycle"></i> 重置筛选
                 </button>
-                <button type="button" class="btn btn-success btn-outline" data-toggle="modal" data-target="#searchModal">
-                    <i class="fa fa-search"></i> 批量查询
-                </button>
+
             </div>
             <div class="modal inmodal" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog">
@@ -174,9 +315,9 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
-    
+
 </form>
 
 
@@ -192,30 +333,13 @@
     </div>
 </div>
 <div id="toolbar">
-    <div class="form-inline" role="form">
-        <div class="form-group">
-            @if (Model.CallIndex == "weixin")
-            {
-                <select name="MediaName" class="form-control" id="Areas">
-                    <option value="">不限区域</option>
-                    @foreach (var item in areas)
-                    {
-                        <option value="@item.Value">@item.Text</option>
-                    }
-                </select>
-            }
-            else
-            {
-                <select name="Areas" class="form-control" id="Areas">
-                    <option value="">不限区域</option>
-                    @foreach (var item in areas)
-                    {
-                        <option value="@item.Value">@item.Text</option>
-                    }
-                </select>
-            }
-            
-        </div>
 
+    <div class="form-inline" role="form">
+
+        <div class="form-group">
+            <button type="button" class="btn btn-primary btn-outline" data-toggle="modal" data-target="#searchModal">
+                <i class="fa fa-search"></i> 批量查询
+            </button>
+        </div>
     </div>
 </div>

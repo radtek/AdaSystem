@@ -23,6 +23,7 @@
     var seos = fieldService.GetFieldsByKey("SEO").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var yesnos = fieldService.GetFieldsByKey("YesOrNo").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var resourceTypes = fieldService.GetFieldsByKey("ResourceType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var authenticateTypes = fieldService.GetFieldsByKey("AuthenticateType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
@@ -191,8 +192,8 @@
                             </div>
                             <div class="col-sm-2">
                                 <div class="form-group">
-                                    @Html.LabelFor(d => d.SEO, Html.DisplayNameFor(d => d.SEO).ToString(), new { @class = "control-label" })
-                                    @Html.DropDownListFor(d => d.SEO, seos, "请选择", new { @class = "form-control" })
+                                    @Html.LabelFor(d => d.AuthenticateType, Html.DisplayNameFor(d => d.AuthenticateType).ToString(), new { @class = "control-label" })
+                                    @Html.DropDownListFor(d => d.AuthenticateType, authenticateTypes, "请选择", new { @class = "form-control" })
                                 </div>
                             </div>
                             <div class="col-sm-2">
@@ -338,6 +339,21 @@
                                                     else
                                                     {
                                                         <img alt="女" class="img-circle" src="/Images/lady.png" style="width: 25px; height: 25px;" />
+                                                    }
+                                                }
+                                                @if (!string.IsNullOrWhiteSpace(item.AuthenticateType))
+                                                {
+                                                    if (item.AuthenticateType == "黄V")
+                                                    {
+                                                        <span class='label label-warning'>V</span> 
+                                                    }
+                                                    if (item.AuthenticateType == "蓝V")
+                                                    {
+                                                        <span class='label label-success'>V</span> 
+                                                    }
+                                                    if (item.AuthenticateType == "达人")
+                                                    {
+                                                        <span class="label label-danger"><i class='fa fa-star-o'></i></span> 
                                                     }
                                                 }
                                                 @if (item.MediaType.CallIndex == "weixin")

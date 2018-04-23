@@ -277,7 +277,7 @@ function formatterblogLevel(value) {
     } else if (value == "金V") {
         return " <span class='label label-danger'>V</span>";
     } else if (value == "达人") {
-        return " <span><i class='fa fa-star text-danger'></i></span>";
+        return " <span class='label label-danger'><i class='fa fa-star-o'></i></span>";
     }
     return "";
 };
@@ -360,10 +360,56 @@ function upLoadFile() {
             if (result.State == 1) {
                 swal({
                     title: "操作成功",
-                    text: data.Msg,
+                    text: result.Msg,
                     timer: 2000,
                     type: "success",
                     showConfirmButton: false
+                });
+            } else {
+                swal("操作失败", result.Msg, "error");
+            }
+        },
+        error: function () {
+            swal("操作失败", "系统错误", "error");
+        },
+        beforeSend: function () {
+            subBtn.ladda('start');
+        },
+        complete: function () {
+            subBtn.ladda('stop');
+        }
+    });
+}
+
+function confirmFile() {
+
+    var fileObj = document.getElementById("confirmfile").files[0]; // js 获取文件对象
+    if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
+        swal("操作失败", "请选择文件", "warning");
+        return;
+    }
+    if (!checkFileExt(fileObj.name)) {
+        swal("操作失败", "只支持xlsx后缀文件", "warning");
+        return;
+    }
+    var formFile = new FormData();
+    formFile.append("upfile", fileObj); //加入文件对象
+    var data = formFile;
+    var subBtn = $('.ladda-button').ladda();
+    $.ajax({
+        url: "/Resource/Media/Confirm",
+        data: data,
+        type: "Post",
+        dataType: "json",
+        cache: false, //上传文件无需缓存
+        processData: false, //用于对data参数进行序列化处理 这里必须false
+        contentType: false, //必须
+        success: function (result) {
+            if (result.State == 1) {
+                swal({
+                    title: "验证成功",
+                    text: result.Msg,
+                    type: "success"
                 });
             } else {
                 swal("操作失败", result.Msg, "error");
