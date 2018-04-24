@@ -750,6 +750,116 @@ namespace Ada.Services.API
             return requestResult;
         }
 
+        public RequestResult GetDouYinInfo(DouYinParams dyparams)
+        {
+            var apiInfo = _apiInterfacesService.GetAPIInterfacesByCallIndex(dyparams.CallIndex);
+            string url = string.Format(apiInfo.APIUrl + "?apikey={0}", apiInfo.Token);
+            string urlparams = string.Empty;
+            if (!string.IsNullOrWhiteSpace(dyparams.KeyWord))
+            {
+                urlparams = "&kw=" + dyparams.KeyWord;
+            }
+            int times = apiInfo.TimeOut ?? 3;
+            string htmlstr = string.Empty;
+            int request = 1;
+            string resultMsg = "无任何返回结果";
+            while (request <= times)
+            {
+                try
+                {
+                    htmlstr = HttpUtility.Get(url + urlparams);
+                    request = 9999;
+                }
+                catch (Exception ex)
+                {
+                    if (request == times)
+                    {
+                        //异常日期
+                        APIRequestRecord exrecord = new APIRequestRecord();
+                        exrecord.Id = IdBuilder.CreateIdNum();
+                        exrecord.RequestParameters = urlparams;
+                        exrecord.IsSuccess = false;
+                        exrecord.Retcode = "500";
+                        exrecord.ReponseContent = ex.Message;
+                        exrecord.Retmsg = "请求异常";
+                        exrecord.ReponseDate = DateTime.Now;
+                        apiInfo.APIRequestRecords.Add(exrecord);
+                        resultMsg ="请求异常："+ ex.Message;
+                    }
+                    request++;
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(htmlstr))
+            {
+                var result = JsonConvert.DeserializeObject<DouYinJSON>(htmlstr);
+                //记录日志
+                //成功日志
+                if (result.retcode == ReturnCode.请求成功 && dyparams.IsLog)
+                {
+                    APIRequestRecord record = new APIRequestRecord();
+                    record.Id = IdBuilder.CreateIdNum();
+                    record.IsSuccess = true;
+                    record.RequestParameters = urlparams;
+                    record.Retcode = result.retcode.GetHashCode().ToString();
+                    record.Retmsg = result.message;
+                    record.ReponseContent = "当前采集用户信息数：" + result.data.Count;
+                    record.ReponseDate = DateTime.Now;
+                    record.AddedById = dyparams.TransactorId;
+                    record.AddedBy = dyparams.Transactor;
+                    apiInfo.APIRequestRecords.Add(record);
+                }
+                //失败日志
+                if (result.retcode != ReturnCode.请求成功)
+                {
+                    APIRequestRecord record = new APIRequestRecord();
+                    record.Id = IdBuilder.CreateIdNum();
+                    record.IsSuccess = false;
+                    record.RequestParameters = urlparams;
+                    record.Retcode = result.retcode.GetHashCode().ToString();
+                    record.Retmsg = result.message;
+                    record.ReponseContent = htmlstr;
+                    record.ReponseDate = DateTime.Now;
+                    record.AddedById = dyparams.TransactorId;
+                    record.AddedBy = dyparams.Transactor;
+                    apiInfo.APIRequestRecords.Add(record);
+                }
+                else
+                {
+                    var media = _mediaRepository.LoadEntities(d => d.MediaID == dyparams.UID && d.IsDelete == false).FirstOrDefault();
+                    media.CollectionDate = DateTime.Now;
+                    if (result.data.Any())
+                    {
+                        //找到ID匹配的进行更新
+                        var mediaInfo = result.data.FirstOrDefault(d => d.id == dyparams.UID);
+                        if (mediaInfo != null)
+                        {
+                            media.MediaName = mediaInfo.screenName;
+                            media.Content = mediaInfo.biography;
+                            media.FansNum = mediaInfo.fansCount;
+                            media.PostNum = mediaInfo.videoCount;
+                            media.MediaLink = mediaInfo.url;
+                            //media.LikesNum = mediaInfo.favoriteCount;
+                            media.FriendNum = mediaInfo.followCount;
+                            //media.TransmitNum = mediaInfo.coinCount;
+                            media.MediaLogo = mediaInfo.avatarUrl;
+                            media.IsAuthenticate = mediaInfo.idVerified;
+                            var sex = Utils.BlogSex(mediaInfo.gender);
+                            if (!string.IsNullOrWhiteSpace(sex))
+                            {
+                                media.Sex = sex;
+                            }
+                        }
+                    }
+                }
+
+                resultMsg = result.ToString();
+            }
+            RequestResult requestResult = new RequestResult();
+            requestResult.Message = resultMsg;
+            _dbContext.SaveChanges();
+            return requestResult;
+        }
+
         public string TestApi(TestParams testParams)
         {
             var apiInfo = _apiInterfacesService.GetAPIInterfacesByCallIndex(testParams.CallIndex);

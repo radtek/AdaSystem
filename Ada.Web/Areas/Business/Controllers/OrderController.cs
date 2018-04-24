@@ -752,10 +752,14 @@ namespace Business.Controllers
                 {
                     continue;
                 }
+                mediaName = mediaName.Trim();
+                client = client.Trim();
+                channal = channal.Trim();
+                adpositon = adpositon.Trim();
                 var mediaPrice = _mediaPriceRepository.LoadEntities(d =>
-                     d.Media.MediaName.Equals(mediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
-                     d.Media.Client.Equals(client.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
-                     d.Media.Channel.Equals(channal.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
+                     d.Media.MediaName.Equals(mediaName, StringComparison.CurrentCultureIgnoreCase) &&
+                     d.Media.Client.Equals(client, StringComparison.CurrentCultureIgnoreCase) &&
+                     d.Media.Channel.Equals(channal, StringComparison.CurrentCultureIgnoreCase) &&
                      d.Media.IsDelete == false && d.AdPositionName == adpositon && d.IsDelete == false).FirstOrDefault();
                 if (mediaPrice == null)
                 {

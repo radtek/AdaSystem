@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
@@ -9,6 +10,8 @@ using System.Web.Compilation;
 using Ada.Core;
 using Ada.Core.Infrastructure;
 using Ada.Data;
+using Ada.Framework.NoSql;
+using Ada.Framework.NoSql.Redis;
 using Autofac;
 using Autofac.Integration.Mvc;
 
@@ -23,7 +26,17 @@ namespace Ada.Framework
             //注册数据存储
             builder.Register<DbContext>(d => new AdaEFDbcontext()).InstancePerLifetimeScope();//EF上下文
             builder.RegisterGeneric(typeof(AdaEFRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();//数据仓储
-
+            var isRedis = ConfigurationManager.AppSettings["RedisEnabled"];
+            if (string.Equals(isRedis, "true", StringComparison.CurrentCultureIgnoreCase))
+            {
+                //builder.RegisterType<ICacheStorageProvider, RedisCacheStorageProvider>();
+                builder.RegisterType<RedisCacheStorageProvider>().As<ICacheStorageProvider>().InstancePerLifetimeScope();
+            }
+            else
+            {
+                builder.RegisterType<DefaultCacheStorageProvider>().As<ICacheStorageProvider>().SingleInstance();
+                //container.RegisterType<ICacheStorageProvider, DefaultCacheStorageProvider>(new ContainerControlledLifetimeManager());
+            }
             //获取所有程序集
             var assemblys = BuildManager.GetReferencedAssemblies().Cast<Assembly>().ToArray();
             builder.RegisterControllers(assemblys);//注册控制器

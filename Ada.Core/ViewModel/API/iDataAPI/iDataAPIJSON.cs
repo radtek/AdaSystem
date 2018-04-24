@@ -59,7 +59,7 @@ namespace Ada.Core.ViewModel.API.iDataAPI
 
         public override string ToString()
         {
-            return string.Format("iDataAPI结果：{{返回码:'{0}',错误中文信息:'{1}',错误信息:'{2}'}}",
+            return string.Format("采集结果：{{返回码:'{0}',返回码信息:'{1}',错误信息:'{2}'}}",
                 (int)retcode, retcode.ToString(), message);
         }
 

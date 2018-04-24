@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel.Customer;
+using Ada.Framework.Filter;
+using Ada.Services.Cache;
 using Ada.Services.Customer;
 using Ada.Web.Models;
 using Newtonsoft.Json;
@@ -14,9 +16,11 @@ namespace Ada.Web.Controllers
     public class LoginController : Controller
     {
         private readonly ILinkManService _linkManService;
-        public LoginController(ILinkManService linkManService)
+        private readonly ICacheService _cacheService;
+        public LoginController(ILinkManService linkManService, ICacheService cacheService)
         {
             _linkManService = linkManService;
+            _cacheService = cacheService;
         }
         public ActionResult Index()
         {
@@ -45,6 +49,18 @@ namespace Ada.Web.Controllers
             viewModel.Phone = user.Phone;
             Session["User"] = SerializeHelper.SerializeToString(viewModel);
             return RedirectToAction("Index", "UserCenter");
+        }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult GetSmsCode(string phone)
+        {
+            //验证手机号
+            //验证是否频繁
+            //生成随机码
+            var code = Utils.RndomStr(5);
+            //发送短信
+            //返回结果
+            return Json(new {State = 1, Msg = code});
         }
     }
 }

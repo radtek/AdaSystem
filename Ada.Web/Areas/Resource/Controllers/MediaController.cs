@@ -215,6 +215,8 @@ namespace Resource.Controllers
                     jo.Add("媒体名称", media.MediaName);
                     jo.Add("媒体链接", media.MediaLink);
                     jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                    jo.Add("性别", media.Sex);
+                    jo.Add("地区", media.Area);
                     jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
                     jo.Add("认证类型", media.AuthenticateType);
                     foreach (var priceType in priceTypeList)
@@ -791,10 +793,15 @@ namespace Resource.Controllers
                 {
                     continue;
                 }
+
+                mediaName = mediaName.Trim();
+                client = client.Trim();
+                channal = channal.Trim();
+                adpositon = adpositon.Trim();
                 var mediaPrice = _mediaPriceRepository.LoadEntities(d =>
-                    d.Media.MediaName.Equals(mediaName.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
-                    d.Media.Client.Equals(client.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
-                    d.Media.Channel.Equals(channal.Trim(), StringComparison.CurrentCultureIgnoreCase) &&
+                    d.Media.MediaName.Equals(mediaName, StringComparison.CurrentCultureIgnoreCase) &&
+                    d.Media.Client.Equals(client, StringComparison.CurrentCultureIgnoreCase) &&
+                    d.Media.Channel.Equals(channal, StringComparison.CurrentCultureIgnoreCase) &&
                     d.Media.IsDelete == false && d.AdPositionName == adpositon && d.IsDelete == false).FirstOrDefault();
                 if (mediaPrice == null)
                 {
@@ -818,7 +825,8 @@ namespace Resource.Controllers
             {
                 heightPriceStr = "\r\n\r\n共" + heightPrice.Count + "条超出参考成本：【" + string.Join("，", heightPrice) + "】";
             }
-            return Json(new { State = 1, Msg = lostStr + heightPriceStr });
+
+            return Json(string.IsNullOrWhiteSpace(lostStr + heightPriceStr) ? new { State = 1, Msg = "资源全部存在！" } : new { State = 1, Msg = lostStr + heightPriceStr });
         }
         public ActionResult GetMediaPrices(MediaView viewModel)
         {
@@ -1339,6 +1347,23 @@ namespace Resource.Controllers
             var msg = _iDataAPIService.GetWeiXinInfoPro(baseParams);
             return Json(new { State = 1, Msg = msg.Message });
         }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult DouYinInfoCollection(DouYinParams baseParams)
+        {
+            var premission = PremissionData();
+            if (premission.Count > 0)
+            {
+                if (CheckRequest(baseParams.CallIndex))
+                {
+                    return Json(new { State = 0, Msg = "今日请求采集抖音信息次数已用完" });
+                }
+            }
+            baseParams.TransactorId = CurrentManager.Id;
+            baseParams.Transactor = CurrentManager.UserName;
+            var msg = _iDataAPIService.GetDouYinInfo(baseParams);
+            return Json(new { State = 1, Msg = msg.Message });
+        }
         [AllowAnonymous]
         public ActionResult FenPei()
         {
@@ -1459,7 +1484,7 @@ namespace Resource.Controllers
 
             var media = _repository.LoadEntities(whereLambda).FirstOrDefault();
             if (media == null) return null;
-            msg = viewModel.MediaName + "，此媒体账号已存在！";
+            msg = "此媒体资源已存在！媒体信息：" + media.MediaName + " - " + media.MediaID + "，经办媒介：" + media.Transactor;
             return media;
         }
 

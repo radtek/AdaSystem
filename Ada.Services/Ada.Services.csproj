@@ -95,6 +95,8 @@
     <Compile Include="Business\IBusinessPaymentService.cs" />
     <Compile Include="Business\IBusinessWriteOffService.cs" />
     <Compile Include="Business\IBusinessPayeeService.cs" />
+    <Compile Include="Cache\CacheService.cs" />
+    <Compile Include="Cache\ICacheService.cs" />
     <Compile Include="Customer\FollowUpService.cs" />
     <Compile Include="Customer\IFollowUpService.cs" />
     <Compile Include="Customer\IPayAccountService.cs" />

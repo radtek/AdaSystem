@@ -152,6 +152,7 @@
     <Compile Include="IDbContext.cs" />
     <Compile Include="IdBuilder.cs" />
     <Compile Include="IDependency.cs" />
+    <Compile Include="IMessageBroker.cs" />
     <Compile Include="Infrastructure\AdaEngine.cs" />
     <Compile Include="Infrastructure\Dependency\ContainerManager.cs" />
     <Compile Include="Infrastructure\EngineContext.cs" />
@@ -182,6 +183,7 @@
     <Compile Include="ViewModel\API\iDataAPI\TestJSON.cs" />
     <Compile Include="ViewModel\API\iDataAPI\TestParams.cs" />
     <Compile Include="ViewModel\API\iDataAPI\DouYinJSON.cs" />
+    <Compile Include="ViewModel\API\iDataAPI\DouYinParams.cs" />
     <Compile Include="ViewModel\API\iDataAPI\WeiXinInfoJSON.cs" />
     <Compile Include="ViewModel\API\RequestResult.cs" />
     <Compile Include="ViewModel\API\iDataAPI\WeiBoJSON.cs" />

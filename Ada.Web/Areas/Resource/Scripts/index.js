@@ -590,3 +590,54 @@ function collectWeiXin(url) {
         });
     });
 }
+
+function collectDouYin(url) {
+    var arrselections = $("#table").bootstrapTable('getSelections');
+    if (arrselections.length == 1) {
+        swal({
+            title: "您确定吗?",
+            text: "确认要采集抖音用户信息吗?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            closeOnConfirm: false,
+            showLoaderOnConfirm: true
+
+        }, function () {
+            $.ajax({
+                type: "post",
+                headers: {
+                    '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
+                },
+                url: url,
+                data: { CallIndex: "douyininfo", UID: arrselections[0].MediaID, KeyWord: arrselections[0].MediaName },
+                success: function (data) {
+                    if (data.State == 1) {
+                        $("#table").bootstrapTable('refresh');
+                        swal({
+                            title: "操作成功",
+                            text: data.Msg,
+                            type: "success"
+                        });
+                    } else {
+                        swal("操作提醒", data.Msg, "warning");
+                    }
+                },
+                error: function () {
+                    swal("操作失败", "系统错误", "error");
+                },
+                complete: function () {
+
+                }
+            });
+        });
+        
+    } else {
+        swal("操作提醒", "请选择一条抖音用户记录", "warning");
+        return;
+    }
+
+    
+}
