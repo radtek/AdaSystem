@@ -372,9 +372,20 @@ namespace Ada.Core.Tools
                 code += charArray[t];//随机数的位数加一  
             }
             return code;
-        } 
+        }
         #endregion
 
+        /// <summary>
+        /// 判断输入的字符串是否是一个合法的手机号
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static bool IsMobilePhone(string input)
+        {
+            Regex regex = new Regex("^[1][3,4,5,6,7,8,9][0-9]{9}$");
+            return regex.IsMatch(input);
+
+        }
         public static bool IsNum(string str)
         {
             return str.All(t => t >= '0' && t <= '9');

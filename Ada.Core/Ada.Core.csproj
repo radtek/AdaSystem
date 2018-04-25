@@ -152,7 +152,6 @@
     <Compile Include="IDbContext.cs" />
     <Compile Include="IdBuilder.cs" />
     <Compile Include="IDependency.cs" />
-    <Compile Include="IMessageBroker.cs" />
     <Compile Include="Infrastructure\AdaEngine.cs" />
     <Compile Include="Infrastructure\Dependency\ContainerManager.cs" />
     <Compile Include="Infrastructure\EngineContext.cs" />

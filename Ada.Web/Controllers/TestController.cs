@@ -11,6 +11,7 @@ using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.Domain.Resource;
+using Ada.Services.Cache;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -25,6 +26,7 @@ namespace Ada.Web.Controllers
         private readonly IRepository<MediaType> _mediaType;
         private readonly IRepository<PurchaseOrderDetail> _ptemp;
         private readonly IDbContext _dbContext;
+        private readonly ICacheService _cacheService;
 
         public TestController(
             IDbContext dbContext,
@@ -35,7 +37,8 @@ namespace Ada.Web.Controllers
             IRepository<MediaPrice> mediaPrice,
             IRepository<BusinessOrder> businessOrder,
             IRepository<MediaType> mediaType,
-            IRepository<Field> fieldRepository)
+            IRepository<Field> fieldRepository,
+            ICacheService cacheService)
         {
             _dbContext = dbContext;
             _ptemp = ptemp;
@@ -44,6 +47,7 @@ namespace Ada.Web.Controllers
             _mediaType = mediaType;
             _mediaPrice = mediaPrice;
             _fieldRepository = fieldRepository;
+            _cacheService = cacheService;
         }
 
         public ActionResult CheckOrder()
@@ -332,6 +336,12 @@ namespace Ada.Web.Controllers
                 _dbContext.SaveChanges();
             }
             return Content("导入成功" + count + "条资源");
+        }
+
+        public ActionResult Cache(string id)
+        {
+            var cache = _cacheService.GetObject<string>(id);
+            return cache == null ? Content("无此KEY的缓存值") : Content("缓存值：" + cache);
         }
 
         private string GetDouYinId(string url)

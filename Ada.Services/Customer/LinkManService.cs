@@ -86,12 +86,12 @@ namespace Ada.Services.Customer
             _dbContext.SaveChanges();
         }
 
-        public LinkMan CheackUser(string name, string pwd)
+        public LinkMan CheackUser(string name)
         {
-            pwd = Encrypt.Encode(pwd.Trim());
+            //pwd = Encrypt.Encode(pwd.Trim());
             var user = _repository.LoadEntities(d =>
                   d.LoginName.Equals(name.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false &&
-                  d.IsLock == false && d.Password == pwd).FirstOrDefault();
+                  d.IsLock == false).FirstOrDefault();
             return user;
         }
     }

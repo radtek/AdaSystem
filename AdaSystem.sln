@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeiXin", "Ada.Web\Areas\Wei
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIStore", "Ada.Web\Areas\APIStore\APIStore.csproj", "{30ACC830-AE75-4B16-8ED8-64F9B99D745B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Message", "Ada.Web\Areas\Message\Message.csproj", "{6D9BC718-723F-4988-8850-467BEB958321}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -131,6 +133,10 @@ Global
 		{30ACC830-AE75-4B16-8ED8-64F9B99D745B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30ACC830-AE75-4B16-8ED8-64F9B99D745B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30ACC830-AE75-4B16-8ED8-64F9B99D745B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D9BC718-723F-4988-8850-467BEB958321}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D9BC718-723F-4988-8850-467BEB958321}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D9BC718-723F-4988-8850-467BEB958321}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D9BC718-723F-4988-8850-467BEB958321}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -150,6 +156,7 @@ Global
 		{C0CF17B0-C44B-4779-8751-FD387C23DDE6} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
 		{1CF16572-A2E5-4A23-93DB-001658C819A9} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
 		{30ACC830-AE75-4B16-8ED8-64F9B99D745B} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
+		{6D9BC718-723F-4988-8850-467BEB958321} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AB64B513-252F-4F91-A011-A6FD97731889}

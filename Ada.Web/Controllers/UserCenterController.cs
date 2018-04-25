@@ -9,6 +9,7 @@ using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.ViewModel.Business;
 using Ada.Core.ViewModel.Statistics;
+using Ada.Services.Cache;
 using Ada.Web.Models;
 
 namespace Ada.Web.Controllers
@@ -17,12 +18,14 @@ namespace Ada.Web.Controllers
     {
         private readonly IRepository<BusinessOrderDetail> _businessRepository;
         private readonly IRepository<PurchaseOrderDetail> _purchaseRepository;
+        private readonly ICacheService _cacheService;
 
         public UserCenterController(IRepository<BusinessOrderDetail> businessRepository,
-            IRepository<PurchaseOrderDetail> purchaseRepository)
+            IRepository<PurchaseOrderDetail> purchaseRepository, ICacheService cacheService)
         {
             _businessRepository = businessRepository;
             _purchaseRepository = purchaseRepository;
+            _cacheService = cacheService;
         }
         public ActionResult Index()
         {
@@ -79,7 +82,7 @@ namespace Ada.Web.Controllers
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeId))
             {
-                allList = allList.Where(d => d.MediaPrice.Media.MediaTypeId==viewModel.MediaTypeId);
+                allList = allList.Where(d => d.MediaPrice.Media.MediaTypeId == viewModel.MediaTypeId);
             }
             if (viewModel.Status != null)
             {
@@ -95,13 +98,13 @@ namespace Ada.Web.Controllers
             }
             if (!string.IsNullOrWhiteSpace(viewModel.PublishDateStr))
             {
-                var temp = viewModel.PublishDateStr.Replace("至","#").Split('#');
+                var temp = viewModel.PublishDateStr.Replace("至", "#").Split('#');
                 var start = DateTime.Parse(temp[0].Trim());
                 var end = DateTime.Parse(temp[1].Trim()).AddDays(1);
                 allList = from b in allList
-                    from p in purchaseOrderDetails
-                    where b.Id == p.BusinessOrderDetailId && p.PublishDate>=start&&p.PublishDate<end
-                    select b;
+                          from p in purchaseOrderDetails
+                          where b.Id == p.BusinessOrderDetailId && p.PublishDate >= start && p.PublishDate < end
+                          select b;
             }
             var result = from b in allList
                          from p in purchaseOrderDetails
@@ -138,8 +141,14 @@ namespace Ada.Web.Controllers
 
         public ActionResult Quit()
         {
-            Session.Abandon();
-            Response.Cookies.Add(new HttpCookie("ASP.NET_SessionId", string.Empty) { HttpOnly = true });
+            //Session.Abandon();
+            //Response.Cookies.Add(new HttpCookie("ASP.NET_SessionId", string.Empty) { HttpOnly = true });
+            //清缓存 清COOKIE
+            var session = Request.Cookies["UserSession"];
+            if (session == null) return RedirectToAction("Index", "Login");
+            var sessionId = session.Value;
+            _cacheService.Remove(sessionId);
+            session.Expires = DateTime.Now.AddDays(-999);
             return RedirectToAction("Index", "Login");
         }
     }

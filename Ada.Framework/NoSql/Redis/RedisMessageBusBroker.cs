@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ada.Core;
+using Ada.Framework.Messaging;
 using StackExchange.Redis;
 
 namespace Ada.Framework.NoSql.Redis

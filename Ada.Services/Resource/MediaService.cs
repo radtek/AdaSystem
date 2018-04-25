@@ -70,11 +70,13 @@ namespace Ada.Services.Resource
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.MediaName.Contains(viewModel.search.Trim()) || d.MediaID.Contains(viewModel.search.Trim()));
+                viewModel.search = viewModel.search.Trim();
+                allList = allList.Where(d => d.MediaName.Contains(viewModel.search) || d.MediaID.Contains(viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaName))
             {
-                allList = allList.Where(d => d.MediaName.Contains(viewModel.MediaName.Trim()));
+                viewModel.MediaName = viewModel.MediaName.Trim();
+                allList = allList.Where(d => d.MediaName.Contains(viewModel.MediaName));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.Content))
             {
@@ -191,7 +193,8 @@ namespace Ada.Services.Resource
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaID))
             {
-                allList = allList.Where(d => d.MediaID.Contains(viewModel.MediaID.Trim()));
+                viewModel.MediaID = viewModel.MediaID.Trim();
+                allList = allList.Where(d => d.MediaID.Contains(viewModel.MediaID));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.LinkManId))
             {
@@ -199,11 +202,13 @@ namespace Ada.Services.Resource
             }
             if (!string.IsNullOrWhiteSpace(viewModel.LinkManName))
             {
-                allList = allList.Where(d => d.LinkMan.Name.Contains(viewModel.LinkManName.Trim()));
+                viewModel.LinkManName = viewModel.LinkManName.Trim();
+                allList = allList.Where(d => d.LinkMan.Name.Contains(viewModel.LinkManName));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.Transactor))
             {
-                allList = allList.Where(d => d.Transactor.Contains(viewModel.Transactor.Trim()));
+                viewModel.Transactor = viewModel.Transactor.Trim();
+                allList = allList.Where(d => d.Transactor.Contains(viewModel.Transactor));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.AuthenticateType))
             {

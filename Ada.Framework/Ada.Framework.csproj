@@ -133,6 +133,12 @@
     <Compile Include="Filter\FormValueRequiredAttribute.cs" />
     <Compile Include="HtmlHelperExtensions.cs" />
     <Compile Include="Log\LogModule.cs" />
+    <Compile Include="Messaging\DefaultMessageService.cs" />
+    <Compile Include="Messaging\IMessageBroker.cs" />
+    <Compile Include="Messaging\IMessageChannel.cs" />
+    <Compile Include="Messaging\IMessageChannelManager.cs" />
+    <Compile Include="Messaging\IMessageChannelSelector.cs" />
+    <Compile Include="Messaging\IMessageService.cs" />
     <Compile Include="NoSql\CachingExtensions.cs" />
     <Compile Include="NoSql\DefaultCacheStorageProvider.cs" />
     <Compile Include="NoSql\Redis\IRedisConnectionProvider.cs" />

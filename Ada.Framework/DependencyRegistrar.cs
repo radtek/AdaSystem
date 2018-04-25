@@ -27,15 +27,20 @@ namespace Ada.Framework
             builder.Register<DbContext>(d => new AdaEFDbcontext()).InstancePerLifetimeScope();//EF上下文
             builder.RegisterGeneric(typeof(AdaEFRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();//数据仓储
             var isRedis = ConfigurationManager.AppSettings["RedisEnabled"];
-            if (string.Equals(isRedis, "true", StringComparison.CurrentCultureIgnoreCase))
+            try
             {
-                //builder.RegisterType<ICacheStorageProvider, RedisCacheStorageProvider>();
-                builder.RegisterType<RedisCacheStorageProvider>().As<ICacheStorageProvider>().InstancePerLifetimeScope();
+                if (string.Equals(isRedis, "true", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    builder.RegisterType<RedisCacheStorageProvider>().As<ICacheStorageProvider>().InstancePerLifetimeScope();
+                }
+                else
+                {
+                    builder.RegisterType<DefaultCacheStorageProvider>().As<ICacheStorageProvider>().SingleInstance();
+                }
             }
-            else
+            catch 
             {
                 builder.RegisterType<DefaultCacheStorageProvider>().As<ICacheStorageProvider>().SingleInstance();
-                //container.RegisterType<ICacheStorageProvider, DefaultCacheStorageProvider>(new ContainerControlledLifetimeManager());
             }
             //获取所有程序集
             var assemblys = BuildManager.GetReferencedAssemblies().Cast<Assembly>().ToArray();
