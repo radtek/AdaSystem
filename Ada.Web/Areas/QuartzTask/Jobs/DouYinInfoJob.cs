@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity.SqlServer;
 using System.Linq;
 using Ada.Core;
@@ -8,7 +7,6 @@ using Ada.Core.Domain.API;
 using Ada.Core.Domain.QuartzTask;
 using Ada.Core.Domain.Resource;
 using Ada.Core.Tools;
-using Ada.Core.ViewModel.Admin;
 using Ada.Core.ViewModel.API.iDataAPI;
 using Ada.Data;
 using log4net;
@@ -29,10 +27,10 @@ namespace QuartzTask.Jobs
                 var name = context.JobDetail.Key.Name;
                 var group = context.JobDetail.Key.Group;
                 var job = db.Set<Job>().FirstOrDefault(d => d.GroupName == group && d.JobName == name);
-                int hour = 7200;
+                int hour = 72;
                 if (job != null)
                 {
-                    hour = job.Taxis ?? 7200;
+                    hour = job.Taxis ?? 72;
                 }
                 var media = db.Set<Media>().FirstOrDefault(d =>
                       d.IsDelete == false && d.MediaType.CallIndex == "douyin" && d.IsSlide == true && d.Status == Consts.StateNormal &&
@@ -51,7 +49,7 @@ namespace QuartzTask.Jobs
                                 if (apiInfo != null)
                                 {
                                     string url = string.Format(apiInfo.APIUrl + "?apikey={0}&kw={1}", apiInfo.Token,
-                                        System.Web.HttpUtility.HtmlEncode(media.MediaName.Trim()));
+                                        media.MediaName.Trim());
                                     int times = apiInfo.TimeOut ?? 3;
                                     int request = 1;
                                     string htmlstr = string.Empty;
