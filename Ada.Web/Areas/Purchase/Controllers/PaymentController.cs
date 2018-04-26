@@ -366,6 +366,17 @@ namespace Purchase.Controllers
                         paymoney += item.PayMoney;
                     }
                 }
+                ////更新订单
+                //foreach (var item in orderdetails)
+                //{
+                //    //更新订单金额
+                //    var order = _purchaseOrderDetailrepository.LoadEntities(d => d.Id == item.Id).FirstOrDefault();
+                //    order.Tax = item.Tax;
+                //    order.TaxMoney = item.TaxMoney;
+                //    order.PurchaseMoney = item.PurchaseMoney;
+                //    order.Money = item.Money;
+                //}
+                //payment.Tax = viewModel.Tax ?? 0;
             }
             //if (paymoney > ordermoney)
             //{

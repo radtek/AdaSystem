@@ -344,6 +344,52 @@ namespace Ada.Web.Controllers
             return cache == null ? Content("无此KEY的缓存值") : Content("缓存值：" + cache);
         }
 
+        public ActionResult ChangeMedia()
+        {
+            var medias = _media.LoadEntities(d => d.Transactor == "吴璇" && d.MediaType.CallIndex == "redbook").ToList();
+            foreach (var media in medias)
+            {
+                media.Transactor = "孔繁燕";
+                media.TransactorId = "X1804251432125166";
+                media.LinkMan.Transactor = "孔繁燕";
+                media.LinkMan.TransactorId = "X1804251432125166";
+                media.LinkMan.Commpany.Transactor = "孔繁燕";
+                media.LinkMan.Commpany.TransactorId = "X1804251432125166";
+            }
+
+            _dbContext.SaveChanges();
+            return Content("成功转移：" + medias.Count());
+        }
+        public ActionResult ChangeLinkMan()
+        {
+            string path = Server.MapPath("~/upload/link.xlsx");
+            int count = 0;
+            using (FileStream ms = new FileStream(path, FileMode.Open))
+            {
+                //创建工作薄
+                IWorkbook wk = new XSSFWorkbook(ms);
+                //1.获取第一个工作表
+                ISheet sheet = wk.GetSheetAt(0);
+                if (sheet.LastRowNum <= 1)
+                {
+                    return Content("此文件没有导入数据，请填充数据再进行导入");
+                }
+                for (int i = 1; i <= sheet.LastRowNum; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+                    var mediaId = row.GetCell(0)?.ToString();
+                    //var linkname = row.GetCell(1)?.ToString();
+                    var linkId = row.GetCell(2)?.ToString();
+                   var media= _media.LoadEntities(d => d.Id == mediaId.Trim()).FirstOrDefault();
+                    if (media == null) continue;
+                    media.LinkManId = linkId;
+                    count++;
+                }
+
+                _dbContext.SaveChanges();
+            }
+            return Content("成功更换" + count + "条资源");
+        }
         private string GetDouYinId(string url)
         {
             string result = string.Empty;

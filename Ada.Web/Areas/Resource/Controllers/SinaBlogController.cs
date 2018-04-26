@@ -123,17 +123,22 @@ namespace Resource.Controllers
                     var tags = row.GetCell(7)?.ToString();
                     if (!string.IsNullOrWhiteSpace(tags))
                     {
-                        var mediaTag = _mediaTagRepository.LoadEntities(d => d.IsDelete == false && d.TagName == tags)
-                            .FirstOrDefault();
-                        if (mediaTag != null)
+                        var arr = tags.Trim().Replace("，", ",").Split(',').ToList();
+                        var mediaTag =
+                            _mediaTagRepository.LoadEntities(d => d.IsDelete == false && arr.Contains(d.TagName));
+                        if (mediaTag.Any())
                         {
-                            media.MediaTags.Add(mediaTag);
+                            foreach (var tag in mediaTag)
+                            {
+                                media.MediaTags.Add(tag);
+                            }
                         }
                     }
 
                     media.Remark = row.GetCell(8)?.ToString();
                     media.Transactor = row.GetCell(10)?.ToString();
                     media.TransactorId = row.GetCell(11)?.ToString();
+                    media.AddedDate=DateTime.Now;
                     media.Status = Consts.StateNormal;
                     media.IsSlide = true;
                     _mediaService.Add(media);
