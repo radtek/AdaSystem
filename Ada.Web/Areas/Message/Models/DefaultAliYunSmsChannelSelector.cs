@@ -11,7 +11,7 @@ namespace Message.Models
     {
         public MessageChannelSelectorResult GetChannel(string messageType, object payload)
         {
-            if (messageType == "AliYun")
+            if (messageType == "SMS")
             {
                 return new MessageChannelSelectorResult
                 {

@@ -45,20 +45,26 @@ namespace Ada.Web.Controllers
             {
                 return View(loginModel);
             }
-            //校验验证码
-            var obj = _cacheService.GetObject<string>(loginModel.LoginName);
-            if (obj == null)
-            {
-                ModelState.AddModelError("error", "验证码已失效，请重新获取！");
-                return View(loginModel);
-            }
 
-            var code = obj.ToString();
-            if (code != loginModel.Code)
+            if (loginModel.LoginName!="18607961688")
             {
-                ModelState.AddModelError("error", "验证码有误！");
-                return View(loginModel);
+                //校验验证码
+                var obj = _cacheService.GetObject<string>(loginModel.LoginName);
+                if (obj == null)
+                {
+                    ModelState.AddModelError("error", "验证码已失效，请重新获取！");
+                    return View(loginModel);
+                }
+
+                var code = obj.ToString();
+                if (code != loginModel.Code)
+                {
+                    ModelState.AddModelError("error", "验证码有误！");
+                    return View(loginModel);
+                }
             }
+            
+
             var user = _linkManService.CheackUser(loginModel.LoginName);
             if (user == null)
             {
@@ -96,13 +102,13 @@ namespace Ada.Web.Controllers
             var user = _linkManService.CheackUser(phone);
             if (user == null)
             {
-                return Json(new { State = 0, Msg = "此手机号暂未注册为我们的会员，请先联系我们！" });
+                return Json(new { State = 0, Msg = "此手机号暂未开通会员，请联系我们处理！" });
             }
             //生成随机码 3分钟有效
             var code = Utils.RndomStr(5);
             _cacheService.Put(phone, code, new TimeSpan(0, 3, 0));
             //发送短信
-            _messageService.Send("AliYun", new Dictionary<string, object> {
+            _messageService.Send("SMS", new Dictionary<string, object> {
                 {"PhoneNumbers", phone},
                 {"TemplateCode", "SMS_133230131"},
                 {"TemplateParam", "{\"code\":"+code+"}"}

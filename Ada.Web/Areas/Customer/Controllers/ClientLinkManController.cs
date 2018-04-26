@@ -209,6 +209,7 @@ namespace Customer.Controllers
             LinkManView view = new LinkManView();
             view.Id = id;
             view.Name = entity.Commpany.Name + " - " + entity.Name;
+            view.LoginName = entity.Phone;
             view.Password = "wglh666666";
             return PartialView("CreateAccount", view);
         }
@@ -225,6 +226,10 @@ namespace Customer.Controllers
             {
                 return Json(new { State = 0, Msg = "登陆账户名称不能为空" });
             }
+            if (!Utils.IsMobilePhone(viewModel.LoginName))
+            {
+                return Json(new { State = 0, Msg = "登陆账户名需为手机号码" });
+            }
             if (viewModel.Password.Trim().Length < 6)
             {
                 return Json(new { State = 0, Msg = "密码长度不能少于6位" });
@@ -232,11 +237,11 @@ namespace Customer.Controllers
             entity.LoginName = viewModel.LoginName.Trim();
             //校验唯一性
             var temp = _repository
-                .LoadEntities(d => d.LoginName.Equals(entity.LoginName, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false && d.IsLock != true)
+                .LoadEntities(d => d.LoginName==entity.LoginName && d.IsDelete == false && d.IsLock != true)
                 .FirstOrDefault();
             if (temp != null)
             {
-                return Json(new { State = 0, Msg = entity.LoginName + ",此账户名称已被占用!" });
+                return Json(new { State = 0, Msg = entity.LoginName + ",此手机号已被占用!" });
             }
             entity.IsLock = false;
             entity.Password = Encrypt.Encode(viewModel.Password.Trim());
@@ -253,6 +258,8 @@ namespace Customer.Controllers
                 return Json(new { State = 0, Msg = "此用户还未开通会员，请先开通会员" });
             }
             entity.IsLock = true;
+            entity.LoginName = null;
+            entity.Password = null;
             _linkManService.Update(entity);
             return Json(new { State = 1, Msg = "锁定成功" });
         }

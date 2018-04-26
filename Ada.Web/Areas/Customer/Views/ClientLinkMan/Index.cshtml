@@ -166,12 +166,12 @@
                             valign: "middle",
                             formatter: function (value, row) {
                                 var btn =
-                                    "<a class='btn btn-warning btn-outline btn-xs' href='javascript:initCreateAccount(\"" +
+                                    "<a class='btn btn-primary  btn-outline btn-xs' href='javascript:initCreateAccount(\"" +
                                         value +
                                         "\");'><i class='fa fa-plus'></i> 开通会员</a> ";
                                 if (row.IsLock==false) {
                                     btn =
-                                        "<a class='btn btn-warning btn-outline btn-xs' href='javascript:lockAccount(\"" +
+                                        "<a class='btn btn-danger  btn-outline btn-xs' href='javascript:lockAccount(\"" +
                                         value +
                                         "\");'><i class='fa fa-lock'></i> 锁定会员</a> ";
                                 } 
@@ -180,10 +180,10 @@
                                     "<a class='btn btn-success btn-outline btn-xs' href='@Url.Action("Update")?id=" + value + "' target='_blank'><i class='fa fa-pencil'></i> 编辑</a> " +
                                     "<button class='btn btn-success btn-outline btn-xs' onclick=\"cancle('" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button>" +
                                     "</div></div>" +
-                                    "<div class='p-xxs'><div class='btn-group'>" +
+                                    "<div class='p-xxs'>" +
                                     btn +
-                                    "<a class='btn btn-warning btn-outline btn-xs' href='javascript:resetpwd(\""+value+"\");'><i class='fa fa-key'></i> 重置密码</a> " +
-                                    "</div></div>";
+                                    //"<a class='btn btn-warning btn-outline btn-xs' href='javascript:resetpwd(\""+value+"\");'><i class='fa fa-key'></i> 重置密码</a> " +
+                                    "</div>";
                             }
                         }
                     ]
@@ -248,7 +248,7 @@
                                     LoginName:
                                 {
                                     required: true,
-                                    minlength: 6
+                                            maxlength: 11
                                 },
                                     Password:
                                 {
@@ -260,8 +260,8 @@
                             {
                                 LoginName:
                                 {
-                                    required: "请输入登陆用户名",
-                                        minlength: "用户名不能小于{0}个字符"
+                                    required: "请输入登陆手机号",
+                                    maxlength: "请输入正确的手机号"
                                 },
                                     Password:
                                 {

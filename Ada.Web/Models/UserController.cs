@@ -7,15 +7,18 @@ using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel.Customer;
 using Ada.Services.Cache;
+using Ada.Services.Customer;
 
 namespace Ada.Web.Models
 {
     public class UserController:Controller
     {
         private readonly ICacheService _cacheService;
+        private readonly ILinkManService _linkManService;
         public UserController()
         {
             _cacheService = EngineContext.Current.Resolve<ICacheService>();
+            _linkManService = EngineContext.Current.Resolve<ILinkManService>();
         }
         public LinkManView CurrentUser { get; set; }
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -39,6 +42,17 @@ namespace Ada.Web.Models
             if (user == null)
             {
                 //缓存失效
+                filterContext.Result = RedirectToAction("Index", "Login");
+                return;
+            }
+            //校验是否开通
+            var temp = _linkManService.CheackUser(user.LoginName);
+            if (temp==null)
+            {
+                //账户暂未开通
+                //清缓存 清COOKIE
+                _cacheService.Remove(sessionId);
+                session.Expires = DateTime.Now.AddDays(-999);
                 filterContext.Result = RedirectToAction("Index", "Login");
                 return;
             }
