@@ -685,8 +685,22 @@ namespace Resource.Controllers
                         date = row.GetCell(10).DateCellValue;
                     }
                 }
-                var sellPriceRange = _fieldService.GetFieldsByKey(media.IsHot == true ? "HotSellPriceRange" : "SellPriceRange").ToList();
-                var marketPriceRange = _fieldService.GetFieldsByKey("ExportPrice").ToList();
+                var sellKey = "SellPriceRange";
+                var marketKey = "ExportPrice";
+                if (media.MediaType.CallIndex == "douyin" || media.MediaType.CallIndex == "redbook")
+                {
+                    sellKey = "SellPriceRangeByR&D";
+                    marketKey = "SellPriceRangeByR&D";
+                }
+                else
+                {
+                    if (media.IsHot == true)
+                    {
+                        sellKey = "HotSellPriceRange";
+                    }
+                }
+                var sellPriceRange = _fieldService.GetFieldsByKey(sellKey).ToList();
+                var marketPriceRange = _fieldService.GetFieldsByKey(marketKey).ToList();
                 for (int j = 0; j < adpostionNames.Count; j++)
                 {
                     var name = adpostionNames[j];
@@ -972,8 +986,15 @@ namespace Resource.Controllers
             entity.IsRecommend = false;
             entity.IsTop = false;
             //媒体价格
-            var sellPriceRange = _fieldService.GetFieldsByKey("SellPriceRange").ToList();
-            var marketPriceRange = _fieldService.GetFieldsByKey("ExportPrice").ToList();
+            var sellKey = "SellPriceRange";
+            var marketKey = "ExportPrice";
+            if (viewModel.MediaTypeIndex == "douyin"|| viewModel.MediaTypeIndex == "redbook")
+            {
+                sellKey = "SellPriceRangeByR&D";
+                marketKey = "SellPriceRangeByR&D";
+            }
+            var sellPriceRange = _fieldService.GetFieldsByKey(sellKey).ToList();
+            var marketPriceRange = _fieldService.GetFieldsByKey(marketKey).ToList();
             foreach (var viewModelMediaPrice in viewModel.MediaPrices)
             {
                 MediaPrice price = new MediaPrice();
@@ -1132,8 +1153,22 @@ namespace Resource.Controllers
                 }
             }
             //价格
-            var sellPriceRange = _fieldService.GetFieldsByKey(entity.IsHot == true ? "HotSellPriceRange" : "SellPriceRange").ToList();
-            var marketPriceRange = _fieldService.GetFieldsByKey("ExportPrice").ToList();
+            var sellKey = "SellPriceRange";
+            var marketKey = "ExportPrice";
+            if (viewModel.MediaTypeIndex == "douyin" || viewModel.MediaTypeIndex == "redbook")
+            {
+                sellKey = "SellPriceRangeByR&D";
+                marketKey = "SellPriceRangeByR&D";
+            }
+            else
+            {
+                if (entity.IsHot==true)
+                {
+                    sellKey = "HotSellPriceRange";
+                }
+            }
+            var sellPriceRange = _fieldService.GetFieldsByKey(sellKey).ToList();
+            var marketPriceRange = _fieldService.GetFieldsByKey(marketKey).ToList();
             foreach (var viewModelMediaPrice in viewModel.MediaPrices)
             {
                 if (string.IsNullOrWhiteSpace(viewModelMediaPrice.Id))
@@ -1238,11 +1273,16 @@ namespace Resource.Controllers
 
             if (entity.IsTop != true)
             {
-                var sellPriceRange = _fieldService.GetFieldsByKey(entity.IsHot == true ? "HotSellPriceRange" : "SellPriceRange").ToList();
-                foreach (var entityMediaPrice in entity.MediaPrices)
+                //小红书和抖音不影响
+                if (entity.MediaType.CallIndex!="redbook"|| entity.MediaType.CallIndex != "douyin")
                 {
-                    entityMediaPrice.SellPrice = SetSalePrice(Convert.ToDecimal(entityMediaPrice.PurchasePrice), sellPriceRange);
+                    var sellPriceRange = _fieldService.GetFieldsByKey(entity.IsHot == true ? "HotSellPriceRange" : "SellPriceRange").ToList();
+                    foreach (var entityMediaPrice in entity.MediaPrices)
+                    {
+                        entityMediaPrice.SellPrice = SetSalePrice(Convert.ToDecimal(entityMediaPrice.PurchasePrice), sellPriceRange);
+                    }
                 }
+                
             }
 
             _mediaService.Update(entity);

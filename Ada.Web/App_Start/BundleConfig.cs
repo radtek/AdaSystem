@@ -512,7 +512,9 @@ namespace Ada.Web
             // jqLabelauty
             bundles.Add(new ScriptBundle("~/plugins/jqLabelautyScript").Include(
                 "~/Scripts/plugins/jqLabelauty/jquery-labelauty.js"));
-
+            // jqtagcanvas
+            bundles.Add(new ScriptBundle("~/plugins/tagcanvas").Include(
+                "~/Scripts/plugins/tagcanvas/jquery.tagcanvas.min.js"));
             //===========================前端=============================
             //bootstrap 4.0
             bundles.Add(new StyleBundle("~/WebGlobal/bootstrapStyle").Include(

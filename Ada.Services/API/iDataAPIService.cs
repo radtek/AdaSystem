@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Ada.Core;
+using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.API;
 using Ada.Core.Domain.Resource;
 using Ada.Core.Tools;
@@ -22,12 +23,14 @@ namespace Ada.Services.API
         private readonly IDbContext _dbContext;
         private readonly IAPIInterfacesService _apiInterfacesService;
         private readonly IRepository<Media> _mediaRepository;
+        private readonly IRepository<Field> _fieldRepository;
         public ILog Log { get; set; }
-        public iDataAPIService(IAPIInterfacesService apiInterfacesService, IDbContext dbContext, IRepository<Media> mediaRepository)
+        public iDataAPIService(IAPIInterfacesService apiInterfacesService, IDbContext dbContext, IRepository<Media> mediaRepository, IRepository<Field> fieldRepository)
         {
             _apiInterfacesService = apiInterfacesService;
             _dbContext = dbContext;
             _mediaRepository = mediaRepository;
+            _fieldRepository = fieldRepository;
         }
 
         public RequestResult GetWeinXinInfo(BaseParams baseParams)
@@ -229,6 +232,7 @@ namespace Ada.Services.API
                     {
                         break;
                     }
+                    var brands = _fieldRepository.LoadEntities(d => d.FieldType.CallIndex == "Brand").Select(d => d.Text).ToList();
                     media.CollectionDate = DateTime.Now;
                     foreach (var articleData in result.data)
                     {
@@ -241,7 +245,7 @@ namespace Ada.Services.API
                             //article.OriginUrl = articleData.originUrl;
                             article.Biz = articleData.biz;
                             article.CommentCount = articleData.commentCount;
-                            article.Content = articleData.content;
+                            article.Content = GetBrands(articleData.content, brands); ;
                             article.IsTop = articleData.isTop;
                             article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
                                 ? (DateTime?)null
@@ -262,7 +266,7 @@ namespace Ada.Services.API
                             //article.OriginUrl = articleData.originUrl;
                             article.Biz = articleData.biz;
                             article.CommentCount = articleData.commentCount;
-                            article.Content = articleData.content;
+                            article.Content = GetBrands(articleData.content, brands); ;
                             article.IsTop = articleData.isTop;
                             article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
                                 ? (DateTime?)null
@@ -491,6 +495,7 @@ namespace Ada.Services.API
                                     var resultArticle = JsonConvert.DeserializeObject<WeiXinProJSON>(htmlstrArticle);
                                     if (resultArticle.data.Count > 0)
                                     {
+                                        var brands = _fieldRepository.LoadEntities(d => d.FieldType.CallIndex == "Brand").Select(d => d.Text).ToList();
                                         foreach (var articleData in resultArticle.data)
                                         {
                                             var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
@@ -501,7 +506,7 @@ namespace Ada.Services.API
                                                 article.IsOriginal = articleData.original;
                                                 article.Biz = articleData.biz;
                                                 article.CommentCount = articleData.commentCount;
-                                                article.Content = articleData.content;
+                                                article.Content = GetBrands(articleData.content,brands);
                                                 article.IsTop = articleData.isTop;
                                                 article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
                                                     ? (DateTime?)null
@@ -521,7 +526,7 @@ namespace Ada.Services.API
                                                 article.IsOriginal = articleData.original;
                                                 article.Biz = articleData.biz;
                                                 article.CommentCount = articleData.commentCount;
-                                                article.Content = articleData.content;
+                                                article.Content = GetBrands(articleData.content, brands);
                                                 article.IsTop = articleData.isTop;
                                                 article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
                                                     ? (DateTime?)null
@@ -873,6 +878,36 @@ namespace Ada.Services.API
             return HttpUtility.Post(apiInfo.APIUrl, postdata);
             
         }
-        
+
+        private static string GetBrands(string content, List<string> brands)
+        {
+            string htmlstr = string.Empty;
+            int request = 1;
+            while (request <= 3)
+            {
+                try
+                {
+                    htmlstr = HttpUtility.Post(
+                        "http://120.76.205.241:8000/nlp/segment/bitspaceman?apikey=aHkIQg6KZL5nKgqhcAbrT7AYq484DkAfmFzd8rBgYDrK6CItsvAAOWwz7BiFkoQx",
+                        new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("text", content) });
+                    request = 9999;
+                }
+                catch (Exception)
+                {
+                    request++;
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(htmlstr))
+            {
+                var resultJson = JsonConvert.DeserializeObject<BitspacemanJSON>(htmlstr);
+                if (resultJson.wordList.Any())
+                {
+                    var words = resultJson.wordList.Where(d => d.length > 1 && brands.Contains(d.word)).Select(d => d.word);
+                    words = words.Distinct().ToList();
+                    return string.Join(",", words);
+                }
+            }
+            return null;
+        }
     }
 }

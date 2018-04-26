@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Data.Entity.SqlServer;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Ada.Core;
 using Ada.Core.Domain;
+using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.API;
 using Ada.Core.Domain.QuartzTask;
 using Ada.Core.Domain.Resource;
@@ -15,6 +17,7 @@ using Ada.Core.Tools;
 using Ada.Core.ViewModel.API.iDataAPI;
 using Ada.Data;
 using Ada.Services.API;
+using Ada.Services.Cache;
 using log4net;
 using Newtonsoft.Json;
 using Quartz;
@@ -89,6 +92,7 @@ namespace QuartzTask.Jobs
     public static class WeiXinJob
     {
         private static readonly ILog Logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly MemoryCache Cache = MemoryCache.Default;
         public static void GetInfoAndArticle(IJobExecutionContext context)
         {
             using (var db = new AdaEFDbcontext())
@@ -209,6 +213,14 @@ namespace QuartzTask.Jobs
                                                 var resultArticle = JsonConvert.DeserializeObject<WeiXinProJSON>(htmlstrArticle);
                                                 if (resultArticle.data.Count > 0)
                                                 {
+                                                    //var cacheObj = Cache.Get("Brand");
+                                                    if (Cache.Get("Brand") == null)
+                                                    {
+                                                        var temp = db.Set<Field>().Where(d => d.FieldType.CallIndex == "Brand").Select(d => d.Text).ToList();
+                                                        var policy = new CacheItemPolicy() { AbsoluteExpiration = ObjectCache.InfiniteAbsoluteExpiration };
+                                                        Cache.Set("Brand", temp, policy);
+                                                    }
+                                                    List<string> brands = Cache.Get("Brand") as List<string>;
                                                     foreach (var articleData in resultArticle.data)
                                                     {
                                                         var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
@@ -219,7 +231,7 @@ namespace QuartzTask.Jobs
                                                             article.IsOriginal = articleData.original;
                                                             article.Biz = articleData.biz;
                                                             article.CommentCount = articleData.commentCount;
-                                                            article.Content = articleData.content;
+                                                            article.Content = GetBrands(articleData.content,brands);
                                                             article.IsTop = articleData.isTop;
                                                             article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
                                                                 ? (DateTime?)null
@@ -238,7 +250,7 @@ namespace QuartzTask.Jobs
                                                             article.IsOriginal = articleData.original;
                                                             article.Biz = articleData.biz;
                                                             article.CommentCount = articleData.commentCount;
-                                                            article.Content = articleData.content;
+                                                            article.Content = GetBrands(articleData.content, brands);
                                                             article.IsTop = articleData.isTop;
                                                             article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
                                                                 ? (DateTime?)null
@@ -298,5 +310,37 @@ namespace QuartzTask.Jobs
 
             }
         }
+
+        private static string GetBrands(string content,List<string> brands)
+        {
+            string htmlstr = string.Empty;
+            int request = 1;
+            while (request <= 3)
+            {
+                try
+                {
+                    htmlstr= HttpUtility.Post(
+                        "http://120.76.205.241:8000/nlp/segment/bitspaceman?apikey=aHkIQg6KZL5nKgqhcAbrT7AYq484DkAfmFzd8rBgYDrK6CItsvAAOWwz7BiFkoQx",
+                        new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("text", content) });
+                    request = 9999;
+                }
+                catch (Exception)
+                {
+                    request++;
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(htmlstr))
+            {
+                var resultJson = JsonConvert.DeserializeObject<BitspacemanJSON>(htmlstr);
+                if (resultJson.wordList.Any())
+                {
+                    var words = resultJson.wordList.Where(d => d.length > 1 && brands.Contains(d.word)).Select(d => d.word);
+                    words = words.Distinct().ToList();
+                    return string.Join(",", words);
+                }
+            }
+            return null;
+        }
+
     }
 }

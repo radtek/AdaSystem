@@ -11,7 +11,10 @@ using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.Domain.Resource;
+using Ada.Core.Tools;
+using Ada.Core.ViewModel.API.iDataAPI;
 using Ada.Services.Cache;
+using Newtonsoft.Json;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -22,6 +25,7 @@ namespace Ada.Web.Controllers
         private readonly IRepository<BusinessOrderDetail> _temp;
         private readonly IRepository<Media> _media;
         private readonly IRepository<Field> _fieldRepository;
+        private readonly IRepository<MediaArticle> _mediaArticleRepository;
         private readonly IRepository<MediaPrice> _mediaPrice;
         private readonly IRepository<MediaType> _mediaType;
         private readonly IRepository<PurchaseOrderDetail> _ptemp;
@@ -38,7 +42,8 @@ namespace Ada.Web.Controllers
             IRepository<BusinessOrder> businessOrder,
             IRepository<MediaType> mediaType,
             IRepository<Field> fieldRepository,
-            ICacheService cacheService)
+            ICacheService cacheService,
+            IRepository<MediaArticle> mediaArticleRepository)
         {
             _dbContext = dbContext;
             _ptemp = ptemp;
@@ -48,6 +53,7 @@ namespace Ada.Web.Controllers
             _mediaPrice = mediaPrice;
             _fieldRepository = fieldRepository;
             _cacheService = cacheService;
+            _mediaArticleRepository = mediaArticleRepository;
         }
 
         public ActionResult CheckOrder()
@@ -129,21 +135,11 @@ namespace Ada.Web.Controllers
         public ActionResult UpdateMedia()
         {
 
-            var medias = _media.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "weixin").ToList();
-            //int start = medias.Count;
-            //var last = medias.Distinct(new FastPropertyComparer<Media>("MediaID"));
-            //var end = last.Count();
-            int i = 0;
-            foreach (var media in medias)
-            {
-                if (string.IsNullOrWhiteSpace(media.MediaID))
-                {
-                    media.IsDelete = true;
-                    i++;
-                }
-            }
+           
+           var count= _mediaArticleRepository.Update(d => d.Media.MediaType.CallIndex == "weixin",
+                a => new MediaArticle() {Content = null});
             _dbContext.SaveChanges();
-            return Content("成功更新" + i + "个");
+            return Content("成功更新" + count + "个");
             //return Content("原有：" + start + ",去重后：" + end);
 
 
@@ -291,7 +287,7 @@ namespace Ada.Web.Controllers
 
         public ActionResult Temp()
         {
-            string path = Server.MapPath("~/upload/hot.xlsx");
+            string path = Server.MapPath("~/upload/sell.xlsx");
             int count = 0;
             using (FileStream ms = new FileStream(path, FileMode.Open))
             {
@@ -303,35 +299,35 @@ namespace Ada.Web.Controllers
                 {
                     return Content("此文件没有导入数据，请填充数据再进行导入");
                 }
-                //List<Field> list = new List<Field>();
-                //for (int i = 1; i <= sheet.LastRowNum; i++)
-                //{
-                //    IRow row = sheet.GetRow(i);
-                //    var text = row.GetCell(0)?.ToString();
-                //    var value = row.GetCell(1)?.ToString();
-                //    var sort = row.GetCell(2)?.ToString();
-                //    Field field = new Field();
-                //    field.Id = IdBuilder.CreateIdNum();
-                //    field.FieldTypeId = "X1804191503140072";
-                //    field.Text = text;
-                //    field.Value = value;
-                //    field.Taxis = Convert.ToInt32(sort);
-                //    list.Add(field);
-                //    count++;
-                //}
-                //_fieldRepository.Add(list);
-                List<string> list = new List<string>();
+                List<Field> list = new List<Field>();
                 for (int i = 1; i <= sheet.LastRowNum; i++)
                 {
                     IRow row = sheet.GetRow(i);
-                    var id = row.GetCell(0)?.ToString();
-                    if (!string.IsNullOrWhiteSpace(id))
-                    {
-                        list.Add(id);
-                    }
+                    var text = row.GetCell(0)?.ToString();
+                    var value = row.GetCell(1)?.ToString();
+                    var sort = row.GetCell(2)?.ToString();
+                    Field field = new Field();
+                    field.Id = IdBuilder.CreateIdNum();
+                    field.FieldTypeId = "X1804261113343734";
+                    field.Text = text;
+                    field.Value = value;
+                    field.Taxis = Convert.ToInt32(sort);
+                    list.Add(field);
+                    count++;
                 }
+                _fieldRepository.Add(list);
+                //List<string> list = new List<string>();
+                //for (int i = 1; i <= sheet.LastRowNum; i++)
+                //{
+                //    IRow row = sheet.GetRow(i);
+                //    var id = row.GetCell(0)?.ToString();
+                //    if (!string.IsNullOrWhiteSpace(id))
+                //    {
+                //        list.Add(id);
+                //    }
+                //}
 
-                count = _media.Update(d => list.Contains(d.Id), m => new Media() { IsHot = true });
+                //count = _media.Update(d => list.Contains(d.Id), m => new Media() { IsHot = true });
 
                 _dbContext.SaveChanges();
             }
@@ -380,7 +376,7 @@ namespace Ada.Web.Controllers
                     var mediaId = row.GetCell(0)?.ToString();
                     //var linkname = row.GetCell(1)?.ToString();
                     var linkId = row.GetCell(2)?.ToString();
-                   var media= _media.LoadEntities(d => d.Id == mediaId.Trim()).FirstOrDefault();
+                    var media = _media.LoadEntities(d => d.Id == mediaId.Trim()).FirstOrDefault();
                     if (media == null) continue;
                     media.LinkManId = linkId;
                     count++;
@@ -389,6 +385,73 @@ namespace Ada.Web.Controllers
                 _dbContext.SaveChanges();
             }
             return Content("成功更换" + count + "条资源");
+        }
+
+        public ActionResult Brand()
+        {
+            string path = Server.MapPath("~/upload/brand.xlsx");
+            int count = 0;
+            using (FileStream ms = new FileStream(path, FileMode.Open))
+            {
+                //创建工作薄
+                IWorkbook wk = new XSSFWorkbook(ms);
+                //1.获取第一个工作表
+                ISheet sheet = wk.GetSheetAt(0);
+                if (sheet.LastRowNum <= 1)
+                {
+                    return Content("此文件没有导入数据，请填充数据再进行导入");
+                }
+                IList<string> list = new List<string>();
+                for (int i = 1; i <= sheet.LastRowNum; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+                    var brand = row.GetCell(0)?.ToString();
+                    if (!string.IsNullOrWhiteSpace(brand))
+                    {
+                        brand = brand.Trim();
+                        list.Add(brand);
+                    }
+                }
+                //去重
+                var result = list.Distinct();
+                List<Field> fields = new List<Field>();
+                foreach (var item in result)
+                {
+                    Field field = new Field();
+                    field.Id = IdBuilder.CreateIdNum();
+                    field.FieldTypeId = "X1804131418551871";
+                    field.Text = item;
+                    field.Value = item;
+                    field.Taxis = 0;
+                    fields.Add(field);
+                }
+
+                count = fields.Count;
+                if (fields.Any())
+                {
+                    _fieldRepository.Add(fields);
+                    _dbContext.SaveChanges();
+                }
+
+            }
+            return Content("成功导入" + count + "条品牌");
+        }
+
+        public ActionResult Bitspaceman()
+        {
+            var result = HttpUtility.Post(
+                  "http://120.76.205.241:8000/nlp/segment/bitspaceman?apikey=aHkIQg6KZL5nKgqhcAbrT7AYq484DkAfmFzd8rBgYDrK6CItsvAAOWwz7BiFkoQx",
+                  new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("text", "骆驼罩杯们姨妈别克隆重的来向你们宣布一个消息我们的微信小程序“张大奕说”在 1月22日晚20点 将首次上线 日后将与淘宝同步上新以后在微信里也可以放肆的买买买了而且拼团优惠券巨划算，优惠不重样你们想要的通通有有木有很激动~~~“张大奕说”是姨妈自己取的名字虽然被说像脱口秀的名字哈哈哈但是我觉得很好啊换种方式陪伴在你们身边听姨妈继续碎碎念继续给你们种下一片大草原小程序首次上新，可能会有一些不足就让我们一起成长吧~从无到有的过程真的很值得期待然后带大家正式认识一下我们的“张大奕说”") });
+            if (!string.IsNullOrWhiteSpace(result))
+            {
+                var resultJson = JsonConvert.DeserializeObject<BitspacemanJSON>(result);
+                var brands = _fieldRepository.LoadEntities(d => d.FieldType.CallIndex == "Brand").Select(d => d.Text).ToList();
+                var words = resultJson.wordList.Where(d => d.length > 1 && brands.Contains(d.word)).Select(d => d.word);
+                words = words.Distinct().ToList();
+                return Content(string.Join(",", words));
+            }
+
+            return Content(result);
         }
         private string GetDouYinId(string url)
         {

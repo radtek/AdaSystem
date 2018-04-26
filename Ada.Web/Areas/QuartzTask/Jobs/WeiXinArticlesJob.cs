@@ -105,6 +105,7 @@ namespace QuartzTask.Jobs
                                     }
                                     if (result.data.Count > 0)
                                     {
+                                        
                                         foreach (var articleData in result.data)
                                         {
                                             var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
