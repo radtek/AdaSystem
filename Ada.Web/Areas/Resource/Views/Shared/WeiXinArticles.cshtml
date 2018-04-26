@@ -18,6 +18,19 @@
     }).OrderBy(d => d.Date).ToList();
     var maxRead = articles.Max(d => d.AveRead) ?? 0;
     var maxLike = articles.Max(d => d.AvgLike) ?? 0;
+    //取内容
+    var contents = Model.MediaArticles.Where(d => !string.IsNullOrWhiteSpace(d.Content)).OrderByDescending(d => d.PublishDate).Take(100).Select(d => d.Content);
+    var brands = new List<string>();
+    foreach (var content in contents)
+    {
+        var temp = content.Split(',').ToList();
+        brands.AddRange(temp);
+    }
+    brands = brands.Distinct().ToList();
+    if (!brands.Any())
+    {
+        brands.Add("暂无数据");
+    }
 }
 
 <div class="row">
@@ -130,60 +143,85 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h3>品牌提及 <small>根据账号历史发文的品牌提及,判断账号可接的广告品类</small></h3>
+            </div>
+            <div class="ibox-content" style="height: 300px;">
+                <div id="myCanvasContainer"  class="text-center">
+                    <canvas id="myCanvas" width='500' height="250">
+                        <p>暂无数据</p>
+                    </canvas>
+                </div>
+                <div id="tags">
+                    <ul>
+                        @foreach (var item in brands)
+                        {
+                            <li><a href="javascript:;">@item</a></li>
+                        }
+                    </ul>
+                </div>
+                
 
+            </div>
+        </div>
+    </div>
+</div>
 <script>
-            function initCharts() {
-                var myChart = echarts.init(document.getElementById('flot-dashboard-chart'));
-                var option = {
-                    tooltip : {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        data:['阅读数','点赞数']
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            magicType : {show: true, type: ['line', 'bar']},
-                            restore : {show: true}
-                        }
-                    },
-                    calculable: true,
-                    xAxis : [
-                        {
-                            type : 'category',
-                            data : @Html.Raw(Json.Encode(articles.Select(d => d.Date)))
-                        }
-                    ],
-                    yAxis: [
-                        {
-                            type: 'value',
-                            name: '阅读数',
-                            min: 0,
-                            max: @maxRead
-                        }, {
-                            type: 'value',
-                            name: '点赞数',
-                            min: 0,
-                            max: @maxLike
-                        }
-                    ],
-                    series : [
-                        {
-                            name:'阅读数',
-                            type:'bar',
-                            data:@Html.Raw(Json.Encode(articles.Select(d => d.AveRead)))
+    function initCharts() {
+        var myChart = echarts.init(document.getElementById('flot-dashboard-chart'));
+        var option = {
+            tooltip : {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['阅读数','点赞数']
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    magicType : {show: true, type: ['line', 'bar']},
+                    restore : {show: true}
+                }
+            },
+            calculable: true,
+            xAxis : [
+                {
+                    type : 'category',
+                    data : @Html.Raw(Json.Encode(articles.Select(d => d.Date)))
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '阅读数',
+                    min: 0,
+                    max: @maxRead
+                }, {
+                    type: 'value',
+                    name: '点赞数',
+                    min: 0,
+                    max: @maxLike
+                }
+            ],
+            series : [
+                {
+                    name:'阅读数',
+                    type:'bar',
+                    data:@Html.Raw(Json.Encode(articles.Select(d => d.AveRead)))
 
-                        },
-                        {
-                            name:'点赞数',
-                            type: 'bar',
-                            yAxisIndex: 1,
-                            data:@Html.Raw(Json.Encode(articles.Select(d => d.AvgLike)))
+                },
+                {
+                    name:'点赞数',
+                    type: 'bar',
+                    yAxisIndex: 1,
+                    data:@Html.Raw(Json.Encode(articles.Select(d => d.AvgLike)))
 
-                        }
-                    ]
-                };
-                myChart.setOption(option);
-            }
+                }
+            ]
+        };
+        myChart.setOption(option);
+    }
 </script>

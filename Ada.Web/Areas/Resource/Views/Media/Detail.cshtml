@@ -288,6 +288,7 @@
 @section Scripts {
     @Scripts.Render("~/plugins/footableV3")
     @Scripts.Render("~/plugins/echarts")
+    @Scripts.Render("~/plugins/tagcanvasScript")
     <script>
         @if (Model.MediaArticles.Any())
         {
@@ -298,7 +299,25 @@
                 });
             </text>
         }
-
+        @if (Model.MediaType.CallIndex=="weixin")
+        {
+            <text>
+        $(function () {
+            if(!$('#myCanvas').tagcanvas({
+                textColour: '#ff0000',
+                //outlineColour: '#ff00ff',
+                reverse: true,
+                textHeight: 25,
+                depth: 0.8,
+                maxSpeed: 0.05,
+                //zoom:1.5
+            },'tags')) {
+                // something went wrong, hide the canvas container
+                $('#myCanvasContainer').hide();
+            }
+        });
+            </text>
+        }
 
     </script>
 }
