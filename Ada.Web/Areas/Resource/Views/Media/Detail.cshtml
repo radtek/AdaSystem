@@ -27,7 +27,7 @@
 @Html.Partial("Bread")
 
 
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content">
     <div class="row m-b-lg m-t-lg">
         <div class="col-md-6">
 
@@ -304,8 +304,8 @@
             <text>
         $(function () {
             if(!$('#myCanvas').tagcanvas({
-                textColour: '#ff0000',
-                //outlineColour: '#ff00ff',
+                textColour: '#1c84c6',
+                outlineColour: '#1c84c6',
                 reverse: true,
                 textHeight: 25,
                 depth: 0.8,
@@ -315,7 +315,26 @@
                 // something went wrong, hide the canvas container
                 $('#myCanvasContainer').hide();
             }
+            if (!$('#myCanvas1').tagcanvas({
+                textColour: '#ed5565',
+                outlineColour: '#ed5565',
+                reverse: true,
+                textHeight: 25,
+                depth: 0.8,
+                maxSpeed: 0.05,
+                //zoom:1.5
+            }, 'tags1')) {
+                // something went wrong, hide the canvas container
+                $('#myCanvasContainer1').hide();
+            }
         });
+
+                function showArticles(id,kw) {
+                    $("#modalView").load("@Url.Action("Articles")?id="+id+"&kw="+kw,
+                        function () {
+                            $('#modalView .modal').modal('show');
+                        });
+                }
             </text>
         }
 

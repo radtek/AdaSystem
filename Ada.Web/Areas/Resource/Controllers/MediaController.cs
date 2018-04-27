@@ -203,7 +203,9 @@ namespace Resource.Controllers
                     jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
                     jo.Add("媒体说明", media.Content);
                     jo.Add("备注说明", media.Remark);
-                    jo.Add("平均浏览数", media.AvgReadNum);
+                    jo.Add("平均头条浏览数", media.AvgReadNum);
+                    jo.Add("月发布频次", media.PublishFrequency);
+                    jo.Add("月发文总数", media.MonthPostNum);
                     jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
                     jo.Add("经办媒介", media.Transactor);
                 }
@@ -988,7 +990,7 @@ namespace Resource.Controllers
             //媒体价格
             var sellKey = "SellPriceRange";
             var marketKey = "ExportPrice";
-            if (viewModel.MediaTypeIndex == "douyin"|| viewModel.MediaTypeIndex == "redbook")
+            if (viewModel.MediaTypeIndex == "douyin" || viewModel.MediaTypeIndex == "redbook")
             {
                 sellKey = "SellPriceRangeByR&D";
                 marketKey = "SellPriceRangeByR&D";
@@ -1162,7 +1164,7 @@ namespace Resource.Controllers
             }
             else
             {
-                if (entity.IsHot==true)
+                if (entity.IsHot == true)
                 {
                     sellKey = "HotSellPriceRange";
                 }
@@ -1274,7 +1276,7 @@ namespace Resource.Controllers
             if (entity.IsTop != true)
             {
                 //小红书和抖音不影响
-                if (entity.MediaType.CallIndex!="redbook"|| entity.MediaType.CallIndex != "douyin")
+                if (entity.MediaType.CallIndex != "redbook" || entity.MediaType.CallIndex != "douyin")
                 {
                     var sellPriceRange = _fieldService.GetFieldsByKey(entity.IsHot == true ? "HotSellPriceRange" : "SellPriceRange").ToList();
                     foreach (var entityMediaPrice in entity.MediaPrices)
@@ -1282,7 +1284,7 @@ namespace Resource.Controllers
                         entityMediaPrice.SellPrice = SetSalePrice(Convert.ToDecimal(entityMediaPrice.PurchasePrice), sellPriceRange);
                     }
                 }
-                
+
             }
 
             _mediaService.Update(entity);
@@ -1325,6 +1327,17 @@ namespace Resource.Controllers
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             return View(entity);
+        }
+        [AllowAnonymous]
+        public ActionResult Articles(string id, string kw = null)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(kw))
+            {
+                return PartialView("Articles", entity.MediaArticles.OrderByDescending(d => d.PublishDate).Take(20).ToList());
+            }
+            return PartialView("Articles", entity.MediaArticles.Where(d => !string.IsNullOrWhiteSpace(d.Content) && d.Content.Contains(kw)).OrderByDescending(d => d.PublishDate).Take(20).ToList());
+
         }
         [HttpPost]
         [ValidateAntiForgeryToken]

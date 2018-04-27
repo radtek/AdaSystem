@@ -46,7 +46,7 @@ namespace Ada.Web.Controllers
                 return View(loginModel);
             }
 
-            //if (loginModel.LoginName!="18607961688")
+            //if (loginModel.LoginName != "18607961688")
             //{
             //    //校验验证码
             //    var obj = _cacheService.GetObject<string>(loginModel.LoginName);
@@ -118,7 +118,8 @@ namespace Ada.Web.Controllers
                 return Json(new { State = 0, Msg = "此手机号暂未开通会员，请联系我们处理！" });
             }
             //生成随机码 3分钟有效
-            var code = Utils.RndomStr(5);
+            RandomHelper random=new RandomHelper();
+            var code = random.GenerateCheckCodeNum(5);
             _cacheService.Put(phone, code, new TimeSpan(0, 3, 0));
             //发送短信
             _messageService.Send("SMS", new Dictionary<string, object> {

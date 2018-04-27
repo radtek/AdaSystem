@@ -342,7 +342,12 @@ formatter.mediaLogo = function (value, row) {
     if (arr.length > 0) {
         vg = "<div class='p-xxs text-center'>" + arr.join(' ') + "</div>";
     }
-    return '<div class="p-xxs text-center">' + logo + '</div>' + vg;
+    var detail = "";
+    if (row.MediaTypeIndex == "weixin" || row.MediaTypeIndex == "douyin" || row.MediaTypeIndex == "sinablog") {
+        detail = "<a class='btn btn-warning btn-outline btn-xs' href='/Media/Detail/" + row.Id + "' target='_blank'><i class='fa fa-info'></i> 查看详情</a>";
+    }
+    var line = detail ? "<div class='p-xxs text-center'>" + detail + "</div>" : "";
+    return '<div class="p-xxs text-center">' + logo + '</div>' + vg + line;
 };
 formatter.mediaInfo = function (value, row) {
     var sex = "";
@@ -382,12 +387,20 @@ formatter.mediaInfo = function (value, row) {
     if (row.MediaTypeIndex == "weixin") {
         weixinid = "<span class='btn btn-warning btn-xs btn-outline'><i class='fa fa-weixin'></i> 微信号：" + row.MediaID + " </span>";
     }
+    if (row.MediaTypeIndex == "weixin") {
+        value = " <a class='label' href='http://weixin.sogou.com/weixin?type=1&query=" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> " + value +  "</a>";
+    } else {
+        if (row.MediaLink) {
+            value = " <a class='label' href='" + row.MediaLink + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
+        }
+    }
     var line1 = "<div class='p-xxs'>" + sex + isAuth+ aType + value + "</div>";
     var line2 = weixinid ? "<div class='p-xxs'>" + weixinid + "</div>" : "";
     var line3 = area ? "<div class='p-xxs'>" + area + "</div>" : "";
     var line4 = tags ? "<div class='p-xxs'>" + tags + "</div>" : "";
     var line5 = "<div class='p-xxs'>" + fans + "</div>";
-    return line1 + line2 + line3 + line4 + line5;
+    
+    return line1 + line2 + line3 + line4 + line5 ;
 };
 formatter.mediaPrice = function (value, row) {
     var arr = [];
@@ -467,7 +480,7 @@ formatter.mediaData = function (value, row) {
 formatter.mediaOperation = function (value, row) {
 
     return "<div class='p-xxs'><div class='btn-group'>" +
-        "<a class='btn btn-danger btn-outline btn-sm' href='/Media/Detail/" + value + "' target='_blank'><i class='fa fa-comment'></i> 评价详情</a> " +
+        "<a class='btn btn-danger btn-outline btn-sm' href='/Media/CommentDetail/" + value + "' target='_blank'><i class='fa fa-comment'></i> 评价详情</a> " +
         "<button class='btn btn-danger btn-outline btn-sm' onclick='todo();'><i class='fa fa-cart-arrow-down'></i> 加入分组</button>" +
         "</div></div>";
 };

@@ -9,47 +9,22 @@
 @{
     Layout = "~/Views/Shared/_Layout_Web.cshtml";
     ViewBag.Title = Model.MediaName + " 详情";
-    var service = EngineContext.Current.Resolve<IMediaCommentService>();
-    var orderservice = EngineContext.Current.Resolve<IOrderDetailCommentService>();
-    var pageSize = 10;
-    MediaCommentView view1 = new MediaCommentView()
-    {
-        MediaId = Model.Id,
-        limit = pageSize,
-        offset = 0
-    };
-    MediaCommentView view2 = new MediaCommentView()
-    {
-        MediaId = Model.Id,
-        limit = pageSize,
-        offset = 0
-    };
-    var ordercomments = orderservice.LoadComments(view1).ToList();
-    var totalPages1 = Math.Max(((int)view1.total + pageSize - 1) / pageSize, 1); //总页数
-    var comments = service.LoadEntitiesFilter(view2).ToList();
-    var totalPages2 = Math.Max(((int)view2.total + pageSize - 1) / pageSize, 1); //总页数
+
 }
 
-
-
 <div class="wrapper wrapper-content animated fadeInRight">
-    @Html.AntiForgeryToken()
-    <input type="hidden" id="MediaId" value="@Model.Id" />
-    <input type="hidden" id="PageSize" value="@pageSize" />
     <div class="row m-b-lg m-t-lg">
-        <div class="col-md-12">
+        <div class="col-md-6">
 
             <div class="profile-image">
                 @if (string.IsNullOrWhiteSpace(Model.MediaLogo))
                 {
-                    var logo = Model.MediaType.CallIndex + ".jpg";
-                    <img src="/Images/medialogo/@logo" class="img-circle circle-border m-b-md" alt="profile">
+                    <i class="fa @Model.MediaType.Image fa-5x"></i>
                 }
                 else
                 {
                     <img src="@Model.MediaLogo" class="img-circle circle-border m-b-md" alt="profile">
                 }
-
             </div>
             <div class="profile-info">
                 <div class="">
@@ -63,8 +38,9 @@
                                 <small class='label label-info'><i class='fa fa-map-marker'></i> @Model.Area</small>
                             }*@
                         <h4>@Model.Abstract</h4>
+
                         <div class='p-xxs'>
-                            @foreach (var tag in Model.MediaTags.Take(8))
+                            @foreach (var tag in Model.MediaTags.Take(6))
                             {
                                 <span class='label label-success'><i class='fa fa-tag'></i> @tag.TagName</span>
                             }
@@ -73,324 +49,141 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-3">
+            <table class="table small m-b-xs">
+                <tbody>
+                    <tr>
 
+                        <td>
+                            <strong>@Utils.ShowFansNum(Model.FansNum)</strong> 粉丝数(万)
+                        </td>
+                        <td>
+                            <strong>@Model.MediaPrices.Sum(d => d.BusinessOrderDetails.Count)</strong> 交易次数
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
 
 
     </div>
-
-
-    @*<div class="row">
-            <div class="col-lg-12">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        @{
-                            var invalid = Model.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd");
-                        }
-                        <h3>资源报价 <small>价格有效期：@invalid</small></h3>
-
-                    </div>
-                    <div class="ibox-content">
-                        <div class="row">
-                            @foreach (var item in Model.MediaPrices)
-                            {
-                                <div class="col-lg-2">
-
-                                    <div class="widget  p-xs text-center">
-                                        <div class="m-b-md">
-                                            <h2 class="m-xs text-danger"><i class="fa fa-jpy"></i> @item.PurchasePrice</h2>
-                                            <h3 class="font-bold no-margins">
-                                                @item.AdPositionName
-                                            </h3>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>*@
-
-
 
 
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>满意度评价</h5>
-                    <div class="ibox-tools">
-                        @{
+                    @{
+                        var invalid = Model.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd");
+                    }
+                    <h3>资源报价 <small>价格有效期：@invalid</small></h3>
 
-                            var avg1 = view1.AvgScore != null ? Math.Round((double)view1.AvgScore, 1) : 0;
-                        }
-                        <span class="label label-warning-light">综合评分 @avg1</span>
-                        @*<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="fa fa-star"></i> 星级
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li>
-                                    <a href="#">
-                                        全部
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-star text-danger"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                    </a>
-                                </li>
-
-                            </ul>*@
-                    </div>
                 </div>
                 <div class="ibox-content">
+                    <div class="row">
+                        @foreach (var item in Model.MediaPrices)
+                        {
+                            <div class="col-lg-2">
 
-                    @if (view1.total > 0)
-                    {
-                        <div class="scroll_content" id="comment1">
-                            <div class="feed-activity-list">
-
-                                @foreach (var item in ordercomments)
-                                {
-                                    var name = item.Transactor.Substring(0, 1) + "**";
-                                    <div class="feed-element">
-                                        <div class="media-body">
-                                            <small class="pull-right">@Utils.ToRead(item.CommentDate)</small>
-                                            <strong>@name</strong><br>
-                                            <small>
-                                                @for (int i = 0; i < item.Score; i++)
-                                                {
-                                                    <i class="fa fa-star text-danger"></i>
-                                                }
-                                                @for (int i = 0; i < 5 - item.Score; i++)
-                                                {
-                                                    <i class="fa fa-star text-muted"></i>
-                                                }
-                                            </small>
-                                            <div class="well">
-                                                @item.Content
-                                            </div>
-
-                                        </div>
+                                <div class="widget  p-xs text-center">
+                                    <div class="m-b-md">
+                                        <h2 class="m-xs text-danger"><i class="fa fa-jpy"></i> @item.SellPrice</h2>
+                                        <h3 class="font-bold no-margins">
+                                            @item.AdPositionName
+                                        </h3>
                                     </div>
-                                }
-                            </div>
-                            <div class="loading m-t-xs text-center">
-                                <div class="sk-spinner sk-spinner-fading-circle">
-                                    <div class="sk-circle1 sk-circle"></div>
-                                    <div class="sk-circle2 sk-circle"></div>
-                                    <div class="sk-circle3 sk-circle"></div>
-                                    <div class="sk-circle4 sk-circle"></div>
-                                    <div class="sk-circle5 sk-circle"></div>
-                                    <div class="sk-circle6 sk-circle"></div>
-                                    <div class="sk-circle7 sk-circle"></div>
-                                    <div class="sk-circle8 sk-circle"></div>
-                                    <div class="sk-circle9 sk-circle"></div>
-                                    <div class="sk-circle10 sk-circle"></div>
-                                    <div class="sk-circle11 sk-circle"></div>
-                                    <div class="sk-circle12 sk-circle"></div>
                                 </div>
                             </div>
-
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="alert alert-warning">
-                            暂无相关评论信息
-                        </div>
-                    }
-
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-lg-6">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>配合度评价</h5>
-                    <div class="ibox-tools">
-                        @{
-
-                            var avg2 = view2.AvgScore != null ? Math.Round((double)view2.AvgScore, 1) : 0;
                         }
-                        <span class="label label-warning-light">综合评分 @avg2</span>
-                        @*<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="fa fa-star"></i> 星级
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li>
-                                    <a href="#">
-                                        全部
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-star text-danger"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                        <i class="fa fa-star text-danger"></i>
-                                    </a>
-                                </li>
 
-                            </ul>*@
                     </div>
                 </div>
-                <div class="ibox-content">
-
-                    @if (view2.total > 0)
-                    {
-                        <div class="scroll_content" id="comment2">
-                            <div class="feed-activity-list">
-
-                                @foreach (var item in comments)
-                                {
-                                    var name = item.Transactor.Substring(0, 1) + "**";
-                                    <div class="feed-element">
-                                        <div class="media-body">
-                                            <small class="pull-right">@Utils.ToRead(item.CommentDate)</small>
-                                            <strong>@name</strong><br>
-                                            <small>
-                                                @for (int i = 0; i < item.Score; i++)
-                                                {
-                                                    <i class="fa fa-star text-danger"></i>
-                                                }
-                                                @for (int i = 0; i < 5 - item.Score; i++)
-                                                {
-                                                    <i class="fa fa-star text-muted"></i>
-                                                }
-                                            </small>
-                                            <div class="well">
-                                                @item.Content
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                            <div class="loading m-t-xs text-center">
-                                <div class="sk-spinner sk-spinner-fading-circle">
-                                    <div class="sk-circle1 sk-circle"></div>
-                                    <div class="sk-circle2 sk-circle"></div>
-                                    <div class="sk-circle3 sk-circle"></div>
-                                    <div class="sk-circle4 sk-circle"></div>
-                                    <div class="sk-circle5 sk-circle"></div>
-                                    <div class="sk-circle6 sk-circle"></div>
-                                    <div class="sk-circle7 sk-circle"></div>
-                                    <div class="sk-circle8 sk-circle"></div>
-                                    <div class="sk-circle9 sk-circle"></div>
-                                    <div class="sk-circle10 sk-circle"></div>
-                                    <div class="sk-circle11 sk-circle"></div>
-                                    <div class="sk-circle12 sk-circle"></div>
-                                </div>
-                            </div>
-
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="alert alert-warning">
-                            暂无相关评论信息
-                        </div>
-                    }
-
-                </div>
             </div>
-
         </div>
     </div>
+    @if (Model.MediaArticles.Any())
+    {
+        if (Model.MediaType.CallIndex == "weixin")
+        {
+            @Html.Partial("WeiXinArticles", Model)
+        }
+        if (Model.MediaType.CallIndex == "sinablog")
+        {
+            @Html.Partial("WeiboArticles", Model)
+        }
+        if (Model.MediaType.CallIndex == "douyin")
+        {
+            @Html.Partial("DouYinArticles", Model)
+        }
+
+    }
+
+
+
+
 </div>
+
+
 @section Styles {
+    @Styles.Render("~/plugins/footableV3Styles")
 }
 @section Scripts {
-    @Scripts.Render("~/plugins/moment")
+    @Scripts.Render("~/plugins/footableV3")
+    @Scripts.Render("~/plugins/echarts")
+    @Scripts.Render("~/plugins/tagcanvasScript")
     <script>
-        var page1 = 0,page2=0;
+
+        @if (Model.MediaArticles.Any())
+        {
+            <text>
         $(function () {
-            $('.scroll_content').slimscroll({
-                height: '500px'
-            });
-            initScroll('comment1',
-                function() {
-                    page1++;
-                    if (page1<@totalPages1) {
-                        nextPage('comment1',"@Url.Action("GetOrderComments")", page1*@pageSize);
-                    } else {
-                        $("#comment1 .loading").html("已经到底啦");
-                    }
-                });
-            initScroll('comment2',
-                function() {
-                    page2++;
-                    if (page2<@totalPages2) {
-                        nextPage('comment2',"@Url.Action("GetMediaComments")", page2*@pageSize);
-                    } else {
-                        $("#comment2 .loading").html("已经到底啦");
-                    }
-                });
+            $('.table').footable();
+            initCharts();
         });
+            </text>
+        }
+        @if (Model.MediaType.CallIndex=="weixin")
+        {
+            <text>
+        $(function () {
+            if(!$('#myCanvas').tagcanvas({
+                textColour: '#1c84c6',
+                outlineColour: '#1c84c6',
+                reverse: true,
+                textHeight: 25,
+                depth: 0.8,
+                maxSpeed: 0.05,
+                //zoom:1.5
+            },'tags')) {
+                // something went wrong, hide the canvas container
+                $('#myCanvasContainer').hide();
+            }
+            if (!$('#myCanvas1').tagcanvas({
+                textColour: '#ed5565',
+                outlineColour: '#ed5565',
+                reverse: true,
+                textHeight: 25,
+                depth: 0.8,
+                maxSpeed: 0.05,
+                //zoom:1.5
+            }, 'tags1')) {
+                // something went wrong, hide the canvas container
+                $('#myCanvasContainer1').hide();
+            }
+        });
+
+        function showArticles(id,kw) {
+            $("#modalView").load("@Url.Action("Articles")?id="+id+"&kw="+kw,
+                function () {
+                    $('#modalView .modal').modal('show');
+                });
+        }
+            </text>
+        }
 
 
     </script>
 }
+
 

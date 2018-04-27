@@ -55,10 +55,25 @@ namespace Ada.Web.Controllers
         {
             return View();
         }
+        public ActionResult CommentDetail(string id)
+        {
+            var media = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            return View(media);
+        }
         public ActionResult Detail(string id)
         {
             var media = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             return View(media);
+        }
+        public ActionResult Articles(string id, string kw = null)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(kw))
+            {
+                return PartialView("Articles", entity.MediaArticles.OrderByDescending(d => d.PublishDate).Take(20).ToList());
+            }
+            return PartialView("Articles", entity.MediaArticles.Where(d => !string.IsNullOrWhiteSpace(d.Content) && d.Content.Contains(kw)).OrderByDescending(d => d.PublishDate).Take(20).ToList());
+
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
@@ -75,6 +90,7 @@ namespace Ada.Web.Controllers
                     MediaName = d.MediaName,
                     MediaTypeIndex = d.MediaType.CallIndex,
                     MediaID = d.MediaID,
+                    MediaLink = d.MediaLink,
                     IsAuthenticate = d.IsAuthenticate,
                     IsOriginal = d.IsOriginal,
                     FansNum = Utils.ShowFansNum(d.FansNum),

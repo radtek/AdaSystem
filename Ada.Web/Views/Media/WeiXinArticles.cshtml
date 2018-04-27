@@ -1,5 +1,4 @@
-﻿@using Ada.Core.Domain.Resource
-@using Ada.Core.Tools
+﻿@using Ada.Core.Tools
 @model Ada.Core.Domain.Resource.Media
 @{
     var update = Model.CollectionDate?.ToString("yyyy-MM-dd");
@@ -20,7 +19,7 @@
     var maxRead = articles.Max(d => d.AveRead) ?? 0;
     var maxLike = articles.Max(d => d.AvgLike) ?? 0;
     //取内容
-    var contents = Model.MediaArticles.Where(d => !string.IsNullOrWhiteSpace(d.Content)).OrderByDescending(d => d.PublishDate).Take(100).Select(d => d.Content);
+    var contents = Model.MediaArticles.Where(d => !string.IsNullOrWhiteSpace(d.Content)).OrderByDescending(d => d.PublishDate).Take(100).Select(d=>d.Content);
     var allBrands = new List<string>();
     foreach (var content in contents)
     {

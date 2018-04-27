@@ -163,6 +163,7 @@
     <Compile Include="Tools\Encrypt.cs" />
     <Compile Include="Tools\FastPropertyComparer.cs" />
     <Compile Include="Tools\HttpUtility.cs" />
+    <Compile Include="Tools\RandomHelper.cs" />
     <Compile Include="Tools\SerializeHelper.cs" />
     <Compile Include="Tools\Thumbnail.cs" />
     <Compile Include="Tools\Utils.cs" />

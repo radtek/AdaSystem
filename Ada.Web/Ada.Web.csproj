@@ -2939,10 +2939,15 @@
     <Content Include="Views\Media\RedBook.cshtml" />
     <Content Include="Views\UserCenter\Index.cshtml" />
     <Content Include="Views\Media\Filter.cshtml" />
-    <Content Include="Views\Media\Detail.cshtml" />
+    <Content Include="Views\Media\CommentDetail.cshtml" />
     <Content Include="Views\Media\FilterWeiXin.cshtml" />
     <Content Include="Views\Media\FilterBlog.cshtml" />
     <Content Include="Views\Media\FilterDouYin.cshtml" />
+    <Content Include="Views\Media\Detail.cshtml" />
+    <Content Include="Views\Media\WeiboArticles.cshtml" />
+    <Content Include="Views\Media\WeiXinArticles.cshtml" />
+    <Content Include="Views\Media\DouYinArticles.cshtml" />
+    <Content Include="Views\Media\Articles.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
