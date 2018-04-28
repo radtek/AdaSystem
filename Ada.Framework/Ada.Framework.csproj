@@ -130,6 +130,7 @@
     <Compile Include="Filter\AdaExceptionAttribute.cs" />
     <Compile Include="Filter\AdaValidateAntiForgeryTokenAttribute.cs" />
     <Compile Include="Filter\BaseController.cs" />
+    <Compile Include="Filter\DeleteFileAttribute.cs" />
     <Compile Include="Filter\FormValueRequiredAttribute.cs" />
     <Compile Include="HtmlHelperExtensions.cs" />
     <Compile Include="Log\LogModule.cs" />

@@ -344,10 +344,11 @@ formatter.mediaLogo = function (value, row) {
     }
     var detail = "";
     if (row.MediaTypeIndex == "weixin" || row.MediaTypeIndex == "douyin" || row.MediaTypeIndex == "sinablog") {
-        detail = "<a class='btn btn-warning btn-outline btn-xs' href='/Media/Detail/" + row.Id + "' target='_blank'><i class='fa fa-info'></i> 查看详情</a>";
+        detail = "<a class='btn btn-warning btn-outline btn-xs' href='/Media/Detail/" + row.Id + "' target='_blank'><i class='fa fa-info-circle'></i> 查看详情</a>";
     }
     var line = detail ? "<div class='p-xxs text-center'>" + detail + "</div>" : "";
-    return '<div class="p-xxs text-center">' + logo + '</div>' + vg + line;
+    var comment = "<div class='p-xxs text-center'><a class='btn btn-danger btn-outline btn-xs' href='/Media/CommentDetail/" + row.Id + "' target='_blank'><i class='fa fa-comment'></i> 评价详情</a></div>";
+    return '<div class="p-xxs text-center">' + logo + '</div>' + vg + line + comment;
 };
 formatter.mediaInfo = function (value, row) {
     var sex = "";
@@ -363,9 +364,9 @@ formatter.mediaInfo = function (value, row) {
     }
     var aType = "";
     if (row.AuthenticateType == "黄V") {
-        aType= " <span class='label label-warning'>V</span> ";
+        aType = " <span class='label label-warning'>V</span> ";
     } else if (row.AuthenticateType == "蓝V") {
-        aType= " <span class='label label-success'>V</span> ";
+        aType = " <span class='label label-success'>V</span> ";
     } else if (row.AuthenticateType == "达人") {
         aType = " <span class='label label-danger'><i class='fa fa-star-o'></i></span> ";
     }
@@ -388,19 +389,19 @@ formatter.mediaInfo = function (value, row) {
         weixinid = "<span class='btn btn-warning btn-xs btn-outline'><i class='fa fa-weixin'></i> 微信号：" + row.MediaID + " </span>";
     }
     if (row.MediaTypeIndex == "weixin") {
-        value = " <a class='label' href='http://weixin.sogou.com/weixin?type=1&query=" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> " + value +  "</a>";
+        value = " <a class='label' href='http://weixin.sogou.com/weixin?type=1&query=" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
     } else {
         if (row.MediaLink) {
             value = " <a class='label' href='" + row.MediaLink + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
         }
     }
-    var line1 = "<div class='p-xxs'>" + sex + isAuth+ aType + value + "</div>";
+    var line1 = "<div class='p-xxs'>" + sex + isAuth + aType + value + "</div>";
     var line2 = weixinid ? "<div class='p-xxs'>" + weixinid + "</div>" : "";
     var line3 = area ? "<div class='p-xxs'>" + area + "</div>" : "";
     var line4 = tags ? "<div class='p-xxs'>" + tags + "</div>" : "";
     var line5 = "<div class='p-xxs'>" + fans + "</div>";
-    
-    return line1 + line2 + line3 + line4 + line5 ;
+
+    return line1 + line2 + line3 + line4 + line5;
 };
 formatter.mediaPrice = function (value, row) {
     var arr = [];
@@ -480,7 +481,6 @@ formatter.mediaData = function (value, row) {
 formatter.mediaOperation = function (value, row) {
 
     return "<div class='p-xxs'><div class='btn-group'>" +
-        "<a class='btn btn-danger btn-outline btn-sm' href='/Media/CommentDetail/" + value + "' target='_blank'><i class='fa fa-comment'></i> 评价详情</a> " +
         "<button class='btn btn-danger btn-outline btn-sm' onclick='todo();'><i class='fa fa-cart-arrow-down'></i> 加入分组</button>" +
         "</div></div>";
 };
@@ -695,10 +695,10 @@ function initDateRange($datepicker) {
     });
 }
 
-function exportDate() {
+function exportDate(id) {
     swal({
-        title: "您确定吗?",
-        text: "确认要导出数据吗?",
+        title: "确认要导出数据吗?",
+        text: "注：每次最多导出100条数据，每日导出次数为5次;",
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#DD6B55",
@@ -707,13 +707,35 @@ function exportDate() {
         closeOnConfirm: false,
         showLoaderOnConfirm: true
     }, function () {
-        $('#searchFrm')[0].submit();
-        swal({
-            title: "数据正在导出中...",
-            text: "请耐心等待",
-            timer: 2000,
-            showConfirmButton: false
+        var parameters = {};
+        parameters.MediaTypeId = id;
+        parameters.MediaTypeIndex = $("#MediaTypeIndex").val();
+        parameters=searchFrm.queryParams(parameters);
+        $.ajax({
+            type: "post",
+            headers: {
+                '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
+            },
+            url: "/Media/Export",
+            data: parameters,
+            success: function (data) {
+                if (data.State == 1) {
+                    swal({
+                        title: "导出成功",
+                        text: "正在下载中...",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    window.location.href = "/Media/Download?file=" + data.Msg;
+                } else {
+                    swal("消息", data.Msg, "warning");
+                }
+            },
+            error: function () {
+                swal("错误", "系统错误", "error");
+            }
         });
+
     });
 }
 

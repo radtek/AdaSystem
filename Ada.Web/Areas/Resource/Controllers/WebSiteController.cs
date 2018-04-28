@@ -127,11 +127,15 @@ namespace Resource.Controllers
                     var tags = row.GetCell(8)?.ToString();
                     if (!string.IsNullOrWhiteSpace(tags))
                     {
-                        var mediaTag = _mediaTagRepository.LoadEntities(d => d.IsDelete == false && d.TagName == tags)
-                            .FirstOrDefault();
-                        if (mediaTag != null)
+                        var arr = tags.Trim().Replace("，", ",").Split(',').ToList();
+                        var mediaTag =
+                            _mediaTagRepository.LoadEntities(d => d.IsDelete == false && arr.Contains(d.TagName));
+                        if (mediaTag.Any())
                         {
-                            media.MediaTags.Add(mediaTag);
+                            foreach (var tag in mediaTag)
+                            {
+                                media.MediaTags.Add(tag);
+                            }
                         }
                     }
                     media.MediaLink = row.GetCell(9)?.ToString();
@@ -143,7 +147,7 @@ namespace Resource.Controllers
                     media.Content = row.GetCell(15)?.ToString();
                     media.Transactor = row.GetCell(16)?.ToString();
                     media.TransactorId = row.GetCell(17)?.ToString();
-                    
+                    media.AddedDate=DateTime.Now;
                     media.Status = Consts.StateNormal;
                     media.IsSlide = true;
                     _mediaService.Add(media);

@@ -131,6 +131,7 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
     <div class="ibox-content m-b-sm border-bottom">
         <div class="row">
             @Html.AntiForgeryToken()
+            
             <div class="col-sm-12">
                 <div class="form-group">
                     <label class="control-label">媒体分类</label>
@@ -320,7 +321,7 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
 
 </form>
 
-
+<input type="hidden" name="MediaTypeIndex" id="MediaTypeIndex" value="@Model.CallIndex" />
 
 
 <div class="row">
@@ -339,6 +340,9 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
         <div class="form-group">
             <button type="button" class="btn btn-primary btn-outline" data-toggle="modal" data-target="#searchModal">
                 <i class="fa fa-search"></i> 批量查询
+            </button>
+            <button type="button" class="btn btn-warning btn-outline" onclick="exportDate('@Model.Id')">
+                <i class="fa fa-download"></i> 导出资源
             </button>
         </div>
     </div>

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -8,6 +10,8 @@ using Ada.Core.Tools;
 using Ada.Core.ViewModel.Customer;
 using Ada.Services.Cache;
 using Ada.Services.Customer;
+using ClosedXML.Excel;
+using Newtonsoft.Json;
 
 namespace Ada.Web.Models
 {
@@ -59,6 +63,23 @@ namespace Ada.Web.Models
             CurrentUser = user;
             ViewBag.CurrentUser = CurrentUser;
             _cacheService.Put(sessionId,user,new TimeSpan(1,0,0,0));
+        }
+        /// <summary>
+        /// 导出数据
+        /// </summary>
+        /// <param name="jsonStr"></param>
+        /// <returns></returns>
+        public string ExportData(string jsonStr)
+        {
+            var dt = JsonConvert.DeserializeObject<DataTable>(jsonStr);
+            var fileName = "UserExport_" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx";
+            var fullPath = Server.MapPath("~/upload/" + fileName);
+            using (var workbook = new XLWorkbook())
+            {
+                workbook.Worksheets.Add(dt, "江西微广");
+                workbook.SaveAs(fullPath);
+            }
+            return fileName;
         }
     }
 }

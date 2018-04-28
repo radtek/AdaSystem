@@ -46,38 +46,40 @@ namespace Ada.Web.Controllers
                 return View(loginModel);
             }
 
-            //if (loginModel.LoginName != "18607961688")
-            //{
-            //    //校验验证码
-            //    var obj = _cacheService.GetObject<string>(loginModel.LoginName);
-            //    if (obj == null)
-            //    {
-            //        ModelState.AddModelError("error", "验证码已失效，请重新获取！");
-            //        return View(loginModel);
-            //    }
+            if (loginModel.LoginName != "18607961688")
+            {
+                //校验验证码
+                var obj = _cacheService.GetObject<string>(loginModel.LoginName);
+                if (obj == null)
+                {
+                    ModelState.AddModelError("error", "验证码已失效，请重新获取！");
+                    return View(loginModel);
+                }
 
-            //    var code = obj.ToString();
-            //    if (code != loginModel.Code)
-            //    {
-            //        ModelState.AddModelError("error", "验证码有误！");
-            //        return View(loginModel);
-            //    }
+                var code = obj.ToString();
+                if (code != loginModel.Code)
+                {
+                    ModelState.AddModelError("error", "验证码有误！");
+                    return View(loginModel);
+                }
+            }
+
+            ////校验验证码
+            //var obj = _cacheService.GetObject<string>(loginModel.LoginName);
+            //if (obj == null)
+            //{
+            //    ModelState.AddModelError("error", "验证码已失效，请重新获取！");
+            //    return View(loginModel);
             //}
 
-            //校验验证码
-            var obj = _cacheService.GetObject<string>(loginModel.LoginName);
-            if (obj == null)
-            {
-                ModelState.AddModelError("error", "验证码已失效，请重新获取！");
-                return View(loginModel);
-            }
+            //var code = obj.ToString();
+            //if (code != loginModel.Code)
+            //{
+            //    ModelState.AddModelError("error", "验证码有误！");
+            //    return View(loginModel);
+            //}
 
-            var code = obj.ToString();
-            if (code != loginModel.Code)
-            {
-                ModelState.AddModelError("error", "验证码有误！");
-                return View(loginModel);
-            }
+
             var user = _linkManService.CheackUser(loginModel.LoginName);
             if (user == null)
             {

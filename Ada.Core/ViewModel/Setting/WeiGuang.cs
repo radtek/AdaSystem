@@ -25,16 +25,18 @@ namespace Ada.Core.ViewModel.Setting
             ReturnDays2 = 365;
             RequestArticleCount = 1;
             RequestMediaCount = 1;
+            UserExportRows = 10;
+            UserExportTimes = 5;
         }
         /// <summary>
         /// 媒介资源查询数
         /// </summary>
-        [Display(Name = "媒介资源查询数")]
+        [Display(Name = "资源查询数")]
         public int PurchaseSeachRows { get; set; }
         /// <summary>
         /// 销售资源查询数
         /// </summary>
-        [Display(Name = "销售资源查询数")]
+        [Display(Name = "资源查询数")]
         public int BusinessSeachRows { get; set; }
         /// <summary>
         /// 媒介资源导出数
@@ -46,6 +48,16 @@ namespace Ada.Core.ViewModel.Setting
         /// </summary>
         [Display(Name = "销售资源导出数")]
         public int BusinessExportRows { get; set; }
+        /// <summary>
+        /// 会员资源导出数
+        /// </summary>
+        [Display(Name = "会员资源导出数")]
+        public int UserExportRows { get; set; }
+        /// <summary>
+        /// 会员每日资源导出次数
+        /// </summary>
+        [Display(Name = "会员每日资源导出次数")]
+        public int UserExportTimes { get; set; }
         /// <summary>
         /// 销售订单导出数
         /// </summary>
