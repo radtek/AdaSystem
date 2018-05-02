@@ -112,14 +112,14 @@ namespace Resource.Controllers
         {
             List<Media> noDatas = new List<Media>();
             //找到没有的
-            if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaBatch))
             {
-                var names = viewModel.MediaNames.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
+                var names = viewModel.MediaBatch.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
                 int i = 0;
                 foreach (var name in names)
                 {
                     var temp = results.FirstOrDefault(d =>
-                        d.MediaName.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+                        d.MediaName.Equals(name, StringComparison.CurrentCultureIgnoreCase) || d.MediaID.Equals(name, StringComparison.CurrentCultureIgnoreCase));
                     if (temp == null)
                     {
                         noDatas.Add(new Media
@@ -134,30 +134,6 @@ namespace Resource.Controllers
                         temp.Taxis = i;
                     }
 
-                    i++;
-                }
-            }
-            if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
-            {
-                var ids = viewModel.MediaIDs.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
-                int i = 0;
-                foreach (var id in ids)
-                {
-                    var temp = results.FirstOrDefault(d =>
-                        d.MediaID.Equals(id, StringComparison.CurrentCultureIgnoreCase));
-                    if (temp == null)
-                    {
-                        noDatas.Add(new Media
-                        {
-                            MediaID = id,
-                            Taxis = i
-                        });
-                        //noDatas.Add(id);
-                    }
-                    else
-                    {
-                        temp.Taxis = i;
-                    }
                     i++;
                 }
             }
