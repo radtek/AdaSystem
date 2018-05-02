@@ -9,6 +9,10 @@ namespace Ada.Core.ViewModel
     [Serializable]
     public class BaseView
     {
+        public BaseView()
+        {
+            NoExistent=new List<string>();
+        }
         /// <summary>
         /// 当前页
         /// </summary>
@@ -45,5 +49,9 @@ namespace Ada.Core.ViewModel
         /// 经办人
         /// </summary>
         public List<string> Managers { get; set; }
+        /// <summary>
+        /// 不存在数据
+        /// </summary>
+        public List<string> NoExistent { get; set; }
     }
 }

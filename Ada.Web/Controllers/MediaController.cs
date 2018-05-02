@@ -31,13 +31,15 @@ namespace Ada.Web.Controllers
         private readonly IMediaCommentService _mediaCommentService;
         private readonly IOrderDetailCommentService _orderDetailCommentService;
         private readonly ICacheService _cacheService;
+        private readonly IMediaDevelopService _mediaDevelopService;
 
         public MediaController(IRepository<Media> repository,
             IMediaService service,
             IOrderDetailCommentService orderDetailCommentService,
             IMediaCommentService mediaCommentService,
             ISettingService settingService,
-            ICacheService cacheService)
+            ICacheService cacheService,
+            IMediaDevelopService mediaDevelopService)
         {
             _repository = repository;
             _service = service;
@@ -45,6 +47,7 @@ namespace Ada.Web.Controllers
             _mediaCommentService = mediaCommentService;
             _settingService = settingService;
             _cacheService = cacheService;
+            _mediaDevelopService = mediaDevelopService;
         }
         public ActionResult WeiXin()
         {
@@ -95,6 +98,7 @@ namespace Ada.Web.Controllers
             return Json(new
             {
                 viewModel.total,
+                no = viewModel.NoExistent,
                 rows = result.Select(d => new MediaView
                 {
                     Id = d.Id,
@@ -148,7 +152,7 @@ namespace Ada.Web.Controllers
             }
             if (times > setting.UserExportTimes)
             {
-                return Json(new {State = 0, Msg = "抱歉，今日导出的次数已用完！"});
+                return Json(new { State = 0, Msg = "抱歉，今日导出的次数已用完！" });
             }
 
             search.Status = Consts.StateNormal;
@@ -164,7 +168,42 @@ namespace Ada.Web.Controllers
             times++;
             var timeSpan = DateTime.Now.Date.AddDays(1) - DateTime.Now;
             _cacheService.Put(CurrentUser.Id + "UserExportTimes", times, timeSpan);
-            return Json(new {State = 1, Msg = ExportData(jObjects.ToString())});
+            return Json(new { State = 1, Msg = ExportData(jObjects.ToString()) });
+        }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult Develop(MediaDevelopView viewModel)
+        {
+            var medias = viewModel.MediaName.Replace("\r\n", ",").Trim(',').Split(',').ToList();
+            if (medias.Any())
+            {
+                List<MediaDevelop> list = new List<MediaDevelop>();
+                foreach (var name in medias)
+                {
+                    MediaDevelop entity = new MediaDevelop();
+                    entity.Id = IdBuilder.CreateIdNum();
+                    entity.AddedById = CurrentUser.Id;
+                    entity.AddedBy = CurrentUser.LoginName;
+                    entity.AddedDate = DateTime.Now;
+                    entity.SubBy = entity.AddedBy;
+                    entity.SubById = entity.AddedById;
+                    entity.MediaName = name;
+                    entity.Content = "来自网站申请。联系信息："+ "公司名称【" + CurrentUser.CommpanyName + "】，联系人【" + CurrentUser.Name + "】，联系电话【" + CurrentUser.LoginName+"】";
+                    entity.Status = Consts.StateLock;//待开发
+                    entity.MediaTypeId = viewModel.MediaTypeId;
+                    entity.SubDate = DateTime.Now;
+                    //进度记录
+                    MediaDevelopProgress progress = new MediaDevelopProgress();
+                    progress.Id = IdBuilder.CreateIdNum();
+                    progress.ProgressContent = "已提交申请";
+                    progress.Remark = "等待媒介认领资源。";
+                    progress.ProgressDate = DateTime.Now;
+                    entity.MediaDevelopProgresses.Add(progress);
+                    list.Add(entity);
+                }
+                _mediaDevelopService.AddRange(list);
+            }
+            return Json(new { State = 1, Msg = "申请成功" });
         }
         [HttpGet]
         [DeleteFile] //Action Filter, 下載完后自動刪除文件，這個屬性稍後解釋
@@ -328,116 +367,57 @@ namespace Ada.Web.Controllers
             foreach (var media in results.OrderBy(d => d.Taxis))
             {
                 var jo = new JObject();
+                jo.Add("媒体状态", string.IsNullOrWhiteSpace(media.Id) ? "不存在" : "正常");
+                jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
+                jo.Add("媒体名称", media.MediaName);
+                jo.Add("媒体ID", media.MediaID);
+                jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
                 switch (viewModel.MediaTypeIndex)
                 {
                     case "weixin":
-                        jo.Add("媒体编号", string.IsNullOrWhiteSpace(media.Id) ? "不存在的资源" : media.Id);
-                        jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
-                        jo.Add("媒体名称", media.MediaName);
-                        jo.Add("媒体ID", media.MediaID);
-                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
                         jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
-                        foreach (var mediaMediaPrice in media.MediaPrices)
-                        {
-                            var price = mediaMediaPrice.SellPrice ?? 0;
-                            jo.Add(mediaMediaPrice.AdPositionName, price);
-                        }
-                        jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
                         jo.Add("平均头条阅读数", media.AvgReadNum);
                         jo.Add("月发布频次", media.PublishFrequency);
                         jo.Add("最近月发文数", media.MonthPostNum);
                         jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
                         break;
                     case "sinablog":
-                        jo.Add("媒体编号", string.IsNullOrWhiteSpace(media.Id) ? "不存在的资源" : media.Id);
-                        jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
-                        jo.Add("媒体名称", media.MediaName);
                         jo.Add("媒体链接", media.MediaLink);
-                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
                         jo.Add("性别", media.Sex);
                         jo.Add("地区", media.Area);
                         jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
                         jo.Add("认证类型", media.AuthenticateType);
-                        foreach (var mediaMediaPrice in media.MediaPrices)
-                        {
-                            var price = mediaMediaPrice.SellPrice ?? 0;
-                            jo.Add(mediaMediaPrice.AdPositionName, price);
-                        }
-                        jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
                         jo.Add("平均转发数", media.TransmitNum);
                         jo.Add("平均评论数", media.CommentNum);
                         jo.Add("平均点赞数", media.LikesNum);
                         jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
                         break;
                     case "douyin":
-                        jo.Add("媒体编号", string.IsNullOrWhiteSpace(media.Id) ? "不存在的资源" : media.Id);
-                        jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
-                        jo.Add("媒体名称", media.MediaName);
                         jo.Add("媒体链接", media.MediaLink);
                         jo.Add("性别", media.Sex);
                         jo.Add("地区", media.Area);
-                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
                         jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
-                        foreach (var mediaMediaPrice in media.MediaPrices)
-                        {
-                            var price = mediaMediaPrice.SellPrice ?? 0;
-                            jo.Add(mediaMediaPrice.AdPositionName, price);
-                        }
-                        jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
                         jo.Add("平均转发数", media.TransmitNum);
                         jo.Add("平均浏览数", media.AvgReadNum);
                         jo.Add("平均评论数", media.CommentNum);
                         jo.Add("平均点赞数", media.LikesNum);
                         break;
                     case "redbook":
-                        jo.Add("媒体编号", string.IsNullOrWhiteSpace(media.Id) ? "不存在的资源" : media.Id);
-                        jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
-                        jo.Add("媒体名称", media.MediaName);
                         jo.Add("媒体链接", media.MediaLink);
                         jo.Add("地区", media.Area);
-                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
-                        foreach (var mediaMediaPrice in media.MediaPrices)
-                        {
-                            var price = mediaMediaPrice.SellPrice ?? 0;
-                            jo.Add(mediaMediaPrice.AdPositionName, price);
-                        }
-                        jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
                         jo.Add("平均点赞数", media.LikesNum);
                         break;
                     case "zhihu":
-                        jo.Add("媒体编号", string.IsNullOrWhiteSpace(media.Id) ? "不存在的资源" : media.Id);
-                        jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
-                        jo.Add("媒体名称", media.MediaName);
-                        jo.Add("媒体ID", media.MediaID);
                         jo.Add("媒体链接", media.MediaLink);
                         jo.Add("地区", media.Area);
-                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
-                        foreach (var mediaMediaPrice in media.MediaPrices)
-                        {
-                            var price = mediaMediaPrice.SellPrice ?? 0;
-                            jo.Add(mediaMediaPrice.AdPositionName, price);
-                        }
-                        jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
-                        break;
-                    default:
-                        jo.Add("媒体编号", string.IsNullOrWhiteSpace(media.Id) ? "不存在的资源" : media.Id);
-                        jo.Add("媒体类型", media.MediaType?.TypeName);
-                        jo.Add("媒体名称", media.MediaName);
-                        jo.Add("媒体ID", media.MediaID);
-                        jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
-                        jo.Add("媒体链接", media.MediaLink);
-                        jo.Add("性别", media.Sex);
-                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
-                        jo.Add("地区", media.Area);
-
-                        foreach (var mediaMediaPrice in media.MediaPrices)
-                        {
-                            var price = mediaMediaPrice.SellPrice ?? 0;
-                            jo.Add(mediaMediaPrice.AdPositionName, price);
-                        }
-                        jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
                         break;
                 }
+                foreach (var mediaMediaPrice in media.MediaPrices)
+                {
+                    var price = mediaMediaPrice.SellPrice ?? 0;
+                    jo.Add(mediaMediaPrice.AdPositionName, price);
+                }
+                jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
                 jObjects.Add(jo);
             }
             return jObjects;

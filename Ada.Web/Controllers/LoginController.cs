@@ -89,6 +89,7 @@ namespace Ada.Web.Controllers
             LinkManView viewModel = new LinkManView();
             viewModel.Id = user.Id;
             viewModel.CommpanyName = user.Commpany.Name;
+            viewModel.Name = user.Name;
             viewModel.LoginName = user.LoginName;
             viewModel.Phone = user.Phone;
             string sessionId = Guid.NewGuid().ToString("N");

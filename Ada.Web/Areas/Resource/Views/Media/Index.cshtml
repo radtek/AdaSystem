@@ -222,18 +222,13 @@
 
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                                 <div class="form-group">
-                                    @Html.LabelFor(d => d.MediaNames, Html.DisplayNameFor(d => d.MediaNames).ToString(), new { @class = "control-label" })
-                                    @Html.TextAreaFor(d => d.MediaNames, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
+                                    @Html.LabelFor(d => d.MediaBatch, Html.DisplayNameFor(d => d.MediaBatch).ToString(), new { @class = "control-label" })
+                                    @Html.TextAreaFor(d => d.MediaBatch, 4, 20, new { @class = "form-control", placeholder = "请输入媒体名称或者媒体ID，多个媒体查询，请用逗号隔开或者一行一个；同时支持复制粘贴的数据查询" })
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    @Html.LabelFor(d => d.MediaIDs, Html.DisplayNameFor(d => d.MediaIDs).ToString(), new { @class = "control-label" })
-                                    @Html.TextAreaFor(d => d.MediaIDs, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -345,15 +340,15 @@
                                                 {
                                                     if (item.AuthenticateType == "黄V")
                                                     {
-                                                        <span class='label label-warning'>V</span> 
+                                                        <span class='label label-warning'>V</span>
                                                     }
                                                     if (item.AuthenticateType == "蓝V")
                                                     {
-                                                        <span class='label label-success'>V</span> 
+                                                        <span class='label label-success'>V</span>
                                                     }
                                                     if (item.AuthenticateType == "达人")
                                                     {
-                                                        <span class="label label-danger"><i class='fa fa-star-o'></i></span> 
+                                                        <span class="label label-danger"><i class='fa fa-star-o'></i></span>
                                                     }
                                                 }
                                                 @if (item.MediaType.CallIndex == "weixin")
@@ -584,6 +579,13 @@
                 <text>
             $('.table').footable();
             new Clipboard('.btn-white');
+                </text>
+            }
+/**/
+            @if (Model.NoExistent.Any())
+            {
+                <text>
+                    swal("查询结果", "以下资源不存在：@string.Join(",",Model.NoExistent)", "warning");
                 </text>
             }
             //$(".wrapper.wrapper-content form").validate({

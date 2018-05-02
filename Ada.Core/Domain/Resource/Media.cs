@@ -178,6 +178,11 @@ namespace Ada.Core.Domain.Resource
         /// </summary>
         [Display(Name = "是否推荐")]
         public bool? IsRecommend { get; set; }
+        ///// <summary>
+        ///// 是否自营
+        ///// </summary>
+        //[Display(Name = "是否自营")]
+        //public bool? IsSelf { get; set; }
         /// <summary>
         /// 媒体状态
         /// </summary>

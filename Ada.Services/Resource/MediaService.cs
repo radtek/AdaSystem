@@ -212,13 +212,13 @@ namespace Ada.Services.Resource
             }
             if (!string.IsNullOrWhiteSpace(viewModel.AuthenticateType))
             {
-                allList = allList.Where(d => d.AuthenticateType==viewModel.AuthenticateType);
+                allList = allList.Where(d => d.AuthenticateType == viewModel.AuthenticateType);
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaBatch))
             {
                 viewModel.MediaBatch = viewModel.MediaBatch.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("，", ",").Replace(" ", ",");
                 var mediaNames = viewModel.MediaBatch.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
-                allList = allList.Where(d => mediaNames.Contains(d.MediaName)||mediaNames.Contains(d.MediaID));
+                allList = allList.Where(d => mediaNames.Contains(d.MediaName) || mediaNames.Contains(d.MediaID));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
             {
@@ -361,14 +361,31 @@ namespace Ada.Services.Resource
             }
             //allList = allList.Distinct();
             viewModel.total = allList.Count();
+            //找出不存在的
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaBatch))
+            {
+                var searchMedias = viewModel.MediaBatch.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
+                var searchCount = searchMedias.Count;
+                var resultCount = viewModel.total;
+                if (searchCount != resultCount)
+                {
+                    foreach (var item in searchMedias)
+                    {
+                        if (!allList.Any(d => d.MediaName.Contains(item) || d.MediaID.Contains(item)))
+                        {
+                            viewModel.NoExistent.Add(item);
+                        }
+                    }
+                }
+            }
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
             string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
             if (order == "desc")
             {
-                return allList.OrderByDescending(d => d.IsTop).ThenByDescending(d => d.IsHot).ThenByDescending(d => d.IsRecommend).ThenByDescending(d => d.Id).Skip(offset).Take(rows);
+                return allList.OrderByDescending(d => d.IsTop).ThenByDescending(d => d.IsHot).ThenByDescending(d => d.IsRecommend).ThenByDescending(d => d.MediaName).ThenByDescending(d => d.Id).Skip(offset).Take(rows);
             }
-            return allList.OrderByDescending(d => d.IsTop).ThenByDescending(d => d.IsHot).ThenByDescending(d => d.IsRecommend).ThenBy(d => d.Id).Skip(offset).Take(rows);
+            return allList.OrderByDescending(d => d.IsTop).ThenByDescending(d => d.IsHot).ThenByDescending(d => d.IsRecommend).ThenBy(d => d.MediaName).ThenBy(d => d.Id).Skip(offset).Take(rows);
         }
         public IQueryable<MediaView> LoadEntitiesFilters(MediaView viewModel)
         {

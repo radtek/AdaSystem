@@ -131,7 +131,7 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
     <div class="ibox-content m-b-sm border-bottom">
         <div class="row">
             @Html.AntiForgeryToken()
-            
+
             <div class="col-sm-12">
                 <div class="form-group">
                     <label class="control-label">媒体分类</label>
@@ -167,9 +167,9 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
                                 {
                                     <li><input type="radio" name="priceradio" data-labelauty="@item.Text" value="@item.Value"></li>
                                 }
-                                
+
                             </ul>
-                            
+
                         </div>
                         <div class="col-md-3">
                             <div class="input-daterange input-group">
@@ -184,14 +184,14 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
                                     </span>
                                 </div>
                             </div>
-                            
-                            
+
+
                         </div>
                     </div>
 
                 </div>
             </div>
-            
+
             <div class="col-sm-12">
                 <div class="form-group" id="fans">
 
@@ -294,27 +294,7 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
                 </button>
 
             </div>
-            <div class="modal inmodal" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content animated bounceInRight">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            <i class="fa fa-search modal-icon"></i>
-                            <h4 class="modal-title">批量查找媒体</h4>
-                            <small class="font-bold">注：输入媒体信息时，请确保一行一个</small>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <textarea class="form-control" placeholder="请输入 @Model.TypeName 信息名称或ID" rows="15" cols="3" id="MediaBatch"></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-                            <button type="button" class="btn btn-primary" onclick="searchTable();$('#searchModal').modal('hide');">查找</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
         </div>
 
     </div>
@@ -322,7 +302,7 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
 </form>
 
 <input type="hidden" name="MediaTypeIndex" id="MediaTypeIndex" value="@Model.CallIndex" />
-
+<input type="hidden" name="MediaTypeId" id="MediaTypeId" value="@Model.Id" />
 
 <div class="row">
     <div class="col-lg-12">
@@ -344,6 +324,48 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
             <button type="button" class="btn btn-warning btn-outline" onclick="exportDate('@Model.Id')">
                 <i class="fa fa-download"></i> 导出资源
             </button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal inmodal" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <i class="fa fa-search modal-icon"></i>
+                <h4 class="modal-title">批量查找媒体</h4>
+                <small class="font-bold">注：输入媒体信息时，请确保一行一个</small>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <textarea class="form-control" placeholder="请输入 @Model.TypeName 信息名称或ID" rows="15" cols="3" id="MediaBatch"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="searchTable();$('#searchModal').modal('hide');">查找</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal inmodal" id="resultModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInUp">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <i class="fa fa-search modal-icon"></i>
+                <h4 class="modal-title">批量查找结果</h4>
+                <small class="font-bold">以下资源信息不存在</small>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">返回关闭</button>
+                <button type="button" class="btn btn-primary ladda-button" data-style="zoom-in" onclick="develop();">申请开发</button>
+            </div>
         </div>
     </div>
 </div>

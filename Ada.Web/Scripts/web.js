@@ -256,13 +256,27 @@ searchFrm.queryParams = function (parameters) {
     });
     return parameters;
 }
-function initTooltip() {
-    $('[data-toggle="tooltip"]').tooltip();
+function onLoadSuccess(data) {
+    if ($("#MediaBatch").val()) {
+        if (data.no.length > 0) {
+            $.each(data.no,
+                function (k, v) {
+                    $('#resultModal .modal-body').append('<div class="checkbox checkbox-success checkbox-inline">' +
+                        '<input type = "checkbox" id = "inlineCheckbox' + k + '" name = "Develop" value = "' + v + '" checked = "" >' +
+                        '<label for="inlineCheckbox' + k + '"> ' + v + ' </label>' +
+                        '</div>');
+                });
+
+            $('#resultModal').modal('show');
+        }
+    }
+
 }
 
 function initFilter() {
     $('#searchModal').on('shown.bs.modal', function () {
         $("#MediaBatch").val("");
+        $('#resultModal .modal-body').empty();
     }).on('hidden.bs.modal', function () {
 
     });
@@ -710,7 +724,7 @@ function exportDate(id) {
         var parameters = {};
         parameters.MediaTypeId = id;
         parameters.MediaTypeIndex = $("#MediaTypeIndex").val();
-        parameters=searchFrm.queryParams(parameters);
+        parameters = searchFrm.queryParams(parameters);
         $.ajax({
             type: "post",
             headers: {
@@ -812,4 +826,38 @@ function starHtml(score) {
         html += '<i class="fa fa-star text-muted"></i>';
     }
     return html;
+}
+
+function develop() {
+    var arr = [], checkeds = $("[name='Develop']:checked");
+    $.each(checkeds,function() {
+        arr.push($(this).val());
+    });
+   
+    if (arr.length<=0) {
+        swal("消息", "请选择要申请开发的媒体", "warning");
+        return;
+    }
+    var subBtn = $('.ladda-button').ladda();
+    $.ajax({
+        type: "post",
+        headers: {
+            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
+        },
+        url: "/Media/Develop",
+        data: { MediaName: arr.join(','), MediaTypeId: $("#MediaTypeId").val() },
+        success: function (data) {
+            $('#resultModal').modal('hide');
+            swal("消息", data.Msg, "success");
+        },
+        error: function () {
+            swal("消息", "系统错误", "error");
+        },
+        beforeSend: function () {
+            subBtn.ladda('start');
+        },
+        complete: function () {
+            subBtn.ladda('stop');
+        }
+    });
 }

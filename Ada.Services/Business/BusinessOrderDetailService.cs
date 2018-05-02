@@ -87,7 +87,7 @@ namespace Ada.Services.Business
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeId))
             {
-                allList = allList.Where(d => d.MediaPrice.Media.MediaTypeId==viewModel.MediaTypeId);
+                allList = allList.Where(d => d.MediaPrice.Media.MediaTypeId == viewModel.MediaTypeId);
             }
             if (!string.IsNullOrWhiteSpace(viewModel.AdPositionName))
             {
@@ -286,31 +286,31 @@ namespace Ada.Services.Business
 
             }
             return (from b in businessOrders
-                          from p in purchaseOrders
-                              //双方都是已完成的状态
-                          where p.Status == Consts.PurchaseStatusSuccess &&
-                                b.Status == Consts.StateOK &&
-                                b.Id == p.BusinessOrderDetailId
-                          select new BusinessOrderDetailView
-                          {
-                              SellMoney = b.SellMoney,
-                              VerificationMoney = b.VerificationMoney,
-                              ConfirmVerificationMoney = b.ConfirmVerificationMoney,
-                              PurchaseMoney = p.PurchaseMoney,
-                              ProfitMoney = b.SellMoney - p.PurchaseMoney,
-                              Transactor = b.BusinessOrder.Transactor,
-                              TransactorId = b.BusinessOrder.TransactorId
-                          }).GroupBy(d => d.Transactor).Select(d => new BusinessPerformance
-                          {
-                              Transactor = d.Key,
-                              TotalSellMoney = d.Sum(o => o.SellMoney),
-                              TotalVerificationMoney = d.Sum(o => o.VerificationMoney),
-                              TotalConfirmVerificationMoney = d.Sum(o => o.ConfirmVerificationMoney),
-                              TotalPurchaseMoney = d.Sum(o => o.PurchaseMoney),
-                              TotalProfitMoney = d.Sum(o => o.ProfitMoney),
-                              Profit = d.Sum(o => o.ProfitMoney) / d.Sum(o => o.SellMoney) * 100,
+                    from p in purchaseOrders
+                        //双方都是已完成的状态
+                    where p.Status == Consts.PurchaseStatusSuccess &&
+                          b.Status == Consts.StateOK &&
+                          b.Id == p.BusinessOrderDetailId
+                    select new BusinessOrderDetailView
+                    {
+                        SellMoney = b.SellMoney,
+                        VerificationMoney = b.VerificationMoney,
+                        ConfirmVerificationMoney = b.ConfirmVerificationMoney,
+                        PurchaseMoney = p.PurchaseMoney,
+                        ProfitMoney = b.SellMoney - p.PurchaseMoney,
+                        Transactor = b.BusinessOrder.Transactor,
+                        TransactorId = b.BusinessOrder.TransactorId
+                    }).GroupBy(d => d.Transactor).Select(d => new BusinessPerformance
+                    {
+                        Transactor = d.Key,
+                        TotalSellMoney = d.Sum(o => o.SellMoney),
+                        TotalVerificationMoney = d.Sum(o => o.VerificationMoney),
+                        TotalConfirmVerificationMoney = d.Sum(o => o.ConfirmVerificationMoney),
+                        TotalPurchaseMoney = d.Sum(o => o.PurchaseMoney),
+                        TotalProfitMoney = d.Sum(o => o.ProfitMoney),
+                        Profit = d.Sum(o => o.SellMoney) == 0 ? 0 : d.Sum(o => o.ProfitMoney) / d.Sum(o => o.SellMoney) * 100,
 
-                          });
+                    });
         }
         /// <summary>
         /// 销售业绩统计(按月份分组)
@@ -340,8 +340,8 @@ namespace Ada.Services.Business
                         ProfitMoney = b.SellMoney - p.PurchaseMoney,
                         PublishDateStr = SqlFunctions.DateName("yyyy", p.PublishDate)
                                          + "年" +
-                                         SqlFunctions.StringConvert((decimal)SqlFunctions.DatePart("mm", p.PublishDate)).Trim()+"月"
-                        
+                                         SqlFunctions.StringConvert((decimal)SqlFunctions.DatePart("mm", p.PublishDate)).Trim() + "月"
+
                     }).GroupBy(d => d.PublishDateStr).Select(d => new BusinessPerformance
                     {
                         Month = d.Key,
@@ -350,7 +350,7 @@ namespace Ada.Services.Business
                         TotalConfirmVerificationMoney = d.Sum(o => o.ConfirmVerificationMoney),
                         TotalPurchaseMoney = d.Sum(o => o.PurchaseMoney),
                         TotalProfitMoney = d.Sum(o => o.ProfitMoney)
-                        
+
                     });
         }
         public void Update(BusinessOrderDetail entity)
