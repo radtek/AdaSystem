@@ -239,9 +239,9 @@ namespace Ada.Core.Domain.Resource
         [Display(Name = "媒体频道")]
         public string Channel { get; set; }
         /// <summary>
-        /// 配合度
+        /// 运营
         /// </summary>
-        [Display(Name = "配合度")]
+        [Display(Name = "运营")]
         public short? Cooperation { get; set; }
         /// <summary>
         /// 媒体类型

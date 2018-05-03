@@ -11,6 +11,7 @@
     var settingService = EngineContext.Current.Resolve<ISettingService>();
     var setConfig = settingService.GetSetting<WeiGuang>();
     var excelFields = fieldService.GetFieldsByKey(Model.CallIndex + "-excel");
+    var isData = new List<string>() { "weixin", "sinablog", "douyin", "redbook" };
     var areas = fieldService.GetFieldsByKey("Area").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var priceRange = new List<SelectListItem>();
     var fansRange = new List<SelectListItem>();
@@ -230,7 +231,7 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
         </div>
         <div class="ibox collapsed">
             <div class="ibox-title">
-                @if (Model.CallIndex == "weixin" || Model.CallIndex == "sinablog" || Model.CallIndex == "douyin")
+                @if (isData.Contains(Model.CallIndex))
                 {
                     <div class="ibox-tools">
                         <a class="collapse-link">
@@ -285,6 +286,10 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
                     @if (Model.CallIndex == "douyin")
                     {
                         @Html.Partial("FilterDouYin")
+                    }
+                    @if (Model.CallIndex == "redbook")
+                    {
+                        @Html.Partial("FilterRedBook")
                     }
                 </div>
 

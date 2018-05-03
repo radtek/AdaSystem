@@ -68,6 +68,10 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.Sex == viewModel.Sex);
             }
+            if (viewModel.Cooperation!=null)
+            {
+                allList = allList.Where(d => d.Cooperation == viewModel.Cooperation);
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
                 viewModel.search = viewModel.search.Trim();

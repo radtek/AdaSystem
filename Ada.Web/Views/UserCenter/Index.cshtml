@@ -12,7 +12,7 @@
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var tyeService = EngineContext.Current.Resolve<IMediaTypeService>();
     var purchaseStatus = fieldService.GetFieldsByKey("PurchaseStatus").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
-    var types = tyeService.LoadEntitiesFilter(new MediaTypeView()).OrderBy(d=>d.Taxis).Select(d => new SelectListItem { Text = d.TypeName, Value = d.Id }).ToList();
+    var types = tyeService.LoadEntitiesFilter(new MediaTypeView()).OrderBy(d => d.Taxis).Select(d => new SelectListItem { Text = d.TypeName, Value = d.Id }).ToList();
 }
 <div class="wrapper wrapper-content">
     <div class="row">
@@ -120,9 +120,9 @@
                                             <select name="MediaTypeId" id="MediaTypeId" class="form-control">
                                                 <option value="" selected="">不限</option>
                                                 @foreach (var item in types)
-                {
-                                <option value="@item.Value">@item.Text</option>
-}
+                                                {
+                                                    <option value="@item.Value">@item.Text</option>
+                                                }
                                             </select>
                                         </div>
                                     </div>
@@ -150,16 +150,16 @@
                                             <select name="PurchaseStatus" id="PurchaseStatus" class="form-control">
                                                 <option value="" selected="">不限</option>
                                                 @foreach (var item in purchaseStatus)
-                {
-                                <option value="@item.Value">@item.Text</option>
-}
+                                                {
+                                                    <option value="@item.Value">@item.Text</option>
+                                                }
                                             </select>
                                         </div>
                                     </div>
 
                                 </div>
                             </form>
-                            
+
                             <table id="table"></table>
                         </div>
                     </div>
@@ -194,13 +194,13 @@
                     refreshTable();
                 }, 500);
             });
-            $("#MediaName").add("#Remark").focus(function(){    
+            $("#MediaName").add("#Remark").focus(function(){
                 clearTimeout(timeoutId); // doesn't matter if it's 0
                 timeoutId = setTimeout(function () {
                     refreshTable();
                 }, 500);
             });
-            
+
             $("#MediaName").add("#Remark").off('keyup drop ').on('keyup drop ', function (event) {
                 if ($.inArray(event.keyCode, [37, 38, 39, 40]) > -1) {
                     return;
@@ -392,7 +392,7 @@
                 refreshTable();
             });
         }
-        
+
         function refreshTable() {
             $('#table').bootstrapTable('refresh');
         }

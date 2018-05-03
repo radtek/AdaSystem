@@ -64,6 +64,12 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                @Html.LabelFor(d => d.Cooperation, Html.DisplayNameFor(d => d.Cooperation).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(d => d.Cooperation, cooperations,  new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 @Html.LabelFor(d => d.ResourceType, Html.DisplayNameFor(d => d.ResourceType).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
                                     @Html.DropDownListFor(d => d.ResourceType, resourceTypes, "请选择", new { @class = "form-control" })

@@ -358,7 +358,7 @@ formatter.mediaLogo = function (value, row) {
         vg = "<div class='p-xxs text-center'>" + arr.join(' ') + "</div>";
     }
     var detail = "";
-    if (row.MediaTypeIndex == "weixin" || row.MediaTypeIndex == "douyin" || row.MediaTypeIndex == "sinablog") {
+    if (row.MediaTypeIndex == "weixin" || row.MediaTypeIndex == "douyin" || row.MediaTypeIndex == "sinablog" || row.MediaTypeIndex == "redbook") {
         detail = "<a class='btn btn-warning btn-outline btn-xs' href='/Media/Detail/" + row.Id + "' target='_blank'><i class='fa fa-info-circle'></i> 查看详情</a>";
     }
     var line = detail ? "<div class='p-xxs text-center'>" + detail + "</div>" : "";
@@ -379,11 +379,16 @@ formatter.mediaInfo = function (value, row) {
     }
     var aType = "";
     if (row.AuthenticateType == "黄V") {
-        aType = " <span class='label label-warning'>V</span> ";
+        aType = " <span class='label label-warning'> " + row.AuthenticateType +"</span> ";
     } else if (row.AuthenticateType == "蓝V") {
-        aType = " <span class='label label-success'>V</span> ";
+        aType = " <span class='label label-success'> " + row.AuthenticateType +"</span> ";
     } else if (row.AuthenticateType == "达人") {
-        aType = " <span class='label label-danger'><i class='fa fa-star-o'></i></span> ";
+        aType = " <span class='label label-danger'><i class='fa fa-star-o'></i> " + row.AuthenticateType+"</span> ";
+    } else {
+        if (row.AuthenticateType) {
+            aType = " <span class='label label-info'> " + row.AuthenticateType + "</span> ";
+        }
+        
     }
     var area = "";
     if (row.Areas) {
@@ -410,13 +415,14 @@ formatter.mediaInfo = function (value, row) {
             value = " <a class='label' href='" + row.MediaLink + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
         }
     }
-    var line1 = "<div class='p-xxs'>" + sex + isAuth + aType + value + "</div>";
+    var line1 = "<div class='p-xxs'>" + sex + isAuth  + value + "</div>";
     var line2 = weixinid ? "<div class='p-xxs'>" + weixinid + "</div>" : "";
     var line3 = area ? "<div class='p-xxs'>" + area + "</div>" : "";
+    var line0 = aType ? "<div class='p-xxs'>" + aType + "</div>" : "";
     var line4 = tags ? "<div class='p-xxs'>" + tags + "</div>" : "";
     var line5 = "<div class='p-xxs'>" + fans + "</div>";
 
-    return line1 + line2 + line3 + line4 + line5;
+    return line1 + line2 + line3 + line0+ line4 + line5;
 };
 formatter.mediaPrice = function (value, row) {
     var arr = [];
@@ -425,6 +431,7 @@ formatter.mediaPrice = function (value, row) {
             var price = !v.SellPrice ? "不接单" : "<i class='fa fa-jpy'></i> " + v.SellPrice;
             arr.push("<li class='list-group-item p-xxs'><span class='badge badge-success'>" + price + "</span> " + v.AdPositionName + "</li>");
         });
+    arr.push("<li class='list-group-item p-xxs'><span class='badge'>" + moment(value[0].InvalidDate).format("YYYY-MM-DD")+"</span>价格有效期</li>");
     return "<ul class='list-group m-b-none'>" + arr.join('') + "</ul>";
 };
 formatter.mediaData = function (value, row) {

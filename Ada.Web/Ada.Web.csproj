@@ -2965,6 +2965,7 @@
     <Content Include="Views\Media\DouYinArticles.cshtml" />
     <Content Include="Views\Media\Articles.cshtml" />
     <Content Include="Views\Media\RedBookArticles.cshtml" />
+    <Content Include="Views\Media\FilterRedBook.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

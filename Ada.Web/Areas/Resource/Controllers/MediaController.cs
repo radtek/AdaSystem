@@ -561,8 +561,8 @@ namespace Resource.Controllers
                     {
                         //判断，如果价格更新了，就更新市场价格
                         mediaPrice.PurchasePrice = Convert.ToDecimal(tempPrice);
-                        mediaPrice.SellPrice = media.IsTop == true ? mediaPrice.SellPrice : SetSalePrice(Convert.ToDecimal(tempPrice), sellPriceRange);
-                        mediaPrice.MarketPrice = media.IsTop == true ? mediaPrice.SellPrice : SetSalePrice(Convert.ToDecimal(tempPrice), marketPriceRange);
+                        mediaPrice.SellPrice = media.Cooperation == Consts.StateNormal ? mediaPrice.SellPrice : SetSalePrice(Convert.ToDecimal(tempPrice), sellPriceRange);
+                        mediaPrice.MarketPrice = media.Cooperation == Consts.StateNormal ? mediaPrice.SellPrice : SetSalePrice(Convert.ToDecimal(tempPrice), marketPriceRange);
                         mediaPrice.PriceDate = DateTime.Now;
                         mediaPrice.InvalidDate = date;
                     }
@@ -735,6 +735,7 @@ namespace Resource.Controllers
             viewModel.Transactor = CurrentManager.UserName;
             viewModel.TransactorId = CurrentManager.Id;
             viewModel.PriceUpdateDate = DateTime.Now.Date;
+            viewModel.Cooperation = Consts.StateLock;
             viewModel.PriceInvalidDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
                 DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)).Date;
             return View(viewModel);
@@ -959,7 +960,7 @@ namespace Resource.Controllers
             entity.Remark = viewModel.Remark;
             entity.Status = viewModel.Status;
             entity.ClickNum = viewModel.ClickNum;
-            //entity.IsSlide = viewModel.IsSlide;
+            entity.Cooperation = viewModel.Cooperation;
             //联系人
             entity.LinkManId = viewModel.LinkManId;
             //标签
@@ -1010,8 +1011,8 @@ namespace Resource.Controllers
                     price.InvalidDate = viewModel.PriceInvalidDate;
                     price.PriceDate = viewModel.PriceUpdateDate;
                     price.PurchasePrice = Convert.ToDecimal(viewModelMediaPrice.PurchasePrice);
-                    price.SellPrice = entity.IsTop == true ? price.SellPrice : SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), sellPriceRange);
-                    price.MarketPrice = entity.IsTop == true ? price.MarketPrice : SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), marketPriceRange);
+                    price.SellPrice = entity.Cooperation == Consts.StateNormal ? price.SellPrice : SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), sellPriceRange);
+                    price.MarketPrice = entity.Cooperation == Consts.StateNormal ? price.MarketPrice : SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), marketPriceRange);
                 }
             }
             _mediaService.Update(entity);
@@ -1091,7 +1092,7 @@ namespace Resource.Controllers
                 entity.IsHot = false;
             }
 
-            if (entity.IsTop != true)
+            if (entity.Cooperation != Consts.StateNormal)
             {
                 //小红书和抖音不影响
                 if (entity.MediaType.CallIndex != "redbook" || entity.MediaType.CallIndex != "douyin")
@@ -1102,9 +1103,7 @@ namespace Resource.Controllers
                         entityMediaPrice.SellPrice = SetSalePrice(Convert.ToDecimal(entityMediaPrice.PurchasePrice), sellPriceRange);
                     }
                 }
-
             }
-
             _mediaService.Update(entity);
             return Json(new { State = 1, Msg = "操作成功" });
         }

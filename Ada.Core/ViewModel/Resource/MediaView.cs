@@ -458,9 +458,9 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "媒体集合")]
         public List<Media> Medias { get; set; }
         /// <summary>
-        /// 配合度
+        /// 运营
         /// </summary>
-        [Display(Name = "配合度")]
+        [Display(Name = "运营")]
         public short? Cooperation { get; set; }
         /// <summary>
         /// 是否有文章

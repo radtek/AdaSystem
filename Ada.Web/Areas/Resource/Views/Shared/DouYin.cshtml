@@ -6,6 +6,7 @@
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
     var sexs = fieldService.GetFieldsByKey("Sex").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var cooperations = fieldService.GetFieldsByKey("Cooperation").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 
 <div class="row">
@@ -53,6 +54,12 @@
                                 @Html.LabelFor(d => d.Sex, Html.DisplayNameFor(d => d.Sex).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
                                     @Html.DropDownListFor(d => d.Sex, sexs, "请选择", new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Cooperation, Html.DisplayNameFor(d => d.Cooperation).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(d => d.Cooperation, cooperations,  new { @class = "form-control" })
                                 </div>
                             </div>
                             <div class="form-group">
