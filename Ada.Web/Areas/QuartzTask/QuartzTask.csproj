@@ -124,7 +124,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\JobController.cs" />
+    <Compile Include="Jobs\RedBookArticlesJob.cs" />
     <Compile Include="Jobs\DouYinArticlesJob.cs" />
+    <Compile Include="Jobs\RedBookInfoJob.cs" />
     <Compile Include="Jobs\DouYinInfoJob.cs" />
     <Compile Include="Jobs\UpdateMediaSellPriceJob.cs" />
     <Compile Include="Jobs\WeiboArticlesJob.cs" />

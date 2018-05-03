@@ -522,6 +522,11 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "批量媒体")]
         public string MediaBatch { get; set; }
+        /// <summary>
+        /// 导出字段
+        /// </summary>
+        [Display(Name = "导出字段")]
+        public string ExcelField { get; set; }
     }
 
 }

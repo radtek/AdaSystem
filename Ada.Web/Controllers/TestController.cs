@@ -284,7 +284,21 @@ namespace Ada.Web.Controllers
             _dbContext.SaveChanges();
             return Content("更新抖音价格" + count + "条");
         }
+        public ActionResult RedBookId()
+        {
+            var douyins = _media.LoadEntities(d => d.MediaTypeId == "X1712181059130008" && d.IsDelete == false).ToList();
+            var count = 0;
+            foreach (var douyin in douyins)
+            {
 
+                var uid = GetRedBookId(douyin.MediaLink);
+                douyin.MediaID = string.IsNullOrWhiteSpace(uid) ? null : uid;
+                count++;
+            }
+            _dbContext.SaveChanges();
+            return Content("更新小红书类型" + count + "条");
+
+        }
         public ActionResult Temp()
         {
             string path = Server.MapPath("~/upload/sell.xlsx");
@@ -503,6 +517,23 @@ namespace Ada.Web.Controllers
             Match match = Regex.Match(url, @"/share/user/(\d+)", RegexOptions.ECMAScript);
             result = match.Groups[1].Value;
 
+            return result;
+
+        }
+        private string GetRedBookId(string url)
+        {
+            string result = string.Empty;
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return result;
+            }
+            Match match = Regex.Match(url, @"/user/profile/(\w+)", RegexOptions.ECMAScript);
+            result = match.Groups[1].Value;
+            if (string.IsNullOrWhiteSpace(result))
+            {
+                Match match2 = Regex.Match(url, @"oid=user\.(\w+)", RegexOptions.ECMAScript);
+                result = match2.Groups[1].Value;
+            }
             return result;
 
         }

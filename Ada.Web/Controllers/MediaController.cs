@@ -182,13 +182,13 @@ namespace Ada.Web.Controllers
                 {
                     MediaDevelop entity = new MediaDevelop();
                     entity.Id = IdBuilder.CreateIdNum();
-                    entity.AddedById = CurrentUser.Id;
-                    entity.AddedBy = CurrentUser.LoginName;
+                    entity.AddedById = CurrentUser.TransactorId;
+                    entity.AddedBy = CurrentUser.Transactor;
                     entity.AddedDate = DateTime.Now;
                     entity.SubBy = entity.AddedBy;
                     entity.SubById = entity.AddedById;
                     entity.MediaName = name;
-                    entity.Content = "来自网站申请。联系信息："+ "公司名称【" + CurrentUser.CommpanyName + "】，联系人【" + CurrentUser.Name + "】，联系电话【" + CurrentUser.LoginName+"】";
+                    entity.Content = "来自网站申请";
                     entity.Status = Consts.StateLock;//待开发
                     entity.MediaTypeId = viewModel.MediaTypeId;
                     entity.SubDate = DateTime.Now;
@@ -316,8 +316,9 @@ namespace Ada.Web.Controllers
                 int i = 0;
                 foreach (var name in names)
                 {
+                    var mediaInfo = name.Trim();
                     var temp = results.FirstOrDefault(d =>
-                        d.MediaName.Equals(name, StringComparison.CurrentCultureIgnoreCase)|| d.MediaID.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+                        d.MediaName == mediaInfo || d.MediaID == mediaInfo);
                     if (temp == null)
                     {
                         noDatas.Add(new Media
@@ -340,60 +341,47 @@ namespace Ada.Web.Controllers
             {
                 results.AddRange(noDatas);
             }
+            var fields = string.IsNullOrWhiteSpace(viewModel.ExcelField) ? new List<string>() : viewModel.ExcelField.Split(',').ToList();
             foreach (var media in results.OrderBy(d => d.Taxis))
             {
                 var jo = new JObject();
                 jo.Add("媒体状态", string.IsNullOrWhiteSpace(media.Id) ? "不存在" : "正常");
-                jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
+                if (fields.Contains("MediaTags")) jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
                 jo.Add("媒体名称", media.MediaName);
-                jo.Add("媒体ID", media.MediaID);
+                if (fields.Contains("MediaID")) jo.Add("媒体ID", media.MediaID);
                 jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
-                switch (viewModel.MediaTypeIndex)
+
+                if (fields.Contains("MediaLink")) jo.Add("媒体链接", media.MediaLink);
+                if (fields.Contains("Sex")) jo.Add("性别", media.Sex);
+                if (fields.Contains("Area")) jo.Add("地区", media.Area);
+                if (fields.Contains("IsAuthenticate")) jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
+                if (fields.Contains("AuthenticateType")) jo.Add("等级", media.AuthenticateType);
+                if (fields.Contains("AvgReadNum")) jo.Add("平均阅读数", media.AvgReadNum);
+                if (fields.Contains("TransmitNum")) jo.Add("平均转发数", media.TransmitNum);
+                if (fields.Contains("CommentNum")) jo.Add("平均评论数", media.CommentNum);
+                if (fields.Contains("LikesNum")) jo.Add("平均点赞数", media.LikesNum);
+                if (fields.Contains("PostNum")) jo.Add("发布总数", media.PostNum);
+                //小红书
+                if (fields.Contains("FriendNum")) jo.Add("关注数", media.FriendNum);
+                if (fields.Contains("RedBookAvgReadNum")) jo.Add("平均点赞数", media.AvgReadNum);
+                if (fields.Contains("RedBookTransmitNum")) jo.Add("平均收藏数", media.TransmitNum);
+                if (fields.Contains("RedBookLikesNum")) jo.Add("赞与收藏", media.LikesNum);
+                if (fields.Contains("RedBookPostNum")) jo.Add("笔记数", media.PostNum);
+                
+                if (fields.Contains("PublishFrequency")) jo.Add("月发布频次", media.PublishFrequency);
+                if (fields.Contains("MonthPostNum")) jo.Add("最近月发文数", media.MonthPostNum);
+                if (fields.Contains("LastPushDate")) jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
+                
+                if (fields.Contains("SellPrice"))
                 {
-                    case "weixin":
-                        jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
-                        jo.Add("平均头条阅读数", media.AvgReadNum);
-                        jo.Add("月发布频次", media.PublishFrequency);
-                        jo.Add("最近月发文数", media.MonthPostNum);
-                        jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
-                        break;
-                    case "sinablog":
-                        jo.Add("媒体链接", media.MediaLink);
-                        jo.Add("性别", media.Sex);
-                        jo.Add("地区", media.Area);
-                        jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
-                        jo.Add("认证类型", media.AuthenticateType);
-                        jo.Add("平均转发数", media.TransmitNum);
-                        jo.Add("平均评论数", media.CommentNum);
-                        jo.Add("平均点赞数", media.LikesNum);
-                        jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
-                        break;
-                    case "douyin":
-                        jo.Add("媒体链接", media.MediaLink);
-                        jo.Add("性别", media.Sex);
-                        jo.Add("地区", media.Area);
-                        jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
-                        jo.Add("平均转发数", media.TransmitNum);
-                        jo.Add("平均浏览数", media.AvgReadNum);
-                        jo.Add("平均评论数", media.CommentNum);
-                        jo.Add("平均点赞数", media.LikesNum);
-                        break;
-                    case "redbook":
-                        jo.Add("媒体链接", media.MediaLink);
-                        jo.Add("地区", media.Area);
-                        jo.Add("平均点赞数", media.LikesNum);
-                        break;
-                    case "zhihu":
-                        jo.Add("媒体链接", media.MediaLink);
-                        jo.Add("地区", media.Area);
-                        break;
+                    foreach (var mediaMediaPrice in media.MediaPrices)
+                    {
+                        var price = mediaMediaPrice.SellPrice ?? 0;
+                        jo.Add(mediaMediaPrice.AdPositionName, price);
+                    }
+                    jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
                 }
-                foreach (var mediaMediaPrice in media.MediaPrices)
-                {
-                    var price = mediaMediaPrice.SellPrice ?? 0;
-                    jo.Add(mediaMediaPrice.AdPositionName, price);
-                }
-                jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
+
                 jObjects.Add(jo);
             }
             return jObjects;

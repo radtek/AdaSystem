@@ -19,11 +19,12 @@
         var mediaType = repository.LoadEntities(d => d.CallIndex == Model.MediaTypeIndex).FirstOrDefault();
         adaPostions = mediaType.AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name }).ToList();
     }
+    var isData = new List<string>() { "weixin", "sinablog", "douyin", "redbook" };
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
-    var seos = fieldService.GetFieldsByKey("SEO").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    //var seos = fieldService.GetFieldsByKey("SEO").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var yesnos = fieldService.GetFieldsByKey("YesOrNo").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var resourceTypes = fieldService.GetFieldsByKey("ResourceType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
-    var authenticateTypes = fieldService.GetFieldsByKey("AuthenticateType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    //var authenticateTypes = fieldService.GetFieldsByKey("AuthenticateType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
@@ -193,7 +194,7 @@
                             <div class="col-sm-2">
                                 <div class="form-group">
                                     @Html.LabelFor(d => d.AuthenticateType, Html.DisplayNameFor(d => d.AuthenticateType).ToString(), new { @class = "control-label" })
-                                    @Html.DropDownListFor(d => d.AuthenticateType, authenticateTypes, "请选择", new { @class = "form-control" })
+                                    @Html.TextBoxFor(d => d.AuthenticateType, new { @class = "form-control" })
                                 </div>
                             </div>
                             <div class="col-sm-2">
@@ -228,7 +229,7 @@
                                     @Html.TextAreaFor(d => d.MediaBatch, 4, 20, new { @class = "form-control", placeholder = "请输入媒体名称或者媒体ID，多个媒体查询，请用逗号隔开或者一行一个；同时支持复制粘贴的数据查询" })
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -274,7 +275,7 @@
 
                                     <th>媒体类型</th>
                                     <th>媒体信息</th>
-                                    @if (Model.MediaTypeIndex == "weixin" || Model.MediaTypeIndex == "sinablog" || Model.MediaTypeIndex == "douyin")
+                                    @if (isData.Contains(Model.MediaTypeIndex))
                                     {
                                         <th data-breakpoints="xs">媒体指数</th>
                                     }
@@ -320,6 +321,15 @@
                                                     <span class="badge badge-warning">优</span>
                                                 }
                                             </div>
+                                            @if (item.MediaType.IsComment == true)
+                                            {
+                                                <div class='p-xxs text-center'>
+                                                    <a class='btn btn-warning btn-xs btn-outline' data-toggle='tooltip' data-placement='bottom' title='查看媒体详情' href='@Url.Action("Detail", new {id = item.Id})' target="_blank"><i class='fa fa-info-circle'></i> 详情</a>
+                                                    <a class='btn btn-warning btn-outline btn-xs' href="@Url.Action("Comment",new{id=item.Id})" target="_blank"><i class='fa fa-comment'></i> 评论</a>
+                                                    </div>
+                                                
+                                            }
+
                                         </td>
 
                                         <td>
@@ -334,21 +344,6 @@
                                                     else
                                                     {
                                                         <img alt="女" class="img-circle" src="/Images/lady.png" style="width: 25px; height: 25px;" />
-                                                    }
-                                                }
-                                                @if (!string.IsNullOrWhiteSpace(item.AuthenticateType))
-                                                {
-                                                    if (item.AuthenticateType == "黄V")
-                                                    {
-                                                        <span class='label label-warning'>V</span>
-                                                    }
-                                                    if (item.AuthenticateType == "蓝V")
-                                                    {
-                                                        <span class='label label-success'>V</span>
-                                                    }
-                                                    if (item.AuthenticateType == "达人")
-                                                    {
-                                                        <span class="label label-danger"><i class='fa fa-star-o'></i></span>
                                                     }
                                                 }
                                                 @if (item.MediaType.CallIndex == "weixin")
@@ -383,15 +378,18 @@
                                                         @item.Channel
                                                     }
                                                 }
-                                                @if (item.MediaType.IsComment == true)
-                                                {
-                                                    <a class='btn btn-warning btn-xs btn-outline' data-toggle='tooltip' data-placement='bottom' title='查看媒体详情' href='@Url.Action("Detail", new {id = item.Id})' target="_blank">详情</a>
-                                                }
+
                                             </div>
                                             @if (!string.IsNullOrWhiteSpace(item.Area))
                                             {
                                                 <div class='p-xxs'>
                                                     <span class='btn btn-info btn-outline btn-xs'><i class='fa fa-map-marker'></i> @item.Area</span>
+                                                </div>
+                                            }
+                                            @if (!string.IsNullOrWhiteSpace(item.AuthenticateType))
+                                            {
+                                                <div class='p-xxs'>
+                                                    <span class='btn btn-warning btn-outline btn-xs'><i class='fa fa-trophy'></i> @item.AuthenticateType</span>
                                                 </div>
                                             }
                                             @if (item.MediaTags.Count > 0)
@@ -409,14 +407,9 @@
                                                     <span class='btn btn-danger btn-outline btn-xs'><i class='fa fa-users'></i> 粉丝：@Utils.ShowFansNum(item.FansNum) 万</span>
                                                 </div>
                                             }
-                                            @if (item.MediaType.IsComment == true)
-                                            {
-                                                <div class='p-xxs'>
-                                                    <a class='btn btn-warning btn-outline btn-xs' href="@Url.Action("Comment",new{id=item.Id})" target="_blank"><i class='fa fa-comment'></i> 发表评论</a>
-                                                </div>
-                                            }
+
                                         </td>
-                                        @if (Model.MediaTypeIndex == "weixin" || Model.MediaTypeIndex == "sinablog" || Model.MediaTypeIndex == "douyin")
+                                        @if (isData.Contains(Model.MediaTypeIndex))
                                         {
                                             var lastDate = item.LastPushDate?.ToString("yyyy-MM-dd");
 
@@ -485,6 +478,30 @@
                                                     <div class='p-xxs'>
                                                         <span class='label label-info'>最近视频日期：@lastDate</span>
                                                     </div>
+                                                </td>
+                                            }
+                                            if (Model.MediaTypeIndex == "redbook")
+                                            {
+                                                <td>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>平均点赞数：@item.AvgReadNum</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>平均评论数：@item.CommentNum</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>平均收藏数：@item.TransmitNum</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>关注数：@item.FriendNum</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>赞与收藏：@item.LikesNum</span>
+                                                    </div>
+                                                    <div class='p-xxs'>
+                                                        <span class='label label-info'>笔记总数：@item.PostNum</span>
+                                                    </div>
+
                                                 </td>
                                             }
                                         }

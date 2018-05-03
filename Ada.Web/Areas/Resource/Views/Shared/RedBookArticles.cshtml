@@ -1,0 +1,205 @@
+﻿@using Ada.Core.Tools
+@model Ada.Core.Domain.Resource.Media
+@{
+    var update = Model.LastPushDate?.ToString("yyyy-MM-dd");
+    //var pushdate = Model.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate?.ToString("yyyy-MM-dd");
+    var start = DateTime.Now.Date.AddDays(-7);
+    var end = DateTime.Now.AddDays(1).Date;
+
+    var articles = Model.MediaArticles.Where(d => d.PublishDate >= start && d.PublishDate < end).Select(d => new
+    {
+        Date = d.PublishDate.Value.ToString("MM-dd"),
+        Read = d.ViewCount,
+        Like = d.LikeCount,
+        Comment=d.CommentCount
+    }).GroupBy(d => d.Date).Select(d => new
+    {
+        Date = d.Key,
+        AveRead = Convert.ToInt32(d.Average(l => l.Read)),
+        AvgLike = Convert.ToInt32(d.Average(l => l.Like)),
+        AvgComment = Convert.ToInt32(d.Average(l => l.Comment))
+    }).OrderBy(d => d.Date).ToList();
+    var maxLike = articles.Count>0? articles.Max(d => d.AvgLike):0;
+    var maxComment = articles.Count > 0 ? articles.Max(d => d.AvgComment):0;
+}
+
+<div class="row">
+
+    <div class="col-lg-2">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>平均收藏数</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins">@Model.TransmitNum</h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>平均点赞数</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins">@Model.AvgReadNum</h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>平均评论数</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins">@Model.CommentNum</h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>号主被关注总数</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins">@Model.FriendNum</h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>赞与收藏</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins">@Model.LikesNum</h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>笔记总数</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins">@Model.PostNum</h1>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h3>近一周笔记平均点赞数，评论数 <small>更新日期：@update</small></h3>
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="flot-chart" style="height: 350px;">
+                            <div class="flot-chart-content" id="flot-dashboard-chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox">
+            <div class="ibox-title">
+                <h3>最近发布笔记情况 <small>更新日期：@update</small></h3>
+            </div>
+            <div class="ibox-content">
+                <table class="table" data-empty="暂无数据">
+                    <thead>
+                        <tr>
+                            <th>标题</th>
+                            <th data-breakpoints="xs sm">点赞数</th>
+                            <th data-breakpoints="xs sm">评论数</th>
+                            <th data-breakpoints="xs sm">收藏数</th>
+                            <th data-breakpoints="xs sm">发布日期</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.MediaArticles.OrderByDescending(d => d.PublishDate).Take(10))
+                        {
+                        <tr>
+                            @{
+        var dateTime = item.PublishDate?.ToString("yyyy-MM-dd HH:mm:ss") ?? string.Empty;
+        
+                            }
+                            <td>
+                                <a class='label' href='@item.ArticleUrl' target='_blank'><i class='fa fa-link'></i> @item.Title</a>
+                            </td>
+                            <td>@item.LikeCount</td>
+                            <td>@item.CommentCount</td>
+                            <td>@item.ShareCount</td>
+                            <td>@dateTime</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+            function initCharts() {
+                var myChart = echarts.init(document.getElementById('flot-dashboard-chart'));
+                var option = {
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['点赞数','评论数']
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            magicType : {show: true, type: ['line', 'bar']},
+                            restore : {show: true}
+                        }
+                    },
+                    calculable: true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : @Html.Raw(Json.Encode(articles.Select(d => d.Date)))
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            name: '点赞数',
+                            min: 0,
+                            max: @maxLike
+                        }, {
+                            type: 'value',
+                            name: '评论数',
+                            min: 0,
+                            max: @maxComment
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'点赞数',
+                            type:'bar',
+                            data:@Html.Raw(Json.Encode(articles.Select(d => d.AvgLike)))
+
+                        },
+                        {
+                            name:'评论数',
+                            type: 'bar',
+                            yAxisIndex: 1,
+                            data:@Html.Raw(Json.Encode(articles.Select(d => d.AvgComment)))
+
+                        }
+                    ]
+                };
+                myChart.setOption(option);
+            }
+</script>

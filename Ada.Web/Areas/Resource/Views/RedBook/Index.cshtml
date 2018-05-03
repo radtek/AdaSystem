@@ -200,7 +200,7 @@
     @Scripts.Render("~/plugins/clipboard")
     @Scripts.Render("~/plugins/dataPicker")
     @Scripts.Render("~/plugins/dateRange")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201803228131")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=201804228131")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -263,12 +263,12 @@
                         align: "left",
                         formatter: formatterMediaName
                     },
-                    //{
-                    //    field: 'LikesNum',
-                    //    title: '赞与收藏',
-                    //    valign: "middle",
-                    //    align: "center"
-                    //},
+                    {
+                        field: 'TransmitNum',
+                        title: '小红书指数',
+                        valign: "middle",
+                        formatter: formatterRedBookData
+                    },
 
                     {
                         field: 'MediaPrices',

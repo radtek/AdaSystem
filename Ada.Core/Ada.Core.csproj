@@ -180,6 +180,7 @@
     <Compile Include="ViewModel\API\APIRequestRecordView.cs" />
     <Compile Include="ViewModel\API\iDataAPI\BaseParams.cs" />
     <Compile Include="ViewModel\API\iDataAPI\BitspacemanJSON.cs" />
+    <Compile Include="ViewModel\API\iDataAPI\RedBookJSON.cs" />
     <Compile Include="ViewModel\API\iDataAPI\iDataAPIJSON.cs" />
     <Compile Include="ViewModel\API\iDataAPI\TestJSON.cs" />
     <Compile Include="ViewModel\API\iDataAPI\TestParams.cs" />

@@ -135,7 +135,10 @@
         {
             @Html.Partial("DouYinArticles", Model)
         }
-
+        if (Model.MediaType.CallIndex == "redbook")
+        {
+            @Html.Partial("RedBookArticles", Model)
+        }
     }
 
     <div class="row">

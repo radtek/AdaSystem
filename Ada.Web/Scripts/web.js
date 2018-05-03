@@ -315,8 +315,9 @@ function addFilter(id, name, value) {
 
 function resetFilter() {
     $("form")[0].reset();
+    $("#MediaBatch").val("");
     $("#table").bootstrapTable("refresh");
-    //$(".filters").empty();
+
 }
 function resetCurrent(o) {
     var parent = $(o).data("parent");
@@ -432,6 +433,7 @@ formatter.mediaData = function (value, row) {
     if (row.AvgReadNum) {
         read = " <span class='label label-info'>平均浏览数：" + row.AvgReadNum + "</span>";
     }
+
     var lastread = "";
     if (row.LastReadNum) {
         lastread = " <span class='label label-info'>最近浏览数：" + row.LastReadNum + "</span>";
@@ -469,6 +471,22 @@ formatter.mediaData = function (value, row) {
         var date = moment(row.LastPushDate).format("YYYY-MM-DD HH:mm");
         lastdate = " <span class='label label-info'>最近发布日期：" + date + "</span>";
     }
+    var dz = "";
+    if (row.AvgReadNum) {
+        dz = " <span class='label label-info'>平均点赞数：" + row.AvgReadNum + "</span>";
+    }
+    var sc = "";
+    if (row.TransmitNum) {
+        sc = " <span class='label label-info'>平均收藏数：" + row.TransmitNum + "</span>";
+    }
+    var bj = "";
+    if (row.PostNum) {
+        bj = " <span class='label label-info'>笔记总数：" + row.PostNum + "</span>";
+    }
+    var zc = "";
+    if (row.LikesNum) {
+        zc = " <span class='label label-info'>赞与收藏：" + row.LikesNum + "</span>";
+    }
     var line1 = read ? "<div class='p-xxs'>" + read + "</div>" : "";
     var line2 = like ? "<div class='p-xxs'>" + like + "</div>" : "";
     var line3 = comment ? "<div class='p-xxs'>" + comment + "</div>" : "";
@@ -479,6 +497,10 @@ formatter.mediaData = function (value, row) {
     var line8 = friend ? "<div class='p-xxs'>" + friend + "</div>" : "";
     var line9 = frequency ? "<div class='p-xxs'>" + frequency + "</div>" : "";
     var line10 = share ? "<div class='p-xxs'>" + share + "</div>" : "";
+    var linedz = dz ? "<div class='p-xxs'>" + dz + "</div>" : "";
+    var linesc = sc ? "<div class='p-xxs'>" + sc + "</div>" : "";
+    var linebj = bj ? "<div class='p-xxs'>" + bj + "</div>" : "";
+    var linezc = zc ? "<div class='p-xxs'>" + zc + "</div>" : "";
     var line = "";
     if (row.MediaTypeIndex == "weixin") {
         line = line1 + line6 + line4 + line9 + line7;
@@ -488,6 +510,9 @@ formatter.mediaData = function (value, row) {
     }
     if (row.MediaTypeIndex == "douyin") {
         line = line1 + line2 + line3 + line10 + line5;
+    }
+    if (row.MediaTypeIndex == "redbook") {
+        line = linedz + line3 + linesc + line8 + linezc + linebj;
     }
     return line || "<span class='label label-warning'>抱歉！暂无相关数据</span>";
 };
@@ -709,48 +734,89 @@ function initDateRange($datepicker) {
     });
 }
 
-function exportDate(id) {
-    swal({
-        title: "确认要导出数据吗?",
-        text: "注：每次最多导出100条数据，每日导出次数为5次;",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        closeOnConfirm: false,
-        showLoaderOnConfirm: true
-    }, function () {
-        var parameters = {};
-        parameters.MediaTypeId = id;
-        parameters.MediaTypeIndex = $("#MediaTypeIndex").val();
-        parameters = searchFrm.queryParams(parameters);
-        $.ajax({
-            type: "post",
-            headers: {
-                '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-            },
-            url: "/Media/Export",
-            data: parameters,
-            success: function (data) {
-                if (data.State == 1) {
-                    swal({
-                        title: "导出成功",
-                        text: "正在下载中...",
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-                    window.location.href = "/Media/Download?file=" + data.Msg;
-                } else {
-                    swal("消息", data.Msg, "warning");
-                }
-            },
-            error: function () {
-                swal("错误", "系统错误", "error");
-            }
-        });
-
+function exportDate() {
+    var parameters = {};
+    var arr = [], checkeds = $("[name='ExcelField']:checked");
+    $.each(checkeds, function () {
+        arr.push($(this).val());
     });
+    parameters.MediaTypeId = $("#MediaTypeId").val();
+    parameters.MediaTypeIndex = $("#MediaTypeIndex").val();
+    parameters.ExcelField = arr.join(',');
+    parameters = searchFrm.queryParams(parameters);
+    var subBtn = $('.ladda-button').ladda();
+    $.ajax({
+        type: "post",
+        headers: {
+            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
+        },
+        url: "/Media/Export",
+        data: parameters,
+        success: function (data) {
+            if (data.State == 1) {
+                $('#exportModal').modal('hide');
+                swal({
+                    title: "导出成功",
+                    text: "正在下载中...",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                window.location.href = "/Media/Download?file=" + data.Msg;
+            } else {
+                swal("消息", data.Msg, "warning");
+            }
+        },
+        error: function () {
+            swal("错误", "系统错误", "error");
+        },
+        beforeSend: function () {
+            subBtn.ladda('start');
+        },
+        complete: function () {
+            subBtn.ladda('stop');
+        }
+    });
+    //swal({
+    //    title: "确认要导出数据吗?",
+    //    text: "注：每次最多导出100条数据，每日导出次数为5次;",
+    //    type: "warning",
+    //    showCancelButton: true,
+    //    confirmButtonColor: "#DD6B55",
+    //    confirmButtonText: "确定",
+    //    cancelButtonText: "取消",
+    //    closeOnConfirm: false,
+    //    showLoaderOnConfirm: true
+    //}, function () {
+    //    var parameters = {};
+    //    parameters.MediaTypeId = id;
+    //    parameters.MediaTypeIndex = $("#MediaTypeIndex").val();
+    //    parameters = searchFrm.queryParams(parameters);
+    //    $.ajax({
+    //        type: "post",
+    //        headers: {
+    //            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
+    //        },
+    //        url: "/Media/Export",
+    //        data: parameters,
+    //        success: function (data) {
+    //            if (data.State == 1) {
+    //                swal({
+    //                    title: "导出成功",
+    //                    text: "正在下载中...",
+    //                    timer: 2000,
+    //                    showConfirmButton: false
+    //                });
+    //                window.location.href = "/Media/Download?file=" + data.Msg;
+    //            } else {
+    //                swal("消息", data.Msg, "warning");
+    //            }
+    //        },
+    //        error: function () {
+    //            swal("错误", "系统错误", "error");
+    //        }
+    //    });
+
+    //});
 }
 
 function todo() {
@@ -830,11 +896,11 @@ function starHtml(score) {
 
 function develop() {
     var arr = [], checkeds = $("[name='Develop']:checked");
-    $.each(checkeds,function() {
+    $.each(checkeds, function () {
         arr.push($(this).val());
     });
-   
-    if (arr.length<=0) {
+
+    if (arr.length <= 0) {
         swal("消息", "请选择要申请开发的媒体", "warning");
         return;
     }

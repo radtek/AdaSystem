@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel.Customer;
+using Ada.Framework.Filter;
 using Ada.Services.Cache;
 using Ada.Services.Customer;
 using ClosedXML.Excel;
@@ -15,6 +16,7 @@ using Newtonsoft.Json;
 
 namespace Ada.Web.Models
 {
+    [UserException]
     public class UserController:Controller
     {
         private readonly ICacheService _cacheService;

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Ada.Core.Tools;
@@ -17,7 +14,11 @@ namespace Ada.Framework.Filter
     {
         public override void OnException(ExceptionContext filterContext)
         {
-            base.OnException(filterContext);
+            //base.OnException(filterContext);
+            if (filterContext.ExceptionHandled)
+            {
+                return;
+            }
             Exception ex = filterContext.Exception;
             //写日志
             //写到队列(如果是写入文件，就要考虑并发写入队列)

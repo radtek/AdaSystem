@@ -31,7 +31,7 @@ namespace Ada.Services.Customer
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.Name.Contains(viewModel.search)||d.LoginName.Contains(viewModel.search)||d.Commpany.Name.Contains(viewModel.search));
+                allList = allList.Where(d => d.Name.Contains(viewModel.search)||d.LoginName.Contains(viewModel.search)||d.Commpany.Name.Contains(viewModel.search) || d.Phone.Contains(viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.CommpanyName))
             {

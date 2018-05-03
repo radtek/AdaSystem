@@ -1,11 +1,16 @@
 ﻿@using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Setting
 @using Ada.Services.Admin
 @using Ada.Services.Resource
+@using Ada.Services.Setting
 @model Ada.Core.Domain.Resource.MediaType
 @{
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
     var adpositions = Model.AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var settingService = EngineContext.Current.Resolve<ISettingService>();
+    var setConfig = settingService.GetSetting<WeiGuang>();
+    var excelFields = fieldService.GetFieldsByKey(Model.CallIndex + "-excel");
     var areas = fieldService.GetFieldsByKey("Area").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var priceRange = new List<SelectListItem>();
     var fansRange = new List<SelectListItem>();
@@ -321,7 +326,7 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
             <button type="button" class="btn btn-primary btn-outline" data-toggle="modal" data-target="#searchModal">
                 <i class="fa fa-search"></i> 批量查询
             </button>
-            <button type="button" class="btn btn-warning btn-outline" onclick="exportDate('@Model.Id')">
+            <button type="button" class="btn btn-warning btn-outline" data-toggle="modal" data-target="#exportModal">
                 <i class="fa fa-download"></i> 导出资源
             </button>
         </div>
@@ -365,6 +370,36 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">返回关闭</button>
                 <button type="button" class="btn btn-primary ladda-button" data-style="zoom-in" onclick="develop();">申请开发</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="exportModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInUp">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <i class="fa fa-download modal-icon"></i>
+                <h4 class="modal-title">选择导出的字段</h4>
+                <small class="font-bold">导出说明：每次导出数据记录数最多 @setConfig.UserExportRows 条，每日导出操作最多 @setConfig.UserExportTimes 次</small>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    @foreach (var item in excelFields)
+                    {
+                        <div class="col-md-4">
+                            <div class="checkbox checkbox-success checkbox-inline">
+                                <input type="checkbox" id="@item.Id" name="ExcelField" value="@item.Value" checked="">
+                                <label for="@item.Id"> @item.Text </label>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">返回关闭</button>
+                <button type="button" class="btn btn-primary ladda-button" data-style="zoom-in" onclick="exportDate();">开始导出</button>
             </div>
         </div>
     </div>

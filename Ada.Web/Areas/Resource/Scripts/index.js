@@ -112,8 +112,16 @@ function formatterLogo(value, row) {
     if (arr.length > 0) {
         vg = "<div class='p-xxs text-center'>" + arr.join(' ') + "</div>";
     }
-    //var state = "<div class='p-xxs text-center'>" + vg + "</div>";//+ formatter.normalStatus(row.Status)
-    return '<div class="p-xxs text-center">' + logo + '</div>' + vg;
+    var info = "";
+    if (row.IsComment) {
+        info =
+            "<div class='p-xxs text-center'><a class='btn btn-warning  btn-outline btn-xs' data-toggle='tooltip' data-placement='bottom' title='查看详情' href='/Resource/Media/Detail/" +
+            row.Id +
+            "' target='_blank'>查看详情</a></div>";
+    }
+
+    var state = "<div class='p-xxs text-center'>" + vg + "</div>";//+ formatter.normalStatus(row.Status)
+    return '<div class="p-xxs text-center">' + logo + '</div>' + vg+info;
 }
 function formatterWeiXin(value, row) {
     var url =
@@ -122,9 +130,8 @@ function formatterWeiXin(value, row) {
     var fans = "<div class='p-xxs'>" + formatterFans(row.FansNum) + "</div>";
     return url +
         "<div class='p-xxs'>" +
-        "<button class='btn btn-white btn-sm' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" +
+        "<button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" +
         " <img rel='drevil' data-content='<div id=\"popOverBox\"><img src=\"" + (row.MediaQR || '/Images/nopic.png') + "\" width=\"100\" height=\"100\" /></div>'  src='/Images/ewm.png' style='width: 20px; height: 20px;'/>" +
-        " <a class='btn btn-warning  btn-outline btn-sm' data-toggle='tooltip' data-placement='bottom' title='查看详情' href='/Resource/Media/Detail/" + row.Id + "' target='_blank'>详情</a>" +
         "</div>" +
         tags + fans;
 }
@@ -150,11 +157,10 @@ function formatterBlog(value, row) {
     var level = formatterblogLevel(row.AuthenticateType);
     var area = "";
     if (row.Areas) {
-        area = " <span class='btn btn-info btn-outline btn-sm'><i class='fa fa-map-marker'></i> " + row.Areas + "</span>";
+        area = " <span class='btn btn-info btn-outline btn-xs'><i class='fa fa-map-marker'></i> " + row.Areas + "</span>";
     }
     return url +
         "<div class='p-xxs'>" + level + area +
-        " <a class='btn btn-warning  btn-outline btn-sm' data-toggle='tooltip' data-placement='bottom' title='查看详情' href='/Resource/Media/Detail/" + row.Id + "' target='_blank'>详情</a>" +
         "</div>" + tags + fans;
 }
 
@@ -180,16 +186,9 @@ function formatterMediaName(value, row) {
     if (row.MediaLink) {
         name = "<a class='label' href='" + row.MediaLink + "' target='_blank'><i class='fa fa-link'></i> " + name + "</a>";
     }
-    var info = "";
-    if (row.IsComment) {
-        info =
-            " <a class='btn btn-warning  btn-outline btn-sm' data-toggle='tooltip' data-placement='bottom' title='查看详情' href='/Resource/Media/Detail/" +
-            row.Id +
-            "' target='_blank'>详情</a>";
-    }
     var url =
         "<div class='p-xxs'>" + sex + name +
-        " <button class='btn btn-white btn-sm' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" + info +
+        " <button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" + 
         "</div>";;
     var tags = "";
     if (row.MediaTags) {
@@ -201,9 +200,13 @@ function formatterMediaName(value, row) {
     }
     var area = "";
     if (row.Areas) {
-        area = "<div class='p-xxs'><span class='btn btn-info  btn-outline btn-sm'><i class='fa fa-map-marker'></i> " + row.Areas + "</span></div>";
+        area = "<div class='p-xxs'><span class='btn btn-info  btn-outline btn-xs'><i class='fa fa-map-marker'></i> " + row.Areas + "</span></div>";
     }
-    return url + area + tags + fans;
+    var grad = "";
+    if (row.AuthenticateType) {
+        grad = "<div class='p-xxs'><span class='btn btn-warning  btn-outline btn-xs'><i class='fa fa-trophy'></i> " + row.AuthenticateType + "</span></div>";
+    }
+    return url + area + grad + tags + fans;
 }
 
 
@@ -268,6 +271,26 @@ function formatterDouYinData(value, row) {
         "<div class='p-xxs'><span class='label label-info'>总视频数：" +
         (row.PostNum || 0) +
         "</div>" ;
+}
+function formatterRedBookData(value, row) {
+    return "<div class='p-xxs'><span class='label label-info'>平均评论数：" +
+        (row.CommentNum || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>平均点赞数：" +
+        (row.AvgReadNum || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>平均收藏数：" +
+        (row.TransmitNum || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>关注数：" +
+        (row.FriendNum || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>赞与收藏：" +
+        (row.LikesNum || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>笔记数：" +
+        (row.PostNum || 0) +
+        "</div>";
 }
 function formatterblogLevel(value) {
     if (value == "黄V") {

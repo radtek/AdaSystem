@@ -15,7 +15,8 @@
             <p class="bg-danger">@Html.ValidationMessage("message") </p>
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#tab-1"> 基本信息</a></li>
-                <li class=""><a data-toggle="tab" href="#tab-2"> 媒体价格</a></li>
+                <li class=""><a data-toggle="tab" href="#tab-2"> 媒体数据</a></li>
+                <li class=""><a data-toggle="tab" href="#tab-3"> 媒体价格</a></li>
             </ul>
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane active">
@@ -38,9 +39,9 @@
                             </div>
 
                             <div class="form-group">
-                                @Html.LabelFor(d => d.MediaLink, Html.DisplayNameFor(d => d.MediaLink).ToString(), new { @class = "col-sm-2 control-label" })
+                                @Html.LabelFor(d => d.MediaID, Html.DisplayNameFor(d => d.MediaID).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.MediaLink, new { @class = "form-control" })
+                                    @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control", required = "" })
                                 </div>
                             </div>
                             <div class="form-group">
@@ -50,34 +51,22 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.LabelFor(d => d.Cooperation, Html.DisplayNameFor(d => d.Cooperation).ToString(), new { @class = "col-sm-2 control-label" })
+                                @Html.LabelFor(d => d.AuthenticateType, "等级", new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
-                                    @Html.DropDownListFor(d => d.Cooperation, cooperations, "请选择", new { @class = "form-control" })
+                                    @Html.TextBoxFor(d => d.AuthenticateType, new { @class = "form-control" })
                                 </div>
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
                                     @foreach (var item in tags)
-            {
-                var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
-                        <div class="checkbox checkbox-success checkbox-inline">
-                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
-                            <label for="@item.Id">@item.TagName</label>
-                        </div>
-}
-                                </div>
+                        {
+                            var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
+                            <div class="checkbox checkbox-success checkbox-inline">
+                                <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
+                                <label for="@item.Id">@item.TagName</label>
                             </div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.FansNum, Html.DisplayNameFor(d => d.FansNum).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.FansNum, new { @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.LikesNum, "赞与收藏", new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.LikesNum, new { @class = "form-control" })
+            }
                                 </div>
                             </div>
                             <div class="form-group">
@@ -125,8 +114,45 @@
 
                     </div>
                 </div>
-
                 <div id="tab-2" class="tab-pane">
+                    <div class="panel-body">
+
+                        <fieldset class="form-horizontal">
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.FansNum, Html.DisplayNameFor(d => d.FansNum).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.FansNum, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.FriendNum, Html.DisplayNameFor(d => d.FriendNum).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.FriendNum, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.LikesNum, "赞与收藏", new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.LikesNum, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.PostNum, "笔记数", new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.PostNum, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                           
+
+
+                        </fieldset>
+                        @Html.HiddenFor(d => d.MediaLogo)
+                        @Html.HiddenFor(d => d.MediaLink)
+
+                    </div>
+                </div>
+                <div id="tab-3" class="tab-pane">
                     <div class="panel-body">
                         @Html.Partial("MediaPrices", Model)
 

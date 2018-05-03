@@ -109,7 +109,7 @@ namespace DataReport.Controllers
             foreach (var item in result)
             {
                 var jo = new JObject();
-                jo.Add("订单日期", item.OrderDate);
+                jo.Add("订单日期", item.OrderDate?.ToString("yyyy-MM-dd"));
                 jo.Add("订单编号", item.OrderNum);
                 jo.Add("项目摘要", item.OrderRemark);
                 jo.Add("客户名称", item.LinkManName);
@@ -120,7 +120,7 @@ namespace DataReport.Controllers
                 jo.Add("销售金额", item.Money);
                 jo.Add("采购成本", item.PurchaseMoney);
                 jo.Add("稿件标题", item.MediaTitle);
-                jo.Add("出刊日期", item.PublishDate);
+                jo.Add("出刊日期", item.PublishDate?.ToString("yyyy-MM-dd"));
                 jo.Add("出刊链接", item.PublishLink);
                 jo.Add("经办媒介", item.MediaByPurchase);
                 jo.Add("销售人员", item.Transactor);
