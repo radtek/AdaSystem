@@ -406,7 +406,7 @@ formatter.mediaInfo = function (value, row) {
     }
     var weixinid = "";
     if (row.MediaTypeIndex == "weixin") {
-        weixinid = "<span class='btn btn-warning btn-xs btn-outline'><i class='fa fa-weixin'></i> 微信号：" + row.MediaID + " </span>";
+        weixinid = "<span class='label label-warning'><i class='fa fa-weixin'></i> 微信号：" + row.MediaID + " </span>";
     }
     if (row.MediaTypeIndex == "weixin") {
         value = " <a class='label' href='http://weixin.sogou.com/weixin?type=1&query=" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
