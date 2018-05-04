@@ -80,6 +80,7 @@ namespace DataReport.Controllers
                 d.PurchaseOrder.OrderNum,
                 d.MediaName,
                 d.LinkManName,
+                d.LinkManId,
                 d.AdPositionName,
                 d.PurchaseMoney,
                 d.PublishDate,
@@ -93,15 +94,16 @@ namespace DataReport.Controllers
             foreach (var item in result)
             {
                 var jo = new JObject();
-                jo.Add("订单日期", item.OrderDate);
+                jo.Add("订单日期", item.OrderDate?.ToString("yyyy-MM-dd"));
                 jo.Add("订单编号", item.OrderNum);
+                jo.Add("供应商ID", item.LinkManId);
                 jo.Add("供应商", item.LinkManName);
                 jo.Add("媒体名称", item.MediaName);
                 jo.Add("广告位", item.AdPositionName);
                 jo.Add("采购金额（无税）", item.PurchaseMoney);
                 jo.Add("采购金额（含税）", item.Money);
                 jo.Add("稿件标题", item.MediaTitle);
-                jo.Add("出刊日期", item.PublishDate);
+                jo.Add("出刊日期", item.PublishDate?.ToString("yyyy-MM-dd"));
                 jo.Add("出刊链接", item.PublishLink);
                 jo.Add("经办媒介", item.Transactor);
                 jObjects.Add(jo);

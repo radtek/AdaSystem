@@ -37,7 +37,10 @@ namespace Ada.Services.Customer
             {
                 allList = allList.Where(d => d.Commpany.Name.Contains(viewModel.CommpanyName));
             }
-
+            if (viewModel.IsLock != null)
+            {
+                allList = allList.Where(d => d.IsLock == viewModel.IsLock);
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.QQ))
             {
                 allList = allList.Where(d => d.QQ.Contains(viewModel.QQ));
