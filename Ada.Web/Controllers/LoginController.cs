@@ -47,10 +47,10 @@ namespace Ada.Web.Controllers
                 return View(loginModel);
             }
 
-            if (loginModel.LoginName != "18607961688"&&loginModel.LoginName != "18888888888")
+            if (loginModel.LoginName != "18888888888")
             {
                 //校验验证码
-                var obj = _cacheService.GetObject<string>(loginModel.LoginName);
+                var obj = _cacheService.GetObject<string>(loginModel.LoginName.Trim());
                 if (obj == null)
                 {
                     ModelState.AddModelError("error", "验证码已失效，请重新获取！");
@@ -58,29 +58,12 @@ namespace Ada.Web.Controllers
                 }
 
                 var code = obj.ToString();
-                if (code != loginModel.Code)
+                if (code != loginModel.Code.Trim())
                 {
                     ModelState.AddModelError("error", "验证码有误！");
                     return View(loginModel);
                 }
             }
-
-            ////校验验证码
-            //var obj = _cacheService.GetObject<string>(loginModel.LoginName);
-            //if (obj == null)
-            //{
-            //    ModelState.AddModelError("error", "验证码已失效，请重新获取！");
-            //    return View(loginModel);
-            //}
-
-            //var code = obj.ToString();
-            //if (code != loginModel.Code)
-            //{
-            //    ModelState.AddModelError("error", "验证码有误！");
-            //    return View(loginModel);
-            //}
-
-
             var user = _linkManService.CheackUser(loginModel.LoginName);
             if (user == null)
             {
@@ -100,18 +83,20 @@ namespace Ada.Web.Controllers
             //Cookie
             Response.Cookies["UserSession"].Value = sessionId;
             //Session["User"] = SerializeHelper.SerializeToString(viewModel);
+            //会员登陆日志
+
             return RedirectToAction("Index", "UserCenter");
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
         public ActionResult GetSmsCode(string phone)
         {
-            if (phone=="18607961688"||phone== "18888888888")
+            if (phone== "18888888888")
             {
                 return Json(new { State = 1, Msg = "获取成功" });
             }
             //验证手机号
-            if (!Utils.IsMobilePhone(phone))
+            if (!Utils.IsMobilePhone(phone.Trim()))
             {
                 return Json(new { State = 0, Msg = "请输入正确的手机号" });
             }
@@ -122,7 +107,7 @@ namespace Ada.Web.Controllers
                 return Json(new { State = 0, Msg = "请勿频繁获取！" });
             }
             //验证是否存在账户
-            var user = _linkManService.CheackUser(phone);
+            var user = _linkManService.CheackUser(phone.Trim());
             if (user == null)
             {
                 return Json(new { State = 0, Msg = "此手机号暂未开通会员，请联系我们处理！" });

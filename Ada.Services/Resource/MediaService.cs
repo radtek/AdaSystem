@@ -68,7 +68,7 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.Sex == viewModel.Sex);
             }
-            if (viewModel.Cooperation!=null)
+            if (viewModel.Cooperation != null)
             {
                 allList = allList.Where(d => d.Cooperation == viewModel.Cooperation);
             }
@@ -220,19 +220,19 @@ namespace Ada.Services.Resource
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaBatch))
             {
-                viewModel.MediaBatch = viewModel.MediaBatch.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("，", ",").Replace(" ", ",");
+                viewModel.MediaBatch = viewModel.MediaBatch.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("\t", ",").Replace("，", ",").Replace(" ", ",");
                 var mediaNames = viewModel.MediaBatch.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
                 allList = allList.Where(d => mediaNames.Contains(d.MediaName) || mediaNames.Contains(d.MediaID));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
             {
-                viewModel.MediaNames = viewModel.MediaNames.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("，", ",").Replace(" ", ",");
+                viewModel.MediaNames = viewModel.MediaNames.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("\t", ",").Replace("，", ",").Replace(" ", ",");
                 var mediaNames = viewModel.MediaNames.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
                 allList = allList.Where(d => mediaNames.Contains(d.MediaName));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
             {
-                viewModel.MediaIDs = viewModel.MediaIDs.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("，", ",").Replace(" ", ",");
+                viewModel.MediaIDs = viewModel.MediaIDs.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("\t", ",").Replace("，", ",").Replace(" ", ",");
                 var mediaIDs = viewModel.MediaIDs.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
                 allList = allList.Where(d => mediaIDs.Contains(d.MediaID));
             }
@@ -250,17 +250,23 @@ namespace Ada.Services.Resource
 
             if (viewModel.FansNumStart != null)
             {
-                allList = allList.Where(d => d.FansNum >= viewModel.FansNumStart * 10000);
+                viewModel.FansNumStart = viewModel.FansNumStart >= 10000
+                    ? viewModel.FansNumStart
+                    : viewModel.FansNumStart * 10000;
+                allList = allList.Where(d => d.FansNum >= viewModel.FansNumStart);
             }
             if (viewModel.FansNumEnd != null)
             {
-                allList = allList.Where(d => d.FansNum <= viewModel.FansNumEnd * 10000);
+                viewModel.FansNumEnd = viewModel.FansNumEnd >= 10000
+                    ? viewModel.FansNumEnd
+                    : viewModel.FansNumEnd * 10000;
+                allList = allList.Where(d => d.FansNum <= viewModel.FansNumEnd);
             }
             if (!string.IsNullOrWhiteSpace(viewModel.FansNumRange))
             {
                 var temp = viewModel.FansNumRange.Trim().Replace("至", "-").Split('-');
-                var min = Convert.ToInt32(temp[0].Trim()) * 10000;
-                var max = Convert.ToInt32(temp[1].Trim()) * 10000;
+                var min = Convert.ToInt32(temp[0].Trim()) > 10000 ? Convert.ToInt32(temp[0].Trim()) : Convert.ToInt32(temp[0].Trim()) * 10000;
+                var max = Convert.ToInt32(temp[1].Trim()) > 10000 ? Convert.ToInt32(temp[1].Trim()) : Convert.ToInt32(temp[1].Trim()) * 10000;
                 allList = allList.Where(d => d.FansNum >= min && d.FansNum <= max);
             }
             if (!string.IsNullOrWhiteSpace(viewModel.AvgReadNumRange))

@@ -1,0 +1,62 @@
+﻿@using Ada.Core.Tools
+@model Ada.Core.Domain.Resource.MediaGroup
+<div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">关联平台详情</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>媒体平台</th>
+                                <th>媒体名称</th>
+                                <th>粉丝数(万)</th>
+                                <th>媒体价格</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Medias)
+                            {
+                                var date = item.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd");
+                                <tr>
+                                    <td>@item.MediaType.TypeName</td>
+                                    <td>@item.MediaName</td>
+                                    <td>@Utils.ShowFansNum(item.FansNum)</td>
+                                    <td>
+                                        <ul class='list-group m-b-none'>
+                                            @foreach (var price in item.MediaPrices.OrderByDescending(d=>d.AdPositionName))
+                                            {
+
+                                                <li class='list-group-item p-xxs'>
+                                                    <span class='badge badge-success'>
+                                                        @if (price.SellPrice == 0)
+                                                        {
+                                                            <text>不接单</text>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class='fa fa-jpy'></i> @price.SellPrice
+                                                        }
+                                                    </span>
+                                                    @price.AdPositionName
+                                                </li>
+                                            }
+                                            <li class='list-group-item p-xxs'><span class='badge'>@date</span>价格有效期</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>

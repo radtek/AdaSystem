@@ -531,6 +531,14 @@ formatter.mediaOperation = function (value, row) {
         "</div></div>";
 };
 
+formatter.mediaGroup=function (value, row, index) {
+    var result = "";
+    $.each(value,
+        function (k, v) {
+            result += "<button class='btn btn-warning btn-outline btn-sm' onclick=\"groupDetail('" + v.Id + "');\"><i class='fa fa-object-group'></i> " + v.GroupName + "</button> ";
+        });
+    return result;
+}
 
 
 
@@ -783,47 +791,6 @@ function exportDate() {
             subBtn.ladda('stop');
         }
     });
-    //swal({
-    //    title: "确认要导出数据吗?",
-    //    text: "注：每次最多导出100条数据，每日导出次数为5次;",
-    //    type: "warning",
-    //    showCancelButton: true,
-    //    confirmButtonColor: "#DD6B55",
-    //    confirmButtonText: "确定",
-    //    cancelButtonText: "取消",
-    //    closeOnConfirm: false,
-    //    showLoaderOnConfirm: true
-    //}, function () {
-    //    var parameters = {};
-    //    parameters.MediaTypeId = id;
-    //    parameters.MediaTypeIndex = $("#MediaTypeIndex").val();
-    //    parameters = searchFrm.queryParams(parameters);
-    //    $.ajax({
-    //        type: "post",
-    //        headers: {
-    //            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-    //        },
-    //        url: "/Media/Export",
-    //        data: parameters,
-    //        success: function (data) {
-    //            if (data.State == 1) {
-    //                swal({
-    //                    title: "导出成功",
-    //                    text: "正在下载中...",
-    //                    timer: 2000,
-    //                    showConfirmButton: false
-    //                });
-    //                window.location.href = "/Media/Download?file=" + data.Msg;
-    //            } else {
-    //                swal("消息", data.Msg, "warning");
-    //            }
-    //        },
-    //        error: function () {
-    //            swal("错误", "系统错误", "error");
-    //        }
-    //    });
-
-    //});
 }
 
 function todo() {
@@ -933,4 +900,12 @@ function develop() {
             subBtn.ladda('stop');
         }
     });
+}
+
+function groupDetail(id) {
+    $("#modalView").load("/Media/GroupDetail/" + id,
+        function () {
+            $('#modalView .modal').modal('show');
+        });
+
 }

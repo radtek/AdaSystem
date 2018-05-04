@@ -32,14 +32,15 @@ namespace Ada.Web.Controllers
         private readonly IOrderDetailCommentService _orderDetailCommentService;
         private readonly ICacheService _cacheService;
         private readonly IMediaDevelopService _mediaDevelopService;
-
+        private readonly IRepository<MediaGroup> _mediaGroupRepository;
         public MediaController(IRepository<Media> repository,
             IMediaService service,
             IOrderDetailCommentService orderDetailCommentService,
             IMediaCommentService mediaCommentService,
             ISettingService settingService,
             ICacheService cacheService,
-            IMediaDevelopService mediaDevelopService)
+            IMediaDevelopService mediaDevelopService,
+            IRepository<MediaGroup> mediaGroupRepository)
         {
             _repository = repository;
             _service = service;
@@ -48,6 +49,7 @@ namespace Ada.Web.Controllers
             _settingService = settingService;
             _cacheService = cacheService;
             _mediaDevelopService = mediaDevelopService;
+            _mediaGroupRepository = mediaGroupRepository;
         }
         public ActionResult WeiXin()
         {
@@ -132,7 +134,7 @@ namespace Ada.Web.Controllers
                     IsRecommend = d.IsRecommend,
                     IsTop = d.IsTop,
                     MediaLogo = d.MediaLogo,
-                    //CommentCount = d.MediaComments.Count+d.MediaPrices.Count(c=>c.BusinessOrderDetails.Count(o=>o.OrderDetailComments.Count>0)>0),
+                    MediaGroups = d.MediaGroups.Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
                     MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).Take(6).ToList(),
                     MediaPrices = d.MediaPrices.Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, SellPrice = p.SellPrice }).OrderByDescending(c => c.AdPositionName).ToList()
                 })
@@ -188,7 +190,7 @@ namespace Ada.Web.Controllers
                     entity.SubBy = entity.AddedBy;
                     entity.SubById = entity.AddedById;
                     entity.MediaName = name;
-                    entity.Content = "来自网站申请";
+                    entity.Content = "来自网站会员【"+CurrentUser.Name+"】的申请";
                     entity.Status = Consts.StateLock;//待开发
                     entity.MediaTypeId = viewModel.MediaTypeId;
                     entity.SubDate = DateTime.Now;
@@ -209,8 +211,13 @@ namespace Ada.Web.Controllers
         [DeleteFile] //Action Filter, 下載完后自動刪除文件，這個屬性稍後解釋
         public ActionResult Download(string file)
         {
+            
             string fullPath = Path.Combine(Server.MapPath("~/upload"), file);
-            return File(fullPath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", file);
+            if (System.IO.File.Exists(fullPath))
+            {
+                return File(fullPath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", file);
+            }
+            return Content("无可用文件下载");
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
@@ -247,6 +254,11 @@ namespace Ada.Web.Controllers
                     d.CommentDate
                 })
             });
+        }
+        public ActionResult GroupDetail(string id)
+        {
+            var entity = _mediaGroupRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            return PartialView("GroupDetail", entity);
         }
         private string HideName(string name)
         {
@@ -350,8 +362,6 @@ namespace Ada.Web.Controllers
                 jo.Add("媒体名称", media.MediaName);
                 if (fields.Contains("MediaID")) jo.Add("媒体ID", media.MediaID);
                 jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
-
-                if (fields.Contains("MediaLink")) jo.Add("媒体链接", media.MediaLink);
                 if (fields.Contains("Sex")) jo.Add("性别", media.Sex);
                 if (fields.Contains("Area")) jo.Add("地区", media.Area);
                 if (fields.Contains("IsAuthenticate")) jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
@@ -381,7 +391,7 @@ namespace Ada.Web.Controllers
                     }
                     jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
                 }
-
+                if (fields.Contains("MediaLink")) jo.Add("媒体链接", media.MediaLink);
                 jObjects.Add(jo);
             }
             return jObjects;

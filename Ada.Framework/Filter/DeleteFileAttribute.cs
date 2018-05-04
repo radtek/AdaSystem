@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,12 @@ namespace Ada.Framework.Filter
             //將當前filter context轉換成具體操作的文件并獲取文件路徑
             string filePath = (filterContext.Result as FilePathResult)?.FileName;
             //有文件路徑后就可以直接刪除相關文件了
-            System.IO.File.Delete(filePath ?? throw new InvalidOperationException());
+            if (File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath ?? throw new InvalidOperationException());
+            }
+            
+
         }
     }
 }
