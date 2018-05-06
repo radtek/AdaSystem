@@ -527,6 +527,11 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "导出字段")]
         public string ExcelField { get; set; }
+        /// <summary>
+        /// 分组ID
+        /// </summary>
+        [Display(Name = "分组ID")]
+        public string GroupId { get; set; }
     }
 
 }

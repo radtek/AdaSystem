@@ -7,9 +7,13 @@ using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Purchase;
+using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Business;
+using Ada.Core.ViewModel.Resource;
 using Ada.Core.ViewModel.Statistics;
+using Ada.Framework.Filter;
 using Ada.Services.Cache;
+using Ada.Services.Resource;
 using Ada.Web.Models;
 
 namespace Ada.Web.Controllers
@@ -18,16 +22,22 @@ namespace Ada.Web.Controllers
     {
         private readonly IRepository<BusinessOrderDetail> _businessRepository;
         private readonly IRepository<PurchaseOrderDetail> _purchaseRepository;
+        private readonly IRepository<MediaGroup> _mediaGroupRepository;
         private readonly ICacheService _cacheService;
+        private readonly IMediaGroupService _mediaGroupService;
 
         public UserCenterController(IRepository<BusinessOrderDetail> businessRepository,
-            IRepository<PurchaseOrderDetail> purchaseRepository, ICacheService cacheService)
+            IRepository<PurchaseOrderDetail> purchaseRepository, ICacheService cacheService,
+            IRepository<MediaGroup> mediaGroupRepository,
+            IMediaGroupService mediaGroupService)
         {
             _businessRepository = businessRepository;
             _purchaseRepository = purchaseRepository;
             _cacheService = cacheService;
+            _mediaGroupRepository = mediaGroupRepository;
+            _mediaGroupService = mediaGroupService;
         }
-        public ActionResult Index()
+        public ActionResult Order()
         {
             BusinessTotal viewModel = new BusinessTotal();
             var userId = CurrentUser.Id;
@@ -138,6 +148,13 @@ namespace Ada.Web.Controllers
                 rows = result.ToList()
             }, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult Group()
+        {
+            var groups = _mediaGroupRepository.LoadEntities(d => d.AddedById == CurrentUser.Id).ToList();
+            return View(groups);
+        }
+        
 
         public ActionResult Quit()
         {

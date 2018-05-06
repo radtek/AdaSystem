@@ -21,11 +21,11 @@ namespace Ada.Core.Domain.Resource
         /// </summary>
         [Display(Name = "媒体组名")]
         public string GroupName { get; set; }
-        ///// <summary>
-        ///// 媒体组类别
-        ///// </summary>
-        //[Display(Name = "媒体组类别")]
-        //public string GroupType { get; set; }
+        /// <summary>
+        /// 媒体组类别
+        /// </summary>
+        [Display(Name = "媒体组类别")]
+        public short? GroupType { get; set; }
         ///// <summary>
         ///// 经办媒介
         ///// </summary>

@@ -13,8 +13,15 @@
         </div>
         <div class="navbar-collapse collapse" id="navbar">
             <ul class="nav navbar-nav">
-                <li class="@Html.IsActive("usercenter","index")">
+                @*<li class="@Html.IsActive("usercenter","index")">
                     <a aria-expanded="false" role="button" href="@Url.Action("Index","UserCenter")"> 会员中心</a>
+                </li>*@
+                <li class="dropdown @Html.IsActive("usercenter")">
+                    <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> 会员中心 <span class="caret"></span></a>
+                    <ul role="menu" class="dropdown-menu">
+                        <li><a href="@Url.Action("Order","UserCenter")">我的订单</a></li>
+                        <li><a href="@Url.Action("Group","UserCenter")">我的分组</a></li>
+                    </ul>
                 </li>
                 <li class="@Html.IsActive("media", "weixin")">
                     <a aria-expanded="false" role="button" href="@Url.Action("WeiXin", "Media")"> 微信公众号</a>

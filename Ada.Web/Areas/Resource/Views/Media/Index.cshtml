@@ -1,5 +1,6 @@
 ﻿@using System.Web.Optimization
 @using Ada.Core
+@using Ada.Core.Domain
 @using Ada.Core.Domain.Resource
 @using Ada.Core.Infrastructure
 @using Ada.Core.Tools
@@ -523,7 +524,7 @@
                                             </ul>
                                         </td>
                                         <td>
-                                            @foreach (var group in item.MediaGroups)
+                                            @foreach (var group in item.MediaGroups.Where(d=>d.GroupType==Consts.StateNormal))
                                             {
                                                 <button class='btn btn-warning btn-xs' onclick="groupDetail('@group.Id');"><i class='fa fa-object-group'></i>@group.GroupName</button>
                                             }

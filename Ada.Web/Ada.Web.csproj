@@ -2953,7 +2953,7 @@
     <Content Include="Views\Media\DouYin.cshtml" />
     <Content Include="Views\Media\ZhiHu.cshtml" />
     <Content Include="Views\Media\RedBook.cshtml" />
-    <Content Include="Views\UserCenter\Index.cshtml" />
+    <Content Include="Views\UserCenter\Order.cshtml" />
     <Content Include="Views\Media\Filter.cshtml" />
     <Content Include="Views\Media\CommentDetail.cshtml" />
     <Content Include="Views\Media\FilterWeiXin.cshtml" />
@@ -2967,6 +2967,8 @@
     <Content Include="Views\Media\RedBookArticles.cshtml" />
     <Content Include="Views\Media\FilterRedBook.cshtml" />
     <Content Include="Views\Media\GroupDetail.cshtml" />
+    <Content Include="Views\Media\AddGroup.cshtml" />
+    <Content Include="Views\UserCenter\Group.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

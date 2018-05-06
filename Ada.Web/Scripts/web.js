@@ -379,16 +379,16 @@ formatter.mediaInfo = function (value, row) {
     }
     var aType = "";
     if (row.AuthenticateType == "黄V") {
-        aType = " <span class='label label-warning'> " + row.AuthenticateType +"</span> ";
+        aType = " <span class='label label-warning'> " + row.AuthenticateType + "</span> ";
     } else if (row.AuthenticateType == "蓝V") {
-        aType = " <span class='label label-success'> " + row.AuthenticateType +"</span> ";
+        aType = " <span class='label label-success'> " + row.AuthenticateType + "</span> ";
     } else if (row.AuthenticateType == "达人") {
-        aType = " <span class='label label-danger'><i class='fa fa-star-o'></i> " + row.AuthenticateType+"</span> ";
+        aType = " <span class='label label-danger'><i class='fa fa-star-o'></i> " + row.AuthenticateType + "</span> ";
     } else {
         if (row.AuthenticateType) {
             aType = " <span class='label label-info'> " + row.AuthenticateType + "</span> ";
         }
-        
+
     }
     var area = "";
     if (row.Areas) {
@@ -415,14 +415,14 @@ formatter.mediaInfo = function (value, row) {
             value = " <a class='label' href='" + row.MediaLink + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
         }
     }
-    var line1 = "<div class='p-xxs'>" + sex + isAuth  + value + "</div>";
+    var line1 = "<div class='p-xxs'>" + sex + isAuth + value + "</div>";
     var line2 = weixinid ? "<div class='p-xxs'>" + weixinid + "</div>" : "";
     var line3 = area ? "<div class='p-xxs'>" + area + "</div>" : "";
     var line0 = aType ? "<div class='p-xxs'>" + aType + "</div>" : "";
     var line4 = tags ? "<div class='p-xxs'>" + tags + "</div>" : "";
     var line5 = "<div class='p-xxs'>" + fans + "</div>";
 
-    return line1 + line2 + line3 + line0+ line4 + line5;
+    return line1 + line2 + line3 + line0 + line4 + line5;
 };
 formatter.mediaPrice = function (value, row) {
     var arr = [];
@@ -431,7 +431,7 @@ formatter.mediaPrice = function (value, row) {
             var price = !v.SellPrice ? "不接单" : "<i class='fa fa-jpy'></i> " + v.SellPrice;
             arr.push("<li class='list-group-item p-xxs'><span class='badge badge-success'>" + price + "</span> " + v.AdPositionName + "</li>");
         });
-    arr.push("<li class='list-group-item p-xxs'><span class='badge'>" + moment(value[0].InvalidDate).format("YYYY-MM-DD")+"</span>价格有效期</li>");
+    arr.push("<li class='list-group-item p-xxs'><span class='badge'>" + moment(value[0].InvalidDate).format("YYYY-MM-DD") + "</span>价格有效期</li>");
     return "<ul class='list-group m-b-none'>" + arr.join('') + "</ul>";
 };
 formatter.mediaData = function (value, row) {
@@ -525,13 +525,19 @@ formatter.mediaData = function (value, row) {
 };
 
 formatter.mediaOperation = function (value, row) {
+    if (row.IsGroup) {
+        return "<div class='p-xxs'><div class='btn-group'>" +
+            "<button class='btn btn-danger btn-sm' disable='disable'><i class='fa fa-star-o'></i> 已加分组</button>" +
+            "</div></div>";
+    } else {
+        return "<div class='p-xxs'><div class='btn-group'>" +
+            "<button class='btn btn-danger btn-outline btn-sm' onclick=\"showGroup('" + row.MediaName + "','" + row.Id + "');\"><i class='fa fa-star-o'></i> 加入分组</button>" +
+            "</div></div>";
+    }
 
-    return "<div class='p-xxs'><div class='btn-group'>" +
-        "<button class='btn btn-danger btn-outline btn-sm' onclick='todo();'><i class='fa fa-cart-arrow-down'></i> 加入分组</button>" +
-        "</div></div>";
 };
 
-formatter.mediaGroup=function (value, row, index) {
+formatter.mediaGroup = function (value, row, index) {
     var result = "";
     $.each(value,
         function (k, v) {
@@ -540,7 +546,13 @@ formatter.mediaGroup=function (value, row, index) {
     return result;
 }
 
+formatter.groupOperation = function (value, row) {
+    return "<div class='p-xxs'><div class='btn-group'>" +
+        "<button class='btn btn-danger btn-outline btn-sm' onclick=\"showGroup('" + row.MediaName + "','" + row.Id + "');\"><i class='fa fa-star-o'></i> 重新分组</button>" +
+        "<button class='btn btn-danger btn-outline btn-sm' onclick=\"removeMedia('" + row.MediaName + "','" + row.Id + "');\"><i class='fa fa-trash-o'></i> 移出分组</button>" +
+        "</div></div>";
 
+};
 
 
 
@@ -908,4 +920,190 @@ function groupDetail(id) {
             $('#modalView .modal').modal('show');
         });
 
+}
+
+function showGroup(name, id) {
+    $("#modalView").load("/Media/AddGroup?name=" + name,
+        function () {
+            $('#modalView .modal').on('shown.bs.modal', function () {
+                $("#MediaId").val(id);
+                $("#errorMsg").text("");
+            }).on('hidden.bs.modal', function () {
+
+            });
+            $('#modalView .modal').modal('show');
+        });
+}
+function addGroup() {
+    var groupName = $("#groupName").val();
+    if (groupName) {
+        if (groupName.length > 10) {
+            $("#errorMsg").text("分组名称不能超过10个字符");
+            return;
+        } else {
+            var subBtn = $('.btn-warning.ladda-button').ladda();
+            $.ajax({
+                type: "post",
+                headers: {
+                    '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
+                },
+                url: "/Media/AddGroup",
+                data: { GroupName: groupName },
+                success: function (data) {
+                    if (data.State == 1) {
+                        var id = data.Msg;
+                        $("#groups").append('<div class="col-md-4 col-xs-6">' +
+                            '<div class="checkbox checkbox-success checkbox-inline">' +
+                            '<input type="checkbox" id="' + id + '" name="Group" value="' + id + '" checked="">' +
+                            '<label for="' + id + '"> ' + groupName + ' </label>' +
+                            '</div>' +
+                            '</div>');
+                        $("#errorMsg").text("");
+                        $("#groupName").val("");
+                    } else {
+                        $("#errorMsg").text(data.Msg);
+                    }
+                },
+                error: function () {
+                    $("#errorMsg").text("系统错误");
+                },
+                beforeSend: function () {
+                    subBtn.ladda('start');
+                },
+                complete: function () {
+                    subBtn.ladda('stop');
+                }
+            });
+        }
+    } else {
+        $("#errorMsg").text("请输入分组名称");
+        return;
+    }
+}
+
+function joinGroup() {
+    var arr = [], checkeds = $("[name='Group']:checked");
+    $.each(checkeds, function () {
+        arr.push($(this).val());
+    });
+    if (arr.length <= 0) {
+        $("#errorMsg").text("请选择要加入的分组，如果没有，请先添加分组");
+        return;
+    }
+    var subBtn = $('.btn-primary.ladda-button').ladda();
+    $.ajax({
+        type: "post",
+        headers: {
+            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
+        },
+        url: "/Media/JoinGroup",
+        data: { gIds: arr.join(','), mId: $("#MediaId").val() },
+        success: function (data) {
+            $('#modalView .modal').modal('hide');
+            $("#table").bootstrapTable("refresh");
+            swal("消息", data.Msg, "success");
+        },
+        error: function () {
+            swal("消息", "系统错误", "error");
+        },
+        beforeSend: function () {
+            subBtn.ladda('start');
+        },
+        complete: function () {
+            subBtn.ladda('stop');
+        }
+    });
+}
+
+function removeMedia(name, id) {
+    swal({
+        title: "提醒",
+        text: "确认要将 [" + name + "] 移除分组吗?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
+
+    }, function () {
+        $.ajax({
+            type: "post",
+            headers: {
+                '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
+            },
+            url: "/Media/RemoveGroup",
+            data: { mId: id, gId: $("#GroupId").val() },
+            success: function (data) {
+                if (data.State == 1) {
+                    $("#table").bootstrapTable('refresh');
+                    swal({
+                        title: "操作成功",
+                        text: data.Msg,
+                        timer: 1000,
+                        type: "success",
+                        showConfirmButton: false
+                    });
+
+                } else {
+                    swal("操作提醒", data.Msg, "warning");
+                }
+            },
+            error: function () {
+                swal("操作失败", "系统错误", "error");
+            },
+            complete: function () {
+
+            }
+        });
+    });
+}
+
+function delGroup() {
+    swal({
+        title: "提醒",
+        text: "确认要将删除此分组吗?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
+
+    }, function () {
+        $.ajax({
+            type: "post",
+            headers: {
+                '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
+            },
+            url: "/Media/DeleteGroup",
+            data: { id: $("#GroupId").val() },
+            success: function (data) {
+                if (data.State == 1) {
+                    
+                    swal({
+                        title: "操作成功",
+                        text: data.Msg,
+                        timer: 1000,
+                        type: "success"
+
+                    },
+                        function() {
+                            window.location.reload();
+                        });
+
+                } else {
+                    swal("操作提醒", data.Msg, "warning");
+                }
+            },
+            error: function () {
+                swal("操作失败", "系统错误", "error");
+            },
+            complete: function () {
+
+            }
+        });
+    });
 }

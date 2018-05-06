@@ -64,6 +64,10 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.MediaTypeId == viewModel.MediaTypeId.Trim());
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.GroupId))
+            {
+                allList = allList.Where(d => d.MediaGroups.Any(g=>viewModel.GroupId.Contains(g.Id)));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.Sex))
             {
                 allList = allList.Where(d => d.Sex == viewModel.Sex);

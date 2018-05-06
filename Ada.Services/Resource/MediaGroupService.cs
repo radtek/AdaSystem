@@ -33,10 +33,14 @@ namespace Ada.Services.Resource
 
         public IQueryable<MediaGroup> LoadEntitiesFilter(MediaGroupView viewModel)
         {
-            var allList = _repository.LoadEntities(d => d.IsDelete==false);
+            var allList = _repository.LoadEntities(d => d.IsDelete == false);
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
                 allList = allList.Where(d => d.GroupName.Contains(viewModel.search));
+            }
+            if (viewModel.GroupType != null)
+            {
+                allList = allList.Where(d => d.GroupType == viewModel.GroupType);
             }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
@@ -54,7 +58,24 @@ namespace Ada.Services.Resource
             _repository.Update(entity);
             _dbContext.SaveChanges();
         }
+        public void AddMedia(List<string> groupIds, Media media)
+        {
+            foreach (var groupId in groupIds)
+            {
+                var group = _repository.LoadEntities(d => d.Id == groupId).FirstOrDefault();
+                group?.Medias.Add(media);
+            }
+            _dbContext.SaveChanges();
+        }
+        public void RemoveMedia(string groupId, Media media)
+        {
+            var group = _repository.LoadEntities(d => d.Id == groupId).FirstOrDefault();
+            if (group != null)
+            {
+                group.Medias.Remove(media);
+                _dbContext.SaveChanges();
+            }
 
-        
+        }
     }
 }

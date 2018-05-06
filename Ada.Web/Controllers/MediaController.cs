@@ -33,6 +33,7 @@ namespace Ada.Web.Controllers
         private readonly ICacheService _cacheService;
         private readonly IMediaDevelopService _mediaDevelopService;
         private readonly IRepository<MediaGroup> _mediaGroupRepository;
+        private readonly IMediaGroupService _mediaGroupService;
         public MediaController(IRepository<Media> repository,
             IMediaService service,
             IOrderDetailCommentService orderDetailCommentService,
@@ -40,7 +41,8 @@ namespace Ada.Web.Controllers
             ISettingService settingService,
             ICacheService cacheService,
             IMediaDevelopService mediaDevelopService,
-            IRepository<MediaGroup> mediaGroupRepository)
+            IRepository<MediaGroup> mediaGroupRepository,
+            IMediaGroupService mediaGroupService)
         {
             _repository = repository;
             _service = service;
@@ -50,6 +52,7 @@ namespace Ada.Web.Controllers
             _cacheService = cacheService;
             _mediaDevelopService = mediaDevelopService;
             _mediaGroupRepository = mediaGroupRepository;
+            _mediaGroupService = mediaGroupService;
         }
         public ActionResult WeiXin()
         {
@@ -106,6 +109,7 @@ namespace Ada.Web.Controllers
                     Id = d.Id,
                     MediaName = d.MediaName,
                     MediaTypeIndex = d.MediaType.CallIndex,
+                    MediaTypeName = d.MediaType.TypeName,
                     MediaID = d.MediaID,
                     MediaLink = d.MediaLink,
                     IsAuthenticate = d.IsAuthenticate,
@@ -134,7 +138,8 @@ namespace Ada.Web.Controllers
                     IsRecommend = d.IsRecommend,
                     IsTop = d.IsTop,
                     MediaLogo = d.MediaLogo,
-                    MediaGroups = d.MediaGroups.Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
+                    IsGroup = d.MediaGroups.Any(g => g.GroupType == Consts.StateLock&&g.AddedById==CurrentUser.Id),
+                    MediaGroups = d.MediaGroups.Where(m => m.GroupType == Consts.StateNormal).Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
                     MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).Take(6).ToList(),
                     MediaPrices = d.MediaPrices.Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, SellPrice = p.SellPrice }).OrderByDescending(c => c.AdPositionName).ToList()
                 })
@@ -190,7 +195,7 @@ namespace Ada.Web.Controllers
                     entity.SubBy = entity.AddedBy;
                     entity.SubById = entity.AddedById;
                     entity.MediaName = name;
-                    entity.Content = "来自网站会员【"+CurrentUser.Name+"】的申请";
+                    entity.Content = "来自网站会员【" + CurrentUser.Name + "】的申请";
                     entity.Status = Consts.StateLock;//待开发
                     entity.MediaTypeId = viewModel.MediaTypeId;
                     entity.SubDate = DateTime.Now;
@@ -211,7 +216,7 @@ namespace Ada.Web.Controllers
         [DeleteFile] //Action Filter, 下載完后自動刪除文件，這個屬性稍後解釋
         public ActionResult Download(string file)
         {
-            
+
             string fullPath = Path.Combine(Server.MapPath("~/upload"), file);
             if (System.IO.File.Exists(fullPath))
             {
@@ -259,6 +264,81 @@ namespace Ada.Web.Controllers
         {
             var entity = _mediaGroupRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
             return PartialView("GroupDetail", entity);
+        }
+
+        public ActionResult AddGroup(string name)
+        {
+            ViewBag.MediaName = name;
+            var groups = _mediaGroupRepository.LoadEntities(d => d.AddedById == CurrentUser.Id);
+            return PartialView("AddGroup", groups.ToList());
+        }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult AddGroup(MediaGroupView viewModel)
+        {
+            //组名不能超出10个字符
+            if (viewModel.GroupName.Length > 10)
+            {
+                return Json(new { State = 0, Msg = "分组名称不能超出10个字符" });
+            }
+            //校验是否超出10个分组
+            var count = _mediaGroupRepository.LoadEntities(d => d.AddedById == CurrentUser.Id && d.IsDelete == false).Count();
+            if (count > 10)
+            {
+                return Json(new { State = 0, Msg = "最多只能建立10个分组" });
+            }
+            //校验唯一性
+            var temp = _mediaGroupRepository
+                .LoadEntities(d => d.GroupName.Equals(viewModel.GroupName, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false && d.AddedById == CurrentUser.Id)
+                .FirstOrDefault();
+            if (temp != null)
+            {
+                return Json(new { State = 0, Msg = viewModel.GroupName + "，此分组已存在" });
+            }
+            MediaGroup entity = new MediaGroup();
+            entity.Id = IdBuilder.CreateIdNum();
+            entity.AddedById = CurrentUser.Id;
+            entity.AddedBy = CurrentUser.Name;
+            entity.AddedDate = DateTime.Now;
+            entity.GroupName = viewModel.GroupName;
+            entity.GroupType = Consts.StateLock;//用户分组
+            _mediaGroupService.Add(entity);
+            return Json(new { State = 1, Msg = entity.Id });
+        }
+
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult JoinGroup(string mId, string gIds)
+        {
+            var groups = gIds.Split(',');
+            var media = _repository.LoadEntities(d => d.Id == mId).FirstOrDefault();
+            if (media != null)
+            {
+                _mediaGroupService.AddMedia(groups.ToList(), media);
+                return Json(new { State = 1, Msg = "加入成功" });
+            }
+            return Json(new { State = 0, Msg = "媒体资源不存在" });
+        }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult RemoveGroup(string mId, string gId)
+        {
+            
+            var media = _repository.LoadEntities(d => d.Id == mId).FirstOrDefault();
+            if (media!=null)
+            {
+                _mediaGroupService.RemoveMedia(gId,media);
+                return Json(new { State = 1, Msg = "移除成功" });
+            }
+            return Json(new { State = 0, Msg = "媒体资源不存在" });
+        }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult DeleteGroup(string id)
+        {
+            var group = _mediaGroupRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            _mediaGroupService.Delete(group);
+            return Json(new { State = 1, Msg = "删除成功" });
         }
         private string HideName(string name)
         {
@@ -377,11 +457,11 @@ namespace Ada.Web.Controllers
                 if (fields.Contains("RedBookTransmitNum")) jo.Add("平均收藏数", media.TransmitNum);
                 if (fields.Contains("RedBookLikesNum")) jo.Add("赞与收藏", media.LikesNum);
                 if (fields.Contains("RedBookPostNum")) jo.Add("笔记数", media.PostNum);
-                
+
                 if (fields.Contains("PublishFrequency")) jo.Add("月发布频次", media.PublishFrequency);
                 if (fields.Contains("MonthPostNum")) jo.Add("最近月发文数", media.MonthPostNum);
                 if (fields.Contains("LastPushDate")) jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
-                
+
                 if (fields.Contains("SellPrice"))
                 {
                     foreach (var mediaMediaPrice in media.MediaPrices)

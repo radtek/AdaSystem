@@ -38,8 +38,9 @@ namespace Customer.Controllers
                     FollowUpWay = d.FollowUpWay,
                     LinkManName = d.LinkMan.Name,
                     NextTime = d.NextTime,
-                    Transactor = d.Transactor,
-                    CompanyName = d.LinkMan.Commpany.Name
+                    Transactor = d.LinkMan.LoginName,
+                    CompanyName = d.LinkMan.Commpany.Name,
+                    IpAddress = d.IpAddress
                 })
             }, JsonRequestBehavior.AllowGet);
         }

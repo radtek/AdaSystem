@@ -15,5 +15,7 @@ namespace Ada.Services.Resource
         void Add(MediaGroup entity);
         void Update(MediaGroup entity);
         void Delete(MediaGroup entity);
+        void AddMedia(List<string> groupIds, Media media);
+        void RemoveMedia(string groupId, Media media);
     }
 }

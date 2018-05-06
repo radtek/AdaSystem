@@ -317,6 +317,10 @@
     <Compile Include="Migrations\201803150459295_UserProfile20180315.Designer.cs">
       <DependentUpon>201803150459295_UserProfile20180315.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805051441003_UpdateMediaGroup.cs" />
+    <Compile Include="Migrations\201805051441003_UpdateMediaGroup.Designer.cs">
+      <DependentUpon>201805051441003_UpdateMediaGroup.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -483,6 +487,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201803150459295_UserProfile20180315.resx">
       <DependentUpon>201803150459295_UserProfile20180315.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805051441003_UpdateMediaGroup.resx">
+      <DependentUpon>201805051441003_UpdateMediaGroup.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

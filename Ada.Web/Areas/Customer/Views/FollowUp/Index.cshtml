@@ -2,7 +2,7 @@
 @using System.Web.Optimization
 @model Ada.Core.ViewModel.Customer.FollowUpView
 @{
-    ViewBag.Title = "客户跟进";
+    ViewBag.Title = "登陆日志";
 }
 @Html.Partial("Bread")
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
@@ -97,9 +97,14 @@
                             align: "center", valign: "middle",
                             formatter: function(value) {
                                 if (value) {
-                                    return moment(value).format("YYYY-MM-DD");
+                                    return moment(value).format("YYYY-MM-DD HH:mm");
                                 }
                             }
+                        },
+                        {
+                            field: 'IpAddress',
+                            title: '@Html.DisplayNameFor(d => d.IpAddress)',
+                            align: "center", valign: "middle"
                         },
                         {
                             field: 'Transactor',

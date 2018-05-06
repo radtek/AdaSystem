@@ -1,0 +1,171 @@
+﻿@using System.Web.Optimization
+@model List<Ada.Core.Domain.Resource.MediaGroup>
+@{
+    ViewBag.Title = "我的分组";
+    Layout = "~/Views/Shared/_Layout_Web.cshtml";
+    var gIds = Model.FirstOrDefault()?.Id;
+}
+
+<div class="wrapper wrapper-content">
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content mailbox-content">
+                    <div class="file-manager">
+
+                        <h5>我的分组</h5>
+                        <ul class="folder-list m-b-md" style="padding: 0">
+                            @foreach (var item in Model)
+                            {
+                                <li><a href="javascript:;" onclick="refreshTable('@item.Id','@item.GroupName')"> <i class="fa fa fa-bars "></i> @item.GroupName <span class="label label-warning pull-right">@item.Medias.Count</span> </a></li>
+                            }
+                        </ul>
+
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9 animated fadeInRight">
+            <div class="mail-box-header">
+
+                @if (Model.Any())
+                {
+                    var media1 = Model.FirstOrDefault();
+                    <form method="get" action="#" class="pull-right mail-search">
+                        <input type="hidden" id="GroupId" value="@gIds" />
+                        <button type="button" class="btn btn-sm btn-danger" id="delGroup">
+                            删除该分组
+                        </button>
+                    </form>
+                    <h2 id="groupName">
+                        @media1.GroupName
+                    </h2>
+                }
+                else
+                {
+                    <h2>
+                        您还未有任何媒体分组信息：）
+                    </h2>
+                }
+            </div>
+            <div class="mail-box">
+                <table id="table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+    @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/laddaStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/ladda")
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            @if (!string.IsNullOrWhiteSpace(gIds))
+            {
+                <text>
+                    initTable();
+                </text>
+            }
+            $("#delGroup").click(function() {
+                delGroup();
+            });
+        });
+
+        function initTable() {
+             $('#table').bootstrapTable({
+                url: '@Url.Action("GetList","Media")', //请求后台的URL（*）
+                method: 'post',
+                classes: "table table-no-bordered",
+                //toolbar: '#toolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "desc",                   //排序方式
+                sortName:"Id",
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
+                showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                singleSelect: true,                  //设置True 将禁止多选
+                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                //searchAlign:"left",
+                ajaxOptions:{
+                    headers: { "__RequestVerificationToken": $("input[name='__RequestVerificationToken']").val() }
+                },
+                formatSearch: function() {
+                    return "媒体名称或媒体ID";
+                },
+                mobileResponsive: true,
+                queryParams: function (parameters) {
+                    parameters.GroupId = '@gIds';
+                    return searchFrm.queryParams(parameters);
+                 },
+                 //onLoadSuccess: function(data) {
+                 //    var gid = $("#GroupId").val();
+                 //    $("#" + gid).text(data.total);
+                 //},
+                columns: [
+                    {
+                        field: 'MediaLogo',
+                        align: "right", valign: "middle",
+                        formatter: formatter.mediaLogo
+
+                    },
+                    {
+                        field: 'MediaTypeName',
+                        title: '所属平台',
+                        valign: "middle",
+                        align: "center"
+                    },
+                    {
+                        field: 'MediaName',
+                        title: '媒体名称',
+                        valign: "middle",
+                        align: "left",
+                        formatter: formatter.mediaInfo
+                    },
+
+                    {
+                        field: 'MediaPrices',
+                        title: '广告位参考价格',
+                        valign: "middle",
+                        align: "left",
+                        formatter: formatter.mediaPrice,
+                        //align: "center"
+                    },
+
+                    {
+                        field: 'Id',
+                        title: '操作',
+                        valign: "middle",
+                        align: "center",
+                        formatter: formatter.groupOperation
+                    }
+                ]
+            });
+        }
+
+
+        function refreshTable(id,name) {
+            $('#table').bootstrapTable('refresh', { query: { GroupId: id } });
+            $("#GroupId").val(id);
+            $("#groupName").text(name);
+        }
+
+    </script>
+}

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
+using Ada.Core.Domain;
 using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Filter;
@@ -34,6 +35,7 @@ namespace Resource.Controllers
         }
         public ActionResult GetList(MediaGroupView viewModel)
         {
+            viewModel.GroupType = Consts.StateNormal;
             var result = _mediaGroupService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {
@@ -75,6 +77,7 @@ namespace Resource.Controllers
             entity.AddedBy = CurrentManager.UserName;
             entity.AddedDate = DateTime.Now;
             entity.GroupName = viewModel.GroupName;
+            entity.GroupType = Consts.StateNormal;//系统内部分组
             foreach (var id in viewModel.Medias)
             {
                 var media = _mediaRepository.LoadEntities(d => d.Id == id).FirstOrDefault();

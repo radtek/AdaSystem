@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Ada.Core;
+using Ada.Core.Domain.Customer;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel.Customer;
 using Ada.Framework.Filter;
@@ -33,7 +35,7 @@ namespace Ada.Web.Controllers
             var user = _cacheService.GetObject<LinkManView>(sessionId);
             if (user != null)
             {
-                return RedirectToAction("Index", "UserCenter");
+                return RedirectToAction("Order", "UserCenter");
             }
             return View();
         }
@@ -46,30 +48,40 @@ namespace Ada.Web.Controllers
             {
                 return View(loginModel);
             }
-
-            if (loginModel.LoginName != "18888888888")
-            {
-                //校验验证码
-                var obj = _cacheService.GetObject<string>(loginModel.LoginName.Trim());
-                if (obj == null)
-                {
-                    ModelState.AddModelError("error", "验证码已失效，请重新获取！");
-                    return View(loginModel);
-                }
-
-                var code = obj.ToString();
-                if (code != loginModel.Code.Trim())
-                {
-                    ModelState.AddModelError("error", "验证码有误！");
-                    return View(loginModel);
-                }
-            }
             var user = _linkManService.CheackUser(loginModel.LoginName);
             if (user == null)
             {
                 ModelState.AddModelError("error", "此手机号暂未开通会员，请联系我们处理！");
                 return View(loginModel);
             }
+            if (loginModel.LoginName != "18888888888")
+            {
+                //校验验证码
+                var obj = _cacheService.GetObject<string>(loginModel.LoginName.Trim());
+                if (obj == null)
+                {
+                    ModelState.AddModelError("error", "验证码无效！");
+                    return View(loginModel);
+                }
+
+                var code = obj.ToString();
+                if (code != loginModel.Code.Trim())
+                {
+                    //会员登陆日志
+                    user.FollowUps.Add(new FollowUp()
+                    {
+                        Id = IdBuilder.CreateIdNum(),
+                        IpAddress = Utils.GetIpAddress(),
+                        Content = Request.UserAgent,
+                        NextTime = DateTime.Now,
+                        FollowUpWay = "失败，ErrorCode：" + loginModel.Code + "，Code:" + code
+                    });
+                    _linkManService.Update(user);
+                    ModelState.AddModelError("error", "验证码错误！");
+                    return View(loginModel);
+                }
+            }
+
             LinkManView viewModel = new LinkManView();
             viewModel.Id = user.Id;
             viewModel.CommpanyName = user.Commpany.Name;
@@ -82,16 +94,23 @@ namespace Ada.Web.Controllers
             _cacheService.Put(sessionId, viewModel, new TimeSpan(1, 0, 0, 0));
             //Cookie
             Response.Cookies["UserSession"].Value = sessionId;
-            //Session["User"] = SerializeHelper.SerializeToString(viewModel);
             //会员登陆日志
-
-            return RedirectToAction("Index", "UserCenter");
+            user.FollowUps.Add(new FollowUp()
+            {
+                Id = IdBuilder.CreateIdNum(),
+                IpAddress = Utils.GetIpAddress(),
+                Content = Request.UserAgent,
+                NextTime = DateTime.Now,
+                FollowUpWay = "成功"
+            });
+            _linkManService.Update(user);
+            return RedirectToAction("Order", "UserCenter");
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
         public ActionResult GetSmsCode(string phone)
         {
-            if (phone== "18888888888")
+            if (phone == "18888888888")
             {
                 return Json(new { State = 1, Msg = "获取成功" });
             }
@@ -113,7 +132,7 @@ namespace Ada.Web.Controllers
                 return Json(new { State = 0, Msg = "此手机号暂未开通会员，请联系我们处理！" });
             }
             //生成随机码 3分钟有效
-            RandomHelper random=new RandomHelper();
+            RandomHelper random = new RandomHelper();
             var code = random.GenerateCheckCodeNum(5);
             _cacheService.Put(phone, code, new TimeSpan(0, 3, 0));
             //发送短信
