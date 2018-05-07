@@ -66,19 +66,38 @@ namespace Ada.Web.Models
             ViewBag.CurrentUser = CurrentUser;
             _cacheService.Put(sessionId,user,new TimeSpan(1,0,0,0));
         }
+
         /// <summary>
         /// 导出数据
         /// </summary>
         /// <param name="jsonStr"></param>
+        /// <param name="sheetName"></param>
         /// <returns></returns>
-        public string ExportData(string jsonStr)
+        public string ExportData(string jsonStr,string sheetName= "江西微广")
         {
             var dt = JsonConvert.DeserializeObject<DataTable>(jsonStr);
             var fileName = "UserExport_" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx";
             var fullPath = Server.MapPath("~/upload/" + fileName);
             using (var workbook = new XLWorkbook())
             {
-                workbook.Worksheets.Add(dt, "江西微广");
+                workbook.Worksheets.Add(dt, sheetName);
+                workbook.SaveAs(fullPath);
+            }
+            return fileName;
+        }
+
+        public string ExportData(IDictionary<string,string> dic)
+        {
+           
+            var fileName = "UserExport_" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx";
+            var fullPath = Server.MapPath("~/upload/" + fileName);
+            using (var workbook = new XLWorkbook())
+            {
+                foreach (KeyValuePair<string, string> keyValuePair in dic)
+                {
+                    var dt = JsonConvert.DeserializeObject<DataTable>(keyValuePair.Value);
+                    workbook.Worksheets.Add(dt, keyValuePair.Key);
+                }
                 workbook.SaveAs(fullPath);
             }
             return fileName;

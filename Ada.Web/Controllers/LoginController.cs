@@ -7,10 +7,12 @@ using Ada.Core;
 using Ada.Core.Domain.Customer;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel.Customer;
+using Ada.Core.ViewModel.Setting;
 using Ada.Framework.Filter;
 using Ada.Framework.Messaging;
 using Ada.Services.Cache;
 using Ada.Services.Customer;
+using Ada.Services.Setting;
 using Ada.Web.Models;
 using Newtonsoft.Json;
 
@@ -22,11 +24,16 @@ namespace Ada.Web.Controllers
         private readonly ILinkManService _linkManService;
         private readonly IMessageService _messageService;
         private readonly ICacheService _cacheService;
-        public LoginController(ILinkManService linkManService, ICacheService cacheService, IMessageService messageService)
+        private readonly ISettingService _settingService;
+        public LoginController(ILinkManService linkManService,
+            ICacheService cacheService, 
+            IMessageService messageService,
+            ISettingService settingService)
         {
             _linkManService = linkManService;
             _cacheService = cacheService;
             _messageService = messageService;
+            _settingService = settingService;
         }
         public ActionResult Index()
         {
@@ -54,7 +61,9 @@ namespace Ada.Web.Controllers
                 ModelState.AddModelError("error", "此手机号暂未开通会员，请联系我们处理！");
                 return View(loginModel);
             }
-            if (loginModel.LoginName != "18888888888")
+
+            var demo = _settingService.GetSetting<WeiGuang>();
+            if (loginModel.LoginName != demo.UserDemo)
             {
                 //校验验证码
                 var obj = _cacheService.GetObject<string>(loginModel.LoginName.Trim());
@@ -110,7 +119,8 @@ namespace Ada.Web.Controllers
         [AdaValidateAntiForgeryToken]
         public ActionResult GetSmsCode(string phone)
         {
-            if (phone == "18888888888")
+            var demo = _settingService.GetSetting<WeiGuang>();
+            if (phone == demo.UserDemo)
             {
                 return Json(new { State = 1, Msg = "获取成功" });
             }
@@ -139,7 +149,7 @@ namespace Ada.Web.Controllers
             _messageService.Send("SMS", new Dictionary<string, object> {
                 {"PhoneNumbers", phone},
                 {"TemplateCode", "SMS_133230131"},
-                {"TemplateParam", "{\"code\":"+code+"}"}
+                {"TemplateParam", "{\"code\":\""+code+"\"}"}
             });
             //返回结果
             return Json(new { State = 1, Msg = "获取成功" });

@@ -33,7 +33,7 @@ namespace Ada.Services.Resource
 
         public IQueryable<MediaTag> LoadEntitiesFilter(MediaTagView viewModel)
         {
-            var allList = _repository.LoadEntities(d => d.IsDelete==false);
+            var allList = _repository.LoadEntities(d => d.IsDelete == false);
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
                 allList = allList.Where(d => d.TagName.Contains(viewModel.search));
@@ -57,8 +57,13 @@ namespace Ada.Services.Resource
 
         public List<MediaTagView> GetTags()
         {
-           return _repository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis)
-                .Select(d => new MediaTagView() {Id = d.Id, TagName = d.TagName}).ToList();
+            return _repository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis)
+                 .Select(d => new MediaTagView() { Id = d.Id, TagName = d.TagName }).ToList();
+        }
+        public List<MediaTagView> GetTags(string typeId)
+        {
+            return _repository.LoadEntities(d => d.IsDelete == false && d.Medias.Any(m => m.IsDelete == false && m.MediaTypeId == typeId)).OrderBy(d => d.Taxis)
+                .Select(d => new MediaTagView() { Id = d.Id, TagName = d.TagName }).ToList();
         }
     }
 }

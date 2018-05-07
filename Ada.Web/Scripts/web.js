@@ -525,16 +525,13 @@ formatter.mediaData = function (value, row) {
 };
 
 formatter.mediaOperation = function (value, row) {
+    var title = '加入分组', css = 'btn-outline';
     if (row.IsGroup) {
-        return "<div class='p-xxs'><div class='btn-group'>" +
-            "<button class='btn btn-danger btn-sm' disable='disable'><i class='fa fa-star-o'></i> 已加分组</button>" +
-            "</div></div>";
-    } else {
-        return "<div class='p-xxs'><div class='btn-group'>" +
-            "<button class='btn btn-danger btn-outline btn-sm' onclick=\"showGroup('" + row.MediaName + "','" + row.Id + "');\"><i class='fa fa-star-o'></i> 加入分组</button>" +
-            "</div></div>";
+        title = '重新分组', css = "";
     }
-
+    return "<div class='p-xxs'><div class='btn-group'>" +
+        "<button class='btn btn-danger btn-sm " + css + "' onclick=\"showGroup('" + row.MediaName + "','" + row.Id + "');\"><i class='fa fa-star-o'></i> " + title + "</button>" +
+        "</div></div>";
 };
 
 formatter.mediaGroup = function (value, row, index) {
@@ -923,7 +920,7 @@ function groupDetail(id) {
 }
 
 function showGroup(name, id) {
-    $("#modalView").load("/Media/AddGroup?name=" + name,
+    $("#modalView").load("/Media/AddGroup?name=" + name + "&id=" + id,
         function () {
             $('#modalView .modal').on('shown.bs.modal', function () {
                 $("#MediaId").val(id);
@@ -1000,7 +997,13 @@ function joinGroup() {
         data: { gIds: arr.join(','), mId: $("#MediaId").val() },
         success: function (data) {
             $('#modalView .modal').modal('hide');
-            $("#table").bootstrapTable("refresh");
+            var gid = $("#GroupId").val();
+            if (gid) {
+                $('#table').bootstrapTable('refresh', { query: { GroupId: gid } });
+            } else {
+                $("#table").bootstrapTable("refresh");
+            }
+
             swal("消息", data.Msg, "success");
         },
         error: function () {
@@ -1082,7 +1085,7 @@ function delGroup() {
             data: { id: $("#GroupId").val() },
             success: function (data) {
                 if (data.State == 1) {
-                    
+
                     swal({
                         title: "操作成功",
                         text: data.Msg,
@@ -1090,7 +1093,7 @@ function delGroup() {
                         type: "success"
 
                     },
-                        function() {
+                        function () {
                             window.location.reload();
                         });
 
@@ -1105,5 +1108,40 @@ function delGroup() {
 
             }
         });
+    });
+}
+
+function exportGroup() {
+    var subBtn = $('.ladda-button').ladda();
+    $.ajax({
+        type: "post",
+        headers: {
+            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
+        },
+        url: "/Media/ExportGroup",
+        data: { id: $("#GroupId").val(), isData: $("input[name='IsData']:checked").val() },
+        success: function (data) {
+            if (data.State == 1) {
+                $('#exportGroupModal').modal('hide');
+                swal({
+                    title: "导出成功",
+                    text: "正在下载中...",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                window.location.href = "/Media/Download?file=" + data.Msg;
+            } else {
+                swal("消息", data.Msg, "warning");
+            }
+        },
+        error: function () {
+            swal("错误", "系统错误", "error");
+        },
+        beforeSend: function () {
+            subBtn.ladda('start');
+        },
+        complete: function () {
+            subBtn.ladda('stop');
+        }
     });
 }

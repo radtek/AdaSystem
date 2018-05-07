@@ -138,7 +138,7 @@ namespace Ada.Web.Controllers
                     IsRecommend = d.IsRecommend,
                     IsTop = d.IsTop,
                     MediaLogo = d.MediaLogo,
-                    IsGroup = d.MediaGroups.Any(g => g.GroupType == Consts.StateLock&&g.AddedById==CurrentUser.Id),
+                    IsGroup = d.MediaGroups.Any(g => g.GroupType == Consts.StateLock && g.AddedById == CurrentUser.Id),
                     MediaGroups = d.MediaGroups.Where(m => m.GroupType == Consts.StateNormal).Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
                     MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).Take(6).ToList(),
                     MediaPrices = d.MediaPrices.Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, SellPrice = p.SellPrice }).OrderByDescending(c => c.AdPositionName).ToList()
@@ -177,6 +177,45 @@ namespace Ada.Web.Controllers
             _cacheService.Put(CurrentUser.Id + "UserExportTimes", times, timeSpan);
             return Json(new { State = 1, Msg = ExportData(jObjects.ToString()) });
         }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult ExportGroup(string id, bool isData)
+        {
+            var setting = _settingService.GetSetting<WeiGuang>();
+            //验证导出次数
+            int times = 1;
+            var obj = _cacheService.GetObject<int>(CurrentUser.Id + "UserExportTimes");
+            if (obj != null)
+            {
+                times = (int)obj;
+            }
+            if (times > setting.UserExportTimes)
+            {
+                return Json(new { State = 0, Msg = "抱歉，今日导出的次数已用完！" });
+            }
+
+            var group = _mediaGroupRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (group == null)
+            {
+                return Json(new { State = 0, Msg = "此分组不存在！" });
+            }
+            var rows = setting.UserExportGroupRows;
+            var result = group.Medias.Take(rows).GroupBy(d => d.MediaType.TypeName);
+            IDictionary<string, string> dic = new Dictionary<string, string>();
+            foreach (var item in result)
+            {
+                var jObjects = ExprotTemplate(item.ToList(),isData);
+                dic.Add(item.Key, jObjects.ToString());
+            }
+            times++;
+            var timeSpan = DateTime.Now.Date.AddDays(1) - DateTime.Now;
+            _cacheService.Put(CurrentUser.Id + "UserExportTimes", times, timeSpan);
+            return Json(new { State = 1, Msg = ExportData(dic) });
+        }
+
+
+
+
         [HttpPost]
         [AdaValidateAntiForgeryToken]
         public ActionResult Develop(MediaDevelopView viewModel)
@@ -266,9 +305,10 @@ namespace Ada.Web.Controllers
             return PartialView("GroupDetail", entity);
         }
 
-        public ActionResult AddGroup(string name)
+        public ActionResult AddGroup(string name, string id)
         {
             ViewBag.MediaName = name;
+            ViewBag.MediaId = id;
             var groups = _mediaGroupRepository.LoadEntities(d => d.AddedById == CurrentUser.Id);
             return PartialView("AddGroup", groups.ToList());
         }
@@ -323,11 +363,11 @@ namespace Ada.Web.Controllers
         [AdaValidateAntiForgeryToken]
         public ActionResult RemoveGroup(string mId, string gId)
         {
-            
+
             var media = _repository.LoadEntities(d => d.Id == mId).FirstOrDefault();
-            if (media!=null)
+            if (media != null)
             {
-                _mediaGroupService.RemoveMedia(gId,media);
+                _mediaGroupService.RemoveMedia(gId, media);
                 return Json(new { State = 1, Msg = "移除成功" });
             }
             return Json(new { State = 0, Msg = "媒体资源不存在" });
@@ -476,6 +516,73 @@ namespace Ada.Web.Controllers
             }
             return jObjects;
         }
+        private JArray ExprotTemplate(List<Media> results,bool isData)
+        {
 
+            JArray jObjects = new JArray();
+            foreach (var media in results)
+            {
+                var jo = new JObject();
+                jo.Add("媒体状态", string.IsNullOrWhiteSpace(media.Id) ? "不存在" : "正常");
+                jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
+                jo.Add("媒体名称", media.MediaName);
+                jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                if (isData)
+                {
+                    switch (media.MediaType.CallIndex)
+                    {
+                        case "weixin":
+                            jo.Add("微信号", media.MediaID);
+                            jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
+                            jo.Add("平均阅读数", media.AvgReadNum);
+                            jo.Add("月发布频次", media.PublishFrequency);
+                            jo.Add("最近月发文数", media.MonthPostNum);
+                            jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
+                            break;
+                        case "sinablog":
+                            jo.Add("性别", media.Sex);
+                            jo.Add("地区", media.Area);
+                            jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
+                            jo.Add("认证类型", media.AuthenticateType);
+                            jo.Add("平均转发数", media.TransmitNum);
+                            jo.Add("平均评论数", media.CommentNum);
+                            jo.Add("平均点赞数", media.LikesNum);
+                            jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
+                            break;
+                        case "douyin":
+                            jo.Add("性别", media.Sex);
+                            jo.Add("地区", media.Area);
+                            jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
+                            jo.Add("平均转发数", media.TransmitNum);
+                            jo.Add("平均浏览数", media.AvgReadNum);
+                            jo.Add("平均评论数", media.CommentNum);
+                            jo.Add("平均点赞数", media.LikesNum);
+                            break;
+                        case "redbook":
+                            jo.Add("地区", media.Area);
+                            jo.Add("等级", media.AuthenticateType);
+                            jo.Add("平均收藏数", media.TransmitNum);
+                            jo.Add("平均点赞数", media.AvgReadNum);
+                            jo.Add("平均评论数", media.CommentNum);
+                            jo.Add("赞与收藏", media.LikesNum);
+                            jo.Add("关注数", media.FriendNum);
+                            jo.Add("笔记总数", media.PostNum);
+                            break;
+                        case "zhihu":
+                            jo.Add("地区", media.Area);
+                            break;
+                    }
+                }
+                foreach (var mediaMediaPrice in media.MediaPrices)
+                {
+                    var price = mediaMediaPrice.SellPrice ?? 0;
+                    jo.Add(mediaMediaPrice.AdPositionName, price);
+                }
+                jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
+                jo.Add("媒体链接", media.MediaLink);
+                jObjects.Add(jo);
+            }
+            return jObjects;
+        }
     }
 }

@@ -13,10 +13,12 @@ namespace Ada.Services.Resource
     {
         private readonly IDbContext _dbContext;
         private readonly IRepository<MediaGroup> _repository;
-        public MediaGroupService(IRepository<MediaGroup> repository, IDbContext dbContext)
+        private readonly IRepository<Media> _mediaRepository;
+        public MediaGroupService(IRepository<MediaGroup> repository, IRepository<Media> mediaRepository, IDbContext dbContext)
         {
             _repository = repository;
             _dbContext = dbContext;
+            _mediaRepository = mediaRepository;
         }
 
         public void Add(MediaGroup entity)
@@ -60,10 +62,13 @@ namespace Ada.Services.Resource
         }
         public void AddMedia(List<string> groupIds, Media media)
         {
+            media.MediaGroups.Clear();
             foreach (var groupId in groupIds)
             {
                 var group = _repository.LoadEntities(d => d.Id == groupId).FirstOrDefault();
-                group?.Medias.Add(media);
+                //var temp = _mediaRepository.LoadEntities(d => d.Id == media.Id).FirstOrDefault();
+                //group?.Medias.Add(temp);
+                media.MediaGroups.Add(group);
             }
             _dbContext.SaveChanges();
         }

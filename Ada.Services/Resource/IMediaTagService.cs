@@ -16,5 +16,6 @@ namespace Ada.Services.Resource
         void Update(MediaTag entity);
         void Delete(MediaTag entity);
         List<MediaTagView> GetTags();
+        List<MediaTagView> GetTags(string typeId);
     }
 }

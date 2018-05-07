@@ -5,7 +5,7 @@
 @using Ada.Services.Setting
 @model Ada.Core.Domain.Resource.MediaType
 @{
-    var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
+    var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags(Model.Id);
     var adpositions = Model.AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var settingService = EngineContext.Current.Resolve<ISettingService>();
@@ -202,13 +202,13 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
                 <div class="form-group" id="fans">
 
                     <div class="row">
-                        <label class="control-label col-md-1">粉丝数：</label>
+                        <label class="control-label col-md-1">粉丝数 <small class="text-muted"> (单位：万)</small></label>
                         <div class="col-md-6">
                             <ul class="ul-labelauty">
                                 @foreach (var item in fansRange)
-                                {
-                                    <li><input type="radio" name="radio" data-labelauty="@item.Text" value="@item.Value"></li>
-                                }
+            {
+                    <li><input type="radio" name="radio" data-labelauty="@item.Text" value="@item.Value"></li>
+}
                             </ul>
                         </div>
                         <div class="col-md-3">

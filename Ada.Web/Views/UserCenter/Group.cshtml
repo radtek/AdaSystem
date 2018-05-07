@@ -1,9 +1,14 @@
 ﻿@using System.Web.Optimization
+@using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Setting
+@using Ada.Services.Setting
 @model List<Ada.Core.Domain.Resource.MediaGroup>
 @{
     ViewBag.Title = "我的分组";
     Layout = "~/Views/Shared/_Layout_Web.cshtml";
     var gIds = Model.FirstOrDefault()?.Id;
+    var settingService = EngineContext.Current.Resolve<ISettingService>();
+    var setConfig = settingService.GetSetting<WeiGuang>();
 }
 
 <div class="wrapper wrapper-content">
@@ -14,7 +19,13 @@
                 <div class="ibox-content mailbox-content">
                     <div class="file-manager">
 
-                        <h5>我的分组</h5>
+                        <h4>
+                            我的分组
+                            <button type="button" class="btn btn-success btn-xs pull-right" onclick="location.reload();">
+                                <i class="fa fa-refresh"></i> 刷新
+                            </button>
+                        </h4>
+
                         <ul class="folder-list m-b-md" style="padding: 0">
                             @foreach (var item in Model)
                             {
@@ -53,10 +64,51 @@
             <div class="mail-box">
                 <table id="table"></table>
             </div>
+            <div id="toolbar" class="m-l-sm">
+                <div class="form-inline" role="form">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-warning btn-outline" data-toggle="modal" data-target="#exportGroupModal">
+                            <i class="fa fa-download"></i> 导出资源
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
+<div class="modal inmodal" id="exportGroupModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInUp">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <i class="fa fa-download modal-icon"></i>
+                <h4 class="modal-title">导出分组内资源</h4>
+                <small class="font-bold">导出说明：每次导出数据记录数最多 @setConfig.UserExportGroupRows 条，每日导出操作最多 @setConfig.UserExportTimes 次</small>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-sm-5 control-label">是否导出媒体指数</label>
+                        <div class="col-sm-7">
+                            <div class="radio radio-info radio-inline">
+                                <input type="radio" name="IsData" id="isdatatrue" value="true" />
+                                <label for="isdatatrue"> 是 </label>
+                            </div>
+                            <div class="radio radio-info radio-inline">
+                                <input type="radio" name="IsData" id="isdatafalse" value="false" checked="" />
+                                <label for="isdatafalse"> 否 </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">返回关闭</button>
+                <button type="button" class="btn btn-primary ladda-button" data-style="zoom-in" onclick="exportGroup();">开始导出</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Styles {
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
@@ -86,7 +138,7 @@
                 url: '@Url.Action("GetList","Media")', //请求后台的URL（*）
                 method: 'post',
                 classes: "table table-no-bordered",
-                //toolbar: '#toolbar',                //工具按钮用哪个容器
+                toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）

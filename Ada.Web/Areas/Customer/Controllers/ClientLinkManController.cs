@@ -76,6 +76,12 @@ namespace Customer.Controllers
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
                 return View(viewModel);
             }
+
+            if (string.IsNullOrWhiteSpace(viewModel.QQ) && string.IsNullOrWhiteSpace(viewModel.Phone)&&string.IsNullOrWhiteSpace(viewModel.WeiXin))
+            {
+                ModelState.AddModelError("message", "手机，微信，QQ联系方式必填写一种");
+                return View(viewModel);
+            }
             LinkMan entity = new LinkMan();
             entity.Id = IdBuilder.CreateIdNum();
             entity.AddedById = CurrentManager.Id;
@@ -125,6 +131,11 @@ namespace Customer.Controllers
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
+                return View(viewModel);
+            }
+            if (string.IsNullOrWhiteSpace(viewModel.QQ) && string.IsNullOrWhiteSpace(viewModel.Phone) && string.IsNullOrWhiteSpace(viewModel.WeiXin))
+            {
+                ModelState.AddModelError("message", "手机，微信，QQ联系方式必填写一种");
                 return View(viewModel);
             }
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();

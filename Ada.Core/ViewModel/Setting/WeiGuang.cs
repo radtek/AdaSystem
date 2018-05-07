@@ -27,6 +27,8 @@ namespace Ada.Core.ViewModel.Setting
             RequestMediaCount = 1;
             UserExportRows = 10;
             UserExportTimes = 5;
+            UserExportGroupRows = 500;
+            UserDemo = "18888888888";
         }
         /// <summary>
         /// 媒介资源查询数
@@ -54,10 +56,20 @@ namespace Ada.Core.ViewModel.Setting
         [Display(Name = "会员资源导出数")]
         public int UserExportRows { get; set; }
         /// <summary>
+        /// 会员资源分组导出数
+        /// </summary>
+        [Display(Name = "会员资源分组导出数")]
+        public int UserExportGroupRows { get; set; }
+        /// <summary>
         /// 会员每日资源导出次数
         /// </summary>
         [Display(Name = "会员每日资源导出次数")]
         public int UserExportTimes { get; set; }
+        /// <summary>
+        /// 会员测试账号
+        /// </summary>
+        [Display(Name = "会员测试账号")]
+        public string UserDemo { get; set; }
         /// <summary>
         /// 销售订单导出数
         /// </summary>

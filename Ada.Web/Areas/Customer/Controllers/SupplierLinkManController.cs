@@ -70,6 +70,11 @@ namespace Customer.Controllers
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
                 return View(viewModel);
             }
+            if (string.IsNullOrWhiteSpace(viewModel.QQ) && string.IsNullOrWhiteSpace(viewModel.Phone) && string.IsNullOrWhiteSpace(viewModel.WeiXin))
+            {
+                ModelState.AddModelError("message", "手机，微信，QQ联系方式必填写一种");
+                return View(viewModel);
+            }
             //校验唯一性
             var temp = _repository
                 .LoadEntities(d => d.Name.Equals(viewModel.Name, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false&&d.CommpanyId==viewModel.CommpanyId)
@@ -128,6 +133,11 @@ namespace Customer.Controllers
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
+                return View(viewModel);
+            }
+            if (string.IsNullOrWhiteSpace(viewModel.QQ) && string.IsNullOrWhiteSpace(viewModel.Phone) && string.IsNullOrWhiteSpace(viewModel.WeiXin))
+            {
+                ModelState.AddModelError("message", "手机，微信，QQ联系方式必填写一种");
                 return View(viewModel);
             }
             //校验唯一性

@@ -1,4 +1,7 @@
 ﻿@model List<Ada.Core.Domain.Resource.MediaGroup>
+@{
+    var mediaId = ViewBag.MediaId;
+}
 <div class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true" id="addgroup">
     <div class="modal-dialog">
         <div class="modal-content animated bounceInUp">
@@ -14,13 +17,21 @@
                     {
                         <div class="col-md-4 col-xs-6">
                             <div class="checkbox checkbox-success checkbox-inline">
-                                <input type="checkbox" id="@item.Id" name="Group" value="@item.Id">
+                                @if (item.Medias.Any(d => d.Id == mediaId))
+                                {
+                                    <input type="checkbox" id="@item.Id" name="Group" value="@item.Id" checked="">
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="@item.Id" name="Group" value="@item.Id">
+                                }
+
                                 <label for="@item.Id"> @item.GroupName </label>
                             </div>
                         </div>
                     }
-                    
-                    <input type="hidden" id="MediaId"/>
+
+                    <input type="hidden" id="MediaId" />
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="row">

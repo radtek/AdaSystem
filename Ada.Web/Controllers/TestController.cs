@@ -510,8 +510,14 @@ namespace Ada.Web.Controllers
         }
         public ActionResult Tool()
         {
-            RandomHelper random = new RandomHelper();
-            var code = random.GenerateCheckCodeNum(5);
+           // RandomHelper random = new RandomHelper();
+            var code = "01234";
+           var dic= new Dictionary<string, object>
+            {
+                {"PhoneNumbers", "18888888888"},
+                {"TemplateCode", "SMS_133230131"},
+                {"TemplateParam", "{\"code\":" + code + "}"}
+            };
             return Content(code);
         }
         private string GetDouYinId(string url)
