@@ -330,6 +330,7 @@ namespace Resource.Controllers
                 jo.Add("媒体名称", media.MediaName + website);
                 jo.Add("媒体ID", media.MediaID);
                 jo.Add("粉丝数", Utils.ShowFansNum(media.FansNum));
+                jo.Add("地区", media.Area);
                 jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
                 jo.Add("媒体说明", media.Content);
                 jo.Add("备注说明", media.Remark);
@@ -338,8 +339,6 @@ namespace Resource.Controllers
                 foreach (var mediaMediaPrice in media.MediaPrices)
                 {
                     jo.Add(mediaMediaPrice.AdPositionName, mediaMediaPrice.PurchasePrice);
-                    //jo.Add(mediaMediaPrice.AdPositionName + "更新日期", mediaMediaPrice.PriceDate);
-                    //jo.Add(mediaMediaPrice.AdPositionName + "失效日期", mediaMediaPrice.InvalidDate);
                 }
                 jObjects.Add(jo);
             }
@@ -454,7 +453,7 @@ namespace Resource.Controllers
             //拿到广告位的名称
             IRow headRow = sheet.GetRow(0);
             List<string> adpostionNames = new List<string>();
-            int startPrice = 11;//价格所在位置
+            int startPrice = 12;//价格所在位置
             for (int i = startPrice; i < headRow.LastCellNum; i++)
             {
                 var adpostionName = headRow.GetCell(i).StringCellValue;
@@ -474,14 +473,16 @@ namespace Resource.Controllers
                 {
                     continue;
                 }
-                //修改粉丝
+                //粉丝
                 decimal.TryParse(row.GetCell(6)?.ToString(), out var fansNum);
                 media.FansNum = Utils.SetFansNum(fansNum);
+                //地区
+                media.Area = row.GetCell(7)?.ToString();
                 //标签
-                if (row.GetCell(7) != null)
+                if (row.GetCell(8) != null)
                 {
                     media.MediaTags.Clear();
-                    var tags = row.GetCell(7).ToString().Trim().Replace("，", ",").Split(',');
+                    var tags = row.GetCell(8).ToString().Trim().Replace("，", ",").Split(',');
                     foreach (var tag in tags)
                     {
                         var mediaTag = _mediaTagRepository.LoadEntities(d => d.IsDelete == false && d.TagName == tag)
@@ -490,19 +491,19 @@ namespace Resource.Controllers
                     }
                 }
                 //备注
-                media.Remark = row.GetCell(9)?.ToString();
+                media.Remark = row.GetCell(10)?.ToString();
                 DateTime date = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
                     DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
-                if (row.GetCell(10) != null)
+                if (row.GetCell(11) != null)
                 {
-                    var cellType = row.GetCell(10).CellType;
+                    var cellType = row.GetCell(11).CellType;
                     if (cellType == CellType.String)
                     {
-                        DateTime.TryParse(row.GetCell(10)?.ToString(), out date);
+                        DateTime.TryParse(row.GetCell(11)?.ToString(), out date);
                     }
                     if (cellType == CellType.Numeric)
                     {
-                        date = row.GetCell(10).DateCellValue;
+                        date = row.GetCell(11).DateCellValue;
                     }
                 }
                 var sellKey = "SellPriceRange";

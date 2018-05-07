@@ -18,14 +18,16 @@
 
 
 </div>
-
+@Html.Partial("_IframeIp")
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
 }
-
+@section StylesFirst {
+    <meta name="referrer" content="never">
+}
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-<script type="text/javascript">
+    <script type="text/javascript">
 
         $(document).ready(function() {
             var table = new TableInit();
@@ -104,7 +106,7 @@
                         {
                             field: 'IpAddress',
                             title: '@Html.DisplayNameFor(d => d.IpAddress)',
-                            align: "center", valign: "middle"
+                             valign: "middle", formatter: formatter.ip
                         },
                         {
                             field: 'Transactor',
@@ -172,7 +174,7 @@
                 });
             });
         }
-</script>
+    </script>
 }
 
 

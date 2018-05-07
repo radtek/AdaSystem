@@ -2969,6 +2969,7 @@
     <Content Include="Views\Media\GroupDetail.cshtml" />
     <Content Include="Views\Media\AddGroup.cshtml" />
     <Content Include="Views\UserCenter\Group.cshtml" />
+    <Content Include="Views\Shared\_IframeIp.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

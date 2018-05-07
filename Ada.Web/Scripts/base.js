@@ -173,6 +173,22 @@ formatter.image = function (value, row, index) {
 formatter.linkman = function (value, row, index) {
     return "<a class='label label-info' href=\"javascript:linkmanDetail('" + row.LinkManId + "')\"><i class='fa fa-address-book-o'></i> " + value + "</a>";
 }
+formatter.ip = function (value, row, index) {
+    if (isIP(value)) {
+        return "<a class='label label-info' href=\"javascript:showIP('" + value + "')\">" + value + "</a>";
+    } else {
+        return value;
+    }
+};
+
+function showIP(ip) {
+    $('#ipmodal').on('shown.bs.modal', function () {
+        $("#ipmodal iframe").attr("src", "http://whois.pconline.com.cn/ip.jsp?ip=" + ip);
+    }).on('hidden.bs.modal', function () {
+       
+        });
+    $('#ipmodal').modal('show');
+}
 function isArray(o) {
     return Object.prototype.toString.call(o) == '[object Array]';
 }
@@ -185,7 +201,14 @@ function linkmanDetail(id) {
 function initTooltip() {
     $('[data-toggle="tooltip"]').tooltip();
 }
-
+function isIP(ip) {
+    var re = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/;//正则表达式     
+    if (re.test(ip)) {
+        if (RegExp.$1 < 256 && RegExp.$2 < 256 && RegExp.$3 < 256 && RegExp.$4 < 256)
+            return true;
+    }
+    return false;
+}  
 function initPie() {
     $("span.pie").peity("pie",
         {

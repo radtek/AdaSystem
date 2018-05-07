@@ -503,8 +503,8 @@ namespace Ada.Web.Controllers
         public ActionResult Order()
         {
             int count = 
-            _ptemp.Update(d => d.LinkManName == "孙春来"&& !d.PurchasePaymentOrderDetails.Any()&&d.LinkManId== "X1801151336270229",
-                p => new PurchaseOrderDetail() {LinkManId = "X1712281525540064"});
+            _ptemp.Update(d => d.LinkManName == "新芳" && !d.PurchasePaymentOrderDetails.Any()&&d.LinkManId== "X1801151342500244",
+                p => new PurchaseOrderDetail() {LinkManId = "X1801081415310947" });
             _dbContext.SaveChanges();
             return Content("成功更换" + count + "条资源");
         }
