@@ -147,9 +147,18 @@ namespace Ada.Web.Controllers
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
-        public ActionResult Export(MediaView search)
+        public ActionResult Export(MediaView view)
         {
             var setting = _settingService.GetSetting<WeiGuang>();
+            var configTimes = setting.UserExportTimes;
+            var rows = setting.UserExportRows;
+            //是否VIP
+            var vips = setting.UserVIPGroup.Split(',').ToList();
+            if (vips.Contains(CurrentUser.CommpanyName))
+            {
+                configTimes = configTimes * setting.UserVIPExportRatio;
+                rows = rows * setting.UserVIPExportRatio;
+            }
             //验证导出次数
             int times = 1;
             var obj = _cacheService.GetObject<int>(CurrentUser.Id + "UserExportTimes");
@@ -157,21 +166,21 @@ namespace Ada.Web.Controllers
             {
                 times = (int)obj;
             }
-            if (times > setting.UserExportTimes)
+            if (times > configTimes)
             {
                 return Json(new { State = 0, Msg = "抱歉，今日导出的次数已用完！" });
             }
 
-            search.Status = Consts.StateNormal;
-            search.limit = setting.UserExportRows;
-            if (!string.IsNullOrWhiteSpace(search.MediaBatch))
+            view.Status = Consts.StateNormal;
+            view.limit = rows;
+            if (!string.IsNullOrWhiteSpace(view.MediaBatch))
             {
-                search.MediaBatch = search.MediaBatch.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("，", ",").Replace(" ", ",");
-                var mediaNames = search.MediaBatch.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).Take(setting.UserExportRows).ToList();
-                search.MediaBatch = string.Join(",", mediaNames);
+                view.MediaBatch = view.MediaBatch.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("，", ",").Replace(" ", ",");
+                var mediaNames = view.MediaBatch.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).Take(rows).ToList();
+                view.MediaBatch = string.Join(",", mediaNames);
             }
-            var results = _service.LoadEntitiesFilter(search).AsNoTracking().ToList();
-            var jObjects = ExprotTemplate(search, results);
+            var results = _service.LoadEntitiesFilter(view).AsNoTracking().ToList();
+            var jObjects = ExprotTemplate(view, results);
             times++;
             var timeSpan = DateTime.Now.Date.AddDays(1) - DateTime.Now;
             _cacheService.Put(CurrentUser.Id + "UserExportTimes", times, timeSpan);
@@ -182,6 +191,13 @@ namespace Ada.Web.Controllers
         public ActionResult ExportGroup(string id, bool isData)
         {
             var setting = _settingService.GetSetting<WeiGuang>();
+            var configTimes = setting.UserExportTimes;
+            //是否VIP
+            var vips = setting.UserVIPGroup.Split(',').ToList();
+            if (vips.Contains(CurrentUser.CommpanyName))
+            {
+                configTimes = configTimes * setting.UserVIPExportRatio;
+            }
             //验证导出次数
             int times = 1;
             var obj = _cacheService.GetObject<int>(CurrentUser.Id + "UserExportTimes");
@@ -189,7 +205,7 @@ namespace Ada.Web.Controllers
             {
                 times = (int)obj;
             }
-            if (times > setting.UserExportTimes)
+            if (times > configTimes)
             {
                 return Json(new { State = 0, Msg = "抱歉，今日导出的次数已用完！" });
             }

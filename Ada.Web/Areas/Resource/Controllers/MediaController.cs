@@ -120,7 +120,7 @@ namespace Resource.Controllers
                 {
                     var mediaInfo = name.Trim();
                     var temp = results.FirstOrDefault(d =>
-                        d.MediaName == mediaInfo || d.MediaID == mediaInfo);
+                        string.Equals(d.MediaName, mediaInfo, StringComparison.CurrentCultureIgnoreCase) || String.Equals(d.MediaID, mediaInfo, StringComparison.CurrentCultureIgnoreCase));
                     if (temp == null)
                     {
                         noDatas.Add(new Media

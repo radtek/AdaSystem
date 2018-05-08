@@ -37,6 +37,7 @@ namespace Ada.Framework.Filter
                     {
                         message = "系统异常，详见异常信息",
                         method = httpmethod,
+                        agent = filterContext.HttpContext.Request.UserAgent,
                         urlParams = filterContext.HttpContext.Request.Url?.Query,
                         formParams = dc
                     };

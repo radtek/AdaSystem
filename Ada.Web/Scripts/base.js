@@ -38,13 +38,13 @@ searchFrm.queryParams = function (parameters) {
         function (k, v) {
             if (isArray(v)) {
                 $.each(v,
-                    function(a, b) {
+                    function (a, b) {
                         parameters[k + "[" + a + "]"] = b;
                     });
             } else {
                 parameters[k] = v;
             }
-            
+
         });
     return parameters;
 }
@@ -93,7 +93,7 @@ formatter.inout = function (value, row, index) {
     }
 };
 formatter.normalStatus = function (value, row, index) {
-    if (value == 1) {
+    if (value == 1 || value == true) {
         return "<span class='label label-primary'>正常</span>";
     } else {
         return "<span class='label'>关闭</span>";
@@ -108,7 +108,7 @@ formatter.businessStatus = function (value, row, index) {
         return "<span class='label label-success'>已完成</span>";
     } else if (value == 3) {
         return "<span class='label label-danger'>订单失败</span>";
-    }else {
+    } else {
         return "<span class='label'>待转单</span>";
     }
 };
@@ -144,7 +144,7 @@ formatter.purchaseStatus = function (value, row, index) {
         return "<span class='label'>待响应</span>";
     } else if (value == 3) {
         return "<span class='label label-success'>已完成</span>";
-    } else if (value == -1){
+    } else if (value == -1) {
         return "<span class='label label-danger'>采购失败</span>";
     }
     return "";
@@ -185,8 +185,8 @@ function showIP(ip) {
     $('#ipmodal').on('shown.bs.modal', function () {
         $("#ipmodal iframe").attr("src", "http://whois.pconline.com.cn/ip.jsp?ip=" + ip);
     }).on('hidden.bs.modal', function () {
-       
-        });
+
+    });
     $('#ipmodal').modal('show');
 }
 function isArray(o) {
@@ -208,7 +208,7 @@ function isIP(ip) {
             return true;
     }
     return false;
-}  
+}
 function initPie() {
     $("span.pie").peity("pie",
         {
@@ -425,7 +425,7 @@ function initSelect(id, opt, $obj) {
 }
 
 //注册选中事件
-function checkOn(table, obj,fun) {
+function checkOn(table, obj, fun) {
     var mark;
     var union = function (array, ids) {
         $.each(ids, function (i, id) {
@@ -469,8 +469,8 @@ function checkOn(table, obj,fun) {
             var d = { "union": union, "difference": difference };
             var r = { "unions": unions, "differences": differences };
             var ids = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
-                    return row.Id;
-                }),
+                return row.Id;
+            }),
                 rowarry = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
                     return row;
                 }),

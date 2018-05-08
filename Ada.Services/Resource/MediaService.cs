@@ -126,7 +126,10 @@ namespace Ada.Services.Resource
             {
                 allList = viewModel.IsGroup.Value ? allList.Where(d => d.MediaGroups.Any()) : allList.Where(d => !d.MediaGroups.Any());
             }
-
+            if (viewModel.HaveTag != null)
+            {
+                allList = viewModel.HaveTag.Value ? allList.Where(d => d.MediaTags.Any()) : allList.Where(d => !d.MediaTags.Any());
+            }
             if (viewModel.AvgReadNumStart != null)
             {
                 allList = allList.Where(d => d.AvgReadNum >= viewModel.AvgReadNumStart);

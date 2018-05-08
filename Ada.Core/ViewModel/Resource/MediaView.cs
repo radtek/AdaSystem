@@ -532,6 +532,11 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "分组ID")]
         public string GroupId { get; set; }
+        /// <summary>
+        /// 是否分类
+        /// </summary>
+        [Display(Name = "是否分类")]
+        public bool? HaveTag { get; set; }
     }
 
 }

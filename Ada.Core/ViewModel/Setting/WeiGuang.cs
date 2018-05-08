@@ -29,6 +29,7 @@ namespace Ada.Core.ViewModel.Setting
             UserExportTimes = 5;
             UserExportGroupRows = 500;
             UserDemo = "18888888888";
+            UserVIPExportRatio = 1;
         }
         /// <summary>
         /// 媒介资源查询数
@@ -65,6 +66,16 @@ namespace Ada.Core.ViewModel.Setting
         /// </summary>
         [Display(Name = "会员每日资源导出次数")]
         public int UserExportTimes { get; set; }
+        /// <summary>
+        /// 会员VIP导出系数
+        /// </summary>
+        [Display(Name = "会员VIP导出系数")]
+        public int UserVIPExportRatio { get; set; }
+        /// <summary>
+        /// 会员VIP组
+        /// </summary>
+        [Display(Name = "会员VIP组")]
+        public string UserVIPGroup { get; set; }
         /// <summary>
         /// 会员测试账号
         /// </summary>

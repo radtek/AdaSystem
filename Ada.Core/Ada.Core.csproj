@@ -231,6 +231,7 @@
     <Compile Include="ViewModel\Statistics\PurchaseTotal.cs" />
     <Compile Include="ViewModel\Statistics\WeiGuangTotal.cs" />
     <Compile Include="ViewModel\TreeView.cs" />
+    <Compile Include="ViewModel\WeiXin\WeiXinAccountView.cs" />
     <Compile Include="ViewModel\WorkLog\WorkLogView.cs" />
   </ItemGroup>
   <ItemGroup>

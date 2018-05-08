@@ -1,0 +1,19 @@
+﻿
+@using System.Web.Optimization
+@model Ada.Core.ViewModel.WeiXin.WeiXinAccountView
+@{
+    ViewBag.Title = "新建账户";
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "微信账户", Value = Url.Action("Index") } };
+}
+@Html.Partial("Bread")
+<div class="wrapper wrapper-content animated fadeInRight">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <p class="bg-danger">@Html.ValidationMessage("message") </p>
+        @Html.Partial("Edit")
+    }
+</div>
+@section Styles {
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+}

@@ -1,0 +1,123 @@
+﻿
+@using Ada.Core.Infrastructure
+@using Ada.Services.Admin
+@model Ada.Core.ViewModel.WeiXin.WeiXinAccountView
+@{
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var wxTypes = fieldService.GetFieldsByKey("WeiXinTypes").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox">
+            <div class="ibox-title">
+                <a class="btn btn-outline btn-default btn-sm" href="javascript:window.history.go(-1);"><i class="fa fa-reply"></i> 返回</a>
+                <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
+            </div>
+            <div class="ibox-content">
+                <div class="sk-spinner sk-spinner-wave">
+                    <div class="sk-rect2"></div>
+                    <div class="sk-rect3"></div>
+                    <div class="sk-rect4"></div>
+                    <div class="sk-rect5"></div>
+                </div>
+                <div class="form-horizontal">
+
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.AccountType, Html.DisplayNameFor(d => d.AccountType).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(d => d.AccountType, wxTypes, new { @class = "form-control", required = "" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Name, Html.DisplayNameFor(d => d.Name).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.Name, new { @class = "form-control", required = "" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.SourceId, Html.DisplayNameFor(d => d.SourceId).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.SourceId, new { @class = "form-control", required = "" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.AppId, Html.DisplayNameFor(d => d.AppId).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.AppId, new { @class = "form-control", required = "" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.AppSecret, Html.DisplayNameFor(d => d.AppSecret).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.AppSecret, new { @class = "form-control", required = "" })
+                        </div>
+                    </div>
+
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Token, Html.DisplayNameFor(d => d.Token).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.Token, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.EncodingAESKey, Html.DisplayNameFor(d => d.EncodingAESKey).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.EncodingAESKey, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.MchId, Html.DisplayNameFor(d => d.MchId).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.MchId, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.MchKey, Html.DisplayNameFor(d => d.MchKey).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.MchKey, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.NotifyUrl, Html.DisplayNameFor(d => d.NotifyUrl).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.NotifyUrl, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.CretPath, Html.DisplayNameFor(d => d.CretPath).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.CretPath, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            <div class="radio radio-info radio-inline">
+                                @Html.RadioButtonFor(d => d.Status, true)
+                                <label> 正常 </label>
+                            </div>
+                            <div class="radio radio-info radio-inline">
+                                @Html.RadioButtonFor(d => d.Status, false)
+                                <label> 关闭 </label>
+                            </div>
+                        </div>
+                    </div>
+                    @Html.HiddenFor(d => d.Id)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

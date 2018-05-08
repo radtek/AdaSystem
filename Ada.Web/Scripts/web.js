@@ -767,6 +767,7 @@ function exportDate() {
     parameters.MediaTypeId = $("#MediaTypeId").val();
     parameters.MediaTypeIndex = $("#MediaTypeIndex").val();
     parameters.ExcelField = arr.join(',');
+    parameters.search = $("#table").bootstrapTable('getOptions').searchText;
     parameters = searchFrm.queryParams(parameters);
     var subBtn = $('.ladda-button').ladda();
     $.ajax({

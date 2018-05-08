@@ -146,6 +146,8 @@
     <Compile Include="Resource\MediaService.cs" />
     <Compile Include="Setting\ISettingService.cs" />
     <Compile Include="Setting\SettingService.cs" />
+    <Compile Include="WeiXin\IWeiXinAccountService.cs" />
+    <Compile Include="WeiXin\WeiXinAccountService.cs" />
     <Compile Include="WorkLog\WorkLogService.cs" />
     <Compile Include="WorkLog\IWorkLogService.cs" />
   </ItemGroup>

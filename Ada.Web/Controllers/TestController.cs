@@ -390,18 +390,46 @@ namespace Ada.Web.Controllers
                     var mediaId = row.GetCell(0)?.ToString();
                     var media = _media.LoadEntities(d => d.Id == mediaId.Trim()).FirstOrDefault();
                     if (media == null) continue;
-                    media.Transactor = "孔繁燕";
-                    media.TransactorId = "X1804251432125166";
-                    media.LinkMan.Transactor = "孔繁燕";
-                    media.LinkMan.TransactorId = "X1804251432125166";
-                    media.LinkMan.Commpany.Transactor = "孔繁燕";
-                    media.LinkMan.Commpany.TransactorId = "X1804251432125166";
+                    media.Transactor = "胡江超";
+                    media.TransactorId = "X1712181337040001";
+                    media.LinkMan.Transactor = "胡江超";
+                    media.LinkMan.TransactorId = "X1712181337040001";
+                    media.LinkMan.Commpany.Transactor = "胡江超";
+                    media.LinkMan.Commpany.TransactorId = "X1712181337040001";
                     count++;
                 }
 
                 _dbContext.SaveChanges();
             }
             return Content("成功更换" + count + "条资源");
+        }
+        public ActionResult CloseMediaXls()
+        {
+            string path = Server.MapPath("~/upload/close.xlsx");
+            int count = 0;
+            using (FileStream ms = new FileStream(path, FileMode.Open))
+            {
+                //创建工作薄
+                IWorkbook wk = new XSSFWorkbook(ms);
+                //1.获取第一个工作表
+                ISheet sheet = wk.GetSheetAt(0);
+                if (sheet.LastRowNum <= 1)
+                {
+                    return Content("此文件没有导入数据，请填充数据再进行导入");
+                }
+                for (int i = 1; i <= sheet.LastRowNum; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+                    var mediaId = row.GetCell(0)?.ToString();
+                    var media = _media.LoadEntities(d => d.Id == mediaId.Trim()).FirstOrDefault();
+                    if (media == null) continue;
+                    media.Status = 0;
+                    count++;
+                }
+
+                _dbContext.SaveChanges();
+            }
+            return Content("成功关闭" + count + "条资源");
         }
         public ActionResult ChangeLinkMan()
         {
