@@ -90,6 +90,20 @@ namespace Ada.Web.Controllers
                     return View(loginModel);
                 }
             }
+            else
+            {
+                //验证IP
+                if (!string.IsNullOrWhiteSpace(demo.UserDemoAllowIP))
+                {
+                    var ips = demo.UserDemoAllowIP.Split(',');
+                    var currentIp = Utils.GetIpAddress();
+                    if (!ips.Contains(currentIp))
+                    {
+                        ModelState.AddModelError("error", "抱歉，测试账号只供内部测试使用！");
+                        return View(loginModel);
+                    }
+                }
+            }
 
             LinkManView viewModel = new LinkManView();
             viewModel.Id = user.Id;

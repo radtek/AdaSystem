@@ -71,6 +71,11 @@ namespace Ada.Core.ViewModel.Setting
         [Display(Name = "会员测试账号")]
         public string UserDemo { get; set; }
         /// <summary>
+        /// 会员测试账号IP白名单
+        /// </summary>
+        [Display(Name = "会员测试账号IP白名单")]
+        public string UserDemoAllowIP { get; set; }
+        /// <summary>
         /// 销售订单导出数
         /// </summary>
         [Display(Name = "销售订单导出数")]
