@@ -5,15 +5,18 @@ using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain.WeiXin;
+using log4net;
 using Senparc.Weixin.MP;
 using Senparc.Weixin.MP.Entities.Request;
 using Senparc.Weixin.MP.MvcExtension;
+using WeiXin.Services.MessageHandlers;
 
 namespace WeiXin.Controllers
 {
     public class MessageController : Controller
     {
         private readonly IRepository<WeiXinAccount> _repository;
+        public ILog Log { get; set; }
         public MessageController(IRepository<WeiXinAccount> repository)
         {
             _repository = repository;
@@ -54,26 +57,20 @@ namespace WeiXin.Controllers
             {
                 return Content("参数错误！");
             }
-
-            #region 打包 PostModel 信息
-
             postModel.Token = account.Token;//根据自己后台的设置保持一致
             postModel.EncodingAESKey = account.EncodingAESKey;//根据自己后台的设置保持一致
             postModel.AppId = account.AppId;//根据自己后台的设置保持一致
-
-            #endregion
-
             //v4.2.2之后的版本，可以设置每个人上下文消息储存的最大数量，防止内存占用过多，如果该参数小于等于0，则不限制
             var maxRecordCount = 10;
 
             //自定义MessageHandler，对微信请求的详细判断操作都在这里面。
-            //var messageHandler = new CustomMessageHandler(Request.InputStream, postModel, maxRecordCount);
+            var messageHandler = new CustomMessageHandler(Request.InputStream, postModel, maxRecordCount);
 
             #region 设置消息去重
 
             /* 如果需要添加消息去重功能，只需打开OmitRepeatedMessage功能，SDK会自动处理。
              * 收到重复消息通常是因为微信服务器没有及时收到响应，会持续发送2-5条不等的相同内容的RequestMessage*/
-            //messageHandler.OmitRepeatedMessage = true;//默认已经开启，此处仅作为演示，也可以设置为false在本次请求中停用此功能
+            messageHandler.OmitRepeatedMessage = true;//默认已经开启，此处仅作为演示，也可以设置为false在本次请求中停用此功能
 
             #endregion
 
@@ -102,7 +99,7 @@ namespace WeiXin.Controllers
                 #endregion
 
                 //执行微信处理过程
-                //messageHandler.Execute();
+                messageHandler.Execute();
 
                 #region 记录 Response 日志
 
@@ -128,39 +125,12 @@ namespace WeiXin.Controllers
                 //}
 
                 #endregion
-                return Content("");
-                //return Content(messageHandler.ResponseDocument.ToString());//v0.7-
-                //return new WeixinResult(messageHandler);//v0.8+
-                //return new FixWeixinBugWeixinResult(messageHandler);//为了解决官方微信5.0软件换行bug暂时添加的方法，平时用下面一个方法即可
+                return new FixWeixinBugWeixinResult(messageHandler);//为了解决官方微信5.0软件换行bug暂时添加的方法，平时用下面一个方法即可
             }
             catch (Exception ex)
             {
                 #region 异常处理
-                //WeixinTrace.Log("MessageHandler错误：{0}", ex.Message);
-
-                //using (TextWriter tw = new StreamWriter(Server.MapPath("~/App_Data/Error_" + _getRandomFileName() + ".txt")))
-                //{
-                //    tw.WriteLine("ExecptionMessage:" + ex.Message);
-                //    tw.WriteLine(ex.Source);
-                //    tw.WriteLine(ex.StackTrace);
-                //    //tw.WriteLine("InnerExecptionMessage:" + ex.InnerException.Message);
-
-                //    if (messageHandler.ResponseDocument != null)
-                //    {
-                //        tw.WriteLine(messageHandler.ResponseDocument.ToString());
-                //    }
-
-                //    if (ex.InnerException != null)
-                //    {
-                //        tw.WriteLine("========= InnerException =========");
-                //        tw.WriteLine(ex.InnerException.Message);
-                //        tw.WriteLine(ex.InnerException.Source);
-                //        tw.WriteLine(ex.InnerException.StackTrace);
-                //    }
-
-                //    tw.Flush();
-                //    tw.Close();
-                //}
+                Log.Error("MessageHandler异常",ex);
                 return Content("");
                 #endregion
             }

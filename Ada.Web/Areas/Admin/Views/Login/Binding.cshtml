@@ -1,0 +1,60 @@
+﻿@using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Setting
+@using Ada.Services.Setting
+@{
+    Layout = null;
+    var setting = EngineContext.Current.Resolve<ISettingService>().GetSetting<Site>();
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>江西微广 | 微信绑定</title>
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Fonts/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <link href="~/Content/animate.css" rel="stylesheet">
+    <link href="~/Content/style.css" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div>
+            <div>
+
+                <h1 class="logo-name">VG+</h1>
+
+            </div>
+            <h3>绑定微信账户</h3>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <p class="bg-danger">@Html.ValidationMessage("message") </p>
+
+                <input name="openid" type="hidden" value="@Model"/>
+                <div class="form-group">
+                    <input name="userName" type="text" class="form-control" placeholder="用户名" required="">
+                </div>
+                <div class="form-group">
+                    <input name="password" type="password" class="form-control" placeholder="密码" required="">
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b">绑定</button>
+            }
+
+            <p class="m-t"> <small>@setting.CompanyName &copy; @DateTime.Now.Year</small> </p>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+

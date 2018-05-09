@@ -58,12 +58,13 @@
                 clickToSelect: true,                //是否启用点击选中行
                 singleSelect: true,                  //设置True 将禁止多选
                 uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
-                //searchAlign:"left",
+                searchAlign: "left",
+                buttonsAlign:"left",
                 ajaxOptions:{
                     headers: { "__RequestVerificationToken": $("input[name='__RequestVerificationToken']").val() }
                 },
                 formatSearch: function() {
-                    return "公众号名称或微信号";
+                    return "公众号或微信号关键字";
                 },
                 onLoadSuccess: onLoadSuccess ,
                 mobileResponsive: true,

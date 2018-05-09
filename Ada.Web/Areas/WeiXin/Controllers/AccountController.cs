@@ -5,8 +5,10 @@ using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain.WeiXin;
+using Ada.Core.ViewModel.Setting;
 using Ada.Core.ViewModel.WeiXin;
 using Ada.Framework.Filter;
+using Ada.Services.Setting;
 using Ada.Services.WeiXin;
 
 namespace WeiXin.Controllers
@@ -14,11 +16,13 @@ namespace WeiXin.Controllers
     public class AccountController : BaseController
     {
         private readonly IWeiXinAccountService _service;
+        private readonly ISettingService _settingService;
         private readonly IRepository<WeiXinAccount> _repository;
-        public AccountController(IWeiXinAccountService service, IRepository<WeiXinAccount> repository)
+        public AccountController(IWeiXinAccountService service, IRepository<WeiXinAccount> repository, ISettingService settingService)
         {
             _service = service;
             _repository = repository;
+            _settingService = settingService;
         }
         public ActionResult Index()
         {
@@ -28,6 +32,8 @@ namespace WeiXin.Controllers
         public ActionResult GetList(WeiXinAccountView viewModel)
         {
             var result = _service.LoadEntitiesFilter(viewModel).ToList();
+            var site = _settingService.GetSetting<Site>();
+            var domain = site.Domain;
             return Json(new
             {
                 viewModel.total,
@@ -37,14 +43,14 @@ namespace WeiXin.Controllers
                     Name = d.Name,
                     AccountType = d.AccountType,
                     Status = d.Status,
-                    Url = ""
-                    
+                    Url = domain + "/WeiXin/Message?id=" + d.Id
+
                 })
             }, JsonRequestBehavior.AllowGet);
         }
         public ActionResult Add()
         {
-            WeiXinAccountView entity = new WeiXinAccountView {Status = true};
+            WeiXinAccountView entity = new WeiXinAccountView { Status = true };
             return View(entity);
         }
         [HttpPost]

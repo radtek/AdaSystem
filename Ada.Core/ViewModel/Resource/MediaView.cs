@@ -537,6 +537,11 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "是否分类")]
         public bool? HaveTag { get; set; }
+        /// <summary>
+        /// 广告关键词
+        /// </summary>
+        [Display(Name = "广告关键词")]
+        public string ADKey { get; set; }
     }
 
 }

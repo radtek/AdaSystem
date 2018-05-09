@@ -86,6 +86,11 @@ namespace Ada.Services.Resource
                 viewModel.MediaName = viewModel.MediaName.Trim();
                 allList = allList.Where(d => d.MediaName.Contains(viewModel.MediaName));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.ADKey))
+            {
+                viewModel.ADKey = viewModel.ADKey.Trim();
+                allList = allList.Where(d => d.MediaArticles.Any(a=>a.Content.Contains(viewModel.ADKey)));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.Content))
             {
                 allList = allList.Where(d => d.Content.Contains(viewModel.Content.Trim()));

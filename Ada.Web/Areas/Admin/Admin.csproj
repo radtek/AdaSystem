@@ -135,6 +135,7 @@
     <Content Include="Views\Manager\Update.cshtml" />
     <Content Include="Views\ManagerLog\Index.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Login\Binding.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

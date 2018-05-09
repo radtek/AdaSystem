@@ -52,12 +52,8 @@
                             @Model.MediaName
 
                         </h2>
-                        @*@if (!string.IsNullOrWhiteSpace(Model.Area))
-                            {
-                                <small class='label label-info'><i class='fa fa-map-marker'></i> @Model.Area</small>
-                            }*@
                         <h4>@Model.Abstract</h4>
-
+                        <div class="p-xxs"><span class='label label-warning'>粉丝数： @Utils.ShowFansNum(Model.FansNum) 万</span></div>
                         <div class='p-xxs'>
                             @foreach (var tag in Model.MediaTags.Take(6))
                             {
@@ -68,21 +64,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <table class="table small m-b-xs">
-                <tbody>
-                    <tr>
-
-                        <td>
-                            <strong>@Utils.ShowFansNum(Model.FansNum)</strong> 粉丝数(万)
-                        </td>
-                        <td>
-                            <strong>@Model.MediaPrices.Sum(d => d.BusinessOrderDetails.Count)</strong> 交易次数
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        
 
 
 

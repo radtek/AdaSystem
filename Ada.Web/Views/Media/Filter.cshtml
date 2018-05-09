@@ -242,7 +242,7 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
             </div>
             <div class="ibox-content no-borders">
                 <div class="row">
-                    <div class="col-sm-1">
+                    <div class="col-sm-3">
                         <div class="form-group">
                             <label class="control-label">区域</label>
                             @if (Model.CallIndex == "weixin")
@@ -302,7 +302,12 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
                 <button type="button" class="btn btn-danger btn-outline" onclick="resetFilter();">
                     <i class="fa fa-recycle"></i> 重置筛选
                 </button>
-
+                <button type="button" class="btn btn-primary btn-outline" data-toggle="modal" data-target="#searchModal">
+                    <i class="fa fa-search"></i> 批量查询
+                </button>
+                <button type="button" class="btn btn-warning btn-outline" data-toggle="modal" data-target="#exportModal">
+                    <i class="fa fa-download"></i> 导出资源
+                </button>
             </div>
 
         </div>
@@ -328,12 +333,7 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
     <div class="form-inline" role="form">
 
         <div class="form-group">
-            <button type="button" class="btn btn-primary btn-outline" data-toggle="modal" data-target="#searchModal">
-                <i class="fa fa-search"></i> 批量查询
-            </button>
-            <button type="button" class="btn btn-warning btn-outline" data-toggle="modal" data-target="#exportModal">
-                <i class="fa fa-download"></i> 导出资源
-            </button>
+            
         </div>
     </div>
 </div>

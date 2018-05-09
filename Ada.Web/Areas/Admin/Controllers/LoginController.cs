@@ -98,8 +98,44 @@ namespace Admin.Controllers
             Response.Cookies.Add(new HttpCookie("ASP.NET_SessionId", string.Empty) { HttpOnly = true });
             return RedirectToAction("Index","Login");
         }
+        public ActionResult Binding(string openid)
+        {
+            return View(openid);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Binding(string userName, string password, string openid,string returnUrl)
+        {
+            if (string.IsNullOrWhiteSpace(openid))
+            {
+                return View();
+            }
+            //校验用户
+            var pwd = Encrypt.Encode(password);
+            var manager =
+                _repository.LoadEntities(u => u.UserName == userName && u.Password == pwd && u.Status == Consts.StateNormal && u.IsDelete == false).FirstOrDefault();
+            if (manager == null)
+            {
+                ModelState.AddModelError("message", "用户名或密码有误");
+                return View();
+            }
+            if (manager.Roles.Count == 0)
+            {
+                ModelState.AddModelError("message", "未分配角色，请联系管理员");
+                return View();
+            }
 
-       
+            manager.OpenId = openid.Trim();
+            _dbContext.SaveChanges();
+            if (string.IsNullOrWhiteSpace(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
+            return Content("绑定成功！");
+
+        }
+
 
     }
 }

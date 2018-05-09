@@ -1,4 +1,4 @@
-﻿<div class="col-sm-1">
+﻿<div class="col-sm-3">
     <div class="form-group">
         <label class="control-label">是否认证</label>
         <select name="IsAuthenticate" class="form-control">
@@ -8,7 +8,7 @@
         </select>
     </div>
 </div>
-<div class="col-sm-1">
+<div class="col-sm-3">
     <div class="form-group">
         <label class="control-label">是否优质</label>
         <select name="IsHot" class="form-control">
@@ -18,7 +18,7 @@
         </select>
     </div>
 </div>
-<div class="col-sm-1">
+<div class="col-sm-3">
     <div class="form-group">
         <label class="control-label">是否推荐</label>
         <select name="IsRecommend" class="form-control">
@@ -28,7 +28,20 @@
         </select>
     </div>
 </div>
-<div class="col-sm-2">
+<div class="col-sm-3">
+    <div class="form-group">
+        <label class="control-label">广告关键词</label>
+        <div class="input-group">
+            <input type="text" name="ADKey" value="" class="form-control" />
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                    确定
+                </button>
+            </span>
+        </div>
+    </div>
+</div>
+<div class="col-sm-3">
     <div class="form-group">
         <label class="control-label">平均阅读数</label>
         <div class="input-daterange input-group">
@@ -45,7 +58,7 @@
         </div>
     </div>
 </div>
-<div class="col-sm-2">
+<div class="col-sm-3">
     <div class="form-group">
         <label class="control-label">月发文数</label>
         <div class="input-daterange input-group">
@@ -62,7 +75,7 @@
         </div>
     </div>
 </div>
-<div class="col-sm-2">
+<div class="col-sm-3">
     <div class="form-group">
         <label class="control-label">月发布频次</label>
         <div class="input-daterange input-group">
