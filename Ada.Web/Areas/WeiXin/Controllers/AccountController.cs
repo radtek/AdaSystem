@@ -143,5 +143,7 @@ namespace WeiXin.Controllers
             _service.Delete(entity);
             return Json(new { State = 1, Msg = "删除成功" });
         }
+
+        
     }
 }

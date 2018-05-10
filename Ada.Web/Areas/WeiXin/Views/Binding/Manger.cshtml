@@ -1,0 +1,38 @@
+﻿@model Ada.Core.Domain.Admin.Manager
+@{
+    Layout = "~/Views/Shared/_Layout_Home.cshtml";
+    ViewBag.Title = "Erp管理系统绑定";
+}
+<div class="middle-box text-center loginscreen  animated fadeInDown">
+    <div>
+        <div>
+            <h1 class="logo-name">VG+</h1>
+        </div>
+        @if (Model == null)
+        {
+            <h3>绑定账户</h3>
+            using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <p class="bg-danger">@Html.ValidationMessage("message") </p>
+                <input name="openid" type="hidden" value="@Model" />
+                <div class="form-group">
+                    <input name="userName" type="text" class="form-control" placeholder="用户名" required="">
+                </div>
+                <div class="form-group">
+                    <input name="password" type="password" class="form-control" placeholder="密码" required="">
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b">绑定</button>
+            }
+        }
+        else
+        {
+            <h3>绑定用户：@Model.UserName</h3>
+        }
+
+
+
+    </div>
+</div>
+
+

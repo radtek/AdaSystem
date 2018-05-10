@@ -12,25 +12,24 @@ using Ada.Core.Domain.Purchase;
 using Ada.Core.Domain.Resource;
 using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
+using Ada.Core.ViewModel;
 using Ada.Core.ViewModel.Admin;
 using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Caching;
+using Ada.Services.Admin;
 
 
 namespace Admin.Controllers
 {
     public class LoginController : Controller
     {
-        private readonly IRepository<Manager> _repository;
-        private readonly IDbContext _dbContext;
+        private readonly IManagerService _service;
         private readonly ISignals _signals;
-        public LoginController(IRepository<Manager> repository,
-            IDbContext dbContext,
+        public LoginController(IManagerService service,
             ISignals signals
             )
         {
-            _repository = repository;
-            _dbContext = dbContext;
+            _service = service;
             _signals = signals;
         }
         public ActionResult Index()
@@ -46,48 +45,22 @@ namespace Admin.Controllers
         public ActionResult Index(string userName, string password)
         {
             //校验用户
-            var pwd = Encrypt.Encode(password);
-            var manager =
-                _repository.LoadEntities(u => u.UserName == userName && u.Password == pwd && u.Status == Consts.StateNormal && u.IsDelete == false).FirstOrDefault();
-            if (manager == null)
+            var logModel = new LoginModel
             {
-                ModelState.AddModelError("message", "用户名或密码有误");
-                return View();
-            }
-            if (manager.Roles.Count == 0)
-            {
-                ModelState.AddModelError("message", "未分配角色，请联系管理员");
-                return View();
-            }
-            //根据角色级别排序，获取最高的那个
-            var role = manager.Roles.OrderBy(d => d.RoleGrade).FirstOrDefault();
-            //记录日志
-            manager.ManagerLoginLogs.Add(new ManagerLoginLog()
-            {
-                Id = IdBuilder.CreateIdNum(),
-                IpAddress = Utils.GetIpAddress(),
-                LoginTime = DateTime.Now,
-                WebInfo = Request.UserAgent,
-                Remark = "成功"
-            });
-            _dbContext.SaveChanges();
-            ManagerView managerView = new ManagerView()
-            {
-                Id = manager.Id,
-                Phone = manager.Phone,
-                RealName = manager.RealName,
-                Image = manager.Image,
-                UserName = manager.UserName,
-                RoleId = role.Id,
-                RoleName = role.RoleName,
-                RoleList = manager.Roles.Select(d => new RoleView() { Id = d.Id, RoleName = d.RoleName }),
-                Roles = manager.Roles.Count > 0 ? string.Join(",", manager.Roles.Select(d => d.RoleName)) : "",
-                Organizations = manager.Organizations.Count > 0 ? String.Join("-", manager.Organizations.Select(d => d.OrganizationName)) : ""
+                LoginName = userName.Trim(),
+                Password = password,
+                LoginLog = new LoginLog() { UserAgent = Request.UserAgent }
             };
-            Session["LoginManager"] = SerializeHelper.SerializeToString(managerView);
-            //清空登陆日志缓存
-            _signals.Trigger("LoginLog" + managerView.Id + ".Changed");
+            var result = _service.Login(logModel);
+            if (result == null)
+            {
+                ModelState.AddModelError("message", logModel.Message);
+                return View();
+            }
 
+            Session["LoginManager"] = SerializeHelper.SerializeToString(result);
+            //清空登陆日志缓存
+            _signals.Trigger("LoginLog" + result.Id + ".Changed");
             return RedirectToAction("Index", "Home", new { area = "Dashboards" });
 
         }
@@ -96,45 +69,9 @@ namespace Admin.Controllers
         {
             Session.Abandon();
             Response.Cookies.Add(new HttpCookie("ASP.NET_SessionId", string.Empty) { HttpOnly = true });
-            return RedirectToAction("Index","Login");
+            return RedirectToAction("Index", "Login");
         }
-        public ActionResult Binding(string openid)
-        {
-            return View(openid);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Binding(string userName, string password, string openid,string returnUrl)
-        {
-            if (string.IsNullOrWhiteSpace(openid))
-            {
-                return View();
-            }
-            //校验用户
-            var pwd = Encrypt.Encode(password);
-            var manager =
-                _repository.LoadEntities(u => u.UserName == userName && u.Password == pwd && u.Status == Consts.StateNormal && u.IsDelete == false).FirstOrDefault();
-            if (manager == null)
-            {
-                ModelState.AddModelError("message", "用户名或密码有误");
-                return View();
-            }
-            if (manager.Roles.Count == 0)
-            {
-                ModelState.AddModelError("message", "未分配角色，请联系管理员");
-                return View();
-            }
 
-            manager.OpenId = openid.Trim();
-            _dbContext.SaveChanges();
-            if (string.IsNullOrWhiteSpace(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-
-            return Content("绑定成功！");
-
-        }
 
 
     }

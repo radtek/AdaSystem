@@ -118,12 +118,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BindingController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\OAuth2Controller.cs" />
+    <Compile Include="Filters\WeiXinOAuthAttribute.cs" />
     <Compile Include="Models\WeiXinModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IWeiXinService.cs" />
     <Compile Include="Services\MessageHandlers\CustomMessageContext.cs" />
     <Compile Include="Services\MessageHandlers\CustomMessageHandler.cs" />
+    <Compile Include="Services\WeiXinService.cs" />
     <Compile Include="WeiXinAreaRegistration.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -137,7 +142,8 @@
     <Content Include="Views\Account\Update.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
-    <Content Include="Views\OAuth2\Index.cshtml" />
+    <Content Include="Views\Binding\Index.cshtml" />
+    <Content Include="Views\Binding\Manger.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -146,6 +152,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Views\Login\" />
     <Folder Include="Views\Message\" />
   </ItemGroup>
   <ItemGroup>

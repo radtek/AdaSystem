@@ -2970,6 +2970,7 @@
     <Content Include="Views\Media\AddGroup.cshtml" />
     <Content Include="Views\UserCenter\Group.cshtml" />
     <Content Include="Views\Shared\_IframeIp.cshtml" />
+    <Content Include="Views\Shared\_Layout_Home.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

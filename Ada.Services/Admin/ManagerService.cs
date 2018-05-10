@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
+using Ada.Core.Domain.Log;
+using Ada.Core.Tools;
+using Ada.Core.ViewModel;
 using Ada.Core.ViewModel.Admin;
 
 namespace Ada.Services.Admin
@@ -157,19 +160,107 @@ namespace Ada.Services.Admin
             _managerRepository.Update(entity);
             _dbContext.SaveChanges();
         }
+        /// <summary>
+        /// 根据微信ID获取用户信息
+        /// </summary>
+        /// <param name="openId"></param>
+        public Manager GetMangerByOpenId(string openId)
+        {
+            return _managerRepository.LoadEntities(d => d.OpenId == openId).FirstOrDefault();
 
+        }
+
+        public ManagerView Login(LoginModel loginModel)
+        {
+            Manager manager;
+            if (!string.IsNullOrWhiteSpace(loginModel.OpenId))
+            {
+                manager =
+                    _managerRepository.LoadEntities(u => u.OpenId == loginModel.OpenId && u.Status == Consts.StateNormal && u.IsDelete == false).FirstOrDefault();
+            }
+            else
+            {
+                loginModel.Password = Encrypt.Encode(loginModel.Password);
+                manager =
+                    _managerRepository.LoadEntities(u => u.UserName == loginModel.LoginName && u.Password == loginModel.Password && u.Status == Consts.StateNormal && u.IsDelete == false).FirstOrDefault();
+            }
+            if (manager == null)
+            {
+                loginModel.Message = !string.IsNullOrWhiteSpace(loginModel.OpenId) ? "用户未绑定微信" : "用户不存在或者密码有误";
+                return null;
+            }
+            if (manager.Roles.Count == 0)
+            {
+                loginModel.Message = "未分配角色，请联系管理员";
+                return null;
+            }
+            //根据角色级别排序，获取最高的那个
+            var role = manager.Roles.OrderBy(d => d.RoleGrade).FirstOrDefault();
+            //记录日志
+            manager.ManagerLoginLogs.Add(new ManagerLoginLog()
+            {
+                Id = IdBuilder.CreateIdNum(),
+                IpAddress = Utils.GetIpAddress(),
+                LoginTime = loginModel.LoginLog.LoginTime,
+                WebInfo = loginModel.LoginLog.UserAgent,
+                Remark = "成功"
+            });
+            _dbContext.SaveChanges();
+            loginModel.IsSuccess = true;
+            return new ManagerView()
+            {
+                Id = manager.Id,
+                Phone = manager.Phone,
+                RealName = manager.RealName,
+                Image = manager.Image,
+                UserName = manager.UserName,
+                RoleId = role.Id,
+                RoleName = role.RoleName,
+                RoleList = manager.Roles.Select(d => new RoleView() { Id = d.Id, RoleName = d.RoleName }),
+                Roles = manager.Roles.Count > 0 ? string.Join(",", manager.Roles.Select(d => d.RoleName)) : "",
+                Organizations = manager.Organizations.Count > 0 ? String.Join("-", manager.Organizations.Select(d => d.OrganizationName)) : ""
+            };
+        }
+        public bool BindingOpenId(string loginName, string pwd, string openid, out string errmsg, string image = null)
+        {
+            errmsg = "绑定成功！";
+            pwd = Encrypt.Encode(pwd);
+            var manager =
+                _managerRepository.LoadEntities(u => u.UserName == loginName && u.Password == pwd && u.Status == Consts.StateNormal && u.IsDelete == false).FirstOrDefault();
+            if (manager == null)
+            {
+                errmsg = "用户不存在或者密码有误！";
+                return false;
+            }
+            if (manager.Roles.Count == 0)
+            {
+                errmsg = "此用户未分配角色，请联系管理员";
+                return false;
+            }
+            manager.OpenId = openid.Trim();
+            if (string.IsNullOrWhiteSpace(manager.Image))
+            {
+                if (!string.IsNullOrWhiteSpace(image))
+                {
+                    manager.Image = image;
+                }
+            }
+            _dbContext.SaveChanges();
+            return true;
+
+        }
         public IEnumerable<ManagerView> GetByOrganizationName(string name)
         {
             var organization = _organizationRepository.LoadEntities(d => d.IsDelete == false && d.OrganizationName == name).FirstOrDefault();
             var allManagers = _managerRepository.LoadEntities(d => d.Status == Consts.StateNormal && d.IsDelete == false);
             var managers = from m in allManagers
-                from o in m.Organizations
-                where o.TreePath.Contains(organization.Id)
-                select new ManagerView()
-                {
-                    Id = m.Id,
-                    UserName = m.UserName
-                };
+                           from o in m.Organizations
+                           where o.TreePath.Contains(organization.Id)
+                           select new ManagerView()
+                           {
+                               Id = m.Id,
+                               UserName = m.UserName
+                           };
             return managers;
         }
     }

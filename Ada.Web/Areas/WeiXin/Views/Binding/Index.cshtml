@@ -1,0 +1,26 @@
+﻿@model Senparc.Weixin.MP.AdvancedAPIs.User.UserInfoJson
+@{
+    Layout = "~/Views/Shared/_Layout_Home.cshtml";
+    ViewBag.Title = "账户绑定微信";
+}
+
+<div class="middle-box text-center lockscreen animated fadeInDown">
+    <div>
+        <div class="m-b-md">
+            <img alt="image" class="img-circle circle-border" src="@Model.headimgurl">
+        </div>
+        <h3>@Model.nickname</h3>
+        <p>请选择要绑定的系统.</p>
+        <div class="m-t">
+            <div class="form-group">
+                <a href="@Url.Action("Manger",new{Model.openid})" class="btn btn-primary block full-width btn-outline">ERP管理系统</a>
+            </div>
+            <div class="form-group">
+                <a href="javascript:;" class="btn btn-warning block full-width btn-outline">会员VIP系统</a>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+

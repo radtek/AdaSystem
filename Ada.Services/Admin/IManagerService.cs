@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
 using Ada.Core.Domain.Admin;
+using Ada.Core.ViewModel;
 using Ada.Core.ViewModel.Admin;
 
 namespace Ada.Services.Admin
@@ -38,6 +39,9 @@ namespace Ada.Services.Admin
         /// <param name="entity"></param>
         void Edit(Manager entity);
 
+        Manager GetMangerByOpenId(string openId);
+        bool BindingOpenId(string loginName, string pwd, string openid, out string errmsg, string image = null);
+        ManagerView Login(LoginModel loginModel);
         IEnumerable<ManagerView> GetByOrganizationName(string name);
     }
 }
