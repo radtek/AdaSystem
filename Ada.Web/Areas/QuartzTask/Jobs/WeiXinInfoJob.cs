@@ -226,12 +226,14 @@ namespace QuartzTask.Jobs
                                                         var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
                                                         if (article != null)
                                                         {
+                                                            if (string.IsNullOrWhiteSpace(articleData.publishDateStr))
+                                                                continue;
                                                             article.ArticleIdx = articleData.idx;
                                                             article.ArticleUrl = articleData.url;
                                                             article.IsOriginal = articleData.original;
                                                             article.Biz = articleData.biz;
                                                             article.CommentCount = articleData.commentCount;
-                                                            article.Content = GetBrands(articleData.content,brands);
+                                                            article.Content = GetBrands(articleData.content, brands);
                                                             article.IsTop = articleData.isTop;
                                                             article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
                                                                 ? (DateTime?)null
@@ -239,9 +241,12 @@ namespace QuartzTask.Jobs
                                                             article.LikeCount = articleData.likeCount;
                                                             article.ViewCount = articleData.viewCount;
                                                             article.Title = articleData.title;
+
                                                         }
                                                         else
                                                         {
+                                                            if (string.IsNullOrWhiteSpace(articleData.publishDateStr))
+                                                                continue;
                                                             article = new MediaArticle();
                                                             article.Id = IdBuilder.CreateIdNum();
                                                             article.ArticleId = articleData.id;
@@ -259,6 +264,7 @@ namespace QuartzTask.Jobs
                                                             article.ViewCount = articleData.viewCount;
                                                             article.Title = articleData.title;
                                                             media.MediaArticles.Add(article);
+
                                                         }
                                                     }
                                                 }
@@ -293,6 +299,7 @@ namespace QuartzTask.Jobs
                         }
                         catch (Exception ex)
                         {
+                            media.CollectionDate = DateTime.Now;
                             Logger.Error("获取【" + media.MediaName + "-" + media.MediaID + "】微信基本信息任务异常", ex);
                             db.SaveChanges();
                         }

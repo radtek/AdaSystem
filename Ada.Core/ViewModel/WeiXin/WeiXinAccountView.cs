@@ -84,5 +84,10 @@ namespace Ada.Core.ViewModel.WeiXin
         /// </summary>
         [Display(Name = "授权地址")]
         public string Url { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        [Display(Name = "备注")]
+        public string Remark { get; set; }
     }
 }

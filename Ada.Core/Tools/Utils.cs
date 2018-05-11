@@ -66,6 +66,25 @@ namespace Ada.Core.Tools
             return userIP;
 
         }
+
+        public static string GetIpByBaidu()
+        {
+            string currentIp = "";
+            try
+            {
+                var htmlContent = HttpUtility.Get("https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=0&rsv_idx=1&tn=baidu&wd=IP&rsv_pq=db4eb7d40002dd86&rsv_t=14d7uOUvNnTdrhnrUx0zdEVTPEN8XDq4aH7KkoHAEpTIXkRQkUD00KJ2p94&rqlang=cn&rsv_enter=1&rsv_sug3=2&rsv_sug1=2&rsv_sug7=100&rsv_sug2=0&inputT=875&rsv_sug4=875");
+                var result = Regex.Match(htmlContent, @"(?<=本机IP:[^\d+]*)(\d+\.\d+\.\d+\.\d+)(?=</span>)");
+                if (result.Success)
+                {
+                    currentIp = result.Value;
+                }
+                return currentIp;
+            }
+            catch
+            {
+                return currentIp;
+            }
+        }
         #endregion
 
         #region 时间转换字符串

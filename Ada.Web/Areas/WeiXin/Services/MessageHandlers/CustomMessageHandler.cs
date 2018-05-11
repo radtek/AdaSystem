@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using Ada.Core.Infrastructure;
 using log4net;
 using Senparc.Weixin;
 using Senparc.Weixin.Helpers;
@@ -17,15 +18,18 @@ namespace WeiXin.Services.MessageHandlers
 {
     public class CustomMessageHandler : MessageHandler<CustomMessageContext>
     {
-        private string _appId;
-        private readonly ILog _logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly string _appId;
+        private readonly IWeiXinService _service;
+        private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public CustomMessageHandler(RequestMessageBase requestMessage)
             : base(requestMessage)
         {
+            _service = EngineContext.Current.Resolve<IWeiXinService>();
         }
         public CustomMessageHandler(Stream inputStream, PostModel postModel, int maxRecordCount = 0)
             : base(inputStream, postModel, maxRecordCount)
         {
+            _service = EngineContext.Current.Resolve<IWeiXinService>();
             if (!string.IsNullOrEmpty(postModel.AppId))
             {
                 _appId = postModel.AppId;//通过第三方开放平台发送过来的请求
@@ -74,7 +78,7 @@ namespace WeiXin.Services.MessageHandlers
            * return responseMessage;
            */
             var responseMessage = this.CreateResponseMessage<ResponseMessageText>();
-            
+
             responseMessage.Content = "抱歉，未找到你所需的服务。";
             return responseMessage;
         }
@@ -89,7 +93,43 @@ namespace WeiXin.Services.MessageHandlers
             var msgType = MsgTypeHelper.GetRequestMsgTypeString(requestMessage.RequestDocument);
             var responseMessage = this.CreateResponseMessage<ResponseMessageText>();
             responseMessage.Content = "未知消息类型：" + msgType;
-            _logger.Info("未知请求消息类型:"+ requestMessage.RequestDocument);
+            _logger.Info("未知请求消息类型:" + requestMessage.RequestDocument);
+            return responseMessage;
+        }
+
+
+
+        /// <summary>
+        /// 订阅（关注）事件
+        /// </summary>
+        /// <returns></returns>
+        public override IResponseMessageBase OnEvent_SubscribeRequest(RequestMessageEvent_Subscribe requestMessage)
+        {
+            var responseMessage = ResponseMessageBase.CreateFromRequestMessage<ResponseMessageText>(requestMessage);
+            var account = _service.GetWeiXinAccount(_appId);
+            var textMsg = "感谢您关注本公众号!";
+            if (account != null)
+            {
+                if (!string.IsNullOrWhiteSpace(account.Remark))
+                {
+                    textMsg = account.Remark;
+                }
+            }
+            responseMessage.Content = textMsg;
+            return responseMessage;
+        }
+
+        /// <summary>
+        /// 退订
+        /// 实际上用户无法收到非订阅账号的消息，所以这里可以随便写。
+        /// unsubscribe事件的意义在于及时删除网站应用中已经记录的OpenID绑定，消除冗余数据。并且关注用户流失的情况。
+        /// </summary>
+        /// <returns></returns>
+        public override IResponseMessageBase OnEvent_UnsubscribeRequest(RequestMessageEvent_Unsubscribe requestMessage)
+        {
+            var responseMessage = base.CreateResponseMessage<ResponseMessageText>();
+            responseMessage.Content = "有空再来";
+            //
             return responseMessage;
         }
     }

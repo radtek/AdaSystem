@@ -80,7 +80,7 @@ namespace WeiXin.Controllers
             entity.NotifyUrl = viewModel.NotifyUrl;
             entity.CretPath = viewModel.CretPath;
             entity.Image = viewModel.Image;
-
+            entity.Remark = viewModel.Remark;
             _service.Add(entity);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
@@ -103,6 +103,7 @@ namespace WeiXin.Controllers
             entity.NotifyUrl = item.NotifyUrl;
             entity.CretPath = item.CretPath;
             entity.Image = item.Image;
+            entity.Remark = item.Remark;
             return View(entity);
         }
         [HttpPost]
@@ -131,6 +132,7 @@ namespace WeiXin.Controllers
             entity.NotifyUrl = viewModel.NotifyUrl;
             entity.CretPath = viewModel.CretPath;
             entity.Image = viewModel.Image;
+            entity.Remark = viewModel.Remark;
             _service.Update(entity);
             TempData["Msg"] = "操作成功";
             return RedirectToAction("Index");

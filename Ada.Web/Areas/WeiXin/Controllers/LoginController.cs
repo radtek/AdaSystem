@@ -26,21 +26,24 @@ namespace WeiXin.Controllers
         [WeiXinOAuth("/WeiXin/OAuth2")]
         public ActionResult Manager()
         {
-            var obj = Session["CurrentWeiXin"];
-            var currentWxUser = SerializeHelper.DeserializeToObject<UserInfoJson>(obj.ToString());
-            var logModel = new LoginModel
+            if (Session["LoginManager"]==null)
             {
-                OpenId = currentWxUser.openid,
-                LoginLog = new LoginLog() { UserAgent = Request.UserAgent }
-            };
-            var result = _service.Login(logModel);
-            if (result == null)
-            {
-                return RedirectToAction("Index", "Binding");
+                var obj = Session["CurrentWeiXin"];
+                var currentWxUser = SerializeHelper.DeserializeToObject<UserInfoJson>(obj.ToString());
+                var logModel = new LoginModel
+                {
+                    OpenId = currentWxUser.openid,
+                    LoginLog = new LoginLog() { UserAgent = Request.UserAgent }
+                };
+                var result = _service.Login(logModel);
+                if (result == null)
+                {
+                    return RedirectToAction("Index", "Binding");
+                }
+                Session["LoginManager"] = SerializeHelper.SerializeToString(result);
+                //清空登陆日志缓存
+                _signals.Trigger("LoginLog" + result.Id + ".Changed");
             }
-            Session["LoginManager"] = SerializeHelper.SerializeToString(result);
-            //清空登陆日志缓存
-            _signals.Trigger("LoginLog" + result.Id + ".Changed");
             return RedirectToAction("Index", "Home", new { area = "Dashboards" });
         }
     }

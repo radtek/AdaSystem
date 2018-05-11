@@ -501,12 +501,13 @@ namespace Ada.Services.API
                                             var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
                                             if (article != null)
                                             {
+                                                if (string.IsNullOrWhiteSpace(articleData.publishDateStr)) continue;
                                                 article.ArticleIdx = articleData.idx;
                                                 article.ArticleUrl = articleData.url;
                                                 article.IsOriginal = articleData.original;
                                                 article.Biz = articleData.biz;
                                                 article.CommentCount = articleData.commentCount;
-                                                article.Content = GetBrands(articleData.content,brands);
+                                                article.Content = GetBrands(articleData.content, brands);
                                                 article.IsTop = articleData.isTop;
                                                 article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
                                                     ? (DateTime?)null
@@ -515,9 +516,11 @@ namespace Ada.Services.API
                                                 article.ViewCount = articleData.viewCount;
                                                 article.Title = articleData.title;
                                                 updateCount++;
+
                                             }
                                             else
                                             {
+                                                if (string.IsNullOrWhiteSpace(articleData.publishDateStr)) continue;
                                                 article = new MediaArticle();
                                                 article.Id = IdBuilder.CreateIdNum();
                                                 article.ArticleId = articleData.id;
@@ -536,6 +539,7 @@ namespace Ada.Services.API
                                                 article.Title = articleData.title;
                                                 media.MediaArticles.Add(article);
                                                 addCount++;
+
                                             }
                                         }
                                     }

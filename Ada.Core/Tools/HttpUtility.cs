@@ -18,6 +18,9 @@ namespace Ada.Core.Tools
 
             using (var http = new HttpClient(handler))
             {
+                http.DefaultRequestHeaders.Add(
+                    "User-Agent",
+                    "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
                 //await异步等待回应
                 var response = await http.GetAsync(url);
                 //确保HTTP成功状态值
@@ -30,9 +33,12 @@ namespace Ada.Core.Tools
         {
             //创建HttpClient（注意传入HttpClientHandler）
             var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
-
+            
             using (var http = new HttpClient(handler))
             {
+                http.DefaultRequestHeaders.Add(
+                    "User-Agent",
+                    "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
                 var task = http.GetAsync(url);
                 task.Result.EnsureSuccessStatusCode();
                 return task.Result.Content.ReadAsStringAsync().Result;
@@ -58,6 +64,9 @@ namespace Ada.Core.Tools
             //创建HttpClient（注意传入HttpClientHandler）
             using (var http = new HttpClient(handler))
             {
+                http.DefaultRequestHeaders.Add(
+                    "User-Agent",
+                    "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
                 //使用FormUrlEncodedContent做HttpContent
                 var content = postData == null ? null : new FormUrlEncodedContent(postData);
                 //await异步等待回应
@@ -74,6 +83,9 @@ namespace Ada.Core.Tools
             //创建HttpClient（注意传入HttpClientHandler）
             using (var http = new HttpClient(handler))
             {
+                http.DefaultRequestHeaders.Add(
+                    "User-Agent",
+                    "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
                 //使用FormUrlEncodedContent做HttpContent
                 var content = postData == null ? null : new FormUrlEncodedContent(postData);
                 //await异步等待回应

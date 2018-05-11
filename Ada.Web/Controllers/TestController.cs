@@ -384,18 +384,21 @@ namespace Ada.Web.Controllers
                 {
                     return Content("此文件没有导入数据，请填充数据再进行导入");
                 }
+
+                var username = "吴璇";
+                var userId = "X1801180851430024";
                 for (int i = 1; i <= sheet.LastRowNum; i++)
                 {
                     IRow row = sheet.GetRow(i);
                     var mediaId = row.GetCell(0)?.ToString();
                     var media = _media.LoadEntities(d => d.Id == mediaId.Trim()).FirstOrDefault();
                     if (media == null) continue;
-                    media.Transactor = "胡江超";
-                    media.TransactorId = "X1712181337040001";
-                    media.LinkMan.Transactor = "胡江超";
-                    media.LinkMan.TransactorId = "X1712181337040001";
-                    media.LinkMan.Commpany.Transactor = "胡江超";
-                    media.LinkMan.Commpany.TransactorId = "X1712181337040001";
+                    media.Transactor = username;
+                    media.TransactorId = userId;
+                    media.LinkMan.Transactor = username;
+                    media.LinkMan.TransactorId = userId;
+                    media.LinkMan.Commpany.Transactor = username;
+                    media.LinkMan.Commpany.TransactorId = userId;
                     count++;
                 }
 
@@ -539,13 +542,8 @@ namespace Ada.Web.Controllers
         public ActionResult Tool()
         {
            // RandomHelper random = new RandomHelper();
-            var code = "01234";
-           var dic= new Dictionary<string, object>
-            {
-                {"PhoneNumbers", "18888888888"},
-                {"TemplateCode", "SMS_133230131"},
-                {"TemplateParam", "{\"code\":" + code + "}"}
-            };
+            var code = Utils.GetIpByBaidu();
+           
             return Content(code);
         }
         private string GetDouYinId(string url)
