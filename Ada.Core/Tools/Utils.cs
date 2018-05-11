@@ -373,7 +373,7 @@ namespace Ada.Core.Tools
         /// <returns></returns>
         public static bool IsMobilePhone(string input)
         {
-            Regex regex = new Regex("^[1][3,4,5,6,7,8,9][0-9]{9}$");
+            Regex regex = new Regex("^^1[3456789]\\d{9}$");
             return regex.IsMatch(input);
 
         }

@@ -539,12 +539,11 @@ namespace Ada.Web.Controllers
             _dbContext.SaveChanges();
             return Content("成功更换" + count + "条资源");
         }
-        public ActionResult Tool()
+        public ActionResult Tool(string id)
         {
            // RandomHelper random = new RandomHelper();
-            var code = Utils.GetIpByBaidu();
-           
-            return Content(code);
+            var code = Utils.IsMobilePhone(id);
+            return Content(code.ToString());
         }
         private string GetDouYinId(string url)
         {
