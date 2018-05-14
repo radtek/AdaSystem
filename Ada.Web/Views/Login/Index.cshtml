@@ -48,12 +48,12 @@
                     {
                         @Html.AntiForgeryToken()
                         <div class="form-group">
-                            @Html.TextBoxFor(d => d.LoginName, new { @class = "form-control", placeholder = "输入手机号" })
-                            @Html.ValidationMessageFor(model => model.LoginName, null, new { @class = "help-block m-b-none text-danger" })
+                            @Html.TextBoxFor(d => d.LoginName, new {@class = "form-control", placeholder = "输入手机号",type="number"})
+                            @Html.ValidationMessageFor(model => model.LoginName, null, new {@class = "help-block m-b-none text-danger"})
                         </div>
                         <div class="form-group">
                             <div class="input-group">
-                                @Html.TextBoxFor(d => d.Code, new { @class = "form-control", placeholder = "输入手机验证码" })
+                                @Html.TextBoxFor(d => d.Code, new { @class = "form-control", placeholder = "输入手机验证码", type = "number" })
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-default" onclick="getSmsCode(this);">
                                         获取验证码
@@ -132,8 +132,8 @@
             }
             $.ajax({
                 type: "post",
-                headers: {
-                    '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("__RequestVerificationToken", $('@Html.AntiForgeryToken()').val()); // 请求发起前在头部附加token
                 },
                 url: "@Url.Action("GetSmsCode")",
                 data: { phone:phone },

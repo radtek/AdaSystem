@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
+using log4net;
 
 namespace Ada.Framework.Filter
 {
@@ -15,6 +16,7 @@ namespace Ada.Framework.Filter
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public  class AdaValidateAntiForgeryTokenAttribute: FilterAttribute, IAuthorizationFilter
     {
+        //private readonly ILog _logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private void ValidateRequestHeader(HttpRequestBase request)
         {
             //string cookieToken = string.Empty;

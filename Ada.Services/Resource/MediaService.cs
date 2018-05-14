@@ -402,12 +402,31 @@ namespace Ada.Services.Resource
             }
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
-            string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
-            if (order == "desc")
+            if (!string.IsNullOrWhiteSpace(viewModel.PriceSortOrder))
             {
-                return allList.OrderByDescending(d => d.IsTop).ThenByDescending(d => d.IsHot).ThenByDescending(d => d.IsRecommend).ThenByDescending(d => d.MediaName).ThenByDescending(d => d.Id).Skip(offset).Take(rows);
+                var arr = viewModel.PriceSortOrder.Split('|');
+                var sort = arr[0];
+                var order = arr[1];
+                if (order.ToLower()=="desc")
+                {
+                    return allList
+                        .OrderByDescending(d => d.MediaPrices.FirstOrDefault(p => p.AdPositionName == sort).SellPrice)
+                        .Skip(offset).Take(rows);
+                }
+                return allList
+                    .OrderBy(d => d.MediaPrices.FirstOrDefault(p => p.AdPositionName == sort).SellPrice)
+                    .Skip(offset).Take(rows);
             }
-            return allList.OrderByDescending(d => d.IsTop).ThenByDescending(d => d.IsHot).ThenByDescending(d => d.IsRecommend).ThenBy(d => d.MediaName).ThenBy(d => d.Id).Skip(offset).Take(rows);
+            else
+            {
+                string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
+                if (order == "desc")
+                {
+                    return allList.OrderByDescending(d => d.IsTop).ThenByDescending(d => d.IsHot).ThenByDescending(d => d.IsRecommend).ThenByDescending(d => d.MediaName).ThenByDescending(d => d.Id).Skip(offset).Take(rows);
+                }
+                return allList.OrderByDescending(d => d.IsTop).ThenByDescending(d => d.IsHot).ThenByDescending(d => d.IsRecommend).ThenBy(d => d.MediaName).ThenBy(d => d.Id).Skip(offset).Take(rows);
+            }
+
         }
         public IQueryable<MediaView> LoadEntitiesFilters(MediaView viewModel)
         {

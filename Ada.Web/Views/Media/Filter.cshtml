@@ -13,6 +13,12 @@
     var excelFields = fieldService.GetFieldsByKey(Model.CallIndex + "-excel");
     var isData = new List<string>() { "weixin", "sinablog", "douyin", "redbook" };
     var areas = fieldService.GetFieldsByKey("Area").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var priceOrder = new List<SelectListItem>();
+    foreach (var adPosition in Model.AdPositions.OrderByDescending(d=>d.Name))
+    {
+        priceOrder.Add(new SelectListItem() { Value = adPosition.Name + "|desc", Text = adPosition.Name + @" 从高到低" });
+        priceOrder.Add(new SelectListItem() { Value = adPosition.Name + "|asc", Text = adPosition.Name + @" 从低到高" });
+    }
     var priceRange = new List<SelectListItem>();
     var fansRange = new List<SelectListItem>();
     switch (Model.CallIndex)
@@ -206,9 +212,9 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
                         <div class="col-md-6">
                             <ul class="ul-labelauty">
                                 @foreach (var item in fansRange)
-            {
-                    <li><input type="radio" name="radio" data-labelauty="@item.Text" value="@item.Value"></li>
-}
+                                {
+                                    <li><input type="radio" name="radio" data-labelauty="@item.Text" value="@item.Value"></li>
+                                }
                             </ul>
                         </div>
                         <div class="col-md-3">
@@ -333,7 +339,13 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
     <div class="form-inline" role="form">
 
         <div class="form-group">
-            
+            <select class="form-control" name="PriceSortOrder" id="PriceSortOrder">
+                <option value="">默认排序</option>
+                @foreach (var item in priceOrder)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
         </div>
     </div>
 </div>

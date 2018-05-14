@@ -119,21 +119,36 @@ namespace Resource.Controllers
                 foreach (var name in names)
                 {
                     var mediaInfo = name.Trim();
-                    var temp = results.FirstOrDefault(d =>
-                        string.Equals(d.MediaName, mediaInfo, StringComparison.CurrentCultureIgnoreCase) || String.Equals(d.MediaID, mediaInfo, StringComparison.CurrentCultureIgnoreCase));
-                    if (temp == null)
+                    if (!results.Any(d=>d.MediaName.ToLower().Contains(mediaInfo.ToLower())||d.MediaID.ToLower().Contains(mediaInfo.ToLower())))
                     {
                         noDatas.Add(new Media
                         {
                             MediaName = name,
                             Taxis = i
                         });
-                        //noDatas.Add(name);
                     }
                     else
                     {
-                        temp.Taxis = i;
+                        var temp = results.FirstOrDefault(d =>
+                            d.MediaName.ToLower().Contains(mediaInfo.ToLower()) ||
+                            d.MediaID.ToLower().Contains(mediaInfo.ToLower()));
+                        if (temp != null) temp.Taxis = i;
                     }
+                    //var temp = results.FirstOrDefault(d =>
+                    //    string.Equals(d.MediaName, mediaInfo, StringComparison.CurrentCultureIgnoreCase) || String.Equals(d.MediaID, mediaInfo, StringComparison.CurrentCultureIgnoreCase));
+                    //if (temp == null)
+                    //{
+                    //    noDatas.Add(new Media
+                    //    {
+                    //        MediaName = name,
+                    //        Taxis = i
+                    //    });
+                    //    //noDatas.Add(name);
+                    //}
+                    //else
+                    //{
+                    //    temp.Taxis = i;
+                    //}
 
                     i++;
                 }

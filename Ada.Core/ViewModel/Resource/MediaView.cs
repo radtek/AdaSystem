@@ -542,6 +542,11 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "广告关键词")]
         public string ADKey { get; set; }
+        /// <summary>
+        /// 价格排序
+        /// </summary>
+        [Display(Name = "价格排序")]
+        public string PriceSortOrder { get; set; }
     }
 
 }
