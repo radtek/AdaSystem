@@ -8,8 +8,11 @@ using Ada.Core.Domain.WeiXin;
 using Ada.Core.ViewModel.Setting;
 using Ada.Core.ViewModel.WeiXin;
 using Ada.Framework.Filter;
+using Ada.Framework.Messaging;
 using Ada.Services.Setting;
 using Ada.Services.WeiXin;
+using Senparc.Weixin.MP.AdvancedAPIs;
+using WeiXin.Models;
 
 namespace WeiXin.Controllers
 {
@@ -18,11 +21,16 @@ namespace WeiXin.Controllers
         private readonly IWeiXinAccountService _service;
         private readonly ISettingService _settingService;
         private readonly IRepository<WeiXinAccount> _repository;
-        public AccountController(IWeiXinAccountService service, IRepository<WeiXinAccount> repository, ISettingService settingService)
+        private readonly IMessageService _messageService;
+        public AccountController(IWeiXinAccountService service,
+            IRepository<WeiXinAccount> repository,
+            ISettingService settingService,
+            IMessageService messageService)
         {
             _service = service;
             _repository = repository;
             _settingService = settingService;
+            _messageService = messageService;
         }
         public ActionResult Index()
         {
@@ -43,6 +51,7 @@ namespace WeiXin.Controllers
                     Name = d.Name,
                     AccountType = d.AccountType,
                     Status = d.Status,
+                    AppId = d.AppId,
                     Url = domain + "/WeiXin/Message?id=" + d.Id
 
                 })
@@ -145,7 +154,39 @@ namespace WeiXin.Controllers
             _service.Delete(entity);
             return Json(new { State = 1, Msg = "删除成功" });
         }
-
-        
+        [AllowAnonymous]
+        public ActionResult TemplateView(string id)
+        {
+            var viewModel = new TemplateMsgModel
+            {
+                AppId = id,
+                Templates = TemplateApi.GetPrivateTemplate(id).template_list
+                    .Select(d => new SelectListItem() { Value = d.template_id + "|" + d.title, Text = d.title })
+            };
+            return PartialView("TemplateMsg", viewModel);
+        }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult TestSendMsg(TemplateMsgModel templateMsgModel)
+        {
+            var temp = templateMsgModel.TemplateId.Split('|');
+            var dic = new Dictionary<string, object>
+            {
+                {"Title", templateMsgModel.Title},
+                {"Remark", templateMsgModel.Remark},
+                {"Url", templateMsgModel.Url},
+                {"AppId", templateMsgModel.AppId},
+                {"TemplateId", temp[0]},
+                {"TemplateName", temp[1]},
+                {"OpenIds", templateMsgModel.OpenIds},
+                {"KeyWord1", templateMsgModel.KeyWord1},
+                {"KeyWord2", templateMsgModel.KeyWord2},
+                {"KeyWord3", templateMsgModel.KeyWord3},
+                {"KeyWord4", templateMsgModel.KeyWord4},
+                {"KeyWord5", templateMsgModel.KeyWord5}
+            };
+            _messageService.Send("Push", dic);
+            return Json(new { State = 1, Msg = "提交成功" });
+        }
     }
 }

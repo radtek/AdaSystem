@@ -1,4 +1,5 @@
-﻿@using Ada.Core.Infrastructure
+﻿@using Ada.Core.Domain
+@using Ada.Core.Infrastructure
 @using Ada.Services.Resource
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
@@ -14,34 +15,49 @@
             <th>
                 采购价格
             </th>
-            <th>
-                销售价格
-            </th>
+            @if (Model.Cooperation == Consts.StateNormal)
+            {
+                <th>
+                    销售价格
+                </th>
+                <th>
+                    零售价格
+                </th>
+            }
+            
         </tr>
     </thead>
     <tbody>
         @for (int i = 0; i < prices.Count; i++)
         {
-            <tr>
-                @{
+        <tr>
+            @{
 
-                    var price = Model.MediaPrices?.FirstOrDefault(d => d.AdPositionName == prices[i].Name);
-                    var id = price == null ? "" : price.Id;
-                    var purchasePrice = price == null ? 0 : price.PurchasePrice;
-                    //var sellPrice = price == null ? 0 : price.SellPrice;
-                }
+                var price = Model.MediaPrices?.FirstOrDefault(d => d.AdPositionName == prices[i].Name);
+                var id = price == null ? "" : price.Id;
+                var purchasePrice = price == null ? 0 : price.PurchasePrice;
+                var sellPrice = price == null ? 0 : price.SellPrice;
+                var marketPrice = price == null ? 0 : price.MarketPrice;
+            }
+            <td>
+                <input name="MediaPrices[@i].Id" type="hidden" value="@id" />
+                <input name="MediaPrices[@i].AdPositionId" type="hidden" value="@prices[i].Id" />
+                <input class="form-control" name="MediaPrices[@i].AdPositionName" readonly="readonly" type="text" value="@prices[i].Name" />
+            </td>
+            <td>
+                <input class="form-control" name="MediaPrices[@i].PurchasePrice" placeholder="请输入价格，无报价输入0" type="text" value="@purchasePrice" />
+            </td>
+            @if (Model.Cooperation == Consts.StateNormal)
+            {
                 <td>
-                    <input name="MediaPrices[@i].Id" type="hidden" value="@id" />
-                    <input name="MediaPrices[@i].AdPositionId" type="hidden" value="@prices[i].Id" />
-                    <input class="form-control" name="MediaPrices[@i].AdPositionName" readonly="readonly" type="text" value="@prices[i].Name" />
-                </td>
-                <td>
-                    <input class="form-control" name="MediaPrices[@i].PurchasePrice" placeholder="请输入价格，无报价输入0" type="text" value="@purchasePrice" />
-                </td>
-                @*<td>
                     <input class="form-control" name="MediaPrices[@i].SellPrice" placeholder="请输入价格，无报价输入0" type="text" value="@sellPrice" />
-                </td>*@
-            </tr>
+                </td>
+                <td>
+                    <input class="form-control" name="MediaPrices[@i].MarketPrice" placeholder="请输入价格，无报价输入0" type="text" value="@marketPrice" />
+                </td>
+            }
+
+        </tr>
         }
 
     </tbody>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Ada.Core;
 using Ada.Core.Domain.WeiXin;
+using WeiXin.Models;
 
 namespace WeiXin.Services
 {

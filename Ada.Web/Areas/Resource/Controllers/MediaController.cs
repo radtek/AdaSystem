@@ -1027,8 +1027,8 @@ namespace Resource.Controllers
                     price.InvalidDate = viewModel.PriceInvalidDate;
                     price.PriceDate = viewModel.PriceUpdateDate;
                     price.PurchasePrice = Convert.ToDecimal(viewModelMediaPrice.PurchasePrice);
-                    price.SellPrice = entity.Cooperation == Consts.StateNormal ? price.SellPrice : SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), sellPriceRange);
-                    price.MarketPrice = entity.Cooperation == Consts.StateNormal ? price.MarketPrice : SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), marketPriceRange);
+                    price.SellPrice = entity.Cooperation == Consts.StateNormal ? viewModelMediaPrice.SellPrice : SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), sellPriceRange);
+                    price.MarketPrice = entity.Cooperation == Consts.StateNormal ? viewModelMediaPrice.MarketPrice : SetSalePrice(Convert.ToDecimal(viewModelMediaPrice.PurchasePrice), marketPriceRange);
                 }
             }
             _mediaService.Update(entity);

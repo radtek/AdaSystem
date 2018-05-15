@@ -8,12 +8,14 @@ using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.WeiXin;
+using Ada.Framework.Messaging;
 using log4net;
 using Senparc.Weixin.MP;
 using Senparc.Weixin.MP.AdvancedAPIs;
 using Senparc.Weixin.MP.AdvancedAPIs.TemplateMessage;
 using Senparc.Weixin.MP.Entities.Request;
 using Senparc.Weixin.MP.MvcExtension;
+using WeiXin.Models;
 using WeiXin.Services;
 using WeiXin.Services.MessageHandlers;
 
@@ -22,23 +24,18 @@ namespace WeiXin.Controllers
     public class MessageController : Controller
     {
         private readonly IRepository<WeiXinAccount> _repository;
-        private readonly IWeiXinService _service;
-        private readonly IRepository<Manager> _managerRepository;
+        
         public ILog Log { get; set; }
-        public MessageController(IRepository<WeiXinAccount> repository,
-            IWeiXinService service,
-            IRepository<Manager> managerRepository)
+        public MessageController(IRepository<WeiXinAccount> repository)
         {
             _repository = repository;
-            _service = service;
-            _managerRepository = managerRepository;
         }
         [HttpGet]
         [ActionName("Index")]
-        public ActionResult Get(string id,PostModel postModel, string echostr)
+        public ActionResult Get(string id, PostModel postModel, string echostr)
         {
             var account = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-            if (account==null)
+            if (account == null)
             {
                 return Content("非法请求");
             }
@@ -142,35 +139,12 @@ namespace WeiXin.Controllers
             catch (Exception ex)
             {
                 #region 异常处理
-                Log.Error("MessageHandler异常",ex);
+                Log.Error("MessageHandler异常", ex);
                 return Content("");
                 #endregion
             }
         }
 
-
-        public async Task<ActionResult> TestSendMsg()
-        {
-            var sendData = new
-            {
-                first = new TemplateDataItem("来自网站会员的媒体资源开发申请！（测试）\r\n", "#ff0000"),
-                keyword1 = new TemplateDataItem("微广联合"),
-                keyword2 = new TemplateDataItem("[微博] 测试测试测试"),
-                keyword3 = new TemplateDataItem(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")),
-                keyword4 = new TemplateDataItem("请媒介及时认领！"),
-                remark = new TemplateDataItem("", "#13227a")
-            };
-            var account = _service.GetWeiXinAccount();
-           var managers= _managerRepository.LoadEntities(d => d.Status == Consts.StateNormal && d.IsDelete == false);
-            foreach (var manager in managers)
-            {
-                if (!string.IsNullOrWhiteSpace(manager.OpenId))
-                {
-                    await TemplateApi.SendTemplateMessageAsync(account.AppId, manager.OpenId, "sNpHN33ZxCjK0_yu2pvgWpqGj9HA5i7au0hRTiC6F3k", "http://www.jxweiguang.com/Resource/MediaDevelopAllot", sendData);
-                }
-            }
-            //return Json(new {State = 1, Msg = "提交成功"});
-            return Content("提交成功");
-        }
+        
     }
 }

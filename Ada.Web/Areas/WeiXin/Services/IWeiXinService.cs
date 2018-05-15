@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
 using Ada.Core.Domain.WeiXin;
+using Ada.Framework.Messaging;
 
 namespace WeiXin.Services
 {
