@@ -61,7 +61,7 @@ namespace Resource.Controllers
                 for (int i = 1; i <= sheet.LastRowNum; i++)
                 {
                     IRow row = sheet.GetRow(i);
-                    var linkid = row.GetCell(9)?.ToString();
+                    var linkid = row.GetCell(10)?.ToString();
                     if (string.IsNullOrWhiteSpace(linkid))
                     {
                         continue;
@@ -71,7 +71,7 @@ namespace Resource.Controllers
                     media.MediaTypeId = "X1711091747220001";
                     media.LinkManId = linkid.Trim();
                     media.MediaName = row.GetCell(0)?.ToString();
-                    media.MediaID = row.GetCell(1)?.ToString();
+                    media.MediaID = row.GetCell(1)?.ToString().Trim();
                     decimal.TryParse(row.GetCell(2)?.ToString(), out var fans);
                     media.FansNum = Utils.SetFansNum(fans);
                     //校验ID不能重复
@@ -122,7 +122,7 @@ namespace Resource.Controllers
                     price4.PurchasePrice = pt4;
                     price4.PriceDate = DateTime.Now;
                     media.MediaPrices.Add(price4);
-                    var tags = row.GetCell(7)?.ToString();
+                    var tags = row.GetCell(8)?.ToString();
                     if (!string.IsNullOrWhiteSpace(tags))
                     {
                         var arr = tags.Trim().Replace("，", ",").Split(',').ToList();
@@ -136,10 +136,11 @@ namespace Resource.Controllers
                             }
                         }
                     }
-
-                    media.Remark = row.GetCell(8)?.ToString();
-                    media.Transactor = row.GetCell(10)?.ToString();
-                    media.TransactorId = row.GetCell(11)?.ToString();
+                    media.Area = row.GetCell(7)?.ToString();
+                    media.Remark = row.GetCell(9)?.ToString();
+                    media.Transactor = row.GetCell(11)?.ToString();
+                    media.TransactorId = row.GetCell(12)?.ToString();
+                    media.AddedDate=DateTime.Now;
                     media.Status = Consts.StateNormal;
                     media.IsSlide = true;
                     _mediaService.Add(media);

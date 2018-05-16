@@ -13,6 +13,7 @@ using Ada.Core.Tools;
 using Ada.Core.ViewModel.Resource;
 using Ada.Core.ViewModel.Setting;
 using Ada.Framework.Filter;
+using Ada.Framework.Messaging;
 using Ada.Services.Admin;
 using Ada.Services.Business;
 using Ada.Services.Cache;
@@ -33,7 +34,10 @@ namespace Ada.Web.Controllers
         private readonly ICacheService _cacheService;
         private readonly IMediaDevelopService _mediaDevelopService;
         private readonly IRepository<MediaGroup> _mediaGroupRepository;
+        private readonly IRepository<MediaDevelop> _mediaDevelopRepository;
         private readonly IMediaGroupService _mediaGroupService;
+        private readonly IMessageService _messageService;
+        private readonly IManagerService _managerService;
         public MediaController(IRepository<Media> repository,
             IMediaService service,
             IOrderDetailCommentService orderDetailCommentService,
@@ -42,7 +46,10 @@ namespace Ada.Web.Controllers
             ICacheService cacheService,
             IMediaDevelopService mediaDevelopService,
             IRepository<MediaGroup> mediaGroupRepository,
-            IMediaGroupService mediaGroupService)
+            IMediaGroupService mediaGroupService,
+            IMessageService messageService,
+            IRepository<MediaDevelop> mediaDevelopRepository,
+            IManagerService managerService)
         {
             _repository = repository;
             _service = service;
@@ -53,6 +60,9 @@ namespace Ada.Web.Controllers
             _mediaDevelopService = mediaDevelopService;
             _mediaGroupRepository = mediaGroupRepository;
             _mediaGroupService = mediaGroupService;
+            _messageService = messageService;
+            _mediaDevelopRepository = mediaDevelopRepository;
+            _managerService = managerService;
         }
         public ActionResult WeiXin()
         {
@@ -220,7 +230,7 @@ namespace Ada.Web.Controllers
             IDictionary<string, string> dic = new Dictionary<string, string>();
             foreach (var item in result)
             {
-                var jObjects = ExprotTemplate(item.ToList(),isData);
+                var jObjects = ExprotTemplate(item.ToList(), isData);
                 dic.Add(item.Key, jObjects.ToString());
             }
             times++;
@@ -242,11 +252,19 @@ namespace Ada.Web.Controllers
                 List<MediaDevelop> list = new List<MediaDevelop>();
                 foreach (var name in medias)
                 {
-                    MediaDevelop entity = new MediaDevelop();
-                    entity.Id = IdBuilder.CreateIdNum();
-                    entity.AddedById = CurrentUser.TransactorId;
-                    entity.AddedBy = CurrentUser.Transactor;
-                    entity.AddedDate = DateTime.Now;
+                    var isExt = _mediaDevelopRepository
+                        .LoadEntities(d => d.MediaTypeId == viewModel.MediaTypeId && d.MediaName == name).Any();
+                    if (isExt)
+                    {
+                        continue;
+                    }
+                    MediaDevelop entity = new MediaDevelop
+                    {
+                        Id = IdBuilder.CreateIdNum(),
+                        AddedById = CurrentUser.TransactorId,
+                        AddedBy = CurrentUser.Transactor,
+                        AddedDate = DateTime.Now
+                    };
                     entity.SubBy = entity.AddedBy;
                     entity.SubById = entity.AddedById;
                     entity.MediaName = name;
@@ -255,15 +273,54 @@ namespace Ada.Web.Controllers
                     entity.MediaTypeId = viewModel.MediaTypeId;
                     entity.SubDate = DateTime.Now;
                     //进度记录
-                    MediaDevelopProgress progress = new MediaDevelopProgress();
-                    progress.Id = IdBuilder.CreateIdNum();
-                    progress.ProgressContent = "已提交申请";
-                    progress.Remark = "等待媒介认领资源。";
-                    progress.ProgressDate = DateTime.Now;
+                    MediaDevelopProgress progress = new MediaDevelopProgress
+                    {
+                        Id = IdBuilder.CreateIdNum(),
+                        ProgressContent = "已提交申请",
+                        Remark = "等待媒介认领资源。",
+                        ProgressDate = DateTime.Now
+                    };
                     entity.MediaDevelopProgresses.Add(progress);
                     list.Add(entity);
                 }
-                _mediaDevelopService.AddRange(list);
+
+                if (list.Any())
+                {
+                    _mediaDevelopService.AddRange(list);
+                    var config = _settingService.GetSetting<WeiGuang>();
+                    var isPush = config.WebDevelopPush;
+                    var names = string.Join(",", list.Select(d => d.MediaName));
+                    if (list.Count > 5)
+                    {
+                        names = string.Join(",", list.Take(5).Select(d => d.MediaName)) + " 等";
+                    }
+                    if (isPush)
+                    {
+                        var openids = _managerService.GetByOrganizationName("媒介部")
+                            .Where(d => !string.IsNullOrWhiteSpace(d.OpenId)).Select(d => d.OpenId).ToList();
+                        if (openids.Any())
+                        {
+                            var dic = new Dictionary<string, object>
+                            {
+                                {"Title", "来自会员VIP系统媒体开发申请，请及时认领处理\r\n"},
+                                {"Remark", "\r\n点击详情查看"},
+                                {"Url",Request.Url.Scheme+"://"+ Request.Url.Authority+ "/Resource/MediaDevelopAllot"},
+                                {"AppId", "wxcd1a304c25e0ea53"},
+                                {"TemplateId", "y4eZb7aPr7tT8EXHi6r78jqsJx_Jw2EI_W7AYlc6D78"},
+                                {"TemplateName", "开发申请处理提醒"},
+                                {"OpenIds", string.Join(",",openids)},
+                                {"KeyWord1", viewModel.MediaTypeName},
+                                {"KeyWord2", names},
+                                {"KeyWord3", CurrentUser.Name},
+                                {"KeyWord4", DateTime.Now.ToString("yyyy-MM-dd HH:mm")}
+
+                            };
+                            _messageService.Send("Push", dic);
+                        }
+                       
+                    }
+                }
+
             }
             return Json(new { State = 1, Msg = "申请成功" });
         }
@@ -532,7 +589,7 @@ namespace Ada.Web.Controllers
             }
             return jObjects;
         }
-        private JArray ExprotTemplate(List<Media> results,bool isData)
+        private JArray ExprotTemplate(List<Media> results, bool isData)
         {
 
             JArray jObjects = new JArray();

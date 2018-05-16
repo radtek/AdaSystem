@@ -1,4 +1,5 @@
 ﻿
+@using System.Web.Optimization
 @model Ada.Core.ViewModel.Setting.WeiGuang
 @{
     ViewBag.Title = "系统配置";
@@ -72,7 +73,7 @@
                                             @Html.TextBoxFor(d => d.UserDemo, new { @class = "form-control" })
                                         </div>
                                         <div class="col-md-10">
-                                            @Html.TextBoxFor(d => d.UserDemoAllowIP, new { @class = "form-control",placeholder= Html.DisplayNameFor(d => d.UserDemoAllowIP).ToString() })
+                                            @Html.TextBoxFor(d => d.UserDemoAllowIP, new { @class = "form-control", placeholder = Html.DisplayNameFor(d => d.UserDemoAllowIP).ToString() })
                                         </div>
                                     </div>
                                 </div>
@@ -103,7 +104,7 @@
                                             @Html.TextBoxFor(d => d.UserVIPExportRatio, new { @class = "form-control" })
                                         </div>
                                         <div class="col-md-10">
-                                            @Html.TextBoxFor(d => d.UserVIPGroup, new { @class = "form-control",placeholder= Html.DisplayNameFor(d => d.UserVIPGroup).ToString() })
+                                            @Html.TextBoxFor(d => d.UserVIPGroup, new { @class = "form-control", placeholder = Html.DisplayNameFor(d => d.UserVIPGroup).ToString() })
                                         </div>
                                     </div>
                                 </div>
@@ -153,6 +154,22 @@
                                     @Html.TextBoxFor(d => d.RequestMediaCount, new { @class = "form-control" })
                                 </div>
                             </div>
+                            <h3>消息参数配置</h3>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.WebDevelopPush, Html.DisplayNameFor(d => d.WebDevelopPush).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    <div class="radio radio-info radio-inline">
+                                        @Html.RadioButtonFor(d => d.WebDevelopPush, true)
+                                        <label> 是 </label>
+                                    </div>
+                                    <div class="radio radio-info radio-inline">
+                                        @Html.RadioButtonFor(d => d.WebDevelopPush, false)
+                                        <label> 否 </label>
+                                    </div>
+                                </div>
+                            </div>
+
 
 
                             <div class="hr-line-dashed"></div>
@@ -171,3 +188,7 @@
 </div>
 
 
+@section Styles {
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+
+}

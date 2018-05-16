@@ -542,6 +542,7 @@ namespace Ada.Web.Controllers
         public ActionResult Tool(string id)
         {
            // RandomHelper random = new RandomHelper();
+            var request =Request.Url.Scheme+"://"+ Request.Url.Authority;
             var code = Utils.IsMobilePhone(id);
             return Content(code.ToString());
         }

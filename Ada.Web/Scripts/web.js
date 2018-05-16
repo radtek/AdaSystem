@@ -895,7 +895,7 @@ function develop() {
             '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
         },
         url: "/Media/Develop",
-        data: { MediaName: arr.join(','), MediaTypeId: $("#MediaTypeId").val() },
+        data: { MediaName: arr.join(','), MediaTypeId: $("#MediaTypeId").val(), MediaTypeName: $("#MediaTypeName").val() },
         success: function (data) {
             $('#resultModal').modal('hide');
             swal("消息", data.Msg, "success");

@@ -101,6 +101,11 @@ namespace Business.Controllers
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
                 return View(viewModel);
             }
+            if (string.IsNullOrWhiteSpace(viewModel.Image))
+            {
+                ModelState.AddModelError("message", "申请凭证不能为空");
+                return View(viewModel);
+            }
             var entity = _repository.LoadEntities(d => d.Id == viewModel.BusinessPayeeId).FirstOrDefault();
             if (entity.VerificationStatus == Consts.StateNormal)
             {

@@ -259,7 +259,8 @@ namespace Ada.Services.Admin
                            select new ManagerView()
                            {
                                Id = m.Id,
-                               UserName = m.UserName
+                               UserName = m.UserName,
+                               OpenId = m.OpenId
                            };
             return managers;
         }
