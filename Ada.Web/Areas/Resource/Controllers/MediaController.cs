@@ -119,7 +119,7 @@ namespace Resource.Controllers
                 foreach (var name in names)
                 {
                     var mediaInfo = name.Trim();
-                    if (!results.Any(d=>d.MediaName.ToLower().Contains(mediaInfo.ToLower())||d.MediaID.ToLower().Contains(mediaInfo.ToLower())))
+                    if (!results.Any(d=>d.MediaName.IndexOf(mediaInfo,StringComparison.OrdinalIgnoreCase)>=0||!string.IsNullOrWhiteSpace(d.MediaID) &&d.MediaID.IndexOf(mediaInfo,StringComparison.OrdinalIgnoreCase)>=0))
                     {
                         noDatas.Add(new Media
                         {
@@ -129,9 +129,7 @@ namespace Resource.Controllers
                     }
                     else
                     {
-                        var temp = results.FirstOrDefault(d =>
-                            d.MediaName.ToLower().Contains(mediaInfo.ToLower()) ||
-                            d.MediaID.ToLower().Contains(mediaInfo.ToLower()));
+                        var temp = results.FirstOrDefault(d => d.MediaName.IndexOf(mediaInfo, StringComparison.OrdinalIgnoreCase) >= 0 || !string.IsNullOrWhiteSpace(d.MediaID) && d.MediaID.IndexOf(mediaInfo, StringComparison.OrdinalIgnoreCase) >= 0);
                         if (temp != null) temp.Taxis = i;
                     }
                     //var temp = results.FirstOrDefault(d =>

@@ -102,7 +102,8 @@ namespace Ada.Services.Business
                     Organization = m.Organizations.FirstOrDefault().OrganizationName,
                     MediaId = c.BusinessOrderDetail.MediaPrice.MediaId,
                     MediaName = c.BusinessOrderDetail.MediaName,
-                    OrderRemark = c.BusinessOrderDetail.BusinessOrder.Remark
+                    OrderRemark = c.BusinessOrderDetail.BusinessOrder.Remark,
+                    Id = c.Id
                     
                 };
             viewModel.total = mediaComments.Count();
