@@ -66,6 +66,10 @@ namespace Ada.Core.ViewModel.API.iDataAPI
         /// </summary>
         public string biography { get; set; }
         /// <summary>
+        /// 抖音ID
+        /// </summary>
+        public string douyinID { get; set; }
+        /// <summary>
         /// 账号名称
         /// </summary>
         public string screenName { get; set; }

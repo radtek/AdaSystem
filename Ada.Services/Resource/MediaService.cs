@@ -20,20 +20,17 @@ namespace Ada.Services.Resource
     {
         private readonly IDbContext _dbContext;
         private readonly IRepository<Media> _repository;
-        private readonly IRepository<MediaArticle> _mediaArticleRepository;
         private readonly IRepository<Manager> _managerRepository;
         private readonly IRepository<MediaComment> _mediaCommentRepository;
         public MediaService(IRepository<Media> repository,
             IDbContext dbContext,
             IRepository<Manager> managerRepository,
-            IRepository<MediaComment> mediaCommentRepository,
-            IRepository<MediaArticle> mediaArticleRepository)
+            IRepository<MediaComment> mediaCommentRepository)
         {
             _repository = repository;
             _dbContext = dbContext;
             _managerRepository = managerRepository;
             _mediaCommentRepository = mediaCommentRepository;
-            _mediaArticleRepository = mediaArticleRepository;
         }
 
         public void Add(Media entity)
@@ -690,5 +687,8 @@ namespace Ada.Services.Resource
             return allList.OrderBy(d => d.CommentDate).Skip(offset).Take(rows);
         }
 
+        
+
     }
+
 }

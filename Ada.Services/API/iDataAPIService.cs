@@ -842,7 +842,7 @@ namespace Ada.Services.API
                         var mediaInfo = result.data.FirstOrDefault(d => d.id == dyparams.UID);
                         if (mediaInfo != null)
                         {
-                            media.MediaName = mediaInfo.screenName;
+                            media.MediaName = Utils.FilterEmoji(mediaInfo.screenName); 
                             media.Content = mediaInfo.biography;
                             media.FansNum = mediaInfo.fansCount;
                             media.PostNum = mediaInfo.videoCount;

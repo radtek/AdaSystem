@@ -54,11 +54,11 @@ namespace WeiXin.Services.MessageHandlers
             // 1、如果返回null，则继续执行OnTextRequest或OnEventRequest
             // 2、如果返回不为null，则终止执行OnTextRequest或OnEventRequest，返回最终ResponseMessage
             // 3、如果是事件，则会将RequestMessageEvent自动转为RequestMessageText类型，其中RequestMessageText.Content就是RequestMessageEvent.EventKey
-
-            if (requestMessage.Content == "微广")
+            var result = _service.PushMedia(requestMessage.Content, _appId, requestMessage.FromUserName);
+            if (!string.IsNullOrWhiteSpace(result))
             {
                 var strongResponseMessage = CreateResponseMessage<ResponseMessageText>();
-                strongResponseMessage.Content = "感谢您的关注，有问题随时联系我们。\r\n网站：http://www.jxweiguang.com ；\r\n联系电话：0796-8797969；\r\n电子邮箱：contact@jxweiguang.com；\r\n公司地址：江西省吉安亿都国际30栋三楼";
+                strongResponseMessage.Content = result;
                 return strongResponseMessage;
             }
             return null;//返回null，则继续执行OnTextRequest或OnEventRequest
@@ -78,7 +78,6 @@ namespace WeiXin.Services.MessageHandlers
            * return responseMessage;
            */
             var responseMessage = this.CreateResponseMessage<ResponseMessageText>();
-
             responseMessage.Content = "抱歉，未找到你所需的服务。";
             return responseMessage;
         }

@@ -84,7 +84,7 @@ namespace QuartzTask.Jobs
                                         var mediaInfo = result.data[0];
                                         if (mediaInfo != null)
                                         {
-                                            media.MediaName = mediaInfo.screenName;
+                                            media.MediaName = Utils.FilterEmoji(mediaInfo.screenName);
                                             media.Content = mediaInfo.biography;
                                             media.FansNum = mediaInfo.fansCount;
                                             media.PostNum = mediaInfo.postCount;

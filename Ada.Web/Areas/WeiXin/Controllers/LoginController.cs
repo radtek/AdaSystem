@@ -24,7 +24,7 @@ namespace WeiXin.Controllers
             _signals = signals;
         }
         [WeiXinOAuth("/WeiXin/OAuth2")]
-        public ActionResult Manager()
+        public ActionResult Manager(string returnUrl)
         {
             if (Session["LoginManager"]==null)
             {
@@ -43,6 +43,11 @@ namespace WeiXin.Controllers
                 Session["LoginManager"] = SerializeHelper.SerializeToString(result);
                 //清空登陆日志缓存
                 _signals.Trigger("LoginLog" + result.Id + ".Changed");
+            }
+
+            if (!string.IsNullOrWhiteSpace(returnUrl))
+            {
+                return Redirect(returnUrl);
             }
             return RedirectToAction("Index", "Home", new { area = "Dashboards" });
         }

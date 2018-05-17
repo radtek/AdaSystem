@@ -107,7 +107,41 @@
 
                 </div>
                 <div class="ibox-content">
-                    <div class="row">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>
+                                    广告位
+                                </th>
+                                <th>
+                                    成本价格
+                                </th>
+                                <th>
+                                    销售价格
+                                </th>
+                                <th>
+                                    零售价格
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var item in Model.MediaPrices)
+                            {
+                                <tr>
+                                    <td>@item.AdPositionName</td>
+                                    <td>@item.PurchasePrice 元</td>
+                                    <td>@item.MarketPrice 元</td>
+                                    <td>@item.SellPrice 元</td>
+                                </tr>
+                            }
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    @*<div class="row">
                         @foreach (var item in Model.MediaPrices)
                         {
                             <div class="col-lg-2">
@@ -123,7 +157,7 @@
                             </div>
                         }
 
-                    </div>
+                    </div>*@
                 </div>
             </div>
         </div>

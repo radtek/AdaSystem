@@ -12,5 +12,6 @@ namespace WeiXin.Services
     public interface IWeiXinService : IDependency
     {
         WeiXinAccount GetWeiXinAccount(string appIdOrAccountId = null);
+        string PushMedia(string key, string appId, string openId);
     }
 }
