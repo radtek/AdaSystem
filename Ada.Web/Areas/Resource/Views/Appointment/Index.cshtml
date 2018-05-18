@@ -1,0 +1,166 @@
+﻿
+@using System.Web.Optimization
+@using Ada.Core.Domain.Resource
+@using Ada.Core.Tools
+@model List<Ada.Core.Domain.Resource.Media>
+@{
+    ViewBag.Title = "媒体预约";
+    var id = ViewBag.Id == null ? string.Empty : ViewBag.Id;
+    int days = 60;
+    var medias = Model.OrderByDescending(d => d.MediaPrices.FirstOrDefault(p => p.AdPositionName == "头条")?.SellPrice).ToList();
+    var media = string.IsNullOrWhiteSpace(id) ? medias.FirstOrDefault(): Model.FirstOrDefault(d => d.Id == id);
+}
+@Html.Partial("Bread")
+
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="file-manager">
+
+                        <h3>预约媒体</h3>
+                        <ul class="folder-list" style="padding: 0">
+                            @foreach (var item in medias)
+                            {
+                                <li class="active"><a href="javascript:;"><i class="fa fa-weixin"></i> @item.MediaName</a></li>
+                            }
+
+
+                        </ul>
+
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-10 animated fadeInRight">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="">
+                        <div>
+                            <h2 class="no-margins">
+                                @media.MediaName
+                            </h2>
+                            <h4>请选择相应的日期进行预约（注：可预约近 @days 天，<span class="label label-danger">红色</span> 代表已确定，<span class="label label-warning">黄色</span> 代表已约定）</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hr-line-solid"></div>
+            <div class="row">
+                @for (int i = 0; i < days; i++)
+                {
+                    var date = DateTime.Now.AddDays(i);
+                    var bg = "white-bg";
+                    var dateStr = date.ToString("MM月dd日") + " " + Utils.GetWeek(date);
+                    var boxid = date.ToString("yyyyMMdd");
+                    <div class="col-lg-2 col-xs-6" id="box_@boxid">
+                        <div class="widget-head-color-box @bg p-lg text-center">
+                            <div class="m-b-md">
+                                <h2>
+                                    可预约
+                                </h2>
+                                <div class="font-bold">@dateStr</div>
+                            </div>
+                        </div>
+                        <div class="widget-text-box text-center">
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-white btn-outline" type="button" data-toggle="modal" data-target="#yyModal" data-date="@dateStr" data-boxid="box_@boxid"><i class="fa fa-bell-o"></i> 预约 </button>
+                                <button class="btn btn-sm btn-danger btn-outline hidden" type="button" onclick="cancleYY('box_@boxid')"><i class="fa fa-bell-slash-o"></i> 取消 </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="modal inmodal" id="yyModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInUp">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <i class="fa fa-bell-o modal-icon"></i>
+                <h4 class="modal-title">预约 [ @media.MediaName ]</h4>
+                <p class="font-bold"></p>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-12 text-center">
+                            <div class="radio radio-info radio-inline">
+                                <input type="radio" name="IsConfirm" id="istrue" value="true" />
+                                <label for="istrue"> 确定 </label>
+                            </div>
+                            <div class="radio radio-info radio-inline">
+                                <input type="radio" name="IsConfirm" id="isfalse" value="false" checked="" />
+                                <label for="isfalse"> 约定 </label>
+                            </div>
+                        </div>
+                        <input type="hidden" id="boxId" value=""/>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary ladda-button" data-style="zoom-in" onclick="confirmYY();">预约</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+    @Styles.Render("~/plugins/laddaStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/ladda")
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#yyModal').on('shown.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var recipient = button.data('date'); // Extract info from data-* attributes
+                var boxid = button.data('boxid');
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                var modal = $(this);
+                modal.find('.modal-header p').text(recipient);
+                modal.find('.modal-body #boxId').val(boxid);
+            });
+
+        });
+
+        function confirmYY() {
+            var boxId = $("#boxId").val();
+            $("#" + boxId + " h2").text("某某某");
+            var isConfirm = $("input[name='IsConfirm']:checked").val();
+            
+            $("#" + boxId + " .widget-head-color-box").removeClass("white-bg").addClass(isConfirm=="true" ? "red-bg" : "yellow-bg");
+            $("#" + boxId + " .btn-white").addClass('hidden');
+            $("#" + boxId + " .btn-danger").removeClass('hidden');
+            $('#yyModal').modal('hide');
+        }
+
+        function cancleYY(id) {
+            $("#" + id + " .widget-head-color-box").removeClass("red-bg").removeClass("yellow-bg").addClass("white-bg");
+            $("#" + id + " h2").text("可预约");
+            $("#" + id + " .btn-white").removeClass('hidden');
+            $("#" + id + " .btn-danger").addClass('hidden');
+        }
+
+    </script>
+}
+
+
+
+
+
+
+

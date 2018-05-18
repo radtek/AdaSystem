@@ -154,6 +154,13 @@ namespace Ada.Core.Tools
             }
             return result;
         }
+
+        public static string GetWeek(DateTime date)
+        {
+            string[] weekdays = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
+            var week = weekdays[Convert.ToInt32(date.DayOfWeek)];
+            return week;
+        }
         #endregion
 
         #region 新浪微博

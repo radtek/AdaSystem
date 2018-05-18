@@ -34,6 +34,7 @@ namespace Ada.Web.Controllers
         private readonly ICacheService _cacheService;
         private readonly IMediaDevelopService _mediaDevelopService;
         private readonly IRepository<MediaGroup> _mediaGroupRepository;
+        private readonly IRepository<Manager> _managerRepository;
         private readonly IRepository<MediaDevelop> _mediaDevelopRepository;
         private readonly IMediaGroupService _mediaGroupService;
         private readonly IMessageService _messageService;
@@ -49,7 +50,8 @@ namespace Ada.Web.Controllers
             IMediaGroupService mediaGroupService,
             IMessageService messageService,
             IRepository<MediaDevelop> mediaDevelopRepository,
-            IManagerService managerService)
+            IManagerService managerService,
+            IRepository<Manager> managerRepository)
         {
             _repository = repository;
             _service = service;
@@ -63,6 +65,7 @@ namespace Ada.Web.Controllers
             _messageService = messageService;
             _mediaDevelopRepository = mediaDevelopRepository;
             _managerService = managerService;
+            _managerRepository = managerRepository;
         }
         public ActionResult WeiXin()
         {
@@ -298,6 +301,15 @@ namespace Ada.Web.Controllers
                     {
                         var openids = _managerService.GetByOrganizationName("媒介部")
                             .Where(d => !string.IsNullOrWhiteSpace(d.OpenId)).Select(d => d.OpenId).ToList();
+                        var manager = _managerRepository.LoadEntities(d => d.Id == CurrentUser.TransactorId)
+                            .FirstOrDefault();
+                        if (manager!=null)
+                        {
+                            if (!string.IsNullOrWhiteSpace(manager.OpenId))
+                            {
+                                openids.Add(manager.OpenId);
+                            }
+                        }
                         if (openids.Any())
                         {
                             var dic = new Dictionary<string, object>

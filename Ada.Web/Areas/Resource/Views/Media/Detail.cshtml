@@ -45,13 +45,13 @@
                 <div class="">
                     <div>
                         <h2 class="no-margins">
-                            @Model.MediaName
-
-                        </h2>
-                        @*@if (!string.IsNullOrWhiteSpace(Model.Area))
+                            @Model.MediaName 
+                            @if (Model.MediaType.CallIndex == "weixin")
                             {
-                                <small class='label label-info'><i class='fa fa-map-marker'></i> @Model.Area</small>
-                            }*@
+                                <small> <i class='fa fa-weixin'></i> @Model.MediaID</small>
+                            }
+                        </h2>
+                        
                         <h4>@Model.Abstract</h4>
                         <small>
                             @Model.Content
@@ -110,54 +110,54 @@
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
-                            <tr>
-                                <th>
-                                    广告位
-                                </th>
-                                <th>
-                                    成本价格
-                                </th>
-                                <th>
-                                    销售价格
-                                </th>
-                                <th>
-                                    零售价格
-                                </th>
-                            </tr>
+                                <tr>
+                                    <th>
+                                        广告位
+                                    </th>
+                                    <th>
+                                        成本价格
+                                    </th>
+                                    <th>
+                                        销售价格
+                                    </th>
+                                    <th>
+                                        零售价格
+                                    </th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @foreach (var item in Model.MediaPrices)
-                            {
-                                <tr>
-                                    <td>@item.AdPositionName</td>
-                                    <td>@item.PurchasePrice 元</td>
-                                    <td>@item.MarketPrice 元</td>
-                                    <td>@item.SellPrice 元</td>
-                                </tr>
-                            }
+                                @foreach (var item in Model.MediaPrices)
+                                {
+                                    <tr>
+                                        <td>@item.AdPositionName</td>
+                                        <td>@item.PurchasePrice 元</td>
+                                        <td>@item.MarketPrice 元</td>
+                                        <td>@item.SellPrice 元</td>
+                                    </tr>
+                                }
 
 
                             </tbody>
                         </table>
                     </div>
-                    
-                    @*<div class="row">
-                        @foreach (var item in Model.MediaPrices)
-                        {
-                            <div class="col-lg-2">
 
-                                <div class="widget  p-xs text-center">
-                                    <div class="m-b-md">
-                                        <h2 class="m-xs text-danger"><i class="fa fa-jpy"></i> @item.PurchasePrice</h2>
-                                        <h3 class="font-bold no-margins">
-                                            @item.AdPositionName
-                                        </h3>
+                    @*<div class="row">
+                            @foreach (var item in Model.MediaPrices)
+                            {
+                                <div class="col-lg-2">
+
+                                    <div class="widget  p-xs text-center">
+                                        <div class="m-b-md">
+                                            <h2 class="m-xs text-danger"><i class="fa fa-jpy"></i> @item.PurchasePrice</h2>
+                                            <h3 class="font-bold no-margins">
+                                                @item.AdPositionName
+                                            </h3>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        }
+                            }
 
-                    </div>*@
+                        </div>*@
                 </div>
             </div>
         </div>

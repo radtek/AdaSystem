@@ -146,6 +146,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AppointmentController.cs" />
     <Compile Include="Controllers\BrushController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\DouYinController.cs" />
@@ -223,6 +224,7 @@
     <Content Include="Views\Shared\Confirm.cshtml" />
     <Content Include="Views\Media\Articles.cshtml" />
     <Content Include="Views\Shared\RedBookArticles.cshtml" />
+    <Content Include="Views\Appointment\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

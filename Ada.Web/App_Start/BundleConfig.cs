@@ -60,7 +60,7 @@ namespace Ada.Web
                       "~/Scripts/plugins/video/responsible-video.js"));
             // Lightbox gallery css styles
             bundles.Add(new StyleBundle("~/plugins/blueimp").Include(
-                      "~/Content/plugins/blueimp/css/blueimp-gallery.min.css",new CssRewriteUrlTransform()));
+                      "~/Content/plugins/blueimp/css/blueimp-gallery.min.css", new CssRewriteUrlTransform()));
             // Lightbox gallery
             bundles.Add(new ScriptBundle("~/plugins/lightboxGallery").Include(
                       "~/Scripts/plugins/blueimp/jquery.blueimp-gallery.min.js"));
@@ -146,12 +146,14 @@ namespace Ada.Web
 
             // fullCalendar styles
             bundles.Add(new StyleBundle("~/plugins/fullCalendarStyles").Include(
-                      "~/Content/plugins/fullcalendar/fullcalendar.css"));
+                      "~/Content/plugins/fullcalendar/fullcalendar.min.css",
+                "~/Content/plugins/fullcalendar/fullcalendar.print.min.css"));
 
             // fullCalendar 
             bundles.Add(new ScriptBundle("~/plugins/fullCalendar").Include(
                       "~/Scripts/plugins/fullcalendar/moment.min.js",
-                      "~/Scripts/plugins/fullcalendar/fullcalendar.min.js"));
+                      "~/Scripts/plugins/fullcalendar/fullcalendar.min.js",
+                      "~/Scripts/plugins/fullcalendar/locale-all.js"));
             // monent
             bundles.Add(new ScriptBundle("~/plugins/moment").Include(
                 "~/Scripts/plugins/fullcalendar/moment-with-locales.min.js"));
@@ -483,7 +485,7 @@ namespace Ada.Web
                 "~/Scripts/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"));
             //Bootstrap Table Edit
             bundles.Add(new StyleBundle("~/plugins/bootstrapEditTableStyle").Include(
-                "~/Content/plugins/bootstrap-table/extensions/editable/css/bootstrap-editable.css",new CssRewriteUrlTransform()));
+                "~/Content/plugins/bootstrap-table/extensions/editable/css/bootstrap-editable.css", new CssRewriteUrlTransform()));
             bundles.Add(new ScriptBundle("~/plugins/bootstrapEditTableScript").Include(
                 "~/Scripts/plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js",
                 "~/Scripts/plugins/bootstrap-table/extensions/editable/bootstrap-editable.min.js"));
@@ -522,7 +524,7 @@ namespace Ada.Web
             bundles.Add(new ScriptBundle("~/WebGlobal/Jquery").Include(
                 "~/Assets/vendor/jquery/jquery.min.js"));
             bundles.Add(new ScriptBundle("~/WebGlobal/bootstrapScript").Include(
-                "~/Assets/vendor/jquery-migrate/jquery-migrate.min.js", 
+                "~/Assets/vendor/jquery-migrate/jquery-migrate.min.js",
                 "~/Assets/vendor/popper.min.js",
                 "~/Assets/vendor/bootstrap/bootstrap.js"));
             //Plugins

@@ -73,6 +73,7 @@ namespace Boss.Controllers
             viewModel.Image = entity.Image;
             viewModel.Remark = entity.Remark;
             ViewBag.LinkMan = entity.BusinessPayee.LinkMan;
+            ViewBag.PayeeInfo = entity.BusinessPayee;
             var account = entity.BusinessPayee.LinkMan.PayAccounts.FirstOrDefault(d =>d.AccountName==viewModel.AccountName &&
                 d.AccountNum==viewModel.AccountNum
                 && d.IsDelete == false);
