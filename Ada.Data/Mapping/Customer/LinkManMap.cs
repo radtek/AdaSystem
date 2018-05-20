@@ -27,7 +27,7 @@ namespace Ada.Data.Mapping.Customer
             Property(s => s.IsLock);
             Property(s => s.Transactor).HasMaxLength(32);
             Property(s => s.TransactorId).HasMaxLength(32);
-
+            Property(s => s.UnionId).HasMaxLength(64);
             Property(s => s.AddedDate);
             Property(s => s.AddedBy).HasMaxLength(32);
             Property(s => s.AddedById).HasMaxLength(32);

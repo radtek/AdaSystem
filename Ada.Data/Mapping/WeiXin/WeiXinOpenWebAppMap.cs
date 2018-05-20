@@ -8,26 +8,21 @@ using Ada.Core.Domain.WeiXin;
 
 namespace Ada.Data.Mapping.WeiXin
 {
-   public class WeiXinAccountMap : EntityTypeConfiguration<WeiXinAccount>
+   public class WeiXinOpenWebAppMap : EntityTypeConfiguration<WeiXinOpenWebApp>
     {
-        public WeiXinAccountMap()
+        public WeiXinOpenWebAppMap()
         {
             //配置主键
             HasKey(s => s.Id);
             //配置字段
 
             Property(s => s.Name).HasMaxLength(32);
-            Property(s => s.SourceId).HasMaxLength(32);
             Property(s => s.AppId).HasMaxLength(32);
             Property(s => s.AppSecret).HasMaxLength(32);
-            Property(s => s.Token).HasMaxLength(32);
-            Property(s => s.EncodingAESKey).HasMaxLength(64);
-            Property(s => s.MchId).HasMaxLength(32);
-            Property(s => s.MchKey).HasMaxLength(64);
-            Property(s => s.NotifyUrl).HasMaxLength(512);
-            Property(s => s.CretPath).HasMaxLength(512);
-            Property(s => s.Image).HasMaxLength(512);
-            Property(s => s.WeiXinOpenWebAppId).HasMaxLength(32);
+            Property(s => s.BindAccountUrl).HasMaxLength(512);
+            Property(s => s.HomeUrl).HasMaxLength(512);
+            Property(s => s.LoginCallBackUrl).HasMaxLength(512);
+            Property(s => s.WeiXinAccountId).HasMaxLength(32);
 
             Property(s => s.AddedBy).HasMaxLength(32);
             Property(s => s.AddedById).HasMaxLength(32);
@@ -40,7 +35,7 @@ namespace Ada.Data.Mapping.WeiXin
             Property(s => s.Remark).HasMaxLength(1024);
 
             //配置表
-            ToTable("WeiXinAccount");
+            ToTable("WeiXinOpenWebApp");
         }
     }
 }

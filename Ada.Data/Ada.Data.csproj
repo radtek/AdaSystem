@@ -103,6 +103,7 @@
     <Compile Include="Mapping\Purchase\PurchaseReturenOrderDetailMap.cs" />
     <Compile Include="Mapping\Purchase\PurchaseReturnOrderMap.cs" />
     <Compile Include="Mapping\QuartzTask\JobMap.cs" />
+    <Compile Include="Mapping\Resource\MediaAppointmentMap.cs" />
     <Compile Include="Mapping\Resource\MediaCommentMap.cs" />
     <Compile Include="Mapping\Resource\MediaArticleMap.cs" />
     <Compile Include="Mapping\Resource\MediaDevelopProgressMap.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Mapping\Resource\AdPositionMap.cs" />
     <Compile Include="Mapping\Resource\MediaDevelopMap.cs" />
     <Compile Include="Mapping\Resource\MediaTypeMap.cs" />
+    <Compile Include="Mapping\WeiXin\WeiXinOpenWebAppMap.cs" />
     <Compile Include="Mapping\WeiXin\WeiXinRequestReocrdMap.cs" />
     <Compile Include="Mapping\WeiXin\WeiXinKeywordMatchMap.cs" />
     <Compile Include="Mapping\WeiXin\WeiXinKeywordMap.cs" />
@@ -321,6 +323,14 @@
     <Compile Include="Migrations\201805051441003_UpdateMediaGroup.Designer.cs">
       <DependentUpon>201805051441003_UpdateMediaGroup.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805201423485_WeiXinAndMediaUpdate.cs" />
+    <Compile Include="Migrations\201805201423485_WeiXinAndMediaUpdate.Designer.cs">
+      <DependentUpon>201805201423485_WeiXinAndMediaUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805201428439_WeiXinAndMediaUpdate2.cs" />
+    <Compile Include="Migrations\201805201428439_WeiXinAndMediaUpdate2.Designer.cs">
+      <DependentUpon>201805201428439_WeiXinAndMediaUpdate2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -490,6 +500,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805051441003_UpdateMediaGroup.resx">
       <DependentUpon>201805051441003_UpdateMediaGroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805201423485_WeiXinAndMediaUpdate.resx">
+      <DependentUpon>201805201423485_WeiXinAndMediaUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805201428439_WeiXinAndMediaUpdate2.resx">
+      <DependentUpon>201805201428439_WeiXinAndMediaUpdate2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

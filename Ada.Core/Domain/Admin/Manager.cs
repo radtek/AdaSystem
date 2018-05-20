@@ -47,8 +47,12 @@ namespace Ada.Core.Domain.Admin
         /// </summary>
         [Display(Name = "授权ID")]
         public string OpenId { get; set; }
+        /// <summary>
+        /// 开发平台授权ID
+        /// </summary>
+        [Display(Name = "开发平台授权ID")]
+        public string UnionId { get; set; }
 
-        
         /// <summary>
         /// 用户状态
         /// </summary>

@@ -84,6 +84,11 @@ namespace Ada.Core.Domain.WeiXin
         /// </summary>
         [Display(Name = "微信Logo")]
         public string Image { get; set; }
+        /// <summary>
+        /// 开放平台
+        /// </summary>
+        [Display(Name = "开放平台网站应用")]
+        public string WeiXinOpenWebAppId { get; set; }
         public virtual ICollection<WeiXinKeyword> WeiXinKeywords { get; set; }
         public virtual ICollection<WeiXinRequestReocrd> WeiXinRequestReocrds { get; set; }
     }

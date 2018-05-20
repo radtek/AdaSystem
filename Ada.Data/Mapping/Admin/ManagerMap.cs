@@ -28,7 +28,7 @@ namespace Ada.Data.Mapping.Admin
             Property(s => s.Theme).HasMaxLength(32);
             Property(s => s.ExpireTime);
             Property(s => s.IdCard).HasMaxLength(32);
-
+            Property(s => s.UnionId).HasMaxLength(64);
             Property(s => s.AddedDate);
             Property(s => s.AddedBy).HasMaxLength(32);
             Property(s => s.AddedById).HasMaxLength(32);

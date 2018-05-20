@@ -92,6 +92,11 @@ namespace Ada.Core.Domain.Customer
         [Display(Name = "OpenId")]
         public string OpenId { get; set; }
         /// <summary>
+        /// 开发平台授权ID
+        /// </summary>
+        [Display(Name = "开发平台授权ID")]
+        public string UnionId { get; set; }
+        /// <summary>
         /// 密码
         /// </summary>
         [Display(Name = "密码")]

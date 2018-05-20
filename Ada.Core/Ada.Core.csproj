@@ -133,6 +133,7 @@
     <Compile Include="Domain\QuartzTask\Job.cs" />
     <Compile Include="Domain\Resource\Media.cs" />
     <Compile Include="Domain\API\APIInterfaces.cs" />
+    <Compile Include="Domain\Resource\MediaAppointment.cs" />
     <Compile Include="Domain\Resource\MediaArticle.cs" />
     <Compile Include="Domain\Resource\MediaComment.cs" />
     <Compile Include="Domain\Resource\MediaDevelop.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="Domain\Resource\MediaTag.cs" />
     <Compile Include="Domain\Resource\MediaType.cs" />
     <Compile Include="Domain\StatusEnum.cs" />
+    <Compile Include="Domain\WeiXin\WeiXinOpenWebApp.cs" />
     <Compile Include="Domain\WeiXin\WeiXinAccount.cs" />
     <Compile Include="Domain\WeiXin\WeiXinKeyword.cs" />
     <Compile Include="Domain\WeiXin\WeiXinKeywordMatch.cs" />
