@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
+using Ada.Core.Tools;
 using Ada.Core.ViewModel;
 using log4net;
+using log4net.Layout;
 using Newtonsoft.Json;
 
 namespace Ada.Framework.Filter
@@ -39,7 +41,8 @@ namespace Ada.Framework.Filter
                         method = httpmethod,
                         agent = filterContext.HttpContext.Request.UserAgent,
                         urlParams = filterContext.HttpContext.Request.Url?.Query,
-                        formParams = dc
+                        formParams = dc,
+                        ip = Utils.GetIpAddress()
                     };
                     errMsg = JsonConvert.SerializeObject(quary);
                 }

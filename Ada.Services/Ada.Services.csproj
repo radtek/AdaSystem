@@ -134,7 +134,9 @@
     <Compile Include="Resource\IMediaGroupService.cs" />
     <Compile Include="Resource\IMediaDevelopService.cs" />
     <Compile Include="Resource\IMediaCommentService.cs" />
+    <Compile Include="Resource\IMediaAppointmentService.cs" />
     <Compile Include="Resource\IMediaTagService.cs" />
+    <Compile Include="Resource\MediaAppointmentService.cs" />
     <Compile Include="Resource\MediaPriceService.cs" />
     <Compile Include="Resource\MediaGroupService.cs" />
     <Compile Include="Resource\MediaDevelopService.cs" />

@@ -51,7 +51,8 @@ namespace Ada.Framework.Filter
                     method = httpmethod,
                     urlParams = filterContext.HttpContext.Request.Url?.Query,
                     formParams = dc,
-                    userInfo = userInfo
+                    userInfo = userInfo,
+                    ip = Utils.GetIpAddress()
                 };
                 errMsg = JsonConvert.SerializeObject(quary);
             }
