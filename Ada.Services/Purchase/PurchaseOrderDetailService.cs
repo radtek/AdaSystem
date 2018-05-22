@@ -45,7 +45,7 @@ namespace Ada.Services.Purchase
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.MediaName.Contains(viewModel.search));
+                allList = allList.Where(d => d.MediaName.Contains(viewModel.search)|| d.LinkManName.Contains(viewModel.search)|| d.MediaTitle.Contains(viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaName))
             {

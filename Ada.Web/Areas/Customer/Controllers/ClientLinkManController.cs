@@ -30,6 +30,7 @@ namespace Customer.Controllers
         }
         public ActionResult Index()
         {
+            ViewBag.IsAdmin = !PremissionData().Any();
             return View();
         }
         public ActionResult GetList(LinkManView viewModel)

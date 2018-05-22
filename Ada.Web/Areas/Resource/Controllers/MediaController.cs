@@ -111,6 +111,7 @@ namespace Resource.Controllers
         private JArray ExprotTemplate(MediaView viewModel, List<Media> results)
         {
             List<Media> noDatas = new List<Media>();
+            List<Media> repeatS = new List<Media>();
             //找到没有的
             if (!string.IsNullOrWhiteSpace(viewModel.MediaBatch))
             {
@@ -124,7 +125,8 @@ namespace Resource.Controllers
                         noDatas.Add(new Media
                         {
                             MediaName = name,
-                            Taxis = i
+                            Taxis = i,
+                            Id = "不存在的资源"
                         });
                     }
                     else
@@ -132,23 +134,20 @@ namespace Resource.Controllers
                         var temp = results.FirstOrDefault(d => d.MediaName.IndexOf(mediaInfo, StringComparison.OrdinalIgnoreCase) >= 0 || !string.IsNullOrWhiteSpace(d.MediaID) && d.MediaID.IndexOf(mediaInfo, StringComparison.OrdinalIgnoreCase) >= 0);
                         if (temp != null) temp.Taxis = i;
                     }
-                    //var temp = results.FirstOrDefault(d =>
-                    //    string.Equals(d.MediaName, mediaInfo, StringComparison.CurrentCultureIgnoreCase) || String.Equals(d.MediaID, mediaInfo, StringComparison.CurrentCultureIgnoreCase));
-                    //if (temp == null)
-                    //{
-                    //    noDatas.Add(new Media
-                    //    {
-                    //        MediaName = name,
-                    //        Taxis = i
-                    //    });
-                    //    //noDatas.Add(name);
-                    //}
-                    //else
-                    //{
-                    //    temp.Taxis = i;
-                    //}
-
                     i++;
+                }
+
+                var repeat = viewModel.MediaBatch.Split(',').GroupBy(d => d).Where(d => d.Count() > 1).Select(d=>d.Key);
+                var j = 9999;
+                foreach (var item in repeat)
+                {
+                    repeatS.Add(new Media()
+                    {
+                        MediaName = item,
+                        Taxis = j,
+                        Id="重复的查询条件"
+                    });
+                    j++;
                 }
             }
             JArray jObjects = new JArray();
@@ -158,10 +157,14 @@ namespace Resource.Controllers
             {
                 results.AddRange(noDatas);
             }
+            if (repeatS.Any())
+            {
+                results.AddRange(repeatS);
+            }
             foreach (var media in results.OrderBy(d => d.Taxis))
             {
                 var jo = new JObject();
-                jo.Add("主键", string.IsNullOrWhiteSpace(media.Id) ? "不存在的资源" : media.Id);
+                jo.Add("主键", media.Id);
                 jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
                 jo.Add("媒体名称", media.MediaName);
                 jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
