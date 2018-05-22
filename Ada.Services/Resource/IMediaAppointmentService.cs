@@ -12,5 +12,6 @@ namespace Ada.Services.Resource
    public interface IMediaAppointmentService : IDependency
     {
         void Delete(MediaAppointment entity);
+        IQueryable<MediaAppointment> LoadEntitiesFilter(MediaAppointmentView viewModel);
     }
 }

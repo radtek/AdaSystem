@@ -31,6 +31,7 @@ namespace Ada.Core.ViewModel.Setting
             UserDemo = "18888888888";
             UserVIPExportRatio = 1;
             WebDevelopPush = false;
+            CancleAppointmentPush = true;
         }
         /// <summary>
         /// 媒介资源查询数
@@ -127,5 +128,10 @@ namespace Ada.Core.ViewModel.Setting
         /// </summary>
         [Display(Name = "网站开发推送")]
         public bool WebDevelopPush { get; set; }
+        /// <summary>
+        /// 取消预约推送
+        /// </summary>
+        [Display(Name = "取消预约推送")]
+        public bool CancleAppointmentPush { get; set; }
     }
 }

@@ -223,6 +223,14 @@ namespace QuartzTask.Jobs
                                                     List<string> brands = Cache.Get("Brand") as List<string>;
                                                     foreach (var articleData in resultArticle.data)
                                                     {
+                                                        if (string.IsNullOrWhiteSpace(articleData.id))
+                                                        {
+                                                            continue;
+                                                        }
+                                                        if (articleData.id.Length > 128)
+                                                        {
+                                                            continue;
+                                                        }
                                                         var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
                                                         if (article != null)
                                                         {
@@ -299,9 +307,7 @@ namespace QuartzTask.Jobs
                         }
                         catch (Exception ex)
                         {
-                            media.CollectionDate = DateTime.Now;
                             Logger.Error("获取【" + media.MediaName + "-" + media.MediaID + "】微信基本信息任务异常", ex);
-                            db.SaveChanges();
                         }
                     }
                     else

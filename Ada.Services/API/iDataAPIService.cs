@@ -498,6 +498,14 @@ namespace Ada.Services.API
                                         var brands = _fieldRepository.LoadEntities(d => d.FieldType.CallIndex == "Brand").Select(d => d.Text).ToList();
                                         foreach (var articleData in resultArticle.data)
                                         {
+                                            if (string.IsNullOrWhiteSpace(articleData.id))
+                                            {
+                                                continue;
+                                            }
+                                            if (articleData.id.Length>128)
+                                            {
+                                                continue;
+                                            }
                                             var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
                                             if (article != null)
                                             {
@@ -568,7 +576,24 @@ namespace Ada.Services.API
             requestResult.AddCount = addCount;
             requestResult.UpdateCount = updateCount;
             requestResult.Message = "采集成功！新增：" + addCount + "篇，更新：" + updateCount + "篇";
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbContext.SaveChanges();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                StringBuilder errors = new StringBuilder();
+                IEnumerable<DbEntityValidationResult> validationResult = ex.EntityValidationErrors;
+                foreach (DbEntityValidationResult result in validationResult)
+                {
+                    ICollection<DbValidationError> validationError = result.ValidationErrors;
+                    foreach (DbValidationError err in validationError)
+                    {
+                        errors.Append(err.PropertyName + ":" + err.ErrorMessage + "\r\n");
+                    }
+                }
+                requestResult.Message = errors.ToString();
+            }
             return requestResult;
         }
         public RequestResult GetWeiBoArticles(WeiBoParams wbparams)

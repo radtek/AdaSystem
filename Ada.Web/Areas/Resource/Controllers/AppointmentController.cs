@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -7,8 +8,12 @@ using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Resource;
+using Ada.Core.ViewModel.Setting;
 using Ada.Framework.Filter;
+using Ada.Framework.Messaging;
+using Ada.Services.Admin;
 using Ada.Services.Resource;
+using Ada.Services.Setting;
 
 namespace Resource.Controllers
 {
@@ -18,18 +23,30 @@ namespace Resource.Controllers
         private readonly IMediaService _service;
         private readonly IMediaAppointmentService _mediaAppointmentService;
         private readonly IRepository<MediaAppointment> _mediaAppointmentRepository;
+        private readonly IMessageService _messageService;
+        private readonly IManagerService _managerService;
+        private readonly ISettingService _settingService;
         private static readonly object Locker = new object();
-        public AppointmentController(IRepository<Media> repository, IMediaService service, IMediaAppointmentService mediaAppointmentService, IRepository<MediaAppointment> mediaAppointmentRepository)
+        public AppointmentController(IRepository<Media> repository,
+            IMediaService service,
+            IMediaAppointmentService mediaAppointmentService,
+            IRepository<MediaAppointment> mediaAppointmentRepository,
+            IMessageService messageService,
+            IManagerService managerService,
+            ISettingService settingService)
         {
             _repository = repository;
             _service = service;
             _mediaAppointmentService = mediaAppointmentService;
             _mediaAppointmentRepository = mediaAppointmentRepository;
+            _messageService = messageService;
+            _managerService = managerService;
+            _settingService = settingService;
         }
         public ActionResult Index(string id)
         {
             var medias = _repository.LoadEntities(d =>
-                d.IsDelete == false && d.MediaType.CallIndex == "weixin" && d.Cooperation == Consts.StateNormal).OrderByDescending(d => d.MediaPrices.FirstOrDefault(p => p.AdPositionName == "头条（原创）").SellPrice).ThenBy(d=>d.MediaName).ToList();
+                d.IsDelete == false && d.MediaType.CallIndex == "weixin" && d.Cooperation == Consts.StateNormal).OrderByDescending(d => d.MediaPrices.FirstOrDefault(p => p.AdPositionName == "头条（原创）").SellPrice).ThenBy(d => d.MediaName).ToList();
             ViewBag.Medias = medias;
             var media = string.IsNullOrWhiteSpace(id) ? medias.FirstOrDefault() : medias.FirstOrDefault(d => d.Id == id);
             return View(media);
@@ -41,12 +58,10 @@ namespace Resource.Controllers
             {
                 var media = _repository.LoadEntities(d => d.Id == view.MediaId).FirstOrDefault();
                 //判断是否被人预约
-                if (media.MediaAppointments.Any(d => d.AppointmentDate.Value.Date == view.AppointmentDate.Value.Date))
+                if (media.MediaAppointments.Any(d => d.AppointmentDate.Value.Date == view.AppointmentDate.Value.Date && d.Taxis == view.Taxis))
                 {
                     return Json(new { State = 0, Msg = "抱歉！" + media.MediaName + "[" + view.AppointmentDate.Value.Date.ToString("MM-dd") + "] 已被预约，请择日再预约。" });
                 }
-
-                var id = IdBuilder.CreateIdNum();
                 media.MediaAppointments.Add(new MediaAppointment()
                 {
                     Transactor = CurrentManager.UserName,
@@ -54,12 +69,13 @@ namespace Resource.Controllers
                     AppointmentDate = view.AppointmentDate.Value.Date,
                     State = view.State,
                     AddedDate = DateTime.Now,
-                    Id = id
+                    Id = IdBuilder.CreateIdNum(),
+                    Taxis = view.Taxis
                 });
                 _service.Update(media);
                 return Json(new { State = 1, Msg = "预约成功" });
             }
-            
+
         }
         [HttpPost, AdaValidateAntiForgeryToken]
         public ActionResult Cancle(string id)
@@ -79,7 +95,67 @@ namespace Resource.Controllers
                 }
             }
             _mediaAppointmentService.Delete(make);
+            //推送通知给编辑部和业务部
+            try
+            {
+                var config = _settingService.GetSetting<WeiGuang>();
+                if (config.CancleAppointmentPush)
+                {
+                    var openids = _managerService.GetByOrganizationName("业务部")
+                        .Where(d => !string.IsNullOrWhiteSpace(d.OpenId)).Select(d => d.OpenId).ToList();
+                    var bjbOpenIds = _managerService.GetByOrganizationName("编辑部")
+                        .Where(d => !string.IsNullOrWhiteSpace(d.OpenId)).Select(d => d.OpenId).ToList();
+                    var jsbOpenIds = _managerService.GetByOrganizationName("技术部")
+                        .Where(d => !string.IsNullOrWhiteSpace(d.OpenId)).Select(d => d.OpenId).ToList();
+                    openids.AddRange(bjbOpenIds);
+                    openids.AddRange(jsbOpenIds);
+                    if (openids.Any())
+                    {
+                        var dic = new Dictionary<string, object>
+                        {
+                            {"Title", make.Transactor+" 的预约已取消。\r\n"},
+                            {"Remark", ""},
+                            {"AppId", "wxcd1a304c25e0ea53"},
+                            {"TemplateId", "r_JKy6y3X8CtisTk2HT_NinKw2r0IE3KmNmFPIYpows"},
+                            {"TemplateName", "预约取消通知"},
+                            {"OpenIds", string.Join(",",openids)},
+                            {"KeyWord1", make.AppointmentDate.Value.ToString("yyyy-MM-dd")},
+                            {"KeyWord2", make.Media.MediaName+"-"+(make.Taxis==1?"头条":"次条")},
+                            {"KeyWord3", "自行取消"}
+
+                        };
+                        _messageService.Send("Push", dic);
+                    }
+                }
+               
+            }
+            catch 
+            {
+
+                //throw;
+            }
             return Json(new { State = 1, Msg = "取消成功" });
+        }
+
+        public ActionResult List()
+        {
+            return View();
+        }
+        public ActionResult GetList(MediaAppointmentView viewModel)
+        {
+            var result = _mediaAppointmentService.LoadEntitiesFilter(viewModel).AsNoTracking().ToList();
+            return Json(new
+            {
+                viewModel.total,
+                rows = result.Select(d => new MediaAppointmentView
+                {
+                    Id = d.Id,
+                    Transactor = d.Transactor,
+                    AppointmentDate = d.AppointmentDate,
+                    Taxis = d.Taxis,
+                    MediaName = d.Media.MediaName,
+                })
+            }, JsonRequestBehavior.AllowGet);
         }
     }
 }

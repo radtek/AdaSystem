@@ -35,5 +35,20 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "媒体名称")]
         public string MediaId { get; set; }
+        /// <summary>
+        /// 媒体名称
+        /// </summary>
+        [Display(Name = "媒体名称")]
+        public string MediaName { get; set; }
+        /// <summary>
+        /// 预约位置 1 头条 2 次条
+        /// </summary>
+        [Display(Name = "预约位置")]
+        public int? Taxis { get; set; }
+        /// <summary>
+        /// 预约时间
+        /// </summary>
+        [Display(Name = "预约时间")]
+        public string AppointmentDateRange { get; set; }
     }
 }

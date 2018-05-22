@@ -22,7 +22,7 @@
                         @foreach (var item in medias)
                         {
                             var isactive = item.Id == Model.Id ? "active" : "";
-                            var count = item.MediaAppointments.Count(d => d.AppointmentDate.Value.Date >= DateTime.Now.Date && d.AppointmentDate.Value.Date <= DateTime.Now.Date.AddDays(days));
+                            var count = item.MediaAppointments.Where(d => d.AppointmentDate.Value.Date >= DateTime.Now.Date && d.AppointmentDate.Value.Date <= DateTime.Now.Date.AddDays(days)).GroupBy(d=>d.AppointmentDate).Count();
                             <a class="list-group-item @isactive" href="@Url.Action("Index", "Appointment", new {id = item.Id})">
                                 @if (count>0)
                                 {
@@ -54,20 +54,87 @@
                 @for (int i = 0; i < days; i++)
                 {
                     var date = DateTime.Now.AddDays(i);
-                    var bg = "white-bg";
-                    var name = "可预约";
-                    var make = media.MediaAppointments.FirstOrDefault(d => d.AppointmentDate.Value.Date == date.Date);
-                    if (make != null)
+                    var bg1 = "gray-bg";
+                    var bg2 = "gray-bg";
+                    var name1 = "可预约";
+                    var name2 = "可预约";
+                    var make1 = media.MediaAppointments.FirstOrDefault(d => d.AppointmentDate.Value.Date == date.Date&&d.Taxis==1);
+                    var make2 = media.MediaAppointments.FirstOrDefault(d => d.AppointmentDate.Value.Date == date.Date&&d.Taxis==2);
+                    if (make1 != null)
                     {
-                        bg = make.State == Consts.StateNormal ? "red-bg" : "yellow-bg";
-                        name = make.Transactor;
+                        bg1 = make1.State == Consts.StateNormal ? "red-bg" : "yellow-bg";
+                        name1 = make1.Transactor;
                     }
-
+                    if (make2 != null)
+                    {
+                        bg2 = make2.State == Consts.StateNormal ? "red-bg" : "yellow-bg";
+                        name2 = make2.Transactor;
+                    }
                     var dateStr = date.ToString("MM月dd日") + " " + Utils.GetWeek(date);
                     var boxid = date.ToString("yyyyMMdd");
 
-                    <div class="col-lg-2 col-xs-6" id="box_@boxid">
-                        <div class="widget-head-color-box @bg p-lg text-center">
+                    <div class="col-lg-3" id="box_@boxid">
+                        <div class="ibox">
+                            <div class="ibox-title">
+                                <h5>@dateStr</h5>
+                            </div>
+                            <div class="ibox-content text-center">
+                                <div class="row">
+                                    <div class="col-md-6 col-xs-6">
+                                        <div class="widget-head-color-box @bg1 p-lg text-center">
+                                            <div class="m-b-md">
+                                                <h3>
+                                                    头条
+                                                </h3>
+                                                <div class="font-bold">@name1</div>
+                                            </div>
+                                        </div>
+                                        <div class="widget-text-box text-center">
+                                            <div class="btn-group">
+                                                @if (make1 != null)
+                                                {
+                                                    <button class="btn btn-sm btn-danger btn-outline" type="button" onclick="cancleYY('@make1.Id')"><i class="fa fa-bell-slash-o"></i> 取消头条 </button>
+                                                }
+                                                else
+                                                {
+                                                    <button class="btn btn-sm btn-white btn-outline" type="button" data-toggle="modal" data-target="#yyModal" data-datestr="@dateStr" data-date="@date.Date" data-boxid="box_@boxid" data-sort="1"><i class="fa fa-bell-o"></i> 头条预约 </button>
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-xs-6">
+                                        <div class="widget-head-color-box @bg2 p-lg text-center">
+                                            <div class="m-b-md">
+                                                <h3>
+                                                    次条
+                                                </h3>
+                                                <div class="font-bold">@name2</div>
+                                            </div>
+                                        </div>
+                                        <div class="widget-text-box text-center">
+                                            <div class="btn-group">
+                                                @if (make2 != null)
+                                                {
+                                                <button class="btn btn-sm btn-danger btn-outline" type="button" onclick="cancleYY('@make2.Id')"><i class="fa fa-bell-slash-o"></i> 取消次条 </button>
+                                                }
+                                                else
+                                                {
+                                                <button class="btn btn-sm btn-white btn-outline" type="button" data-toggle="modal" data-target="#yyModal" data-datestr="@dateStr" data-date="@date.Date" data-boxid="box_@boxid" data-sort="2"><i class="fa fa-bell-o"></i> 次条预约 </button>
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                        
+                        
+
+                        @*<div class="widget-head-color-box @bg p-lg text-center">
                             <div class="m-b-md">
                                 <h3>
                                     @name
@@ -79,15 +146,15 @@
                             <div class="btn-group">
                                 @if (make != null)
                                 {
-                                    <button class="btn btn-sm btn-danger btn-outline" type="button" onclick="cancleYY('@make.Id')"><i class="fa fa-bell-slash-o"></i> 取消 </button>
+                                    <button class="btn btn-sm btn-danger btn-outline" type="button" onclick="cancleYY('@make.Id')"><i class="fa fa-bell-slash-o"></i> 取消头条 </button>
                                 }
                                 else
                                 {
-                                    <button class="btn btn-sm btn-white btn-outline" type="button" data-toggle="modal" data-target="#yyModal" data-datestr="@dateStr" data-date="@date.Date" data-boxid="box_@boxid"><i class="fa fa-bell-o"></i> 预约 </button>
+                                    <button class="btn btn-sm btn-white btn-outline" type="button" data-toggle="modal" data-target="#yyModal" data-datestr="@dateStr" data-date="@date.Date" data-boxid="box_@boxid"><i class="fa fa-bell-o"></i> 头条预约 </button>
                                 }
 
                             </div>
-                        </div>
+                        </div>*@
                     </div>
                 }
 
@@ -104,7 +171,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <i class="fa fa-bell-o modal-icon"></i>
-                <h4 class="modal-title">预约 [ @media.MediaName ]</h4>
+                <h4 class="modal-title">预约 [ @media.MediaName ] <span id="sortStr"></span></h4>
                 <p class="font-bold"></p>
             </div>
             <div class="modal-body">
@@ -123,6 +190,7 @@
                         </div>
                         <input type="hidden" id="boxId" value="" />
                         <input type="hidden" id="AppointmentDate" value="" />
+                        <input type="hidden" id="sort" value="" />
                     </div>
                 </div>
             </div>
@@ -146,13 +214,15 @@
         $(document).ready(function () {
             $('#yyModal').on('shown.bs.modal', function (event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal
-                var recipient = button.data('datestr'), boxid = button.data('boxid'), date = button.data('date');
+                var recipient = button.data('datestr'), boxid = button.data('boxid'), date = button.data('date'),sort=button.data('sort');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
                 modal.find('.modal-header p').text(recipient);
                 modal.find('.modal-body #boxId').val(boxid);
                 modal.find('.modal-body #AppointmentDate').val(date);
+                modal.find('.modal-body #sort').val(sort);
+                modal.find('.modal-header #sortStr').text(sort == 1?"头条":"次条");
             });
 
         });
@@ -166,7 +236,7 @@
                     '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
                 },
                 url: "@Url.Action("Make")",
-                data: { MediaId: "@media.Id", AppointmentDate: $("#AppointmentDate").val(), State:isConfirm },
+                data: { MediaId: "@media.Id", AppointmentDate: $("#AppointmentDate").val(), State: isConfirm, Taxis: $("#sort").val()},
                 success: function (data) {
                     if (data.State == 1) {
                         $('#yyModal').modal('hide');

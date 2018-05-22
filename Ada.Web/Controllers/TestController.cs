@@ -356,15 +356,15 @@ namespace Ada.Web.Controllers
 
         public ActionResult ChangeMedia()
         {
-            var medias = _media.LoadEntities(d => d.Transactor == "吴璇" && d.MediaType.CallIndex == "redbook").ToList();
+            var medias = _media.LoadEntities(d => d.TransactorId == "X1801091653080193").ToList();
             foreach (var media in medias)
             {
-                media.Transactor = "孔繁燕";
-                media.TransactorId = "X1804251432125166";
-                media.LinkMan.Transactor = "孔繁燕";
-                media.LinkMan.TransactorId = "X1804251432125166";
-                media.LinkMan.Commpany.Transactor = "孔繁燕";
-                media.LinkMan.Commpany.TransactorId = "X1804251432125166";
+                media.Transactor = "戴秋红";
+                media.TransactorId = "X1712181402380029";
+                media.LinkMan.Transactor = "戴秋红";
+                media.LinkMan.TransactorId = "X1712181402380029";
+                media.LinkMan.Commpany.Transactor = "戴秋红";
+                media.LinkMan.Commpany.TransactorId = "X1712181402380029";
             }
 
             _dbContext.SaveChanges();
