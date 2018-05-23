@@ -102,9 +102,10 @@ namespace QuartzTask.Jobs
                                                 article.ArticleUrl = articleData.url;
                                                 article.CommentCount = articleData.commentCount;
                                                 article.Content = articleData.content;
-                                                article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
-                                                    ? (DateTime?)null
-                                                    : DateTime.Parse(articleData.publishDateStr);
+                                                if (DateTime.TryParse(articleData.publishDateStr,out var date))
+                                                {
+                                                    article.PublishDate = date;
+                                                }
                                                 article.LikeCount = articleData.likeCount;
                                                 article.ShareCount = articleData.favoriteCount;
                                                 article.Title = articleData.title;
@@ -118,9 +119,10 @@ namespace QuartzTask.Jobs
                                                 article.CommentCount = articleData.commentCount;
                                                 article.Content = articleData.content;
                                                 article.ShareCount = articleData.favoriteCount;
-                                                article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
-                                                    ? (DateTime?)null
-                                                    : DateTime.Parse(articleData.publishDateStr);
+                                                if (DateTime.TryParse(articleData.publishDateStr, out var date))
+                                                {
+                                                    article.PublishDate = date;
+                                                }
                                                 article.LikeCount = articleData.likeCount;
                                                 article.Title = articleData.title;
                                                 media.MediaArticles.Add(article);

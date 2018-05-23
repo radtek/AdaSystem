@@ -118,9 +118,10 @@ namespace QuartzTask.Jobs
                                                 article.CommentCount = articleData.commentCount;
                                                 article.Content = articleData.content;
                                                 article.IsTop = articleData.isTop;
-                                                article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
-                                                    ? (DateTime?)null
-                                                    : DateTime.Parse(articleData.publishDateStr);
+                                                if (DateTime.TryParse(articleData.publishDateStr, out var date))
+                                                {
+                                                    article.PublishDate = date;
+                                                }
                                                 article.LikeCount = articleData.likeCount;
                                                 article.ViewCount = articleData.viewCount;
                                                 article.Title = articleData.title;
@@ -137,9 +138,10 @@ namespace QuartzTask.Jobs
                                                 article.CommentCount = articleData.commentCount;
                                                 article.Content = articleData.content;
                                                 article.IsTop = articleData.isTop;
-                                                article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
-                                                    ? (DateTime?)null
-                                                    : DateTime.Parse(articleData.publishDateStr);
+                                                if (DateTime.TryParse(articleData.publishDateStr, out var date))
+                                                {
+                                                    article.PublishDate = date;
+                                                }
                                                 article.LikeCount = articleData.likeCount;
                                                 article.ViewCount = articleData.viewCount;
                                                 article.Title = articleData.title;

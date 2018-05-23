@@ -539,6 +539,14 @@ namespace Ada.Web.Controllers
             _dbContext.SaveChanges();
             return Content("成功更换" + count + "条资源");
         }
+        public ActionResult MediaUpdate()
+        {
+            int count =
+                _media.Update(d => d.LinkManId == "X1801151511230002",
+                    p => new Media() { LinkManId = "X1803131311440593" });
+            _dbContext.SaveChanges();
+            return Content("成功更换" + count + "条资源");
+        }
         public ActionResult Tool(string id)
         {
            // RandomHelper random = new RandomHelper();
