@@ -129,7 +129,14 @@ namespace QuartzTask.Jobs
                                             }
                                             foreach (var articleData in result.data)
                                             {
-
+                                                if (string.IsNullOrWhiteSpace(articleData.id))
+                                                {
+                                                    continue;
+                                                }
+                                                if (articleData.id.Length > 128)
+                                                {
+                                                    continue;
+                                                }
                                                 var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
                                                 if (article != null)
                                                 {

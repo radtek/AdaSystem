@@ -74,6 +74,10 @@ namespace Finance.Controllers
             invoice.InvoiceTime = viewModel.InvoiceTime;
             invoice.PayTime = viewModel.PayTime;
             invoice.ReceivableNum = viewModel.ReceivableNum;
+            invoice.Remark = viewModel.Remark;
+            invoice.TotalMoney = viewModel.TotalMoney;
+            invoice.TaxNum = viewModel.TaxNum;
+            invoice.Company = viewModel.Company;
             invoice.ModifiedBy = CurrentManager.UserName;
             invoice.ModifiedById = CurrentManager.Id;
             invoice.ModifiedDate = DateTime.Now;
