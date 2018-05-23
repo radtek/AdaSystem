@@ -68,10 +68,17 @@ namespace WeiXin.Services
                 }
                 foreach (var openid in openids)
                 {
-                    var result = await TemplateApi.SendTemplateMessageAsync(templateMsgModel.AppId, openid, sendData);
-                    if (result.errcode!=ReturnCode.请求成功)
+                    try
                     {
-                        Log.Debug(openid + "发送模板 [" + templateMsgModel.TemplateName + "] 消息失败：" + result.errmsg);
+                        var result = await TemplateApi.SendTemplateMessageAsync(templateMsgModel.AppId, openid, sendData);
+                        if (result.errcode != ReturnCode.请求成功)
+                        {
+                            Log.Debug(openid + "发送模板 [" + templateMsgModel.TemplateName + "] 消息失败：" + result.errmsg);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(openid+ templateMsgModel.TemplateName+"推送失败", ex);
                     }
                 }
 

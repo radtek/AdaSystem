@@ -312,11 +312,15 @@ namespace Ada.Web.Controllers
                         }
                         if (openids.Any())
                         {
+                            var retrunUrl = Request.Url.Scheme + "://" + Request.Url.Authority +
+                                      "/Resource/MediaDevelopAllot";
+                            var url= Request.Url.Scheme + "://" + Request.Url.Authority +
+                                     "/weixin/login/manager?returnUrl=" + Uri.EscapeDataString(retrunUrl);
                             var dic = new Dictionary<string, object>
                             {
                                 {"Title", "来自会员VIP系统媒体开发申请，请及时认领处理\r\n"},
                                 {"Remark", "\r\n点击详情查看"},
-                                {"Url",Request.Url.Scheme+"://"+ Request.Url.Authority+ "/Resource/MediaDevelopAllot"},
+                                {"Url",url},
                                 {"AppId", "wxcd1a304c25e0ea53"},
                                 {"TemplateId", "y4eZb7aPr7tT8EXHi6r78jqsJx_Jw2EI_W7AYlc6D78"},
                                 {"TemplateName", "开发申请处理提醒"},

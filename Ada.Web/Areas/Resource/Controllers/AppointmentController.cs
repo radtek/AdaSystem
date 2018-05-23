@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
@@ -73,6 +74,37 @@ namespace Resource.Controllers
                     Taxis = view.Taxis
                 });
                 _service.Update(media);
+                //推送通知给编辑部和业务部
+                var config = _settingService.GetSetting<WeiGuang>();
+                if (config.AppointmentPush)
+                {
+
+                    var openids = _managerService.GetByOrganizationName("编辑部")
+                        .Where(d => !string.IsNullOrWhiteSpace(d.OpenId)).Select(d => d.OpenId).ToList();
+                    //var openids = _managerService.GetByOrganizationName("技术部")
+                    //    .Where(d => !string.IsNullOrWhiteSpace(d.OpenId)).Select(d => d.OpenId).ToList();
+                    //openids.AddRange(jsbOpenIds);
+                    if (openids.Any())
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendLine("预约日期：" + view.AppointmentDate.Value.Date.ToString("MM-dd"));
+                        sb.AppendLine("预约人员：" + CurrentManager.UserName);
+                        var dic = new Dictionary<string, object>
+                        {
+                            {"Title", "自运营号有新的预约申请，请及时关注。\r\n"},
+                            {"AppId", "wxcd1a304c25e0ea53"},
+                            {"TemplateId", "dMmnd8bv_GcFIH5SnMByO80r-bcJQRPMWduHpYpd1nU"},
+                            {"TemplateName", "预约成功通知"},
+                            {"OpenIds", string.Join(",",openids)},
+                            {"KeyWord1", media.MediaName},
+                            {"KeyWord2", view.Taxis==1?"头条":"次条"},
+                            {"Remark", sb.ToString()},
+                            {"Url",""}
+
+                        };
+                        _messageService.Send("Push", dic);
+                    }
+                }
                 return Json(new { State = 1, Msg = "预约成功" });
             }
 

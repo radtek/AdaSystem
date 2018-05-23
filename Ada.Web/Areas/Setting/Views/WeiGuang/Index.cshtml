@@ -170,6 +170,19 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                @Html.LabelFor(d => d.AppointmentPush, Html.DisplayNameFor(d => d.AppointmentPush).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    <div class="radio radio-info radio-inline">
+                                        @Html.RadioButtonFor(d => d.AppointmentPush, true)
+                                        <label> 开启 </label>
+                                    </div>
+                                    <div class="radio radio-info radio-inline">
+                                        @Html.RadioButtonFor(d => d.AppointmentPush, false)
+                                        <label> 关闭 </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 @Html.LabelFor(d => d.CancleAppointmentPush, Html.DisplayNameFor(d => d.CancleAppointmentPush).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
                                     <div class="radio radio-info radio-inline">
