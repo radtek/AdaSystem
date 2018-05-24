@@ -229,20 +229,20 @@ namespace Ada.Services.Resource
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaBatch))
             {
-                viewModel.MediaBatch = viewModel.MediaBatch.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("\t", ",").Replace("，", ",").Replace(" ", ",");
-                var mediaNames = viewModel.MediaBatch.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
+                viewModel.MediaBatch = viewModel.MediaBatch.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("\t", ",").Replace("，", ",");
+                var mediaNames = SplitStr(viewModel.MediaBatch);
                 allList = allList.Where(d => mediaNames.Contains(d.MediaName) || mediaNames.Contains(d.MediaID));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
             {
-                viewModel.MediaNames = viewModel.MediaNames.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("\t", ",").Replace("，", ",").Replace(" ", ",");
-                var mediaNames = viewModel.MediaNames.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
+                viewModel.MediaNames = viewModel.MediaNames.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("\t", ",").Replace("，", ",");
+                var mediaNames = SplitStr(viewModel.MediaNames);
                 allList = allList.Where(d => mediaNames.Contains(d.MediaName));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
             {
-                viewModel.MediaIDs = viewModel.MediaIDs.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("\t", ",").Replace("，", ",").Replace(" ", ",");
-                var mediaIDs = viewModel.MediaIDs.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
+                viewModel.MediaIDs = viewModel.MediaIDs.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("\t", ",").Replace("，", ",");
+                var mediaIDs = SplitStr(viewModel.MediaIDs);
                 allList = allList.Where(d => mediaIDs.Contains(d.MediaID));
             }
             if (viewModel.MediaTagIds != null)
@@ -687,7 +687,18 @@ namespace Ada.Services.Resource
             return allList.OrderBy(d => d.CommentDate).Skip(offset).Take(rows);
         }
 
-        
+        private List<string> SplitStr(string str)
+        {
+            var arr = str.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
+            List<string> list=new List<string>();
+            foreach (var item in arr)
+            {
+                var temp = item.Trim();
+                list.Add(temp);
+            }
+
+            return list;
+        }
 
     }
 

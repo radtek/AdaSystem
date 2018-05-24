@@ -48,6 +48,7 @@ namespace Ada.Framework.Filter
                 var quary = new
                 {
                     message = "系统异常，详见异常信息",
+                    agent = filterContext.HttpContext.Request.UserAgent,
                     method = httpmethod,
                     urlParams = filterContext.HttpContext.Request.Url?.Query,
                     formParams = dc,

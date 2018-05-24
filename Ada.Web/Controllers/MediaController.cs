@@ -188,7 +188,7 @@ namespace Ada.Web.Controllers
             view.limit = rows;
             if (!string.IsNullOrWhiteSpace(view.MediaBatch))
             {
-                view.MediaBatch = view.MediaBatch.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("，", ",").Replace(" ", ",");
+                view.MediaBatch = view.MediaBatch.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("\t", ",").Replace("，", ",");
                 var mediaNames = view.MediaBatch.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).Take(rows).ToList();
                 view.MediaBatch = string.Join(",", mediaNames);
             }

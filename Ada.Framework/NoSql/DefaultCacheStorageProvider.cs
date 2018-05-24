@@ -33,10 +33,9 @@ namespace Ada.Framework.NoSql
             _cache.Remove(key);
         }
 
-        public void Clear() {
-            if (Signaled != null) {
-                Signaled(null, EventArgs.Empty);
-            }
+        public void Clear()
+        {
+            Signaled?.Invoke(null, EventArgs.Empty);
         }
 
         public object Get<T>(string key) {
@@ -57,10 +56,7 @@ namespace Ada.Framework.NoSql
         public class TenantCacheClearMonitor : ChangeMonitor {
             private readonly DefaultCacheStorageProvider _storageProvider;
 
-            private readonly string _uniqueId = Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture);
-            public override string UniqueId {
-                get { return _uniqueId; }
-            }
+            public override string UniqueId { get; } = Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture);
 
             public TenantCacheClearMonitor(DefaultCacheStorageProvider storageProvider) {
                 _storageProvider = storageProvider;

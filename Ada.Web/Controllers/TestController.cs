@@ -4,6 +4,7 @@ using System.Data.Entity.SqlServer;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
@@ -135,9 +136,9 @@ namespace Ada.Web.Controllers
         public ActionResult UpdateMedia()
         {
 
-           
-           var count= _mediaArticleRepository.Update(d => d.Media.MediaType.CallIndex == "weixin",
-                a => new MediaArticle() {Content = null});
+
+            var count = _mediaArticleRepository.Update(d => d.Media.MediaType.CallIndex == "weixin",
+                 a => new MediaArticle() { Content = null });
             _dbContext.SaveChanges();
             return Content("成功更新" + count + "个");
             //return Content("原有：" + start + ",去重后：" + end);
@@ -533,9 +534,9 @@ namespace Ada.Web.Controllers
         }
         public ActionResult Order()
         {
-            int count = 
-            _ptemp.Update(d => d.LinkManName == "新芳" && !d.PurchasePaymentOrderDetails.Any()&&d.LinkManId== "X1801151342500244",
-                p => new PurchaseOrderDetail() {LinkManId = "X1801081415310947" });
+            int count =
+            _ptemp.Update(d => d.LinkManName == "新芳" && !d.PurchasePaymentOrderDetails.Any() && d.LinkManId == "X1801151342500244",
+                p => new PurchaseOrderDetail() { LinkManId = "X1801081415310947" });
             _dbContext.SaveChanges();
             return Content("成功更换" + count + "条资源");
         }
@@ -549,10 +550,16 @@ namespace Ada.Web.Controllers
         }
         public ActionResult Tool(string id)
         {
-           // RandomHelper random = new RandomHelper();
-            var request =Request.Url.Scheme+"://"+ Request.Url.Authority;
+            // RandomHelper random = new RandomHelper();
+            var request = Request.Url.Scheme + "://" + Request.Url.Authority;
             var code = Utils.IsMobilePhone(id);
             return Content(code.ToString());
+        }
+
+        public async Task<ActionResult> Http()
+        {
+            var content = await HttpUtility.GetAsync("http://whois.pconline.com.cn/ip.jsp");
+            return Content(content);
         }
         private string GetDouYinId(string url)
         {
