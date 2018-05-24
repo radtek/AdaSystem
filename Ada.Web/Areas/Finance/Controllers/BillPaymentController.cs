@@ -60,6 +60,8 @@ namespace Finance.Controllers
                     PaymentType = d.PaymentType,
                     BillDate = d.BillDate,
                     Image = d.Image,
+                    RequestType = d.RequestType,
+                    RequestNum = d.RequestNum,
                     PayInfo = string.Join(",",d.BillPaymentDetails.Select(p=>p.SettleAccount.SettleName))
                     
                 })
@@ -138,6 +140,8 @@ namespace Finance.Controllers
             {
                 var payment = _businessPaymentRepository.LoadEntities(d => d.ApplicationNum == entity.RequestNum).FirstOrDefault();
                 paymoney = payment.PayMoney;
+                
+                
             }
             if (entity.RequestType == Consts.StateLock)//媒介付款单据
             {

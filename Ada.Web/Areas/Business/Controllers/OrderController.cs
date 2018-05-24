@@ -750,7 +750,7 @@ namespace Business.Controllers
                     if (channal != null)
                     {
                         channal = channal.Trim();
-                        var mediaPrice = _mediaPriceRepository.LoadEntities(d =>d.Id== "X1805211737235784")
+                        var mediaPrice = _mediaPriceRepository.LoadEntities(d => d.Id == "X1805211737235784")
                             .FirstOrDefault();
                         decimal.TryParse(row.GetCell(4)?.ToString(), out var pmoney);
                         BusinessOrderDetail detail = new BusinessOrderDetail();
@@ -764,7 +764,7 @@ namespace Business.Controllers
                         detail.Money = detail.SellMoney * (1 + detail.Tax / 100);
 
                         detail.CostMoney = mediaPrice.PurchasePrice;
-                        DateTime? date=null;
+                        DateTime? date = null;
                         if (row.GetCell(7) != null)
                         {
                             var cellType = row.GetCell(7).CellType;
@@ -781,7 +781,7 @@ namespace Business.Controllers
                         detail.PrePublishDate = date;
                         detail.MediaTitle = row.GetCell(5)?.ToString();
                         detail.MediaTypeName = mediaPrice.Media.MediaType.TypeName;
-                        detail.MediaName = mediaName + " - "+ channal;
+                        detail.MediaName = mediaName + " - " + channal;
                         detail.MediaPriceId = mediaPrice.Id;
                         detail.Remark = viewModel.Remark;
                         detail.MediaByPurchase = mediaPrice.Media.Transactor;
@@ -825,8 +825,8 @@ namespace Business.Controllers
             }
             _purchaseOrderRepository.Add(purchase);
             _businessOrderService.Add(entity);
-            
-            return Json(new { State = 1, Msg = "成功导入" + count + "篇网稿订单。"});
+
+            return Json(new { State = 1, Msg = "成功导入" + count + "篇网稿订单。" });
         }
 
 
@@ -1035,6 +1035,28 @@ namespace Business.Controllers
             var order = _repository.LoadEntities(d => d.Id == comments.OrderId).FirstOrDefault();
             return View(order);
         }
-
+        /// <summary>
+        /// 转移订单
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult ChangeOrder()
+        {
+            var ids = Request["ids"];
+            if (string.IsNullOrWhiteSpace(ids))
+            {
+                return Json(new { State = 0, Msg = "请先选择要转移的订单." });
+            }
+            var on = Request["on"];
+            var order = _repository.LoadEntities(d => d.OrderNum == on).FirstOrDefault();
+            if (order == null)
+            {
+                return Json(new { State = 0, Msg = "不存在的订单." });
+            }
+            var idList = ids.Split(',').ToList();
+            _businessOrderDetailService.Update(d => idList.Contains(d.Id), d => new BusinessOrderDetail { BusinessOrderId = order.Id });
+            return Json(new { State = 0, Msg = "转移成功." });
+        }
     }
 }

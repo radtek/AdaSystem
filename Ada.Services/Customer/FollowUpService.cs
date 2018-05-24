@@ -39,7 +39,7 @@ namespace Ada.Services.Customer
             //条件过滤
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.Transactor.Contains(viewModel.search));
+                allList = allList.Where(d => d.LinkMan.LoginName.Contains(viewModel.search)||d.LinkMan.Name.Contains(viewModel.search)||d.IpAddress.Contains(viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.LinkManId))
             {

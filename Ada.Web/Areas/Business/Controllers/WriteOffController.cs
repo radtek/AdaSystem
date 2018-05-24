@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Business;
+using Ada.Core.Domain.Finance;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.ViewModel.Business;
 using Ada.Framework.Filter;
@@ -23,17 +24,23 @@ namespace Business.Controllers
         private readonly IRepository<BusinessOrderDetail> _businessOrderDetailRepository;
         private readonly IRepository<PurchaseOrderDetail> _purchaseOrderDetailRepository;
         private readonly IRepository<BusinessPayee> _businessPayeerepository;
+        private readonly IRepository<BusinessPayment> _businessPaymentRepository;
+        private readonly IRepository<Receivables> _receivablesRepository;
         public WriteOffController(IBusinessWriteOffService businessWriteOffService,
             IRepository<BusinessWriteOff> repository,
             IRepository<BusinessOrderDetail> businessOrderDetailRepository,
             IRepository<BusinessPayee> businessPayeerepository,
-            IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository)
+            IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository,
+            IRepository<BusinessPayment> businessPaymentRepository,
+            IRepository<Receivables> receivablesRepository)
         {
             _businessWriteOffService = businessWriteOffService;
             _repository = repository;
             _businessOrderDetailRepository = businessOrderDetailRepository;
             _businessPayeerepository = businessPayeerepository;
             _purchaseOrderDetailRepository = purchaseOrderDetailRepository;
+            _businessPaymentRepository = businessPaymentRepository;
+            _receivablesRepository = receivablesRepository;
         }
         public ActionResult Index()
         {
@@ -57,10 +64,23 @@ namespace Business.Controllers
                 })
             }, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult Detail(string id)
+        public ActionResult Detail(string id,string pId=null,string rId=null)
         {
+            if (!string.IsNullOrWhiteSpace(pId))
+            {
+                
+                var pay = _businessPaymentRepository.LoadEntities(d => d.ApplicationNum == pId).FirstOrDefault();
+                return PartialView("Details", pay.BusinessPayee.BusinessWriteOffs);
+            }
+
+            if (!string.IsNullOrWhiteSpace(rId))
+            {
+                var receivables = _receivablesRepository.LoadEntities(d => d.Id == rId).FirstOrDefault();
+                return PartialView("Detailss", receivables.BusinessPayees);
+            }
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             return PartialView("Detail", entity);
+
         }
         public ActionResult Add(string name)
         {

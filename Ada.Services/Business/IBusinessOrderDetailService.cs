@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
@@ -31,5 +32,8 @@ namespace Ada.Services.Business
         void Update(BusinessOrderDetail entity);
         void Update(List<BusinessOrderDetail> entitys);
         void Delete(BusinessOrderDetail entity);
+
+        void Update(Expression<Func<BusinessOrderDetail, bool>> whereLambda,
+            Expression<Func<BusinessOrderDetail, BusinessOrderDetail>> updateLambda);
     }
 }

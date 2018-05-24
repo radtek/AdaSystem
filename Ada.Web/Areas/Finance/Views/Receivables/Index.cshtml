@@ -143,7 +143,9 @@
                     {
                         field: 'BillNum',
                         title: '@Html.DisplayNameFor(d=>d.BillNum)',
-                        align: "center", valign: "middle"
+                        align: "center", valign: "middle", formatter: function (value, row) {
+                            return "<a class='label' href='javascript:orderInfo(\"" + row.Id + "\");'><i class='fa fa-link'></i> " + value + "</a>";
+                        }
                     },
                     @*{
                         field: 'AccountBank',
@@ -260,7 +262,17 @@
 
                     }
                 });
-            });
+                });
+
+
+        }
+        function orderInfo(id) {
+            var url = "@Url.Action("Detail", "WriteOff", new{area= "Business" })?rId=" + id;;
+            $("#modalView").load(url,
+                function () {
+                    $('#modalView .modal').modal('show');
+                });
+
         }
     </script>
 }

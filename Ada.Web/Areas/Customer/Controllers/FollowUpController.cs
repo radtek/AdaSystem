@@ -22,11 +22,12 @@ namespace Customer.Controllers
         }
         public ActionResult Index()
         {
+            ViewBag.IsAdmin = !PremissionData().Any();
             return View();
         }
         public ActionResult GetList(FollowUpView viewModel)
         {
-            viewModel.Managers = PremissionData();
+            //viewModel.Managers = PremissionData();
             var result = _followUpService.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {

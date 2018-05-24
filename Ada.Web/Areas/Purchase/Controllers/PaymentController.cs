@@ -96,8 +96,16 @@ namespace Purchase.Controllers
         {
             return PartialView("OrderDetails");
         }
-        public ActionResult PaymentDetails(string id)
+        public ActionResult PaymentDetails(string id,string pId=null)
         {
+            if (!string.IsNullOrWhiteSpace(pId))
+            {
+               var temp= _purchasePaymentDetailRepository.LoadEntities(d => d.Id == pId).FirstOrDefault();
+                if (temp!=null)
+                {
+                    id = temp.PurchasePaymentId;
+                }
+            }
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             return PartialView("PaymentDetails", entity);
         }

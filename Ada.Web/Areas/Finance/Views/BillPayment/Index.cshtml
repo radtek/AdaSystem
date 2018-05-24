@@ -37,7 +37,7 @@
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/lightboxGallery")
-<script type="text/javascript">
+    <script type="text/javascript">
     $(document).ready(function () {
             var table = new TableInit();
             table.Init();
@@ -78,7 +78,9 @@
                     {
                         field: 'BillNum',
                         title: '@Html.DisplayNameFor(d=>d.BillNum)',
-                        align: "center", valign: "middle"
+                        align: "center", valign: "middle", formatter: function (value,row) {
+                            return "<a class='label' href='javascript:orderInfo(\"" + row.RequestNum + "\"," + row.RequestType+");'><i class='fa fa-link'></i> " + value + "</a>";
+                        }
                     },
                     {
                         field: 'PaymentType',
@@ -191,8 +193,21 @@
                 });
             });
         }
+        function orderInfo(id, type) {
+            var url = "";
+            if (type == 0) {
+                url="@Url.Action("PaymentDetails", "Payment",new{area= "Purchase" })?pId=" + id;
+            }
+            if (type==1) {
+                url ="@Url.Action("Detail", "WriteOff", new{area= "Business" })?pId=" + id;
+            }
+        $("#modalView").load(url,
+            function () {
+                $('#modalView .modal').modal('show');
+            });
 
-</script>
+    }
+    </script>
 }
 
 

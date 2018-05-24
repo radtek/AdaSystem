@@ -1,12 +1,12 @@
 ﻿
-@model Ada.Core.Domain.Business.BusinessWriteOff
+@model IEnumerable<Ada.Core.Domain.Business.BusinessPayee>
 
 <div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">核销明细</h4>
+                <h4 class="modal-title">销售信息</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -20,6 +20,9 @@
                                 <tr>
                                     <th>
                                         客户名称
+                                    </th>
+                                    <th>
+                                        领款人员
                                     </th>
                                     <th>
                                         领款金额
@@ -37,23 +40,33 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.BusinessPayees)
+                            @foreach (var payee in Model)
+                            {
+                                foreach (var writeOff in payee.BusinessWriteOffs)
                                 {
-                                    <tr>
-                                        <td>@item.LinkManName</td>
-                                        <td>@item.Money</td>
-                                        <td>@item.ClaimDate</td>
-                                        <td>@item.BusinessPayments.Sum(d => d.PayMoney)</td>
-                                        <td>@item.ConfirmVerificationMoney</td>
-                                    </tr>
-                                }
+                                    foreach (var item in writeOff.BusinessPayees)
+                                    {
                                 <tr>
-                                    <td>合计</td>
-                                    <td>@Model.BusinessPayees.Sum(d => d.Money)</td>
-                                    <td></td>
-                                    <td>@Model.BusinessPayees.Sum(d => d.BusinessPayments.Sum(p => p.PayMoney))</td>
-                                    <td>@Model.BusinessPayees.Sum(d => d.ConfirmVerificationMoney)</td>
+                                    <td>@item.LinkManName</td>
+                                    <td>@item.Transactor</td>
+                                    <td>@item.Money</td>
+                                    <td>@item.ClaimDate</td>
+                                    <td>@item.BusinessPayments.Sum(d => d.PayMoney)</td>
+                                    <td>@item.ConfirmVerificationMoney</td>
                                 </tr>
+                                    }
+                                }
+                                
+                            }
+                            
+                            <tr>
+                                <td>合计</td>
+                                <td></td>
+                                <td>@Model.Sum(d => d.BusinessWriteOffs.Sum(dd=>dd.BusinessPayees.Sum(ddd=>ddd.Money)))</td>
+                                <td></td>
+                                <td>@Model.Sum(d => d.BusinessWriteOffs.Sum(dd=>dd.BusinessPayees.Sum(ddd=>ddd.BusinessPayments.Sum(dddd=>dddd.PayMoney))))</td>
+                                <td>@Model.Sum(d => d.BusinessWriteOffs.Sum(dd=>dd.BusinessPayees.Sum(ddd=>ddd.ConfirmVerificationMoney)))</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -90,27 +103,35 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.BusinessOrderDetails)
+                            @foreach (var payee in Model)
+                            {
+                                foreach (var writeOff in payee.BusinessWriteOffs)
                                 {
-                                <tr>
-                                    <td>
-                                        <a class='label' target="_blank" href='@Url.Action("Update", "Order", new{id=item.BusinessOrderId })'><i class='fa fa-link'></i>@item.BusinessOrder.OrderNum</a>
-                                    </td>
-                                    <td>@item.MediaTypeName</td>
-                                    <td>@item.MediaName</td>
-                                    <td>@item.AdPositionName</td>
-                                    <td>@item.SellMoney</td>
-                                    <td>@item.ConfirmVerificationMoney</td>
-                                </tr>
+                                    foreach (var item in writeOff.BusinessOrderDetails)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <a class='label' target="_blank" href='@Url.Action("Update", "Order", new {id = item.BusinessOrderId})'><i class='fa fa-link'></i>@item.BusinessOrder.OrderNum</a>
+                                            </td>
+                                            <td>@item.MediaTypeName</td>
+                                            <td>@item.MediaName</td>
+                                            <td>@item.AdPositionName</td>
+                                            <td>@item.SellMoney</td>
+                                            <td>@item.ConfirmVerificationMoney</td>
+                                        </tr>
+                                    }
                                 }
-                                <tr>
-                                    <td>合计</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>@Model.BusinessOrderDetails.Sum(d => d.SellMoney)</td>
-                                    <td>@Model.BusinessOrderDetails.Sum(d => d.ConfirmVerificationMoney)</td>
-                                </tr>
+                                
+                            }
+                            
+                            <tr>
+                                <td>合计</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>@Model.Sum(d=>d.BusinessWriteOffs.Sum(dd=>dd.BusinessOrderDetails.Sum(ddd=>ddd.SellMoney)))</td>
+                                <td>@Model.Sum(d => d.BusinessWriteOffs.Sum(dd => dd.BusinessOrderDetails.Sum(ddd => ddd.ConfirmVerificationMoney)))</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

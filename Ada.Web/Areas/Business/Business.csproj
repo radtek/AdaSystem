@@ -187,6 +187,8 @@
     <Content Include="Views\Order\EditMoney.cshtml" />
     <Content Include="Views\Order\Comment.cshtml" />
     <Content Include="Views\Comment\Index.cshtml" />
+    <Content Include="Views\WriteOff\Details.cshtml" />
+    <Content Include="Views\WriteOff\Detailss.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

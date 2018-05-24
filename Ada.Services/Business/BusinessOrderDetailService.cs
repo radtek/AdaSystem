@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity.SqlServer;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
@@ -364,6 +365,11 @@ namespace Ada.Services.Business
             {
                 _repository.Update(item);
             }
+            _dbContext.SaveChanges();
+        }
+        public void Update(Expression<Func<BusinessOrderDetail, bool>> whereLambda, Expression<Func<BusinessOrderDetail, BusinessOrderDetail>> updateLambda)
+        {
+            _repository.Update(whereLambda,updateLambda);
             _dbContext.SaveChanges();
         }
         public void Delete(BusinessOrderDetail entity)
