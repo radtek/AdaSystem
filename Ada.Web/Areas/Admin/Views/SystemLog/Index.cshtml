@@ -94,7 +94,7 @@
             oTableInit.Init = function () {
                 $('#table').bootstrapTable({
                     url: '@Url.Action("GetList")',         //请求后台的URL（*）
-                    //method: 'get',                      //请求方式（*）
+                    classes: "table table-no-bordered",                      //请求方式（*）
                     toolbar: '#toolbar',                //工具按钮用哪个容器
                     striped: true,                      //是否显示行间隔色
                     cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
@@ -131,12 +131,12 @@
                         {
                             field: 'Level',
                             title: '@Html.DisplayNameFor(d=>d.Level)',
-                            align:"center"
-                        },
-                        {
-                            field: 'Logger',
-                            title: '@Html.DisplayNameFor(d=>d.Logger)',
-                            align: "center"
+                            //align: "left",
+                            formatter: function(value,row) {
+                                return "<div class='p-xxs'>日志级别："+value+"</div>" +
+                                    "<div class='p-xxs'>日志模块：" + row.Logger + "</div>" +
+                                    "<div class='p-xxs'>日志时间：" + row.Date + "</div>";
+                            }
                         },
                         {
                             field: 'Message',
@@ -153,12 +153,8 @@
                                 }
                                 
                             }
-                        },
-                        {
-                            field: 'Date',
-                            title: '@Html.DisplayNameFor(d=>d.Date)',
-                            align: "center"
                         }
+                       
                     ]
                 });
             };
