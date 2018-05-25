@@ -56,12 +56,20 @@ function groupDetail(id) {
 
 }
 function formatterPrice(value, row, index) {
-    var result = "";
+    //var result = "";
+    //$.each(value,
+    //    function (k, v) {
+    //        result += "<div class='p-xxs'><span class='label label-info'>" + v.AdPositionName + "：" + (v.PurchasePrice == 0 ? "不接单" : v.PurchasePrice) + "　　有效期至：" + (v.InvalidDate ? moment(v.InvalidDate).format("YYYY-MM-DD") : "") + "</span></div>";
+    //    });
+    //return result;
+    var arr = [];
     $.each(value,
         function (k, v) {
-            result += "<div class='p-xxs'><span class='label label-info'>" + v.AdPositionName + "：" + (v.PurchasePrice == 0 ? "不接单" : v.PurchasePrice) + "　　有效期至：" + (v.InvalidDate ? moment(v.InvalidDate).format("YYYY-MM-DD") : "") + "</span></div>";
+            var price = "<i class='fa fa-jpy'></i> " + v.PurchasePrice;
+            arr.push("<li class='list-group-item p-xxs'><span class='badge badge-success'>" + price + "</span> " + v.AdPositionName + "</li>");
         });
-    return result;
+    arr.push("<li class='list-group-item p-xxs'><span class='badge'>" + moment(value[0].InvalidDate).format("YYYY-MM-DD") + "</span>价格有效期</li>");
+    return "<ul class='list-group m-b-none'>" + arr.join('') + "</ul>";
 }
 function formatterTag(value) {
     var arr = [];

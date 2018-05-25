@@ -353,7 +353,7 @@ namespace Admin.Controllers
             CurrentManager.RoleId = role.Id;
             if (Session["LoginManager"]==null)
             {
-                return RedirectToAction("Index", "Login", new {area = ""});
+                return RedirectToAction("Index", "Login");
             }
             Session["LoginManager"] = SerializeHelper.SerializeToString(CurrentManager);
             return RedirectToAction("Index", "Home", new { area = "Dashboards" });
