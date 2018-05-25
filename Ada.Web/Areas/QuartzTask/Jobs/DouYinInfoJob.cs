@@ -48,8 +48,12 @@ namespace QuartzTask.Jobs
                                 var apiInfo = db.Set<APIInterfaces>().FirstOrDefault(d => d.CallIndex == "douyininfo");
                                 if (apiInfo != null)
                                 {
-                                    string url = string.Format(apiInfo.APIUrl + "?apikey={0}&kw={1}", apiInfo.Token,
-                                        media.MediaName.Trim());
+                                    var kw = media.MediaName.Trim();
+                                    if (!string.IsNullOrWhiteSpace(media.Abstract))
+                                    {
+                                        kw = media.Abstract.Trim();
+                                    }
+                                    string url = string.Format(apiInfo.APIUrl + "?apikey={0}&kw={1}", apiInfo.Token,kw);
                                     int times = apiInfo.TimeOut ?? 3;
                                     int request = 1;
                                     string htmlstr = string.Empty;
@@ -87,6 +91,7 @@ namespace QuartzTask.Jobs
                                             if (mediaInfo!=null)
                                             {
                                                 media.MediaName =Utils.FilterEmoji(mediaInfo.screenName);
+                                                media.Abstract = mediaInfo.douyinID;
                                                 media.Content = mediaInfo.biography;
                                                 media.FansNum = mediaInfo.fansCount;
                                                 media.PostNum = mediaInfo.videoCount;

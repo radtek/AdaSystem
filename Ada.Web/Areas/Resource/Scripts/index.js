@@ -629,13 +629,14 @@ function collectDouYin(url) {
             showLoaderOnConfirm: true
 
         }, function () {
+            var kw = arrselections[0].Abstract || arrselections[0].MediaName;
             $.ajax({
                 type: "post",
                 headers: {
                     '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
                 },
                 url: url,
-                data: { CallIndex: "douyininfo", UID: arrselections[0].MediaID, KeyWord: arrselections[0].MediaName },
+                data: { CallIndex: "douyininfo", UID: arrselections[0].MediaID, KeyWord: kw },
                 success: function (data) {
                     if (data.State == 1) {
                         $("#table").bootstrapTable('refresh');

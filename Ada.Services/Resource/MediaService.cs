@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.SqlServer;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Ada.Core;
-using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Resource;
-using Ada.Core.Tools;
 using Ada.Core.ViewModel.Resource;
 
 namespace Ada.Services.Resource
@@ -76,7 +69,13 @@ namespace Ada.Services.Resource
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
                 viewModel.search = viewModel.search.Trim();
-                allList = allList.Where(d => d.MediaName.Contains(viewModel.search) || d.MediaID.Contains(viewModel.search));
+                allList = allList.Where(d => d.MediaName.Contains(viewModel.search) || 
+                                             d.MediaID.Contains(viewModel.search)||
+                                             d.Abstract.Contains(viewModel.search)||
+                                             d.Transactor.Contains(viewModel.search)||
+                                             d.LinkMan.Name.Contains(viewModel.search)||
+                                             d.Area.Contains(viewModel.search)
+                                             );
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaName))
             {

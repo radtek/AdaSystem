@@ -812,6 +812,7 @@ namespace Resource.Controllers
             entity.ResourceType = viewModel.ResourceType;
             entity.Channel = viewModel.Channel;
             entity.Cooperation = viewModel.Cooperation;
+            entity.Abstract = viewModel.Abstract;
 
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
@@ -872,7 +873,7 @@ namespace Resource.Controllers
 
             entity.MediaName = item.MediaName;
             entity.MediaID = item.MediaID;
-
+            entity.Abstract = item.Abstract;
             entity.MediaLink = item.MediaLink;
             entity.MediaLogo = item.MediaLogo;
             entity.MediaQR = item.MediaQR;
@@ -950,6 +951,7 @@ namespace Resource.Controllers
 
             entity.MediaName = viewModel.MediaName.Trim();
             entity.MediaID = string.IsNullOrWhiteSpace(viewModel.MediaID) ? null : viewModel.MediaID.Trim();
+            entity.Abstract = viewModel.Abstract;
             if (viewModel.MediaTypeIndex == "zhihu")
             {
                 entity.MediaLink = "https://www.zhihu.com/people/" + entity.MediaID;
