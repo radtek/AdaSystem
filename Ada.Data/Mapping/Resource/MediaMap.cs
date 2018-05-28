@@ -64,7 +64,7 @@ namespace Ada.Data.Mapping.Resource
             Property(s => s.IpAddress).HasMaxLength(32);
             Property(s => s.Taxis);
             Property(s => s.Remark).HasMaxLength(1024);
-
+            Property(s => s.PriceProtectionRemark).HasMaxLength(512);
             //配置表
             ToTable("Media");
             //配置关系【一对多的配置，外键是UserId】 Withmany方法允许多个。HasForeignKey方法表示哪个属性是User表的外键，WillCascadeOnDelete方法用来配置是否级联删除

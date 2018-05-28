@@ -154,7 +154,7 @@ namespace Ada.Web.Controllers
                     IsGroup = d.MediaGroups.Any(g => g.GroupType == Consts.StateLock && g.AddedById == CurrentUser.Id),
                     MediaGroups = d.MediaGroups.Where(m => m.GroupType == Consts.StateNormal).Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
                     MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).Take(6).ToList(),
-                    MediaPrices = d.MediaPrices.Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, SellPrice = p.SellPrice }).OrderByDescending(c => c.AdPositionName).ToList()
+                    MediaPrices = d.MediaPrices.Where(c=>c.IsDelete==false).Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, SellPrice = p.SellPrice }).OrderByDescending(c => c.AdPositionName).ToList()
                 })
             });
         }
@@ -593,7 +593,7 @@ namespace Ada.Web.Controllers
 
                 if (fields.Contains("SellPrice"))
                 {
-                    foreach (var mediaMediaPrice in media.MediaPrices)
+                    foreach (var mediaMediaPrice in media.MediaPrices.Where(d => d.IsDelete == false))
                     {
                         var price = mediaMediaPrice.SellPrice ?? 0;
                         jo.Add(mediaMediaPrice.AdPositionName, price);
@@ -662,7 +662,7 @@ namespace Ada.Web.Controllers
                             break;
                     }
                 }
-                foreach (var mediaMediaPrice in media.MediaPrices)
+                foreach (var mediaMediaPrice in media.MediaPrices.Where(d=>d.IsDelete==false))
                 {
                     var price = mediaMediaPrice.SellPrice ?? 0;
                     jo.Add(mediaMediaPrice.AdPositionName, price);

@@ -244,7 +244,7 @@ namespace Resource.Controllers
                 }
                 foreach (var priceType in priceTypeList)
                 {
-                    foreach (var mediaMediaPrice in media.MediaPrices)
+                    foreach (var mediaMediaPrice in media.MediaPrices.Where(d=>d.IsDelete==false))
                     {
                         var price = mediaMediaPrice.PurchasePrice ?? 0;
                         var priceStr = "【成本】";
@@ -352,7 +352,7 @@ namespace Resource.Controllers
                 jo.Add("备注说明", media.Remark);
                 var date = media.MediaPrices.FirstOrDefault()?.InvalidDate;
                 jo.Add("价格有效期", date?.ToString("yyyy-MM-dd") ?? "");
-                foreach (var mediaMediaPrice in media.MediaPrices)
+                foreach (var mediaMediaPrice in media.MediaPrices.Where(d=>d.IsDelete==false))
                 {
                     jo.Add(mediaMediaPrice.AdPositionName, mediaMediaPrice.PurchasePrice);
                 }
@@ -417,7 +417,7 @@ namespace Resource.Controllers
                     Transactor = d.Transactor,
                     MediaGroups = d.MediaGroups.Where(m=>m.GroupType==Consts.StateNormal).Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
                     MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).ToList(),
-                    MediaPrices = d.MediaPrices.Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = p.PurchasePrice }).ToList()
+                    MediaPrices = d.MediaPrices.Where(p=>p.IsDelete==false).Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = p.PurchasePrice }).ToList()
                 })
             });
         }

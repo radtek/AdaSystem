@@ -43,5 +43,6 @@ namespace Ada.Core.Domain.Purchase
         [Display(Name = "采购退款单")]
         public string PurchaseReturnOrderId { get; set; }
         public virtual PurchaseReturnOrder PurchaseReturnOrder { get; set; }
+        public virtual PurchaseOrderDetail PurchaseOrderDetail { get; set; }
     }
 }

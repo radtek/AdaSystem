@@ -516,6 +516,13 @@ namespace Ada.Web.Controllers
             return Content("成功导入" + count + "条品牌");
         }
 
+        public ActionResult DeletePrice()
+        {
+           var count= _mediaPrice.Update(d => d.AdPositionName == "长笔记", u => new MediaPrice() {IsDelete = true});
+            _dbContext.SaveChanges();
+            return Content("删除" + count + "条价格");
+        }
+
         public ActionResult Bitspaceman()
         {
             var result = HttpUtility.Post(

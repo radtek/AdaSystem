@@ -179,11 +179,6 @@ namespace Ada.Core.Domain.Resource
         /// </summary>
         [Display(Name = "是否推荐")]
         public bool? IsRecommend { get; set; }
-        ///// <summary>
-        ///// 是否自营
-        ///// </summary>
-        //[Display(Name = "是否自营")]
-        //public bool? IsSelf { get; set; }
         /// <summary>
         /// 媒体状态
         /// </summary>
@@ -244,6 +239,26 @@ namespace Ada.Core.Domain.Resource
         /// </summary>
         [Display(Name = "运营")]
         public short? Cooperation { get; set; }
+        /// <summary>
+        /// 保价期
+        /// </summary>
+        [Display(Name = "保价期")]
+        public short? PriceProtectionDate { get; set; }
+        /// <summary>
+        /// 是否预付
+        /// </summary>
+        [Display(Name = "是否预付")]
+        public bool? PriceProtectionIsPrePay { get; set; }
+        /// <summary>
+        /// 是否提供品牌
+        /// </summary>
+        [Display(Name = "是否提供品牌")]
+        public bool? PriceProtectionIsBrand { get; set; }
+        /// <summary>
+        /// 保价备注
+        /// </summary>
+        [Display(Name = "保价备注")]
+        public string PriceProtectionRemark { get; set; }
         /// <summary>
         /// 媒体类型
         /// </summary>

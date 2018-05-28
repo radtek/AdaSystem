@@ -508,7 +508,7 @@
                                         }
                                         <td>
                                             <ul class='list-group m-b-none'>
-                                                @foreach (var price in item.MediaPrices)
+                                                @foreach (var price in item.MediaPrices.Where(d=>d.IsDelete==false))
                                                 {
 
                                                     <li class='list-group-item p-xxs'>

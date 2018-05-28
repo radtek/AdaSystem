@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ada.Core.Domain.Customer;
 
 namespace Ada.Core.Domain.Purchase
 {
@@ -17,9 +18,9 @@ namespace Ada.Core.Domain.Purchase
             PurchaseReturenOrderDetails = new HashSet<PurchaseReturenOrderDetail>();
         }
         /// <summary>
-        /// 订单状态
+        /// 退款状态
         /// </summary>
-        [Display(Name = "订单状态")]
+        [Display(Name = "退款状态")]
         public short? Status { get; set; }
         /// <summary>
         /// 采购订单
@@ -86,6 +87,17 @@ namespace Ada.Core.Domain.Purchase
         /// </summary>
         [Display(Name = "单据时间")]
         public DateTime? ReturnDate { get; set; }
+        /// <summary>
+        /// 供应商
+        /// </summary>
+        [Display(Name = "供应商")]
+        public string LinkManName { get; set; }
+        /// <summary>
+        /// 供应商
+        /// </summary>
+        [Display(Name = "供应商")]
+        public string LinkManId { get; set; }
+        public virtual LinkMan LinkMan { get; set; }
         public virtual ICollection<PurchaseReturenOrderDetail> PurchaseReturenOrderDetails { get; set; }
     }
 }

@@ -14,6 +14,7 @@ namespace Ada.Core.Domain.Purchase
         public PurchaseOrderDetail()
         {
             PurchasePaymentOrderDetails = new HashSet<PurchasePaymentOrderDetail>();
+            PurchaseReturenOrderDetails=new HashSet<PurchaseReturenOrderDetail>();
         }
         /// <summary>
         /// 销售明细单
@@ -191,5 +192,6 @@ namespace Ada.Core.Domain.Purchase
         public virtual PurchaseOrder PurchaseOrder { get; set; }
 
         public virtual ICollection<PurchasePaymentOrderDetail> PurchasePaymentOrderDetails { get; set; }
+        public virtual ICollection<PurchaseReturenOrderDetail> PurchaseReturenOrderDetails { get; set; }
     }
 }

@@ -43,6 +43,7 @@ namespace Ada.Data.Mapping.Purchase
             ToTable("PurchaseReturenOrderDetail");
             //配置关系【一对多的配置，外键是UserId】 Withmany方法允许多个。HasForeignKey方法表示哪个属性是User表的外键，WillCascadeOnDelete方法用来配置是否级联删除
             HasRequired(s => s.PurchaseReturnOrder).WithMany(s => s.PurchaseReturenOrderDetails).HasForeignKey(s => s.PurchaseReturnOrderId).WillCascadeOnDelete(false);
+            HasRequired(s => s.PurchaseOrderDetail).WithMany(s => s.PurchaseReturenOrderDetails).HasForeignKey(s => s.PurchaseOrderDetailId).WillCascadeOnDelete(false);
         }
     }
 }

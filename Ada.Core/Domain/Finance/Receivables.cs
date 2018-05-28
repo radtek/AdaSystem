@@ -97,11 +97,11 @@ namespace Ada.Core.Domain.Finance
         /// </summary>
         [Display(Name = "单据日期")]
         public DateTime? BillDate { get; set; }
-        ///// <summary>
-        ///// 关联单据号
-        ///// </summary>
-        //[Display(Name = "关联单据号")]
-        //public string RelationshipNum { get; set; }
+        /// <summary>
+        /// 关联单据号
+        /// </summary>
+        [Display(Name = "关联单据号")]
+        public string RelationshipNum { get; set; }
         public virtual SettleAccount SettleAccount { get; set; }
         public virtual IncomeExpend IncomeExpend { get; set; }
         public virtual ICollection<BusinessPayee> BusinessPayees { get; set; }

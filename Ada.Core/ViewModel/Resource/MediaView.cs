@@ -547,6 +547,26 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "价格排序")]
         public string PriceSortOrder { get; set; }
+        /// <summary>
+        /// 保价期
+        /// </summary>
+        [Display(Name = "保价期")]
+        public short? PriceProtectionDate { get; set; }
+        /// <summary>
+        /// 是否预付
+        /// </summary>
+        [Display(Name = "是否预付")]
+        public bool? PriceProtectionIsPrePay { get; set; }
+        /// <summary>
+        /// 是否提供品牌
+        /// </summary>
+        [Display(Name = "是否提供品牌")]
+        public bool? PriceProtectionIsBrand { get; set; }
+        /// <summary>
+        /// 保价备注
+        /// </summary>
+        [Display(Name = "保价备注")]
+        public string PriceProtectionRemark { get; set; }
     }
 
 }

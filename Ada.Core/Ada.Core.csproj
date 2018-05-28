@@ -135,6 +135,7 @@
     <Compile Include="Domain\API\APIInterfaces.cs" />
     <Compile Include="Domain\Resource\MediaAppointment.cs" />
     <Compile Include="Domain\Resource\MediaArticle.cs" />
+    <Compile Include="Domain\Resource\MediaPriceChange.cs" />
     <Compile Include="Domain\Resource\MediaComment.cs" />
     <Compile Include="Domain\Resource\MediaDevelop.cs" />
     <Compile Include="Domain\Resource\MediaDevelopProgress.cs" />

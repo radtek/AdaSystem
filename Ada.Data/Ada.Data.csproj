@@ -104,6 +104,7 @@
     <Compile Include="Mapping\Purchase\PurchaseReturnOrderMap.cs" />
     <Compile Include="Mapping\QuartzTask\JobMap.cs" />
     <Compile Include="Mapping\Resource\MediaAppointmentMap.cs" />
+    <Compile Include="Mapping\Resource\MediaPriceChangeMap.cs" />
     <Compile Include="Mapping\Resource\MediaCommentMap.cs" />
     <Compile Include="Mapping\Resource\MediaArticleMap.cs" />
     <Compile Include="Mapping\Resource\MediaDevelopProgressMap.cs" />
@@ -331,6 +332,10 @@
     <Compile Include="Migrations\201805201428439_WeiXinAndMediaUpdate2.Designer.cs">
       <DependentUpon>201805201428439_WeiXinAndMediaUpdate2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805280430087_UpdateMedias.cs" />
+    <Compile Include="Migrations\201805280430087_UpdateMedias.Designer.cs">
+      <DependentUpon>201805280430087_UpdateMedias.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -506,6 +511,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805201428439_WeiXinAndMediaUpdate2.resx">
       <DependentUpon>201805201428439_WeiXinAndMediaUpdate2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805280430087_UpdateMedias.resx">
+      <DependentUpon>201805280430087_UpdateMedias.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

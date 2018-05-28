@@ -30,6 +30,8 @@ namespace Ada.Data.Mapping.Purchase
             Property(s => s.AuditById).HasMaxLength(32);
             Property(s => s.CancelBy).HasMaxLength(32);
             Property(s => s.CancelById).HasMaxLength(32);
+            Property(s => s.LinkManId).HasMaxLength(32);
+            Property(s => s.LinkManName).HasMaxLength(128);
 
 
             Property(s => s.AddedDate);
@@ -48,6 +50,7 @@ namespace Ada.Data.Mapping.Purchase
 
             //配置表
             ToTable("PurchaseReturnOrder");
+            HasRequired(s => s.LinkMan).WithMany(s => s.PurchaseReturnOrders).HasForeignKey(s => s.LinkManId).WillCascadeOnDelete(false);
         }
     }
 }

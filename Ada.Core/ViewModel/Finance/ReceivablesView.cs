@@ -135,5 +135,10 @@ namespace Ada.Core.ViewModel.Finance
         /// </summary>
         [Display(Name = "领款状态")]
         public bool? Status { get; set; }
+        /// <summary>
+        /// 关联单据号
+        /// </summary>
+        [Display(Name = "关联单据号")]
+        public string RelationshipNum { get; set; }
     }
 }

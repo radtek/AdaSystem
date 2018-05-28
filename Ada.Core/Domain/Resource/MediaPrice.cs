@@ -16,6 +16,7 @@ namespace Ada.Core.Domain.Resource
             PurchaseOrderDetails=new HashSet<PurchaseOrderDetail>();
             BusinessOrderDetails = new HashSet<BusinessOrderDetail>();
             BusinessOfferDetails=new HashSet<BusinessOfferDetail>();
+            MediaPriceChanges=new HashSet<MediaPriceChange>();
         }
         /// <summary>
         /// 广告位
@@ -61,5 +62,6 @@ namespace Ada.Core.Domain.Resource
         public virtual ICollection<BusinessOrderDetail> BusinessOrderDetails { get; set; }
         public virtual ICollection<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
         public virtual ICollection<BusinessOfferDetail> BusinessOfferDetails { get; set; }
+        public virtual ICollection<MediaPriceChange> MediaPriceChanges { get; set; }
     }
 }
