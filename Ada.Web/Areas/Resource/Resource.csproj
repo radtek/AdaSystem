@@ -226,6 +226,7 @@
     <Content Include="Views\Shared\RedBookArticles.cshtml" />
     <Content Include="Views\Appointment\Index.cshtml" />
     <Content Include="Views\Appointment\List.cshtml" />
+    <Content Include="Views\Shared\MediaPriceProtection.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

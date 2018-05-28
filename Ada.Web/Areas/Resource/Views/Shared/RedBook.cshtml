@@ -17,6 +17,7 @@
                 <li class="active"><a data-toggle="tab" href="#tab-1"> 基本信息</a></li>
                 <li class=""><a data-toggle="tab" href="#tab-2"> 媒体数据</a></li>
                 <li class=""><a data-toggle="tab" href="#tab-3"> 媒体价格</a></li>
+                <li class=""><a data-toggle="tab" href="#tab-5"> 媒体保价</a></li>
             </ul>
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane active">
@@ -165,7 +166,7 @@
 
                     </div>
                 </div>
-
+                @Html.Partial("MediaPriceProtection", Model)
             </div>
         </div>
     </div>

@@ -71,7 +71,7 @@ namespace Ada.Services.Resource
                 viewModel.search = viewModel.search.Trim();
                 allList = allList.Where(d => d.MediaName.Contains(viewModel.search) || 
                                              d.MediaID.Contains(viewModel.search)||
-                                             d.Abstract.Contains(viewModel.search)||
+                                             //d.Abstract.Contains(viewModel.search)||
                                              d.Transactor.Contains(viewModel.search)||
                                              d.LinkMan.Name.Contains(viewModel.search)||
                                              d.Area.Contains(viewModel.search)
@@ -295,11 +295,6 @@ namespace Ada.Services.Resource
                     allList = allList.Include(d => d.MediaPrices)
                         .Where(d => d.MediaPrices.Any(p => p.SellPrice >= min && p.SellPrice <= max && p.AdPositionName == viewModel.AdPositionName));
                 }
-                //else
-                //{
-                //    allList = allList.Include(d => d.MediaPrices)
-                //        .Where(d => d.MediaPrices.Any(p => p.SellPrice >= min&&p.SellPrice<=max));
-                //}
             }
             if (!string.IsNullOrWhiteSpace(viewModel.PriceRange))
             {
@@ -312,11 +307,6 @@ namespace Ada.Services.Resource
                     allList = allList.Include(d => d.MediaPrices)
                         .Where(d => d.MediaPrices.Any(p => p.PurchasePrice >= min && p.PurchasePrice <= max && p.AdPositionName == viewModel.AdPositionName));
                 }
-                //else
-                //{
-                //    allList = allList.Include(d => d.MediaPrices)
-                //        .Where(d => d.MediaPrices.Any(p => p.PurchasePrice >= min && p.PurchasePrice <= max));
-                //}
             }
             if (viewModel.PriceStart != null)
             {
@@ -377,7 +367,19 @@ namespace Ada.Services.Resource
                 allList = allList.Include(d => d.MediaPrices).Where(d =>
                       d.MediaPrices.Any(p => p.InvalidDate < endDate));
             }
-            //allList = allList.Distinct();
+
+            if (viewModel.PriceProtectionDate != null)
+            {
+                allList = allList.Where(d => d.PriceProtectionDate == viewModel.PriceProtectionDate);
+            }
+            if (viewModel.PriceProtectionIsBrand != null)
+            {
+                allList = allList.Where(d => d.PriceProtectionIsBrand == viewModel.PriceProtectionIsBrand);
+            }
+            if (viewModel.PriceProtectionIsPrePay != null)
+            {
+                allList = allList.Where(d => d.PriceProtectionIsPrePay == viewModel.PriceProtectionIsPrePay);
+            }
             viewModel.total = allList.Count();
             //找出不存在的
             if (!string.IsNullOrWhiteSpace(viewModel.MediaBatch))

@@ -34,9 +34,9 @@ $(function () {
         function () {
 
         }).on('hidden.bs.modal',
-        function () {
-            $('.fileinput').fileinput("clear");
-        });
+            function () {
+                $('.fileinput').fileinput("clear");
+            });
     $('.input-group.date').datepicker({
         autoclose: true,
         language: "zh-CN",
@@ -56,12 +56,6 @@ function groupDetail(id) {
 
 }
 function formatterPrice(value, row, index) {
-    //var result = "";
-    //$.each(value,
-    //    function (k, v) {
-    //        result += "<div class='p-xxs'><span class='label label-info'>" + v.AdPositionName + "：" + (v.PurchasePrice == 0 ? "不接单" : v.PurchasePrice) + "　　有效期至：" + (v.InvalidDate ? moment(v.InvalidDate).format("YYYY-MM-DD") : "") + "</span></div>";
-    //    });
-    //return result;
     var arr = [];
     $.each(value,
         function (k, v) {
@@ -70,6 +64,37 @@ function formatterPrice(value, row, index) {
         });
     arr.push("<li class='list-group-item p-xxs'><span class='badge'>" + moment(value[0].InvalidDate).format("YYYY-MM-DD") + "</span>价格有效期</li>");
     return "<ul class='list-group m-b-none'>" + arr.join('') + "</ul>";
+}
+function formatterPriceProtection(value, row, index) {
+    if (value == 0 || !value) {
+        return "不保价";
+    }
+    var str = "";
+    switch (value) {
+        case 1:
+            str = "一个月";
+            break;
+        case 2:
+            str = "两个月";
+            break;
+        case 3:
+            str = "三个月";
+            break;
+        case 6:
+            str = "半年";
+            break;
+    }
+    var line = "<li class='list-group-item p-xxs'><span class='badge badge-success'>" +
+        str +
+        "</span> 保价期</li>";
+    line += "<li class='list-group-item p-xxs'><span class='badge badge-success'>" +
+        (row.PriceProtectionIsPrePay == true ? "是" : "否") +
+        "</span> 是否预付</li>";
+    line += "<li class='list-group-item p-xxs'><span class='badge badge-success'>" +
+        (row.PriceProtectionIsBrand == true ? "是" : "否") +
+        "</span> 品牌提供</li>";
+    line += "<li class='list-group-item p-xxs'><span class='badge badge-success' data-toggle='tooltip' data-placement='bottom' title='" + row.PriceProtectionRemark + "'>查看</span> 保价备注</li>";
+    return "<ul class='list-group'>" + line + "</ul>";
 }
 function formatterTag(value) {
     var arr = [];
@@ -93,6 +118,9 @@ function formatterGroup(value, row, index) {
         function (k, v) {
             result += "<button class='btn btn-warning btn-xs' onclick=\"groupDetail('" + v.Id + "');\"><i class='fa fa-object-group'></i> " + v.GroupName + "</button> ";
         });
+    if (result) {
+        return "<div class='p-xxs'>" + result + "</div>";
+    }
     return result;
 }
 
@@ -129,7 +157,7 @@ function formatterLogo(value, row) {
     }
 
     var state = "<div class='p-xxs text-center'>" + vg + "</div>";//+ formatter.normalStatus(row.Status)
-    return '<div class="p-xxs text-center">' + logo + '</div>' + vg+info;
+    return '<div class="p-xxs text-center">' + logo + '</div>' + vg + info;
 }
 function formatterWeiXin(value, row) {
     var url =
@@ -141,7 +169,7 @@ function formatterWeiXin(value, row) {
         "<button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" +
         " <img rel='drevil' data-content='<div id=\"popOverBox\"><img src=\"" + (row.MediaQR || '/Images/nopic.png') + "\" width=\"100\" height=\"100\" /></div>'  src='/Images/ewm.png' style='width: 20px; height: 20px;'/>" +
         "</div>" +
-        tags + fans;
+        tags + fans + formatterGroup(row.MediaGroups);
 }
 
 function formatterBlog(value, row) {
@@ -169,7 +197,7 @@ function formatterBlog(value, row) {
     }
     return url +
         "<div class='p-xxs'>" + level + area +
-        "</div>" + tags + fans;
+        "</div>" + tags + fans + formatterGroup(row.MediaGroups);
 }
 
 function formatterMediaName(value, row) {
@@ -196,7 +224,7 @@ function formatterMediaName(value, row) {
     }
     var url =
         "<div class='p-xxs'>" + sex + name +
-        " <button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" + 
+        " <button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" +
         "</div>";;
     var tags = "";
     if (row.MediaTags) {
@@ -214,7 +242,7 @@ function formatterMediaName(value, row) {
     if (row.AuthenticateType) {
         grad = "<div class='p-xxs'><span class='btn btn-warning  btn-outline btn-xs'><i class='fa fa-trophy'></i> " + row.AuthenticateType + "</span></div>";
     }
-    return url + area + grad + tags + fans;
+    return url + area + grad + tags + fans + formatterGroup(row.MediaGroups);
 }
 
 
@@ -261,7 +289,7 @@ function formatterBlogData(value, row) {
         date + "</div>";
 }
 function formatterDouYinData(value, row) {
-    return  "<div class='p-xxs'><span class='label label-info'>平均浏览数：" +
+    return "<div class='p-xxs'><span class='label label-info'>平均浏览数：" +
         (row.AvgReadNum || 0) +
         "</div>" +
         "<div class='p-xxs'><span class='label label-info'>平均评论数：" +
@@ -278,7 +306,7 @@ function formatterDouYinData(value, row) {
         "</div>" +
         "<div class='p-xxs'><span class='label label-info'>总视频数：" +
         (row.PostNum || 0) +
-        "</div>" ;
+        "</div>";
 }
 function formatterRedBookData(value, row) {
     return "<div class='p-xxs'><span class='label label-info'>平均评论数：" +
@@ -665,11 +693,11 @@ function collectDouYin(url) {
                 }
             });
         });
-        
+
     } else {
         swal("操作提醒", "请选择一条抖音用户记录", "warning");
         return;
     }
 
-    
+
 }

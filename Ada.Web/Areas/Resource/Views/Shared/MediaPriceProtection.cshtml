@@ -1,0 +1,53 @@
+﻿@using Ada.Core.Infrastructure
+@using Ada.Services.Admin
+@model Ada.Core.ViewModel.Resource.MediaView
+@{
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var priceProtectionDates = fieldService.GetFieldsByKey("PriceProtectionDate").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+}
+<div id="tab-5" class="tab-pane">
+    <div class="panel-body">
+        <fieldset class="form-horizontal">
+            <div class="form-group">
+                @Html.LabelFor(d => d.PriceProtectionDate, Html.DisplayNameFor(d => d.PriceProtectionDate).ToString(), new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(d => d.PriceProtectionDate, priceProtectionDates,"请选择", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(d => d.PriceProtectionIsPrePay, Html.DisplayNameFor(d => d.PriceProtectionIsPrePay).ToString(), new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    <div class="radio radio-info radio-inline">
+                        @Html.RadioButtonFor(d => d.PriceProtectionIsPrePay, true)
+                        <label> 是 </label>
+                    </div>
+                    <div class="radio radio-info radio-inline">
+                        @Html.RadioButtonFor(d => d.PriceProtectionIsPrePay, false)
+                        <label> 否 </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(d => d.PriceProtectionIsBrand, Html.DisplayNameFor(d => d.PriceProtectionIsBrand).ToString(), new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    <div class="radio radio-info radio-inline">
+                        @Html.RadioButtonFor(d => d.PriceProtectionIsBrand, true)
+                        <label> 是 </label>
+                    </div>
+                    <div class="radio radio-info radio-inline">
+                        @Html.RadioButtonFor(d => d.PriceProtectionIsBrand, false)
+                        <label> 否 </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(d => d.PriceProtectionRemark, Html.DisplayNameFor(d => d.PriceProtectionRemark).ToString(), new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(d => d.PriceProtectionRemark, new { @class = "form-control" })
+                </div>
+            </div>
+        </fieldset>
+
+
+    </div>
+</div>
