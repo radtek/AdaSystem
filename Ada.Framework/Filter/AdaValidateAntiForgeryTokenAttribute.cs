@@ -34,9 +34,18 @@ namespace Ada.Framework.Filter
             //AntiForgery.Validate(cookieToken, formToken);
             var antiForgeryCookie = request.Cookies[AntiForgeryConfig.CookieName];
             var cookieValue = antiForgeryCookie?.Value;
+            var token = request.Headers["__RequestVerificationToken"];
             //从cookies 和 Headers 中 验证防伪标记
             //这里可以加try-catch
-            AntiForgery.Validate(cookieValue, request.Headers["__RequestVerificationToken"]);
+            if (!string.IsNullOrWhiteSpace(cookieValue)&&!string.IsNullOrWhiteSpace(token))
+            {
+                AntiForgery.Validate(cookieValue,token);
+            }
+            else
+            {
+                AntiForgery.Validate();
+            }
+            
         }
 
         public void OnAuthorization(AuthorizationContext filterContext)
@@ -57,6 +66,19 @@ namespace Ada.Framework.Filter
             {
                 throw new HttpAntiForgeryException("防伪验证失败");
             }
+        }
+    }
+
+    /// <inheritdoc />
+    /// <summary>
+    /// 页面禁止缓存过滤器
+    /// </summary>
+    public class NoCacheAttribute : ActionFilterAttribute
+    {
+        public override void OnResultExecuting(ResultExecutingContext filterContext)
+        {
+            filterContext.HttpContext.Response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);
+            filterContext.HttpContext.Response.Cache.SetNoStore();
         }
     }
 }

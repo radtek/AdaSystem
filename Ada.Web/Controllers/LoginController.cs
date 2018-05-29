@@ -35,6 +35,7 @@ namespace Ada.Web.Controllers
             _messageService = messageService;
             _settingService = settingService;
         }
+        [NoCache]
         public ActionResult Index()
         {
             var sessionId = Request.Cookies["UserSession"]?.Value;
@@ -129,31 +130,30 @@ namespace Ada.Web.Controllers
             _linkManService.Update(user);
             return RedirectToAction("Order", "UserCenter");
         }
-        [HttpPost]
-        [AdaValidateAntiForgeryToken]
-        public ActionResult GetSmsCode(string phone)
+        //[HttpPost, AdaValidateAntiForgeryToken,NoCache]
+        public ActionResult SmsCode(string phone)
         {
             var demo = _settingService.GetSetting<WeiGuang>();
             if (phone == demo.UserDemo)
             {
-                return Json(new { State = 1, Msg = "获取成功" });
+                return Json(new { State = 1, Msg = "获取成功" },JsonRequestBehavior.AllowGet);
             }
             //验证手机号
             if (!Utils.IsMobilePhone(phone.Trim()))
             {
-                return Json(new { State = 0, Msg = "请输入正确的手机号" });
+                return Json(new { State = 0, Msg = "请输入正确的手机号" }, JsonRequestBehavior.AllowGet);
             }
             //验证是否频繁
             var obj = _cacheService.GetObject<string>(phone);
             if (obj != null)
             {
-                return Json(new { State = 0, Msg = "请勿频繁获取！" });
+                return Json(new { State = 0, Msg = "请勿频繁获取！" }, JsonRequestBehavior.AllowGet);
             }
             //验证是否存在账户
             var user = _linkManService.CheackUser(phone.Trim());
             if (user == null)
             {
-                return Json(new { State = 0, Msg = "此手机号暂未开通会员，请联系我们处理！" });
+                return Json(new { State = 0, Msg = "此手机号暂未开通会员，请联系我们处理！" }, JsonRequestBehavior.AllowGet);
             }
             //生成随机码 3分钟有效
             RandomHelper random = new RandomHelper();
@@ -166,7 +166,7 @@ namespace Ada.Web.Controllers
                 {"TemplateParam", "{\"code\":\""+code+"\"}"}
             });
             //返回结果
-            return Json(new { State = 1, Msg = "获取成功" });
+            return Json(new { State = 1, Msg = "获取成功" }, JsonRequestBehavior.AllowGet);
         }
     }
 }

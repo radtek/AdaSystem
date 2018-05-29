@@ -166,7 +166,7 @@ namespace Ada.Services.Admin
         /// <param name="openId"></param>
         public Manager GetMangerByOpenId(string openId)
         {
-            return _managerRepository.LoadEntities(d => d.OpenId == openId).FirstOrDefault();
+            return _managerRepository.LoadEntities(d => d.OpenId == openId || d.UnionId == openId).FirstOrDefault();
 
         }
 
@@ -176,7 +176,7 @@ namespace Ada.Services.Admin
             if (!string.IsNullOrWhiteSpace(loginModel.OpenId))
             {
                 manager =
-                    _managerRepository.LoadEntities(u => u.OpenId == loginModel.OpenId && u.Status == Consts.StateNormal && u.IsDelete == false).FirstOrDefault();
+                    _managerRepository.LoadEntities(u => (u.OpenId == loginModel.OpenId || u.UnionId == loginModel.OpenId) && u.Status == Consts.StateNormal && u.IsDelete == false).FirstOrDefault();
             }
             else
             {

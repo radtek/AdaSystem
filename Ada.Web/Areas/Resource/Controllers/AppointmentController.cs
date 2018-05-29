@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
-using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
@@ -28,6 +27,7 @@ namespace Resource.Controllers
         private readonly IManagerService _managerService;
         private readonly ISettingService _settingService;
         private static readonly object Locker = new object();
+        //public ILog Loger { get; set; }
         public AppointmentController(IRepository<Media> repository,
             IMediaService service,
             IMediaAppointmentService mediaAppointmentService,
@@ -126,6 +126,10 @@ namespace Resource.Controllers
                     return Json(new { State = 0, Msg = "无法取消他人的预约，请联系预约人进行取消" });
                 }
             }
+
+            var date = make.AppointmentDate.Value.ToString("yyyy-MM-dd");
+            var name = make.Media.MediaName + "-" + (make.Taxis == 1 ? "头条" : "次条");
+            var by = make.Transactor;
             _mediaAppointmentService.Delete(make);
             //推送通知给编辑部和业务部
             try
@@ -141,18 +145,19 @@ namespace Resource.Controllers
                         .Where(d => !string.IsNullOrWhiteSpace(d.OpenId)).Select(d => d.OpenId).ToList();
                     openids.AddRange(bjbOpenIds);
                     openids.AddRange(jsbOpenIds);
+
                     if (openids.Any())
                     {
                         var dic = new Dictionary<string, object>
                         {
-                            {"Title", make.Transactor+" 的预约已取消。\r\n"},
+                            {"Title", by+" 的预约已取消。\r\n"},
                             {"Remark", ""},
                             {"AppId", "wxcd1a304c25e0ea53"},
                             {"TemplateId", "r_JKy6y3X8CtisTk2HT_NinKw2r0IE3KmNmFPIYpows"},
                             {"TemplateName", "预约取消通知"},
                             {"OpenIds", string.Join(",",openids)},
-                            {"KeyWord1", make.AppointmentDate.Value.ToString("yyyy-MM-dd")},
-                            {"KeyWord2", make.Media.MediaName+"-"+(make.Taxis==1?"头条":"次条")},
+                            {"KeyWord1", date},
+                            {"KeyWord2", name},
                             {"KeyWord3", "自行取消"}
 
                         };
@@ -161,10 +166,10 @@ namespace Resource.Controllers
                 }
                
             }
-            catch 
+            catch(Exception ex)
             {
 
-                //throw;
+                Log.Error("取消预约推送异常",ex);
             }
             return Json(new { State = 1, Msg = "取消成功" });
         }

@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain.WeiXin;
 using Ada.Core.Tools;
 using Senparc.Weixin;
-using Senparc.Weixin.Exceptions;
-using Senparc.Weixin.MP;
 using Senparc.Weixin.MP.AdvancedAPIs;
-using Senparc.Weixin.MP.AdvancedAPIs.OAuth;
 
 namespace WeiXin.Controllers
 {
@@ -46,8 +40,9 @@ namespace WeiXin.Controllers
             {
                 return Content("错误：" + result.errmsg);
             }
-            Session["CurrentWeiXin"] = SerializeHelper.SerializeToString(UserApi.Info(account.AppId,result.openid)); ;//进行登录
+            Session["CurrentWeiXin"] = SerializeHelper.SerializeToString(UserApi.Info(account.AppId, result.openid)); ;//进行登录
             return Redirect(returnUrl);
         }
+        
     }
 }

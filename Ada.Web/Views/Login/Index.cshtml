@@ -26,7 +26,7 @@
         <div class="row">
 
             <div class="col-md-6">
-                <h2 class="font-bold">欢迎回到微广！</h2>
+                <h2 class="font-bold">欢迎回到微广!</h2>
 
                 <p>
                     从社交媒体平台的日常维护到内容扩展 微广为不同的客户量身订制最专业而全面的社交媒体方案.
@@ -85,15 +85,10 @@
             </div>
         </div>
     </div>
-
-
-
-
-
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/plugins/sweetAlert")
     <script>
-        var wait = 60, timeId=0;
+        var wait = 60, timeId = 0;
         function setTime(o) {
             clearTimeout(timeId);
             if (wait <= 0) {
@@ -130,30 +125,15 @@
             } else {
                 $("#LoginName").next().text("");
             }
-            $.ajax({
-                type: "post",
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader("__RequestVerificationToken", $('@Html.AntiForgeryToken()').val()); // 请求发起前在头部附加token
-                },
-                url: "@Url.Action("GetSmsCode")",
-                data: { phone:phone },
-                success: function (data) {
-                    if (data.State==0) {
+            $.getJSON("@Url.Action("SmsCode")?phone=" + phone,
+                function(data) {
+                    if (data.State == 0) {
                         $(o).parent().parent().next().text(data.Msg);
                     } else {
                         setTime(o);
                     }
-                },
-                //error: function () {
-
-                //},
-                //beforeSend: function () {
-
-                //},
-                //complete: function () {
-
-                //}
-            });
+                });
+            
         }
     </script>
 </body>
