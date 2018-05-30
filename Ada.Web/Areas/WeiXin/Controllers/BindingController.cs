@@ -10,6 +10,7 @@ using Senparc.Weixin.MP;
 using Senparc.Weixin.MP.AdvancedAPIs;
 using Senparc.Weixin.MP.AdvancedAPIs.OAuth;
 using Senparc.Weixin.MP.AdvancedAPIs.User;
+using Senparc.Weixin.Open.QRConnect;
 using WeiXin.Filters;
 using WeiXin.Services;
 
@@ -59,5 +60,7 @@ namespace WeiXin.Controllers
             }
             return RedirectToAction("Manger", new { currentWxUser.openid });
         }
+
+        
     }
 }

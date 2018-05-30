@@ -65,6 +65,44 @@ namespace Admin.Controllers
 
         }
 
+        public ActionResult Binding()
+        {
+            //var guid = Guid.NewGuid().ToString("N");
+            //Session["LoginOpenState"] = guid;
+            //ViewBag.State = guid;
+            //ViewBag.CallBack = Request.Url.Scheme + "://" + Request.Url.Authority + Url.Action("Open", "OAuth2", new{area="WeiXin"});
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Binding(string userName, string password)
+        {
+            //校验用户
+            var obj = Session["CurrentWeiXinOpenUnionid"];
+            if (obj == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var logModel = new LoginModel
+            {
+                LoginName = userName.Trim(),
+                Password = password,
+                OpenId = obj.ToString(),
+                LoginLog = new LoginLog() { UserAgent = Request.UserAgent }
+            };
+            var result = _service.BindingLogin(logModel);
+            if (result == null)
+            {
+                ModelState.AddModelError("message", logModel.Message);
+                return View();
+            }
+            Session["LoginManager"] = SerializeHelper.SerializeToString(result);
+            //清空登陆日志缓存
+            _signals.Trigger("LoginLog" + result.Id + ".Changed");
+            return RedirectToAction("Index", "Home", new { area = "Dashboards" });
+
+        }
+
         public ActionResult Quit()
         {
             Session.Abandon();

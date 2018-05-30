@@ -41,6 +41,7 @@ namespace Ada.Services.Admin
 
         Manager GetMangerByOpenId(string openId);
         bool BindingOpenId(string loginName, string pwd, string openid, out string errmsg, string image = null);
+        ManagerView BindingLogin(LoginModel loginModel);
         ManagerView Login(LoginModel loginModel);
         IEnumerable<ManagerView> GetByOrganizationName(string name);
     }

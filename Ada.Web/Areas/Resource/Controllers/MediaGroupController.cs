@@ -65,12 +65,13 @@ namespace Resource.Controllers
             }
             //校验唯一性
             var temp = _repository
-                .LoadEntities(d => d.GroupName.Equals(viewModel.GroupName, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false)
+                .LoadEntities(d => d.GroupName.Equals(viewModel.GroupName, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false&&d.GroupType==Consts.StateNormal)
                 .FirstOrDefault();
             if (temp != null)
             {
-                return Json(new { State = 0, Msg = viewModel.GroupName + "，此分组已存在！" });
-            }
+                ModelState.AddModelError("message", viewModel.GroupName + "，此分组已存在！");
+                return View(viewModel);
+                }
             MediaGroup entity = new MediaGroup();
             entity.Id = IdBuilder.CreateIdNum();
             entity.AddedById = CurrentManager.Id;
@@ -112,11 +113,12 @@ namespace Resource.Controllers
             }
             //校验唯一性
             var temp = _repository
-                .LoadEntities(d => d.GroupName.Equals(viewModel.GroupName, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false && d.Id != viewModel.Id)
+                .LoadEntities(d => d.GroupName.Equals(viewModel.GroupName, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false && d.Id != viewModel.Id&&d.GroupType==Consts.StateNormal)
                 .FirstOrDefault();
             if (temp != null)
             {
-                return Json(new { State = 0, Msg = viewModel.GroupName + "，此分组已存在！" });
+                ModelState.AddModelError("message", viewModel.GroupName + "，此分组已存在！");
+                return View(viewModel);
             }
 
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();

@@ -418,7 +418,7 @@ namespace Ada.Web.Controllers
             }
             //校验唯一性
             var temp = _mediaGroupRepository
-                .LoadEntities(d => d.GroupName.Equals(viewModel.GroupName, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false && d.AddedById == CurrentUser.Id)
+                .LoadEntities(d => d.GroupName.Equals(viewModel.GroupName, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false && d.AddedById == CurrentUser.Id&&d.GroupType==Consts.StateLock)
                 .FirstOrDefault();
             if (temp != null)
             {

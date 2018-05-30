@@ -154,7 +154,6 @@
     <Content Include="Views\Binding\Manger.cshtml" />
     <Content Include="Views\Account\TemplateMsg.cshtml" />
     <Content Include="Views\Login\Admin.cshtml" />
-    <Content Include="Views\Login\Binding.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

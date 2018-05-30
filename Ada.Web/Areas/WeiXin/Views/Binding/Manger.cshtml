@@ -15,7 +15,6 @@
             {
                 @Html.AntiForgeryToken()
                 <p class="bg-danger">@Html.ValidationMessage("message") </p>
-                <input name="openid" type="hidden" value="@Model" />
                 <div class="form-group">
                     <input name="userName" type="text" class="form-control" placeholder="用户名" required="">
                 </div>

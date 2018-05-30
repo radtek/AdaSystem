@@ -20,7 +20,7 @@ namespace WeiXin.Models
         }
         public void Register()
         {
-            var accounts = _repository.LoadEntities(d => d.IsDelete==false).ToList();
+            var accounts = _repository.LoadEntities(d => d.IsDelete == false && (d.AccountType == 0 || d.AccountType == 1 || d.AccountType == 2)).ToList();
             var register = RegisterService.Start();
             //var register = RegisterService.Start().ChangeDefaultCacheNamespace("DefaultWeixinCache").RegisterCacheRedis(
             //    ConfigurationManager.AppSettings["RedisConnectionString"],

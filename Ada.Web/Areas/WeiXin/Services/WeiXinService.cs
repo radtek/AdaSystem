@@ -37,7 +37,7 @@ namespace WeiXin.Services
             {
                 return _repository.LoadEntities(d => d.Status == true).FirstOrDefault();
             }
-            return _repository.LoadEntities(d => d.Id == appIdOrAccountId || d.AppId == appIdOrAccountId).FirstOrDefault();
+            return _repository.LoadEntities(d => d.Id == appIdOrAccountId || d.AppId == appIdOrAccountId || d.SourceId == appIdOrAccountId).FirstOrDefault();
         }
         public string PushMedia(string key, string appId, string openId)
         {

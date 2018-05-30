@@ -249,6 +249,50 @@ namespace Ada.Services.Admin
             return true;
 
         }
+        public ManagerView BindingLogin(LoginModel loginModel)
+        {
+            loginModel.Password = Encrypt.Encode(loginModel.Password);
+            var manager= 
+                _managerRepository.LoadEntities(u => u.UserName == loginModel.LoginName && u.Password == loginModel.Password && u.Status == Consts.StateNormal && u.IsDelete == false).FirstOrDefault();
+
+            if (manager == null)
+            {
+                loginModel.Message = "用户不存在或者密码有误";
+                return null;
+            }
+            if (manager.Roles.Count == 0)
+            {
+                loginModel.Message = "未分配角色，请联系管理员";
+                return null;
+            }
+            //根据角色级别排序，获取最高的那个
+            var role = manager.Roles.OrderBy(d => d.RoleGrade).FirstOrDefault();
+            //记录日志
+            manager.ManagerLoginLogs.Add(new ManagerLoginLog()
+            {
+                Id = IdBuilder.CreateIdNum(),
+                IpAddress = Utils.GetIpAddress(),
+                LoginTime = loginModel.LoginLog.LoginTime,
+                WebInfo = loginModel.LoginLog.UserAgent,
+                Remark = "成功"
+            });
+            manager.UnionId = loginModel.OpenId;
+            _dbContext.SaveChanges();
+            loginModel.IsSuccess = true;
+            return new ManagerView()
+            {
+                Id = manager.Id,
+                Phone = manager.Phone,
+                RealName = manager.RealName,
+                Image = manager.Image,
+                UserName = manager.UserName,
+                RoleId = role.Id,
+                RoleName = role.RoleName,
+                RoleList = manager.Roles.Select(d => new RoleView() { Id = d.Id, RoleName = d.RoleName }),
+                Roles = manager.Roles.Count > 0 ? string.Join(",", manager.Roles.Select(d => d.RoleName)) : "",
+                Organizations = manager.Organizations.Count > 0 ? String.Join("-", manager.Organizations.Select(d => d.OrganizationName)) : ""
+            };
+        }
         public IEnumerable<ManagerView> GetByOrganizationName(string name)
         {
             var organization = _organizationRepository.LoadEntities(d => d.IsDelete == false && d.OrganizationName == name).FirstOrDefault();

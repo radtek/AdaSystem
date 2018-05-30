@@ -70,11 +70,10 @@ namespace Ada.Services.Resource
             {
                 viewModel.search = viewModel.search.Trim();
                 allList = allList.Where(d => d.MediaName.Contains(viewModel.search) || 
-                                             d.MediaID.Contains(viewModel.search)||
+                                             d.MediaID.Contains(viewModel.search)
                                              //d.Abstract.Contains(viewModel.search)||
-                                             d.Transactor.Contains(viewModel.search)||
-                                             d.LinkMan.Name.Contains(viewModel.search)||
-                                             d.Area.Contains(viewModel.search)
+                                             //d.Transactor.Contains(viewModel.search)||
+                                             //d.LinkMan.Name.Contains(viewModel.search)
                                              );
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaName))
