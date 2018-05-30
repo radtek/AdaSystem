@@ -40,6 +40,10 @@ namespace Ada.Services.Resource
                 var max = Convert.ToDateTime(temp[1].Trim()).AddDays(1);
                 allList = allList.Where(d => d.AppointmentDate >= min && d.AppointmentDate < max);
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.TransactorId))
+            {
+                allList = allList.Where(d => d.TransactorId == viewModel.TransactorId);
+            }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;

@@ -49,6 +49,7 @@ namespace Resource.Controllers
             var medias = _repository.LoadEntities(d =>
                 d.IsDelete == false && d.MediaType.CallIndex == "weixin" && d.Cooperation == Consts.StateNormal).OrderByDescending(d => d.MediaPrices.FirstOrDefault(p => p.AdPositionName == "头条（原创）").SellPrice).ThenBy(d => d.MediaName).ToList();
             ViewBag.Medias = medias;
+            ViewBag.CurrentId = CurrentManager.Id;
             var media = string.IsNullOrWhiteSpace(id) ? medias.FirstOrDefault() : medias.FirstOrDefault(d => d.Id == id);
             return View(media);
         }
@@ -151,7 +152,7 @@ namespace Resource.Controllers
                         var dic = new Dictionary<string, object>
                         {
                             {"Title", by+" 的预约已取消。\r\n"},
-                            {"Remark", ""},
+                            {"Remark", "\r\n如对此媒体需预约的抓紧哦！"},
                             {"AppId", "wxcd1a304c25e0ea53"},
                             {"TemplateId", "r_JKy6y3X8CtisTk2HT_NinKw2r0IE3KmNmFPIYpows"},
                             {"TemplateName", "预约取消通知"},
@@ -173,9 +174,13 @@ namespace Resource.Controllers
             }
             return Json(new { State = 1, Msg = "取消成功" });
         }
-
         public ActionResult List()
         {
+            return View();
+        }
+        public ActionResult ListSelf()
+        {
+            ViewBag.TransactorId = CurrentManager.Id;
             return View();
         }
         public ActionResult GetList(MediaAppointmentView viewModel)

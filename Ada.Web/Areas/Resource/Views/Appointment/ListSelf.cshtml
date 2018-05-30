@@ -1,8 +1,10 @@
 ﻿
+
 @using System.Web.Optimization
 @model Ada.Core.ViewModel.Resource.MediaAppointmentView
 @{
-    ViewBag.Title = "预约记录";
+    ViewBag.Title = "我的预约";
+    var currentId = ViewBag.TransactorId == null ? "" : ViewBag.TransactorId;
 }
 @Html.Partial("Bread")
 
@@ -129,10 +131,15 @@
                 mobileResponsive: true,
                 queryParams: function (parameters) {
                     parameters.AppointmentDateRange = $("#AppointmentDateRange").val();
+                    @if (!string.IsNullOrWhiteSpace(currentId)){
+                        <text>
+                            parameters.TransactorId = '@currentId';
+                        </text>
+                    }
                     return parameters;
                 },
                 formatSearch: function() {
-                    return "预约人/媒体名称";
+                    return "媒体名称";
                 },
                 columns: [
                     {

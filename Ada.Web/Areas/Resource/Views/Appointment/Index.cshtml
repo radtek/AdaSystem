@@ -17,14 +17,19 @@
         <div class="col-lg-2">
             <div class="ibox float-e-margins">
                 <div class="ibox-content">
-                    <h3>预约媒体</h3>
+                    <h3>
+                        预约媒体
+                        <a href="@Url.Action("ListSelf")" class="btn btn-primary btn-xs btn-outline pull-right" target="_blank">
+                            <i class="fa fa-refresh"></i> 我的预约
+                        </a>
+                    </h3>
                     <div class="list-group">
                         @foreach (var item in medias)
                         {
                             var isactive = item.Id == Model.Id ? "active" : "";
-                            var count = item.MediaAppointments.Where(d => d.AppointmentDate.Value.Date >= DateTime.Now.Date && d.AppointmentDate.Value.Date <= DateTime.Now.Date.AddDays(days)).GroupBy(d=>d.AppointmentDate).Count();
+                            var count = item.MediaAppointments.Where(d => d.AppointmentDate.Value.Date >= DateTime.Now.Date && d.AppointmentDate.Value.Date <= DateTime.Now.Date.AddDays(days)).GroupBy(d => d.AppointmentDate).Count();
                             <a class="list-group-item @isactive" href="@Url.Action("Index", "Appointment", new {id = item.Id})">
-                                @if (count>0)
+                                @if (count > 0)
                                 {
                                     <span class="badge badge-primary">@count</span>
                                 }
@@ -58,8 +63,8 @@
                     var bg2 = "gray-bg";
                     var name1 = "可预约";
                     var name2 = "可预约";
-                    var make1 = media.MediaAppointments.FirstOrDefault(d => d.AppointmentDate.Value.Date == date.Date&&d.Taxis==1);
-                    var make2 = media.MediaAppointments.FirstOrDefault(d => d.AppointmentDate.Value.Date == date.Date&&d.Taxis==2);
+                    var make1 = media.MediaAppointments.FirstOrDefault(d => d.AppointmentDate.Value.Date == date.Date && d.Taxis == 1);
+                    var make2 = media.MediaAppointments.FirstOrDefault(d => d.AppointmentDate.Value.Date == date.Date && d.Taxis == 2);
                     if (make1 != null)
                     {
                         bg1 = make1.State == Consts.StateNormal ? "red-bg" : "yellow-bg";
@@ -116,45 +121,20 @@
                                             <div class="btn-group">
                                                 @if (make2 != null)
                                                 {
-                                                <button class="btn btn-sm btn-danger btn-outline" type="button" onclick="cancleYY('@make2.Id')"><i class="fa fa-bell-slash-o"></i> 取消次条 </button>
+                                                    <button class="btn btn-sm btn-danger btn-outline" type="button" onclick="cancleYY('@make2.Id')"><i class="fa fa-bell-slash-o"></i> 取消次条 </button>
                                                 }
                                                 else
                                                 {
-                                                <button class="btn btn-sm btn-white btn-outline" type="button" data-toggle="modal" data-target="#yyModal" data-datestr="@dateStr" data-date="@date.Date" data-boxid="box_@boxid" data-sort="2"><i class="fa fa-bell-o"></i> 次条预约 </button>
+                                                    <button class="btn btn-sm btn-white btn-outline" type="button" data-toggle="modal" data-target="#yyModal" data-datestr="@dateStr" data-date="@date.Date" data-boxid="box_@boxid" data-sort="2"><i class="fa fa-bell-o"></i> 次条预约 </button>
                                                 }
 
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                
-                            </div>
-                        </div>
-                        
-                        
-                        
-
-                        @*<div class="widget-head-color-box @bg p-lg text-center">
-                            <div class="m-b-md">
-                                <h3>
-                                    @name
-                                </h3>
-                                <div class="font-bold">@dateStr</div>
-                            </div>
-                        </div>
-                        <div class="widget-text-box text-center">
-                            <div class="btn-group">
-                                @if (make != null)
-                                {
-                                    <button class="btn btn-sm btn-danger btn-outline" type="button" onclick="cancleYY('@make.Id')"><i class="fa fa-bell-slash-o"></i> 取消头条 </button>
-                                }
-                                else
-                                {
-                                    <button class="btn btn-sm btn-white btn-outline" type="button" data-toggle="modal" data-target="#yyModal" data-datestr="@dateStr" data-date="@date.Date" data-boxid="box_@boxid"><i class="fa fa-bell-o"></i> 头条预约 </button>
-                                }
 
                             </div>
-                        </div>*@
+                        </div>
                     </div>
                 }
 

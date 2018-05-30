@@ -230,6 +230,7 @@
     <Content Include="Views\Appointment\Index.cshtml" />
     <Content Include="Views\Appointment\List.cshtml" />
     <Content Include="Views\Shared\MediaPriceProtection.cshtml" />
+    <Content Include="Views\Appointment\ListSelf.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
