@@ -63,8 +63,13 @@
                             @Html.ValidationMessageFor(model => model.Code, null, new { @class = "help-block m-b-none text-danger" })
                         </div>
                         <button class="btn btn-danger block full-width m-b" type="submit">登陆</button>
-                        @Html.ValidationMessage("error", new { @class = "bg-danger" })
-
+                        <p>
+                            @Html.ValidationMessage("error", new { @class = "bg-danger" })
+                        </p>                                                                
+                        
+                        <button type="button" class="btn btn-primary btn-xs btn-outline">
+                            <small><i class="fa fa-weixin"></i> 微信登陆</small>
+                        </button>
 
 
                         <p class="text-muted text-center">

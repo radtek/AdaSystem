@@ -1,1 +1,28 @@
 ﻿
+@{
+    Layout = "~/Views/Shared/_Layout_Home.cshtml";
+    ViewBag.Title = "微信绑定";
+}
+<div class="middle-box text-center loginscreen  animated fadeInDown">
+    <div>
+        <div>
+            <h1 class="logo-name">VG+</h1>
+        </div>
+        <h3>绑定账户</h3>
+        @using (Html.BeginForm())
+        {
+        @Html.AntiForgeryToken()
+        <p class="bg-danger">@Html.ValidationMessage("message") </p>
+        <div class="form-group">
+            <input name="userName" type="text" class="form-control" placeholder="用户名" required="">
+        </div>
+        <div class="form-group">
+            <input name="password" type="password" class="form-control" placeholder="密码" required="">
+        </div>
+        <button type="submit" class="btn btn-primary block full-width m-b">绑定</button>
+        }
+
+
+
+    </div>
+</div>

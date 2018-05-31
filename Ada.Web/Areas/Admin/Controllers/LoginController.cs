@@ -15,8 +15,10 @@ using Ada.Core.Tools;
 using Ada.Core.ViewModel;
 using Ada.Core.ViewModel.Admin;
 using Ada.Core.ViewModel.Resource;
+using Ada.Core.ViewModel.Setting;
 using Ada.Framework.Caching;
 using Ada.Services.Admin;
+using Ada.Services.Setting;
 
 
 namespace Admin.Controllers
@@ -25,18 +27,29 @@ namespace Admin.Controllers
     {
         private readonly IManagerService _service;
         private readonly ISignals _signals;
+        private readonly ISettingService _settingService;
         public LoginController(IManagerService service,
-            ISignals signals
+            ISignals signals, ISettingService settingService
             )
         {
             _service = service;
             _signals = signals;
+            _settingService = settingService;
         }
         public ActionResult Index()
         {
             if (Session["LoginManager"] != null)
             {
                 return RedirectToAction("Index", "Home", new { area = "Dashboards" });
+            }
+
+            var isWxLogin = _settingService.GetSetting<Site>().SystemIsWeiXinLogin;
+            if (isWxLogin)
+            {
+                var guid = Guid.NewGuid().ToString("N");
+                Session["LoginOpenState"] = guid;
+                ViewBag.State = guid;
+                ViewBag.CallBack = Request.Url.Scheme + "://" + Request.Url.Authority + Url.Action("Open", "OAuth2", new { area = "WeiXin" });
             }
             return View();
         }
@@ -67,10 +80,7 @@ namespace Admin.Controllers
 
         public ActionResult Binding()
         {
-            //var guid = Guid.NewGuid().ToString("N");
-            //Session["LoginOpenState"] = guid;
-            //ViewBag.State = guid;
-            //ViewBag.CallBack = Request.Url.Scheme + "://" + Request.Url.Authority + Url.Action("Open", "OAuth2", new{area="WeiXin"});
+            
             return View();
         }
         [HttpPost]

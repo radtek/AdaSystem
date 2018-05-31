@@ -272,7 +272,13 @@ namespace Admin.Controllers
             _managerService.Delete(manager);
             return Json(new { State = 1, Msg = "删除成功" });
         }
-       
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult UnBinding(string id)
+        {
+            _managerService.UnBinding(id);
+            return Json(new { State = 1, Msg = "解绑成功" });
+        }
         public ActionResult ChangePassword()
         {
             return PartialView("ChangePassword");

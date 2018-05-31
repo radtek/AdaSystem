@@ -81,7 +81,7 @@ namespace WeiXin.Controllers
                 var weixin = QRConnectAPI.GetUserInfo(result.access_token, result.openid);
                 Session["CurrentWeiXinOpenUnionid"] = weixin.unionid;
                 //绑定页面
-                return RedirectToAction("Index", "Login", new { area = "Admin" });
+                return RedirectToAction("Binding", "Login", new { area = "Admin" });
             }
             Session["LoginManager"] = SerializeHelper.SerializeToString(manager);
             //清空登陆日志缓存

@@ -252,7 +252,7 @@ namespace Ada.Services.Admin
         public ManagerView BindingLogin(LoginModel loginModel)
         {
             loginModel.Password = Encrypt.Encode(loginModel.Password);
-            var manager= 
+            var manager =
                 _managerRepository.LoadEntities(u => u.UserName == loginModel.LoginName && u.Password == loginModel.Password && u.Status == Consts.StateNormal && u.IsDelete == false).FirstOrDefault();
 
             if (manager == null)
@@ -263,6 +263,11 @@ namespace Ada.Services.Admin
             if (manager.Roles.Count == 0)
             {
                 loginModel.Message = "未分配角色，请联系管理员";
+                return null;
+            }
+            if (!string.IsNullOrWhiteSpace(manager.UnionId))
+            {
+                loginModel.Message = "此账户已绑定了微信，无需重复绑定，如需解绑，请联系管理员！";
                 return null;
             }
             //根据角色级别排序，获取最高的那个
@@ -292,6 +297,14 @@ namespace Ada.Services.Admin
                 Roles = manager.Roles.Count > 0 ? string.Join(",", manager.Roles.Select(d => d.RoleName)) : "",
                 Organizations = manager.Organizations.Count > 0 ? String.Join("-", manager.Organizations.Select(d => d.OrganizationName)) : ""
             };
+        }
+
+        public void UnBinding(string id)
+        {
+            var manager = _managerRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            manager.UnionId = null;
+            manager.OpenId = null;
+            _dbContext.SaveChanges();
         }
         public IEnumerable<ManagerView> GetByOrganizationName(string name)
         {

@@ -15,6 +15,8 @@ namespace Ada.Core.ViewModel.Setting
         public Site()
         {
             SiteStatus = true;
+            WebIsWeiXinLogin = false;
+            SystemIsWeiXinLogin = false;
         }
         /// <summary>
         /// 网站名称
@@ -71,6 +73,16 @@ namespace Ada.Core.ViewModel.Setting
         /// </summary>
         [Display(Name = "公司邮箱")]
         public string CompanyEmail { get; set; }
-        
+        /// <summary>
+        /// 系统微信登陆
+        /// </summary>
+        [Display(Name = "系统微信登陆")]
+        public bool SystemIsWeiXinLogin { get; set; }
+        /// <summary>
+        /// 网站微信登陆
+        /// </summary>
+        [Display(Name = "网站微信登陆")]
+        public bool WebIsWeiXinLogin { get; set; }
+
     }
 }
