@@ -237,7 +237,7 @@
     @Scripts.Render("~/plugins/clipboard")
     @Scripts.Render("~/plugins/dataPicker")
     @Scripts.Render("~/plugins/dateRange")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=2018042281381")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=20180422813812")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -315,7 +315,14 @@
                         valign: "middle",
                         formatter: formatterPrice,
                         //align: "center"
-                    },
+                        },
+                        {
+                            field: 'PriceProtectionDate',
+                            title: '媒体保价',
+                            valign: "middle",
+                            formatter: formatterPriceProtection
+                            //align: "center"
+                        },
                         {
                             field: 'Content',
                             title: '媒体信息',
@@ -323,13 +330,13 @@
                             valign: "middle",
                             formatter: formatterRemark
                         },
-                    {
+                    @*{
                         field: 'MediaGroups',
                         title: '@Html.DisplayNameFor(d=>d.MediaGroups)',
                         valign: "middle",
                         formatter: formatterGroup,
                         align: "left"
-                    },
+                    },*@
                     {
                         field: 'LinkManName',
                         title: '@Html.DisplayNameFor(d=>d.LinkManName)',

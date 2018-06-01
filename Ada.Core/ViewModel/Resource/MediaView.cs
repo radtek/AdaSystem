@@ -428,6 +428,11 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "媒体ID集合")]
         public string MediaIDs { get; set; }
         /// <summary>
+        /// 抖音ID集合
+        /// </summary>
+        [Display(Name = "抖音ID集合")]
+        public string DouYinIDs { get; set; }
+        /// <summary>
         /// 客户端
         /// </summary>
         [Display(Name = "客户端")]

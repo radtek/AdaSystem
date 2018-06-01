@@ -92,7 +92,18 @@
                                             }
                                             @totalTemp
                                         </th>
-                                        <th></th>
+                                        <th>
+
+                                            @{
+                                                var totalSell = Model.Sum(d => d.TotalSellMoney);
+                                                decimal avg = 0;
+                                                if (totalSell != null && totalSell != 0 && totalTemp != null)
+                                                {
+                                                    avg = Math.Round(((decimal) totalTemp / (decimal) totalSell) * 100, 2);
+                                                }
+                                            }
+                                            @avg
+                                        </th>
                                         <th>@Model.Sum(d => d.TotalVerificationMoney)</th>
                                     </tr>
 

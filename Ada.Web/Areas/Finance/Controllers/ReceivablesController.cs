@@ -144,7 +144,7 @@ namespace Finance.Controllers
             entity.AccountName = viewModel.AccountName.Trim();
             entity.AccountNum = viewModel.AccountNum;
             entity.Money = viewModel.Money;
-            if (entity.BusinessPayees.Count >0)
+            if (entity.BusinessPayees.Count > 0)
             {
                 ModelState.AddModelError("message", "此收款单据已被领款，无法修改");
                 return View(viewModel);

@@ -434,6 +434,37 @@ formatter.mediaPrice = function (value, row) {
     arr.push("<li class='list-group-item p-xxs'><span class='badge'>" + moment(value[0].InvalidDate).format("YYYY-MM-DD") + "</span>价格有效期</li>");
     return "<ul class='list-group m-b-none'>" + arr.join('') + "</ul>";
 };
+formatter.priceProtection= function(value,row) {
+    if (value == 0 || !value) {
+        return "不保价";
+    }
+    var str = "";
+    switch (value) {
+    case 1:
+        str = "一个月";
+        break;
+    case 2:
+        str = "两个月";
+        break;
+    case 3:
+        str = "三个月";
+        break;
+    case 6:
+        str = "半年";
+        break;
+    }
+    var line = "<li class='list-group-item p-xxs'><span class='badge badge-success'>" +
+        str +
+        "</span> 保价期</li>";
+    line += "<li class='list-group-item p-xxs'><span class='badge badge-success'>" +
+        (row.PriceProtectionIsPrePay == true ? "是" : "否") +
+        "</span> 是否预付</li>";
+    line += "<li class='list-group-item p-xxs'><span class='badge badge-success'>" +
+        (row.PriceProtectionIsBrand == true ? "是" : "否") +
+        "</span> 品牌提供</li>";
+    return "<ul class='list-group'>" + line + "</ul>";
+}
+
 formatter.mediaData = function (value, row) {
 
     var read = "";
@@ -516,7 +547,7 @@ formatter.mediaData = function (value, row) {
         line = line2 + line3 + line10 + line5 + line7;
     }
     if (row.MediaTypeIndex == "douyin") {
-        line = line1 + line2 + line3 + line10 + line5;
+        line =  line2 + line3 + line10 + line5;
     }
     if (row.MediaTypeIndex == "redbook") {
         line = linedz + line3 + linesc + line8 + linezc + linebj;

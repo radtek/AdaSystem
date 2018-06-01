@@ -94,6 +94,10 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.Remark.Contains(viewModel.Remark.Trim()));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.Abstract))
+            {
+                allList = allList.Where(d => d.Abstract.Contains(viewModel.Abstract.Trim()));
+            }
             if (viewModel.HasArticles != null)
             {
                 allList = !viewModel.HasArticles.Value ? allList.Where(d => !d.MediaArticles.Any()) : allList.Where(d => d.MediaArticles.Any());
@@ -242,6 +246,12 @@ namespace Ada.Services.Resource
                 viewModel.MediaIDs = viewModel.MediaIDs.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("\t", ",").Replace("，", ",");
                 var mediaIDs = SplitStr(viewModel.MediaIDs);
                 allList = allList.Where(d => mediaIDs.Contains(d.MediaID));
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.DouYinIDs))
+            {
+                viewModel.DouYinIDs = viewModel.DouYinIDs.Trim().Replace("\r\n", ",").Replace("\n", ",").Replace("\t", ",").Replace("，", ",");
+                var mediaIDs = SplitStr(viewModel.DouYinIDs);
+                allList = allList.Where(d => mediaIDs.Contains(d.Abstract));
             }
             if (viewModel.MediaTagIds != null)
             {

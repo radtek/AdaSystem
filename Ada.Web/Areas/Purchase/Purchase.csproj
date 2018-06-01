@@ -108,6 +108,7 @@
   <ItemGroup>
     <Compile Include="Controllers\OrderDetailController.cs" />
     <Compile Include="Controllers\OrderDetailSpecController.cs" />
+    <Compile Include="Controllers\OrderReturnController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="PurchaseAreaRegistration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -137,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
+    <Folder Include="Views\OrderReturn\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Ada.Core\Ada.Core.csproj">

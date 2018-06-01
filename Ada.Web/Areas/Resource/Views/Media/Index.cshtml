@@ -281,6 +281,7 @@
                                         <th data-breakpoints="xs">媒体指数</th>
                                     }
                                     <th data-breakpoints="xs">媒体价格</th>
+                                    <th data-breakpoints="xs">媒体保价</th>
                                     <th data-breakpoints="xs">媒体组</th>
                                     <th data-breakpoints="all" data-title="媒体说明">媒体说明</th>
                                     <th data-breakpoints="all" data-title="媒体备注">媒体备注</th>
@@ -506,23 +507,55 @@
                                                 </td>
                                             }
                                         }
-                                        <td>
-                                            <ul class='list-group m-b-none'>
-                                                @foreach (var price in item.MediaPrices.Where(d=>d.IsDelete==false))
-                                                {
+                                    <td>
+                                        <ul class='list-group m-b-none'>
+                                            @foreach (var price in item.MediaPrices.Where(d=>d.IsDelete==false))
+                                            {
 
-                                                    <li class='list-group-item p-xxs'>
-                                                        <span class='badge badge-success'>成本 : <i class='fa fa-jpy'></i> @price.PurchasePrice</span>
+                                                <li class='list-group-item p-xxs'>
+                                                    <span class='badge badge-success'>成本 : <i class='fa fa-jpy'></i> @price.PurchasePrice</span>
 
-                                                        <span class='badge badge-danger'>销售 : <i class='fa fa-jpy'></i> @price.MarketPrice</span>
-                                                        <span class='badge badge-warning'>零售 : <i class='fa fa-jpy'></i> @price.SellPrice</span>
-                                                        @price.AdPositionName
-                                                    </li>
-                                                }
+                                                    <span class='badge badge-danger'>销售 : <i class='fa fa-jpy'></i> @price.MarketPrice</span>
+                                                    <span class='badge badge-warning'>零售 : <i class='fa fa-jpy'></i> @price.SellPrice</span>
+                                                    @price.AdPositionName
+                                                </li>
+                                            }
 
-                                                <li class='list-group-item p-xxs'><span class='badge'>@priceDate</span>价格有效期</li>
+                                            <li class='list-group-item p-xxs'><span class='badge'>@priceDate</span>价格有效期</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        @if (item.PriceProtectionDate ==null|| item.PriceProtectionDate == 0)
+                                        {
+                                            <span>不保价</span>
+                                        }
+                                        else
+                                        {
+                                            var isPre = item.PriceProtectionIsPrePay == true ? "是" : "否";
+                                            var isBrand = item.PriceProtectionIsBrand == true ? "是" : "否";
+                                            var str = "";
+                                            switch (item.PriceProtectionDate)
+                                            {
+                                                case 1:
+                                                    str = "一个月";
+                                                    break;
+                                                case 2:
+                                                    str = "两个月";
+                                                    break;
+                                                case 3:
+                                                    str = "三个月";
+                                                    break;
+                                                case 6:
+                                                    str = "半年";
+                                                    break;
+                                            }
+                                            <ul class='list-group'>
+                                                <li class='list-group-item p-xxs'><span class='badge badge-success'>@str</span> 保价期</li>
+                                                <li class='list-group-item p-xxs'><span class='badge badge-success'>@isPre</span> 是否预付</li>
+                                                <li class='list-group-item p-xxs'><span class='badge badge-success'>@isBrand</span> 品牌提供</li>
                                             </ul>
-                                        </td>
+                                        }
+                                    </td>
                                         <td>
                                             @foreach (var group in item.MediaGroups.Where(d=>d.GroupType==Consts.StateNormal))
                                             {

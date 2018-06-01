@@ -21,11 +21,12 @@
     }).OrderBy(d => d.Date).ToList();
     var maxRead = articles.Count>0? articles.Max(d => d.AveRead):0;
     var maxComment = articles.Count > 0 ? articles.Max(d => d.AvgComment):0;
+    var maxLike = articles.Count > 0 ? articles.Max(d => d.AvgLike) : 0;
 }
 
 <div class="row">
 
-    <div class="col-lg-2">
+    @*<div class="col-lg-2">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <h5>平均浏览数</h5>
@@ -34,7 +35,7 @@
                 <h1 class="no-margins">@Model.AvgReadNum</h1>
             </div>
         </div>
-    </div>
+    </div>*@
     <div class="col-lg-2">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
@@ -90,7 +91,7 @@
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h3>近一周视频平均浏览数，评论数 <small>更新日期：@update</small></h3>
+                <h3>近一周视频平均点赞数，评论数 <small>更新日期：@update</small></h3>
             </div>
             <div class="ibox-content">
                 <div class="row">
@@ -116,7 +117,7 @@
                         <tr>
                             <th>视频标题</th>
                             <th data-breakpoints="xs sm">视频描述</th>
-                            <th data-breakpoints="xs sm">浏览数</th>
+                            @*<th data-breakpoints="xs sm">浏览数</th>*@
                             <th data-breakpoints="xs sm">评论数</th>
                             <th data-breakpoints="xs sm">点赞数</th>
                             <th data-breakpoints="xs sm">发布日期</th>
@@ -134,7 +135,7 @@
                                 <a class='label' href='@item.ArticleUrl' target='_blank'><i class='fa fa-link'></i> @item.Title</a>
                             </td>
                             <td>@item.Content</td>
-                            <td>@item.ViewCount</td>
+                            @*<td>@item.ViewCount</td>*@
                             <td>@item.CommentCount</td>
                             <td>@item.LikeCount</td>
                             <td>@dateTime</td>
@@ -156,7 +157,7 @@
                         trigger: 'axis'
                     },
                     legend: {
-                        data:['浏览数','评论数']
+                        data: ['点赞数','评论数']
                     },
                     toolbox: {
                         show : true,
@@ -175,9 +176,9 @@
                     yAxis: [
                         {
                             type: 'value',
-                            name: '浏览数',
+                            name: '点赞数',
                             min: 0,
-                            max: @maxRead
+                            max: @maxLike
                         }, {
                             type: 'value',
                             name: '评论数',
@@ -187,9 +188,9 @@
                     ],
                     series : [
                         {
-                            name:'浏览数',
+                            name:'点赞数',
                             type:'bar',
-                            data:@Html.Raw(Json.Encode(articles.Select(d => d.AveRead)))
+                            data:@Html.Raw(Json.Encode(articles.Select(d => d.AvgLike)))
 
                         },
                         {

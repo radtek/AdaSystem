@@ -83,7 +83,7 @@
                 </div>
                 <div class="ibox-content">
                     <div class="row">
-                        @foreach (var item in Model.MediaPrices.Where(d=>d.IsDelete==false))
+                        @foreach (var item in Model.MediaPrices.Where(d=>d.IsDelete==false).OrderByDescending(d => d.AdPositionName))
                         {
                             <div class="col-lg-2">
 

@@ -518,7 +518,7 @@ namespace Ada.Web.Controllers
 
         public ActionResult DeletePrice()
         {
-           var count= _mediaPrice.Update(d => d.AdPositionName == "长笔记", u => new MediaPrice() {IsDelete = true});
+            var count = _mediaPrice.Update(d => d.AdPositionName == "长笔记", u => new MediaPrice() { IsDelete = true });
             _dbContext.SaveChanges();
             return Content("删除" + count + "条价格");
         }
@@ -562,7 +562,14 @@ namespace Ada.Web.Controllers
             var code = Utils.IsMobilePhone(id);
             return Content(code.ToString());
         }
-
+        public ActionResult MediaUpdateByDouYinPrice(string n, string c)
+        {
+            int count =
+                _mediaPrice.Update(d => d.Media.MediaType.Id == "X1804031723358488" && d.AdPositionName == n,
+                    p => new MediaPrice() { AdPositionName = c });
+            _dbContext.SaveChanges();
+            return Content("成功更换" + count + "条资源");
+        }
         public async Task<ActionResult> Http()
         {
             var content = await HttpUtility.GetAsync("http://whois.pconline.com.cn/ip.jsp");

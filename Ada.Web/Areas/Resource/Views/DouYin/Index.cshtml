@@ -55,8 +55,8 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
-                        @Html.LabelFor(d => d.MediaID, Html.DisplayNameFor(d => d.MediaID).ToString(), new { @class = "control-label" })
-                        @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control" })
+                        @Html.LabelFor(d => d.Abstract, "抖音ID", new { @class = "control-label" })
+                        @Html.TextBoxFor(d => d.Abstract, new { @class = "form-control" })
                     </div>
                 </div>
                 <div class="col-sm-2">
@@ -174,8 +174,8 @@
 
                 <div class="col-sm-6">
                     <div class="form-group">
-                        @Html.LabelFor(d => d.MediaIDs, Html.DisplayNameFor(d => d.MediaIDs).ToString(), new { @class = "control-label" })
-                        @Html.TextAreaFor(d => d.MediaIDs, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
+                        @Html.LabelFor(d => d.DouYinIDs, Html.DisplayNameFor(d => d.DouYinIDs).ToString(), new { @class = "control-label" })
+                        @Html.TextAreaFor(d => d.DouYinIDs, 4, 20, new { @class = "form-control", placeholder = "多个媒体查询，请用逗号隔开；同时支持复制粘贴的数据查询" })
                     </div>
                 </div>
 
@@ -315,7 +315,14 @@
                         valign: "middle",
                         formatter: formatterPrice,
                         //align: "center"
-                    },
+                        },
+                        {
+                            field: 'PriceProtectionDate',
+                            title: '媒体保价',
+                            valign: "middle",
+                            formatter: formatterPriceProtection
+                            //align: "center"
+                        },
                         {
                             field: 'Content',
                             title: '媒体信息',
@@ -323,13 +330,13 @@
                             valign: "middle",
                             formatter: formatterRemark
                         },
-                    {
+                    @*{
                         field: 'MediaGroups',
                         title: '@Html.DisplayNameFor(d=>d.MediaGroups)',
                         valign: "middle",
                         formatter: formatterGroup,
                         align: "left"
-                    },
+                    },*@
                     {
                         field: 'LinkManName',
                         title: '@Html.DisplayNameFor(d=>d.LinkManName)',

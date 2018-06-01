@@ -16,7 +16,7 @@
 
         </div>
         <h3>欢迎来到微广+</h3>
-        @if (isWxLogin)
+        @if (!isWxLogin)
             {
                 <div id="login_container"></div>
                 <script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>

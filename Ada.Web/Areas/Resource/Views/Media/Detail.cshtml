@@ -45,13 +45,13 @@
                 <div class="">
                     <div>
                         <h2 class="no-margins">
-                            @Model.MediaName 
+                            @Model.MediaName
                             @if (Model.MediaType.CallIndex == "weixin")
                             {
                                 <small> <i class='fa fa-weixin'></i> @Model.MediaID</small>
                             }
                         </h2>
-                        
+
                         <h4>@Model.Abstract</h4>
                         <small>
                             @Model.Content
@@ -126,7 +126,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.MediaPrices.Where(d=>d.IsDelete==false))
+                                @foreach (var item in Model.MediaPrices.Where(d => d.IsDelete == false).OrderByDescending(d => d.AdPositionName))
                                 {
                                     <tr>
                                         <td>@item.AdPositionName</td>
@@ -162,6 +162,24 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        @foreach (var item in Model.MediaPrices.Where(d => d.IsDelete == false).OrderByDescending(d => d.AdPositionName))
+        {
+            <div class="col-lg-3">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <h5>价格走势</h5>
+                        <h2>@item.AdPositionName</h2>
+                        <div id="@item.Id"></div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+
+
     @if (Model.MediaArticles.Any())
     {
         if (Model.MediaType.CallIndex == "weixin")
@@ -326,6 +344,7 @@
     @Scripts.Render("~/plugins/footableV3")
     @Scripts.Render("~/plugins/echarts")
     @Scripts.Render("~/plugins/tagcanvasScript")
+    @Scripts.Render("~/plugins/sparkline")
     <script>
         @if (Model.MediaArticles.Any())
         {
@@ -374,6 +393,23 @@
                 }
             </text>
         }
+
+
+                $(function () {
+                    @foreach (var item in Model.MediaPrices.Where(d => d.IsDelete == false).OrderByDescending(d => d.AdPositionName))
+                    {
+                        var arr = item.MediaPriceChanges.OrderBy(d => d.ChangeDate).Take(8).Select(d => d.PurchasePrice);
+                        <text>
+                            $("#@item.Id").sparkline(@Html.Raw(Json.Encode(arr.ToList())), {
+                                type: 'line',
+                                width: '100%',
+                                height: '60',
+                                lineColor: '#1ab394',
+                                fillColor: "#ffffff"
+                            });
+                        </text>
+                    }
+                });
 
     </script>
 }
