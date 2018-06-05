@@ -116,9 +116,11 @@
     <Compile Include="Finance\IncomeExpendService.cs" />
     <Compile Include="Finance\SettleAccountService.cs" />
     <Compile Include="Purchase\IPurchasePaymentDetailService.cs" />
+    <Compile Include="Purchase\IPurchaseReturnOrderService.cs" />
     <Compile Include="Purchase\IPurchasePaymentService.cs" />
     <Compile Include="Purchase\IPurchaseOrderDetailService.cs" />
     <Compile Include="Purchase\PurchasePaymentDetailService.cs" />
+    <Compile Include="Purchase\PurchaseReturnOrderService.cs" />
     <Compile Include="Purchase\PurchasePaymentService.cs" />
     <Compile Include="Purchase\PurchaseOrderDetailService.cs" />
     <Compile Include="Purchase\PurchaseOrderService.cs" />

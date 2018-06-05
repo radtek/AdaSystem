@@ -82,9 +82,9 @@ namespace Resource.Controllers
 
                     var openids = _managerService.GetByOrganizationName("编辑部")
                         .Where(d => !string.IsNullOrWhiteSpace(d.OpenId)).Select(d => d.OpenId).ToList();
-                    //var openids = _managerService.GetByOrganizationName("技术部")
-                    //    .Where(d => !string.IsNullOrWhiteSpace(d.OpenId)).Select(d => d.OpenId).ToList();
-                    //openids.AddRange(jsbOpenIds);
+                    var ywbopenids = _managerService.GetByOrganizationName("业务部")
+                        .Where(d => !string.IsNullOrWhiteSpace(d.OpenId)).Select(d => d.OpenId).ToList();
+                    openids.AddRange(ywbopenids);
                     if (openids.Any())
                     {
                         StringBuilder sb = new StringBuilder();
@@ -92,7 +92,7 @@ namespace Resource.Controllers
                         sb.AppendLine("预约人员：" + CurrentManager.UserName);
                         var dic = new Dictionary<string, object>
                         {
-                            {"Title", "自运营号有新的预约申请，请及时关注。\r\n"},
+                            {"Title", "自运营号有新的预约申请，请关注。\r\n"},
                             {"AppId", "wxcd1a304c25e0ea53"},
                             {"TemplateId", "dMmnd8bv_GcFIH5SnMByO80r-bcJQRPMWduHpYpd1nU"},
                             {"TemplateName", "预约成功通知"},

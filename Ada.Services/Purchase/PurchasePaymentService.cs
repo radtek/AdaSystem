@@ -39,6 +39,10 @@ namespace Ada.Services.Purchase
             {
                 allList = allList.Where(d => d.LinkManName.Contains(viewModel.search));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.BankAccount))
+            {
+                allList = allList.Where(d => d.PurchasePaymentDetails.Any(p=>p.AccountName.Contains(viewModel.BankAccount)));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.Transactor))
             {
                 allList = allList.Where(d => d.Transactor.Contains(viewModel.Transactor));

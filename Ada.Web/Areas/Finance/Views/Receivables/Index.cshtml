@@ -134,6 +134,7 @@
                 mobileResponsive: true,
                 queryParams: function (parameters) {
                     parameters.Status = $("#Status").val();
+                    parameters.ReceivablesType = 'S';
                     return searchFrm.queryParams(parameters);
                 },
                 columns: [

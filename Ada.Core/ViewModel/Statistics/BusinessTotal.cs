@@ -125,5 +125,10 @@ namespace Ada.Core.ViewModel.Statistics
         /// </summary>
         [Display(Name = "月份")]
         public string Month { get; set; }
+        /// <summary>
+        /// 媒体类型
+        /// </summary>
+        [Display(Name = "媒体类型")]
+        public string MediaTypeName { get; set; }
     }
 }

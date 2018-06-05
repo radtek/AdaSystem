@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity.SqlServer;
 using System.IO;
 using System.Linq;
@@ -14,8 +15,12 @@ using Ada.Core.Domain.Purchase;
 using Ada.Core.Domain.Resource;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel.API.iDataAPI;
+using Ada.Core.ViewModel.Business;
+using Ada.Services.Business;
 using Ada.Services.Cache;
+using ClosedXML.Excel;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -31,7 +36,8 @@ namespace Ada.Web.Controllers
         private readonly IRepository<MediaType> _mediaType;
         private readonly IRepository<PurchaseOrderDetail> _ptemp;
         private readonly IDbContext _dbContext;
-        private readonly ICacheService _cacheService;
+        private readonly ICacheService _cacheService;//IBusinessOrderDetailService
+        private readonly IBusinessOrderDetailService _businessOrderDetailService;
 
         public TestController(
             IDbContext dbContext,
@@ -44,7 +50,8 @@ namespace Ada.Web.Controllers
             IRepository<MediaType> mediaType,
             IRepository<Field> fieldRepository,
             ICacheService cacheService,
-            IRepository<MediaArticle> mediaArticleRepository)
+            IRepository<MediaArticle> mediaArticleRepository,
+            IBusinessOrderDetailService businessOrderDetailService)
         {
             _dbContext = dbContext;
             _ptemp = ptemp;
@@ -55,6 +62,7 @@ namespace Ada.Web.Controllers
             _fieldRepository = fieldRepository;
             _cacheService = cacheService;
             _mediaArticleRepository = mediaArticleRepository;
+            _businessOrderDetailService = businessOrderDetailService;
         }
 
         public ActionResult CheckOrder()
@@ -386,20 +394,14 @@ namespace Ada.Web.Controllers
                     return Content("此文件没有导入数据，请填充数据再进行导入");
                 }
 
-                var username = "吴璇";
-                var userId = "X1801180851430024";
                 for (int i = 1; i <= sheet.LastRowNum; i++)
                 {
                     IRow row = sheet.GetRow(i);
                     var mediaId = row.GetCell(0)?.ToString();
                     var media = _media.LoadEntities(d => d.Id == mediaId.Trim()).FirstOrDefault();
                     if (media == null) continue;
-                    media.Transactor = username;
-                    media.TransactorId = userId;
-                    media.LinkMan.Transactor = username;
-                    media.LinkMan.TransactorId = userId;
-                    media.LinkMan.Commpany.Transactor = username;
-                    media.LinkMan.Commpany.TransactorId = userId;
+                    media.LinkManId = "X1805171355140059";
+                    
                     count++;
                 }
 
@@ -539,11 +541,11 @@ namespace Ada.Web.Controllers
 
             return Content(result);
         }
-        public ActionResult Order()
+        public ActionResult OrderChangeLinkman(string l,string c)
         {
             int count =
-            _ptemp.Update(d => d.LinkManName == "新芳" && !d.PurchasePaymentOrderDetails.Any() && d.LinkManId == "X1801151342500244",
-                p => new PurchaseOrderDetail() { LinkManId = "X1801081415310947" });
+            _ptemp.Update(d => !d.PurchasePaymentOrderDetails.Any() && d.LinkManId == l,
+                p => new PurchaseOrderDetail() { LinkManId = c });
             _dbContext.SaveChanges();
             return Content("成功更换" + count + "条资源");
         }
@@ -555,12 +557,52 @@ namespace Ada.Web.Controllers
             _dbContext.SaveChanges();
             return Content("成功更换" + count + "条资源");
         }
-        public ActionResult Tool(string id)
+        public ActionResult Tool()
         {
-            // RandomHelper random = new RandomHelper();
-            var request = Request.Url.Scheme + "://" + Request.Url.Authority;
-            var code = Utils.IsMobilePhone(id);
-            return Content(code.ToString());
+            //var result=  _businessOrderDetailService.BusinessPerformanceGroupByMediaType(new BusinessOrderDetailView()
+            //  {
+            //      PublishDateStart=new DateTime(2018,5,1),
+            //      PublishDateEnd = new DateTime(2018,5,31)
+            //  });
+            //  return Json(result.ToList(),JsonRequestBehavior.AllowGet);
+            //var medias = _media.Update(d => d.IsDelete == false && d.LinkMan.IsDelete,d=>new Media(){IsDelete = true});
+            //_dbContext.SaveChanges();
+            var medias = _media.LoadEntities(d => d.IsDelete == false & d.TransactorId != d.LinkMan.TransactorId).ToList();
+
+            //var medias = _media.Update(d => d.IsDelete == false && d.TransactorId != d.LinkMan.TransactorId, d => new Media() { IsDelete = true });
+            //_dbContext.SaveChanges();
+            return Json(medias.Select(d=>new {d.Id,d.MediaType.TypeName,d.MediaName,d.MediaID}),JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Export()
+        {
+            var medias = _media.LoadEntities(d => d.IsDelete == false & d.TransactorId != d.LinkMan.TransactorId).ToList();
+            JArray jObjects = new JArray();
+            foreach (var media in medias)
+            {
+                var jo = new JObject();
+                jo.Add("Id", media.Id);
+                jo.Add("媒体类型", media.MediaType.TypeName);
+                jo.Add("媒体名称", media.MediaName);
+                jo.Add("媒体ID", media.MediaID);
+                jo.Add("归属媒介", media.Transactor);
+                jo.Add("结算人", media.LinkMan.Name);
+                jo.Add("结算人归属", media.LinkMan.Transactor);
+                jObjects.Add(jo);
+            }
+            var dt = JsonConvert.DeserializeObject<DataTable>(jObjects.ToString());
+            byte[] bytes;
+            using (var workbook = new XLWorkbook())
+            {
+                workbook.Worksheets.Add(dt, "媒体异常数据");
+                using (var ms = new MemoryStream())
+                {
+                    workbook.SaveAs(ms);
+                    bytes = ms.ToArray();
+                }
+            }
+            return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "媒体异常数据.xlsx");
+
         }
         public ActionResult MediaUpdateByDouYinPrice(string n, string c)
         {

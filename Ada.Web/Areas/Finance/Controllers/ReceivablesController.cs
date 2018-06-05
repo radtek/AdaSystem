@@ -52,7 +52,6 @@ namespace Finance.Controllers
                     SettleAccountName = d.SettleAccount.SettleName,
                     BillNum = d.BillNum,
                     BillDate = d.BillDate
-
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -61,6 +60,7 @@ namespace Finance.Controllers
             ReceivablesView viewModel = new ReceivablesView();
             viewModel.BillDate = DateTime.Now;
             viewModel.Money = 0;
+            viewModel.ReceivablesType = "S";
             return View(viewModel);
         }
         [HttpPost]
@@ -97,6 +97,7 @@ namespace Finance.Controllers
             entity.BillNum = IdBuilder.CreateOrderNum("SK");
             entity.BillDate = viewModel.BillDate;
             entity.Remark = viewModel.Remark;
+            entity.ReceivablesType = viewModel.ReceivablesType;//收款类型
             _receivablesService.Add(entity);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
@@ -120,6 +121,7 @@ namespace Finance.Controllers
             viewModel.BillNum = entity.BillNum;
             viewModel.BillDate = entity.BillDate;
             viewModel.Remark = entity.Remark;
+            viewModel.ReceivablesType = entity.ReceivablesType;
             if (entity.BusinessPayees.Count > 0)
             {
                 viewModel.BusinessPayees = entity.BusinessPayees.Select(d => new BusinessPayeeView { Transactor = d.Transactor, ClaimDate = d.ClaimDate, Money = d.Money }).ToList();
@@ -162,6 +164,7 @@ namespace Finance.Controllers
             entity.SettleType = viewModel.SettleType;
             entity.BillDate = viewModel.BillDate;
             entity.Remark = viewModel.Remark;
+            entity.ReceivablesType = viewModel.ReceivablesType;
             _receivablesService.Update(entity);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");

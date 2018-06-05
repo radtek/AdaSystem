@@ -112,6 +112,16 @@ namespace Ada.Core.Domain.Customer
         /// </summary>
         [Display(Name = "是否锁定")]
         public bool? IsLock { get; set; }
+        ///// <summary>
+        ///// 是否验证
+        ///// </summary>
+        //[Display(Name = "是否验证")]
+        //public bool? IsValidate { get; set; }
+        ///// <summary>
+        ///// 白名单
+        ///// </summary>
+        //[Display(Name = "白名单")]
+        //public string IpList { get; set; }
         /// <summary>
         /// 公司名称
         /// </summary>

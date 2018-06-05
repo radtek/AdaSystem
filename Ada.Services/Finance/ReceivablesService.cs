@@ -58,6 +58,10 @@ namespace Ada.Services.Finance
             {
                 allList = allList.Where(d => d.SettleAccount.SettleName.Contains(viewModel.SettleAccountName));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.ReceivablesType))
+            {
+                allList = allList.Where(d => d.ReceivablesType==viewModel.ReceivablesType);
+            }
             if (viewModel.Status != null)
             {
                 allList = viewModel.Status.Value ? allList.Where(d => d.BalanceMoney == 0) : allList.Where(d => d.BalanceMoney <= d.Money && d.BalanceMoney > 0);

@@ -400,7 +400,12 @@ formatter.mediaInfo = function (value, row) {
         var arr = [];
         $.each(row.MediaTags,
             function (k, v) {
-                arr.push("<span class='btn btn-success btn-xs btn-outline'><i class='fa fa-tag'></i> " + v.TagName + "</span>");
+                if (((k+1)%3)==0) {
+                    arr.push("<span class='btn btn-success btn-xs btn-outline'><i class='fa fa-tag'></i> " + v.TagName + "</span><br />");
+                } else {
+                    arr.push("<span class='btn btn-success btn-xs btn-outline'><i class='fa fa-tag'></i> " + v.TagName + "</span>");
+                }
+                
             });
         tags = arr.join(' ');
     }
