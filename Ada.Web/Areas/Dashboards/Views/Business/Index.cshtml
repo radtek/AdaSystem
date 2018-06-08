@@ -112,19 +112,23 @@
 
                                 </li>
                                 <li>
-                                    <h3 class="no-margins"><i class="fa fa-jpy "></i> @Model.SellMoney</h3>
-                                    <small>销售总额（不含税）</small>
+                                    <a class="btn btn-link" href="javascript:;">
+                                        <h3 class="no-margins "><i class="fa fa-jpy "></i> @Model.SellMoney</h3>
+                                        <small>销售总额（不含税）</small>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="btn btn-link" href="@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport",Status=Consts.StateOK, VerificationStatus = Consts.StateLock,PublishDateOrder="asc"})" target="_blank">
+                                        <h3 class="no-margins "><i class="fa fa-jpy "></i> @Model.VerificationMoney</h3>
+                                        <small>未核销金额</small>
+                                    </a>
 
                                 </li>
                                 <li>
-                                    <h3 class="no-margins "><i class="fa fa-jpy "></i> @Model.VerificationMoney</h3>
-                                    <small>未核销金额</small>
-
-                                </li>
-                                <li>
-                                    <h3 class="no-margins "><i class="fa fa-jpy "></i> @Model.ConfirmVerificationMoney</h3>
-                                    <small>已核销金额</small>
-
+                                    <a class="btn btn-link" href="@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", VerificationStatus = Consts.StateNormal})" target="_blank">
+                                        <h3 class="no-margins "><i class="fa fa-jpy "></i> @Model.ConfirmVerificationMoney</h3>
+                                        <small>已核销金额</small>
+                                    </a>
                                 </li>
                             </ul>
                         </div>

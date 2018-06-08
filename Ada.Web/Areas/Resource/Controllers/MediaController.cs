@@ -423,6 +423,7 @@ namespace Resource.Controllers
                     PriceProtectionIsPrePay = d.PriceProtectionIsPrePay,
                     PriceProtectionRemark = d.PriceProtectionRemark,
                     PriceProtectionIsBrand = d.PriceProtectionIsBrand,
+                    RetentionTime = d.RetentionTime,
                     MediaGroups = d.MediaGroups.Where(m => m.GroupType == Consts.StateNormal).Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
                     MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).ToList(),
                     MediaPrices = d.MediaPrices.Where(p => p.IsDelete == false).Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = p.PurchasePrice }).OrderByDescending(p=>p.AdPositionName).ToList()
@@ -616,7 +617,7 @@ namespace Resource.Controllers
                         {
                             //找到最近更新的对比
                             var change = mediaPrice.MediaPriceChanges.OrderByDescending(d => d.AddedDate).FirstOrDefault();
-                            if (change != null && change.PurchasePrice != mediaPrice.PurchasePrice)
+                            if (change != null && change.ChangeDate?.Date != mediaPrice.InvalidDate?.Date)
                             {
                                 mediaPrice.MediaPriceChanges.Add(new MediaPriceChange()
                                 {
@@ -885,7 +886,7 @@ namespace Resource.Controllers
             entity.PriceProtectionIsBrand = viewModel.PriceProtectionIsBrand;
             entity.PriceProtectionIsPrePay = viewModel.PriceProtectionIsPrePay;
             entity.PriceProtectionRemark = viewModel.PriceProtectionRemark;
-
+            entity.RetentionTime = viewModel.RetentionTime;
 
             entity.Content = viewModel.Content;
             entity.Remark = viewModel.Remark;
@@ -988,7 +989,7 @@ namespace Resource.Controllers
             entity.PriceProtectionIsBrand = item.PriceProtectionIsBrand;
             entity.PriceProtectionIsPrePay = item.PriceProtectionIsPrePay;
             entity.PriceProtectionRemark = item.PriceProtectionRemark;
-
+            entity.RetentionTime = item.RetentionTime;
             entity.Content = item.Content;
             entity.Remark = item.Remark;
             entity.Status = item.Status;
@@ -1070,6 +1071,7 @@ namespace Resource.Controllers
             entity.PriceProtectionIsBrand = viewModel.PriceProtectionIsBrand;
             entity.PriceProtectionIsPrePay = viewModel.PriceProtectionIsPrePay;
             entity.PriceProtectionRemark = viewModel.PriceProtectionRemark;
+            entity.RetentionTime = viewModel.RetentionTime;
             //联系人
             entity.LinkManId = viewModel.LinkManId;
             //标签
@@ -1134,7 +1136,7 @@ namespace Resource.Controllers
                     {
                         //找到最近更新的对比
                         var change = price.MediaPriceChanges.OrderByDescending(d => d.AddedDate).FirstOrDefault();
-                        if (change != null && change.PurchasePrice != price.PurchasePrice)
+                        if (change != null && change.ChangeDate?.Date != price.InvalidDate?.Date)
                         {
                             price.MediaPriceChanges.Add(new MediaPriceChange()
                             {

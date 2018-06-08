@@ -184,20 +184,15 @@
                     return "@Html.DisplayNameFor(d => d.MediaName)";
                 },
                 mobileResponsive: true,
-                queryParams: searchFrm.queryParams,
-                //rowStyle: function (row, index) {
-                //    if (row.PurchaseStatus == 3 && row.PurchaseMoney==0) {
-                //        return {
-                //            classes: "warning"
-                //        };
-                //    }
-                //    if (row.PurchaseStatus == 3 && row.PurchaseMoney >= row.Money) {
-                //        return {
-                //            classes: "danger"
-                //        };
-                //    }
-                //    return {};
-                //},
+                    queryParams: function (parameters) {
+                        @if (!string.IsNullOrWhiteSpace(Model.PublishDateOrder)){
+                            <text>
+                            parameters.PublishDateOrder = '@Model.PublishDateOrder';
+                            </text>
+                        }
+                        return searchFrm.queryParams(parameters);
+                    },
+                
                 columns: [
                     @*{
                         field: 'OrderDate',

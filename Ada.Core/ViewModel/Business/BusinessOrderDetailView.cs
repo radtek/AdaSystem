@@ -271,6 +271,11 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "是否评论")]
         public bool? IsComment { get; set; }
+        /// <summary>
+        /// 出刊日期排序
+        /// </summary>
+        [Display(Name = "出刊日期排序")]
+        public string PublishDateOrder { get; set; }
 
     }
 }

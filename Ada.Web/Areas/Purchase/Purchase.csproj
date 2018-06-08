@@ -109,6 +109,7 @@
   <ItemGroup>
     <Content Include="Scripts\order.js" />
     <Content Include="Scripts\payment.js" />
+    <Content Include="Scripts\return.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +137,9 @@
     <Content Include="Views\OrderDetail\EditOrder.cshtml" />
     <Content Include="Views\OrderDetailSpec\Index.cshtml" />
     <Content Include="Views\OrderReturn\Index.cshtml" />
+    <Content Include="Views\OrderReturn\Add.cshtml" />
+    <Content Include="Views\OrderReturn\ReturnEdit.cshtml" />
+    <Content Include="Views\OrderReturn\Details.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

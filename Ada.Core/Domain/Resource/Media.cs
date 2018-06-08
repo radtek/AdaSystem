@@ -259,11 +259,11 @@ namespace Ada.Core.Domain.Resource
         /// </summary>
         [Display(Name = "保价备注")]
         public string PriceProtectionRemark { get; set; }
-        ///// <summary>
-        ///// 保留时长
-        ///// </summary>
-        //[Display(Name = "保留时长")]
-        //public string RetentionTime { get; set; }
+        /// <summary>
+        /// 保留时长
+        /// </summary>
+        [Display(Name = "保留时长")]
+        public string RetentionTime { get; set; }
         /// <summary>
         /// 媒体类型
         /// </summary>

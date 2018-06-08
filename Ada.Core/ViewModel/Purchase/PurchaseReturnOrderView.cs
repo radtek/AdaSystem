@@ -89,5 +89,10 @@ namespace Ada.Core.ViewModel.Purchase
         /// </summary>
         [Display(Name = "供应商")]
         public string LinkManId { get; set; }
+        /// <summary>
+        /// 订单明细
+        /// </summary>
+        [Display(Name = "订单明细")]
+        public string OrderDetails { get; set; }
     }
 }

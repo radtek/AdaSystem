@@ -16,7 +16,7 @@ namespace Ada.Data.Mapping.Purchase
             //配置主键
             HasKey(s => s.Id);
             //配置字段
-            Property(s => s.PurchaseOrderId).IsRequired().HasMaxLength(32);
+            Property(s => s.PurchaseOrderId).HasMaxLength(32);
             Property(s => s.ReturnOrderNum).HasMaxLength(32);
             Property(s => s.TotalMoney).IsRequired();
             Property(s => s.Status);

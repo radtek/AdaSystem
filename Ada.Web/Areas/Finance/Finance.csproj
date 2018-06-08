@@ -114,6 +114,7 @@
     <Compile Include="Controllers\InvoiceController.cs" />
     <Compile Include="Controllers\PurchaseInvoiceController.cs" />
     <Compile Include="Controllers\PurchasePayController.cs" />
+    <Compile Include="Controllers\PurchaseReturnController.cs" />
     <Compile Include="Controllers\ReceivablesController.cs" />
     <Compile Include="FinanceAreaRegistration.cs" />
     <Compile Include="Controllers\SettleAccountController.cs" />
@@ -134,7 +135,7 @@
     <Content Include="Views\Receivables\Index.cshtml" />
     <Content Include="Views\Receivables\Add.cshtml" />
     <Content Include="Views\Receivables\Update.cshtml" />
-    <Content Include="Views\Receivables\ReceivablesEdit.cshtml" />
+    <Content Include="Views\Shared\ReceivablesEdit.cshtml" />
     <Content Include="Views\BusinessPay\Index.cshtml" />
     <Content Include="Views\BusinessPay\Pay.cshtml" />
     <Content Include="Views\BillPayment\Index.cshtml" />
@@ -153,6 +154,8 @@
     <Content Include="Views\Invoice\Update.cshtml" />
     <Content Include="Views\PurchaseInvoice\Index.cshtml" />
     <Content Include="Views\PurchaseInvoice\Update.cshtml" />
+    <Content Include="Views\PurchaseReturn\Index.cshtml" />
+    <Content Include="Views\PurchaseReturn\AddReceivable.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

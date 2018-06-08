@@ -20,14 +20,14 @@
             <form id="searchFrm" onSubmit="javascript:searchFrm.search(this,event);">
                 <div class="row">
 
-                    
+
                     <div class="col-sm-3">
                         <div class="form-group">
                             @Html.LabelFor(d => d.Transactor, Html.DisplayNameFor(d => d.Transactor) + "：", new { @class = "control-label" })
                             @Html.TextBoxFor(d => d.Transactor, new { @class = "form-control" })
                         </div>
                     </div>
-                    
+
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="row">
@@ -53,9 +53,15 @@
     </div>
 </div>
 <div id="toolbar" class="btn-group">
-    <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
-        <i class="fa fa-plus"></i> 申请退款
-    </a>
+    <div class="form-inline" role="form">
+        <div class="form-group">
+            <select name="AuditStatus" class="form-control" id="AuditStatus">
+                <option value="0">待审批</option>
+                <option value="1">已审批</option>
+            </select>
+        </div>
+    </div>
+
 </div>
 
 @section Styles {
@@ -68,13 +74,16 @@
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
+            $("#AuditStatus").change(function () {
+                $('#table').bootstrapTable('refresh');
+            });
         });
         var TableInit = function() {
             var obj = new Object();
             obj.Init = function() {
                 $('#table').bootstrapTable({
                 classes: "table table-no-bordered",
-                url: '@Url.Action("GetList")',         //请求后台的URL（*）BalanceMoneyMin
+                url: '@Url.Action("GetList", "OrderReturn",new{area= "Purchase" })',         //请求后台的URL（*）BalanceMoneyMin
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
@@ -97,19 +106,15 @@
                 cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
                 //detailView: true,                   //设置为 true 可以显示详细页面模式。
                 //detailFormatter: detailFormatter,
-                queryParams: searchFrm.queryParams,
+                    queryParams: function (parameters) {
+                        parameters.AuditStatus = $("#AuditStatus").val();
+                    return searchFrm.queryParams(parameters);
+                },
                 formatSearch: function() {
                     return "@Html.DisplayNameFor(d => d.LinkManName)";
                 },
                 mobileResponsive:true,
-                    columns: [
-                        {
-                            field: 'Status',
-                            title: '@Html.DisplayNameFor(d=>d.Status)',
-                            align: "center", valign: "middle",formatter: function(value) {
-                                return value == 1 ? "已收款" : "待收款";
-                            }
-                        },
+                columns: [
                     {
                         field: 'ReturnOrderNum',
                         title: '@Html.DisplayNameFor(d=>d.ReturnOrderNum)',
@@ -143,7 +148,10 @@
                         title: '操作',
                         align: "center", valign: "middle",
                         formatter: function (value,row) {
-                            return "<a class='btn btn-white btn-sm' href='javascript:;' onclick=\"initDetails('" + value + "');\");'><i class='fa fa-search'></i> 明细</a> ";
+                            return "<a class='btn btn-white btn-sm' href='@Url.Action("Audit")/" +
+                                value +
+                                "'><i class='fa fa-gavel'></i> 审批</a> " +
+                                "<button class='btn btn-danger btn-sm' onclick=\"cancle('" + value + "');\"><i class='fa fa-reply'></i> 撤销</button>";
                         }
 
                     }
@@ -154,16 +162,55 @@
             return obj;
         };
 
-        function initDetails(id) {
-            $("#modalView").load("@Url.Action("Details")?id="+id,
-                    function () {
-                        $('#modalView .modal').modal('show');
-                    });
+        //撤销
+        function cancle(id) {
+            swal({
+                title: "您确定吗?",
+                text: "确认要撤销此退款吗?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true
+            }, function () {
+                $.ajax({
+                    type: "post",
+                    headers: {
+                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                    },
+                    url: "@Url.Action("Delete", "OrderReturn", new { area = "Purchase" })",
+                    data: { "id": id },
+                    success: function (data) {
+                        if (data.State == 1) {
+                            $("#table").bootstrapTable('refresh');
+                            swal({
+                                title: "操作成功",
+                                text: data.Msg,
+                                timer: 2000,
+                                type:"success",
+                                showConfirmButton: false
+                            });
 
+                        } else {
+                            swal("操作提醒", data.Msg, "warning");
+                        }
+                    },
+                    error: function () {
+                        swal("操作失败", "系统错误", "error");
+                    },
+                    complete: function () {
+
+                    }
+                });
+            });
         }
-       
+
     </script>
 }
+
+
 
 
 

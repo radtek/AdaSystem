@@ -98,6 +98,7 @@ namespace Finance.Controllers
             entity.BillDate = viewModel.BillDate;
             entity.Remark = viewModel.Remark;
             entity.ReceivablesType = viewModel.ReceivablesType;//收款类型
+            entity.RelationshipNum = viewModel.RelationshipNum;//关联单据
             _receivablesService.Add(entity);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
@@ -122,6 +123,7 @@ namespace Finance.Controllers
             viewModel.BillDate = entity.BillDate;
             viewModel.Remark = entity.Remark;
             viewModel.ReceivablesType = entity.ReceivablesType;
+            viewModel.RelationshipNum = entity.RelationshipNum;
             if (entity.BusinessPayees.Count > 0)
             {
                 viewModel.BusinessPayees = entity.BusinessPayees.Select(d => new BusinessPayeeView { Transactor = d.Transactor, ClaimDate = d.ClaimDate, Money = d.Money }).ToList();
@@ -165,6 +167,7 @@ namespace Finance.Controllers
             entity.BillDate = viewModel.BillDate;
             entity.Remark = viewModel.Remark;
             entity.ReceivablesType = viewModel.ReceivablesType;
+            entity.RelationshipNum = viewModel.RelationshipNum;
             _receivablesService.Update(entity);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");

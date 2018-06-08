@@ -110,6 +110,7 @@
     <Compile Include="Controllers\PayAccountController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\PurchasePaymentController.cs" />
+    <Compile Include="Controllers\PurchaseReturnController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +128,8 @@
     <Content Include="Views\PayAccount\Index.cshtml" />
     <Content Include="Views\PayAccount\Audit.cshtml" />
     <Content Include="Views\BusinessPrice\Index.cshtml" />
+    <Content Include="Views\PurchaseReturn\Index.cshtml" />
+    <Content Include="Views\PurchaseReturn\Audit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

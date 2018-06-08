@@ -167,6 +167,25 @@ namespace Ada.Services.Business
                                             select p).Sum(d => d.PurchaseMoney);
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
+            if (!string.IsNullOrWhiteSpace(viewModel.PublishDateOrder))
+            {
+                if (viewModel.PublishDateOrder.Trim().ToLower()=="asc")
+                {
+                   return (from b in allList
+                        from p in purchaseOrderDetails
+                        where b.Id == p.BusinessOrderDetailId
+                        orderby p.PublishDate
+                        select b).Skip(offset).Take(rows);
+                }
+                if (viewModel.PublishDateOrder.Trim().ToLower() == "desc")
+                {
+                    return (from b in allList
+                        from p in purchaseOrderDetails
+                        where b.Id == p.BusinessOrderDetailId
+                        orderby p.PublishDate descending 
+                        select b).Skip(offset).Take(rows);
+                }
+            }
             string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
             if (order == "desc")
             {
@@ -175,85 +194,7 @@ namespace Ada.Services.Business
             return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
         }
 
-
-        ///// <summary>
-        ///// 根据人员集合获取订单明细统计数
-        ///// </summary>
-        ///// <param name="managers"></param>
-        ///// <returns></returns>
-        //public List<BusinessOrderDetailView> BusinessPerformance(List<ManagerView> managers, BusinessOrderDetailView viewModel)
-        //{
-        //    List<BusinessOrderDetailView> list = new List<BusinessOrderDetailView>();
-        //    foreach (var manager in managers)
-        //    {
-        //        var item = BusinessPerformance(manager.Id, viewModel);
-        //        item.Transactor = manager.UserName;
-        //        list.Add(item);
-        //    }
-        //    return list;
-        //}
-        ///// <summary>
-        ///// 根据个人已完成的订单明细统计数
-        ///// </summary>
-        ///// <param name="transactorId"></param>
-        ///// <returns></returns>
-        //public BusinessOrderDetailView BusinessPerformance(string transactorId, BusinessOrderDetailView viewModel)
-        //{
-        //    var orders = GetBusinessOrderDetails(viewModel);
-        //    BusinessOrderDetailView item = new BusinessOrderDetailView
-        //    {
-        //        TransactorId = transactorId,
-        //        TotalSellMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.SellMoney),
-        //        TotalVerificationMoney =
-        //            orders.Where(d => d.TransactorId == transactorId).Sum(d => d.VerificationMoney),
-        //        TotalConfirmVerificationMoney =
-        //            orders.Where(d => d.TransactorId == transactorId).Sum(d => d.ConfirmVerificationMoney),
-        //        TotalPurchaseMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.PurchaseMoney),
-        //        TotalProfitMoney = orders.Where(d => d.TransactorId == transactorId).Sum(d => d.ProfitMoney)
-        //    };
-        //    if (item.TotalSellMoney == null || item.TotalSellMoney == 0)
-        //    {
-        //        item.Profit = 0;
-        //    }
-        //    else
-        //    {
-        //        item.Profit = item.TotalProfitMoney / item.TotalSellMoney * 100;
-        //    }
-
-        //    return item;
-        //}
-        ///// <summary>
-        ///// 所有数据订单明细数据
-        ///// </summary>
-        ///// <param name="viewModel"></param>
-        ///// <returns></returns>
-        //public IQueryable<BusinessOrderDetailView> BusinessPerformance(BusinessOrderDetailView viewModel)
-        //{
-        //    var orders = GetBusinessOrderDetails(viewModel);
-        //    //BusinessOrderDetailView item = new BusinessOrderDetailView
-        //    //{
-        //    //    TotalSellMoney = orders.Sum(d => d.SellMoney),
-        //    //    TotalVerificationMoney =
-        //    //        orders.Sum(d => d.VerificationMoney),
-        //    //    TotalConfirmVerificationMoney =
-        //    //        orders.Sum(d => d.ConfirmVerificationMoney),
-        //    //    TotalPurchaseMoney = orders.Sum(d => d.PurchaseMoney),
-        //    //    TotalProfitMoney = orders.Sum(d => d.ProfitMoney)
-        //    //};
-        //    //item.Profit = item.TotalProfitMoney / item.TotalSellMoney * 100;
-        //    var result = orders.GroupBy(d => d.Transactor).Select(d => new BusinessOrderDetailView
-        //    {
-        //        Transactor = d.Key,
-        //        TotalSellMoney = d.Sum(o => o.SellMoney),
-        //        TotalVerificationMoney = d.Sum(o => o.VerificationMoney),
-        //        TotalConfirmVerificationMoney = d.Sum(o => o.ConfirmVerificationMoney),
-        //        TotalPurchaseMoney = d.Sum(o => o.PurchaseMoney),
-        //        TotalProfitMoney = d.Sum(o => o.ProfitMoney),
-        //        Profit = d.Sum(o => o.ProfitMoney) / d.Sum(o => o.SellMoney) * 100,
-
-        //    });
-        //    return result;
-        //}
+        
         /// <summary>
         /// 销售业绩统计(按经办人分组)
         /// </summary>
@@ -297,8 +238,8 @@ namespace Ada.Services.Business
                         SellMoney = b.SellMoney,
                         VerificationMoney = b.VerificationMoney,
                         ConfirmVerificationMoney = b.ConfirmVerificationMoney,
-                        PurchaseMoney = p.PurchaseMoney,
-                        ProfitMoney = b.SellMoney - p.PurchaseMoney,
+                        PurchaseMoney = p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Sum(d => d.Money) ?? 0),
+                        ProfitMoney = b.SellMoney - p.PurchaseMoney- (p.PurchaseReturenOrderDetails.Sum(d => d.Money) ?? 0),
                         Transactor = b.BusinessOrder.Transactor,
                         TransactorId = b.BusinessOrder.TransactorId
                     }).GroupBy(d => d.Transactor).Select(d => new BusinessPerformance
@@ -337,8 +278,8 @@ namespace Ada.Services.Business
                         SellMoney = b.SellMoney,
                         VerificationMoney = b.VerificationMoney,
                         ConfirmVerificationMoney = b.ConfirmVerificationMoney,
-                        PurchaseMoney = p.PurchaseMoney,
-                        ProfitMoney = b.SellMoney - p.PurchaseMoney,
+                        PurchaseMoney = p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Sum(d => d.Money) ?? 0),
+                        ProfitMoney = b.SellMoney - p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Sum(d => d.Money) ?? 0),
                         PublishDateStr = SqlFunctions.DateName("yyyy", p.PublishDate)
                                          + "年" +
                                          SqlFunctions.StringConvert((decimal)SqlFunctions.DatePart("mm", p.PublishDate)).Trim() + "月"
@@ -383,8 +324,8 @@ namespace Ada.Services.Business
                         SellMoney = b.SellMoney,
                         VerificationMoney = b.VerificationMoney,
                         ConfirmVerificationMoney = b.ConfirmVerificationMoney,
-                        PurchaseMoney = p.PurchaseMoney,
-                        ProfitMoney = b.SellMoney - p.PurchaseMoney,
+                        PurchaseMoney = p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Sum(d => d.Money) ?? 0),
+                        ProfitMoney = b.SellMoney - p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Sum(d => d.Money) ?? 0),
                         MediaTypeName = b.MediaTypeName
                     }).GroupBy(d => d.MediaTypeName).Select(d => new BusinessPerformance
                     {

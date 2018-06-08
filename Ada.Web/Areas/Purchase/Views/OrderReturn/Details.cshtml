@@ -1,0 +1,71 @@
+﻿@model Ada.Core.Domain.Purchase.PurchaseReturnOrder
+
+<div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">退款明细</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        媒体类型
+                                    </th>
+                                    <th>
+                                        媒体名称
+                                    </th>
+                                    <th>
+                                        广告位
+                                    </th>
+                                    <th>
+                                        采购金额
+                                    </th>
+                                    <th>
+                                        退款金额
+                                    </th>
+                                    <th>
+                                        经办业务
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.PurchaseReturenOrderDetails)
+                                {
+                                    <tr>
+                                        <td>@item.PurchaseOrderDetail.MediaTypeName</td>
+                                        <td>@item.PurchaseOrderDetail.MediaName</td>
+                                        <td>@item.PurchaseOrderDetail.AdPositionName</td>
+                                        <td>@item.PurchaseOrderDetail.PurchaseMoney</td>
+                                        <td>@item.Money</td>
+                                        <td>@item.PurchaseOrderDetail.PurchaseOrder.BusinessBy</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>合计</td>
+                                    <td>@Model.PurchaseReturenOrderDetails.Sum(d=>d.PurchaseOrderDetail.PurchaseMoney)</td>
+                                    <td>@Model.PurchaseReturenOrderDetails.Sum(d => d.Money)</td>
+                                    <td></td>
+                              
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

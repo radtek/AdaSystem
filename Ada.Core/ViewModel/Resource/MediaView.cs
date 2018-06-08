@@ -572,6 +572,11 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "保价备注")]
         public string PriceProtectionRemark { get; set; }
+        /// <summary>
+        /// 保留时长
+        /// </summary>
+        [Display(Name = "保留时长")]
+        public string RetentionTime { get; set; }
     }
 
 }
