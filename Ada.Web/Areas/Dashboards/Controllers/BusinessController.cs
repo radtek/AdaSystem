@@ -86,17 +86,17 @@ namespace Dashboards.Controllers
         /// <param name="o"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        public ActionResult GetBusinessPerformance(string o,string t=null)
+        public ActionResult GetBusinessPerformance(string o, string t = null)
         {
             var date = DateTime.Now;
             if (!string.IsNullOrWhiteSpace(t))
             {
-                if (DateTime.TryParse(t,out var dateTime))
+                if (DateTime.TryParse(t, out var dateTime))
                 {
                     date = dateTime;
                 }
             }
-           
+
             BusinessOrderDetailView quare = new BusinessOrderDetailView();
             quare.PublishDateStart = new DateTime(date.Year, date.Month, 1);
             quare.PublishDateEnd = new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month));
@@ -113,29 +113,6 @@ namespace Dashboards.Controllers
             {
                 userId = CurrentManager.Id;
             }
-            //List<BusinessTotal> list = new List<BusinessTotal>();
-            ////当前月后面11个月
-            //for (int i = 0; i < 12; i++)
-            //{
-            //    BusinessTotal total = new BusinessTotal();
-            //    BusinessOrderDetailView quare = new BusinessOrderDetailView();
-            //    if (i == 0)
-            //    {
-            //        quare.PublishDateStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-            //        quare.PublishDateEnd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
-            //        total.Month = DateTime.Now.Month + "月";
-            //    }
-            //    else
-            //    {
-            //        quare.PublishDateStart = new DateTime(DateTime.Now.AddMonths(-i).Year, DateTime.Now.AddMonths(-i).Month, 1);
-            //        quare.PublishDateEnd = new DateTime(DateTime.Now.AddMonths(-i).Year, DateTime.Now.AddMonths(-i).Month, DateTime.DaysInMonth(DateTime.Now.AddMonths(-i).Year, DateTime.Now.AddMonths(-i).Month));
-            //        total.Month = DateTime.Now.AddMonths(-i).Month + "月";
-            //    }
-            //    total.Sort = i;
-
-            //    //total.BusinessOrderDetailView = string.IsNullOrWhiteSpace(userId) ? _businessOrderDetailService.BusinessPerformance(quare) : _businessOrderDetailService.BusinessPerformance(userId, quare);
-            //    list.Add(total);
-            //}
             BusinessOrderDetailView quare = new BusinessOrderDetailView();
             if (!string.IsNullOrWhiteSpace(userId))
             {
@@ -143,7 +120,27 @@ namespace Dashboards.Controllers
             }
 
             var result = _businessOrderDetailService.BusinessPerformanceGroupByDate(quare);
-            return Json(result.OrderBy(d=>d.Month).Take(12).ToList(), JsonRequestBehavior.AllowGet);
+            return Json(result.OrderBy(d => d.Month).Take(12).ToList(), JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetProfitMargin(string date)
+        {
+            var now = DateTime.Now;
+            if (!string.IsNullOrWhiteSpace(date))
+            {
+                if (DateTime.TryParse(date, out var dateTime))
+                {
+                    now = dateTime;
+                }
+            }
+            BusinessOrderDetailView quare = new BusinessOrderDetailView();
+            quare.PublishDateStart = new DateTime(now.Year, now.Month, 1);
+            quare.PublishDateEnd = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
+            var result = _businessOrderDetailService.BusinessPerformanceGroupByMediaType(quare);
+            return Json(result.Select(d => new { name = d.MediaTypeName, value = d.TotalProfitMoney }).ToList(), JsonRequestBehavior.AllowGet);
         }
     }
 }

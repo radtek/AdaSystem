@@ -91,7 +91,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>销售核销统计</h5>
@@ -137,7 +137,39 @@
 
             </div>
         </div>
-        <div class="col-lg-4">
+
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>销售利润占比</h5>
+                    <div class="ibox-tools">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="label label-info pull-right"><span id="dateZB">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            @for (int i = 0; i < 12; i++)
+                            {
+                                <li>
+                                    <a href="javascript:initPieCharts('@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")');">@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")</a>
+                                </li>
+                            }
+                        </ul>
+
+                    </div>
+                </div>
+                
+                <div class="ibox-content">
+                    <div class="flot-chart" style="height: 300px;">
+                        <div class="flot-chart-content" id="flot-dashboard-chart-pie"></div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="col-lg-6">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>近四月销售概况</h5>
@@ -167,7 +199,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="row">
 
@@ -257,25 +288,25 @@
                 </div>
             </div>
             @*<div class="row">
-                <div class="col-lg-12">
-                    <div class="ibox float-e-margins">
-                        <div class="ibox-title">
-                            <h5>销售业绩大比拼（PK）</h5>
-                            <div class="ibox-tools">
-                                <a class="collapse-link">
-                                    <i class="fa fa-chevron-up"></i>
-                                </a>
-                                <a class="close-link">
-                                    <i class="fa fa-times"></i>
-                                </a>
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>销售业绩大比拼（PK）</h5>
+                                <div class="ibox-tools">
+                                    <a class="collapse-link">
+                                        <i class="fa fa-chevron-up"></i>
+                                    </a>
+                                    <a class="close-link">
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                                </div>
                             </div>
+                            <div class="ibox-content">
+                                <h2>待开发</h2>
+                               </div>
                         </div>
-                        <div class="ibox-content">
-                            <h2>待开发</h2>
-                           </div>
                     </div>
-                </div>
-            </div>*@
+                </div>*@
 
         </div>
 
@@ -291,6 +322,7 @@
             getTop("业务一部","@DateTime.Now.ToString("yyyy年MM月")", "ibox1");
             getTop("业务二部","@DateTime.Now.ToString("yyyy年MM月")", "ibox2");
             initCharts();
+            initPieCharts("@DateTime.Now.ToString("yyyy年MM月")");
         });
 
         function getTop(oname,date, id) {
@@ -334,10 +366,10 @@
         function initCharts() {
             var myChart = echarts.init(document.getElementById('flot-dashboard-chart'));
             var option = {
-                title : {
-                    text: '核销统计',
-                    //subtext: ''
-                },
+                //title : {
+                //    text: '核销统计',
+                //    //subtext: ''
+                //},
                 tooltip : {
                     trigger: 'axis'
                 },
@@ -382,61 +414,55 @@
                 ]
             };
             myChart.setOption(option);
-            @*$.ajax({
-                type: "get",
-                url: "@Url.Action("GetBusinessIncome")",
-                //data: {},
-                success: function (data) {
-                    var months = [], confirmVerificationMoneys = [], verificationMoneys = [];
+        }
 
+        function initPieCharts(date) {
+            $("#dateZB").text(date);
+            var myChart = echarts.init(document.getElementById('flot-dashboard-chart-pie'));
+            var option = {
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    data: []
+                },
+                series : [
+                    {
+                        name: '利润占比',
+                        type: 'pie',
+                        radius : '55%',
+                        center: ['50%', '60%'],
+                        data: [],
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+            myChart.setOption(option);
+            $.ajax({
+                type: "get",
+                url: "@Url.Action("GetProfitMargin")",
+                data: {date:date||""},
+                success: function (data) {
+                    var types = [];
                     $.each(data,
                         function(k, v) {
-                            months.push(v.Month);
-                            confirmVerificationMoneys.push(v.TotalConfirmVerificationMoney ||
-                                0);
-                            verificationMoneys.push(v.TotalVerificationMoney ||
-                                0);
-
-                            if (k<4) {
-                                $("#business").prepend('<div class="ibox-content">' +
-                                    '<div class="row">' +
-                                    '<div class="col-xs-4">' +
-                                    '<small class="stats-label">月份</small>' +
-                                    '<h4>' + v.Month+'</h4>' +
-                                    '</div>' +
-                                    '<div class="col-xs-4">' +
-                                    '<small class="stats-label">销售额</small>' +
-                                    '<h4><i class="fa fa-jpy "></i> ' + (v.TotalSellMoney || 0)+'</h4>' +
-                                    '</div>' +
-                                    '<div class="col-xs-4">' +
-                                    '<small class="stats-label">利润值</small>' +
-                                    '<h4><i class="fa fa-jpy "></i> ' + (v.TotalProfitMoney || 0)+'</h4>' +
-                                    '</div>' +
-                                    '</div>' +
-                                    '</div>');
-                            }
-
+                            types.push(v.name);
                         });
                     myChart.setOption({
-                        xAxis: {
-                            data: months
-                        }
-                        ,
-                        series : [
-                            {
-                                name:'未核销',
-                                data: verificationMoneys
-                            },
-                            {
-                                name:'已核销',
-                                data: confirmVerificationMoneys
-                            }
-                        ]
+                        legend: {
+                            data: types
+                        },
+                        series: [{
+                            data: data
+                        }]
                     });
-                    //console.log(data);
-                },
-                error: function () {
-                    //swal("操作失败", "系统错误", "error");
                 },
                 complete: function () {
                     myChart.hideLoading();
@@ -444,7 +470,7 @@
                 beforeSend: function() {
                     myChart.showLoading();
                 }
-            });*@
+            });
         }
     </script>
 }
