@@ -166,10 +166,18 @@ namespace Ada.Services.Admin
         /// <param name="openId"></param>
         public Manager GetMangerByOpenId(string openId)
         {
-            return _managerRepository.LoadEntities(d => d.OpenId == openId || d.UnionId == openId).FirstOrDefault();
+            return _managerRepository.LoadEntities(d => d.OpenId == openId || d.UnionId == openId && d.IsDelete == false && d.Status == Consts.StateNormal).FirstOrDefault();
 
         }
+        /// <summary>
+        /// 根据微信ID获取用户信息
+        /// </summary>
+        /// <param name="phone"></param>
+        public Manager GetMangerByPhone(string phone)
+        {
+            return _managerRepository.LoadEntities(d => d.Phone == phone && d.IsDelete == false && d.Status == Consts.StateNormal).FirstOrDefault();
 
+        }
         public ManagerView Login(LoginModel loginModel)
         {
             Manager manager;
@@ -177,6 +185,11 @@ namespace Ada.Services.Admin
             {
                 manager =
                     _managerRepository.LoadEntities(u => (u.OpenId == loginModel.OpenId || u.UnionId == loginModel.OpenId) && u.Status == Consts.StateNormal && u.IsDelete == false).FirstOrDefault();
+            }
+            else if (!string.IsNullOrWhiteSpace(loginModel.Phone))
+            {
+                manager =
+                    _managerRepository.LoadEntities(u => u.Phone==loginModel.Phone && u.Status == Consts.StateNormal && u.IsDelete == false).FirstOrDefault();
             }
             else
             {

@@ -6,6 +6,7 @@
     ViewBag.Title = "系统登陆";
     var setting = EngineContext.Current.Resolve<ISettingService>().GetSetting<Site>();
     var isWxLogin = setting.SystemIsWeiXinLogin;
+    
 }
 
 <div class="middle-box text-center loginscreen  animated fadeInDown">
@@ -16,28 +17,28 @@
 
         </div>
         <h3>欢迎来到微广+</h3>
-        @if (!isWxLogin)
+        @if (isWxLogin)
             {
                 <div id="login_container"></div>
                 <script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
                 <script type="text/javascript">
-                    if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
-                        var elm = document.getElementById('login_container');
-                        elm.innerHTML=(
-                            '<a href="weixin://" class="btn btn-primary block full-width m-b"><i class="fa fa-weixin"></i> 通过微信公众号[微广联合文化传播]登陆</button>');
-                    } else {
-                        var obj = new WxLogin({
-                            self_redirect:false,
-                            id:"login_container",
-                            appid: "wx4cc90f050274ab2e",
-                            scope: "snsapi_login",
-                            redirect_uri: "@ViewBag.CallBack",
-                            state: "@ViewBag.State"
-                            //style: "",
-                            //href: ""
-                        });
-                    }
-
+                    //if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
+                    //    var elm = document.getElementById('login_container');
+                    //    elm.innerHTML=(
+                    //        '<a href="weixin://" class="btn btn-primary block full-width m-b"><i class="fa fa-weixin"></i> 通过微信公众号[微广联合文化传播]登陆</button>');
+                    //} else {
+                        
+                    //}
+                    var obj = new WxLogin({
+                        self_redirect:false,
+                        id:"login_container",
+                        appid: "wx4cc90f050274ab2e",
+                        scope: "snsapi_login",
+                        redirect_uri: "@ViewBag.CallBack",
+                        state: "@ViewBag.State"
+                        //style: "",
+                        //href: ""
+                    });
                 </script>
             }
             else

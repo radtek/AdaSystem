@@ -15,6 +15,7 @@ namespace Ada.Core.ViewModel
             IsSuccess = false;
         }
         public string LoginName { get; set; }
+        public string Phone { get; set; }
         public string Password { get; set; }
         public string OpenId { get; set; }
         public string Message { get; set; }

@@ -238,8 +238,8 @@ namespace Ada.Services.Business
                         SellMoney = b.SellMoney,
                         VerificationMoney = b.VerificationMoney,
                         ConfirmVerificationMoney = b.ConfirmVerificationMoney,
-                        PurchaseMoney = p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Sum(d => d.Money) ?? 0),
-                        ProfitMoney = b.SellMoney - p.PurchaseMoney- (p.PurchaseReturenOrderDetails.Sum(d => d.Money) ?? 0),
+                        PurchaseMoney = p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Where(a => a.PurchaseReturnOrder.AuditStatus == Consts.StateNormal).Sum(d => d.Money) ?? 0),
+                        ProfitMoney = b.SellMoney - p.PurchaseMoney- (p.PurchaseReturenOrderDetails.Where(a => a.PurchaseReturnOrder.AuditStatus == Consts.StateNormal).Sum(d => d.Money) ?? 0),
                         Transactor = b.BusinessOrder.Transactor,
                         TransactorId = b.BusinessOrder.TransactorId
                     }).GroupBy(d => d.Transactor).Select(d => new BusinessPerformance
@@ -278,8 +278,8 @@ namespace Ada.Services.Business
                         SellMoney = b.SellMoney,
                         VerificationMoney = b.VerificationMoney,
                         ConfirmVerificationMoney = b.ConfirmVerificationMoney,
-                        PurchaseMoney = p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Sum(d => d.Money) ?? 0),
-                        ProfitMoney = b.SellMoney - p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Sum(d => d.Money) ?? 0),
+                        PurchaseMoney = p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Where(a => a.PurchaseReturnOrder.AuditStatus == Consts.StateNormal).Sum(d => d.Money) ?? 0),
+                        ProfitMoney = b.SellMoney - p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Where(a => a.PurchaseReturnOrder.AuditStatus == Consts.StateNormal).Sum(d => d.Money) ?? 0),
                         PublishDateStr = SqlFunctions.DateName("yyyy", p.PublishDate)
                                          + "年" +
                                          SqlFunctions.StringConvert((decimal)SqlFunctions.DatePart("mm", p.PublishDate)).Trim() + "月"
@@ -324,8 +324,8 @@ namespace Ada.Services.Business
                         SellMoney = b.SellMoney,
                         VerificationMoney = b.VerificationMoney,
                         ConfirmVerificationMoney = b.ConfirmVerificationMoney,
-                        PurchaseMoney = p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Sum(d => d.Money) ?? 0),
-                        ProfitMoney = b.SellMoney - p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Sum(d => d.Money) ?? 0),
+                        PurchaseMoney = p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Where(a => a.PurchaseReturnOrder.AuditStatus == Consts.StateNormal).Sum(d => d.Money) ?? 0),
+                        ProfitMoney = b.SellMoney - p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Where(a=>a.PurchaseReturnOrder.AuditStatus==Consts.StateNormal).Sum(d => d.Money) ?? 0),
                         MediaTypeName = b.MediaTypeName
                     }).GroupBy(d => d.MediaTypeName).Select(d => new BusinessPerformance
                     {

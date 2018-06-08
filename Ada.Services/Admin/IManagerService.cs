@@ -40,6 +40,7 @@ namespace Ada.Services.Admin
         void Edit(Manager entity);
 
         Manager GetMangerByOpenId(string openId);
+        Manager GetMangerByPhone(string phone);
         bool BindingOpenId(string loginName, string pwd, string openid, out string errmsg, string image = null);
         void UnBinding(string id);
         ManagerView BindingLogin(LoginModel loginModel);

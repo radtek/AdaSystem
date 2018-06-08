@@ -174,7 +174,7 @@
                                                                     <a class='label' href='@Url.Action("Update","Payment",new{area="Purchase",id=purchasePaymentOrderDetail.PurchasePayment.Id})' target="_blank"><i class='fa fa-link'></i> @purchasePaymentOrderDetail.PurchasePayment.BillNum</a>
                                                                 </td>
                                                                 <td>@date</td>
-                                                                <td>@purchasePaymentOrderDetail.PurchasePayment.PayMoney</td>
+                                                                <td>@purchasePaymentOrderDetail.PurchasePayment.PurchasePaymentDetails.Sum(d=>d.PayMoney)</td>
                                                             </tr>
                                                         }
                                                         

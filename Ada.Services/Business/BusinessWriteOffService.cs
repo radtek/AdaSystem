@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
+using Ada.Core.Domain;
 using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.ViewModel.Business;
@@ -50,14 +51,6 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => viewModel.Managers.Contains(d.TransactorId));
             }
-            //if (!string.IsNullOrWhiteSpace(viewModel.search))
-            //{
-            //    allList = allList.Where(d => d.BusinessOrders.FirstOrDefault().LinkManName.Contains(viewModel.search));
-            //}
-            //var total = allList.Sum(d => d.BusinessOrderDetails.Sum(o => o.Money));//销售总额
-            //var total2 = allList.Sum(d => d.BusinessPayees.Sum(p => p.Money));//领款总额
-            //var total3 = allList.Sum(d => d.BusinessPayees.Sum(p => p.BusinessPayments.Sum(r => r.PayMoney)));//请款总额
-
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
@@ -127,11 +120,11 @@ namespace Ada.Services.Business
                            LinkManName = o.BusinessOrder.LinkManName,
                            OrderId = o.BusinessOrderId,
                            BusinessMoney = o.SellMoney,
-                           PurchaseMoney = p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Sum(d => d.Money) ?? 0),
+                           PurchaseMoney = p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Where(a => a.PurchaseReturnOrder.AuditStatus == Consts.StateNormal).Sum(d => d.Money) ?? 0),
                            Profit = Math.Round((decimal)(o.SellMoney - p.PurchaseMoney), 2),
                            ReturnDays = SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate),
                            Percentage = SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays1 ? setting.Percentage1 : (SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays2 && SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) > setting.ReturnDays1 ? setting.Percentage2 : 0),
-                           Commission = Math.Round((decimal)((o.SellMoney - p.PurchaseMoney- (p.PurchaseReturenOrderDetails.Sum(d => d.Money) ?? 0)) * (SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays1 ? setting.Percentage1 : (SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays2 && SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) > setting.ReturnDays1 ? setting.Percentage2 : 0))), 2)
+                           Commission = Math.Round((decimal)((o.SellMoney - p.PurchaseMoney- (p.PurchaseReturenOrderDetails.Where(a => a.PurchaseReturnOrder.AuditStatus == Consts.StateNormal).Sum(d => d.Money) ?? 0)) * (SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays1 ? setting.Percentage1 : (SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays2 && SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) > setting.ReturnDays1 ? setting.Percentage2 : 0))), 2)
                        };
             
             return temp;
