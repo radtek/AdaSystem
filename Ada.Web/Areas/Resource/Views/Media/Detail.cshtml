@@ -1,5 +1,6 @@
 ﻿@using System.Web.Optimization
 @using Ada.Core.Domain
+@using Ada.Core.Domain.Resource
 @using Ada.Core.Infrastructure
 @using Ada.Core.Tools
 @using Ada.Core.ViewModel.Resource
@@ -23,6 +24,13 @@
     };
     var comments = service.LoadComments(view1);
     var ordercomments = orderservice.LoadComments(view2);
+    List<MediaPriceChange> list=new List<MediaPriceChange>();
+    foreach (var mediaPrice in Model.MediaPrices.Where(d=>d.IsDelete==false))
+    {
+        var arr = mediaPrice.MediaPriceChanges.OrderBy(d => d.AddedDate).Take(6);
+        list.AddRange(arr);
+    }
+    var date = list.GroupBy(d => d.AddedDate?.ToString("yyyy-MM-dd")).Select(d => d.Key);
 }
 @Html.Partial("Bread")
 
@@ -164,7 +172,7 @@
     </div>
 
     <div class="row">
-        @foreach (var item in Model.MediaPrices.Where(d => d.IsDelete == false).OrderByDescending(d => d.AdPositionName))
+        @*@foreach (var item in Model.MediaPrices.Where(d => d.IsDelete == false).OrderByDescending(d => d.AdPositionName))
         {
             <div class="col-lg-3">
                 <div class="ibox">
@@ -175,8 +183,19 @@
                     </div>
                 </div>
             </div>
-        }
-
+        }*@
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>媒体价格走势</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="flot-chart" style="height: 500px;">
+                        <div class="flot-chart-content" id="flot-dashboard-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -344,7 +363,6 @@
     @Scripts.Render("~/plugins/footableV3")
     @Scripts.Render("~/plugins/echarts")
     @Scripts.Render("~/plugins/tagcanvasScript")
-    @Scripts.Render("~/plugins/sparkline")
     <script>
         @if (Model.MediaArticles.Any())
         {
@@ -396,20 +414,54 @@
 
 
                 $(function () {
-                    @foreach (var item in Model.MediaPrices.Where(d => d.IsDelete == false).OrderByDescending(d => d.AdPositionName))
-                    {
-                        var arr = item.MediaPriceChanges.OrderBy(d => d.ChangeDate).Take(8).Select(d => d.PurchasePrice);
-                        <text>
-                            $("#@item.Id").sparkline(@Html.Raw(Json.Encode(arr.ToList())), {
-                                type: 'line',
-                                width: '100%',
-                                height: '60',
-                                lineColor: '#1ab394',
-                                fillColor: "#ffffff"
-                            });
-                        </text>
-                    }
+                    initCharts();
                 });
+                function initCharts() {
+                    var myChart = echarts.init(document.getElementById('flot-dashboard-chart'));
+                    var option = {
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:@Html.Raw(Json.Encode(Model.MediaType.AdPositions.Select(d=>d.Name)))
+                        },
+                        //grid: {
+                        //    left: '3%',
+                        //    right: '4%',
+                        //    bottom: '3%',
+                        //    containLabel: true
+                        //},
 
+                        xAxis: {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: @Html.Raw(Json.Encode(date))
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [
+
+                            @foreach (var item in Model.MediaPrices.Where(d => d.IsDelete == false))
+                            {
+                                var arr = item.MediaPriceChanges.OrderBy(d => d.AddedDate).Take(6).Select(d => d.PurchasePrice);
+                                <text>
+                                    {
+                                        name:'@item.AdPositionName',
+                                        type:'line',
+                                        label: {
+                                            normal: {
+                                                show: true
+                                            }
+                                        },
+                                        data:@Html.Raw(Json.Encode(arr))
+                                    },
+                                </text>
+                            }
+                            
+                        ]
+                    };
+                    myChart.setOption(option);
+                }
     </script>
 }
