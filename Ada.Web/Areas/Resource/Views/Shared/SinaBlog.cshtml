@@ -70,20 +70,26 @@
                             <div class="form-group">
                                 @Html.LabelFor(d => d.Cooperation, Html.DisplayNameFor(d => d.Cooperation).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
-                                    @Html.DropDownListFor(d => d.Cooperation, cooperations,  new { @class = "form-control" })
+                                    @Html.DropDownListFor(d => d.Cooperation, cooperations, new { @class = "form-control" })
                                 </div>
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
                                     @foreach (var item in tags)
-            {
-                var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
-                        <div class="checkbox checkbox-success checkbox-inline">
-                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
-                            <label for="@item.Id">@item.TagName</label>
-                        </div>
-}
+                                    {
+                                        var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
+                                        <div class="checkbox checkbox-success checkbox-inline">
+                                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
+                                            <label for="@item.Id">@item.TagName</label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.RetentionTime, Html.DisplayNameFor(d => d.RetentionTime).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.RetentionTime, new { @class = "form-control" })
                                 </div>
                             </div>
                             <div class="form-group">

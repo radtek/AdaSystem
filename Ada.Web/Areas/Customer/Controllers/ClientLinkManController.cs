@@ -94,7 +94,7 @@ namespace Customer.Controllers
             entity.WorkName = viewModel.WorkName;
             entity.LinkManType = viewModel.LinkManType;
             entity.QQ = viewModel.QQ;
-            entity.Phone = viewModel.Phone;
+            entity.Phone = viewModel.Phone?.Trim();
             entity.WeiXin = viewModel.WeiXin;
             entity.Sex = viewModel.Sex;
             entity.Status = viewModel.Status;
@@ -148,7 +148,7 @@ namespace Customer.Controllers
             entity.WorkName = viewModel.WorkName;
             entity.LinkManType = viewModel.LinkManType;
             entity.QQ = viewModel.QQ;
-            entity.Phone = viewModel.Phone;
+            entity.Phone = viewModel.Phone?.Trim();
             entity.WeiXin = viewModel.WeiXin;
             entity.Sex = viewModel.Sex;
             entity.Status = viewModel.Status;

@@ -352,6 +352,7 @@ namespace Resource.Controllers
                 jo.Add("是否预付", media.PriceProtectionIsPrePay == true ? "是" : "否");
                 jo.Add("是否提供品牌", media.PriceProtectionIsBrand == true ? "是" : "否");
                 jo.Add("保价备注", media.PriceProtectionRemark);
+                jo.Add("保留时长", media.RetentionTime);
                 jo.Add("媒体说明", media.Content);
                 jo.Add("备注说明", media.Remark);
                 var date = media.MediaPrices.FirstOrDefault()?.InvalidDate;
@@ -478,7 +479,7 @@ namespace Resource.Controllers
             //拿到广告位的名称
             IRow headRow = sheet.GetRow(0);
             List<string> adpostionNames = new List<string>();
-            int startPrice = 16;//价格所在位置
+            int startPrice = 17;//价格所在位置
             for (int i = startPrice; i < headRow.LastCellNum; i++)
             {
                 var adpostionName = headRow.GetCell(i).StringCellValue;
@@ -527,20 +528,21 @@ namespace Resource.Controllers
                 media.PriceProtectionIsPrePay = ParseBool(row.GetCell(10)?.ToString());
                 media.PriceProtectionIsBrand = ParseBool(row.GetCell(11)?.ToString());
                 media.PriceProtectionRemark = row.GetCell(12)?.ToString();
+                media.RetentionTime = row.GetCell(13)?.ToString();
                 //备注
-                media.Remark = row.GetCell(14)?.ToString();
+                media.Remark = row.GetCell(15)?.ToString();
                 DateTime date = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
                     DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
-                if (row.GetCell(15) != null)
+                if (row.GetCell(16) != null)
                 {
-                    var cellType = row.GetCell(15).CellType;
+                    var cellType = row.GetCell(16).CellType;
                     if (cellType == CellType.String)
                     {
-                        DateTime.TryParse(row.GetCell(15)?.ToString(), out date);
+                        DateTime.TryParse(row.GetCell(16)?.ToString(), out date);
                     }
                     if (cellType == CellType.Numeric)
                     {
-                        date = row.GetCell(15).DateCellValue;
+                        date = row.GetCell(16).DateCellValue;
                     }
                 }
                 var sellKey = "SellPriceRange";
