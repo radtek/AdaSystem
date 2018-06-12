@@ -192,28 +192,31 @@
                     <div class="sk-double-bounce1"></div>
                     <div class="sk-double-bounce2"></div>
                 </div>
-                <table class="table table-hover margin bottom">
-                    <thead>
-                    <tr>
-                        <th class="text-center">排名</th>
-                        <th>媒介人员</th>
-                        <th>开发数</th>
-                    </tr>
-
-                    </thead>
-                    <tbody>
-                    @foreach (var item in Model.Tops)
-                    {
+                <div class="table-responsive">
+                    <table class="table table-hover margin bottom">
+                        <thead>
                         <tr>
-                            <td class="text-center">@index</td>
-                            <td>@item.Transactor</td>
-                            <td>@item.MediasCount</td>
+                            <th class="text-center">排名</th>
+                            <th>媒介人员</th>
+                            <th>开发数</th>
                         </tr>
-                        index++;
-                    }
-                    </tbody>
 
-                </table>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model.Tops)
+                        {
+                            <tr>
+                                <td class="text-center">@index</td>
+                                <td>@item.Transactor</td>
+                                <td>@item.MediasCount</td>
+                            </tr>
+                            index++;
+                        }
+                        </tbody>
+
+                    </table>
+                </div>
+                
             </div>
         </div>
     </div>
@@ -227,16 +230,17 @@
                 <h5>供应商采购排行</h5>
             </div>
             <div class="ibox-content">
-                <table class="table table-hover bottom">
-                    <thead>
+                <div class="table-responsive">
+                    <table class="table table-hover bottom">
+                        <thead>
                         <tr>
                             <th class="text-center">排名</th>
                             <th>供应商名称</th>
                             <th>采购总额</th>
                         </tr>
 
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         @foreach (var item in Model.CompanyTops)
                         {
                             <tr>
@@ -246,9 +250,11 @@
                             </tr>
                             cindex++;
                         }
-                    </tbody>
+                        </tbody>
 
-                </table>
+                    </table>
+                </div>
+                
             </div>
         </div>
     </div>

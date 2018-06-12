@@ -21,19 +21,19 @@ namespace Dashboards.Controllers
         private readonly IRepository<PurchasePayment> _purchasePaymentRepository;
         private readonly IRepository<MediaType> _mediaTypeRepository;
         private readonly IRepository<Media> _mediaRepository;
-        private readonly IRepository<Commpany> _commpanyRepository;
+        private readonly IRepository<LinkMan> _linkmanRepository;
 
         public PurchaseController(IRepository<PurchaseOrderDetail> purchaseRepository,
             IRepository<PurchasePayment> purchasePaymentRepository,
             IRepository<MediaType> mediaTypeRepository,
             IRepository<Media> mediaRepository,
-            IRepository<Commpany> commpanyRepository)
+            IRepository<LinkMan> linkmanRepository)
         {
             _purchaseRepository = purchaseRepository;
             _purchasePaymentRepository = purchasePaymentRepository;
             _mediaTypeRepository = mediaTypeRepository;
             _mediaRepository = mediaRepository;
-            _commpanyRepository = commpanyRepository;
+            _linkmanRepository = linkmanRepository;
         }
         public ActionResult Index()
         {
@@ -117,17 +117,17 @@ namespace Dashboards.Controllers
             {
                 userId = CurrentManager.Id;
             }
-            var companys =
-                _commpanyRepository.LoadEntities(d => d.IsDelete == false && d.IsBusiness);
+            var linkmans =
+                _linkmanRepository.LoadEntities(d => d.IsDelete == false && d.Commpany.IsBusiness);
             if (!string.IsNullOrWhiteSpace(userId))
             {
-                companys = companys.Where(d => d.TransactorId == userId);
+                linkmans = linkmans.Where(d => d.TransactorId == userId);
             }
-            total.CompanyTops = companys.Select(d => new CompanyTop()
+            total.CompanyTops = linkmans.Select(d => new CompanyTop()
             {
-                Name = d.Name,
-                TotalMoney = d.LinkMans.Sum(l => l.PurchaseOrderDetails.Where(o=>o.Status!=Consts.PurchaseStatusFail).Sum(p => p.PurchaseMoney))
-            }).OrderByDescending(d => d.TotalMoney).Take(20).ToList();
+                Name = d.Name+" ("+d.Commpany.Name+")",
+                TotalMoney = d.PurchaseOrderDetails.Where(o => o.Status != Consts.PurchaseStatusFail).Sum(p => p.PurchaseMoney)
+            }).OrderByDescending(d => d.TotalMoney).Take(50).ToList();
             total.Tops= AddTopData(DateTime.Now.Year,DateTime.Now.Month);
             return View(total);
         }
