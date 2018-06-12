@@ -191,7 +191,7 @@
                 </div>
                 <div class="ibox-content">
                     <div class="flot-chart" style="height: 500px;">
-                        <div class="flot-chart-content" id="flot-dashboard-chart"></div>
+                        <div class="flot-chart-content" id="flot-dashboard-chart-price"></div>
                     </div>
                 </div>
             </div>
@@ -414,10 +414,10 @@
 
 
                 $(function () {
-                    initCharts();
+                    initPriceCharts();
                 });
-                function initCharts() {
-                    var myChart = echarts.init(document.getElementById('flot-dashboard-chart'));
+        function initPriceCharts() {
+                    var myChart = echarts.init(document.getElementById('flot-dashboard-chart-price'));
                     var option = {
                         tooltip: {
                             trigger: 'axis'

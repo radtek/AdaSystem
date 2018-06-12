@@ -488,6 +488,10 @@ namespace Resource.Controllers
             for (int i = 1; i <= sheet.LastRowNum; i++)
             {
                 IRow row = sheet.GetRow(i);
+                if (row==null)
+                {
+                    continue;
+                }
                 var id = row.GetCell(0)?.StringCellValue;
                 if (string.IsNullOrWhiteSpace(id) || id == "不存在的资源")
                 {

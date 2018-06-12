@@ -12,6 +12,7 @@ namespace Ada.Core.ViewModel.Statistics
         public PurchaseTotal()
         {
             Tops=new List<MediaAddTop>();
+            CompanyTops=new List<CompanyTop>();
         }
         /// <summary>
         /// 订单总数
@@ -68,6 +69,11 @@ namespace Ada.Core.ViewModel.Statistics
         /// </summary>
         [Display(Name = "开发排行")]
         public List<MediaAddTop> Tops { get; set; }
+        /// <summary>
+        /// 供应商排行
+        /// </summary>
+        [Display(Name = "供应商排行")]
+        public List<CompanyTop> CompanyTops { get; set; }
     }
 
     public class MediaAddTop
@@ -120,5 +126,19 @@ namespace Ada.Core.ViewModel.Statistics
         /// </summary>
         [Display(Name = "节省金额")]
         public decimal? Economize { get; set; }
+    }
+
+    public class CompanyTop
+    {
+        /// <summary>
+        /// 公司名称
+        /// </summary>
+        [Display(Name = "公司名称")]
+        public string Name { get; set; }
+        /// <summary>
+        /// 开发数
+        /// </summary>
+        [Display(Name = "采购总额")]
+        public decimal? TotalMoney { get; set; }
     }
 }

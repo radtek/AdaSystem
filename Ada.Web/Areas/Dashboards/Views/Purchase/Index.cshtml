@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = "媒介工作台";
     int index = 1;
+    int cindex = 1;
 }
 <div class="wrapper wrapper-content">
 
@@ -167,57 +168,92 @@
 
 
     </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox float-e-margins" id="iboxAdd">
-                <div class="ibox-title">
-                    <h5>媒体资源开发排行榜</h5>
-                    <div class="ibox-tools">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy-MM")</span> <i class="fa fa-chevron-down"></i></span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            @for (int i = 0; i < 12; i++)
-                            {
-                                <li>
-                                    <a href="javascript:getTop('@DateTime.Now.AddMonths(-i).ToString("yyyy-MM")');">@DateTime.Now.AddMonths(-i).ToString("yyyy-MM")</a>
-                                </li>
-                            }
-                        </ul>
-                    </div>
-                </div>
-                <div class="ibox-content">
-                    <div class="sk-spinner sk-spinner-double-bounce">
-                        <div class="sk-double-bounce1"></div>
-                        <div class="sk-double-bounce2"></div>
-                    </div>
-                    <table class="table table-hover margin bottom">
-                        <thead>
-                            <tr>
-                                <th class="text-center">排名</th>
-                                <th>媒介人员</th>
-                                <th>开发数</th>
-                            </tr>
-
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Tops)
-                            {
-                                <tr>
-                                    <td class="text-center">@index</td>
-                                    <td>@item.Transactor</td>
-                                    <td>@item.MediasCount</td>
-                                </tr>
-                                index++;
-                            }
-                        </tbody>
-
-                    </table>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins" id="iboxAdd">
+            <div class="ibox-title">
+                <h5>媒体资源开发排行榜</h5>
+                <div class="ibox-tools">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy-MM")</span> <i class="fa fa-chevron-down"></i></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        @for (int i = 0; i < 12; i++)
+                        {
+                            <li>
+                                <a href="javascript:getTop('@DateTime.Now.AddMonths(-i).ToString("yyyy-MM")');">@DateTime.Now.AddMonths(-i).ToString("yyyy-MM")</a>
+                            </li>
+                        }
+                    </ul>
                 </div>
             </div>
-        </div>
+            <div class="ibox-content">
+                <div class="sk-spinner sk-spinner-double-bounce">
+                    <div class="sk-double-bounce1"></div>
+                    <div class="sk-double-bounce2"></div>
+                </div>
+                <table class="table table-hover margin bottom">
+                    <thead>
+                    <tr>
+                        <th class="text-center">排名</th>
+                        <th>媒介人员</th>
+                        <th>开发数</th>
+                    </tr>
 
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model.Tops)
+                    {
+                        <tr>
+                            <td class="text-center">@index</td>
+                            <td>@item.Transactor</td>
+                            <td>@item.MediasCount</td>
+                        </tr>
+                        index++;
+                    }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
     </div>
+
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>供应商采购排行</h5>
+            </div>
+            <div class="ibox-content">
+                <table class="table table-hover bottom">
+                    <thead>
+                        <tr>
+                            <th class="text-center">排名</th>
+                            <th>供应商名称</th>
+                            <th>采购总额</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.CompanyTops)
+                        {
+                            <tr>
+                                <td class="text-center">@cindex</td>
+                                <td>@item.Name</td>
+                                <td>@item.TotalMoney</td>
+                            </tr>
+                            cindex++;
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
 </div>
 
 
