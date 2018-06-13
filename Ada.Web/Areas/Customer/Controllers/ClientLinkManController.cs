@@ -272,6 +272,8 @@ namespace Customer.Controllers
             entity.IsLock = true;
             entity.LoginName = null;
             entity.Password = null;
+            entity.OpenId = null;
+            entity.UnionId = null;
             _linkManService.Update(entity);
             return Json(new { State = 1, Msg = "锁定成功" });
         }

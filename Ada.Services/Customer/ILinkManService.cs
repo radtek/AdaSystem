@@ -18,5 +18,6 @@ namespace Ada.Services.Customer
         IQueryable<LinkMan> LoadEntitiesFilter(LinkManView viewModel);
 
        LinkMan CheackUser(string name);
+       LinkMan GetUserByOpenId(string openId);
    }
 }

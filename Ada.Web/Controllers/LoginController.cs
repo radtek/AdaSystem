@@ -105,32 +105,51 @@ namespace Ada.Web.Controllers
                     }
                 }
             }
-
-            LinkManView viewModel = new LinkManView();
-            viewModel.Id = user.Id;
-            viewModel.CommpanyName = user.Commpany.Name;
-            viewModel.Name = user.Name;
-            viewModel.LoginName = user.LoginName;
-            viewModel.Phone = user.Phone;
-            viewModel.Transactor = user.Transactor;
-            viewModel.TransactorId = user.TransactorId;
-            string sessionId = Guid.NewGuid().ToString("N");
-            _cacheService.Put(sessionId, viewModel, new TimeSpan(1, 0, 0, 0));
-            //Cookie
-            Response.Cookies["UserSession"].Value = sessionId;
-            //会员登陆日志
-            user.FollowUps.Add(new FollowUp()
-            {
-                Id = IdBuilder.CreateIdNum(),
-                IpAddress = Utils.GetIpAddress(),
-                Content = Request.UserAgent,
-                NextTime = DateTime.Now,
-                FollowUpWay = "成功"
-            });
-            _linkManService.Update(user);
+            Login(user);
             return RedirectToAction("Order", "UserCenter");
         }
-        //[HttpPost, AdaValidateAntiForgeryToken,NoCache]
+        public ActionResult Binding()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Binding(string phone, string code)
+        {
+            //校验用户
+            var obj = Session["CurrentWeiXinOpenVIPUnionid"];
+            if (obj == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var user = _linkManService.CheackUser(phone);
+            if (user == null)
+            {
+                ModelState.AddModelError("error", "此手机号暂未开通会员，请联系我们处理！");
+                return View();
+            }
+            //校验验证码
+            var cacheCode = _cacheService.GetObject<string>(phone.Trim());
+            if (cacheCode == null)
+            {
+                ModelState.AddModelError("error", "验证码无效！");
+                return View();
+            }
+            if (cacheCode.ToString() != code)
+            {
+                ModelState.AddModelError("error", "验证码错误！");
+                return View();
+            }
+
+            if (!string.IsNullOrWhiteSpace(user.UnionId))
+            {
+                ModelState.AddModelError("error", "此账户已绑定微信，无需重复绑定！");
+                return View();
+            }
+            user.UnionId = obj.ToString();
+            Login(user,"绑定微信成功");
+            return RedirectToAction("Order", "UserCenter");
+        }
         public ActionResult SmsCode(string phone)
         {
             var demo = _settingService.GetSetting<WeiGuang>();
@@ -167,6 +186,32 @@ namespace Ada.Web.Controllers
             });
             //返回结果
             return Json(new { State = 1, Msg = "获取成功" }, JsonRequestBehavior.AllowGet);
+        }
+
+        private void Login(LinkMan user,string msg="成功")
+        {
+            LinkManView viewModel = new LinkManView();
+            viewModel.Id = user.Id;
+            viewModel.CommpanyName = user.Commpany.Name;
+            viewModel.Name = user.Name;
+            viewModel.LoginName = user.LoginName;
+            viewModel.Phone = user.Phone;
+            viewModel.Transactor = user.Transactor;
+            viewModel.TransactorId = user.TransactorId;
+            string sessionId = Guid.NewGuid().ToString("N");
+            _cacheService.Put(sessionId, viewModel, new TimeSpan(1, 0, 0, 0));
+            //Cookie
+            Response.Cookies["UserSession"].Value = sessionId;
+            //会员登陆日志
+            user.FollowUps.Add(new FollowUp()
+            {
+                Id = IdBuilder.CreateIdNum(),
+                IpAddress = Utils.GetIpAddress(),
+                Content = Request.UserAgent,
+                NextTime = DateTime.Now,
+                FollowUpWay = msg
+            });
+            _linkManService.Update(user);
         }
     }
 }

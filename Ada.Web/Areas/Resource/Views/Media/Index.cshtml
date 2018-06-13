@@ -409,7 +409,12 @@
                                                     <span class='btn btn-danger btn-outline btn-xs'><i class='fa fa-users'></i> 粉丝：@Utils.ShowFansNum(item.FansNum) 万</span>
                                                 </div>
                                             }
-
+                                            @if (!string.IsNullOrWhiteSpace(item.RetentionTime))
+                                            {
+                                                <div class='p-xxs'>
+                                                    <span class='btn btn-info btn-outline btn-xs'><i class='fa fa-clock-o'></i> 保留时长：@item.RetentionTime</span>
+                                                </div>
+                                            }
                                         </td>
                                         @if (isData.Contains(Model.MediaTypeIndex))
                                         {

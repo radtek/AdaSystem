@@ -1,4 +1,5 @@
-﻿@using System.Web.Optimization
+﻿@using System.Text.RegularExpressions
+@using System.Web.Optimization
 @using Ada.Core.Infrastructure
 @using Ada.Core.ViewModel.Setting
 @using Ada.Services.Setting
@@ -6,6 +7,7 @@
 @{
     Layout = null;
     var setting = EngineContext.Current.Resolve<ISettingService>().GetSetting<Site>();
+    var isPhoneBroise = Regex.IsMatch(Request.UserAgent, "(iPhone|iPad|iPod|iOS|Android)", RegexOptions.IgnoreCase);
 }
 
 <!DOCTYPE html>
@@ -48,8 +50,8 @@
                     {
                         @Html.AntiForgeryToken()
                         <div class="form-group">
-                            @Html.TextBoxFor(d => d.LoginName, new {@class = "form-control", placeholder = "输入手机号",type="number"})
-                            @Html.ValidationMessageFor(model => model.LoginName, null, new {@class = "help-block m-b-none text-danger"})
+                            @Html.TextBoxFor(d => d.LoginName, new { @class = "form-control", placeholder = "输入手机号", type = "number" })
+                            @Html.ValidationMessageFor(model => model.LoginName, null, new { @class = "help-block m-b-none text-danger" })
                         </div>
                         <div class="form-group">
                             <div class="input-group">
@@ -65,11 +67,14 @@
                         <button class="btn btn-danger block full-width m-b" type="submit">登陆</button>
                         <p>
                             @Html.ValidationMessage("error", new { @class = "bg-danger" })
-                        </p>                                                                
-                        
-                        <button type="button" class="btn btn-primary btn-xs btn-outline">
-                            <small><i class="fa fa-weixin"></i> 微信登陆</small>
-                        </button>
+                        </p>
+                        if (!isPhoneBroise)
+                        {
+                            <a href="@Url.Action("OpenVIP","Login",new{area="WeiXin"})" class="btn btn-primary btn-xs btn-outline">
+                                <small><i class="fa fa-weixin"></i> 微信登陆</small>
+                            </a>
+                        }
+
 
 
                         <p class="text-muted text-center">
@@ -138,7 +143,7 @@
                         setTime(o);
                     }
                 });
-            
+
         }
     </script>
 </body>

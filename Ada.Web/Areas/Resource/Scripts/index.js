@@ -164,12 +164,13 @@ function formatterWeiXin(value, row) {
         "<div class='p-xxs'><a class='label' href='http://weixin.sogou.com/weixin?type=1&query=" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> <span id='" + row.Id + "'>" + value + " - " + row.MediaID + "</span></a></div>";
     var tags = formatterTag(row.MediaTags);
     var fans = "<div class='p-xxs'>" + formatterFans(row.FansNum) + "</div>";
+    var retentionTime = row.RetentionTime ? "<div class='p-xxs'><span class='btn btn-info btn-outline btn-xs'><i class='fa fa-clock-o'></i> 保留时长：" + row.RetentionTime+"</div>" : "";
     return url +
         "<div class='p-xxs'>" +
         "<button class='btn btn-white btn-xs' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#" + row.Id + "'><i class='fa fa-copy'></i></button>" +
         " <img rel='drevil' data-content='<div id=\"popOverBox\"><img src=\"" + (row.MediaQR || '/Images/nopic.png') + "\" width=\"100\" height=\"100\" /></div>'  src='/Images/ewm.png' style='width: 20px; height: 20px;'/>" +
         "</div>" +
-        tags + fans + formatterGroup(row.MediaGroups);
+        tags + fans + formatterGroup(row.MediaGroups) + retentionTime;
 }
 
 function formatterBlog(value, row) {
@@ -195,9 +196,10 @@ function formatterBlog(value, row) {
     if (row.Areas) {
         area = " <span class='btn btn-info btn-outline btn-xs'><i class='fa fa-map-marker'></i> " + row.Areas + "</span>";
     }
+    var retentionTime = row.RetentionTime ? "<div class='p-xxs'><span class='btn btn-info btn-outline btn-xs'><i class='fa fa-clock-o'></i> 保留时长：" + row.RetentionTime + "</div>" : "";
     return url +
         "<div class='p-xxs'>" + level + area +
-        "</div>" + tags + fans + formatterGroup(row.MediaGroups);
+        "</div>" + tags + fans + formatterGroup(row.MediaGroups) + retentionTime;
 }
 
 function formatterMediaName(value, row) {
@@ -242,7 +244,8 @@ function formatterMediaName(value, row) {
     if (row.AuthenticateType) {
         grad = "<div class='p-xxs'><span class='btn btn-warning  btn-outline btn-xs'><i class='fa fa-trophy'></i> " + row.AuthenticateType + "</span></div>";
     }
-    return url + area + grad + tags + fans + formatterGroup(row.MediaGroups);
+    var retentionTime = row.RetentionTime ? "<div class='p-xxs'><span class='btn btn-info btn-outline btn-xs'><i class='fa fa-clock-o'></i> 保留时长：" + row.RetentionTime + "</div>" : "";
+    return url + area + grad + tags + fans + formatterGroup(row.MediaGroups) + retentionTime;
 }
 
 

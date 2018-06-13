@@ -2975,6 +2975,7 @@
     <Content Include="Views\UserCenter\Group.cshtml" />
     <Content Include="Views\Shared\_IframeIp.cshtml" />
     <Content Include="Views\Shared\_Layout_Home.cshtml" />
+    <Content Include="Views\Login\Binding.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

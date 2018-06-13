@@ -7,6 +7,7 @@ using Ada.Framework.Caching;
 using Ada.Services.Admin;
 using Senparc.Weixin;
 using Senparc.Weixin.MP.AdvancedAPIs.User;
+using Senparc.Weixin.Open;
 using Senparc.Weixin.Open.QRConnect;
 using WeiXin.Filters;
 
@@ -52,6 +53,15 @@ namespace WeiXin.Controllers
             return RedirectToAction("Index", "Home", new { area = "Dashboards" });
         }
 
+        public ActionResult OpenVIP()
+        {
+            var guid = Guid.NewGuid().ToString("N");
+            Session["LoginOpenVIPState"] = guid;
+            var retureUrl= Request.Url.Scheme + "://" + Request.Url.Authority + Url.Action("OpenVIP", "OAuth2");
+            var returnOpenUrl =
+                QRConnectAPI.GetQRConnectUrl("wx4cc90f050274ab2e", retureUrl, guid, new[] {OAuthScope.snsapi_login});
+            return Redirect(returnOpenUrl);
+        }
        
         
     }

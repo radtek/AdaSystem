@@ -101,5 +101,13 @@ namespace Ada.Services.Customer
                   d.IsLock == false).FirstOrDefault();
             return user;
         }
+
+        public LinkMan GetUserByOpenId(string openId)
+        {
+            //pwd = Encrypt.Encode(pwd.Trim());
+            var user = _repository.LoadEntities(d =>(d.OpenId==openId||d.UnionId==openId )&& d.IsDelete == false &&
+                d.IsLock == false).FirstOrDefault();
+            return user;
+        }
     }
 }
