@@ -39,7 +39,7 @@ namespace DataReport.Controllers
             ViewBag.Start = start;
             ViewBag.End = end;
             var startDate = DateTime.Parse(start);
-            var endDate = DateTime.Parse(end).AddDays(1);
+            var endDate = DateTime.Parse(end);
             var allList = _businessWriteOffService.LoadEntitiesFilter(new BusinessWriteOffDetailView(){WriteOffDateStar = startDate,WriteOffDateEnd = endDate});
             var managers = _managerService.GetByOrganizationName("业务部");
             List<BusinessWriteOffDetailView> list=new List<BusinessWriteOffDetailView>();
