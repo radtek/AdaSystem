@@ -141,6 +141,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\filter.js" />
     <Content Include="Scripts\index.js" />
     <Content Include="Scripts\resource.js" />
     <Content Include="Scripts\transactor.js" />
@@ -231,6 +232,13 @@
     <Content Include="Views\Appointment\List.cshtml" />
     <Content Include="Views\Shared\MediaPriceProtection.cshtml" />
     <Content Include="Views\Appointment\ListSelf.cshtml" />
+    <Content Include="Views\Media\Index - 复制.cshtml" />
+    <Content Include="Views\Shared\FilterTags.cshtml" />
+    <Content Include="Views\Shared\FilterPrice.cshtml" />
+    <Content Include="Views\Shared\FilterFans.cshtml" />
+    <Content Include="Views\Shared\FilterOther.cshtml" />
+    <Content Include="Views\Shared\FilterModalSearch.cshtml" />
+    <Content Include="Views\Shared\ExportModal.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

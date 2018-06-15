@@ -159,15 +159,13 @@ namespace Ada.Framework.Filter
         /// </summary>
         /// <param name="jsonStr"></param>
         /// <returns></returns>
-        public byte[] ExportData(string jsonStr)
+        public byte[] ExportData(string jsonStr, string sheetName = "江西微广")
         {
             var dt = JsonConvert.DeserializeObject<DataTable>(jsonStr);
             byte[] bytes;
             using (var workbook = new XLWorkbook())
             {
-                var ws = workbook.Worksheets.Add(dt, "江西微广");
-                //remove AutoFilter
-                //ws.Tables.FirstOrDefault().ShowAutoFilter = false;
+                workbook.Worksheets.Add(dt, sheetName);
                 using (var ms = new MemoryStream())
                 {
                     workbook.SaveAs(ms);
@@ -175,6 +173,24 @@ namespace Ada.Framework.Filter
                 }
             }
             return bytes;
+        }
+        /// <summary>
+        /// 导出数据
+        /// </summary>
+        /// <param name="jsonStr"></param>
+        /// <param name="sheetName"></param>
+        /// <returns></returns>
+        public string ExportFile(string jsonStr, string sheetName = "江西微广")
+        {
+            var dt = JsonConvert.DeserializeObject<DataTable>(jsonStr);
+            var fileName = "MangerExport_" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx";
+            var fullPath = Server.MapPath("~/upload/" + fileName);
+            using (var workbook = new XLWorkbook())
+            {
+                workbook.Worksheets.Add(dt, sheetName);
+                workbook.SaveAs(fullPath);
+            }
+            return fileName;
         }
     }
 }

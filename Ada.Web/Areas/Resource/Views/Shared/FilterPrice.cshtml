@@ -1,0 +1,32 @@
+﻿@model List<SelectListItem>
+<div class="col-sm-4">
+    <div class="form-group">
+        <label class="control-label">成本价格区间 </label><small class="text-muted"> (注：请先选择广告位，再填写价格区间)</small>
+        <div class="row">
+            <div class="col-md-4">
+                <select class="form-control" name="AdPositionName" id="AdPositionName">
+                    <option value="">广告位</option>
+                    @foreach (var item in Model)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-8">
+                <div class="input-daterange input-group">
+                    <input type="number" name="PriceStart" value="" class="form-control" />
+                    <span class="input-group-addon">至</span>
+                    <div class="input-group">
+                        <input type="number" name="PriceEnd" value="" class="form-control" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                                确定
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

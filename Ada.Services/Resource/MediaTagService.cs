@@ -62,6 +62,10 @@ namespace Ada.Services.Resource
         }
         public List<MediaTagView> GetTags(string typeId)
         {
+            if (string.IsNullOrWhiteSpace(typeId))
+            {
+                return GetTags();
+            }
             return _repository.LoadEntities(d => d.IsDelete == false && d.Medias.Any(m => m.IsDelete == false && m.MediaTypeId == typeId)).OrderBy(d => d.Taxis)
                 .Select(d => new MediaTagView() { Id = d.Id, TagName = d.TagName }).ToList();
         }

@@ -1,0 +1,386 @@
+﻿@using Ada.Core.Infrastructure
+@using Ada.Services.Admin
+@model String
+@{
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var areas = fieldService.GetFieldsByKey("Area").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var priceProtectionDates = fieldService.GetFieldsByKey("PriceProtectionDate").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+}
+<div class="col-sm-3">
+    <div class="form-group">
+        <label class="control-label">区域</label>
+        <select name="Areas" class="form-control">
+            <option value="">不限区域</option>
+            @foreach (var item in areas)
+            {
+                <option value="@item.Value">@item.Text</option>
+            }
+        </select>
+    </div>
+</div>
+<div class="col-sm-3">
+    <div class="form-group">
+        <label class="control-label">保价期</label>
+        <select name="PriceProtectionDate" class="form-control">
+            <option value="">请选择</option>
+            @foreach (var item in priceProtectionDates)
+            {
+                <option value="@item.Value">@item.Text</option>
+            }
+        </select>
+    </div>
+</div>
+@if (Model == "weixin")
+{
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">是否认证</label>
+            <select name="IsAuthenticate" class="form-control">
+                <option value="">请选择</option>
+                <option value="true">是</option>
+                <option value="false">否</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">是否优质</label>
+            <select name="IsHot" class="form-control">
+                <option value="">请选择</option>
+                <option value="true">是</option>
+                <option value="false">否</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">是否推荐</label>
+            <select name="IsRecommend" class="form-control">
+                <option value="">请选择</option>
+                <option value="true">是</option>
+                <option value="false">否</option>
+            </select>
+        </div>
+    </div>
+    @*<div class="col-sm-3">
+            <div class="form-group">
+                <label class="control-label">广告关键词</label>
+                <div class="input-group">
+                    <input type="text" name="ADKey" value="" class="form-control" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                            确定
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>*@
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">平均阅读数</label>
+            <div class="input-daterange input-group">
+                <input type="number" name="AvgReadNumStart" value="" class="form-control" />
+                <span class="input-group-addon">至</span>
+                <div class="input-group">
+                    <input type="number" name="AvgReadNumEnd" value="" class="form-control" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                            确定
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">月发文数</label>
+            <div class="input-daterange input-group">
+                <input type="number" name="PostNumMin" value="" class="form-control" />
+                <span class="input-group-addon">至</span>
+                <div class="input-group">
+                    <input type="number" name="PostNumMax" value="" class="form-control" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                            确定
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">月发布频次</label>
+            <div class="input-daterange input-group">
+                <input type="number" name="PublishFrequencyMin" value="" class="form-control" />
+                <span class="input-group-addon">至</span>
+                <div class="input-group">
+                    <input type="number" name="PublishFrequencyMax" value="" class="form-control" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                            确定
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (Model == "sinablog")
+{
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">性别</label>
+            <select name="Sex" class="form-control">
+                <option value="">请选择</option>
+                <option value="男">男</option>
+                <option value="女">女</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">认证类型</label>
+            <select name="AuthenticateType" class="form-control">
+                <option value="">请选择</option>
+                <option value="黄V">黄V</option>
+                <option value="蓝V">蓝V</option>
+                <option value="达人">达人</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">是否优质</label>
+            <select name="IsHot" class="form-control">
+                <option value="">请选择</option>
+                <option value="true">是</option>
+                <option value="false">否</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">是否推荐</label>
+            <select name="IsRecommend" class="form-control">
+                <option value="">请选择</option>
+                <option value="true">是</option>
+                <option value="false">否</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">平均点赞数</label>
+            <div class="input-daterange input-group">
+                <input type="number" name="LikesNumMin" value="" class="form-control" />
+                <span class="input-group-addon">至</span>
+                <div class="input-group">
+                    <input type="number" name="LikesNumMax" value="" class="form-control" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                            确定
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">平均评论数</label>
+            <div class="input-daterange input-group">
+                <input type="number" name="CommentNumMin" value="" class="form-control" />
+                <span class="input-group-addon">至</span>
+                <div class="input-group">
+                    <input type="number" name="CommentNumMax" value="" class="form-control" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                            确定
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">平均转发数</label>
+            <div class="input-daterange input-group">
+                <input type="number" name="TransmitNumMin" value="" class="form-control" />
+                <span class="input-group-addon">至</span>
+                <div class="input-group">
+                    <input type="number" name="TransmitNumMax" value="" class="form-control" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                            确定
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">发布总数</label>
+            <div class="input-daterange input-group">
+                <input type="number" name="PostNumMin" value="" class="form-control" />
+                <span class="input-group-addon">至</span>
+                <div class="input-group">
+                    <input type="number" name="PostNumMax" value="" class="form-control" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                            确定
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (Model == "douyin")
+{
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">抖音ID</label>
+            <div class="input-group">
+                <input type="text" name="Abstract" value="" class="form-control" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                        确定
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">性别</label>
+            <select name="Sex" class="form-control">
+                <option value="">请选择</option>
+                <option value="男">男</option>
+                <option value="女">女</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">是否认证</label>
+            <select name="IsAuthenticate" class="form-control">
+                <option value="">请选择</option>
+                <option value="true">是</option>
+                <option value="false">否</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">平均点赞数</label>
+            <div class="input-daterange input-group">
+                <input type="number" name="LikesNumMin" value="" class="form-control" />
+                <span class="input-group-addon">至</span>
+                <div class="input-group">
+                    <input type="number" name="LikesNumMax" value="" class="form-control" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                            确定
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">平均评论数</label>
+            <div class="input-daterange input-group">
+                <input type="number" name="CommentNumMin" value="" class="form-control" />
+                <span class="input-group-addon">至</span>
+                <div class="input-group">
+                    <input type="number" name="CommentNumMax" value="" class="form-control" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                            确定
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">平均转发数</label>
+            <div class="input-daterange input-group">
+                <input type="number" name="TransmitNumMin" value="" class="form-control" />
+                <span class="input-group-addon">至</span>
+                <div class="input-group">
+                    <input type="number" name="TransmitNumMax" value="" class="form-control" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                            确定
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model == "redbook")
+{
+
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">平均点赞数</label>
+            <div class="input-daterange input-group">
+                <input type="number" name="AvgReadNumStart" value="" class="form-control" />
+                <span class="input-group-addon">至</span>
+                <div class="input-group">
+                    <input type="number" name="AvgReadNumEnd" value="" class="form-control" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                            确定
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">平均评论数</label>
+            <div class="input-daterange input-group">
+                <input type="number" name="CommentNumMin" value="" class="form-control" />
+                <span class="input-group-addon">至</span>
+                <div class="input-group">
+                    <input type="number" name="CommentNumMax" value="" class="form-control" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                            确定
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">平均收藏数</label>
+            <div class="input-daterange input-group">
+                <input type="number" name="TransmitNumMin" value="" class="form-control" />
+                <span class="input-group-addon">至</span>
+                <div class="input-group">
+                    <input type="number" name="TransmitNumMax" value="" class="form-control" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                            确定
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

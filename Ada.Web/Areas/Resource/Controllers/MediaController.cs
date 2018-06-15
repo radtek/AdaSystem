@@ -70,44 +70,50 @@ namespace Resource.Controllers
             _fieldService = fieldService;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string id)
         {
             MediaView media = new MediaView();
+            media.MediaTypeId = id;
             return View(media);
         }
+        /// <summary>
+        /// 资源导出
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Index(MediaView viewModel)
+        [AdaValidateAntiForgeryToken]
+        public ActionResult Exports(MediaView viewModel)
         {
-            var export = Request.Form["Submit.Export"];
-            if (string.IsNullOrWhiteSpace(viewModel.MediaTypeIndex))
-            {
-                ModelState.AddModelError("message", "请先选择媒体类型！");
-                return View(viewModel);
-            }
-            var setting = _settingService.GetSetting<WeiGuang>();
-            Stopwatch watcher = new Stopwatch();
-            watcher.Start();
-            viewModel.Status = Consts.StateNormal;
-            var isExport = export == "export";
-            viewModel.limit = isExport ? setting.BusinessExportRows : setting.BusinessSeachRows;
-            var results = _mediaService.LoadEntitiesFilter(viewModel).AsNoTracking().ToList();
-            watcher.Stop();
-            if (isExport)
-            {
-                var jObjects = ExprotTemplate(viewModel, results);
-                return File(ExportData(jObjects.ToString()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
-            }
-            viewModel.Medias = results.OrderBy(d => d.Taxis).ToList();
-            if (!results.Any())
-            {
-                ModelState.AddModelError("message", "没有查询到相关媒体信息！");
-                return View(viewModel);
-            }
-            ModelState.AddModelError("message", "本次查询查询耗时：" + watcher.ElapsedMilliseconds + "毫秒，共查询结果为" + viewModel.total + "条。注：查询结果最多显示" + setting.BusinessSeachRows + "条。");
-            return View(viewModel);
-        }
 
+            if (string.IsNullOrWhiteSpace(viewModel.MediaTypeId))
+            {
+                return Json(new { State = 0, Msg = "请选择媒体类型！" });
+            }
+            var mediaType = _mediaTypeRepository.LoadEntities(d => d.Id == viewModel.MediaTypeId).FirstOrDefault();
+            if (mediaType == null)
+            {
+                return Json(new { State = 0, Msg = "不存在的媒体类型！" });
+            }
+            viewModel.MediaTypeIndex = mediaType.CallIndex;
+            var setting = _settingService.GetSetting<WeiGuang>();
+            viewModel.Status = Consts.StateNormal;
+            viewModel.limit = setting.BusinessExportRows;
+            var results = _mediaService.LoadEntitiesFilter(viewModel).AsNoTracking().ToList();
+            var jObjects = ExprotTemplate(viewModel, results);
+            return Json(new { State = 1, Msg = ExportFile(jObjects.ToString()) });
+
+        }
+        [HttpGet,DeleteFile,AllowAnonymous]
+        public ActionResult Download(string file)
+        {
+            string fullPath = Path.Combine(Server.MapPath("~/upload"), file);
+            if (System.IO.File.Exists(fullPath))
+            {
+                return File(fullPath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", file);
+            }
+            return Content("无可用文件下载");
+        }
         private JArray ExprotTemplate(MediaView viewModel, List<Media> results)
         {
             List<Media> noDatas = new List<Media>();
@@ -357,7 +363,7 @@ namespace Resource.Controllers
                 jo.Add("备注说明", media.Remark);
                 var date = media.MediaPrices.FirstOrDefault()?.InvalidDate;
                 jo.Add("价格有效期", date?.ToString("yyyy-MM-dd") ?? "");
-                foreach (var mediaMediaPrice in media.MediaPrices.OrderByDescending(d=>d.AdPositionName).Where(d => d.IsDelete == false))
+                foreach (var mediaMediaPrice in media.MediaPrices.OrderByDescending(d => d.AdPositionName).Where(d => d.IsDelete == false))
                 {
                     jo.Add(mediaMediaPrice.AdPositionName, mediaMediaPrice.PurchasePrice);
                 }
@@ -366,14 +372,14 @@ namespace Resource.Controllers
             return jObjects.ToString();
         }
         [HttpPost]
-        public ActionResult GetList(MediaView viewModel)
+        public ActionResult GetListAll(MediaView viewModel)
         {
-            viewModel.Managers = PremissionData();
+            viewModel.Status = Consts.StateNormal;
             var result = _mediaService.LoadEntitiesFilter(viewModel).AsNoTracking().ToList();
             return Json(new
             {
                 viewModel.total,
-                //rows = result
+                no = viewModel.NoExistent,
                 rows = result.Select(d => new MediaView
                 {
                     Id = d.Id,
@@ -385,7 +391,7 @@ namespace Resource.Controllers
                     IsAuthenticate = d.IsAuthenticate,
                     IsOriginal = d.IsOriginal,
                     IsComment = d.MediaType.IsComment,
-                    FansNum = d.FansNum,
+                    FansNum = Utils.ShowFansNum(d.FansNum),
                     ChannelType = d.ChannelType,
                     LastReadNum = d.LastReadNum,
                     AvgReadNum = d.AvgReadNum,
@@ -427,7 +433,73 @@ namespace Resource.Controllers
                     RetentionTime = d.RetentionTime,
                     MediaGroups = d.MediaGroups.Where(m => m.GroupType == Consts.StateNormal).Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
                     MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).ToList(),
-                    MediaPrices = d.MediaPrices.Where(p => p.IsDelete == false).Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = p.PurchasePrice }).OrderByDescending(p=>p.AdPositionName).ToList()
+                    MediaPrices = d.MediaPrices.Where(p => p.IsDelete == false).Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = p.PurchasePrice, SellPrice = p.SellPrice, MarketPrice = p.MarketPrice }).OrderByDescending(p => p.AdPositionName).ToList()
+                })
+            });
+        }
+        [HttpPost]
+        public ActionResult GetList(MediaView viewModel)
+        {
+            viewModel.Managers = PremissionData();
+            var result = _mediaService.LoadEntitiesFilter(viewModel).AsNoTracking().ToList();
+            return Json(new
+            {
+                viewModel.total,
+                no = viewModel.NoExistent,
+                rows = result.Select(d => new MediaView
+                {
+                    Id = d.Id,
+                    MediaName = d.MediaName,
+                    MediaID = d.MediaID,
+                    MediaTypeIndex = d.MediaType.CallIndex,
+                    MediaTypeLogo = d.MediaType.Image,
+                    MediaTypeName = d.MediaType.TypeName,
+                    IsAuthenticate = d.IsAuthenticate,
+                    IsOriginal = d.IsOriginal,
+                    IsComment = d.MediaType.IsComment,
+                    FansNum = Utils.ShowFansNum(d.FansNum),
+                    ChannelType = d.ChannelType,
+                    LastReadNum = d.LastReadNum,
+                    AvgReadNum = d.AvgReadNum,
+                    PublishFrequency = d.PublishFrequency,
+                    Areas = d.Area,
+                    Sex = d.Sex,
+                    Client = d.Client,
+                    SEO = d.SEO,
+                    Abstract = d.Abstract,
+                    PostNum = d.PostNum,
+                    MonthPostNum = d.MonthPostNum,
+                    FriendNum = d.FriendNum,
+                    Efficiency = d.Efficiency,
+                    ResourceType = d.ResourceType,
+                    Channel = d.Channel,
+                    LastPushDate = d.LastPushDate,
+                    AuthenticateType = d.AuthenticateType,
+                    Platform = d.Platform,
+                    TransmitNum = d.TransmitNum,
+                    CommentNum = d.CommentNum,
+                    LikesNum = d.LikesNum,
+                    Content = d.Content,
+                    Remark = d.Remark,
+                    Status = d.Status,
+                    IsHot = d.IsHot,
+                    IsRecommend = d.IsRecommend,
+                    IsTop = d.IsTop,
+                    ApiUpDate = d.ApiUpDate,
+                    MediaLink = d.MediaLink,
+                    MediaLogo = d.MediaLogo,
+                    MediaQR = d.MediaQR,
+                    LinkManId = d.LinkManId,
+                    LinkManName = d.LinkMan.Name,
+                    Transactor = d.Transactor,
+                    PriceProtectionDate = d.PriceProtectionDate,
+                    PriceProtectionIsPrePay = d.PriceProtectionIsPrePay,
+                    PriceProtectionRemark = d.PriceProtectionRemark,
+                    PriceProtectionIsBrand = d.PriceProtectionIsBrand,
+                    RetentionTime = d.RetentionTime,
+                    MediaGroups = d.MediaGroups.Where(m => m.GroupType == Consts.StateNormal).Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
+                    MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).ToList(),
+                    MediaPrices = d.MediaPrices.Where(p => p.IsDelete == false).Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = p.PurchasePrice, SellPrice = p.SellPrice, MarketPrice = p.MarketPrice }).OrderByDescending(p => p.AdPositionName).ToList()
                 })
             });
         }
@@ -488,7 +560,7 @@ namespace Resource.Controllers
             for (int i = 1; i <= sheet.LastRowNum; i++)
             {
                 IRow row = sheet.GetRow(i);
-                if (row==null)
+                if (row == null)
                 {
                     continue;
                 }

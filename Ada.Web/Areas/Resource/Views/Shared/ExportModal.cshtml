@@ -1,0 +1,31 @@
+﻿
+<div class="modal inmodal" id="exportModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <i class="fa fa-download modal-icon"></i>
+                <h4 class="modal-title">媒体资源导出</h4>
+                <small class="font-bold">请选择要导出的价格类型（可多选，如不选默认为成本价格）.</small>
+            </div>
+            <div class="modal-body text-center">
+                <div class="checkbox checkbox-success checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox1" name="PriceType" value="0" checked="">
+                    <label for="inlineCheckbox1"> 成本价格 </label>
+                </div>
+                <div class="checkbox checkbox-success checkbox-success checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox2" name="PriceType" value="1">
+                    <label for="inlineCheckbox2"> 销售价格 </label>
+                </div>
+                <div class="checkbox checkbox-success checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox3" name="PriceType" value="2">
+                    <label for="inlineCheckbox3"> 零售价格 </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">返回关闭</button>
+                <button type="button" class="btn btn-primary ladda-button" data-style="zoom-in" onclick="exportFile();">开始导出</button>
+            </div>
+        </div>
+    </div>
+</div>
