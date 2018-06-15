@@ -159,13 +159,13 @@ namespace Ada.Framework.Filter
         /// </summary>
         /// <param name="jsonStr"></param>
         /// <returns></returns>
-        public byte[] ExportData(string jsonStr, string sheetName = "江西微广")
+        public byte[] ExportData(string jsonStr)
         {
             var dt = JsonConvert.DeserializeObject<DataTable>(jsonStr);
             byte[] bytes;
             using (var workbook = new XLWorkbook())
             {
-                workbook.Worksheets.Add(dt, sheetName);
+                workbook.Worksheets.Add(dt, "江西微广");
                 using (var ms = new MemoryStream())
                 {
                     workbook.SaveAs(ms);

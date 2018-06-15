@@ -5,6 +5,7 @@
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var areas = fieldService.GetFieldsByKey("Area").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var priceProtectionDates = fieldService.GetFieldsByKey("PriceProtectionDate").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var platforms = fieldService.GetFieldsByKey("LivePlatform").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 <div class="col-sm-3">
     <div class="form-group">
@@ -30,6 +31,21 @@
         </select>
     </div>
 </div>
+@if (Model == "webcast")
+{
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">直播平台</label>
+            <select name="Platform" class="form-control">
+                <option value="">请选择</option>
+                @foreach (var item in platforms)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
+    </div>
+}
 @if (Model == "weixin")
 {
     <div class="col-sm-3">

@@ -53,17 +53,19 @@ namespace Ada.Services.Purchase
             }
             if (!string.IsNullOrWhiteSpace(viewModel.InvoiceCompany))
             {
-                allList = from p in allList
-                          from d in p.PurchasePaymentDetails
-                          where d.AccountName.Contains(viewModel.InvoiceCompany)
-                          select p;
+                allList = allList.Where(d => d.PurchasePaymentDetails.Any(p=>p.AccountName.Contains(viewModel.InvoiceCompany)));
+                //allList = from p in allList
+                //          from d in p.PurchasePaymentDetails
+                //          where d.AccountName.Contains(viewModel.InvoiceCompany)
+                //          select p;
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaName))
             {
-                allList = from p in allList
-                          from d in p.PurchasePaymentOrderDetails
-                          where d.PurchaseOrderDetail.MediaName.Contains(viewModel.MediaName)
-                          select p;
+                allList = allList.Where(d => d.PurchasePaymentOrderDetails.Any(o=>o.PurchaseOrderDetail.MediaName.Contains(viewModel.MediaName)));
+                //allList = from p in allList
+                //          from d in p.PurchasePaymentOrderDetails
+                //          where d.PurchaseOrderDetail.MediaName.Contains(viewModel.MediaName)
+                //          select p;
             }
             if (viewModel.IsInvoice != null)
             {

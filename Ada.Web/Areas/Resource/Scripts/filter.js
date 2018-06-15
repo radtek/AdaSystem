@@ -60,6 +60,10 @@ filterFormat.mediaInfo = function (value, row) {
     if (row.Areas) {
         area = " <span class='btn btn-info btn-outline btn-xs'><i class='fa fa-map-marker'></i> " + row.Areas + "</span>";
     }
+    var platform = "";
+    if (row.Platform) {
+        platform = " <span class='btn btn-info btn-outline btn-xs'><i class='fa fa-star-o'></i> 平台：" + row.Platform + "</span>";
+    }
     var fans = "<span class='btn btn-danger btn-xs btn-outline'><i class='fa fa-users'></i> 粉丝：" + (row.FansNum ? row.FansNum.toFixed(1) + " 万" : "不详") + "</span>";
     var tags = "";
     if (row.MediaTags) {
@@ -102,12 +106,13 @@ filterFormat.mediaInfo = function (value, row) {
     var line1 = "<div class='p-xxs'>" + sex + isAuth + mediaName + "</div>";
     var line2 = weixinid ? "<div class='p-xxs'>" + weixinid + "</div>" : "";
     var line3 = area ? "<div class='p-xxs'>" + area + "</div>" : "";
+    var line33 = platform ? "<div class='p-xxs'>" + platform + "</div>" : "";
     var line0 = aType ? "<div class='p-xxs'>" + aType + "</div>" : "";
     var line4 = tags ? "<div class='p-xxs'>" + tags + "</div>" : "";
     var line5 = "<div class='p-xxs'>" + fans + "</div>";
     var line6 = row.RetentionTime ? "<div class='p-xxs'><span class='btn btn-info btn-outline btn-xs'><i class='fa fa-clock-o'></i> 保留时长：" + row.RetentionTime + "</span></div>" : "";
 
-    return line1 + line2 + line3 + line0 + line4 + line5 + line6;
+    return line1 + line2 + line3 + line33 + line0 + line4 + line5 + line6;
 };
 filterFormat.mediaPrice = function (value, row) {
     var arr = [];
