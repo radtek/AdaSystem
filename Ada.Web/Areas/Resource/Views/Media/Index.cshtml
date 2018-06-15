@@ -140,7 +140,7 @@
     @Scripts.Render("~/plugins/clipboard")
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/ladda")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/filter.js?v=20180616")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/filter.js?v=20180617")"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -224,13 +224,16 @@
                     },
                     {
                         field: 'Remark',
-                        title: '媒介备注',
+                        title: '备注信息',
                         valign: "middle",
                         align: "center",
-                        formatter: function(value) {
-                            return "<span class='label label-info'  data-toggle='tooltip' data-placement='bottom' title='" +
+                        formatter: function(value,row) {
+                            return "<div class='p-xxs text-center'><span class='label label-info'  data-toggle='tooltip' data-placement='bottom' title='" +
                                 (value || '暂无信息') +
-                                "'>查看备注</span>";
+                                "'>媒介备注</span></div>" +
+                                "<div class='p-xxs text-center'><span class='label label-info'  data-toggle='tooltip' data-placement='bottom' title='" +
+                                (row.Content || '暂无简介') +
+                                "'>媒体简介</span></div>";
                         }
 
                     },

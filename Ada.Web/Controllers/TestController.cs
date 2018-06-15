@@ -400,8 +400,11 @@ namespace Ada.Web.Controllers
                     var mediaId = row.GetCell(0)?.ToString();
                     var media = _media.LoadEntities(d => d.Id == mediaId.Trim()).FirstOrDefault();
                     if (media == null) continue;
-                    media.LinkManId = "X1805171355140059";
-                    
+                    media.Transactor = "周方超";
+                    media.TransactorId = "X1806111602430001";
+                    media.LinkMan.Transactor = "周方超";
+                    media.LinkMan.TransactorId = "X1806111602430001";
+
                     count++;
                 }
 
@@ -551,11 +554,16 @@ namespace Ada.Web.Controllers
         }
         public ActionResult MediaUpdate()
         {
-            int count =
-                _media.Update(d => d.LinkManId == "X1801151511230002",
-                    p => new Media() { LinkManId = "X1803131311440593" });
+            //int count =
+            //    _media.Update(d => d.LinkManId == "X1801151511230002",
+            //        p => new Media() { LinkManId = "X1803131311440593" });
+            var medias = _media.LoadEntities(d => d.IsDelete == false && d.MediaName.Contains(" ")).ToList();
+            foreach (var media in medias)
+            {
+                media.MediaName = media.MediaName.Replace(" ", "");
+            }
             _dbContext.SaveChanges();
-            return Content("成功更换" + count + "条资源");
+            return Content("成功更换" + medias.Count + "条资源");
         }
         public ActionResult Tool()
         {

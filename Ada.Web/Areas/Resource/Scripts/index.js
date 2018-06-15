@@ -106,11 +106,7 @@ function formatterTag(value) {
 }
 
 function formatterFans(value) {
-    var fans = 0;
-    if (value) {
-        fans = value * 1.0 / 10000;
-    }
-    return "<span class='btn btn-danger btn-xs btn-outline'><i class='fa fa-users'></i> 粉丝：" + fans.toFixed(1) + " 万</span>";
+    return "<span class='btn btn-danger btn-xs btn-outline'><i class='fa fa-users'></i> 粉丝：" + value + " 万</span>";
 }
 function formatterGroup(value, row, index) {
     var result = "";

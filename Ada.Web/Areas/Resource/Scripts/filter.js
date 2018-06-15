@@ -261,7 +261,6 @@ function initFilter() {
 
     });
     $('#searchModal').on('shown.bs.modal', function () {
-        $("#MediaBatch").val("");
         $('#resultModal .modal-body').empty();
     }).on('hidden.bs.modal', function () {
 
@@ -315,6 +314,7 @@ function onLoadSuccess(data) {
 function serachFilter(parameters) {
     var mediaBatch = $("#MediaBatch").val();
     if (mediaBatch) {
+        parameters.MediaTypeId = $("#MediaTypeId").val();
         parameters.MediaBatch = mediaBatch;
         return parameters;
     }

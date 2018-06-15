@@ -421,6 +421,10 @@ namespace Ada.Core.Tools
          */
         public static string FilterEmoji(string source)
         {
+            if (!string.IsNullOrWhiteSpace(source))
+            {
+                source = source.Replace(" ", "");
+            }
             if (!ContainsEmoji(source))
                 return source;//如果不包含，直接返回
             //到这里铁定包含
