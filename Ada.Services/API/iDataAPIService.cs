@@ -330,6 +330,140 @@ namespace Ada.Services.API
             //}
             return requestResult;
         }
+
+        public RequestResult UpdateWeiXinArticle(WeiXinProParams baseParams)
+        {
+            RequestResult requestResult = new RequestResult();
+            var apiInfo = _apiInterfacesService.GetAPIInterfacesByCallIndex(baseParams.CallIndex);
+            string url = string.Format(apiInfo.APIUrl + "?apikey={0}", apiInfo.Token);
+            string urlparams = string.Empty;
+            if (!string.IsNullOrWhiteSpace(baseParams.ArticleLinks))
+            {
+                var base64 = Convert.ToBase64String(Encoding.Default.GetBytes(baseParams.ArticleLinks));
+                urlparams = "&link=" + base64;
+            }
+            int times = apiInfo.TimeOut ?? 3;
+            string htmlstr = string.Empty;
+            int request = 1;
+            while (request <= times)
+            {
+                try
+                {
+                    htmlstr = HttpUtility.Get(url + urlparams);
+                    request = 9999;
+                }
+                catch (Exception ex)
+                {
+                    if (request == times)
+                    {
+                        APIRequestRecord exrecord = new APIRequestRecord();
+                        exrecord.Id = IdBuilder.CreateIdNum();
+                        exrecord.RequestParameters = urlparams;
+                        exrecord.IsSuccess = false;
+                        exrecord.Retcode = "500";
+                        exrecord.ReponseContent = ex.Message;
+                        exrecord.Retmsg = "请求异常";
+                        exrecord.ReponseDate = DateTime.Now;
+                        apiInfo.APIRequestRecords.Add(exrecord);
+                    }
+                    request++;
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(htmlstr))
+            {
+                var result = JsonConvert.DeserializeObject<WeiXinProJSON>(htmlstr);
+                //记录日志
+                //成功日志
+                if (result.retcode == ReturnCode.请求成功 && baseParams.IsLog)
+                {
+                    APIRequestRecord record = new APIRequestRecord();
+                    record.Id = IdBuilder.CreateIdNum();
+                    record.IsSuccess = true;
+                    record.RequestParameters = urlparams;
+                    record.Retcode = result.retcode.GetHashCode().ToString();
+                    record.Retmsg = result.message;
+                    record.ReponseContent = "当前采集文章数：" + result.data.Count;
+                    record.ReponseDate = DateTime.Now;
+                    record.AddedById = baseParams.TransactorId;
+                    record.AddedBy = baseParams.Transactor;
+                    apiInfo.APIRequestRecords.Add(record);
+                }
+                //失败日志
+                if (result.retcode != ReturnCode.请求成功)
+                {
+                    APIRequestRecord record = new APIRequestRecord();
+                    record.Id = IdBuilder.CreateIdNum();
+                    record.IsSuccess = false;
+                    record.RequestParameters = urlparams;
+                    record.Retcode = result.retcode.GetHashCode().ToString();
+                    record.Retmsg = result.message;
+                    record.ReponseContent = htmlstr;
+                    record.ReponseDate = DateTime.Now;
+                    record.AddedById = baseParams.TransactorId;
+                    record.AddedBy = baseParams.Transactor;
+                    apiInfo.APIRequestRecords.Add(record);
+                }
+                if (result.data.Count > 0)
+                {
+                    var media = _mediaRepository.LoadEntities(d => d.MediaID == baseParams.UID && d.IsDelete == false).FirstOrDefault();
+                    var brands = _fieldRepository.LoadEntities(d => d.FieldType.CallIndex == "Brand").Select(d => d.Text).ToList();
+                    media.CollectionDate = DateTime.Now;
+                    
+                    var articleData = result.data.FirstOrDefault();
+                    if (articleData!=null)
+                    {
+
+                        var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
+                        if (article != null)
+                        {
+                            article.ArticleIdx = articleData.idx;
+                            article.ArticleUrl = articleData.url;
+                            article.IsOriginal = articleData.original;
+                            article.Biz = articleData.biz;
+                            article.CommentCount = articleData.commentCount;
+                            article.Content = GetBrands(articleData.content, brands); ;
+                            article.IsTop = articleData.isTop;
+                            article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
+                                ? (DateTime?)null
+                                : DateTime.Parse(articleData.publishDateStr);
+                            article.LikeCount = articleData.likeCount;
+                            article.ViewCount = articleData.viewCount;
+                            article.Title = articleData.title;
+                            article.ModifiedDate = DateTime.Now;
+                        }
+                        else
+                        {
+                            article = new MediaArticle();
+                            article.Id = IdBuilder.CreateIdNum();
+                            article.ArticleId = articleData.id;
+                            article.ArticleIdx = articleData.idx;
+                            article.ArticleUrl = articleData.url;
+                            article.IsOriginal = articleData.original;
+                            article.Biz = articleData.biz;
+                            article.CommentCount = articleData.commentCount;
+                            article.Content = GetBrands(articleData.content, brands); ;
+                            article.IsTop = articleData.isTop;
+                            article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
+                                ? (DateTime?)null
+                                : DateTime.Parse(articleData.publishDateStr);
+                            article.LikeCount = articleData.likeCount;
+                            article.ViewCount = articleData.viewCount;
+                            article.Title = articleData.title;
+                            media.MediaArticles.Add(article);
+                        }
+                        requestResult.IsSuccess = true;
+                        requestResult.Message = articleData.id;
+                        requestResult.ViewCount = articleData.viewCount;
+                        requestResult.CommentCount = articleData.commentCount;
+                        requestResult.LikeCount = articleData.likeCount;
+                    }
+                    
+                }
+            }
+            _dbContext.SaveChanges();
+            return requestResult;
+        }
+
         /// <summary>
         /// 先更新微信信息，再更新文章内容
         /// </summary>

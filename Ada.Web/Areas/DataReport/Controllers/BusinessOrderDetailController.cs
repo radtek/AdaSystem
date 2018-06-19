@@ -65,7 +65,7 @@ namespace DataReport.Controllers
                     OrderRemark = d.BusinessOrder.Remark,
                     PrePublishDate = d.PrePublishDate,
                     PurchaseStatus = GetPurchaseOrderDetail(d.Id)?.Status,
-                    PurchaseMoney = GetPurchaseOrderDetail(d.Id)?.PurchaseMoney,
+                    PurchaseMoney = GetPurchaseOrderDetail(d.Id)?.PurchaseMoney- (GetPurchaseOrderDetail(d.Id)?.PurchaseReturenOrderDetails.Sum(p=>p.Money)??0),
                     PublishDate = GetPurchaseOrderDetail(d.Id)?.PublishDate,
                     PublishLink = GetPurchaseOrderDetail(d.Id)?.PublishLink,
                     MediaByPurchase = GetPurchaseOrderDetail(d.Id)?.Transactor,

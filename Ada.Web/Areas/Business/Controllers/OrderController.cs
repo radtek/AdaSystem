@@ -148,7 +148,7 @@ namespace Business.Controllers
                 PublishLink = GetPurchaseOrderDetail(d.Id)?.PublishLink,
                 PublishDate = GetPurchaseOrderDetail(d.Id)?.PublishDate,
                 PurchaseStatus = GetPurchaseOrderDetail(d.Id)?.Status,
-                CostMoney = GetPurchaseOrderDetail(d.Id)?.PurchaseMoney
+                CostMoney = GetPurchaseOrderDetail(d.Id)?.PurchaseMoney - GetPurchaseOrderDetail(d.Id)?.PurchaseReturenOrderDetails.Sum(p => p.Money)
             });
             return PartialView("OrderDetails", details);
         }
@@ -266,7 +266,7 @@ namespace Business.Controllers
                 d.MediaByPurchase,
                 Status = d.Status ?? Consts.StateLock,
                 PurchaseStatus = GetPurchaseOrderDetail(d.Id)?.Status,
-                GetPurchaseOrderDetail(d.Id)?.PurchaseMoney
+                PurchaseMoney = GetPurchaseOrderDetail(d.Id)?.PurchaseMoney - (GetPurchaseOrderDetail(d.Id)?.PurchaseReturenOrderDetails.Sum(p => p.Money)??0)
             }).OrderByDescending(d => d.Id);
             entity.OrderDetails = JsonConvert.SerializeObject(orderDetails);
 

@@ -165,6 +165,11 @@ namespace Ada.Services.Business
                                             from p in purchaseOrderDetails
                                             where b.Id == p.BusinessOrderDetailId
                                             select p).Sum(d => d.PurchaseMoney);
+            var returnMoney = (from b in allList
+                from p in purchaseOrderDetails
+                where b.Id == p.BusinessOrderDetailId
+                select p).Sum(d => d.PurchaseReturenOrderDetails.Sum(p=>p.Money));
+            viewModel.TotalPurchaseMoney = viewModel.TotalPurchaseMoney - (returnMoney??0);
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
             if (!string.IsNullOrWhiteSpace(viewModel.PublishDateOrder))

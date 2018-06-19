@@ -158,7 +158,21 @@ namespace Purchase.Controllers
                 .LoadEntities(d => d.Id == entity.BusinessOrderDetailId).FirstOrDefault();
             if (entity.Status==Consts.PurchaseStatusFail)
             {
-                
+                //请款了的，不能采购失败
+                if (entity.PurchasePaymentOrderDetails.Any())
+                {
+                    //如果退款金额==请款金额，可以失败
+                    //请款金额
+                    var payMoney = entity.PurchasePaymentOrderDetails.Sum(d =>
+                        d.PurchasePayment.PurchasePaymentDetails.Sum(p => p.PayMoney));
+                    var returnMoney = entity.PurchaseReturenOrderDetails.Sum(r => r.Money);
+                    if (payMoney != returnMoney)
+                    {
+                        ModelState.AddModelError("message", "已请款，无法进行采购失败");
+                        return View(viewModel);
+                    }
+                   
+                }
                 businessOrder.Status = Consts.StateFail;//订单失败
                 entity.AuditStatus = Consts.StateNormal;
             }

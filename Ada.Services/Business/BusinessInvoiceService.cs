@@ -41,7 +41,7 @@ namespace Ada.Services.Business
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.Company.Contains(viewModel.search));
+                allList = allList.Where(d => d.Company.Contains(viewModel.search)||d.BusinessInvoiceDetails.Any(i=>i.BusinessOrder.OrderNum==viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.Transactor))
             {

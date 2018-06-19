@@ -283,7 +283,8 @@ namespace Resource.Controllers
             viewModel.Managers = PremissionData();
             var setting = _settingService.GetSetting<WeiGuang>();
             viewModel.limit = setting.PurchaseExportRows;
-            return File(ExportData(ExportExcel(viewModel)), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
+            var bytes = ExportData(ExportExcel(viewModel));
+            return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
         }
 
         private string ExportExcel(MediaView viewModel)

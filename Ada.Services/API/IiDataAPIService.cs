@@ -17,5 +17,7 @@ namespace Ada.Services.API
       RequestResult GetWeinXinInfo(BaseParams baseParams);
       RequestResult GetWeiXinInfoPro(WeiXinProParams wxparams);
       RequestResult GetDouYinInfo(DouYinParams dyparams);
+
+      RequestResult UpdateWeiXinArticle(WeiXinProParams baseParams);
   }
 }
