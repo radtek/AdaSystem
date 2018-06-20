@@ -240,6 +240,7 @@
                                         <th class="text-center">排名</th>
                                         <th>销售人员</th>
                                         <th>销售额（不含税）</th>
+                                        <th>利润率(%)</th>
                                         <th>利润</th>
                                     </tr>
                                 </thead>
@@ -277,6 +278,7 @@
                                         <th class="text-center">排名</th>
                                         <th>销售人员</th>
                                         <th>销售额（不含税）</th>
+                                        <th>利润率(%)</th>
                                         <th>利润</th>
                                     </tr>
                                 </thead>
@@ -339,7 +341,8 @@
                         function(k, v) {
                             $table.append('<tr>' +
                                 '<td class="text-center">' + (k + 1) + '</td><td>' + v.Transactor+'</td>' +
-                                '<td><span class="label label-primary">¥ ' + v.TotalSellMoney+'</span></td>' +
+                                '<td><span class="label label-primary">¥ ' + v.TotalSellMoney + '</span></td>' +
+                                '<td><span class="label label-info">' + v.Profit + '</span></td>' +
                                 '<td><span class="label label-warning">¥ ' +v.TotalProfitMoney+'</span></td>' +
                                 '</tr>');
                             totalSell += v.TotalSellMoney;
@@ -347,7 +350,8 @@
                         });
                     $table.append('<tr>' +
                         '<td class="text-center"></td><td>合计</td>' +
-                        '<td><span class="label label-primary">¥ ' + totalSell.toFixed(2)+'</span></td>' +
+                        '<td><span class="label label-primary">¥ ' + totalSell.toFixed(2) + '</span></td>' +
+                        '<td></td>' +
                         '<td><span class="label label-warning">¥ ' + totalProfit.toFixed(2)+'</span></td>' +
                         '</tr>');
                 },

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -49,15 +50,15 @@ namespace Business.Controllers
         public ActionResult GetList(BusinessWriteOffView viewModel)
         {
             viewModel.Managers = PremissionData();
-            var result = _businessWriteOffService.LoadEntitiesFilter(viewModel).ToList();
+            var result = _businessWriteOffService.LoadEntitiesFilter(viewModel).AsNoTracking().ToList();
             return Json(new
             {
                 viewModel.total,
                 rows = result.Select(d => new BusinessWriteOffView
                 {
                     Id = d.Id,
-                    LinkManName = d.BusinessOrderDetails.FirstOrDefault()?.BusinessOrder.LinkManName,
-                    OrderNum = d.BusinessOrderDetails.FirstOrDefault()?.BusinessOrder.OrderNum,
+                    //LinkManName = d.BusinessOrderDetails.FirstOrDefault()?.BusinessOrder.LinkManName,
+                    //OrderNum = d.BusinessOrderDetails.FirstOrDefault()?.BusinessOrder.OrderNum,
                     Transactor = d.Transactor,
                     Money = d.Money,
                     WriteOffDate = d.WriteOffDate

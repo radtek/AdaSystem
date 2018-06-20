@@ -51,6 +51,10 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => viewModel.Managers.Contains(d.TransactorId));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.search))
+            {
+                allList = allList.Where(d => d.Transactor.Contains(viewModel.search));
+            }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;

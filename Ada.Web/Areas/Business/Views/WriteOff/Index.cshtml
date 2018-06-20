@@ -66,15 +66,15 @@
                 //detailView: true,                   //设置为 true 可以显示详细页面模式。
                 //detailFormatter: detailFormatter,
                 formatSearch: function() {
-                    return "@Html.DisplayNameFor(d => d.LinkManName)";
+                    return "@Html.DisplayNameFor(d => d.Transactor)";
                 },
                 mobileResponsive:true,
                 columns: [
-                    {
+                    @*{
                         field: 'LinkManName',
                         title: '@Html.DisplayNameFor(d=>d.LinkManName)',
                         align: "center", valign: "middle"
-                    },
+                    },*@
                     {
                         field: 'Money',
                         title: '@Html.DisplayNameFor(d=>d.Money)',

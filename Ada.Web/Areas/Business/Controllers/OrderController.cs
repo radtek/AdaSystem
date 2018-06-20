@@ -122,13 +122,24 @@ namespace Business.Controllers
         {
             var count = businessOrder.BusinessOrderDetails.Count;
             //获取采购订单明细完成情况
-            var purchaseOrder = _purchaseOrderRepository.LoadEntities(d => d.BusinessOrderId == businessOrder.Id)
-                .FirstOrDefault();
             int finish = 0;
-            if (purchaseOrder != null)
+            foreach (var item in businessOrder.BusinessOrderDetails)
             {
-                finish = purchaseOrder.PurchaseOrderDetails.Count(d => d.IsDelete == false && d.Status == Consts.PurchaseStatusSuccess);
+                var purchare = _purchaseOrderDetailRepository.LoadEntities(d => d.BusinessOrderDetailId == item.Id)
+                    .FirstOrDefault();
+                if (purchare == null) continue;
+                if (purchare.Status==Consts.PurchaseStatusSuccess)
+                {
+                    finish++;
+                }
             }
+            //var purchaseOrder = _purchaseOrderRepository.LoadEntities(d => d.BusinessOrderId == businessOrder.Id)
+            //    .FirstOrDefault();
+            //int finish = 0;
+            //if (purchaseOrder != null)
+            //{
+            //    finish = purchaseOrder.PurchaseOrderDetails.Count(d => d.IsDelete == false && d.Status == Consts.PurchaseStatusSuccess);
+            //}
             return finish + "/" + count;
         }
         public ActionResult Details(string id)
@@ -1055,7 +1066,12 @@ namespace Business.Controllers
                 return Json(new { State = 0, Msg = "不存在的订单." });
             }
             var idList = ids.Split(',').ToList();
-            _businessOrderDetailService.Update(d => idList.Contains(d.Id), d => new BusinessOrderDetail { BusinessOrderId = order.Id });
+            if (!order.BusinessOrderDetails.Any())
+            {
+                order.Status = Consts.StateNormal;
+                order.AuditStatus = Consts.StateNormal;
+            }
+            _businessOrderDetailService.Update(d => idList.Contains(d.Id), d => new BusinessOrderDetail { BusinessOrderId = order.Id,Tax = order.Tax});
             return Json(new { State = 0, Msg = "转移成功." });
         }
     }
