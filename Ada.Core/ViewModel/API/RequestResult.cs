@@ -1,4 +1,6 @@
-﻿namespace Ada.Core.ViewModel.API
+﻿using System;
+
+namespace Ada.Core.ViewModel.API
 {
   public  class RequestResult
     {
@@ -15,7 +17,7 @@
         public int? CommentCount { get; set; }
         public int? LikeCount { get; set; }
         public int? ViewCount { get; set; }
-       
+        public DateTime? RequestTime { get; set; }
 
     }
 }

@@ -104,7 +104,7 @@ namespace Resource.Controllers
             return Json(new { State = 1, Msg = ExportFile(jObjects.ToString()) });
 
         }
-        [HttpGet,DeleteFile,AllowAnonymous]
+        [HttpGet, DeleteFile, AllowAnonymous]
         public ActionResult Download(string file)
         {
             string fullPath = Path.Combine(Server.MapPath("~/upload"), file);
@@ -268,7 +268,7 @@ namespace Resource.Controllers
                     }
                 }
                 jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
-                jo.Add("媒体说明", media.Content);
+                jo.Add("媒体说明", viewModel.MediaTypeIndex == "sinablog" ? media.Abstract : media.Content);
                 jo.Add("备注说明", media.Remark);
                 jo.Add("经办媒介", media.Transactor);
                 jObjects.Add(jo);
@@ -1460,6 +1460,15 @@ namespace Resource.Controllers
             baseParams.Transactor = CurrentManager.UserName;
             var msg = _iDataAPIService.GetDouYinInfo(baseParams);
             return Json(new { State = 1, Msg = msg.Message });
+        }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult WeiXinUpdateArticle(WeiXinProParams proParams)
+        {
+            proParams.TransactorId = CurrentManager.Id;
+            proParams.Transactor = CurrentManager.UserName;
+            var result = _iDataAPIService.UpdateWeiXinArticle(proParams);
+            return result.IsSuccess ? Json(new { State = 1, Data = result }) : Json(new { State = 0, Msg = result.Message });
         }
         [AllowAnonymous]
         public ActionResult FenPei()

@@ -33,6 +33,7 @@ namespace Ada.Core.ViewModel.Setting
             WebDevelopPush = false;
             CancleAppointmentPush = true;
             AppointmentPush = false;
+            UserRequestMediaCount = 10;
         }
         /// <summary>
         /// 媒介资源查询数
@@ -124,6 +125,11 @@ namespace Ada.Core.ViewModel.Setting
         /// </summary>
         [Display(Name = "每日限定采集资源次数")]
         public int RequestMediaCount { get; set; }
+        /// <summary>
+        /// 会员每日限定查看文章数据次数
+        /// </summary>
+        [Display(Name = "会员每日限定查看文章数据次数")]
+        public int UserRequestMediaCount { get; set; }
         /// <summary>
         /// 网站开发推送
         /// </summary>

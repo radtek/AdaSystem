@@ -6,6 +6,7 @@
     var areas = fieldService.GetFieldsByKey("Area").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var priceProtectionDates = fieldService.GetFieldsByKey("PriceProtectionDate").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var platforms = fieldService.GetFieldsByKey("LivePlatform").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var platforms2 = fieldService.GetFieldsByKey("HeadLinePlatform").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 <div class="col-sm-3">
     <div class="form-group">
@@ -39,6 +40,21 @@
             <select name="Platform" class="form-control">
                 <option value="">请选择</option>
                 @foreach (var item in platforms)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
+    </div>
+}
+@if (Model == "headline")
+{
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">平台</label>
+            <select name="Platform" class="form-control">
+                <option value="">请选择</option>
+                @foreach (var item in platforms2)
                 {
                     <option value="@item.Value">@item.Text</option>
                 }
@@ -400,3 +416,17 @@
     </div>
 
 }
+
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">媒体简介</label>
+            <div class="input-group">
+                <input type="text" name="Content" value="" class="form-control" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                        确定
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>

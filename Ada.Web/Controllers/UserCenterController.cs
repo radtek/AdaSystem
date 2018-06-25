@@ -8,12 +8,16 @@ using Ada.Core.Domain;
 using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.Domain.Resource;
+using Ada.Core.ViewModel.API.iDataAPI;
 using Ada.Core.ViewModel.Business;
 using Ada.Core.ViewModel.Resource;
+using Ada.Core.ViewModel.Setting;
 using Ada.Core.ViewModel.Statistics;
 using Ada.Framework.Filter;
+using Ada.Services.API;
 using Ada.Services.Cache;
 using Ada.Services.Resource;
+using Ada.Services.Setting;
 using Ada.Web.Models;
 
 namespace Ada.Web.Controllers
@@ -24,18 +28,21 @@ namespace Ada.Web.Controllers
         private readonly IRepository<PurchaseOrderDetail> _purchaseRepository;
         private readonly IRepository<MediaGroup> _mediaGroupRepository;
         private readonly ICacheService _cacheService;
-        private readonly IMediaGroupService _mediaGroupService;
+        private readonly IiDataAPIService _iDataAPIService;
+        private readonly ISettingService _settingService;
 
         public UserCenterController(IRepository<BusinessOrderDetail> businessRepository,
             IRepository<PurchaseOrderDetail> purchaseRepository, ICacheService cacheService,
             IRepository<MediaGroup> mediaGroupRepository,
-            IMediaGroupService mediaGroupService)
+            IiDataAPIService iDataAPIService,
+            ISettingService settingServic)
         {
             _businessRepository = businessRepository;
             _purchaseRepository = purchaseRepository;
             _cacheService = cacheService;
             _mediaGroupRepository = mediaGroupRepository;
-            _mediaGroupService = mediaGroupService;
+            _iDataAPIService = iDataAPIService;
+            _settingService = settingServic;
         }
         public ActionResult Order()
         {
@@ -43,7 +50,7 @@ namespace Ada.Web.Controllers
             var userId = CurrentUser.Id;
 
             var business =
-                _businessRepository.LoadEntities(d => d.BusinessOrder.IsDelete == false && d.IsDelete == false && d.BusinessOrder.LinkManId == userId);
+                _businessRepository.LoadEntities(d => d.BusinessOrder.IsDelete == false && d.IsDelete == false && d.BusinessOrder.LinkManId == userId&&d.MediaPrice.Media.MediaType.CallIndex!= "brush");
             var purchase = _purchaseRepository.LoadEntities(d => d.IsDelete == false);
             var temp = business.Where(d => d.Status != 0);
             viewModel.OrderCount = temp.Count();
@@ -66,6 +73,15 @@ namespace Ada.Web.Controllers
             var start1 = DateTime.Now.Date.AddDays(1);
             var end1 = start1.AddDays(1);
             viewModel.Tomorrow = business.Count(d => d.PrePublishDate >= start1 && d.PrePublishDate < end1);
+
+            var setting = _settingService.GetSetting<WeiGuang>();
+            var totalTimes = setting.UserRequestMediaCount;
+            var obj = _cacheService.GetObject<int>(CurrentUser.Id + "UserRequestTimes");
+            if (obj != null)
+            {
+                totalTimes= totalTimes-(int)obj;
+            }
+            ViewBag.RequestTimes = totalTimes;
             return View(viewModel);
         }
 
@@ -73,7 +89,7 @@ namespace Ada.Web.Controllers
         {
             var userId = CurrentUser.Id;
             var purchaseOrderDetails = _purchaseRepository.LoadEntities(d => d.IsDelete == false);
-            var allList = _businessRepository.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false && d.BusinessOrder.LinkManId == userId);
+            var allList = _businessRepository.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false && d.BusinessOrder.LinkManId == userId && d.MediaPrice.Media.MediaType.CallIndex != "brush");
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
                 allList = allList.Where(d => d.MediaName.Contains(viewModel.search));
@@ -135,6 +151,7 @@ namespace Ada.Web.Controllers
                              PurchaseStatus = p.Status,
                              PublishDate = p.PublishDate,
                              PublishLink = p.PublishLink,
+                             MediaTypeId = p.MediaPrice.Media.MediaType.CallIndex
                          };
 
             viewModel.total = result.Count();
@@ -154,8 +171,35 @@ namespace Ada.Web.Controllers
             var groups = _mediaGroupRepository.LoadEntities(d => d.AddedById == CurrentUser.Id).ToList();
             return View(groups);
         }
-        
 
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult WeiXinUpdateArticle(WeiXinProParams proParams)
+        {
+            var setting = _settingService.GetSetting<WeiGuang>();
+            var totalTimes = setting.UserRequestMediaCount;
+            int times = 1;
+            var obj = _cacheService.GetObject<int>(CurrentUser.Id + "UserRequestTimes");
+            if (obj != null)
+            {
+                times = (int)obj;
+            }
+            if (times > totalTimes)
+            {
+                return Json(new { State = 0, Msg = "抱歉，今日查看实时数据的次数已用完！" });
+            }
+            proParams.TransactorId = CurrentUser.Id;
+            proParams.Transactor = CurrentUser.LoginName;
+            var result = _iDataAPIService.UpdateWeiXinArticle(proParams);
+            if (result.IsSuccess)
+            {
+                times++;
+                var timeSpan = DateTime.Now.Date.AddDays(1) - DateTime.Now;
+                _cacheService.Put(CurrentUser.Id + "UserRequestTimes", times, timeSpan);
+                return Json(new {State = 1, Data = result});
+            }
+            return  Json(new { State = 0, Msg = "请求失败，请稍后再试试" });
+        }
         public ActionResult Quit()
         {
             //Session.Abandon();

@@ -128,7 +128,7 @@ namespace Ada.Services.API
                         }
                     }
                 }
-                
+
                 _dbContext.SaveChanges();
             }
             RequestResult requestResult = new RequestResult();
@@ -365,6 +365,7 @@ namespace Ada.Services.API
                         exrecord.Retmsg = "请求异常";
                         exrecord.ReponseDate = DateTime.Now;
                         apiInfo.APIRequestRecords.Add(exrecord);
+                        requestResult.Message = ex.Message;
                     }
                     request++;
                 }
@@ -402,62 +403,64 @@ namespace Ada.Services.API
                     record.AddedById = baseParams.TransactorId;
                     record.AddedBy = baseParams.Transactor;
                     apiInfo.APIRequestRecords.Add(record);
+                    requestResult.Message = result.message;
                 }
                 if (result.data.Count > 0)
                 {
-                    var media = _mediaRepository.LoadEntities(d => d.MediaID == baseParams.UID && d.IsDelete == false).FirstOrDefault();
-                    var brands = _fieldRepository.LoadEntities(d => d.FieldType.CallIndex == "Brand").Select(d => d.Text).ToList();
-                    media.CollectionDate = DateTime.Now;
-                    
+                    //var media = _mediaRepository.LoadEntities(d => d.MediaID == baseParams.UID && d.IsDelete == false).FirstOrDefault();
+                    //var brands = _fieldRepository.LoadEntities(d => d.FieldType.CallIndex == "Brand").Select(d => d.Text).ToList();
+                    //media.CollectionDate = DateTime.Now;
+
                     var articleData = result.data.FirstOrDefault();
-                    if (articleData!=null)
+                    if (articleData != null)
                     {
 
-                        var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
-                        if (article != null)
-                        {
-                            article.ArticleIdx = articleData.idx;
-                            article.ArticleUrl = articleData.url;
-                            article.IsOriginal = articleData.original;
-                            article.Biz = articleData.biz;
-                            article.CommentCount = articleData.commentCount;
-                            article.Content = GetBrands(articleData.content, brands); ;
-                            article.IsTop = articleData.isTop;
-                            article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
-                                ? (DateTime?)null
-                                : DateTime.Parse(articleData.publishDateStr);
-                            article.LikeCount = articleData.likeCount;
-                            article.ViewCount = articleData.viewCount;
-                            article.Title = articleData.title;
-                            article.ModifiedDate = DateTime.Now;
-                        }
-                        else
-                        {
-                            article = new MediaArticle();
-                            article.Id = IdBuilder.CreateIdNum();
-                            article.ArticleId = articleData.id;
-                            article.ArticleIdx = articleData.idx;
-                            article.ArticleUrl = articleData.url;
-                            article.IsOriginal = articleData.original;
-                            article.Biz = articleData.biz;
-                            article.CommentCount = articleData.commentCount;
-                            article.Content = GetBrands(articleData.content, brands); ;
-                            article.IsTop = articleData.isTop;
-                            article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
-                                ? (DateTime?)null
-                                : DateTime.Parse(articleData.publishDateStr);
-                            article.LikeCount = articleData.likeCount;
-                            article.ViewCount = articleData.viewCount;
-                            article.Title = articleData.title;
-                            media.MediaArticles.Add(article);
-                        }
+                        //var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
+                        //if (article != null)
+                        //{
+                        //    article.ArticleIdx = articleData.idx;
+                        //    article.ArticleUrl = articleData.url;
+                        //    article.IsOriginal = articleData.original;
+                        //    article.Biz = articleData.biz;
+                        //    article.CommentCount = articleData.commentCount;
+                        //    article.Content = GetBrands(articleData.content, brands); ;
+                        //    article.IsTop = articleData.isTop;
+                        //    article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
+                        //        ? (DateTime?)null
+                        //        : DateTime.Parse(articleData.publishDateStr);
+                        //    article.LikeCount = articleData.likeCount;
+                        //    article.ViewCount = articleData.viewCount;
+                        //    article.Title = articleData.title;
+                        //    article.ModifiedDate = DateTime.Now;
+                        //}
+                        //else
+                        //{
+                        //    article = new MediaArticle();
+                        //    article.Id = IdBuilder.CreateIdNum();
+                        //    article.ArticleId = articleData.id;
+                        //    article.ArticleIdx = articleData.idx;
+                        //    article.ArticleUrl = articleData.url;
+                        //    article.IsOriginal = articleData.original;
+                        //    article.Biz = articleData.biz;
+                        //    article.CommentCount = articleData.commentCount;
+                        //    article.Content = GetBrands(articleData.content, brands); ;
+                        //    article.IsTop = articleData.isTop;
+                        //    article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
+                        //        ? (DateTime?)null
+                        //        : DateTime.Parse(articleData.publishDateStr);
+                        //    article.LikeCount = articleData.likeCount;
+                        //    article.ViewCount = articleData.viewCount;
+                        //    article.Title = articleData.title;
+                        //    media.MediaArticles.Add(article);
+                        //}
                         requestResult.IsSuccess = true;
                         requestResult.Message = articleData.id;
                         requestResult.ViewCount = articleData.viewCount;
                         requestResult.CommentCount = articleData.commentCount;
                         requestResult.LikeCount = articleData.likeCount;
+                        requestResult.RequestTime = DateTime.Now;
                     }
-                    
+
                 }
             }
             _dbContext.SaveChanges();
@@ -543,10 +546,10 @@ namespace Ada.Services.API
                     {
                         var media = _mediaRepository.LoadEntities(d => d.MediaID == wxparams.UID && d.IsDelete == false).FirstOrDefault();
                         //阅读数
-                        
+
                         if (media != null)
                         {
-                            
+
                             var lastPost = media.LastPushDate;
                             //是否要更新文章
                             var isUpdateArticle = lastPost == null;
@@ -564,7 +567,7 @@ namespace Ada.Services.API
                             {
                                 media.LastPushDate = date;
                             }
-                            
+
                             if (!isUpdateArticle)
                             {
                                 //如果最后一次发布日期和存储的最后一次发布日期不一致，就更新
@@ -583,7 +586,7 @@ namespace Ada.Services.API
                                 }
                             }
                             //更新文章
-                            if (isUpdateArticle&& weixinInfo.lastPost!=null)
+                            if (isUpdateArticle && weixinInfo.lastPost != null)
                             {
                                 var apiArticle = _apiInterfacesService.GetAPIInterfacesByCallIndex(wxparams.CallIndexWeiXinInfo);
                                 //更新日期范围
@@ -636,7 +639,7 @@ namespace Ada.Services.API
                                             {
                                                 continue;
                                             }
-                                            if (articleData.id.Length>128)
+                                            if (articleData.id.Length > 128)
                                             {
                                                 continue;
                                             }
@@ -819,7 +822,7 @@ namespace Ada.Services.API
                 var media = _mediaRepository.LoadEntities(d => d.MediaID == wbparams.UID && d.IsDelete == false).FirstOrDefault();
                 if (result.data.Count > 0)
                 {
-                    
+
                     if (media == null)
                     {
                         break;
@@ -952,7 +955,7 @@ namespace Ada.Services.API
                         exrecord.Retmsg = "请求异常";
                         exrecord.ReponseDate = DateTime.Now;
                         apiInfo.APIRequestRecords.Add(exrecord);
-                        resultMsg ="请求异常："+ ex.Message;
+                        resultMsg = "请求异常：" + ex.Message;
                     }
                     request++;
                 }
@@ -1040,7 +1043,7 @@ namespace Ada.Services.API
                 new KeyValuePair<string, string>("id",testParams.UID)
             };
             return HttpUtility.Post(apiInfo.APIUrl, postdata);
-            
+
         }
 
         private static string GetBrands(string content, List<string> brands)

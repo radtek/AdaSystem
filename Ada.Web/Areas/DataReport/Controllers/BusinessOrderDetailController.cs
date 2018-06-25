@@ -46,6 +46,7 @@ namespace DataReport.Controllers
                     VerificationMoney = d.VerificationMoney,
                     MediaName = d.MediaName,
                     MediaTypeName = d.MediaTypeName,
+                    MediaTypeId = d.MediaPrice.Media.MediaType.CallIndex,
                     AdPositionName = d.AdPositionName,
                     Money = d.Money,
                     TaxMoney = d.TaxMoney,
