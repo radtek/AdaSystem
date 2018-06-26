@@ -24,8 +24,8 @@
     };
     var comments = service.LoadComments(view1);
     var ordercomments = orderservice.LoadComments(view2);
-    List<MediaPriceChange> list=new List<MediaPriceChange>();
-    foreach (var mediaPrice in Model.MediaPrices.Where(d=>d.IsDelete==false))
+    List<MediaPriceChange> list = new List<MediaPriceChange>();
+    foreach (var mediaPrice in Model.MediaPrices.Where(d => d.IsDelete == false))
     {
         var arr = mediaPrice.MediaPriceChanges.OrderBy(d => d.AddedDate).Take(6);
         list.AddRange(arr);
@@ -53,13 +53,23 @@
                 <div class="">
                     <div>
                         <h2 class="no-margins">
-                            @Model.MediaName
+                            @*@Model.MediaName
+        @if (Model.MediaType.CallIndex == "weixin")
+        {
+            <small> <i class='fa fa-weixin'></i> @Model.MediaID</small>
+        }*@
                             @if (Model.MediaType.CallIndex == "weixin")
                             {
-                                <small> <i class='fa fa-weixin'></i> @Model.MediaID</small>
-                            }
-                        </h2>
+                                <span id="@Model.Id">@Model.MediaName - @Model.MediaID</span>
 
+                            }
+                            else
+                            {
+                                <span id="@Model.Id">@Model.MediaName</span>
+                            }
+                            <small><button class='btn btn-white btn-sm copyid' data-toggle='tooltip' title='媒体名称复制到剪切板' data-clipboard-target='#@Model.Id'><i class='fa fa-copy'></i></button></small>
+                        </h2>
+                      
                         <h4>@Model.Abstract</h4>
                         <small>
                             @Model.Content
@@ -173,17 +183,17 @@
 
     <div class="row">
         @*@foreach (var item in Model.MediaPrices.Where(d => d.IsDelete == false).OrderByDescending(d => d.AdPositionName))
-        {
-            <div class="col-lg-3">
-                <div class="ibox">
-                    <div class="ibox-content">
-                        <h5>价格走势</h5>
-                        <h2>@item.AdPositionName</h2>
-                        <div id="@item.Id"></div>
+            {
+                <div class="col-lg-3">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <h5>价格走势</h5>
+                            <h2>@item.AdPositionName</h2>
+                            <div id="@item.Id"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }*@
+            }*@
         <div class="col-lg-12">
             <div class="ibox">
                 <div class="ibox-title">
@@ -363,6 +373,7 @@
     @Scripts.Render("~/plugins/footableV3")
     @Scripts.Render("~/plugins/echarts")
     @Scripts.Render("~/plugins/tagcanvasScript")
+    @Scripts.Render("~/plugins/clipboard")
     <script>
         @if (Model.MediaArticles.Any())
         {
@@ -415,6 +426,7 @@
 
                 $(function () {
                     initPriceCharts();
+                    new Clipboard('.copyid');
                 });
         function initPriceCharts() {
                     var myChart = echarts.init(document.getElementById('flot-dashboard-chart-price'));
@@ -458,7 +470,7 @@
                                     },
                                 </text>
                             }
-                            
+
                         ]
                     };
                     myChart.setOption(option);
