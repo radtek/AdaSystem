@@ -50,6 +50,10 @@ namespace Ada.Services.Finance
             {
                 allList = allList.Where(d => d.BillNum.Contains(viewModel.BillNum));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.PayeeBy))
+            {
+                allList = allList.Where(d => d.BusinessPayees.Any(p=>p.Transactor.Contains(viewModel.PayeeBy)));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.IncomeExpendName))
             {
                 allList = allList.Where(d => d.IncomeExpend.SubjectName.Contains(viewModel.IncomeExpendName));

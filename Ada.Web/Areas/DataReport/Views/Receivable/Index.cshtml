@@ -20,30 +20,36 @@
             <form id="searchFrm" action="@Url.Action("Export")" method="post">
                 @Html.AntiForgeryToken()
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.IncomeExpendName, Html.DisplayNameFor(d => d.IncomeExpendName) + "：", new {@class = "control-label"})
-                            @Html.TextBoxFor(d => d.IncomeExpendName, new {@class = "form-control input-sm"})
+                            @Html.LabelFor(d => d.IncomeExpendName, Html.DisplayNameFor(d => d.IncomeExpendName) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.IncomeExpendName, new { @class = "form-control input-sm" })
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.SettleAccountName, Html.DisplayNameFor(d => d.SettleAccountName) + "：", new {@class = "control-label"})
-                            @Html.TextBoxFor(d => d.SettleAccountName, new {@class = "form-control input-sm"})
+                            @Html.LabelFor(d => d.SettleAccountName, Html.DisplayNameFor(d => d.SettleAccountName) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.SettleAccountName, new { @class = "form-control input-sm" })
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.BillNum, Html.DisplayNameFor(d => d.BillNum) + "：", new {@class = "control-label"})
-                            @Html.TextBoxFor(d => d.BillNum, new {@class = "form-control input-sm"})
+                            @Html.LabelFor(d => d.PayeeBy, Html.DisplayNameFor(d => d.PayeeBy) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.PayeeBy, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.BillNum, Html.DisplayNameFor(d => d.BillNum) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.BillNum, new { @class = "form-control input-sm" })
                         </div>
                     </div>
 
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <div class="form-group">
-                            @Html.LabelFor(d => d.BillDate, Html.DisplayNameFor(d => d.BillDate) + "：", new {@class = "control-label"})
+                            @Html.LabelFor(d => d.BillDate, Html.DisplayNameFor(d => d.BillDate) + "：", new { @class = "control-label" })
 
-                            <input type="text" id="DateStr" class="form-control input-sm" readonly="readonly"/>
+                            <input type="text" id="DateStr" class="form-control input-sm" readonly="readonly" />
                             @Html.HiddenFor(d => d.BillDateStart)
                             @Html.HiddenFor(d => d.BillDateEnd)
                         </div>
