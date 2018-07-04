@@ -106,6 +106,8 @@
   <ItemGroup>
     <Compile Include="Controllers\SalaryDetailController.cs" />
     <Compile Include="Controllers\QuartersController.cs" />
+    <Compile Include="Controllers\SettingController.cs" />
+    <Compile Include="Models\SalarySet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SalaryAreaRegistration.cs" />
   </ItemGroup>
@@ -119,6 +121,9 @@
     <Content Include="Views\SalaryDetail\Index.cshtml" />
     <Content Include="Views\SalaryDetail\Add.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\SalaryDetail\Detail.cshtml" />
+    <Content Include="Views\Setting\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -126,9 +131,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\Ada.Core\Ada.Core.csproj">
       <Project>{1E0B290A-3337-43C9-9CE9-BFB8CE741DBA}</Project>

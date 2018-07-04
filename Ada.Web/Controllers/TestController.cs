@@ -34,6 +34,7 @@ namespace Ada.Web.Controllers
         private readonly IRepository<MediaArticle> _mediaArticleRepository;
         private readonly IRepository<MediaPrice> _mediaPrice;
         private readonly IRepository<MediaType> _mediaType;
+        private readonly IRepository<Manager> _manager;
         private readonly IRepository<PurchaseOrderDetail> _ptemp;
         private readonly IDbContext _dbContext;
         private readonly ICacheService _cacheService;//IBusinessOrderDetailService
@@ -51,7 +52,8 @@ namespace Ada.Web.Controllers
             IRepository<Field> fieldRepository,
             ICacheService cacheService,
             IRepository<MediaArticle> mediaArticleRepository,
-            IBusinessOrderDetailService businessOrderDetailService)
+            IBusinessOrderDetailService businessOrderDetailService,
+            IRepository<Manager> manager)
         {
             _dbContext = dbContext;
             _ptemp = ptemp;
@@ -63,6 +65,7 @@ namespace Ada.Web.Controllers
             _cacheService = cacheService;
             _mediaArticleRepository = mediaArticleRepository;
             _businessOrderDetailService = businessOrderDetailService;
+            _manager = manager;
         }
 
         public ActionResult CheckOrder()
@@ -581,7 +584,38 @@ namespace Ada.Web.Controllers
             //_dbContext.SaveChanges();
             return Json(medias.Select(d=>new {d.Id,d.MediaType.TypeName,d.MediaName,d.MediaID}),JsonRequestBehavior.AllowGet);
         }
+        public ActionResult UpdateManager()
+        {
+            string path = Server.MapPath("~/upload/manager.xlsx");
+            int count = 0;
+            using (FileStream ms = new FileStream(path, FileMode.Open))
+            {
+                //创建工作薄
+                IWorkbook wk = new XSSFWorkbook(ms);
+                //1.获取第一个工作表
+                ISheet sheet = wk.GetSheetAt(0);
+                if (sheet.LastRowNum <= 1)
+                {
+                    return Content("此文件没有导入数据，请填充数据再进行导入");
+                }
 
+                for (int i = 1; i <= sheet.LastRowNum; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+                    var managerId = row.GetCell(0)?.ToString();
+                    var manager = _manager.LoadEntities(d => d.Id == managerId).FirstOrDefault();
+                    if (manager == null) continue;
+                    manager.QuartersId = row.GetCell(1)?.ToString();
+                    manager.BankName = row.GetCell(3)?.ToString();
+                    manager.BankAccount = row.GetCell(4)?.ToString();
+                    manager.BankNum = row.GetCell(2)?.ToString();
+                    count++;
+                }
+
+                _dbContext.SaveChanges();
+            }
+            return Content("成功更新" + count + "条资源");
+        }
         public ActionResult Export()
         {
             var medias = _media.LoadEntities(d => d.IsDelete == false & d.TransactorId != d.LinkMan.TransactorId).ToList();

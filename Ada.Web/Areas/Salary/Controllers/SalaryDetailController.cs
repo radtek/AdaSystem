@@ -12,6 +12,8 @@ using Ada.Framework.Filter;
 using Ada.Services.Admin;
 using Ada.Services.Business;
 using Ada.Services.Salary;
+using Ada.Services.Setting;
+using Salary.Models;
 
 namespace Salary.Controllers
 {
@@ -24,18 +26,24 @@ namespace Salary.Controllers
         private readonly IManagerService _managerService;
         private readonly IRepository<Manager> _managerRepository;
         private readonly IRepository<Quarters> _quartersRepository;
+        private readonly IRepository<SalaryDetail> _salaryRepository;
         private readonly IBusinessWriteOffService _businessWriteOffService;
+        private readonly ISettingService _settingService;
         public SalaryDetailController(ISalaryDetailService service,
             IManagerService managerService,
             IRepository<Manager> managerRepository,
             IBusinessWriteOffService businessWriteOffService,
-            IRepository<Quarters> quartersRepository)
+            IRepository<Quarters> quartersRepository,
+            IRepository<SalaryDetail> salaryRepository,
+            ISettingService settingService)
         {
             _service = service;
             _managerService = managerService;
             _managerRepository = managerRepository;
             _businessWriteOffService = businessWriteOffService;
             _quartersRepository = quartersRepository;
+            _salaryRepository = salaryRepository;
+            _settingService = settingService;
         }
         public ActionResult Index()
         {
@@ -44,7 +52,8 @@ namespace Salary.Controllers
 
         public ActionResult GetList(AttendanceDetailView viewModel)
         {
-            viewModel.ManagerId = CurrentManager.RoleLever != 0 ? CurrentManager.Id : null;
+            var p = PremissionData();
+            viewModel.ManagerId = p.Any() ? CurrentManager.Id : null;
             var result = _service.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {
@@ -99,18 +108,20 @@ namespace Salary.Controllers
             var gw = quarters.BaseSalary;//岗位工资
             var kq = quarters.Attendance;//全勤
             var jt = quarters.Allowance;//津贴
+            var config = _settingService.GetSetting<SalarySet>();
             //未打卡
-            var dk = 20;
-            var dkYh = 1;
+            var dk = config.NoClock;
+            var dkYh = config.Derate;
             var dkTemp = viewModel.NoClockTimes > 0 ? viewModel.NoClockTimes - dkYh : viewModel.NoClockTimes;
             var noClock = dkTemp * dk;
             //迟到
-            var cd = 20;
-            var cdYh = 1;
+            var cd = config.Late;
+            var cdYh = config.Derate;
             var cdTemp = viewModel.LateTimes > 0 ? viewModel.LateTimes - cdYh : viewModel.LateTimes;
             var late = cdTemp * cd;
+            bool isBad = false;
             //请假
-            var qj = 50;
+            var qj = (double)config.OffWork;
             double offwork = 0;
             if (viewModel.OffWork < 5)
             {
@@ -118,10 +129,10 @@ namespace Salary.Controllers
             }
             else
             {
-                gw = 0;
+                isBad = true;
             }
             //旷工
-            var kuanggong = 100;
+            var kuanggong = (double)config.Absenteeism;
             double absenteeism = 0;
             if (viewModel.Absenteeism < 5)
             {
@@ -129,13 +140,10 @@ namespace Salary.Controllers
             }
             else
             {
-                gw = 0;
+                isBad = true;
             }
             //全勤
-            if (viewModel.OffWork > 0 || viewModel.Absenteeism > 0 || viewModel.NoClockTimes >= 5 || viewModel.LateTimes >= 5)
-            {
-                kq = 0;
-            }
+            bool isQc = !(viewModel.OffWork > 0 || viewModel.Absenteeism > 0 || viewModel.NoClockTimes >= 5 || viewModel.LateTimes >= 5);
             //算工资
             SalaryDetail salaryDetail = manager.SalaryDetails.FirstOrDefault(d => d.Date == viewModel.Date);
             bool isAddSalary = false;
@@ -146,7 +154,15 @@ namespace Salary.Controllers
                 isAddSalary = true;
             }
             //扣款  旷工+请假+未打卡+迟到
-            var deductTotal = (decimal)(absenteeism + noClock + late + offwork);
+            decimal deductTotal = (decimal) (absenteeism + offwork) + noClock + late; //(decimal)(absenteeism + noClock + late + offwork);
+            if (!isQc)
+            {
+                deductTotal += kq;
+            }
+            if (isBad)
+            {
+                deductTotal += gw;
+            }
             //奖金 岗位工资+全勤奖+津贴+其他奖金+红包提成+销售提成
             //销售提成
             var quare = new BusinessWriteOffDetailView();
@@ -156,7 +172,7 @@ namespace Salary.Controllers
             var saleCommission = _businessWriteOffService.LoadEntitiesFilter(quare).Sum(d => d.Commission) ?? 0;
             var total = gw + jt + kq + viewModel.Bonus + viewModel.Commission + saleCommission;
             //合计
-            salaryDetail.Total = total - deductTotal - viewModel.DeductMoney;
+            salaryDetail.Total =Math.Round(total - deductTotal - viewModel.DeductMoney) ;
             salaryDetail.Commission = viewModel.Commission;
             salaryDetail.Bonus = viewModel.Bonus;
             salaryDetail.Date = viewModel.Date;
@@ -174,10 +190,14 @@ namespace Salary.Controllers
             }
             _managerService.Edit(manager);
             TempData["Msg"] = "添加成功";
-            AttendanceDetailView temp = new AttendanceDetailView();
-            return View(temp);
+            //AttendanceDetailView temp = new AttendanceDetailView();
+            return RedirectToAction("Add");
         }
-
+        public ActionResult Detail(string id)
+        {
+            var entity = _salaryRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            return PartialView("Detail", entity);
+        }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
         public ActionResult Delete(string id)

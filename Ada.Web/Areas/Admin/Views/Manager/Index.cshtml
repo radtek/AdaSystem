@@ -142,7 +142,7 @@
                             formatter: function (value, row) {
 
                                 return "<div class='btn-group'>" +
-                                    "<a class='btn btn-success btn-outline btn-xs' href='@Url.Action("Update")?id=" + value + "'><i class='fa fa-pencil'></i> 编辑</a> " +
+                                    "<a class='btn btn-success btn-outline btn-xs' href='@Url.Action("Update")?id=" + value + "' target='_blank'><i class='fa fa-pencil'></i> 编辑</a> " +
                                     "<button class='btn btn-warning btn-outline btn-xs' onclick=\"unlock('" + value + "');\"><i class='fa fa-unlock'></i> 解绑</button> " +
                                     "<button class='btn btn-danger btn-outline btn-xs' onclick=\"cancle('" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button></div>";
                             }

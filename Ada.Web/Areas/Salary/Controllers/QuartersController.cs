@@ -38,7 +38,8 @@ namespace Salary.Controllers
                     Id = d.Id,
                     Title = d.Title,
                     BaseSalary = d.BaseSalary,
-                    Attendance = d.Attendance
+                    Attendance = d.Attendance,
+                    Allowance = d.Allowance
                 })
             }, JsonRequestBehavior.AllowGet);
         }

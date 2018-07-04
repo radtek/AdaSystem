@@ -388,6 +388,30 @@ namespace Business.Controllers
             {
                 return Json(new { State = 0, Msg = "此订单已开票无法删除" });
             }
+
+            var p = PremissionData();
+            if (!p.Any())
+            {
+                foreach (var entityBusinessOrderDetail in entity.BusinessOrderDetails)
+                {
+                    if (entityBusinessOrderDetail.VerificationStatus == Consts.StateNormal)
+                    {
+                        return Json(new { State = 0, Msg = "此销售订单明细有核销的，无法删除" });
+                    }
+                    var purchase = GetPurchaseOrderDetail(entityBusinessOrderDetail.Id);
+                    if (purchase!=null)
+                    {
+                        //是否已经付款
+                        if (purchase.PurchasePaymentOrderDetails.Count > 0)
+                        {
+                            return Json(new { State = 0, Msg = "有订单采购已请款，无法删除" });
+                        }
+                        _purchaseOrderDetailRepository.Remove(purchase);
+                    }
+                }
+                _businessOrderService.Remove(entity);
+                return Json(new { State = 1, Msg = "删除成功" });
+            }
             if (entity.AuditStatus != Consts.StateNormal || entity.BusinessOrderDetails.Count == 0)
             {
                 foreach (var entityBusinessOrderDetail in entity.BusinessOrderDetails)

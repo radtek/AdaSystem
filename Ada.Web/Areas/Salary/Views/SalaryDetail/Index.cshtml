@@ -74,7 +74,10 @@
                     {
                         field: 'Date',
                         title: '@Html.DisplayNameFor(d=>d.Date)',
-                        align: "center", valign: "middle"
+                        align: "center", valign: "middle",
+                        formatter: function (value) {
+                            return moment(value).format("YYYY年MM月");
+                        }
                     },
                     {
                         field: 'Total',
@@ -87,9 +90,7 @@
                         align: "center", valign: "middle",
                         formatter: function (value,row) {
                             return "<div class='p-xxs'><div class='btn-group'>" +
-                                "<a class='btn btn-success btn-outline btn-xs' href='@Url.Action("Update")?id=" +
-                                value +
-                                "' target='_blank'><i class='fa fa-search'></i> 明细</a> " +
+                                "<a class='btn btn-success btn-outline btn-xs' href='javascript:;' onclick=\"initDetails('" + value + "');\");'><i class='fa fa-search'></i> 明细</a> " +
                                 "<button class='btn btn-success btn-outline btn-xs' onclick=\"cancle('" +
                                 value +
                                 "');\"><i class='fa fa-trash-o'></i> 删除</button>" +
@@ -145,6 +146,13 @@
                     }
                 });
             });
+        }
+        function initDetails(id) {
+            $("#modalView").load("@Url.Action("Detail")?id="+id,
+                function () {
+                    $('#modalView .modal').modal('show');
+                });
+
         }
     </script>
 }

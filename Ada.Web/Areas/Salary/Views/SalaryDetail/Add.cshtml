@@ -44,7 +44,7 @@
                                     <div class="form-group">
                                         @Html.LabelFor(d => d.ManagerId, Html.DisplayNameFor(d => d.ManagerId).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
-                                            @Html.DropDownListFor(d => d.ManagerId, managers, new { @class = "chosen-select", tabindex = "2", data_placeholder = "请选择员工" })
+                                            @Html.DropDownListFor(d => d.ManagerId, managers, "请选择",new { @class = "chosen-select", tabindex = "2", data_placeholder = "请选择员工",required=""})
                                         </div>
                                     </div>
                                     <div class="hr-line-dashed"></div>
@@ -52,7 +52,7 @@
                                         @Html.LabelFor(d => d.Date, Html.DisplayNameFor(d => d.Date).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-4">
                                             <div class="input-group date">
-                                                @Html.TextBoxFor(d => d.Date, new { @class = "form-control", @readonly = "" })
+                                                @Html.TextBoxFor(d => d.Date, new { @class = "form-control" ,required=""})
                                                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                             </div>
@@ -62,14 +62,14 @@
                                     <div class="form-group">
                                         @Html.LabelFor(d => d.OffWork, Html.DisplayNameFor(d => d.OffWork).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.OffWork, new { @class = "form-control", type = "number" })
+                                            @Html.TextBoxFor(d => d.OffWork, new { @class = "form-control" })
                                         </div>
                                     </div>
                                     <div class="hr-line-dashed"></div>
                                     <div class="form-group">
                                         @Html.LabelFor(d => d.Absenteeism, Html.DisplayNameFor(d => d.Absenteeism).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
-                                            @Html.TextBoxFor(d => d.Absenteeism, new { @class = "form-control", type = "number" })
+                                            @Html.TextBoxFor(d => d.Absenteeism, new { @class = "form-control" })
                                         </div>
                                     </div>
                                     <div class="hr-line-dashed"></div>
