@@ -1,7 +1,18 @@
-﻿@using Ada.Core.Domain
+﻿@using Ada.Core
+@using Ada.Core.Domain
+@using Ada.Core.Domain.Wages
+@using Ada.Core.Infrastructure
 @using Ada.Core.ViewModel
 @using Microsoft.Ajax.Utilities
 @model Ada.Core.ViewModel.Admin.ManagerView
+@{
+    var repository = EngineContext.Current.Resolve<IRepository<Quarters>>();
+    var quarters = repository.LoadEntities(d => d.IsDelete == false).Select(d => new SelectListItem()
+    {
+        Value = d.Id,
+        Text = d.Title
+    }).ToList();
+}
 @helper TreeHelper(List<TreeView> list, bool showBtn = false)
     {
         if (list.Count > 0)
@@ -56,6 +67,13 @@
                         @Html.LabelFor(d => d.Password, Html.DisplayNameFor(d => d.Password).ToString(), new { @class = "col-sm-2 control-label" })
                         <div class="col-sm-10">
                             <input type="text" name="Password" value="@Model.Password" class="form-control" required="" />
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.QuartersId, Html.DisplayNameFor(d => d.QuartersId).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(d => d.QuartersId,quarters,"请选择", new { @class = "form-control", required = "" })
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
@@ -120,12 +138,33 @@
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
-                        @Html.LabelFor(d => d.Birthday, Html.DisplayNameFor(d => d.Birthday).ToString(), new {@class = "col-sm-2 control-label"})
+                        @Html.LabelFor(d => d.BankName, Html.DisplayNameFor(d => d.BankName).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.BankName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.BankAccount, Html.DisplayNameFor(d => d.BankAccount).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.BankAccount, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.BankNum, Html.DisplayNameFor(d => d.BankNum).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.BankNum, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Birthday, Html.DisplayNameFor(d => d.Birthday).ToString(), new { @class = "col-sm-2 control-label" })
                         <div class="col-sm-10">
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="input-group date">
-                                        @Html.TextBoxFor(d => d.Birthday, Model.Birthday.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new {@class = "form-control", @readonly = ""})
+                                        @Html.TextBoxFor(d => d.Birthday, Model.Birthday.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control", @readonly = "" })
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                     </div>
@@ -141,16 +180,16 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                         </div>
 
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
-                        @Html.LabelFor(d => d.EntryDate, Html.DisplayNameFor(d => d.EntryDate).ToString(), new {@class = "col-sm-2 control-label"})
+                        @Html.LabelFor(d => d.EntryDate, Html.DisplayNameFor(d => d.EntryDate).ToString(), new { @class = "col-sm-2 control-label" })
                         <div class="col-sm-4">
                             <div class="input-group date">
-                                @Html.TextBoxFor(d => d.EntryDate, Model.EntryDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new {@class = "form-control", @readonly = ""})
+                                @Html.TextBoxFor(d => d.EntryDate, Model.EntryDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control", @readonly = "" })
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                             </div>
@@ -158,17 +197,15 @@
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
-                        @Html.LabelFor(d => d.QuitDate, Html.DisplayNameFor(d => d.QuitDate).ToString(), new {@class = "col-sm-2 control-label"})
+                        @Html.LabelFor(d => d.QuitDate, Html.DisplayNameFor(d => d.QuitDate).ToString(), new { @class = "col-sm-2 control-label" })
                         <div class="col-sm-4">
                             <div class="input-group date">
-                                @Html.TextBoxFor(d => d.QuitDate, Model.QuitDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new {@class = "form-control", @readonly = ""})
+                                @Html.TextBoxFor(d => d.QuitDate, Model.QuitDate.IfNotNull(d => d.Value.ToString("yyyy年MM月dd日")), new { @class = "form-control", @readonly = "" })
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>

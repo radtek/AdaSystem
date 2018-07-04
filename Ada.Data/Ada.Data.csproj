@@ -115,6 +115,9 @@
     <Compile Include="Mapping\Resource\AdPositionMap.cs" />
     <Compile Include="Mapping\Resource\MediaDevelopMap.cs" />
     <Compile Include="Mapping\Resource\MediaTypeMap.cs" />
+    <Compile Include="Mapping\Wages\AttendanceDetailMap.cs" />
+    <Compile Include="Mapping\Wages\SalaryDetailMap.cs" />
+    <Compile Include="Mapping\Wages\QuartersMap.cs" />
     <Compile Include="Mapping\WeiXin\WeiXinOpenWebAppMap.cs" />
     <Compile Include="Mapping\WeiXin\WeiXinRequestReocrdMap.cs" />
     <Compile Include="Mapping\WeiXin\WeiXinKeywordMatchMap.cs" />
@@ -340,6 +343,10 @@
     <Compile Include="Migrations\201806060639476_Update20180606.Designer.cs">
       <DependentUpon>201806060639476_Update20180606.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201807040439518_SaralyUpdate.cs" />
+    <Compile Include="Migrations\201807040439518_SaralyUpdate.Designer.cs">
+      <DependentUpon>201807040439518_SaralyUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -521,6 +528,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806060639476_Update20180606.resx">
       <DependentUpon>201806060639476_Update20180606.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807040439518_SaralyUpdate.resx">
+      <DependentUpon>201807040439518_SaralyUpdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

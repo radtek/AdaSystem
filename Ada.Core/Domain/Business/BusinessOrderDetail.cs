@@ -104,6 +104,16 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "稿件标题")]
         public string MediaTitle { get; set; }
         /// <summary>
+        /// 更新日期
+        /// </summary>
+        [Display(Name = "更新日期")]
+        public DateTime? MediaUpdate { get; set; }
+        /// <summary>
+        /// 媒体指数
+        /// </summary>
+        [Display(Name = "媒体指数")]
+        public string UpdateContent { get; set; }
+        /// <summary>
         /// 媒体类型
         /// </summary>
         [Display(Name = "媒体类型")]

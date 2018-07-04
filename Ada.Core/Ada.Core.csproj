@@ -145,6 +145,9 @@
     <Compile Include="Domain\Resource\MediaTag.cs" />
     <Compile Include="Domain\Resource\MediaType.cs" />
     <Compile Include="Domain\StatusEnum.cs" />
+    <Compile Include="Domain\Wages\SalaryDetail.cs" />
+    <Compile Include="Domain\Wages\Quarters.cs" />
+    <Compile Include="Domain\Wages\AttendanceDetail.cs" />
     <Compile Include="Domain\WeiXin\WeiXinOpenWebApp.cs" />
     <Compile Include="Domain\WeiXin\WeiXinAccount.cs" />
     <Compile Include="Domain\WeiXin\WeiXinKeyword.cs" />
@@ -237,6 +240,8 @@
     <Compile Include="ViewModel\Statistics\PurchaseTotal.cs" />
     <Compile Include="ViewModel\Statistics\WeiGuangTotal.cs" />
     <Compile Include="ViewModel\TreeView.cs" />
+    <Compile Include="ViewModel\Wages\AttendanceDetailView.cs" />
+    <Compile Include="ViewModel\Wages\QuartersView.cs" />
     <Compile Include="ViewModel\WeiXin\WeiXinAccountView.cs" />
     <Compile Include="ViewModel\WorkLog\WorkLogView.cs" />
   </ItemGroup>

@@ -148,6 +148,10 @@
     <Compile Include="Resource\IMediaTypeService.cs" />
     <Compile Include="Resource\IMediaService.cs" />
     <Compile Include="Resource\MediaService.cs" />
+    <Compile Include="Salary\ISalaryDetailService.cs" />
+    <Compile Include="Salary\IQuartersService.cs" />
+    <Compile Include="Salary\SalaryDetailService.cs" />
+    <Compile Include="Salary\QuartersService.cs" />
     <Compile Include="Setting\ISettingService.cs" />
     <Compile Include="Setting\SettingService.cs" />
     <Compile Include="WeiXin\IWeiXinAccountService.cs" />

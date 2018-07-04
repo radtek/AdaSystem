@@ -119,6 +119,7 @@ function initData() {
                 field: 'MediaTypeName',
                 title: '媒体类型',
                 align: "center", valign: "middle",
+                sortable:true,
                 footerFormatter: function () {
                     return "合计";
                 }
@@ -137,6 +138,7 @@ function initData() {
             {
                 field: 'CostMoney',
                 title: '参考成本',
+                sortable: true,
                 align: "center", valign: "middle",
                 footerFormatter: sumFormatter
             },
@@ -173,6 +175,7 @@ function initData() {
             {
                 field: 'PrePublishDate',
                 title: '预出刊日期',
+                sortable: true,
                 align: "center", valign: "middle",
                 editable: {
                     mode: "inline", emptytext: '请输入', validate: function (value) {
@@ -187,6 +190,7 @@ function initData() {
             {
                 field: 'SellMoney',
                 title: '无税金额',
+                sortable: true,
                 align: "center", valign: "middle",
                 editable: {
                     mode: "inline", emptytext: '请输入', validate: function (value) {
@@ -200,6 +204,7 @@ function initData() {
             {
                 field: 'Money',
                 title: '销售金额',
+                sortable: true,
                 align: "center", valign: "middle",
                 editable: {
                     mode: "inline",
@@ -234,6 +239,7 @@ function initData() {
             {
                 field: 'PurchaseStatus',
                 title: '采购状态',
+                sortable: true,
                 align: "center", valign: "middle",
                 formatter: formatter.purchaseStatus
 
@@ -241,6 +247,7 @@ function initData() {
             {
                 field: 'Status',
                 title: '销售状态',
+                sortable: true,
                 align: "center", valign: "middle",
                 formatter: function (value, row,index) {
                     if (row.PurchaseStatus == 3 && value == 1) {

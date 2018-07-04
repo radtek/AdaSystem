@@ -26,9 +26,13 @@ namespace Ada.Data.Mapping.Admin
             Property(s => s.Status);
             Property(s => s.Image).HasMaxLength(512);
             Property(s => s.Theme).HasMaxLength(32);
+            Property(s => s.BankAccount).HasMaxLength(32);
+            Property(s => s.BankName).HasMaxLength(32);
+            Property(s => s.BankNum).HasMaxLength(32);
             Property(s => s.ExpireTime);
             Property(s => s.IdCard).HasMaxLength(32);
             Property(s => s.UnionId).HasMaxLength(64);
+            Property(s => s.QuartersId).HasMaxLength(32);
             Property(s => s.AddedDate);
             Property(s => s.AddedBy).HasMaxLength(32);
             Property(s => s.AddedById).HasMaxLength(32);
@@ -45,7 +49,6 @@ namespace Ada.Data.Mapping.Admin
 
             //配置表
             ToTable("Manager");
-
             //配置关系[多个角色，可以被多个用户选择]
             //多对多关系实现要领：hasmany,hasmany,然后映射生成第三个表，最后映射leftkey,rightkey
             HasMany(s => s.Roles).

@@ -45,6 +45,7 @@ namespace Ada.Data.Mapping.Purchase
             Property(s => s.VerificationStatus);
             Property(s => s.LinkManName).HasMaxLength(64);
             Property(s => s.LinkManId).HasMaxLength(32);
+            Property(s => s.Image).HasMaxLength(512);
 
             Property(s => s.AddedDate);
             Property(s => s.AddedBy).HasMaxLength(32);

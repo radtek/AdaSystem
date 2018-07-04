@@ -168,6 +168,11 @@ namespace Ada.Core.Domain.Purchase
         [Display(Name = "采购类型")]
         public string PurchaseType { get; set; }
         /// <summary>
+        /// 图片
+        /// </summary>
+        [Display(Name = "图片")]
+        public string Image { get; set; }
+        /// <summary>
         /// 媒体名称
         /// </summary>
         [Display(Name = "媒体名称")]

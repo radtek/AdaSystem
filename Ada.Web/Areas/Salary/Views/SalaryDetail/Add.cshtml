@@ -1,0 +1,170 @@
+﻿
+@using System.Web.Optimization
+@using Ada.Core
+@using Ada.Core.Domain
+@using Ada.Core.Domain.Admin
+@using Ada.Core.Infrastructure
+@model Ada.Core.ViewModel.Wages.AttendanceDetailView
+@{
+    ViewBag.Title = "新增工资";
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "工资明细", Value = Url.Action("Index") } };
+    var repository = EngineContext.Current.Resolve<IRepository<Manager>>();
+    var managers = repository.LoadEntities(d => d.Status == Consts.StateNormal && d.IsDelete == false).OrderBy(d => d.UserName).Select(d => new SelectListItem()
+    {
+        Value = d.Id,
+        Text = d.UserName
+    }).ToList();
+}
+@Html.Partial("Bread")
+<div class="wrapper wrapper-content">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox-title">
+                    <a class="btn btn-outline btn-default btn-sm" href="javascript:goBackOrClose();"><i class="fa fa-reply"></i> 返回</a>
+                    <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="tabs-container">
+                    <p class="bg-danger">@Html.ValidationMessage("message") </p>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#tab-1"> 考勤</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-2"> 奖金</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-3"> 备注</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.ManagerId, Html.DisplayNameFor(d => d.ManagerId).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.DropDownListFor(d => d.ManagerId, managers, new { @class = "chosen-select", tabindex = "2", data_placeholder = "请选择员工" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Date, Html.DisplayNameFor(d => d.Date).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-4">
+                                            <div class="input-group date">
+                                                @Html.TextBoxFor(d => d.Date, new { @class = "form-control", @readonly = "" })
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.OffWork, Html.DisplayNameFor(d => d.OffWork).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.OffWork, new { @class = "form-control", type = "number" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Absenteeism, Html.DisplayNameFor(d => d.Absenteeism).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Absenteeism, new { @class = "form-control", type = "number" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.NoClockTimes, Html.DisplayNameFor(d => d.NoClockTimes).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.NoClockTimes, new { @class = "form-control", type = "number" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.LateTimes, Html.DisplayNameFor(d => d.LateTimes).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.LateTimes, new { @class = "form-control", type = "number" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.DeductMoney, Html.DisplayNameFor(d => d.DeductMoney).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.DeductMoney, new { @class = "form-control", type = "number" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div id="tab-2" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Commission, Html.DisplayNameFor(d => d.Commission).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Commission, new { @class = "form-control", type = "number" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Bonus, Html.DisplayNameFor(d => d.Bonus).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Bonus, new { @class = "form-control", type = "number" })
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab-3" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        @Html.TextAreaFor(d => d.Remark, new { @class = "form-control", rows = "20", placeholder = "请输入相关内容" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+</div>
+
+
+@section Styles {
+    @Styles.Render("~/plugins/dateTimePickerStyle")
+    @Styles.Render("~/Content/plugins/chosen/chosenStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/chosen")
+    @Scripts.Render("~/plugins/dateTimePickerScript")
+    <script type="text/javascript">
+
+        $(function() {
+            $('.chosen-select').chosen({ width: "100%" });
+            $('.input-group.date').datetimepicker({
+                language: 'zh-CN',
+                autoclose: 1,
+                startView: 3,
+                minView: 3,
+                forceParse: 0,
+                format: "yyyy年mm月"
+            });
+        });
+       
+    </script>
+}
+
+
+
+
+
+

@@ -91,7 +91,7 @@
             orderData =@Html.Raw(string.IsNullOrWhiteSpace(Model.OrderDetails)?"[]": Model.OrderDetails),
             isReadonly = @Model.AuditStatus;
     </script>
-    <script src="@Url.Content("~/Areas/Business/Scripts/order.js?v=201802260")"></script>
+    <script src="@Url.Content("~/Areas/Business/Scripts/order.js?v=201806260")"></script>
     <script>
         function transOrder() {
             var arrselections = $table.bootstrapTable('getSelections');

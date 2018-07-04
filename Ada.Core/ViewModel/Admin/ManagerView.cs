@@ -140,5 +140,35 @@ namespace Ada.Core.ViewModel.Admin
         /// </summary>
         [Display(Name = "离职日期")]
         public DateTime? QuitDate { get; set; }
+        /// <summary>
+        /// 岗位
+        /// </summary>
+        [Display(Name = "岗位")]
+        public string QuartersId { get; set; }
+        /// <summary>
+        /// 岗位
+        /// </summary>
+        [Display(Name = "岗位")]
+        public string QuartersTitle { get; set; }
+        /// <summary>
+        /// 转正日期
+        /// </summary>
+        [Display(Name = "转正日期")]
+        public DateTime? PromotionDate { get; set; }
+        /// <summary>
+        /// 开户行
+        /// </summary>
+        [Display(Name = "开户行")]
+        public string BankName { get; set; }
+        /// <summary>
+        /// 开户号
+        /// </summary>
+        [Display(Name = "开户号")]
+        public string BankNum { get; set; }
+        /// <summary>
+        /// 开户名
+        /// </summary>
+        [Display(Name = "开户名")]
+        public string BankAccount { get; set; }
     }
 }

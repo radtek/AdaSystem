@@ -212,6 +212,7 @@
             var isConfirm = $("input[name='IsConfirm']:checked").val();
             $.ajax({
                 type: "post",
+                cache: false,
                 headers: {
                     '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
                 },

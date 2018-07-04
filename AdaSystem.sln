@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Message", "Ada.Web\Areas\Me
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeiXin", "Ada.Web\Areas\WeiXin\WeiXin.csproj", "{1A2D22B3-9AD0-4092-A87A-3817667177D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Salary", "Ada.Web\Areas\Salary\Salary.csproj", "{CA257809-9D21-4DDF-B494-4AE146A038F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +139,10 @@ Global
 		{1A2D22B3-9AD0-4092-A87A-3817667177D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A2D22B3-9AD0-4092-A87A-3817667177D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A2D22B3-9AD0-4092-A87A-3817667177D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA257809-9D21-4DDF-B494-4AE146A038F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA257809-9D21-4DDF-B494-4AE146A038F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA257809-9D21-4DDF-B494-4AE146A038F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA257809-9D21-4DDF-B494-4AE146A038F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -157,6 +163,7 @@ Global
 		{30ACC830-AE75-4B16-8ED8-64F9B99D745B} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
 		{6D9BC718-723F-4988-8850-467BEB958321} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
 		{1A2D22B3-9AD0-4092-A87A-3817667177D8} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
+		{CA257809-9D21-4DDF-B494-4AE146A038F8} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AB64B513-252F-4F91-A011-A6FD97731889}

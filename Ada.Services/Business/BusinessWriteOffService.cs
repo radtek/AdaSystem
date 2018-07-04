@@ -95,7 +95,10 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => d.Transactor.Contains(viewModel.search));
             }
-
+            if (!string.IsNullOrWhiteSpace(viewModel.TransactorId))
+            {
+                allList = allList.Where(d => d.TransactorId==viewModel.TransactorId);
+            }
             if (viewModel.WriteOffDateStar != null)
             {
                 allList = allList.Where(d => d.WriteOffDate >= viewModel.WriteOffDateStar);

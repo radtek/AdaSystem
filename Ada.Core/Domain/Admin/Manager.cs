@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core.Domain.Log;
+using Ada.Core.Domain.Wages;
 using Newtonsoft.Json;
 
 namespace Ada.Core.Domain.Admin
@@ -17,6 +18,8 @@ namespace Ada.Core.Domain.Admin
             this.Roles = new HashSet<Role>();
             this.ManagerActions = new HashSet<ManagerAction>();
             this.ManagerLoginLogs = new HashSet<ManagerLoginLog>();
+            SalaryDetails = new HashSet<SalaryDetail>();
+            AttendanceDetails= new HashSet<AttendanceDetail>();
         }
         /// <summary>
         /// 用户名
@@ -96,13 +99,42 @@ namespace Ada.Core.Domain.Admin
         [Display(Name = "离职日期")]
         public DateTime? QuitDate { get; set; }
         /// <summary>
+        /// 转正日期
+        /// </summary>
+        [Display(Name = "转正日期")]
+        public DateTime? PromotionDate { get; set; }
+        /// <summary>
         /// 过期时间
         /// </summary>
         [Display(Name = "过期时间")]
         public System.DateTime? ExpireTime { get; set; }
+        /// <summary>
+        /// 开户行
+        /// </summary>
+        [Display(Name = "开户行")]
+        public string BankName { get; set; }
+        /// <summary>
+        /// 开户号
+        /// </summary>
+        [Display(Name = "开户号")]
+        public string BankNum { get; set; }
+        /// <summary>
+        /// 开户名
+        /// </summary>
+        [Display(Name = "开户名")]
+        public string BankAccount { get; set; }
+        /// <summary>
+        /// 岗位
+        /// </summary>
+        [Display(Name = "岗位")]
+        public string QuartersId { get; set; }
+
         public virtual ICollection<Organization> Organizations { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
         public virtual ICollection<ManagerAction> ManagerActions { get; set; }
         public virtual ICollection<ManagerLoginLog> ManagerLoginLogs { get; set; }
+
+        public virtual ICollection<SalaryDetail> SalaryDetails { get; set; }
+        public virtual ICollection<AttendanceDetail> AttendanceDetails { get; set; }
     }
 }

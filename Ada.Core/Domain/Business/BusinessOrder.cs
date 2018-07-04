@@ -141,6 +141,11 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "单据时间")]
         public DateTime? OrderDate { get; set; }
         /// <summary>
+        /// 是否截图
+        /// </summary>
+        [Display(Name = "是否截图")]
+        public bool? IsPic { get; set; }
+        /// <summary>
         /// 联系客户
         /// </summary>
         [Display(Name = "联系客户")]

@@ -176,6 +176,11 @@ namespace Admin.Controllers
                 Birthday = viewModel.Birthday,
                 EntryDate = viewModel.EntryDate,
                 QuitDate = viewModel.QuitDate,
+                PromotionDate = viewModel.PromotionDate,
+                BankAccount = viewModel.BankAccount,
+                BankName = viewModel.BankName,
+                BankNum = viewModel.BankNum,
+                QuartersId = viewModel.QuartersId,
                 Password = Encrypt.Encode(viewModel.Password),
                 Id = IdBuilder.CreateIdNum(),
                 AddedBy = CurrentManager.UserName,
@@ -201,6 +206,11 @@ namespace Admin.Controllers
             viewModel.Birthday = manager.Birthday;
             viewModel.IsLunar = manager.IsLunar ?? false;
             viewModel.RealName = manager.RealName;
+            viewModel.QuartersId = manager.QuartersId;
+            viewModel.PromotionDate = manager.PromotionDate;
+            viewModel.BankAccount = manager.BankAccount;
+            viewModel.BankName = manager.BankName;
+            viewModel.BankNum = manager.BankNum;
             viewModel.Roles = string.Join(",", manager.Roles.Select(r => r.Id));
             viewModel.OrganizationIds = manager.Organizations.Count > 0
                 ? string.Join(",", manager.Organizations.Select(r => r.Id))
@@ -245,6 +255,11 @@ namespace Admin.Controllers
             manager.IsLunar = viewModel.IsLunar;
             manager.EntryDate = viewModel.EntryDate;
             manager.QuitDate = viewModel.QuitDate;
+            manager.QuartersId = viewModel.QuartersId;
+            manager.BankAccount = viewModel.BankAccount;
+            manager.BankName = viewModel.BankName;
+            manager.BankNum = viewModel.BankNum;
+            manager.PromotionDate = viewModel.PromotionDate;
             manager.Password = Encrypt.Encode(viewModel.Password);
             manager.ModifiedById = CurrentManager.Id;
             manager.ModifiedBy = CurrentManager.UserName;

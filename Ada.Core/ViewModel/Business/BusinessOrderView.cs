@@ -218,5 +218,10 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "采购成本")]
         public decimal? TotalPurchaseMoney { get; set; }
+        /// <summary>
+        /// 是否截图
+        /// </summary>
+        [Display(Name = "是否截图")]
+        public bool? IsPic { get; set; }
     }
 }

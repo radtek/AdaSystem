@@ -258,5 +258,10 @@ namespace Ada.Core.ViewModel.Purchase
         /// </summary>
         [Display(Name = "优惠总额")]
         public decimal? TotalDiscountMoney { get; set; }
+        /// <summary>
+        /// 图片
+        /// </summary>
+        [Display(Name = "图片")]
+        public string Image { get; set; }
     }
 }

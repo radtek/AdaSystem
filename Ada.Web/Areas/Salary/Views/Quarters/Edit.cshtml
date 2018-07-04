@@ -1,0 +1,51 @@
+﻿@model Ada.Core.ViewModel.Wages.QuartersView
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <p class="bg-danger">@Html.ValidationMessage("message") </p>
+    <div class="form-horizontal">
+
+        <div class="form-group">
+            @Html.LabelFor(d => d.Title, Html.DisplayNameFor(d => d.Title).ToString(), new { @class = "col-sm-2 control-label" })
+            <div class="col-sm-10">
+                @Html.TextBoxFor(d => d.Title, new { @class = "form-control", required = "" })
+            </div>
+        </div>
+        <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            @Html.LabelFor(d => d.BaseSalary, Html.DisplayNameFor(d => d.BaseSalary).ToString(), new { @class = "col-sm-2 control-label" })
+            <div class="col-sm-10">
+                @Html.TextBoxFor(d => d.BaseSalary, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            @Html.LabelFor(d => d.Commission, Html.DisplayNameFor(d => d.Commission).ToString(), new { @class = "col-sm-2 control-label" })
+            <div class="col-sm-10">
+                @Html.TextBoxFor(d => d.Commission, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            @Html.LabelFor(d => d.Attendance, Html.DisplayNameFor(d => d.Attendance).ToString(), new { @class = "col-sm-2 control-label" })
+            <div class="col-sm-10">
+                @Html.TextBoxFor(d => d.Attendance, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            @Html.LabelFor(d => d.Allowance, Html.DisplayNameFor(d => d.Allowance).ToString(), new { @class = "col-sm-2 control-label" })
+            <div class="col-sm-10">
+                @Html.TextBoxFor(d => d.Allowance, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="hr-line-dashed"></div>
+        <div class="form-group">
+            <div class="col-sm-4 col-sm-offset-2">
+                <a class="btn btn-outline btn-default" href="javascript:goBackOrClose();"><i class="fa fa-reply"></i> 返回</a>
+                <button class="btn btn-primary" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
+            </div>
+        </div>
+    </div>
+}
