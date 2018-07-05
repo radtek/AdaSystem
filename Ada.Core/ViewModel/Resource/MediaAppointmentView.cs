@@ -50,5 +50,10 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "预约时间")]
         public string AppointmentDateRange { get; set; }
+        /// <summary>
+        /// 预约备注
+        /// </summary>
+        [Display(Name = "预约备注")]
+        public string Remark { get; set; }
     }
 }

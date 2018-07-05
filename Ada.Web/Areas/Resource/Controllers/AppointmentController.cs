@@ -72,6 +72,7 @@ namespace Resource.Controllers
                     State = view.State,
                     AddedDate = DateTime.Now,
                     Id = IdBuilder.CreateIdNum(),
+                    Remark = view.Remark,
                     Taxis = view.Taxis
                 });
                 _service.Update(media);
@@ -196,6 +197,7 @@ namespace Resource.Controllers
                     AppointmentDate = d.AppointmentDate,
                     Taxis = d.Taxis,
                     MediaName = d.Media.MediaName,
+                    Remark = d.Remark
                 })
             }, JsonRequestBehavior.AllowGet);
         }

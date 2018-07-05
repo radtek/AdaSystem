@@ -125,8 +125,8 @@ namespace Resource.Controllers
                 int i = 0;
                 foreach (var name in names)
                 {
-                    var mediaInfo = name.Trim();
-                    if (!results.Any(d => d.MediaName.IndexOf(mediaInfo, StringComparison.OrdinalIgnoreCase) >= 0 || !string.IsNullOrWhiteSpace(d.MediaID) && d.MediaID.IndexOf(mediaInfo, StringComparison.OrdinalIgnoreCase) >= 0))
+                    var mediaInfo = name.Trim().ToLower();
+                    if (!results.Any(d => d.MediaName.ToLower()==mediaInfo || !string.IsNullOrWhiteSpace(d.MediaID) && d.MediaID.ToLower()==mediaInfo))
                     {
                         noDatas.Add(new Media
                         {
@@ -137,7 +137,7 @@ namespace Resource.Controllers
                     }
                     else
                     {
-                        var temp = results.FirstOrDefault(d => d.MediaName.IndexOf(mediaInfo, StringComparison.OrdinalIgnoreCase) >= 0 || !string.IsNullOrWhiteSpace(d.MediaID) && d.MediaID.IndexOf(mediaInfo, StringComparison.OrdinalIgnoreCase) >= 0);
+                        var temp = results.FirstOrDefault(d => d.MediaName.ToLower() == mediaInfo || !string.IsNullOrWhiteSpace(d.MediaID) && d.MediaID.ToLower() == mediaInfo);
                         if (temp != null) temp.Taxis = i;
                     }
                     i++;
@@ -297,7 +297,7 @@ namespace Resource.Controllers
                 foreach (var name in names)
                 {
                     var temp = result.FirstOrDefault(d =>
-                        d.MediaName.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+                        d.MediaName.ToLower()==name.ToLower().Trim());
                     if (temp == null)
                     {
                         result.Add(new Media
@@ -321,7 +321,7 @@ namespace Resource.Controllers
                 foreach (var id in ids)
                 {
                     var temp = result.FirstOrDefault(d =>
-                        d.MediaID.Equals(id, StringComparison.CurrentCultureIgnoreCase));
+                        d.MediaID.ToLower()==id.ToLower().Trim());
                     if (temp == null)
                     {
                         result.Add(new Media

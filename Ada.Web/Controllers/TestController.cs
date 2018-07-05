@@ -157,10 +157,10 @@ namespace Ada.Web.Controllers
 
         }
 
-        public ActionResult CheckMedia()
+        public ActionResult CheckMedia(string n)
         {
 
-            var m = _media.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == "sinablog").ToList();
+            var m = _media.LoadEntities(d => d.IsDelete == false && d.MediaType.CallIndex == n).ToList();
             List<string> ids = new List<string>();
             List<string> isnulls = new List<string>();
             foreach (var item in m)

@@ -1,10 +1,12 @@
-﻿@using Ada.Core
+﻿
+@using Ada.Core
 @using Ada.Core.Domain.Wages
 @using Ada.Core.Infrastructure
 @model SalaryDetail
 @{
     var repository = EngineContext.Current.Resolve<IRepository<Quarters>>();
     var quarters = repository.LoadEntities(d => d.Id == Model.Manager.QuartersId).FirstOrDefault();
+   var attendance= Model.Manager.AttendanceDetails.FirstOrDefault(d => d.Date == Model.Date);
 }
 
 
@@ -49,6 +51,27 @@
                     <li class='list-group-item'>
                         <span class='badge badge-danger'>@Model.AttendanceTotal</span>
                         缺勤扣款
+                        @if (Model.AttendanceTotal > 0)
+                        {
+                            var sb = new List<string>();
+                            if (attendance.Absenteeism > 0)
+                            {
+                                sb.Add("旷工："+ attendance.Absenteeism + " 天");
+                            }
+                            if (attendance.OffWork > 0)
+                            {
+                                sb.Add("请假："+ attendance.OffWork + " 天");
+                            }
+                            if (attendance.LateTimes > 0)
+                            {
+                                sb.Add("迟到："+ attendance.LateTimes + " 次");
+                            }
+                            if (attendance.NoClockTimes > 0)
+                            {
+                                sb.Add("未打卡："+ attendance.NoClockTimes + " 次");
+                            }
+                            <small> [ @string.Join(" | ",sb) ]</small>
+                        }
                     </li>
                     <li class='list-group-item'>
                         <span class='badge badge-danger'>@Model.DeductMoney</span>

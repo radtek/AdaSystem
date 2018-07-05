@@ -18,23 +18,77 @@
     </div>
 </div>
 
-<div id="toolbar" class="btn-group">
-    <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")" target="_blank">
-        <i class="fa fa-plus"></i> 新增工资
-    </a>
+<div id="toolbar">
+    <div class="form-inline" role="form">
+        <div class="form-group">
+
+            <div class="input-group date">
+                <input name="Date" class="form-control" type="text" placeholder="请选择月份">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            </div>
+        </div>
+        <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")" target="_blank">
+            <i class="fa fa-plus"></i> 新增工资
+        </a>
+        <button type="button" class="btn btn-warning btn-outline" data-toggle="modal" data-target="#exportModal">
+            <i class="fa fa-download"></i> 导出明细
+        </button>
+    </div>
 </div>
+
+<div class="modal inmodal" id="exportModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <i class="fa fa-download modal-icon"></i>
+                <h4 class="modal-title">导出工资明细</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="input-group date">
+                        <input id="date" class="form-control" type="text" placeholder="请选择月份">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">返回关闭</button>
+                <button type="button" class="btn btn-primary ladda-button" data-style="zoom-in" onclick="exportFile();">开始导出</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/dateTimePickerStyle")
+    @Styles.Render("~/plugins/laddaStyles")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/dateTimePickerScript")
+    @Scripts.Render("~/plugins/ladda")
     <script type="text/javascript">
 
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
+            $('.input-group.date').datetimepicker({
+                language: 'zh-CN',
+                autoclose: 1,
+                startView: 3,
+                minView: 3,
+                forceParse: 0,
+                format: "yyyy年mm月"
+            }).on('changeDate', function (ev) {
+                $('#table').bootstrapTable('refresh');
+                
+            });;
         });
         var TableInit = function() {
             var obj = new Object();
@@ -47,11 +101,11 @@
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）
                 sortable: true,                     //是否启用排序
-                sortOrder: "asc",                   //排序方式
+                sortOrder: "desc",                   //排序方式
                 sortName: "Id",
                 sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
                 pageNumber: 1,                       //初始化加载第一页，默认第一页
-                pageSize: 50,                       //每页的记录行数（*）
+                pageSize: 10,                       //每页的记录行数（*）
                 search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
                 strictSearch: true,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
                 showColumns: true,                  //是否显示所有的列
@@ -62,8 +116,12 @@
                 uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
                 showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
                 cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
-                //detailView: true,                   //设置为 true 可以显示详细页面模式。
-                //detailFormatter: detailFormatter,
+                queryParams: function(parameters) {
+                    $('#toolbar').find('input[name]').each(function () {
+                        parameters[$(this).attr('name')] = $(this).val();
+                    });
+                    return parameters;
+                    },
                 mobileResponsive:true,
                 columns: [
                     {
@@ -153,6 +211,46 @@
                     $('#modalView .modal').modal('show');
                 });
 
+        }
+
+        function exportFile() {
+            if (!$("#date").val()) {
+                swal("提醒", "请选择导出的月份！", "warning");
+                $('#exportModal').modal('hide');
+                return;
+            }
+            var subBtn = $('.ladda-button').ladda();
+            $.ajax({
+                type: "post",
+                headers: {
+                    '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                },
+                url: "@Url.Action("Export")",
+                data: { date: $("#date").val()},
+                success: function (data) {
+                    if (data.State == 1) {
+                        $('#exportModal').modal('hide');
+                        swal({
+                            title: "导出成功",
+                            text: "正在下载中...",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        window.location.href = "/Resource/Media/Download?file=" + data.Msg;
+                    } else {
+                        swal("消息", data.Msg, "warning");
+                    }
+                },
+                error: function () {
+                    swal("错误", "系统错误", "error");
+                },
+                beforeSend: function () {
+                    subBtn.ladda('start');
+                },
+                complete: function () {
+                    subBtn.ladda('stop');
+                }
+            });
         }
     </script>
 }

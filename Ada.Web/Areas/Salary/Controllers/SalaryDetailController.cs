@@ -13,6 +13,7 @@ using Ada.Services.Admin;
 using Ada.Services.Business;
 using Ada.Services.Salary;
 using Ada.Services.Setting;
+using Newtonsoft.Json.Linq;
 using Salary.Models;
 
 namespace Salary.Controllers
@@ -110,14 +111,38 @@ namespace Salary.Controllers
             var jt = quarters.Allowance;//津贴
             var config = _settingService.GetSetting<SalarySet>();
             //未打卡
+            var jmTimes = config.Derate;
+            bool isJm = true;
             var dk = config.NoClock;
-            var dkYh = config.Derate;
-            var dkTemp = viewModel.NoClockTimes > 0 ? viewModel.NoClockTimes - dkYh : viewModel.NoClockTimes;
+            int dkTemp;
+            if (viewModel.NoClockTimes > 0)
+            {
+                dkTemp = viewModel.NoClockTimes - jmTimes;
+                isJm = false;
+            }
+            else
+            {
+                dkTemp = viewModel.NoClockTimes;
+            }
             var noClock = dkTemp * dk;
             //迟到
             var cd = config.Late;
-            var cdYh = config.Derate;
-            var cdTemp = viewModel.LateTimes > 0 ? viewModel.LateTimes - cdYh : viewModel.LateTimes;
+            int cdTemp;
+            if (viewModel.LateTimes > 0)
+            {
+                if (isJm)
+                {
+                    cdTemp = viewModel.LateTimes - jmTimes;
+                }
+                else
+                {
+                    cdTemp = viewModel.LateTimes;
+                }
+            }
+            else
+            {
+                cdTemp = viewModel.LateTimes;
+            }
             var late = cdTemp * cd;
             bool isBad = false;
             //请假
@@ -154,7 +179,7 @@ namespace Salary.Controllers
                 isAddSalary = true;
             }
             //扣款  旷工+请假+未打卡+迟到
-            decimal deductTotal = (decimal) (absenteeism + offwork) + noClock + late; //(decimal)(absenteeism + noClock + late + offwork);
+            decimal deductTotal = (decimal)(absenteeism + offwork) + noClock + late; //(decimal)(absenteeism + noClock + late + offwork);
             if (!isQc)
             {
                 deductTotal += kq;
@@ -172,7 +197,7 @@ namespace Salary.Controllers
             var saleCommission = _businessWriteOffService.LoadEntitiesFilter(quare).Sum(d => d.Commission) ?? 0;
             var total = gw + jt + kq + viewModel.Bonus + viewModel.Commission + saleCommission;
             //合计
-            salaryDetail.Total =Math.Round(total - deductTotal - viewModel.DeductMoney) ;
+            salaryDetail.Total = Math.Round(total - deductTotal - viewModel.DeductMoney);
             salaryDetail.Commission = viewModel.Commission;
             salaryDetail.Bonus = viewModel.Bonus;
             salaryDetail.Date = viewModel.Date;
@@ -198,6 +223,57 @@ namespace Salary.Controllers
             var entity = _salaryRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
             return PartialView("Detail", entity);
         }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult Export(string date)
+        {
+            if (string.IsNullOrWhiteSpace(date))
+            {
+                return Json(new { State = 0, Msg = "请选择要导出的月份！" });
+            }
+            if (!DateTime.TryParse(date, out var exportDate))
+            {
+                return Json(new { State = 0, Msg = "日期格式有误！" });
+            }
+            var p = PremissionData();
+            var viewModel = new AttendanceDetailView();
+            viewModel.Date = exportDate;
+            viewModel.ManagerId = p.Any() ? CurrentManager.Id : null;
+            viewModel.limit = 500;
+            var result = _service.LoadEntitiesFilter(viewModel).ToList();
+            if (!result.Any())
+            {
+                return Json(new { State = 0, Msg = "未找到相关的数据！" });
+            }
+            JArray jObjects = new JArray();
+            foreach (var salaryDetail in result)
+            {
+                var jo = new JObject();
+                var quarters = _quartersRepository.LoadEntities(d => d.Id == salaryDetail.Manager.QuartersId).FirstOrDefault();
+                jo.Add("姓名", salaryDetail.Manager.UserName);
+                jo.Add("岗位名称", quarters.Title);
+                jo.Add("岗位工资", quarters.BaseSalary);
+                jo.Add("岗位津贴", quarters.Allowance);
+                jo.Add("全勤奖金", quarters.Attendance);
+                jo.Add("销售提成", salaryDetail.SaleCommission);
+                jo.Add("红包提成", salaryDetail.Commission);
+                jo.Add("其他奖金", salaryDetail.Bonus);
+                var attendance = salaryDetail.Manager.AttendanceDetails.FirstOrDefault(d => d.Date == exportDate);
+                jo.Add("请假天数", attendance.OffWork);
+                jo.Add("旷工天数", attendance.Absenteeism);
+                jo.Add("迟到次数", attendance.LateTimes);
+                jo.Add("未打卡次数", attendance.NoClockTimes);
+                jo.Add("考勤扣款", salaryDetail.AttendanceTotal);
+                jo.Add("其他扣款", salaryDetail.DeductMoney);
+                jo.Add("实发工资", salaryDetail.Total);
+                jo.Add("工资银行", salaryDetail.Manager.BankName);
+                jo.Add("工资卡号", salaryDetail.Manager.BankNum);
+                jo.Add("备注信息", salaryDetail.Remark);
+                jObjects.Add(jo);
+            }
+            return Json(new { State = 1, Msg = ExportFile(jObjects.ToString(),exportDate.ToString("yyyy年MM月")) });
+        }
+
         [HttpPost]
         [AdaValidateAntiForgeryToken]
         public ActionResult Delete(string id)

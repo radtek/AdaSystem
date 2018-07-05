@@ -172,6 +172,11 @@
                         <input type="hidden" id="AppointmentDate" value="" />
                         <input type="hidden" id="sort" value="" />
                     </div>
+                    <div class="form-group">
+                        <div class="col-sm-12 text-center">
+                            <textarea id="Remark" class="form-control" placeholder="预约备注"></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -217,7 +222,7 @@
                     '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
                 },
                 url: "@Url.Action("Make")",
-                data: { MediaId: "@media.Id", AppointmentDate: $("#AppointmentDate").val(), State: isConfirm, Taxis: $("#sort").val()},
+                data: { MediaId: "@media.Id", Remark: $("#Remark").val(), AppointmentDate: $("#AppointmentDate").val(), State: isConfirm, Taxis: $("#sort").val()},
                 success: function (data) {
                     if (data.State == 1) {
                         $('#yyModal').modal('hide');

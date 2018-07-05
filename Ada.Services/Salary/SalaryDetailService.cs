@@ -30,15 +30,20 @@ namespace Ada.Services.Salary
             {
                 allList = allList.Where(d => d.ManagerId==viewModel.ManagerId);
             }
+
+            if (viewModel.Date!=null)
+            {
+                allList = allList.Where(d => d.Date == viewModel.Date);
+            }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
             string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
             if (order == "desc")
             {
-                return allList.OrderByDescending(d => d.Taxis).Skip(offset).Take(rows);
+                return allList.OrderByDescending(d => d.Id).Skip(offset).Take(rows);
             }
-            return allList.OrderBy(d => d.Taxis).Skip(offset).Take(rows);
+            return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
         }
         
         public void Delete(string id)
