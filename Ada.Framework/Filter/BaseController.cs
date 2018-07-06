@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using Ada.Core;
+using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
 using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel;
 using Ada.Core.ViewModel.Admin;
 using Ada.Framework.Caching;
-using Ada.Framework.Services;
 using Ada.Services.Admin;
 using Autofac;
 using ClosedXML.Excel;
@@ -45,7 +44,30 @@ namespace Ada.Framework.Filter
         {
             base.OnActionExecuting(filterContext);
             //如果打了允许的标签就无须验证权限
-           
+            
+            
+            var dateNow = DateTime.Now.Date.Month;
+            var birthdays = _repository.LoadEntities(d => d.Status == Consts.StateNormal && d.Birthday != null).ToList();
+            ChineseLunisolarCalendar cc = new ChineseLunisolarCalendar();
+            List<string> managerBirthdays=new List<string>();
+            foreach (var birthday in birthdays)
+            {
+                var month = birthday.Birthday.Value.Month;
+                if (birthday.IsLunar==true)
+                {
+                    var temp = cc.ToDateTime(DateTime.Now.Year, birthday.Birthday.Value.Month,
+                        birthday.Birthday.Value.Day, 0, 0, 0, 0);
+                    month = temp.Month;
+                }
+                if (dateNow==month)
+                {
+                    managerBirthdays.Add(birthday.UserName);
+                }
+            }
+            if (managerBirthdays.Any())
+            {
+                ViewBag.Birthday = managerBirthdays;
+            }
             if (filterContext.ActionDescriptor.IsDefined(typeof(AllowAnonymousAttribute), true)
                 || filterContext.ActionDescriptor.ControllerDescriptor.IsDefined(typeof(AllowAnonymousAttribute), true))
             {
@@ -58,7 +80,7 @@ namespace Ada.Framework.Filter
             {
                 //没登陆
                 filterContext.Result = isAjax
-                    ? Json(new { State = 0, Msg = "您尚未登陆或登陆超时，请重新登陆！" },JsonRequestBehavior.AllowGet)
+                    ? Json(new { State = 0, Msg = "您尚未登陆或登陆超时，请重新登陆！" }, JsonRequestBehavior.AllowGet)
                     : (ActionResult)RedirectToAction("Index", "Login", new { area = "Admin" });
                 return;
             }
@@ -114,7 +136,7 @@ namespace Ada.Framework.Filter
         {
             if (isAjax)
             {
-                return Json(new { State = 0, Msg = httpResultView.Msg },JsonRequestBehavior.AllowGet);
+                return Json(new { State = 0, Msg = httpResultView.Msg }, JsonRequestBehavior.AllowGet);
             }
             ViewResult result = new ViewResult
             {

@@ -197,6 +197,8 @@ namespace Resource.Controllers
                         jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
                         break;
                     case "douyin":
+                        jo.Add("媒体ID", media.MediaID);
+                        jo.Add("抖音ID", media.Abstract);
                         jo.Add("媒体链接", media.MediaLink);
                         jo.Add("性别", media.Sex);
                         jo.Add("地区", media.Area);
