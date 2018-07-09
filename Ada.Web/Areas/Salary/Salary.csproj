@@ -124,6 +124,8 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\SalaryDetail\Detail.cshtml" />
     <Content Include="Views\Setting\Index.cshtml" />
+    <Content Include="Views\SalaryDetail\Update.cshtml" />
+    <Content Include="Views\SalaryDetail\Edit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -36,6 +36,10 @@ namespace Ada.Services.Salary
                 allList = allList.Where(d => d.Date == viewModel.Date);
             }
             viewModel.total = allList.Count();
+            if (allList.Any())
+            {
+                viewModel.TotalSum = allList.Sum(d => d.Total);
+            }
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
             string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;

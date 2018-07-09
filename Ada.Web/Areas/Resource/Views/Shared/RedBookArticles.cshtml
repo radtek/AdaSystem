@@ -3,7 +3,7 @@
 @{
     var update = Model.LastPushDate?.ToString("yyyy-MM-dd");
     //var pushdate = Model.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate?.ToString("yyyy-MM-dd");
-    var start = DateTime.Now.Date.AddDays(-7);
+    var start = DateTime.Now.Date.AddDays(-30);
     var end = DateTime.Now.AddDays(1).Date;
 
     var articles = Model.MediaArticles.Where(d => d.PublishDate >= start && d.PublishDate < end).Select(d => new
@@ -91,7 +91,7 @@
     <div class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h3>近一周笔记平均点赞数，评论数 <small>更新日期：@update</small></h3>
+                <h3>近30天笔记平均点赞数，评论数 <small>更新日期：@update</small></h3>
             </div>
             <div class="ibox-content">
                 <div class="row">

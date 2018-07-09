@@ -20,6 +20,7 @@ namespace Ada.Core.ViewModel.Wages
             Bonus = 0;
             DeductMoney = 0;
             TotalMoney = 0;
+            TotalSum = 0;
         }
         /// <summary>
         /// 月份
@@ -81,6 +82,11 @@ namespace Ada.Core.ViewModel.Wages
         /// </summary>
         [Display(Name = "实发工资")]
         public decimal TotalMoney { get; set; }
+        /// <summary>
+        /// 实发总工资
+        /// </summary>
+        [Display(Name = "实发总工资")]
+        public decimal TotalSum { get; set; }
         /// <summary>
         /// 备注
         /// </summary>

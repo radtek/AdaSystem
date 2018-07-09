@@ -1,0 +1,13 @@
+﻿
+@model Ada.Core.ViewModel.Wages.AttendanceDetailView
+@{
+    ViewBag.Title = "编辑工资";
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "工资明细", Value = Url.Action("Index") } };
+
+}
+@Html.Partial("Bread")
+<div class="wrapper wrapper-content">
+    @Html.Partial("Edit", Model)
+</div>
+
+

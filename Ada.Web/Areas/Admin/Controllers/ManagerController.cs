@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
+using Ada.Core.Domain.Wages;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel;
 using Ada.Core.ViewModel.Admin;
@@ -14,6 +15,7 @@ using Ada.Framework.Caching;
 using Ada.Framework.Filter;
 using Ada.Framework.UploadFile;
 using Ada.Services.Admin;
+using Newtonsoft.Json.Linq;
 using Action = Ada.Core.Domain.Admin.Action;
 
 namespace Admin.Controllers
@@ -24,19 +26,22 @@ namespace Admin.Controllers
         private readonly IRepository<Role> _roleRepository;
         private readonly IRepository<Manager> _managerRepository;
         private readonly IManagerService _managerService;
+        private readonly IRepository<Quarters> _quartersRepository;
         private readonly IRepository<Organization> _organizationRepository;
 
         public ManagerController(IManagerService managerService,
             IRepository<Manager> managerRepository,
             IRepository<Role> roleRepository,
             IRepository<Action> actionRepository,
-            IRepository<Organization> organizationRepository)
+            IRepository<Organization> organizationRepository,
+            IRepository<Quarters> quartersRepository)
         {
             _actionRepository = actionRepository;
             _roleRepository = roleRepository;
             _managerRepository = managerRepository;
             _managerService = managerService;
             _organizationRepository = organizationRepository;
+            _quartersRepository = quartersRepository;
         }
         public ActionResult Index()
         {
@@ -268,10 +273,59 @@ namespace Admin.Controllers
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");
         }
-        
 
-        
-        
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult Export(ManagerView viewModel)
+        {
+           viewModel.Managers = PremissionData();
+            var managers = _managerService.LoadEntitiesFilter(viewModel);
+            var quarters = _quartersRepository.LoadEntities(d => d.IsDelete == false);
+            var result = from m in managers
+                from q in quarters
+                where q.Id == m.QuartersId
+                select new
+                {
+                    m.UserName,
+                    m.Phone,
+                    m.IdCard,
+                    m.Birthday,
+                    m.IsLunar,
+                    m.BankName,
+                    m.BankAccount,
+                    m.BankNum,
+                    m.EntryDate,
+                    q.Title
+                };
+            if (!result.Any())
+            {
+                return Json(new { State = 0, Msg = "未找到相关的数据！" });
+            }
+            JArray jObjects = new JArray();
+            foreach (var item in result.ToList())
+            {
+                var jo = new JObject();
+                jo.Add("姓名", item.UserName);
+                jo.Add("岗位", item.Title);
+                jo.Add("联系手机", item.Phone);
+                jo.Add("身份证", item.IdCard);
+                if (item.Birthday!=null)
+                {
+                    var str = item.Birthday.Value.ToString("yyyy-MM-dd") + (item.IsLunar == true ? " (农历)" : "");
+                    jo.Add("生日", str);
+                }
+                else
+                {
+                    jo.Add("生日", "");
+                }
+                jo.Add("入职日期", item.EntryDate);
+                jo.Add("开户行", item.BankName);
+                jo.Add("开户名", item.BankAccount);
+                jo.Add("开户号", item.BankNum);
+                jObjects.Add(jo);
+            }
+            return Json(new { State = 1, Msg = ExportFile(jObjects.ToString()) });
+        }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
         public ActionResult Delete(string id)
