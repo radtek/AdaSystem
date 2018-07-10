@@ -279,8 +279,8 @@ namespace Admin.Controllers
         public ActionResult Export(ManagerView viewModel)
         {
            viewModel.Managers = PremissionData();
-            var managers = _managerService.LoadEntitiesFilter(viewModel);
-            var quarters = _quartersRepository.LoadEntities(d => d.IsDelete == false);
+            var managers = _managerService.LoadEntitiesFilter(viewModel).ToList();
+            var quarters = _quartersRepository.LoadEntities(d => d.IsDelete == false).ToList();
             var result = from m in managers
                 from q in quarters
                 where q.Id == m.QuartersId
@@ -295,17 +295,20 @@ namespace Admin.Controllers
                     m.BankAccount,
                     m.BankNum,
                     m.EntryDate,
-                    q.Title
+                    q.Title,
+                    Group=GetOrganization(m)
                 };
-            if (!result.Any())
+            var enumerable = result.ToList();
+            if (!enumerable.Any())
             {
                 return Json(new { State = 0, Msg = "未找到相关的数据！" });
             }
             JArray jObjects = new JArray();
-            foreach (var item in result.ToList())
+            foreach (var item in enumerable.ToList())
             {
                 var jo = new JObject();
                 jo.Add("姓名", item.UserName);
+                jo.Add("所属部门", item.Group);
                 jo.Add("岗位", item.Title);
                 jo.Add("联系手机", item.Phone);
                 jo.Add("身份证", item.IdCard);
@@ -318,7 +321,16 @@ namespace Admin.Controllers
                 {
                     jo.Add("生日", "");
                 }
-                jo.Add("入职日期", item.EntryDate);
+                jo.Add("入职日期", item.EntryDate==null?"":item.EntryDate.Value.ToString("yyyy-MM-dd"));
+                if (viewModel.EntryDate!=null)
+                {
+                    if (item.EntryDate!=null)
+                    {
+                        var span = viewModel.EntryDate.Value - new DateTime(item.EntryDate.Value.Year,
+                                       item.EntryDate.Value.AddMonths(1).Month, 1);
+                        jo.Add("入职天数（截至"+viewModel.EntryDate.Value.ToString("yyyy-MM-dd")+"）",span.TotalDays);
+                    }
+                }
                 jo.Add("开户行", item.BankName);
                 jo.Add("开户名", item.BankAccount);
                 jo.Add("开户号", item.BankNum);
