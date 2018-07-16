@@ -73,7 +73,7 @@ namespace Ada.Web.Models
         /// <param name="jsonStr"></param>
         /// <param name="sheetName"></param>
         /// <returns></returns>
-        public string ExportData(string jsonStr,string sheetName= "江西微广")
+        public string ExportData(string jsonStr,string sheetName= "我的数据")
         {
             var dt = JsonConvert.DeserializeObject<DataTable>(jsonStr);
             var fileName = "UserExport_" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx";

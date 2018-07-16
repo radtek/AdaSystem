@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
+using Ada.Core.Domain;
 using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Resource;
 
@@ -62,13 +63,19 @@ namespace Ada.Services.Resource
         }
         public void AddMedia(List<string> groupIds, Media media)
         {
-            media.MediaGroups.Clear();
+            var oldGroups = media.MediaGroups.Where(d => d.GroupType == Consts.StateLock).ToList();
+            //找出所有对应的媒体组，删除此媒体，再加入媒体组
+            foreach (var mediaGroup in oldGroups)
+            {
+                mediaGroup.Medias.Remove(media);
+            }
+            //media.MediaGroups.Clear();
             foreach (var groupId in groupIds)
             {
                 var group = _repository.LoadEntities(d => d.Id == groupId).FirstOrDefault();
                 //var temp = _mediaRepository.LoadEntities(d => d.Id == media.Id).FirstOrDefault();
-                //group?.Medias.Add(temp);
-                media.MediaGroups.Add(group);
+                group?.Medias.Add(media);
+                //media.MediaGroups.Add(group);
             }
             _dbContext.SaveChanges();
         }
