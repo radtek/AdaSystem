@@ -7,6 +7,7 @@ using Ada.Core.ViewModel.Business;
 using Ada.Framework.Filter;
 using Ada.Services.Admin;
 using Ada.Services.Business;
+using DataReport.Models;
 
 namespace DataReport.Controllers
 {
@@ -41,16 +42,22 @@ namespace DataReport.Controllers
             var startDate = DateTime.Parse(start);
             var endDate = DateTime.Parse(end);
             var allList = _businessWriteOffService.LoadEntitiesFilter(new BusinessWriteOffDetailView(){WriteOffDateStar = startDate,WriteOffDateEnd = endDate});
-            var managers = _managerService.GetByOrganizationName("业务部");
-            List<BusinessWriteOffDetailView> list=new List<BusinessWriteOffDetailView>();
-            foreach (var managerView in managers.ToList())
+            //var managers = _managerService.GetByOrganizationName("业务部");
+            //List<BusinessWriteOffDetailView> list=new List<BusinessWriteOffDetailView>();
+            //foreach (var managerView in managers.ToList())
+            //{
+            //    BusinessWriteOffDetailView item=new BusinessWriteOffDetailView();
+            //    item.Transactor = managerView.UserName;
+            //    item.TotalCommission = allList.Where(d => d.TransactorId == managerView.Id).Sum(d => d.Commission);
+            //    list.Add(item);
+            //}
+
+            var result = allList.GroupBy(d => d.Transactor).Select(d => new BusinessCommission
             {
-                BusinessWriteOffDetailView item=new BusinessWriteOffDetailView();
-                item.Transactor = managerView.UserName;
-                item.TotalCommission = allList.Where(d => d.TransactorId == managerView.Id).Sum(d => d.Commission);
-                list.Add(item);
-            }
-            return View(list.OrderByDescending(d=>d.TotalCommission).ToList());
+                Transactor = d.Key,
+                TotalCommission = d.Sum(t => t.Commission)
+            });
+            return View(result.OrderByDescending(d=>d.TotalCommission).ToList());
         }
     }
 }

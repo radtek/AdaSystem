@@ -116,6 +116,7 @@
     <Compile Include="Controllers\SettleAccountController.cs" />
     <Compile Include="Controllers\WriteOffController.cs" />
     <Compile Include="DataReportAreaRegistration.cs" />
+    <Compile Include="Models\BusinessCommission.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -141,9 +142,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\Ada.Core\Ada.Core.csproj">
       <Project>{1E0B290A-3337-43C9-9CE9-BFB8CE741DBA}</Project>

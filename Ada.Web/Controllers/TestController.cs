@@ -403,10 +403,10 @@ namespace Ada.Web.Controllers
                     var mediaId = row.GetCell(0)?.ToString();
                     var media = _media.LoadEntities(d => d.Id == mediaId.Trim()).FirstOrDefault();
                     if (media == null) continue;
-                    media.Transactor = "周方超";
-                    media.TransactorId = "X1806111602430001";
-                    media.LinkMan.Transactor = "周方超";
-                    media.LinkMan.TransactorId = "X1806111602430001";
+                    media.Transactor = "郑娜";
+                    media.TransactorId = "X1807031436217658";
+                    media.LinkMan.Transactor = "郑娜";
+                    media.LinkMan.TransactorId = "X1807031436217658";
 
                     count++;
                 }
