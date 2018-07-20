@@ -52,7 +52,7 @@ namespace Business.Controllers
                     InvoiceTitle = d.InvoiceTitle,
                     InvoiceType = d.InvoiceType,
                     Company = d.Company,
-                    TaxNum = d.TaxNum,
+                    TaxNum = d.InvoiceTitle + d.Company,
                     InvoiceTime = d.InvoiceTime,
                     InvoiceNum = d.InvoiceNum,
                     PayTime = d.PayTime,
@@ -252,5 +252,32 @@ namespace Business.Controllers
             TempData["Msg"] = "操作成功";
             return RedirectToAction("Update", new { id });
         }
+
+        public ActionResult WriteOff()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult WriteOff(InvoiceWriteOffView viewModel)
+        {
+            //校验数据
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("message", "请选择核销款项或核销发票！");
+                return View(viewModel);
+            }
+            var businessInvoicesIds = viewModel.BusinessInvoicesIds.Split(',').ToList().Distinct();
+            var receivaluesIds = viewModel.ReceivalesIds.Split(',').ToList().Distinct();
+            var result = _businessInvoiceService.WriteOff(businessInvoicesIds, receivaluesIds);
+            if (!result)
+            {
+                ModelState.AddModelError("message", "核销信息或金额不一致！");
+                return View(viewModel);
+            }
+            TempData["Msg"] = "核销成功";
+            return View();
+        }
+        
     }
 }

@@ -98,16 +98,21 @@ namespace Ada.Services.Business
                 if (viewModel.VerificationStatus.Value)
                 {
                     allList = from o in allList
-                              where o.BusinessOrderDetails.Count == o.BusinessOrderDetails.Count(b => b.VerificationStatus == Consts.StateNormal) && o.BusinessOrderDetails.Count > 0
+                              where o.BusinessOrderDetails.Count == o.BusinessOrderDetails.Count(b => b.VerificationStatus == Consts.StateNormal) && o.BusinessOrderDetails.Any()
                               select o;
                 }
                 else
                 {
                     allList = from o in allList
-                              where o.BusinessOrderDetails.Count != o.BusinessOrderDetails.Count(b => b.VerificationStatus == Consts.StateNormal) && o.BusinessOrderDetails.Count > 0
+                              where o.BusinessOrderDetails.Count != o.BusinessOrderDetails.Count(b => b.VerificationStatus == Consts.StateNormal) && o.BusinessOrderDetails.Any()
                               select o;
                 }
 
+            }
+
+            if (viewModel.IsWriteOff==true)
+            {
+                allList = allList.Where(d => d.BusinessInvoiceDetails.Any(i => i.BusinessInvoice.Receivableses.Any())||d.Tax==0);
             }
             if (viewModel.AuditStatus != null)
             {

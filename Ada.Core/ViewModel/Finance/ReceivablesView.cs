@@ -145,5 +145,10 @@ namespace Ada.Core.ViewModel.Finance
         /// </summary>
         [Display(Name = "领款人")]
         public string PayeeBy { get; set; }
+        /// <summary>
+        /// 是否核销
+        /// </summary>
+        [Display(Name = "是否核销")]
+        public bool? IsWriteOff { get; set; }
     }
 }

@@ -51,7 +51,7 @@ namespace Finance.Controllers
             viewModel.TotalMoney = entity.TotalMoney;
             viewModel.Remark = entity.Remark;
             viewModel.Status = entity.Status;
-            viewModel.MoneyStatus = entity.MoneyStatus;
+            //viewModel.MoneyStatus = entity.MoneyStatus;
             viewModel.InvoiceTime = entity.InvoiceTime ?? DateTime.Now;
             viewModel.InvoiceNum = entity.InvoiceNum;
             viewModel.PayTime = entity.PayTime;
@@ -69,7 +69,7 @@ namespace Finance.Controllers
             }
             var invoice = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
             invoice.Status = viewModel.Status;
-            invoice.MoneyStatus = viewModel.MoneyStatus;
+            //invoice.MoneyStatus = viewModel.MoneyStatus;
             invoice.InvoiceNum = viewModel.InvoiceNum;
             invoice.InvoiceTime = viewModel.InvoiceTime;
             invoice.PayTime = viewModel.PayTime;
@@ -90,9 +90,20 @@ namespace Finance.Controllers
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (entity.Receivableses.Any())
+            {
+                return Json(new { State = 0, Msg = "此发票已核销，无法删除" });
+            }
             _businessInvoiceDetailrepository.Remove(entity.BusinessInvoiceDetails);
             _businessInvoiceService.Delete(entity);//物理删除
             return Json(new { State = 1, Msg = "撤销成功" });
+        }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult CancleWriteOff(string id)
+        {
+            _businessInvoiceService.CancleWriteOff(id);
+            return Json(new { State = 1, Msg = "撤销核销成功" });
         }
     }
 }

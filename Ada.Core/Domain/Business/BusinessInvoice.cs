@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core.Domain.Customer;
+using Ada.Core.Domain.Finance;
 
 namespace Ada.Core.Domain.Business
 {
@@ -16,6 +17,7 @@ namespace Ada.Core.Domain.Business
         public BusinessInvoice()
         {
             BusinessInvoiceDetails = new HashSet<BusinessInvoiceDetail>();
+            Receivableses = new HashSet<Receivables>();
         }
         /// <summary>
         /// 发票抬头
@@ -135,5 +137,6 @@ namespace Ada.Core.Domain.Business
         public virtual LinkMan LinkMan { get; set; }
 
         public virtual ICollection<BusinessInvoiceDetail> BusinessInvoiceDetails { get; set; }
+        public virtual ICollection<Receivables> Receivableses { get; set; }
     }
 }

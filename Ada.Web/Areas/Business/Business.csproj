@@ -195,6 +195,7 @@
     <Content Include="Views\Comment\Index.cshtml" />
     <Content Include="Views\WriteOff\Details.cshtml" />
     <Content Include="Views\WriteOff\Detailss.cshtml" />
+    <Content Include="Views\Invoice\WriteOff.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

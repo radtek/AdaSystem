@@ -1,0 +1,398 @@
+﻿@using System.Web.Optimization
+
+@model Ada.Core.ViewModel.Business.InvoiceWriteOffView
+@{
+    ViewBag.Title = "发票核销";
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "销售发票", Value = Url.Action("Index") } };
+    var initName = ViewBag.Name == null ? "" : ViewBag.Name;
+}
+@Html.Partial("Bread")
+
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+    <p class="bg-danger">@Html.ValidationMessage("message") </p>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+
+                <div class="ibox-content">
+                    <div class="sk-spinner sk-spinner-wave">
+                        <div class="sk-rect2"></div>
+                        <div class="sk-rect3"></div>
+                        <div class="sk-rect4"></div>
+                        <div class="sk-rect5"></div>
+                    </div>
+                    @using (Html.BeginForm("WriteOff","Invoice", FormMethod.Post, new { @class = "wizard-big" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <h1>核销发票</h1>
+                        <fieldset>
+                            <h4>请勾选需要核销的销售发票<small id="invoiceMoney"></small></h4>
+                            <table id="invoiceTable"></table>
+                        </fieldset>
+                        <h1>核销款项</h1>
+                        <fieldset>
+                            <h4>请勾选需要核销的收款单据<small id="receivalbesMoney"></small></h4>
+                            <table id="receivablesTable"></table>
+                        </fieldset>
+
+                        <h1>核销完成</h1>
+                        <fieldset>
+                            <h2>核销信息确认</h2>
+                            <div class="row">
+                                <div class="col-lg-8 form-horizontal">
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.TotalInvoiceMoney, Html.DisplayNameFor(d => d.TotalInvoiceMoney).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(d => d.TotalInvoiceMoney, new { @class = "form-control", required = "", @readonly = "" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.TotalReceivalesMoney, Html.DisplayNameFor(d => d.TotalReceivalesMoney).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(d => d.TotalReceivalesMoney, new { @class = "form-control", required = "", @readonly = "" })
+                                        </div>
+                                    </div>
+                                    
+                                    @Html.HiddenFor(d => d.ReceivalesIds)
+                                    @Html.HiddenFor(d => d.BusinessInvoicesIds)
+                                </div>
+                            </div>
+                        </fieldset>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Styles {
+
+    @Styles.Render("~/plugins/select2Styles")
+    @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/wizardStepsStyles")
+    <style>
+        .content.clearfix {
+            height: 420px;
+        }
+
+        .wizard > .content > .body ul > li {
+            display: inline;
+        }
+    </style>
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/wizardSteps")
+    @Scripts.Render("~/plugins/select2")
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/lodash")
+    <script type="text/javascript">
+
+        var isInvoiceSelect = false,
+            isReceivalesSelect = false,
+            invoiceSelections = {},
+            receivablesSelections = {},
+            settleAccountName, accountName,
+            $invoiceTable,
+            $receivablesTable;
+        invoiceSelections.ids = [];
+        invoiceSelections.rows = [];
+        receivablesSelections.ids = [];
+        receivablesSelections.rows = [];
+
+        $(function () {
+            $(".wrapper.wrapper-content form").steps({
+                bodyTag: "fieldset",
+                labels: {
+                    cancel: "取消",
+                    finish: "确认核销",
+                    next: "下一步",
+                    previous: "上一步",
+                    loading: "核销中 ..."
+                },
+                onInit: function (event, currentIndex) {
+                    $invoiceTable = $('#invoiceTable');
+                    $receivablesTable = $('#receivablesTable');
+                    initInvoice();
+                    initReceivables();
+                },
+                onStepChanging: function (event, currentIndex, newIndex) {
+                    if (currentIndex == 0) {
+                        var temp = _.uniq(invoiceSelections.rows, 'TaxNum');
+                        if (temp.length == 0) {
+                            swal("操作提醒", "请选择要核销的销售发票！", "warning");
+                            return false;
+                        }
+                        if (temp.length > 1) {
+                            swal("操作提醒", "请选择相同的公司和发票抬头！", "warning");
+                            return false;
+                        }
+                        settleAccountName = temp[0].InvoiceTitle;
+                        accountName = temp[0].Company;
+                    }
+                    // Always allow going backward even if the current step contains invalid fields!
+                    if (currentIndex > newIndex) {
+                        return true;
+                    }
+                    //// Forbid suppressing "Warning" step if the user is to young
+                    //if (newIndex === 3 && Number($("#age").val()) < 18) {
+                    //    return false;
+                    //}
+
+                    var form = $(this);
+
+                    // Clean up if user went backward before
+                    if (currentIndex < newIndex) {
+                        // To remove error styles
+                        $(".body:eq(" + newIndex + ") label.error", form).remove();
+                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                    }
+
+                    // Disable validation on fields that are disabled or hidden.
+                    form.validate().settings.ignore = ":disabled,:hidden";
+
+                    // Start validation; Prevent going forward if false
+                    return form.valid();
+                },
+                onStepChanged: function (event, currentIndex, priorIndex) {
+                    //// Suppress (skip) "Warning" step if the user is old enough.
+
+
+                    if (currentIndex === 2) {
+                        
+                        //计算选取总额
+                        var totalInvoiceMoney = 0, totalReceivablesMoney = 0;
+                        $.each(invoiceSelections.rows,
+                            function (k, v) {
+                                totalInvoiceMoney += v.TotalMoney;
+                            });
+                        $.each(receivablesSelections.rows,
+                            function (k, v) {
+                                totalReceivablesMoney += v.Money;
+                            });
+                        $("#TotalInvoiceMoney").val(totalInvoiceMoney);
+                        $("#TotalReceivalesMoney").val(totalReceivablesMoney);
+                        $("#ReceivalesIds").val(receivablesSelections.ids.join(","));
+                        $("#BusinessInvoicesIds").val(invoiceSelections.ids.join(","));
+
+                        //$(this).steps("next");
+                    }
+                    if (currentIndex === 0) {
+                        $invoiceTable.bootstrapTable('refresh');
+                        isInvoiceSelect = false;
+                    }
+                    if (currentIndex === 1) {
+                        $receivablesTable.bootstrapTable('refresh');
+                        isReceivalesSelect = false;
+                    }
+                    //// Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
+                    //if (currentIndex === 2 && priorIndex === 3) {
+                    //    $(this).steps("previous");
+                    //}
+
+                },
+                onFinishing: function (event, currentIndex) {
+                    var form = $(this);
+                    // Disable validation on fields that are disabled.
+                    // At this point it's recommended to do an overall check (mean ignoring only disabled fields)
+                    form.validate().settings.ignore = ":disabled";
+
+                    // Start validation; Prevent form submission if false
+                    return form.valid();
+                },
+                onFinished: function (event, currentIndex) {
+                    var form = $(this);
+                    $('.wrapper.wrapper-content .ibox').children('.ibox-content').toggleClass('sk-loading');
+                    // Submit form input
+                    form.submit();
+                }
+            }).validate({
+                errorPlacement: function (error, element) {
+                    element.before(error);
+                },
+                rules: {
+                    TotalInvoiceMoney: {
+                        equalTo: "#TotalReceivalesMoney",
+                        min: 0.01
+                    }
+                },
+                messages: {
+                    TotalInvoiceMoney: {
+                        equalTo: "核销金额不一致",
+                        min: "核销金额须大于0"
+                    }
+                }
+
+            });
+        });
+
+
+        //销售发票
+        function initInvoice() {
+            $invoiceTable.bootstrapTable({
+                classes: "table table-no-bordered",
+                url: "/Business/Invoice/GetList",         //请求后台的URL（*）
+                height: 360,
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "desc",                   //排序方式
+                sortName: "Id",
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pagination: true,
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 7,                       //每页的记录行数（*）
+                pageList: [7, 15, 50],
+                clickToSelect: true,                //是否启用点击选中行
+                //singleSelect: true,                  //设置True 将禁止多选
+                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                mobileResponsive: true,
+                queryParams: function (parameters) {
+                    parameters.Status = 1;
+                    parameters.MoneyStatus = 0;
+                    return parameters;
+                },
+                search: true,
+                strictSearch: true,
+                formatSearch: function () {
+                    return "公司名称";
+                },
+                responseHandler: invoiceResponseHandler,
+                columns: [
+                    {
+                        field: 'state',
+                        checkbox: true
+                    },
+                    {
+                        field: 'LinkManName',
+                        title: '客户名称',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'InvoiceTitle',
+                        title: '发票抬头',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'InvoiceType',
+                        title: '发票类型',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'Company',
+                        title: '公司名称',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'TotalMoney',
+                        title: '发票金额',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'AddedDate',
+                        title: '申请日期',
+                        align: "center", valign: "middle",
+                        formatter: function (value) {
+                            return moment(value).format("YYYY-MM-DD");
+                        }
+                    }
+                ]
+            });
+            checkOn($invoiceTable, invoiceSelections, sumInvoiceMoney);
+        }
+        function sumInvoiceMoney() {
+            var total = 0;
+            $.each(invoiceSelections.rows,
+                function (k, v) {
+                    total += v.TotalMoney;
+                });
+            $("#invoiceMoney").text(" [已选：" + total + " 元]");
+        }
+        //保留选中结果
+        function invoiceResponseHandler(res) {
+            $.each(res.rows, function (i, row) {
+                row.state = $.inArray(row.Id, invoiceSelections.ids) !== -1;
+            });
+            return res;
+        }
+        //收款单据
+        function initReceivables() {
+            $receivablesTable.bootstrapTable({
+                classes: "table table-no-bordered",
+                url: "/Finance/Receivables/GetList",         //请求后台的URL（*）
+                height: 360,
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "desc",                   //排序方式
+                sortName: "Id",
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pagination: true,
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 7,                       //每页的记录行数（*）
+                pageList: [7, 15, 50],
+                clickToSelect: true,                //是否启用点击选中行
+                //singleSelect: true,                  //设置True 将禁止多选
+                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                mobileResponsive: true,
+                queryParams: function (parameters) {
+                    parameters.SettleAccountName = settleAccountName;
+                    parameters.AccountName = accountName;
+                    parameters.IsWriteOff = false;
+                    parameters.ReceivablesType = 'S';
+                    return parameters;
+                },
+                responseHandler: receivalbesResponseHandler,
+                columns: [
+                    {
+                        field: 'state',
+                        checkbox: true
+                    },
+                    {
+                        field: 'SettleAccountName',
+                        title: '收款账户',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'AccountName',
+                        title: '付款客户',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'Money',
+                        title: '收款金额',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'BillDate',
+                        title: '单据日期',
+                        align: "center", valign: "middle",
+                        formatter: function (value) {
+                            return moment(value).format("YYYY-MM-DD");
+                        }
+                    }
+                ]
+            });
+            checkOn($receivablesTable, receivablesSelections, sumReceivables);
+        }
+        function sumReceivables() {
+            var total = 0;
+            $.each(receivablesSelections.rows,
+                function (k, v) {
+                    total += v.Money;
+                });
+            $("#receivalbesMoney").text(" [已选：" + total + " 元]");
+        }
+        //保留选中结果
+        function receivalbesResponseHandler(res) {
+            $.each(res.rows, function (i, row) {
+                row.state = $.inArray(row.Id, receivablesSelections.ids) !== -1;
+            });
+            return res;
+        }
+    </script>
+
+}
+
+
+

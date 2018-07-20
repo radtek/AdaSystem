@@ -372,6 +372,7 @@ function initItem() {
         searchText: initName,
         queryParams: function (parameters) {
             parameters.VerificationStatus = false;
+            parameters.IsWriteOff = true;
             return parameters;
         },
         formatSearch: function () {

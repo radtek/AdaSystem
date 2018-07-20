@@ -16,6 +16,7 @@ namespace Ada.Core.Domain.Finance
         public Receivables()
         {
             BusinessPayees=new HashSet<BusinessPayee>();
+            BusinessInvoices=new HashSet<BusinessInvoice>();
         }
         /// <summary>
         /// 收款类型
@@ -105,5 +106,7 @@ namespace Ada.Core.Domain.Finance
         public virtual SettleAccount SettleAccount { get; set; }
         public virtual IncomeExpend IncomeExpend { get; set; }
         public virtual ICollection<BusinessPayee> BusinessPayees { get; set; }
+
+        public virtual ICollection<BusinessInvoice> BusinessInvoices { get; set; }
     }
 }

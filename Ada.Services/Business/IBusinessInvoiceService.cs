@@ -15,5 +15,7 @@ namespace Ada.Services.Business
         void Update(BusinessInvoice entity);
         void Delete(BusinessInvoice entity);
         IQueryable<BusinessInvoice> LoadEntitiesFilter(BusinessInvoiceView viewModel);
+        bool WriteOff(IEnumerable<string> businessInvoicesIds, IEnumerable<string> receivaluesIds);
+        void CancleWriteOff(string id);
     }
 }

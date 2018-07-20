@@ -42,9 +42,17 @@ namespace Ada.Services.Finance
             {
                 allList = allList.Where(d => d.AccountName.Contains(viewModel.search));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.AccountName))
+            {
+                allList = allList.Where(d => d.AccountName.Contains(viewModel.AccountName));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.AccountNum))
             {
                 allList = allList.Where(d => d.AccountNum.Contains(viewModel.AccountNum));
+            }
+            if (viewModel.IsWriteOff!=null)
+            {
+                allList = viewModel.IsWriteOff.Value ? allList.Where(d => d.BusinessInvoices.Any()) : allList.Where(d => !d.BusinessInvoices.Any());
             }
             if (!string.IsNullOrWhiteSpace(viewModel.BillNum))
             {

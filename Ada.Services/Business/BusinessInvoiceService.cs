@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
+using Ada.Core.Domain;
 using Ada.Core.Domain.Business;
+using Ada.Core.Domain.Finance;
 using Ada.Core.ViewModel.Business;
 
 namespace Ada.Services.Business
@@ -13,11 +15,14 @@ namespace Ada.Services.Business
     {
         private readonly IDbContext _dbContext;
         private readonly IRepository<BusinessInvoice> _repository;
+        private readonly IRepository<Receivables> _receivablesRepository;
         public BusinessInvoiceService(IDbContext dbContext,
-            IRepository<BusinessInvoice> repository)
+            IRepository<BusinessInvoice> repository,
+            IRepository<Receivables> receivablesRepository)
         {
             _dbContext = dbContext;
             _repository = repository;
+            _receivablesRepository = receivablesRepository;
         }
         public void Add(BusinessInvoice entity)
         {
@@ -41,7 +46,7 @@ namespace Ada.Services.Business
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.Company.Contains(viewModel.search)||d.BusinessInvoiceDetails.Any(i=>i.BusinessOrder.OrderNum==viewModel.search));
+                allList = allList.Where(d => d.Company.Contains(viewModel.search) || d.BusinessInvoiceDetails.Any(i => i.BusinessOrder.OrderNum == viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.Transactor))
             {
@@ -67,10 +72,10 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => d.InvoiceType.Contains(viewModel.InvoiceType));
             }
-            
-            if (viewModel.Status!=null)
+
+            if (viewModel.Status != null)
             {
-                allList = allList.Where(d => d.Status==viewModel.Status);
+                allList = allList.Where(d => d.Status == viewModel.Status);
             }
             if (viewModel.MoneyStatus != null)
             {
@@ -91,6 +96,55 @@ namespace Ada.Services.Business
         {
 
             _repository.Update(entity);
+            _dbContext.SaveChanges();
+        }
+
+        public bool WriteOff(IEnumerable<string> businessInvoicesIds, IEnumerable<string> receivaluesIds)
+        {
+            decimal? totalInvoices = 0;
+            decimal? totalReceivalues = 0;
+            foreach (var businessInvoicesId in businessInvoicesIds)
+            {
+                var invoice = _repository.LoadEntities(d => d.Id == businessInvoicesId).FirstOrDefault();
+                var temp = invoice.Company.Trim().ToLower() + invoice.InvoiceTitle.Trim().ToLower();
+                foreach (var receivaluesId in receivaluesIds)
+                {
+                    var receivalues = _receivablesRepository.LoadEntities(d => d.Id == receivaluesId).FirstOrDefault();
+                    var temp2 = receivalues.AccountName.Trim().ToLower() +
+                                receivalues.SettleAccount.AccountName.Trim().ToLower();
+                    if (temp!=temp2)
+                    {
+                        return false;
+                    }
+                    invoice.Receivableses.Add(receivalues);
+                    invoice.PayTime = receivalues.BillDate;
+                    totalReceivalues += receivalues.Money;
+                }
+
+                invoice.MoneyStatus = Consts.StateNormal;
+                totalInvoices += invoice.TotalMoney;
+            }
+
+            if (totalReceivalues!=totalInvoices)
+            {
+                return false;
+            }
+            _dbContext.SaveChanges();
+            return true;
+        }
+
+        public void CancleWriteOff(string id)
+        {
+
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            foreach (var entityReceivablese in entity.Receivableses)
+            {
+                entityReceivablese.BusinessInvoices.Clear();
+            }
+
+            entity.MoneyStatus = Consts.StateLock;
+            entity.PayTime = null;
+            //entity.Receivableses.Clear();
             _dbContext.SaveChanges();
         }
     }

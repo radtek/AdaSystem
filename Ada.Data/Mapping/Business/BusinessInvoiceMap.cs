@@ -45,6 +45,11 @@ namespace Ada.Data.Mapping.Business
             //配置表
             ToTable("BusinessInvoice");
             HasRequired(s => s.LinkMan).WithMany(s => s.BusinessInvoices).HasForeignKey(s => s.LinkManId).WillCascadeOnDelete(false);
+            HasMany(s => s.Receivableses).
+                WithMany(s => s.BusinessInvoices)
+                .Map(s => s.ToTable("BusinessInvoiceReceivables").
+                    MapLeftKey("BusinessInvoiceId").
+                    MapRightKey("ReceivablesId"));
         }
     }
 }

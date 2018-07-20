@@ -10,38 +10,77 @@
             </div>
             <div class="modal-body">
                 <div class="row">
+                    <h3>发票明细</h3>
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
-                            <tr>
-                                <th>
-                                    订单编号
-                                </th>
-                                <th>
-                                    项目摘要
-                                </th>
-                                <th>
-                                    开票金额
-                                </th>
-                                
-                            </tr>
+                                <tr>
+                                    <th>
+                                        订单编号
+                                    </th>
+                                    <th>
+                                        项目摘要
+                                    </th>
+                                    <th>
+                                        开票金额
+                                    </th>
+
+                                </tr>
                             </thead>
                             <tbody>
-                            @foreach (var item in Model.BusinessInvoiceDetails)
-                            {
+                                @foreach (var item in Model.BusinessInvoiceDetails)
+                                {
+                                    <tr>
+                                        <td>@item.BusinessOrder.OrderNum</td>
+                                        <td>@item.BusinessOrder.Remark</td>
+                                        <td>@item.InvoiceMoney</td>
+
+                                    </tr>
+                                }
                                 <tr>
-                                    <td>@item.BusinessOrder.OrderNum</td>
-                                    <td>@item.BusinessOrder.Remark</td>
-                                    <td>@item.InvoiceMoney</td>
-                                    
+                                    <td></td>
+                                    <td>合计</td>
+                                    <td>@Model.TotalMoney</td>
+
                                 </tr>
-                            }
-                            <tr>
-                                <td></td>
-                                <td>合计</td>
-                                <td>@Model.TotalMoney</td>
-                               
-                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <h3>收款明细</h3>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        公司名称
+                                    </th>
+                                    <th>
+                                        收款账户
+                                    </th>
+                                    <th>
+                                        收款金额
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Receivableses)
+                                {
+                                    <tr>
+                                        <td>@item.AccountName</td>
+                                        <td>@item.SettleAccount.AccountName</td>
+                                        <td>@item.Money</td>
+
+                                    </tr>
+                                }
+                                <tr>
+                                    <td></td>
+                                    <td>合计</td>
+                                    <td>@Model.Receivableses.Sum(d=>d.Money)</td>
+
+                                </tr>
                             </tbody>
                         </table>
                     </div>

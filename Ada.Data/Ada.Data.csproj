@@ -347,6 +347,10 @@
     <Compile Include="Migrations\201807040439518_SaralyUpdate.Designer.cs">
       <DependentUpon>201807040439518_SaralyUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201807190425354_UpdateInvoice.cs" />
+    <Compile Include="Migrations\201807190425354_UpdateInvoice.Designer.cs">
+      <DependentUpon>201807190425354_UpdateInvoice.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -531,6 +535,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201807040439518_SaralyUpdate.resx">
       <DependentUpon>201807040439518_SaralyUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807190425354_UpdateInvoice.resx">
+      <DependentUpon>201807190425354_UpdateInvoice.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
