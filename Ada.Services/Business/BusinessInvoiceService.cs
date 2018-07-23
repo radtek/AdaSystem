@@ -103,6 +103,7 @@ namespace Ada.Services.Business
         {
             decimal? totalInvoices = 0;
             decimal? totalReceivalues = 0;
+            bool isTotal = false;
             foreach (var businessInvoicesId in businessInvoicesIds)
             {
                 var invoice = _repository.LoadEntities(d => d.Id == businessInvoicesId).FirstOrDefault();
@@ -118,9 +119,12 @@ namespace Ada.Services.Business
                     }
                     invoice.Receivableses.Add(receivalues);
                     invoice.PayTime = receivalues.BillDate;
-                    totalReceivalues += receivalues.Money;
+                    if (!isTotal)
+                    {
+                        totalReceivalues += receivalues.Money;
+                    }
                 }
-
+                isTotal = true;
                 invoice.MoneyStatus = Consts.StateNormal;
                 totalInvoices += invoice.TotalMoney;
             }

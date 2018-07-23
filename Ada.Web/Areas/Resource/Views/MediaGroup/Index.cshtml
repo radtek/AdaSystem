@@ -29,7 +29,7 @@
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-<script type="text/javascript">
+    <script type="text/javascript">
 
         $(document).ready(function() {
             var table = new TableInit();
@@ -82,8 +82,12 @@
                             formatter: function(value) {
                                 var result = "";
                                 $.each(value,
-                                    function(k, v) {
-                                        result += '<div class="bg-info">【' + v.MediaTypeName + '】' + v.MediaName+'</div>';
+                                    function (k, v) {
+                                        var platem = "";
+                                        if (v.Platform) {
+                                            platem = v.Platform + " - ";
+                                        }
+                                        result += '<div class="bg-info">【' + v.MediaTypeName + '】' + platem+ v.MediaName+'</div>';
                                     });
                                 return result;
                             },
@@ -152,7 +156,7 @@
                 });
             });
         }
-</script>
+    </script>
 }
 
 

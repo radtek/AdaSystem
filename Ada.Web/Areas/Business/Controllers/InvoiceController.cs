@@ -107,7 +107,7 @@ namespace Business.Controllers
             invoice.Address = viewModel.Address;
             invoice.Bank = viewModel.Bank;
             invoice.BankNum = viewModel.BankNum;
-            invoice.Company = viewModel.Company;
+            invoice.Company = !string.IsNullOrWhiteSpace(viewModel.Company) ? viewModel.Company.Trim().Replace(" ","") : viewModel.Company;
             invoice.Phone = viewModel.Phone;
             invoice.TaxNum = viewModel.TaxNum;
             invoice.Remark = viewModel.Remark;
@@ -193,7 +193,7 @@ namespace Business.Controllers
             invoice.Address = viewModel.Address;
             invoice.Bank = viewModel.Bank;
             invoice.BankNum = viewModel.BankNum;
-            invoice.Company = viewModel.Company;
+            invoice.Company = !string.IsNullOrWhiteSpace(viewModel.Company) ? viewModel.Company.Trim().Replace(" ", "") : viewModel.Company;
             invoice.Phone = viewModel.Phone;
             invoice.TaxNum = viewModel.TaxNum;
             invoice.Remark = viewModel.Remark;

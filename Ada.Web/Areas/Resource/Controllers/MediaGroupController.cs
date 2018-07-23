@@ -44,7 +44,7 @@ namespace Resource.Controllers
                 {
                     Id = d.Id,
                     GroupName = d.GroupName,
-                    MediaViews = d.Medias.Select(m => new MediaView { MediaTypeName = m.MediaType.TypeName, MediaName = m.MediaName }).ToList()
+                    MediaViews = d.Medias.Select(m => new MediaView { MediaTypeName = m.MediaType.TypeName, MediaName = m.MediaName,Platform = m.Platform}).ToList()
                 })
             }, JsonRequestBehavior.AllowGet);
         }

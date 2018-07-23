@@ -24,9 +24,10 @@
                         <tbody>
                             @foreach (var item in Model.Medias)
                             {
+                                var platform = string.IsNullOrWhiteSpace(item.Platform) ? "" : item.Platform + " - ";
                                 <tr>
                                     <td>@item.MediaType.TypeName</td>
-                                    <td>@item.MediaName</td>
+                                    <td>@platform@item.MediaName</td>
                                     <td>@item.FansNum</td>
                                     <td>
                                         @foreach (var price in item.MediaPrices)
