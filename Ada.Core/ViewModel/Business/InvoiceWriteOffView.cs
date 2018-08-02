@@ -29,5 +29,10 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "收款单据"),Required]
         public string ReceivalesIds { get; set; }
+        /// <summary>
+        /// 备注信息
+        /// </summary>
+        [Display(Name = "备注信息")]
+        public string Remark { get; set; }
     }
 }

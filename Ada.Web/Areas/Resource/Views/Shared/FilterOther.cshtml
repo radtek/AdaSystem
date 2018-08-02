@@ -7,6 +7,8 @@
     var priceProtectionDates = fieldService.GetFieldsByKey("PriceProtectionDate").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var platforms = fieldService.GetFieldsByKey("LivePlatform").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var platforms2 = fieldService.GetFieldsByKey("HeadLinePlatform").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    //var resourceTypes = fieldService.GetFieldsByKey("WriterResourceType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var efficiencys = fieldService.GetFieldsByKey("WriterEfficiency").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 <div class="col-sm-3">
     <div class="form-group">
@@ -32,6 +34,34 @@
         </select>
     </div>
 </div>
+@if (Model == "writer")
+{
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">擅长类型</label>
+            <div class="input-group">
+                <input type="text" name="ResourceType" value="" class="form-control" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                        确定
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">出稿速度</label>
+            <select name="Efficiency" class="form-control">
+                <option value="">请选择</option>
+                @foreach (var item in efficiencys)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
+    </div>
+}
 @if (Model == "webcast")
 {
     <div class="col-sm-3">

@@ -128,13 +128,14 @@ namespace Ada.Services.Business
                 invoice.MoneyStatus = Consts.StateNormal;
                 totalInvoices += invoice.TotalMoney;
             }
-
-            if (totalReceivalues!=totalInvoices)
+            //||totalReceivalues!=totalInvoices*0.96M  //
+            if (totalReceivalues==totalInvoices|| totalReceivalues == totalInvoices * 0.96M)
             {
-                return false;
+                _dbContext.SaveChanges();
+                return true;
+                
             }
-            _dbContext.SaveChanges();
-            return true;
+            return false;
         }
 
         public void CancleWriteOff(string id)

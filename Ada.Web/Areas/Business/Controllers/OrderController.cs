@@ -204,7 +204,7 @@ namespace Business.Controllers
             entity.LinkManName = viewModel.LinkManName;
             entity.Transactor = viewModel.Transactor;
             entity.TransactorId = viewModel.TransactorId;
-            entity.Tax = viewModel.Tax;
+            entity.Tax = viewModel.Tax ?? 0;
             //entity.DiscountRate = viewModel.DiscountRate;
             //entity.SettlementType = viewModel.SettlementType;
             entity.OrderDate = viewModel.OrderDate;
@@ -303,7 +303,7 @@ namespace Business.Controllers
             entity.LinkManName = viewModel.LinkManName;
             entity.Transactor = viewModel.Transactor;
             entity.TransactorId = viewModel.TransactorId;
-            entity.Tax = viewModel.Tax;
+            entity.Tax = viewModel.Tax??0;
             entity.OrderDate = viewModel.OrderDate;
             entity.Remark = viewModel.Remark;
             //找到已删除的

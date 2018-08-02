@@ -114,8 +114,8 @@ $(function () {
                     function (k, v) {
                         payeeMoney += v.VerificationMoney;
                     });
-                $("#OrderMoney").val(Math.toFixMoney(orderMoney));
-                $("#PayeeMoney").val(Math.toFixMoney(payeeMoney));
+                $("#OrderMoney").val(orderMoney.toFixed(2));
+                $("#PayeeMoney").val(payeeMoney.toFixed(2));
                 $("#Payees").val(payeeSelections.ids.join(","));
                 $("#Orders").val(orderSelections.ids.join(","));
 
@@ -203,7 +203,7 @@ function initPayee() {
         pagination: true,
         pageNumber: 1,                       //初始化加载第一页，默认第一页
         pageSize: 7,                       //每页的记录行数（*）
-        pageList: [7, 15, 50],
+        pageList: [7, 50, 100],
         clickToSelect: true,                //是否启用点击选中行
         //singleSelect: true,                  //设置True 将禁止多选
         uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
@@ -255,7 +255,7 @@ function sumPayee() {
         function (k, v) {
             payeeMoney += v.VerificationMoney;
         });
-    $("#payeemoney").text(" [已选：" + Math.toFixMoney(payeeMoney) + " 元]");
+    $("#payeemoney").text(" [已选：" + payeeMoney.toFixed(2) + " 元]");
 }
 //订单明细
 function initOrder() {
@@ -272,7 +272,7 @@ function initOrder() {
         pagination: true,
         pageNumber: 1,                       //初始化加载第一页，默认第一页
         pageSize: 7,                       //每页的记录行数（*）
-        pageList: [7, 15, 50],
+        pageList: [7, 50, 100],
         clickToSelect: true,                //是否启用点击选中行
         //singleSelect: true,                  //设置True 将禁止多选
         uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
@@ -346,7 +346,7 @@ function sumOrder() {
         function (k, v) {
             orderMoney += v.VerificationMoney;
         });
-    $("#ordermoney").text(" [已选：" + Math.toFixMoney(orderMoney)+" 元]");
+    $("#ordermoney").text(" [已选：" + orderMoney.toFixed(2)+" 元]");
 }
 //项目列表
 function initItem() {
@@ -363,7 +363,7 @@ function initItem() {
         pagination: true,
         pageNumber: 1,                       //初始化加载第一页，默认第一页
         pageSize: 6,                       //每页的记录行数（*）
-        pageList: [6, 15, 50],
+        pageList: [6, 50, 100],
         clickToSelect: true,                //是否启用点击选中行
         search: true,
         strictSearch: true,

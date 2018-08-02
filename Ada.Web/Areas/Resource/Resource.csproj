@@ -166,6 +166,7 @@
     <Compile Include="Controllers\SinaBlogController.cs" />
     <Compile Include="Controllers\UpdateController.cs" />
     <Compile Include="Controllers\WebCastController.cs" />
+    <Compile Include="Controllers\WriterController.cs" />
     <Compile Include="Controllers\WebSiteController.cs" />
     <Compile Include="Controllers\WeiXinController.cs" />
     <Compile Include="Controllers\ZhiHuController.cs" />
@@ -232,13 +233,15 @@
     <Content Include="Views\Appointment\List.cshtml" />
     <Content Include="Views\Shared\MediaPriceProtection.cshtml" />
     <Content Include="Views\Appointment\ListSelf.cshtml" />
-    <Content Include="Views\Media\Index - 复制.cshtml" />
     <Content Include="Views\Shared\FilterTags.cshtml" />
     <Content Include="Views\Shared\FilterPrice.cshtml" />
     <Content Include="Views\Shared\FilterFans.cshtml" />
     <Content Include="Views\Shared\FilterOther.cshtml" />
     <Content Include="Views\Shared\FilterModalSearch.cshtml" />
     <Content Include="Views\Shared\ExportModal.cshtml" />
+    <Content Include="Views\Writer\Index.cshtml" />
+    <Content Include="Views\Shared\Writer.cshtml" />
+    <Content Include="Views\Shared\ArticleDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

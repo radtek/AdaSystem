@@ -45,6 +45,7 @@ namespace Resource.Controllers
         private readonly IRepository<MediaTag> _mediaTagRepository;
         private readonly IDbContext _dbContext;
         private readonly IFieldService _fieldService;
+        private readonly IMediaArticleService _mediaArticleService;
         public MediaController(IMediaPriceService mediaPriceService,
             IMediaService mediaService,
             IRepository<MediaPrice> mediaPriceRepository,
@@ -55,7 +56,8 @@ namespace Resource.Controllers
             ISettingService settingService,
             IiDataAPIService iDataAPIService,
             IRepository<APIRequestRecord> apiRequestRecordRepository,
-            IFieldService fieldService)
+            IFieldService fieldService,
+            IMediaArticleService mediaArticleService)
         {
             _mediaPriceService = mediaPriceService;
             _mediaService = mediaService;
@@ -68,6 +70,7 @@ namespace Resource.Controllers
             _iDataAPIService = iDataAPIService;
             _apiRequestRecordRepository = apiRequestRecordRepository;
             _fieldService = fieldService;
+            _mediaArticleService = mediaArticleService;
         }
 
         public ActionResult Index(string id)
@@ -126,7 +129,7 @@ namespace Resource.Controllers
                 foreach (var name in names)
                 {
                     var mediaInfo = name.Trim().ToLower();
-                    if (!results.Any(d => d.MediaName.ToLower()==mediaInfo || !string.IsNullOrWhiteSpace(d.MediaID) && d.MediaID.ToLower()==mediaInfo))
+                    if (!results.Any(d => d.MediaName.ToLower() == mediaInfo || !string.IsNullOrWhiteSpace(d.MediaID) && d.MediaID.ToLower() == mediaInfo))
                     {
                         noDatas.Add(new Media
                         {
@@ -173,7 +176,11 @@ namespace Resource.Controllers
                 jo.Add("主键", media.Id);
                 jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
                 jo.Add("媒体名称", media.MediaName);
-                jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                if (viewModel.MediaTypeIndex != "writer")
+                {
+                    jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                }
+
                 switch (viewModel.MediaTypeIndex)
                 {
                     case "weixin":
@@ -222,6 +229,10 @@ namespace Resource.Controllers
                     case "zhihu":
                         jo.Add("媒体链接", media.MediaLink);
                         jo.Add("地区", media.Area);
+                        break;
+                    case "writer":
+                        jo.Add("擅长类型", media.ResourceType);
+                        jo.Add("出稿速度", media.Efficiency);
                         break;
                     default:
                         jo.Add("平台", media.Platform);
@@ -299,7 +310,7 @@ namespace Resource.Controllers
                 foreach (var name in names)
                 {
                     var temp = result.FirstOrDefault(d =>
-                        d.MediaName.ToLower()==name.ToLower().Trim());
+                        d.MediaName.ToLower() == name.ToLower().Trim());
                     if (temp == null)
                     {
                         result.Add(new Media
@@ -323,7 +334,7 @@ namespace Resource.Controllers
                 foreach (var id in ids)
                 {
                     var temp = result.FirstOrDefault(d =>
-                        d.MediaID.ToLower()==id.ToLower().Trim());
+                        d.MediaID.ToLower() == id.ToLower().Trim());
                     if (temp == null)
                     {
                         result.Add(new Media
@@ -506,7 +517,44 @@ namespace Resource.Controllers
                 })
             });
         }
-
+        public ActionResult GetArticles(MediaArticleView viewModel)
+        {
+            var result = _mediaArticleService.LoadEntitiesFilter(viewModel).ToList();
+            return Json(new
+            {
+                viewModel.total,
+                rows = result.Select(d => new
+                {
+                    d.Title,
+                    d.Id,
+                    d.ArticleUrl
+                })
+            }, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost, AdaValidateAntiForgeryToken]
+        public ActionResult AddArticle(MediaArticleView viewModel)
+        {
+            MediaArticle entity=new MediaArticle();
+            entity.Id = IdBuilder.CreateIdNum();
+            entity.Title = viewModel.Title;
+            entity.ArticleUrl = viewModel.ArticleUrl;
+            entity.MediaId = viewModel.MediaId;
+            _mediaArticleService.Add(entity);
+            return Json(new { State = 1, Msg = "添加成功" });
+        }
+        [HttpPost,AdaValidateAntiForgeryToken]
+        public ActionResult DeleteArticle(string id)
+        {
+            string[] ids = { id };
+            _mediaArticleService.Delete(ids);
+            return Json(new { State = 1, Msg = "删除成功" });
+        }
+        [AllowAnonymous]
+        public ActionResult ArticleDetails(string id)
+        {
+            var item = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            return PartialView("ArticleDetails", item);
+        }
         /// <summary>
         /// 导入更新价格
         /// </summary>

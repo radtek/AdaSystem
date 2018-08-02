@@ -39,6 +39,7 @@ namespace Ada.Web.Controllers
         private readonly IMediaGroupService _mediaGroupService;
         private readonly IMessageService _messageService;
         private readonly IManagerService _managerService;
+
         public MediaController(IRepository<Media> repository,
             IMediaService service,
             IOrderDetailCommentService orderDetailCommentService,
@@ -51,7 +52,8 @@ namespace Ada.Web.Controllers
             IMessageService messageService,
             IRepository<MediaDevelop> mediaDevelopRepository,
             IManagerService managerService,
-            IRepository<Manager> managerRepository)
+            IRepository<Manager> managerRepository
+            )
         {
             _repository = repository;
             _service = service;
@@ -66,6 +68,7 @@ namespace Ada.Web.Controllers
             _mediaDevelopRepository = mediaDevelopRepository;
             _managerService = managerService;
             _managerRepository = managerRepository;
+            
         }
         public ActionResult WeiXin()
         {
@@ -374,6 +377,7 @@ namespace Ada.Web.Controllers
                 })
             });
         }
+       
         [HttpPost]
         [AdaValidateAntiForgeryToken]
         public ActionResult GetMediaComments(MediaCommentView search)

@@ -1,7 +1,7 @@
 ﻿@using System.Web.Optimization
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
-    ViewBag.Title = "编辑"+Model.MediaTypeName+" - "+Model.MediaName;
+    ViewBag.Title = "编辑" + Model.MediaTypeName + " - " + Model.MediaName;
     ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "媒体资源", Value = Url.Action("Index") } };
 }
 @Html.Partial("Bread")
@@ -22,14 +22,187 @@
     @Styles.Render("~/plugins/select2Styles")
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
     @Styles.Render("~/plugins/dataPickerStyles")
+    @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/laddaStyles")
 }
 @section Scripts {
     @Scripts.Render("~/plugins/select2")
     @Scripts.Render("~/plugins/dataPicker")
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/ladda")
     <script>
         var linkmanurl = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})";
     </script>
     <script src="@Url.Content("~/Areas/Resource/Scripts/resource.js?v=20180221")"></script>
     <script src="@Url.Content("~/Areas/Resource/Scripts/transactor.js")"></script>
+    @if (Model.MediaTypeIndex == "writer")
+    {
+        <script>
+        $(document).ready(function () {
+            var table = new TableInit();
+            table.Init();
+        });
+        var TableInit = function() {
+            var obj = new Object();
+            obj.Init = function() {
+                $('#table').bootstrapTable({
+                url: '@Url.Action("GetArticles")',         //请求后台的URL（*）
+                classes: "table table-no-bordered",
+                toolbar: '#toolbar',
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "desc",                   //排序方式
+                sortName: "Id",
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
+                showColumns: true,                  //是否显示所有的列
+                showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                singleSelect: true,                  //设置True 将禁止多选
+                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
+                mobileResponsive: true,
+                showFooter: true,
+                    queryParams: function (parameters) {
+                    parameters.MediaId = '@Model.Id';
+                    return parameters;
+                },
+                columns: [
+                    {
+                        field: 'Title',
+                        title: '案例标题',
+                        align: "center", valign: "middle",
+                    }
+                    ,
+
+                    {
+                        field: 'ArticleUrl',
+                        title: '案例链接',
+                        align: "center", valign: "middle",
+                        formatter: formatter.url
+                    }
+                    ,
+                    {
+                        field: 'Id',
+                        title: '操作',
+                        align: "center", valign: "middle",
+                        formatter: function (value) {
+                            return "<button class='btn btn-danger btn-xs btn-outline' type='button' onclick=\"deleteArticle('" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button>";
+                        }
+
+                    }
+
+
+                ]
+            });
+            };
+
+            return obj;
+            };
+        //撤销
+        function deleteArticle(id) {
+            swal({
+                title: "您确定吗?",
+                text: "确认要删除此案例吗?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true
+            }, function () {
+                $.ajax({
+                    type: "post",
+                    headers: {
+                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                    },
+                    url: "@Url.Action("DeleteArticle")",
+                    data: { "id": id },
+                    success: function (data) {
+                        if (data.State == 1) {
+                            $("#table").bootstrapTable('refresh');
+                            swal({
+                                title: "操作成功",
+                                text: data.Msg,
+                                timer: 1000,
+                                type:"success",
+                                showConfirmButton: false
+                            });
+
+                        } else {
+                            swal("操作提醒", data.Msg, "warning");
+                        }
+                    },
+                    error: function () {
+                        swal("操作失败", "系统错误", "error");
+                    },
+                    complete: function () {
+
+                    }
+                });
+            });
+            }
+            function addArticle(id) {
+            //校验
+            var title = $("#title").val(), url = $("#url").val();
+            if (!title && !url) {
+                swal("操作失败", "请输入相关信息", "warning");
+                return;
+            }
+
+            var formFile = new FormData();
+                formFile.append("Title", title);
+                formFile.append("ArticleUrl", url);
+                formFile.append("MediaId", id);
+            var data = formFile;
+            var subBtn = $('.ladda-button').ladda();
+            $.ajax({
+                url: "@Url.Action("AddArticle")",
+                data: data,
+                type: "Post",
+                dataType: "json",
+                headers: {
+                    '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                },
+                cache: false, //上传文件无需缓存
+                processData: false, //用于对data参数进行序列化处理 这里必须false
+                contentType: false, //必须
+                success: function(result) {
+                    if (result.State == 1) {
+                        swal({
+                            title: "操作成功",
+                            text: result.Msg,
+                            type: "success"
+                        },
+                            function() {
+                                $("#table").bootstrapTable('refresh');
+                                $('#addModal').modal('hide');
+                            });
+                    } else {
+                        swal("操作失败", result.Msg, "error");
+                    }
+                },
+                error: function() {
+                    swal("操作失败", "系统错误", "error");
+                },
+                beforeSend: function() {
+                    subBtn.ladda('start');
+                },
+                complete: function() {
+                    subBtn.ladda('stop');
+                }
+            });
+        }
+        </script>
+    }
+
 }
 

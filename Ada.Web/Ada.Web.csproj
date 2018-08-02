@@ -2175,6 +2175,7 @@
     <Content Include="Images\medialogo\webcast.jpg" />
     <Content Include="Images\medialogo\website.jpg" />
     <Content Include="Images\medialogo\weixin.jpg" />
+    <Content Include="Images\medialogo\writer.jpg" />
     <Content Include="Images\medialogo\zhihu.jpg" />
     <Content Include="Images\noheader.png" />
     <Content Include="Images\nopic.png" />

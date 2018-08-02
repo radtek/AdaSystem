@@ -1,0 +1,153 @@
+﻿
+
+@using System.Web.Optimization
+@model Crawler.Models.MediaCrawlerSet
+@{
+    ViewBag.Title = "媒体爬虫";
+}
+@Html.Partial("Bread")
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+
+                <div class="ibox-content">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <p class="bg-danger">@Html.ValidationMessage("message") </p>
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.BlogLikeReg, Html.DisplayNameFor(d => d.BlogLikeReg).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.BlogLikeReg, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.BlogRelayReg, Html.DisplayNameFor(d => d.BlogRelayReg).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.BlogRelayReg, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.BlogCommentReg, Html.DisplayNameFor(d => d.BlogCommentReg).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.BlogCommentReg, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.RedbookLikeReg, Html.DisplayNameFor(d => d.RedbookLikeReg).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.RedbookLikeReg, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.RedbookCommentReg, Html.DisplayNameFor(d => d.RedbookCommentReg).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.RedbookCommentReg, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.RedbookCollectionReg, Html.DisplayNameFor(d => d.RedbookCollectionReg).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.RedbookCollectionReg, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-success" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>测试微博</h5>
+                </div>
+                <div class="ibox-content">
+                    <form role="form"  id="testFrm">
+                        <div class="form-group">
+                            <label class="control-label">网址</label>
+                            <div class="input-group">
+                                <input type="text" name="url" value="" class="form-control"  placeholder="请输入微博文章的地址"/>
+                                <span class="input-group-btn">
+                                    <button data-style="zoom-in" type="submit" class="btn btn-primary ladda-button">
+                                        开始
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+    @Styles.Render("~/plugins/laddaStyles")
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/ladda")
+    <script>
+        $(function() {
+            sendMsg();
+        });
+        function sendMsg() {
+            $("#testFrm").validate({
+                submitHandler: function (form) {
+                    var subBtn = $('.ladda-button').ladda();
+                    var $form = $(form),
+                        data = $form.serialize();
+                    $.ajax({
+                        type: "post",
+                        url: "@Url.Action("TestBlog")",
+                        data: data,
+                        headers: {
+                            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
+                        },
+                        success: function (res) {
+                            if (res.State == 1) {
+                                swal({
+                                    title: "操作成功",
+                                    text: res.Msg,
+                                    type: "success"
+                                });
+                            } else {
+                                swal("操作提醒", res.Msg, "warning");
+                            }
+                        },
+                        error: function () {
+                            swal("操作失败", "系统错误", "error");
+                        },
+                        beforeSend: function () {
+                            subBtn.ladda('start');
+                        },
+                        complete: function () {
+                            subBtn.ladda('stop');
+                        }
+                    });
+
+                }
+            });
+        }
+    </script>
+}

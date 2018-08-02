@@ -1,0 +1,52 @@
+﻿@model Ada.Core.Domain.Resource.Media
+<div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">近十篇写手案例</h4>
+            </div>
+            <div class="modal-body">
+                @if (Model.MediaArticles.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        案例标题
+                                    </th>
+                                    <th>
+                                        案例链接
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.MediaArticles.Take(10))
+                                {
+                                    <tr>
+                                        <td>@item.Title</td>
+                                        <td>
+                                            @if (!string.IsNullOrWhiteSpace(item.ArticleUrl))
+                                            {
+                                                <a class='label' href='@item.ArticleUrl' target='_blank'><i class='fa fa-link'></i> 点击浏览</a> 
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                }
+                else
+                {
+                    <p class="text-center"><strong>暂无相关案例</strong></p>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>

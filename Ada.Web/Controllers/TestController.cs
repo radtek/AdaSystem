@@ -403,10 +403,10 @@ namespace Ada.Web.Controllers
                     var mediaId = row.GetCell(0)?.ToString();
                     var media = _media.LoadEntities(d => d.Id == mediaId.Trim()).FirstOrDefault();
                     if (media == null) continue;
-                    media.Transactor = "郑娜";
-                    media.TransactorId = "X1807031436217658";
-                    media.LinkMan.Transactor = "郑娜";
-                    media.LinkMan.TransactorId = "X1807031436217658";
+                    media.Transactor = "乐玲";
+                    media.TransactorId = "X1712181351220014";
+                    media.LinkMan.Transactor = "乐玲";
+                    media.LinkMan.TransactorId = "X1712181351220014";
 
                     count++;
                 }
@@ -414,6 +414,13 @@ namespace Ada.Web.Controllers
                 _dbContext.SaveChanges();
             }
             return Content("成功更换" + count + "条资源");
+        }
+
+        public ActionResult ChangeOrder()
+        {
+            var result = _ptemp.Update(d => d.IsDelete == false && !d.PurchasePaymentOrderDetails.Any()&&d.TransactorId== "X1806111602430001",
+                o => new PurchaseOrderDetail() {TransactorId = "X1807041543215103", Transactor = "刘甜" });
+            return Content("成功更换" + result + "条订单");
         }
         public ActionResult CloseMediaXls()
         {

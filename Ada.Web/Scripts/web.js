@@ -400,12 +400,12 @@ formatter.mediaInfo = function (value, row) {
         var arr = [];
         $.each(row.MediaTags,
             function (k, v) {
-                if (((k+1)%3)==0) {
+                if (((k + 1) % 3) == 0) {
                     arr.push("<span class='btn btn-success btn-xs btn-outline'><i class='fa fa-tag'></i> " + v.TagName + "</span><br />");
                 } else {
                     arr.push("<span class='btn btn-success btn-xs btn-outline'><i class='fa fa-tag'></i> " + v.TagName + "</span>");
                 }
-                
+
             });
         tags = arr.join(' ');
     }
@@ -433,30 +433,33 @@ formatter.mediaPrice = function (value, row) {
     var arr = [];
     $.each(value,
         function (k, v) {
-            var price = !v.SellPrice ? "不接单" : "<i class='fa fa-jpy'></i> " + v.SellPrice;
-            arr.push("<li class='list-group-item p-xxs'><span class='badge badge-success'>" + price + "</span> " + v.AdPositionName + "</li>");
+            var price = !v.SellPrice ? "<span class='badge badge-success'>税前 : 不接单</span> " : "<span class='badge badge-success'>税前 : <i class='fa fa-jpy'></i> " + v.SellPrice + "</span> ";
+            var tax = !v.SellPrice
+                ? "<span class='badge badge-warning'>税后 : 不接单</span> "
+                : "<span class='badge badge-warning'>税后 : <i class='fa fa-jpy'></i> " + v.SellPrice * 1.06 + "</span> ";
+            arr.push("<li class='list-group-item p-xxs'>" + tax+price + v.AdPositionName + "</li>");
         });
     arr.push("<li class='list-group-item p-xxs'><span class='badge'>" + moment(value[0].InvalidDate).format("YYYY-MM-DD") + "</span>价格有效期</li>");
     return "<ul class='list-group m-b-none'>" + arr.join('') + "</ul>";
 };
-formatter.priceProtection= function(value,row) {
+formatter.priceProtection = function (value, row) {
     if (value == 0 || !value) {
         return "不保价";
     }
     var str = "";
     switch (value) {
-    case 1:
-        str = "一个月";
-        break;
-    case 2:
-        str = "两个月";
-        break;
-    case 3:
-        str = "三个月";
-        break;
-    case 6:
-        str = "半年";
-        break;
+        case 1:
+            str = "一个月";
+            break;
+        case 2:
+            str = "两个月";
+            break;
+        case 3:
+            str = "三个月";
+            break;
+        case 6:
+            str = "半年";
+            break;
     }
     var line = "<li class='list-group-item p-xxs'><span class='badge badge-success'>" +
         str +
@@ -552,7 +555,7 @@ formatter.mediaData = function (value, row) {
         line = line2 + line3 + line10 + line5 + line7;
     }
     if (row.MediaTypeIndex == "douyin") {
-        line =  line2 + line3 + line10 + line5;
+        line = line2 + line3 + line10 + line5;
     }
     if (row.MediaTypeIndex == "redbook") {
         line = linedz + line3 + linesc + line8 + linezc + linebj;

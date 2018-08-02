@@ -64,7 +64,11 @@ filterFormat.mediaInfo = function (value, row) {
     if (row.Platform) {
         platform = " <span class='btn btn-info btn-outline btn-xs'><i class='fa fa-star-o'></i> 平台：" + row.Platform + "</span>";
     }
-    var fans = "<span class='btn btn-danger btn-xs btn-outline'><i class='fa fa-users'></i> 粉丝：" + (row.FansNum ? row.FansNum.toFixed(1) + " 万" : "不详") + "</span>";
+    var fans = "";
+    if (row.FansNum) {
+        fans = "<span class='btn btn-danger btn-xs btn-outline'><i class='fa fa-users'></i> 粉丝：" + row.FansNum.toFixed(1) + " 万</span>";
+    }
+    
     var tags = "";
     if (row.MediaTags) {
         var arr = [];
@@ -102,17 +106,22 @@ filterFormat.mediaInfo = function (value, row) {
             mediaName = tempValue + copyName;
         }
     }
-
+    var article = "";
+    if (row.MediaTypeIndex == "writer") {
+        article = "<a class='btn btn-danger btn-xs btn-outline' href='javascript:;' onclick=\"articleDetails('" +
+            row.Id +
+            "');\");'><i class='fa fa-newspaper-o'></i> 查看案例</a> ";
+    }
     var line1 = "<div class='p-xxs'>" + sex + isAuth + mediaName + "</div>";
     var line2 = weixinid ? "<div class='p-xxs'>" + weixinid + "</div>" : "";
     var line3 = area ? "<div class='p-xxs'>" + area + "</div>" : "";
     var line33 = platform ? "<div class='p-xxs'>" + platform + "</div>" : "";
     var line0 = aType ? "<div class='p-xxs'>" + aType + "</div>" : "";
     var line4 = tags ? "<div class='p-xxs'>" + tags + "</div>" : "";
-    var line5 = "<div class='p-xxs'>" + fans + "</div>";
+    var line5 = fans?"<div class='p-xxs'>" + fans + "</div>":"";
     var line6 = row.RetentionTime ? "<div class='p-xxs'><span class='btn btn-info btn-outline btn-xs'><i class='fa fa-clock-o'></i> 保留时长：" + row.RetentionTime + "</span></div>" : "";
-
-    return line1 + line2 + line3 + line33 + line0 + line4 + line5 + line6;
+    var line7 = article ? "<div class='p-xxs'>" + article + "</div>" : "";
+    return line1 + line2 + line3 + line33 + line0 + line4 + line5 + line6+line7;
 };
 filterFormat.mediaPrice = function (value, row) {
     var arr = [];
@@ -217,6 +226,14 @@ filterFormat.mediaData = function (value, row) {
     if (row.LikesNum) {
         zc = " <span class='label label-info'>赞与收藏：" + row.LikesNum + "</span>";
     }
+    var sclx = "";
+    if (row.ResourceType) {
+        sclx = " <span class='label label-info'>擅长类型：" + row.ResourceType + "</span>";
+    }
+    var cgsd = "";
+    if (row.Efficiency) {
+        cgsd = " <span class='label label-info'>出稿速度：" + row.Efficiency + "</span>";
+    }
     var line1 = read ? "<div class='p-xxs'>" + read + "</div>" : "";
     var line2 = like ? "<div class='p-xxs'>" + like + "</div>" : "";
     var line3 = comment ? "<div class='p-xxs'>" + comment + "</div>" : "";
@@ -231,6 +248,8 @@ filterFormat.mediaData = function (value, row) {
     var linesc = sc ? "<div class='p-xxs'>" + sc + "</div>" : "";
     var linebj = bj ? "<div class='p-xxs'>" + bj + "</div>" : "";
     var linezc = zc ? "<div class='p-xxs'>" + zc + "</div>" : "";
+    var linesclx = sclx ? "<div class='p-xxs'>" + sclx + "</div>" : "";
+    var linecgsd = cgsd ? "<div class='p-xxs'>" + cgsd + "</div>" : "";
     var line = "";
     if (row.MediaTypeIndex == "weixin") {
         line = line1 + line6 + line4 + line9 + line7;
@@ -243,6 +262,9 @@ filterFormat.mediaData = function (value, row) {
     }
     if (row.MediaTypeIndex == "redbook") {
         line = linedz + line3 + linesc + line8 + linezc + linebj;
+    }
+    if (row.MediaTypeIndex == "writer") {
+        line = linesclx + linecgsd;
     }
     return line || "<span class='label label-warning'>抱歉！暂无相关数据</span>";
 };
@@ -388,4 +410,11 @@ function exportFile() {
             subBtn.ladda('stop');
         }
     });
+}
+function articleDetails(id) {
+    $("#modalView").load("/Resource/Media/ArticleDetails?id=" + id,
+        function () {
+            $('#modalView .modal').modal('show');
+        });
+
 }

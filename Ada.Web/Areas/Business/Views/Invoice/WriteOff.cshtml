@@ -21,7 +21,7 @@
                         <div class="sk-rect4"></div>
                         <div class="sk-rect5"></div>
                     </div>
-                    @using (Html.BeginForm("WriteOff","Invoice", FormMethod.Post, new { @class = "wizard-big" }))
+                    @using (Html.BeginForm("WriteOff", "Invoice", FormMethod.Post, new { @class = "wizard-big" }))
                     {
                         @Html.AntiForgeryToken()
                         <h1>核销发票</h1>
@@ -54,9 +54,10 @@
                                             @Html.TextBoxFor(d => d.TotalReceivalesMoney, new { @class = "form-control", required = "", @readonly = "" })
                                         </div>
                                     </div>
-                                    
+
                                     @Html.HiddenFor(d => d.ReceivalesIds)
                                     @Html.HiddenFor(d => d.BusinessInvoicesIds)
+                                    @Html.HiddenFor(d => d.Remark)
                                 </div>
                             </div>
                         </fieldset>
@@ -159,7 +160,7 @@
 
 
                     if (currentIndex === 2) {
-                        
+
                         //计算选取总额
                         var totalInvoiceMoney = 0, totalReceivablesMoney = 0;
                         $.each(invoiceSelections.rows,
@@ -202,9 +203,39 @@
                 },
                 onFinished: function (event, currentIndex) {
                     var form = $(this);
-                    $('.wrapper.wrapper-content .ibox').children('.ibox-content').toggleClass('sk-loading');
-                    // Submit form input
-                    form.submit();
+                    var total1 = $("#TotalInvoiceMoney").val();
+                    var total2 = $("#TotalReceivalesMoney").val();
+                    if (total1 !== total2) {
+                        swal({
+                            title: "核销金额不一致",
+                            text: "发票金额和收款金额不一致，提交核销申请",
+                            type: "input",
+                            showCancelButton: true,
+                            closeOnConfirm: false,
+                            animation: "slide-from-top",
+                            inputPlaceholder: "请输入不一致的原因",
+                            showLoaderOnConfirm: true,
+                            confirmButtonText: "提交",
+                            cancelButtonText: "取消"
+                        },
+                            function (inputValue) {
+                                if (inputValue === false) {
+                                    return false;
+                                };
+
+                                if (inputValue === "") {
+                                    swal.showInputError("请输入原因！");
+                                    return false;
+                                }
+                                $("#Remark").val(inputValue);
+                                form.submit();
+                            });
+                    } else {
+                        $('.wrapper.wrapper-content .ibox').children('.ibox-content').toggleClass('sk-loading');
+                        // Submit form input
+                        form.submit();
+                    }
+
                 }
             }).validate({
                 errorPlacement: function (error, element) {
@@ -212,13 +243,13 @@
                 },
                 rules: {
                     TotalInvoiceMoney: {
-                        equalTo: "#TotalReceivalesMoney",
+                        //equalTo: "#TotalReceivalesMoney",
                         min: 0.01
                     }
                 },
                 messages: {
                     TotalInvoiceMoney: {
-                        equalTo: "核销金额不一致",
+                        //equalTo: "核销金额不一致",
                         min: "核销金额须大于0"
                     }
                 }
