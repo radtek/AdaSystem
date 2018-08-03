@@ -270,6 +270,17 @@ function initData() {
             }
             ,
             {
+                field: 'Remark',
+                title: '请款备注',
+                align: "center", valign: "middle",
+                editable: {
+                    mode: "inline",
+                    emptytext: '请选择',
+                    type: 'select',
+                    source: remarks
+                }
+            },
+            {
                 field: 'operate',
                 title: '操作',
                 align: "center", valign: "middle",
@@ -294,6 +305,7 @@ function initData() {
                 AccountBank: "",
                 AccountName: "",
                 AccountNum: "",
+                Remark: "",
                 PayMoney: 0
             }
         });

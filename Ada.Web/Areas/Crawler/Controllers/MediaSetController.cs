@@ -46,7 +46,7 @@ namespace Crawler.Controllers
         public async Task<ActionResult> TestBlog(string url)
         {
             var config = _settingService.GetSetting<MediaCrawlerSet>();
-            var webCrawler = new WebCrawler("spider", "103.85.162.58:53281");
+            var webCrawler = new WebCrawler("spider");
             webCrawler.OnStart += Crawler_OnStart;
             webCrawler.OnError += Crawler_OnError;
             webCrawler.OnCompleted += (o, e) =>

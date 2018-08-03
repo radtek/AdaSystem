@@ -2,11 +2,14 @@
 @using Ada.Core
 @using Ada.Core.Domain.Wages
 @using Ada.Core.Infrastructure
+@using Ada.Services.Setting
+@using Salary.Models
 @model SalaryDetail
 @{
     var repository = EngineContext.Current.Resolve<IRepository<Quarters>>();
     var quarters = repository.LoadEntities(d => d.Id == Model.Manager.QuartersId).FirstOrDefault();
-   var attendance= Model.Manager.AttendanceDetails.FirstOrDefault(d => d.Date == Model.Date);
+    var attendance= Model.Manager.AttendanceDetails.FirstOrDefault(d => d.Date == Model.Date);
+    var setting = EngineContext.Current.Resolve<ISettingService>().GetSetting<SalarySet>();
 }
 
 
@@ -26,11 +29,15 @@
                     </li>
                     <li class='list-group-item'>
                         <span class='badge badge-primary'>@quarters.BaseSalary</span>
-                        岗位工资
+                        基本工资
                     </li>
                     <li class='list-group-item'>
                         <span class='badge badge-primary'>@quarters.Allowance</span>
                         岗位津贴
+                    </li>
+                    <li class='list-group-item'>
+                        <span class='badge badge-primary'>@quarters.Post</span>
+                        职务津贴
                     </li>
                     <li class='list-group-item'>
                         <span class='badge badge-primary'>@quarters.Attendance</span>
@@ -39,6 +46,10 @@
                     <li class='list-group-item'>
                         <span class='badge badge-primary'>@Model.SaleCommission</span>
                         销售提成
+                    </li>
+                    <li class='list-group-item'>
+                        <span class='badge badge-primary'>@setting.SocialSecurity</span>
+                        社保补贴
                     </li>
                     <li class='list-group-item'>
                         <span class='badge badge-primary'>@Model.Commission</span>
@@ -56,22 +67,30 @@
                             var sb = new List<string>();
                             if (attendance.Absenteeism > 0)
                             {
-                                sb.Add("旷工："+ attendance.Absenteeism + " 天");
+                                sb.Add("旷工：" + attendance.Absenteeism + " 天");
                             }
                             if (attendance.OffWork > 0)
                             {
-                                sb.Add("请假："+ attendance.OffWork + " 天");
+                                sb.Add("请假：" + attendance.OffWork + " 天");
                             }
                             if (attendance.LateTimes > 0)
                             {
-                                sb.Add("迟到："+ attendance.LateTimes + " 次");
+                                sb.Add("迟到：" + attendance.LateTimes + " 次");
                             }
                             if (attendance.NoClockTimes > 0)
                             {
-                                sb.Add("未打卡："+ attendance.NoClockTimes + " 次");
+                                sb.Add("未打卡：" + attendance.NoClockTimes + " 次");
                             }
-                            <small> [ @string.Join(" | ",sb) ]</small>
+                            <small> [ @string.Join(" | ", sb) ]</small>
                         }
+                    </li>
+                    <li class='list-group-item'>
+                        <span class='badge badge-danger'>@quarters.Training</span>
+                        培训费用
+                    </li>
+                    <li class='list-group-item'>
+                        <span class='badge badge-danger'>@setting.FoodFee</span>
+                        伙食费用
                     </li>
                     <li class='list-group-item'>
                         <span class='badge badge-danger'>@Model.DeductMoney</span>

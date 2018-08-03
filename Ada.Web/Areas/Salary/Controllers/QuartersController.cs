@@ -39,7 +39,8 @@ namespace Salary.Controllers
                     Title = d.Title,
                     BaseSalary = d.BaseSalary,
                     Attendance = d.Attendance,
-                    Allowance = d.Allowance
+                    Allowance = d.Allowance,
+                    Post = d.Post
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -68,6 +69,8 @@ namespace Salary.Controllers
             entity.Allowance = viewModel.Allowance;
             entity.Commission = viewModel.Commission;
             entity.Attendance = viewModel.Attendance;
+            entity.Post = viewModel.Post;
+            entity.Training = viewModel.Training;
             _service.Add(entity);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
@@ -82,6 +85,8 @@ namespace Salary.Controllers
             entity.Allowance = item.Allowance;
             entity.Commission = item.Commission;
             entity.Attendance = item.Attendance;
+            entity.Post = item.Post;
+            entity.Training = item.Training;
             return View(entity);
         }
         [HttpPost]
@@ -102,6 +107,8 @@ namespace Salary.Controllers
             entity.Commission = viewModel.Commission;
             entity.Allowance = viewModel.Allowance;
             entity.Attendance = viewModel.Attendance;
+            entity.Post = viewModel.Post;
+            entity.Training = viewModel.Training;
             _service.Update(entity);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");

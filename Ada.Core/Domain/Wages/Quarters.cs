@@ -17,8 +17,10 @@ namespace Ada.Core.Domain.Wages
         {
             BaseSalary = 0;
             Allowance = 0;
-            Commission = 0;
+            Commission = 1;
             Attendance = 0;
+            Post = 0;
+            Training = 0;
         }
         /// <summary>
         /// 岗位名称
@@ -26,15 +28,20 @@ namespace Ada.Core.Domain.Wages
         [Display(Name = "岗位名称")]
         public string Title { get; set; }
         /// <summary>
-        /// 岗位工资
+        /// 基本工资
         /// </summary>
-        [Display(Name = "岗位工资")]
+        [Display(Name = "基本工资")]
         public decimal BaseSalary { get; set; }
         /// <summary>
         /// 岗位津贴
         /// </summary>
         [Display(Name = "岗位津贴")]
         public decimal Allowance { get; set; }
+        /// <summary>
+        /// 职务津贴
+        /// </summary>
+        [Display(Name = "职务津贴")]
+        public decimal Post { get; set; }
         /// <summary>
         /// 销售提成系数
         /// </summary>
@@ -45,6 +52,10 @@ namespace Ada.Core.Domain.Wages
         /// </summary>
         [Display(Name = "全勤奖")]
         public decimal Attendance { get; set; }
-
+        /// <summary>
+        /// 培训费用
+        /// </summary>
+        [Display(Name = "培训费用")]
+        public decimal Training { get; set; }
     }
 }

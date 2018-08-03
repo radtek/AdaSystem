@@ -158,6 +158,11 @@ namespace Purchase.Controllers
             //付款信息
             foreach (var item in paydetails)
             {
+                if (string.IsNullOrWhiteSpace(item.Remark))
+                {
+                    ModelState.AddModelError("message", "请款备注信息不能为空");
+                    return View(viewModel);
+                }
                 if (string.IsNullOrWhiteSpace(item.AccountBank) || string.IsNullOrWhiteSpace(item.AccountName) || string.IsNullOrWhiteSpace(item.AccountNum) || item.PayMoney <= 0)
                 {
                     ModelState.AddModelError("message", "付款信息不能为空或者申请金额须大于0");
@@ -332,6 +337,11 @@ namespace Purchase.Controllers
                 _purchasePaymentDetailRepository.Remove(payment.PurchasePaymentDetails);
                 foreach (var item in paydetails)
                 {
+                    if (string.IsNullOrWhiteSpace(item.Remark))
+                    {
+                        ModelState.AddModelError("message", "请款备注信息不能为空");
+                        return View(viewModel);
+                    }
                     item.Id = IdBuilder.CreateIdNum();
                     item.AddedBy = CurrentManager.UserName;
                     item.AddedById = CurrentManager.Id;

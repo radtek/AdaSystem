@@ -137,6 +137,7 @@
     <None Include="packages.config" />
     <Content Include="Views\MediaSet\Index.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

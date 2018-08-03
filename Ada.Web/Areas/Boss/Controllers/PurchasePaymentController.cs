@@ -48,7 +48,8 @@ namespace Boss.Controllers
                     BillDate = d.PurchasePayment.BillDate,
                     LinkManName = d.PurchasePayment.LinkManName,
                     AuditStatus = d.AuditStatus,
-                    Status = d.Status
+                    Status = d.Status,
+                    Remark = d.Remark
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -64,6 +65,7 @@ namespace Boss.Controllers
             viewModel.AccountNum = entity.AccountNum;
             viewModel.PaymentType = entity.PaymentType;
             viewModel.PayMoney = entity.PayMoney;
+            viewModel.Remark = entity.Remark;
             viewModel.AuditStatus = entity.AuditStatus;
             viewModel.IsInvoice = entity.PurchasePayment.IsInvoice;
             viewModel.InvoiceTitle = entity.PurchasePayment.InvoiceTitle;

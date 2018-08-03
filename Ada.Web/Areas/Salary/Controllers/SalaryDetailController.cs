@@ -68,7 +68,7 @@ namespace Salary.Controllers
                     ManagerName = d.Manager.UserName,
                     d.Date,
                     d.Total,
-                    Sum=viewModel.TotalSum
+                    Sum = viewModel.TotalSum
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -111,8 +111,12 @@ namespace Salary.Controllers
             var quarters = _quartersRepository.LoadEntities(d => d.Id == manager.QuartersId).FirstOrDefault();
             var gw = quarters.BaseSalary;//岗位工资
             var kq = quarters.Attendance;//全勤
-            var jt = quarters.Allowance;//津贴
+            var jt = quarters.Allowance;//岗位津贴
+            var zwjt = quarters.Post;//职务津贴
+            var px = quarters.Training;//培训费
             var config = _settingService.GetSetting<SalarySet>();
+            var sb = config.SocialSecurity;//社保补贴
+            var hs = config.FoodFee;//伙食费
             //未打卡
             var jmTimes = config.Derate;
             bool isJm = true;
@@ -153,7 +157,22 @@ namespace Salary.Controllers
             double offwork = 0;
             if (viewModel.OffWork < 5)
             {
-                offwork = viewModel.OffWork <= 2 ? viewModel.OffWork / 0.5 * qj : 2 * qj * Math.Pow(2, viewModel.OffWork - 1);
+                //offwork = viewModel.OffWork <= 2 ? viewModel.OffWork / 0.5 * qj : 2 * qj * Math.Pow(2, viewModel.OffWork - 1);
+                if (viewModel.OffWork <= 2)
+                {
+                    offwork = viewModel.OffWork / 0.5 * qj;
+                }
+                else
+                {
+                    if (viewModel.OffWork.ToString().Contains(".5"))
+                    {
+                        offwork = 2 * qj * Math.Pow(2, viewModel.OffWork - 0.5 - 1) + qj;
+                    }
+                    else
+                    {
+                        offwork = 2 * qj * Math.Pow(2, viewModel.OffWork - 1);
+                    }
+                }
             }
             else
             {
@@ -164,7 +183,24 @@ namespace Salary.Controllers
             double absenteeism = 0;
             if (viewModel.Absenteeism < 5)
             {
-                absenteeism = viewModel.Absenteeism <= 2 ? viewModel.Absenteeism / 0.5 * kuanggong : 2 * kuanggong * Math.Pow(2, viewModel.Absenteeism - 1);
+                //absenteeism = viewModel.Absenteeism <= 2 ? viewModel.Absenteeism / 0.5 * kuanggong : 2 * kuanggong * Math.Pow(2, viewModel.Absenteeism - 1);
+                if (viewModel.Absenteeism <= 2)
+                {
+                    absenteeism = viewModel.Absenteeism / 0.5 * kuanggong;
+                }
+                else
+                {
+
+                    if (viewModel.Absenteeism.ToString().Contains(".5"))
+                    {
+                        absenteeism = 2 * kuanggong * Math.Pow(2, viewModel.Absenteeism - 0.5 - 1) + kuanggong;
+                    }
+                    else
+                    {
+                        absenteeism = 2 * kuanggong * Math.Pow(2, viewModel.Absenteeism - 1);
+                    }
+
+                }
             }
             else
             {
@@ -181,7 +217,7 @@ namespace Salary.Controllers
                 salaryDetail.Id = IdBuilder.CreateIdNum();
                 isAddSalary = true;
             }
-            //扣款  旷工+请假+未打卡+迟到
+            //考勤扣款  旷工+请假+未打卡+迟到
             decimal deductTotal = (decimal)(absenteeism + offwork) + noClock + late; //(decimal)(absenteeism + noClock + late + offwork);
             if (!isQc)
             {
@@ -191,16 +227,17 @@ namespace Salary.Controllers
             {
                 deductTotal += gw;
             }
-            //奖金 岗位工资+全勤奖+津贴+其他奖金+红包提成+销售提成
+            //奖金 岗位工资+全勤奖+岗位津贴+职务津贴+其他奖金+红包提成+销售提成+社保补贴
             //销售提成
             var quare = new BusinessWriteOffDetailView();
             quare.WriteOffDateStar = new DateTime(viewModel.Date.Value.Year, viewModel.Date.Value.Month, 1);
             quare.WriteOffDateEnd = new DateTime(viewModel.Date.Value.Year, viewModel.Date.Value.Month, DateTime.DaysInMonth(viewModel.Date.Value.Year, viewModel.Date.Value.Month));
             quare.TransactorId = viewModel.ManagerId;
             var saleCommission = _businessWriteOffService.LoadEntitiesFilter(quare).Sum(d => d.Commission) ?? 0;
-            var total = gw + jt + kq + viewModel.Bonus + viewModel.Commission + saleCommission;
+            saleCommission = saleCommission * quarters.Commission;//乘以系数
+            var total = gw + jt + kq + viewModel.Bonus + viewModel.Commission + saleCommission + sb + zwjt;
             //合计
-            salaryDetail.Total = Math.Round(total - deductTotal - viewModel.DeductMoney);
+            salaryDetail.Total = Math.Round(total - deductTotal - viewModel.DeductMoney - hs - px);
             salaryDetail.Commission = viewModel.Commission;
             salaryDetail.Bonus = viewModel.Bonus;
             salaryDetail.Date = viewModel.Date;
@@ -274,8 +311,12 @@ namespace Salary.Controllers
             var quarters = _quartersRepository.LoadEntities(d => d.Id == manager.QuartersId).FirstOrDefault();
             var gw = quarters.BaseSalary;//岗位工资
             var kq = quarters.Attendance;//全勤
-            var jt = quarters.Allowance;//津贴
+            var jt = quarters.Allowance;//岗位津贴
+            var zwjt = quarters.Post;//职务津贴
+            var px = quarters.Training;//培训费
             var config = _settingService.GetSetting<SalarySet>();
+            var sb = config.SocialSecurity;//社保补贴
+            var hs = config.FoodFee;//伙食费
             //未打卡
             var jmTimes = config.Derate;
             bool isJm = true;
@@ -316,7 +357,22 @@ namespace Salary.Controllers
             double offwork = 0;
             if (viewModel.OffWork < 5)
             {
-                offwork = viewModel.OffWork <= 2 ? viewModel.OffWork / 0.5 * qj : 2 * qj * Math.Pow(2, viewModel.OffWork - 1);
+                //offwork = viewModel.OffWork <= 2 ? viewModel.OffWork / 0.5 * qj : 2 * qj * Math.Pow(2, viewModel.OffWork - 1);
+                if (viewModel.OffWork <= 2)
+                {
+                    offwork = viewModel.OffWork / 0.5 * qj;
+                }
+                else
+                {
+                    if (viewModel.OffWork.ToString().Contains(".5"))
+                    {
+                        offwork = 2 * qj * Math.Pow(2, viewModel.OffWork - 0.5 - 1) + qj;
+                    }
+                    else
+                    {
+                        offwork = 2 * qj * Math.Pow(2, viewModel.OffWork - 1);
+                    }
+                }
             }
             else
             {
@@ -327,7 +383,24 @@ namespace Salary.Controllers
             double absenteeism = 0;
             if (viewModel.Absenteeism < 5)
             {
-                absenteeism = viewModel.Absenteeism <= 2 ? viewModel.Absenteeism / 0.5 * kuanggong : 2 * kuanggong * Math.Pow(2, viewModel.Absenteeism - 1);
+                //absenteeism = viewModel.Absenteeism <= 2 ? viewModel.Absenteeism / 0.5 * kuanggong : 2 * kuanggong * Math.Pow(2, viewModel.Absenteeism - 1);
+                if (viewModel.Absenteeism <= 2)
+                {
+                    absenteeism = viewModel.Absenteeism / 0.5 * kuanggong;
+                }
+                else
+                {
+
+                    if (viewModel.Absenteeism.ToString().Contains(".5"))
+                    {
+                        absenteeism = 2 * kuanggong * Math.Pow(2, viewModel.Absenteeism - 0.5 - 1) + kuanggong;
+                    }
+                    else
+                    {
+                        absenteeism = 2 * kuanggong * Math.Pow(2, viewModel.Absenteeism - 1);
+                    }
+
+                }
             }
             else
             {
@@ -336,8 +409,8 @@ namespace Salary.Controllers
             //全勤
             bool isQc = !(viewModel.OffWork > 0 || viewModel.Absenteeism > 0 || viewModel.NoClockTimes >= 5 || viewModel.LateTimes >= 5);
             //算工资
-           
-            //扣款  旷工+请假+未打卡+迟到
+
+            //考勤扣款  旷工+请假+未打卡+迟到
             decimal deductTotal = (decimal)(absenteeism + offwork) + noClock + late; //(decimal)(absenteeism + noClock + late + offwork);
             if (!isQc)
             {
@@ -347,17 +420,18 @@ namespace Salary.Controllers
             {
                 deductTotal += gw;
             }
-            //奖金 岗位工资+全勤奖+津贴+其他奖金+红包提成+销售提成
+            //奖金 岗位工资+全勤奖+岗位津贴+职务津贴+其他奖金+红包提成+销售提成+社保补贴
             //销售提成
             var quare = new BusinessWriteOffDetailView();
             quare.WriteOffDateStar = new DateTime(viewModel.Date.Value.Year, viewModel.Date.Value.Month, 1);
             quare.WriteOffDateEnd = new DateTime(viewModel.Date.Value.Year, viewModel.Date.Value.Month, DateTime.DaysInMonth(viewModel.Date.Value.Year, viewModel.Date.Value.Month));
             quare.TransactorId = viewModel.ManagerId;
             var saleCommission = _businessWriteOffService.LoadEntitiesFilter(quare).Sum(d => d.Commission) ?? 0;
-            var total = gw + jt + kq + viewModel.Bonus + viewModel.Commission + saleCommission;
+            saleCommission = saleCommission * quarters.Commission;//乘以系数
+            var total = gw + jt + kq + viewModel.Bonus + viewModel.Commission + saleCommission + sb + zwjt;
             //合计
             SalaryDetail salaryDetail = manager.SalaryDetails.FirstOrDefault(d => d.Date == viewModel.Date);
-            salaryDetail.Total = Math.Round(total - deductTotal - viewModel.DeductMoney);
+            salaryDetail.Total = Math.Round(total - deductTotal - viewModel.DeductMoney - hs - px);
             salaryDetail.Commission = viewModel.Commission;
             salaryDetail.Bonus = viewModel.Bonus;
             salaryDetail.DeductMoney = viewModel.DeductMoney;
@@ -392,16 +466,19 @@ namespace Salary.Controllers
                 return Json(new { State = 0, Msg = "未找到相关的数据！" });
             }
             JArray jObjects = new JArray();
+            var config = _settingService.GetSetting<SalarySet>();
             foreach (var salaryDetail in result)
             {
                 var jo = new JObject();
                 var quarters = _quartersRepository.LoadEntities(d => d.Id == salaryDetail.Manager.QuartersId).FirstOrDefault();
                 jo.Add("姓名", salaryDetail.Manager.UserName);
                 jo.Add("岗位名称", quarters.Title);
-                jo.Add("岗位工资", quarters.BaseSalary);
+                jo.Add("基本工资", quarters.BaseSalary);
                 jo.Add("岗位津贴", quarters.Allowance);
+                jo.Add("职务津贴", quarters.Post);
                 jo.Add("全勤奖金", quarters.Attendance);
                 jo.Add("销售提成", salaryDetail.SaleCommission);
+                jo.Add("社保补贴", config.SocialSecurity);
                 jo.Add("红包提成", salaryDetail.Commission);
                 jo.Add("其他奖金", salaryDetail.Bonus);
                 var attendance = salaryDetail.Manager.AttendanceDetails.FirstOrDefault(d => d.Date == exportDate);
@@ -410,6 +487,8 @@ namespace Salary.Controllers
                 jo.Add("迟到次数", attendance.LateTimes);
                 jo.Add("未打卡次数", attendance.NoClockTimes);
                 jo.Add("考勤扣款", salaryDetail.AttendanceTotal);
+                jo.Add("培训费用", quarters.Training);
+                jo.Add("伙食费用", config.FoodFee);
                 jo.Add("其他扣款", salaryDetail.DeductMoney);
                 jo.Add("实发工资", salaryDetail.Total);
                 jo.Add("工资银行", salaryDetail.Manager.BankName);
@@ -417,7 +496,7 @@ namespace Salary.Controllers
                 jo.Add("备注信息", salaryDetail.Remark);
                 jObjects.Add(jo);
             }
-            return Json(new { State = 1, Msg = ExportFile(jObjects.ToString(),exportDate.ToString("yyyy年MM月")) });
+            return Json(new { State = 1, Msg = ExportFile(jObjects.ToString(), exportDate.ToString("yyyy年MM月")) });
         }
 
         [HttpPost]

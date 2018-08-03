@@ -5,7 +5,7 @@
 @using Ada.Services.Resource
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
-    ViewBag.Title = "写手资源";
+    ViewBag.Title = "文案资源";
     var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("writer");
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var yesnos = fieldService.GetFieldsByKey("YesOrNo").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
@@ -111,7 +111,7 @@
 
 <div id="toolbar" class="btn-group">
     <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add","Media",new{id=meidaType.Id})" target="_blank">
-        <i class="fa fa-plus"></i> 新增写手
+        <i class="fa fa-plus"></i> 新增文案
     </a>
     @*<button type="button" class="btn btn-primary btn-outline" onclick="exportDate();">
         <i class="fa fa-download"></i> 导出数据

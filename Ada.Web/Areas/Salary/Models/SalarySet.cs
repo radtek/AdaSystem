@@ -15,6 +15,8 @@ namespace Salary.Models
             OffWork = 50;
             Absenteeism = 100;
             Derate = 1;
+            SocialSecurity = 500;
+            FoodFee = 400;
         }
         /// <summary>
         /// 未打卡扣款（元/次）
@@ -41,5 +43,16 @@ namespace Salary.Models
         /// </summary>
         [Display(Name = "未打卡/迟到减免次数")]
         public int Derate { get; set; }
+        /// <summary>
+        /// 社保补贴
+        /// </summary>
+        [Display(Name = "社保补贴")]
+        public decimal SocialSecurity { get; set; }
+        /// <summary>
+        /// 伙食费
+        /// </summary>
+        [Display(Name = "伙食费")]
+        public decimal FoodFee { get; set; }
+ 
     }
 }

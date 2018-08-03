@@ -78,7 +78,7 @@
                     return parameters;
                 },
                 formatSearch: function() {
-                    return "@Html.DisplayNameFor(d => d.LinkManName)";
+                    return "@Html.DisplayNameFor(d => d.LinkManName) | 请款备注";
                 },
                 mobileResponsive:true,
                 columns: [
@@ -102,7 +102,11 @@
                         title: '@Html.DisplayNameFor(d=>d.PayMoney)',
                         align: "center", valign: "middle"
                     },
-                    
+                    {
+                        field: 'Remark',
+                        title: '@Html.DisplayNameFor(d=>d.Remark)',
+                        align: "center", valign: "middle"
+                    },
                     {
                         field: 'BillDate',
                         title: '@Html.DisplayNameFor(d=>d.BillDate)',

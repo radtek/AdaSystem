@@ -144,5 +144,10 @@ namespace Ada.Core.ViewModel.Purchase
         /// </summary>
         [Display(Name = "总申请金额")]
         public decimal? TotalPayMoney { get; set; }
+        /// <summary>
+        /// 请款备注
+        /// </summary>
+        [Display(Name = "请款备注")]
+        public string Remark { get; set; }
     }
 }

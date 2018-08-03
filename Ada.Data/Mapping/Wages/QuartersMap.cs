@@ -13,7 +13,10 @@ namespace Ada.Data.Mapping.Wages
             HasKey(s => s.Id);
             //配置字段
             Property(s => s.Title).IsRequired().HasMaxLength(128);
-            
+            Property(s => s.Commission).HasPrecision(18, 5);
+
+
+
             Property(s => s.AddedBy).HasMaxLength(32);
             Property(s => s.AddedById).HasMaxLength(32);
             Property(s => s.ModifiedBy).HasMaxLength(32);

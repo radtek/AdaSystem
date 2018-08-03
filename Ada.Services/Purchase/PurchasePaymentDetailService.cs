@@ -33,7 +33,7 @@ namespace Ada.Services.Purchase
             //}
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.PurchasePayment.LinkManName.Contains(viewModel.search));
+                allList = allList.Where(d => d.PurchasePayment.LinkManName.Contains(viewModel.search)||d.Remark.Contains(viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.Transactor))
             {

@@ -7,6 +7,7 @@
     ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "媒介请款", Value = Url.Action("Index") } };
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var paymentTypes = fieldService.GetFieldsByKey("PurchasePaymentType").Select(d => new { text = d.Text, value = d.Value });
+    var remarks = fieldService.GetFieldsByKey("PurchasePaymentRemark").Select(d => new { text = d.Text, value = d.Value });
 }
 @Html.Partial("Bread")
 
@@ -50,11 +51,12 @@
         var orders = @Html.Raw(string.IsNullOrWhiteSpace(Model.OrderDetails) ?"[]": Model.OrderDetails),
             pays = @Html.Raw(string.IsNullOrWhiteSpace(Model.PayDetails) ?"[]": Model.PayDetails),
             paymentTypes = @Html.Raw(Json.Encode(paymentTypes)),
+            remarks = @Html.Raw(Json.Encode(remarks)),
             orderdetail = "@Url.Action("OrderDetails")",
             orderapi = "@Url.Action("GetList", "OrderDetail")",
             linkmanUrl = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})",
             managerUrl = "@Url.Action("GetList", "Manager", new {area = "Admin"})",
             isReadonly = @Model.AuditStatus;
     </script>
-    <script src="@Url.Content("~/Areas/Purchase/Scripts/payment.js?v=2018011411357")"></script>
+    <script src="@Url.Content("~/Areas/Purchase/Scripts/payment.js?v=2018081411357")"></script>
 }
