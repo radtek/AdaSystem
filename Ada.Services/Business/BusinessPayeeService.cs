@@ -41,7 +41,7 @@ namespace Ada.Services.Business
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.LinkManName.Contains(viewModel.search));
+                allList = allList.Where(d => d.LinkManName.Contains(viewModel.search)||d.Receivables.AccountName.Contains(viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.LinkManId))
             {

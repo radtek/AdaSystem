@@ -37,6 +37,7 @@
                         <div class="form-group">
                             @Html.LabelFor(d => d.LinkManName, Html.DisplayNameFor(d => d.LinkManName) + "：", new { @class = "control-label" })
                             @Html.TextBoxFor(d => d.LinkManName, new { @class = "form-control input-sm" })
+                            @Html.HiddenFor(d => d.LinkManId)
                         </div>
                     </div>
 
@@ -77,6 +78,7 @@
                             <input type="text" id="PrePublishDateStr" class="form-control input-sm" readonly="readonly" />
                             @Html.HiddenFor(d => d.PrePublishDateStart)
                             @Html.HiddenFor(d => d.PrePublishDateEnd)
+                            @Html.HiddenFor(d => d.PublishDateOrder)
                         </div>
                     </div>
                     <div class="col-sm-2">
@@ -185,11 +187,6 @@
                 },
                 mobileResponsive: true,
                     queryParams: function (parameters) {
-                        @if (!string.IsNullOrWhiteSpace(Model.PublishDateOrder)){
-                            <text>
-                            parameters.PublishDateOrder = '@Model.PublishDateOrder';
-                            </text>
-                        }
                         return searchFrm.queryParams(parameters);
                     },
                 

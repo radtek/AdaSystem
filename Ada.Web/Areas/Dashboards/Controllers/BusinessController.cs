@@ -78,6 +78,16 @@ namespace Dashboards.Controllers
 
             viewModel.BusinessPerformances = _businessOrderDetailService.BusinessPerformanceGroupByDate(quare)
                 .OrderBy(d => d.Month).Take(12).ToList();
+            //未核销金额 联系人分组
+            viewModel.VerificationInfos = business
+                .Where(d => d.Status == Consts.StateOK && d.VerificationStatus == Consts.StateLock)
+                .GroupBy(d => d.BusinessOrder.LinkMan).Select(d => new VerificationInfo
+                {
+                    CompanyName=d.Key.Commpany.Name,
+                    LinkManName=d.Key.Name,
+                    LinkManId = d.Key.Id,
+                    VerificationMoney=d.Sum(o=>o.VerificationMoney)
+                }).OrderByDescending(d=>d.VerificationMoney).Take(50).ToList();
             return View(viewModel);
         }
         /// <summary>

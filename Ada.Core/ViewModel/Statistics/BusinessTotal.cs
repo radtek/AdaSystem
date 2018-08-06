@@ -9,6 +9,7 @@ namespace Ada.Core.ViewModel.Statistics
         public BusinessTotal()
         {
             BusinessPerformances=new List<BusinessPerformance>();
+            VerificationInfos=new List<VerificationInfo>();
         }
         /// <summary>
         /// 待转单
@@ -75,9 +76,37 @@ namespace Ada.Core.ViewModel.Statistics
         /// </summary>
         [Display(Name = "销售业绩")]
         public List<BusinessPerformance> BusinessPerformances { get; set; }
+        /// <summary>
+        /// 未核销明细
+        /// </summary>
+        [Display(Name = "未核销明细")]
+        public List<VerificationInfo> VerificationInfos { get; set; }
 
     }
 
+    public class VerificationInfo
+    {
+        /// <summary>
+        /// 公司名称
+        /// </summary>
+        [Display(Name = "公司名称")]
+        public string CompanyName { get; set; }
+        /// <summary>
+        /// 联系人
+        /// </summary>
+        [Display(Name = "联系人")]
+        public string LinkManName { get; set; }
+        /// <summary>
+        /// 联系人
+        /// </summary>
+        [Display(Name = "联系人")]
+        public string LinkManId { get; set; }
+        /// <summary>
+        /// 未核销金额
+        /// </summary>
+        [Display(Name = "未核销金额")]
+        public decimal? VerificationMoney { get; set; }
+    }
     public class BusinessPerformance
     {
         /// <summary>

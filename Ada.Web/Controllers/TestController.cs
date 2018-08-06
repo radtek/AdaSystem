@@ -11,6 +11,7 @@ using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Business;
+using Ada.Core.Domain.Customer;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.Domain.Resource;
 using Ada.Core.Tools;
@@ -36,6 +37,7 @@ namespace Ada.Web.Controllers
         private readonly IRepository<MediaType> _mediaType;
         private readonly IRepository<Manager> _manager;
         private readonly IRepository<PurchaseOrderDetail> _ptemp;
+        private readonly IRepository<LinkMan> _linkman;
         private readonly IDbContext _dbContext;
         private readonly ICacheService _cacheService;//IBusinessOrderDetailService
         private readonly IBusinessOrderDetailService _businessOrderDetailService;
@@ -53,7 +55,8 @@ namespace Ada.Web.Controllers
             ICacheService cacheService,
             IRepository<MediaArticle> mediaArticleRepository,
             IBusinessOrderDetailService businessOrderDetailService,
-            IRepository<Manager> manager)
+            IRepository<Manager> manager,
+            IRepository<LinkMan> linkman)
         {
             _dbContext = dbContext;
             _ptemp = ptemp;
@@ -66,6 +69,7 @@ namespace Ada.Web.Controllers
             _mediaArticleRepository = mediaArticleRepository;
             _businessOrderDetailService = businessOrderDetailService;
             _manager = manager;
+            _linkman = linkman;
         }
 
         public ActionResult CheckOrder()
@@ -403,10 +407,10 @@ namespace Ada.Web.Controllers
                     var mediaId = row.GetCell(0)?.ToString();
                     var media = _media.LoadEntities(d => d.Id == mediaId.Trim()).FirstOrDefault();
                     if (media == null) continue;
-                    media.Transactor = "乐玲";
-                    media.TransactorId = "X1712181351220014";
-                    media.LinkMan.Transactor = "乐玲";
-                    media.LinkMan.TransactorId = "X1712181351220014";
+                    media.Transactor = "刘雪";
+                    media.TransactorId = "X1807121117097012";
+                    media.LinkMan.Transactor = "刘雪";
+                    media.LinkMan.TransactorId = "X1807121117097012";
 
                     count++;
                 }
@@ -415,7 +419,57 @@ namespace Ada.Web.Controllers
             }
             return Content("成功更换" + count + "条资源");
         }
+        public ActionResult ChangeMediaForLinkmanXls()
+        {
+            string path = Server.MapPath("~/upload/change.xlsx");
+            int count = 0;
+            using (FileStream ms = new FileStream(path, FileMode.Open))
+            {
+                //创建工作薄
+                IWorkbook wk = new XSSFWorkbook(ms);
+                //1.获取第一个工作表
+                ISheet sheet = wk.GetSheetAt(0);
+                if (sheet.LastRowNum <= 1)
+                {
+                    return Content("此文件没有导入数据，请填充数据再进行导入");
+                }
 
+                var transactor = "吴璇";
+                var transactorId = "X1801180851430024";
+                for (int i = 1; i <= sheet.LastRowNum; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+                    var mediaId = row.GetCell(0)?.ToString();
+                    var linkId = row.GetCell(1)?.ToString();
+                    var media = _media.LoadEntities(d => d.Id == mediaId.Trim()).FirstOrDefault();
+                    if (media == null) continue;
+                    if (!string.IsNullOrWhiteSpace(linkId))
+                    {
+                        var id = linkId;
+                        var link = _linkman.LoadEntities(d => d.Id == id.Trim()).FirstOrDefault();
+                        if (link==null)
+                        {
+                            continue;
+                        }
+                    }
+                    media.Transactor = transactor;
+                    media.TransactorId = transactorId;
+                    if (!string.IsNullOrWhiteSpace(linkId))
+                    {
+                        media.LinkManId = linkId;
+                    }
+                    else
+                    {
+                        media.LinkMan.Transactor = transactor;
+                        media.LinkMan.TransactorId = transactorId;
+                    }
+                    count++;
+                }
+
+                _dbContext.SaveChanges();
+            }
+            return Content("成功更换" + count + "条资源");
+        }
         public ActionResult ChangeOrder()
         {
             var result = _ptemp.Update(d => d.IsDelete == false && !d.PurchasePaymentOrderDetails.Any()&&d.TransactorId== "X1806111602430001",

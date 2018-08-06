@@ -133,6 +133,8 @@
                             </ul>
                         </div>
                     </div>
+
+
                 </div>
 
             </div>
@@ -159,7 +161,7 @@
 
                     </div>
                 </div>
-                
+
                 <div class="ibox-content">
                     <div class="flot-chart" style="height: 300px;">
                         <div class="flot-chart-content" id="flot-dashboard-chart-pie"></div>
@@ -199,7 +201,50 @@
             </div>
         </div>
     </div>
+    @if (Model.VerificationInfos.Any())
+    {
+        var index = 1;
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>未核销客户排行</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="scroll_content">
+                            <table class="table table-hover margin bottom">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 5%" class="text-center">序号</th>
+                                        <th class="text-center">公司名称</th>
+                                        <th class="text-center">联系人</th>
+                                        <th class="text-center">未核销金额</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.VerificationInfos)
+                                    {
+                                        <tr>
+                                            <td class="text-center">@index</td>
+                                            <td class="text-center">
+                                                @item.CompanyName
+                                            </td>
+                                            <td class="text-center">@item.LinkManName</td>
+                                            <td class="text-center"><a class="btn btn-danger btn-xs" href="@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", Status = Consts.StateOK, VerificationStatus = Consts.StateLock, PublishDateOrder = "asc", LinkManId = item.LinkManId})" target="_blank">¥@item.VerificationMoney</a></td>
+                                        </tr>
+                                        index++;
+                                    }
+                                </tbody>
+                            </table>
 
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    }
     <div class="row">
 
 
@@ -325,6 +370,9 @@
             getTop("业务二部","@DateTime.Now.ToString("yyyy年MM月")", "ibox2");
             initCharts();
             initPieCharts("@DateTime.Now.ToString("yyyy年MM月")");
+            $('.scroll_content').slimscroll({
+                height: '400px'
+            });
         });
 
         function getTop(oname,date, id) {
@@ -418,6 +466,13 @@
                 ]
             };
             myChart.setOption(option);
+            myChart.on('click', function (params) {
+                //console.log(params);
+                var status = params.seriesIndex, date = params.name;
+                var start = moment(date, "YYYYMM").format('YYYY-MM-DD');
+                var end = moment(start).endOf("month").format('YYYY-MM-DD');
+                window.open("/DataReport/BusinessOrderDetail?Status=2&VerificationStatus=" + status +"&PublishDateStart="+start+"&PublishDateEnd="+end+"&PublishDateOrder=asc");
+            });
         }
 
         function initPieCharts(date) {
