@@ -9,6 +9,8 @@ namespace Crawler.Models
 {
     public class ProxyIp
     {
+        public ConcurrentQueue<string> ProxyIpQueue { get; set; }
+
         #region 生产IP 代理 对象
         private void Grab_ProxyIp(ConcurrentQueue<string> proxyIpQueue)
         {

@@ -601,12 +601,18 @@ namespace Ada.Web.Controllers
 
                 if (fields.Contains("SellPrice"))
                 {
-                    foreach (var mediaMediaPrice in media.MediaPrices.Where(d => d.IsDelete == false))
+                    jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
+                    var priceList = media.MediaPrices.Where(d => d.IsDelete == false).ToList();
+                    foreach (var mediaMediaPrice in priceList)
                     {
                         var price = mediaMediaPrice.SellPrice ?? 0;
-                        jo.Add(mediaMediaPrice.AdPositionName, price);
+                        jo.Add(mediaMediaPrice.AdPositionName+"[税前]", price);
                     }
-                    jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
+                    foreach (var mediaMediaPrice in priceList)
+                    {
+                        var price = mediaMediaPrice.SellPrice ?? 0;
+                        jo.Add(mediaMediaPrice.AdPositionName + "[税后]", price * 1.06M);
+                    }
                 }
                 if (fields.Contains("MediaLink")) jo.Add("媒体链接", media.MediaLink);
                 jObjects.Add(jo);

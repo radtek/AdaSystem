@@ -38,9 +38,9 @@ namespace Dashboards.Controllers
         public ActionResult Index()
         {
             var premission = PremissionData();
-            
+
             var purchase = _purchaseRepository.LoadEntities(d => d.IsDelete == false);
-            
+
             if (premission != null && premission.Count > 0)
             {
                 purchase = purchase.Where(d => premission.Contains(d.TransactorId));
@@ -60,7 +60,7 @@ namespace Dashboards.Controllers
             //已付款
             total.TotalPayMoney = purchase.Where(d => d.Status != Consts.PurchaseStatusFail).Sum(d => d.PurchaseMoney);
             var payment = _purchasePaymentRepository.LoadEntities(d => d.IsDelete == false);
-           
+
             if (premission != null && premission.Count > 0)
             {
                 payment = payment.Where(d => premission.Contains(d.TransactorId));
@@ -69,7 +69,7 @@ namespace Dashboards.Controllers
                   d.PurchasePaymentDetails.Where(t => t.Status == Consts.StateNormal).Sum(p => p.PayMoney));
             //发票数
             var invoice = _purchasePaymentRepository.LoadEntities(d => d.IsInvoice == true && d.InvoiceStauts == false);
-            
+
             if (premission != null && premission.Count > 0)
             {
                 invoice = invoice.Where(d => premission.Contains(d.TransactorId));
@@ -125,10 +125,25 @@ namespace Dashboards.Controllers
             }
             total.CompanyTops = linkmans.Select(d => new CompanyTop()
             {
-                Name = d.Name+" ("+d.Commpany.Name+")",
+                Name = d.Name + " (" + d.Commpany.Name + ")",
                 TotalMoney = d.PurchaseOrderDetails.Where(o => o.Status != Consts.PurchaseStatusFail).Sum(p => p.PurchaseMoney)
             }).OrderByDescending(d => d.TotalMoney).Take(50).ToList();
-            total.Tops= AddTopData(DateTime.Now.Year,DateTime.Now.Month);
+            total.Tops = AddTopData(DateTime.Now.Year, DateTime.Now.Month);
+            //资源更新情况
+            var medias = _mediaRepository.LoadEntities(d => d.IsDelete == false && d.Status == Consts.StateNormal);
+            if (premission != null && premission.Count > 0)
+            {
+                medias = medias.Where(d => d.TransactorId == CurrentManager.Id);
+            }
+            var date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            total.MediaUpdates = medias.GroupBy(d => d.MediaType).Select(d => new MediaUpdate
+            {
+                TypeName = d.Key.TypeName,
+                Total = d.Count(),
+                Updated = d.Count(m => m.MediaPrices.Any(p => p.InvalidDate >= date)),
+                NoUpdated = d.Count(m => m.MediaPrices.Any(p => p.InvalidDate < date))
+            }).ToList();
+
             return View(total);
         }
 
@@ -137,10 +152,10 @@ namespace Dashboards.Controllers
             var dateTemp = date.Split('-');
             var year = Convert.ToInt32(dateTemp[0]);
             var month = Convert.ToInt32(dateTemp[1]);
-            return Json(AddTopData(year,month), JsonRequestBehavior.AllowGet);
+            return Json(AddTopData(year, month), JsonRequestBehavior.AllowGet);
         }
 
-        private List<MediaAddTop> AddTopData(int year,int month)
+        private List<MediaAddTop> AddTopData(int year, int month)
         {
             var startTop = new DateTime(year, month, 1);
             var endTop = new DateTime(year, month, DateTime.DaysInMonth(year, month)).AddDays(1);

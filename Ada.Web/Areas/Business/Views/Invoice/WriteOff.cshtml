@@ -203,38 +203,42 @@
                 },
                 onFinished: function (event, currentIndex) {
                     var form = $(this);
-                    var total1 = $("#TotalInvoiceMoney").val();
-                    var total2 = $("#TotalReceivalesMoney").val();
-                    if (total1 !== total2) {
-                        swal({
-                            title: "核销金额不一致",
-                            text: "发票金额和收款金额不一致，提交核销申请",
-                            type: "input",
-                            showCancelButton: true,
-                            closeOnConfirm: false,
-                            animation: "slide-from-top",
-                            inputPlaceholder: "请输入不一致的原因",
-                            showLoaderOnConfirm: true,
-                            confirmButtonText: "提交",
-                            cancelButtonText: "取消"
-                        },
-                            function (inputValue) {
-                                if (inputValue === false) {
-                                    return false;
-                                };
+                    //var total1 = $("#TotalInvoiceMoney").val();
+                    //var total2 = $("#TotalReceivalesMoney").val();
+                    //if (total1 !== total2) {
+                    //    swal({
+                    //        title: "核销金额不一致",
+                    //        text: "发票金额和收款金额不一致，提交核销申请",
+                    //        type: "input",
+                    //        showCancelButton: true,
+                    //        closeOnConfirm: false,
+                    //        animation: "slide-from-top",
+                    //        inputPlaceholder: "请输入不一致的原因",
+                    //        showLoaderOnConfirm: true,
+                    //        confirmButtonText: "提交",
+                    //        cancelButtonText: "取消"
+                    //    },
+                    //        function (inputValue) {
+                    //            if (inputValue === false) {
+                    //                return false;
+                    //            };
 
-                                if (inputValue === "") {
-                                    swal.showInputError("请输入原因！");
-                                    return false;
-                                }
-                                $("#Remark").val(inputValue);
-                                form.submit();
-                            });
-                    } else {
-                        $('.wrapper.wrapper-content .ibox').children('.ibox-content').toggleClass('sk-loading');
-                        // Submit form input
-                        form.submit();
-                    }
+                    //            if (inputValue === "") {
+                    //                swal.showInputError("请输入原因！");
+                    //                return false;
+                    //            }
+                    //            $("#Remark").val(inputValue);
+                    //            form.submit();
+                    //        });
+                    //} else {
+                    //    $('.wrapper.wrapper-content .ibox').children('.ibox-content').toggleClass('sk-loading');
+                    //    // Submit form input
+                    //    form.submit();
+                    //}
+
+                    $('.wrapper.wrapper-content .ibox').children('.ibox-content').toggleClass('sk-loading');
+                    // Submit form input
+                    form.submit();
 
                 }
             }).validate({

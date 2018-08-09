@@ -33,7 +33,7 @@ namespace Ada.Core.Tools
         {
             //创建HttpClient（注意传入HttpClientHandler）
             var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip };
-            
+
             using (var http = new HttpClient(handler))
             {
                 http.DefaultRequestHeaders.Add(

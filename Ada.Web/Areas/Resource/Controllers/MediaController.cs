@@ -110,6 +110,10 @@ namespace Resource.Controllers
         [HttpGet, DeleteFile, AllowAnonymous]
         public ActionResult Download(string file)
         {
+            if (string.IsNullOrWhiteSpace(file))
+            {
+                return Content("参数错误");
+            }
             string fullPath = Path.Combine(Server.MapPath("~/upload"), file);
             if (System.IO.File.Exists(fullPath))
             {

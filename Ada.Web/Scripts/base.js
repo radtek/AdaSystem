@@ -256,6 +256,15 @@ function initChangePwd(url, token) {
     });
 
 }
+
+function initIdInfo(apiUrl) {
+    $("#idInfo").click(function () {
+        $("#modalView").load(apiUrl,
+            function () {
+                $('#modalView .modal').modal('show');
+            });
+    });
+}
 function initCropper(apiurl) {
     $("#changeimage").click(function () {
         $("#modalView").load(apiurl,

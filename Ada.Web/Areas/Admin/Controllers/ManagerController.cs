@@ -73,7 +73,7 @@ namespace Admin.Controllers
 
         private string GetOrganization(Manager manager)
         {
-            List<string> names=new List<string>();
+            List<string> names = new List<string>();
             foreach (var organization in manager.Organizations)
             {
                 List<string> list = new List<string>();
@@ -81,7 +81,7 @@ namespace Admin.Controllers
                 foreach (var s in arry)
                 {
                     var temp = _organizationRepository.LoadEntities(d => d.Id == s).FirstOrDefault();
-                    if (temp.Level!=1)
+                    if (temp.Level != 1)
                     {
                         list.Add(temp.OrganizationName);
                     }
@@ -249,7 +249,7 @@ namespace Admin.Controllers
             var actionIds = string.IsNullOrWhiteSpace(viewModel.ActionIds)
                 ? null
                 : viewModel.ActionIds.Split(',').ToList();
-            
+
             var manager = _managerRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
             manager.UserName = viewModel.UserName;
             manager.RealName = viewModel.RealName;
@@ -278,26 +278,26 @@ namespace Admin.Controllers
         [AdaValidateAntiForgeryToken]
         public ActionResult Export(ManagerView viewModel)
         {
-           viewModel.Managers = PremissionData();
+            viewModel.Managers = PremissionData();
             var managers = _managerService.LoadEntitiesFilter(viewModel).ToList();
             var quarters = _quartersRepository.LoadEntities(d => d.IsDelete == false).ToList();
             var result = from m in managers
-                from q in quarters
-                where q.Id == m.QuartersId
-                select new
-                {
-                    m.UserName,
-                    m.Phone,
-                    m.IdCard,
-                    m.Birthday,
-                    m.IsLunar,
-                    m.BankName,
-                    m.BankAccount,
-                    m.BankNum,
-                    m.EntryDate,
-                    q.Title,
-                    Group=GetOrganization(m)
-                };
+                         from q in quarters
+                         where q.Id == m.QuartersId
+                         select new
+                         {
+                             m.UserName,
+                             m.Phone,
+                             m.IdCard,
+                             m.Birthday,
+                             m.IsLunar,
+                             m.BankName,
+                             m.BankAccount,
+                             m.BankNum,
+                             m.EntryDate,
+                             q.Title,
+                             Group = GetOrganization(m)
+                         };
             var enumerable = result.ToList();
             if (!enumerable.Any())
             {
@@ -312,7 +312,7 @@ namespace Admin.Controllers
                 jo.Add("岗位", item.Title);
                 jo.Add("联系手机", item.Phone);
                 jo.Add("身份证", item.IdCard);
-                if (item.Birthday!=null)
+                if (item.Birthday != null)
                 {
                     var str = item.Birthday.Value.ToString("yyyy-MM-dd") + (item.IsLunar == true ? " (农历)" : "");
                     jo.Add("生日", str);
@@ -321,14 +321,14 @@ namespace Admin.Controllers
                 {
                     jo.Add("生日", "");
                 }
-                jo.Add("入职日期", item.EntryDate==null?"":item.EntryDate.Value.ToString("yyyy-MM-dd"));
-                if (viewModel.EntryDate!=null)
+                jo.Add("入职日期", item.EntryDate == null ? "" : item.EntryDate.Value.ToString("yyyy-MM-dd"));
+                if (viewModel.EntryDate != null)
                 {
-                    if (item.EntryDate!=null)
+                    if (item.EntryDate != null)
                     {
                         var span = viewModel.EntryDate.Value - new DateTime(item.EntryDate.Value.Year,
                                        item.EntryDate.Value.AddMonths(1).Month, 1);
-                        jo.Add("入职天数（截至"+viewModel.EntryDate.Value.ToString("yyyy-MM-dd")+"）",span.TotalDays);
+                        jo.Add("入职天数（截至" + viewModel.EntryDate.Value.ToString("yyyy-MM-dd") + "）", span.TotalDays);
                     }
                 }
                 jo.Add("开户行", item.BankName);
@@ -364,7 +364,11 @@ namespace Admin.Controllers
         {
             return PartialView("ChangePassword");
         }
-
+        public ActionResult BaseInfo()
+        {
+            var manager = _managerRepository.LoadEntities(d => d.Id == CurrentManager.Id).FirstOrDefault();
+            return PartialView("MangerInfo", manager);
+        }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
         public ActionResult ChangePassword(string old, string fresh, string refresh)
@@ -435,10 +439,10 @@ namespace Admin.Controllers
         /// <returns></returns>
         public ActionResult ChangeRole(string id)
         {
-            var role= CurrentManager.RoleList.FirstOrDefault(d => d.Id == id);
+            var role = CurrentManager.RoleList.FirstOrDefault(d => d.Id == id);
             CurrentManager.RoleName = role.RoleName;
             CurrentManager.RoleId = role.Id;
-            if (Session["LoginManager"]==null)
+            if (Session["LoginManager"] == null)
             {
                 return RedirectToAction("Index", "Login");
             }

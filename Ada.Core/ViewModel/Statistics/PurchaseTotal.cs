@@ -13,6 +13,7 @@ namespace Ada.Core.ViewModel.Statistics
         {
             Tops=new List<MediaAddTop>();
             CompanyTops=new List<CompanyTop>();
+            MediaUpdates=new List<MediaUpdate>();
         }
         /// <summary>
         /// 订单总数
@@ -74,6 +75,11 @@ namespace Ada.Core.ViewModel.Statistics
         /// </summary>
         [Display(Name = "供应商排行")]
         public List<CompanyTop> CompanyTops { get; set; }
+        /// <summary>
+        /// 媒体更新情况
+        /// </summary>
+        [Display(Name = "媒体更新情况")]
+        public List<MediaUpdate> MediaUpdates { get; set; }
     }
 
     public class MediaAddTop
@@ -140,5 +146,29 @@ namespace Ada.Core.ViewModel.Statistics
         /// </summary>
         [Display(Name = "采购总额")]
         public decimal? TotalMoney { get; set; }
+    }
+
+    public class MediaUpdate
+    {
+        /// <summary>
+        /// 媒体类型
+        /// </summary>
+        [Display(Name = "媒体类型")]
+        public string TypeName { get; set; }
+        /// <summary>
+        /// 媒体总数
+        /// </summary>
+        [Display(Name = "媒体总数")]
+        public int Total { get; set; }
+        /// <summary>
+        /// 已更新数
+        /// </summary>
+        [Display(Name = "已更新数")]
+        public int Updated { get; set; }
+        /// <summary>
+        /// 未更新数
+        /// </summary>
+        [Display(Name = "未更新数")]
+        public int NoUpdated { get; set; }
     }
 }

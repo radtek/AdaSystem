@@ -96,7 +96,8 @@
 /**/
 /**/
           initChangePwd("@Url.Action("ChangePassword", "Manager",new{area="Admin"})",$('@Html.AntiForgeryToken()').val());
-          initCropper("@Url.Action("UploadImage","Manager",new{area="Admin"})");
+            initCropper("@Url.Action("UploadImage","Manager",new{area="Admin"})");
+            initIdInfo("@Url.Action("BaseInfo","Manager",new{area="Admin"})");
         });
     </script>
 </body>

@@ -4,7 +4,11 @@ using System.Data;
 using System.Data.Entity.SqlServer;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Ada.Core;
@@ -447,7 +451,7 @@ namespace Ada.Web.Controllers
                     {
                         var id = linkId;
                         var link = _linkman.LoadEntities(d => d.Id == id.Trim()).FirstOrDefault();
-                        if (link==null)
+                        if (link == null)
                         {
                             continue;
                         }
@@ -472,8 +476,8 @@ namespace Ada.Web.Controllers
         }
         public ActionResult ChangeOrder()
         {
-            var result = _ptemp.Update(d => d.IsDelete == false && !d.PurchasePaymentOrderDetails.Any()&&d.TransactorId== "X1806111602430001",
-                o => new PurchaseOrderDetail() {TransactorId = "X1807041543215103", Transactor = "刘甜" });
+            var result = _ptemp.Update(d => d.IsDelete == false && !d.PurchasePaymentOrderDetails.Any() && d.TransactorId == "X1806111602430001",
+                o => new PurchaseOrderDetail() { TransactorId = "X1807041543215103", Transactor = "刘甜" });
             return Content("成功更换" + result + "条订单");
         }
         public ActionResult CloseMediaXls()
@@ -608,7 +612,7 @@ namespace Ada.Web.Controllers
 
             return Content(result);
         }
-        public ActionResult OrderChangeLinkman(string l,string c)
+        public ActionResult OrderChangeLinkman(string l, string c)
         {
             int count =
             _ptemp.Update(d => !d.PurchasePaymentOrderDetails.Any() && d.LinkManId == l,
@@ -643,7 +647,7 @@ namespace Ada.Web.Controllers
 
             //var medias = _media.Update(d => d.IsDelete == false && d.TransactorId != d.LinkMan.TransactorId, d => new Media() { IsDelete = true });
             //_dbContext.SaveChanges();
-            return Json(medias.Select(d=>new {d.Id,d.MediaType.TypeName,d.MediaName,d.MediaID}),JsonRequestBehavior.AllowGet);
+            return Json(medias.Select(d => new { d.Id, d.MediaType.TypeName, d.MediaName, d.MediaID }), JsonRequestBehavior.AllowGet);
         }
         public ActionResult UpdateManager()
         {
@@ -715,10 +719,36 @@ namespace Ada.Web.Controllers
             _dbContext.SaveChanges();
             return Content("成功更换" + count + "条资源");
         }
-        public async Task<ActionResult> Http()
+        public async Task<ActionResult> Http(string p)
         {
-            var content = await HttpUtility.GetAsync("http://whois.pconline.com.cn/ip.jsp");
-            return Content(content);
+            CookieContainer cookieContainer = new CookieContainer();
+            cookieContainer.Add(new Uri("http://56062118-yuyue.m.weimob.com"),new Cookie("express.session", "s%3A7etJNperJt_uLjupxp5LEbZRGukKh5id.wcrED5PA%2BRd4Ply59ERMDBPqdMJ7RoZUGWBbFfQTYb8"));
+            //cookieContainer.Add(new Cookie("express.session", "s%3A7etJNperJt_uLjupxp5LEbZRGukKh5id.wcrED5PA%2BRd4Ply59ERMDBPqdMJ7RoZUGWBbFfQTYb8"));
+            HttpClientHandler handler = new HttpClientHandler();
+            handler.CookieContainer = cookieContainer;
+            //handler.UseCookies = true;
+            using (HttpClient client = new HttpClient(handler))
+            {
+                client.BaseAddress = new Uri("http://56062118-yuyue.m.weimob.com/");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue("application/json"));
+                var response = await client.PostAsJsonAsync(
+                    "api/micro-book-consumer/mobileController/mobileCalendar", new
+                    {
+                        aid = "56062118",
+                        calendarDate = p,
+                        sno = 19463
+                    });
+                response.EnsureSuccessStatusCode();
+                var result = response.Content.ReadAsStringAsync().Result;
+                var obj = JsonConvert.DeserializeObject<result>(result);
+                return Content("请求结果：" + obj.code.errmsg + "，是否有预约：" + (obj.data.items.Any() ? "是" : "否"));
+            }
+
+
+            //var content = await HttpUtility.PostAsync("http://56062118-yuyue.m.weimob.com/api/micro-book-consumer/mobileController/mobileCalendar", postdata,cookieContainer);
+            //return Content("");
         }
         private string GetDouYinId(string url)
         {
@@ -751,4 +781,33 @@ namespace Ada.Web.Controllers
 
         }
     }
+
+    class result
+    {
+        public result()
+        {
+            data=new data();
+        }
+        public data data { get; set; }
+        public code code { get; set; }
+    }
+
+    class code
+    {
+        public string errmsg { get; set; }
+    }
+    class data
+    {
+        public data()
+        {
+            items=new List<items>();
+        }
+        public List<items> items { get; set; }
+    }
+
+    class items
+    {
+        public string bookDivideTimes { get; set; }
+    }
+
 }
