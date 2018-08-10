@@ -259,7 +259,8 @@ namespace Purchase.Controllers
                 d.AccountBank,
                 d.AccountName,
                 d.AccountNum,
-                d.PaymentType
+                d.PaymentType,
+                d.Remark
             }).ToList();
             viewModel.PayDetails = JsonConvert.SerializeObject(paydetails);
             return View(viewModel);

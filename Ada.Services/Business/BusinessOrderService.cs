@@ -126,6 +126,10 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => d.BusinessInvoiceDetails.Count == 0);
             }
+            if (viewModel.IsInvoice == true)
+            {
+                allList = allList.Where(d => d.Tax>0);
+            }
             viewModel.total = allList.Count();
             viewModel.AllMoney = allList.Sum(d => d.BusinessOrderDetails.Where(a => a.Status == Consts.StateOK).Sum(b => b.Money));
             viewModel.AllSellMoney = allList.Sum(d => d.BusinessOrderDetails.Where(a => a.Status == Consts.StateOK).Sum(b => b.SellMoney));

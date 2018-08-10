@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Ada.Core;
+using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Resource;
@@ -378,7 +379,7 @@ namespace Ada.Services.Resource
             {
                 var endDate = viewModel.PriceInvalidDate.Value.AddDays(1);
                 allList = allList.Include(d => d.MediaPrices).Where(d =>
-                      d.MediaPrices.Any(p => p.InvalidDate < endDate));
+                      d.MediaPrices.Where(t => t.IsDelete == false).Any(p => p.InvalidDate < endDate));
             }
 
             if (viewModel.PriceProtectionDate != null)
@@ -700,7 +701,27 @@ namespace Ada.Services.Resource
             }
             return allList.OrderBy(d => d.CommentDate).Skip(offset).Take(rows);
         }
+        public IQueryable<Ada.Core.ViewModel.Statistics.MediaUpdate> GetMediaUpdatedInfo(MediaView view)
+        {
+            var medias = _repository.LoadEntities(d => d.IsDelete == false && d.Status == Consts.StateNormal);
+            if (!string.IsNullOrWhiteSpace(view.TransactorId))
+            {
+                medias = medias.Where(d => d.TransactorId == view.TransactorId);
+            }
 
+            if (view.PriceInvalidDate==null)
+            {
+                view.PriceInvalidDate= new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            }
+
+            return medias.GroupBy(d => d.MediaType).Select(d => new Core.ViewModel.Statistics.MediaUpdate
+            {
+                TypeName = d.Key.TypeName,
+                Total = d.Count(),
+                Updated = d.Count(m => m.MediaPrices.Where(t=>t.IsDelete==false).Any(p => p.InvalidDate >= view.PriceInvalidDate)),
+                NoUpdated = d.Count(m => m.MediaPrices.Where(t => t.IsDelete == false).Any(p => p.InvalidDate < view.PriceInvalidDate))
+            });
+        }
         private List<string> SplitStr(string str)
         {
             var arr = str.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();

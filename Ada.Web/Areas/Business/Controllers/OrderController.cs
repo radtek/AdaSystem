@@ -80,6 +80,7 @@ namespace Business.Controllers
                     LinkManId = d.LinkManId,
                     TotalMoney = d.BusinessOrderDetails.Sum(o => o.Money),
                     Transactor = d.Transactor,
+                    Tax = d.Tax,
                     //Status = d.Status ?? Consts.StateLock,
                     OrderDate = d.OrderDate,
                     TotalSellMoney = d.BusinessOrderDetails.Sum(o => o.SellMoney),

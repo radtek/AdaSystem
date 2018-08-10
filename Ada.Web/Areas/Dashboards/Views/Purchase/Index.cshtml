@@ -1,10 +1,14 @@
 ﻿@using System.Web.Optimization
 @using Ada.Core.Domain
+@using Ada.Core.Infrastructure
+@using Ada.Services.Admin
 @model Ada.Core.ViewModel.Statistics.PurchaseTotal
 @{
     ViewBag.Title = "媒介工作台";
     int index = 1;
     int cindex = 1;
+    var service = EngineContext.Current.Resolve<IManagerService>();
+    var mangers = service.GetByOrganizationName("媒介部");
 }
 <div class="wrapper wrapper-content">
 
@@ -178,6 +182,7 @@
                             <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy-MM")</span> <i class="fa fa-chevron-down"></i></span>
                         </a>
                         <ul class="dropdown-menu dropdown-user">
+                            
                             @for (int i = 0; i < 12; i++)
                             {
                                 <li>
@@ -224,11 +229,31 @@
     </div>
     <div class="row">
         <div class="col-lg-12">
-            <div class="ibox float-e-margins">
+            <div class="ibox float-e-margins" id="iboxUpdate">
                 <div class="ibox-title">
-                    <h5>截至 @DateTime.Now.Month 月媒体更新统计</h5>
+                    <h5>截至 @DateTime.Now.Month 月媒体价格更新统计</h5>
+                    <div class="ibox-tools">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="label label-info pull-right"><span class="currentupdate">媒介部</span> <i class="fa fa-chevron-down"></i></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="javascript:getUpdate('','媒介部');"> 媒介部 </a>
+                            </li>
+                            @foreach (var item in mangers)
+                            {
+                                <li>
+                                    <a href="javascript:getUpdate('@item.Id','@item.UserName');"> @item.UserName </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
                 </div>
                 <div class="ibox-content">
+                    <div class="sk-spinner sk-spinner-double-bounce">
+                        <div class="sk-double-bounce1"></div>
+                        <div class="sk-double-bounce2"></div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-hover bottom">
                             <thead>
@@ -379,6 +404,42 @@
                     $top.children('.ibox-content').toggleClass('sk-loading');
                 }
             });
+        }
+        function getUpdate(id,name) {
+            var $top = $("#iboxUpdate"), $table = $("#iboxUpdate tbody");
+            $("#iboxUpdate .currentupdate").text(name);
+            $.ajax({
+                type: "get",
+                url: "@Url.Action("GetMediaUpdatedInfo")",
+                data: { id:id },
+                success: function (data) {
+                    $table.empty();
+                    $.each(data,
+                        function (k, v) {
+                            var bl = v.Total == 0 ? "0" : percentage(v.Updated, v.Total);
+                            $table.append('<tr>' +
+                                '<td>' + v.TypeName + '</td>' +
+                                '<td>' + v.Total+'</td>' +
+                                '<td>' + v.Updated + '</td>' +
+                                '<td>' + v.NoUpdated + '</td>' +
+                                '<td>' + bl + '</td>' +
+                                '</tr>');
+                        });
+                },
+                error: function () {
+
+                },
+                complete: function () {
+                    $top.children('.ibox-content').toggleClass('sk-loading');
+                },
+                beforeSend: function() {
+                    $top.children('.ibox-content').toggleClass('sk-loading');
+                }
+            });
+        }
+        function percentage(number1, number2) { 
+            return (Math.round(number1 / number2 * 10000) / 100.00 + "%");// 小数点后两位百分比
+   
         }
     </script>
 }

@@ -264,7 +264,7 @@ function showOrder() {
                         responseHandler: responseHandler,
                         queryParams: function (parameters) {
                             parameters.LinkManId = linkman;
-                            //parameters.IsInvoice = false;
+                            parameters.IsInvoice = true;
                             return parameters;
                         },
                         columns: [
@@ -283,6 +283,11 @@ function showOrder() {
                                 title: '订单编号',
                                 align: "center", valign: "middle"
 
+                            },
+                            {
+                                field: 'Tax',
+                                title: '税点',
+                                align: "center", valign: "middle"
                             },
                             {
                                 field: 'TotalMoney',

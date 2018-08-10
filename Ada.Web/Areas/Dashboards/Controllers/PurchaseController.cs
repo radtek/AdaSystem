@@ -8,9 +8,11 @@ using Ada.Core.Domain;
 using Ada.Core.Domain.Customer;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.Domain.Resource;
+using Ada.Core.ViewModel.Resource;
 using Ada.Core.ViewModel.Statistics;
 using Ada.Framework.Filter;
 using Ada.Services.Admin;
+using Ada.Services.Resource;
 using Newtonsoft.Json;
 
 namespace Dashboards.Controllers
@@ -22,18 +24,21 @@ namespace Dashboards.Controllers
         private readonly IRepository<MediaType> _mediaTypeRepository;
         private readonly IRepository<Media> _mediaRepository;
         private readonly IRepository<LinkMan> _linkmanRepository;
+        private readonly IMediaService _mediaService;
 
         public PurchaseController(IRepository<PurchaseOrderDetail> purchaseRepository,
             IRepository<PurchasePayment> purchasePaymentRepository,
             IRepository<MediaType> mediaTypeRepository,
             IRepository<Media> mediaRepository,
-            IRepository<LinkMan> linkmanRepository)
+            IRepository<LinkMan> linkmanRepository,
+            IMediaService mediaService)
         {
             _purchaseRepository = purchaseRepository;
             _purchasePaymentRepository = purchasePaymentRepository;
             _mediaTypeRepository = mediaTypeRepository;
             _mediaRepository = mediaRepository;
             _linkmanRepository = linkmanRepository;
+            _mediaService = mediaService;
         }
         public ActionResult Index()
         {
@@ -130,20 +135,12 @@ namespace Dashboards.Controllers
             }).OrderByDescending(d => d.TotalMoney).Take(50).ToList();
             total.Tops = AddTopData(DateTime.Now.Year, DateTime.Now.Month);
             //资源更新情况
-            var medias = _mediaRepository.LoadEntities(d => d.IsDelete == false && d.Status == Consts.StateNormal);
+            MediaView view=new MediaView();
             if (premission != null && premission.Count > 0)
             {
-                medias = medias.Where(d => d.TransactorId == CurrentManager.Id);
+                view.TransactorId = CurrentManager.Id;
             }
-            var date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-            total.MediaUpdates = medias.GroupBy(d => d.MediaType).Select(d => new MediaUpdate
-            {
-                TypeName = d.Key.TypeName,
-                Total = d.Count(),
-                Updated = d.Count(m => m.MediaPrices.Any(p => p.InvalidDate >= date)),
-                NoUpdated = d.Count(m => m.MediaPrices.Any(p => p.InvalidDate < date))
-            }).ToList();
-
+            total.MediaUpdates = _mediaService.GetMediaUpdatedInfo(view).OrderBy(d=>d.NoUpdated).ToList();
             return View(total);
         }
 
@@ -154,7 +151,11 @@ namespace Dashboards.Controllers
             var month = Convert.ToInt32(dateTemp[1]);
             return Json(AddTopData(year, month), JsonRequestBehavior.AllowGet);
         }
-
+        public ActionResult GetMediaUpdatedInfo(string id)
+        {
+            var result = _mediaService.GetMediaUpdatedInfo(new MediaView() {TransactorId = id}).OrderBy(d => d.NoUpdated).ToList();
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
         private List<MediaAddTop> AddTopData(int year, int month)
         {
             var startTop = new DateTime(year, month, 1);

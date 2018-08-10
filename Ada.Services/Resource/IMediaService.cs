@@ -15,6 +15,7 @@ namespace Ada.Services.Resource
         IQueryable<MediaView> LoadEntitiesFilters(MediaView viewModel);
         IQueryable<MediaCommentView> LoadComments(string id,  int pageindex, int pagesize, out int total);
         IQueryable<MediaCommentView> LoadComments(MediaCommentView viewModel);
+        IQueryable<Ada.Core.ViewModel.Statistics.MediaUpdate> GetMediaUpdatedInfo(MediaView view);
         void Add(Media entity);
         void Update(Media entity);
         void Delete(Media entity);
