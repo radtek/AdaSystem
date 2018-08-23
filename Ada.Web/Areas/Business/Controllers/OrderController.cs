@@ -354,6 +354,16 @@ namespace Business.Controllers
                         detail.VerificationMoney = businessOrderDetail.SellMoney;
                         detail.ConfirmVerificationMoney = 0;
                     }
+                    //if (detail.VerificationStatus == Consts.StateNormal)
+                    //{
+                    //    detail.Money = businessOrderDetail.Money;
+                    //    detail.SellMoney = businessOrderDetail.SellMoney;
+                    //    detail.Tax = businessOrderDetail.Tax;
+                    //    detail.TaxMoney = businessOrderDetail.TaxMoney;
+                    //    detail.VerificationMoney = 0;
+                    //    detail.ConfirmVerificationMoney = businessOrderDetail.SellMoney;
+                    //}
+                   
                     //可以修改稿件标题
                     detail.MediaTitle = businessOrderDetail.MediaTitle;
                     detail.PrePublishDate = businessOrderDetail.PrePublishDate;

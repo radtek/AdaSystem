@@ -28,7 +28,11 @@ filterFormat.mediaLogo = function (value, row) {
         detail = "<a class='btn btn-warning btn-outline btn-xs' href='/Resource/Media/Detail/" + row.Id + "' target='_blank'><i class='fa fa-info-circle'></i> 详情</a>";
     }
     var line = detail ? "<div class='p-xxs text-center'>" + detail + "</div>" : "";
-    var comment = "<div class='p-xxs text-center'><a class='btn btn-info btn-outline btn-xs' href='/Resource/Media/Comment/" + row.Id + "' target='_blank'><i class='fa fa-comment'></i> 评价</a></div>";
+    var comment = "";
+    if (row.MediaTypeIndex != "writer") {
+        comment = "<div class='p-xxs text-center'><a class='btn btn-info btn-outline btn-xs' href='/Resource/Media/Comment/" + row.Id + "' target='_blank'><i class='fa fa-comment'></i> 评价</a></div>";
+    }
+        
     return '<div class="p-xxs text-center">' + logo + '</div>' + vg + line + comment;
 };
 filterFormat.mediaInfo = function (value, row) {

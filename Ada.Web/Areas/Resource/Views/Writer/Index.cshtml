@@ -31,7 +31,7 @@
                 <input type="hidden" name="MediaTypeId" value="@meidaType.Id" />
                 <div class="col-sm-2">
                     <div class="form-group">
-                        @Html.LabelFor(d => d.MediaName, "写手名称", new { @class = "control-label" })
+                        @Html.LabelFor(d => d.MediaName, "编辑名称", new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control" })
                     </div>
                 </div>
@@ -172,7 +172,7 @@
                 //detailView: true,                   //设置为 true 可以显示详细页面模式。
                 //detailFormatter: detailFormatter,
                     formatSearch: function() {
-                        return "写手名称";
+                        return "编辑名称";
                     },
                     mobileResponsive: true,
                     queryParams: function (parameters) {
@@ -192,7 +192,7 @@
 
                     {
                         field: 'MediaName',
-                        title: '写手名称',
+                        title: '编辑名称',
                         valign: "middle",
                         align: "left",
                         formatter: formatterMediaName
@@ -230,7 +230,7 @@
                     },
                     {
                         field: 'Artilce',
-                        title: '写手案例',
+                        title: '案例',
                         //align: "center",
                         valign: "middle",
                         formatter: function(value,row) {

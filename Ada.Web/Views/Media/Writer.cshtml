@@ -1,0 +1,123 @@
+﻿@using System.Web.Optimization
+@using Ada.Core.Infrastructure
+@using Ada.Services.Resource
+@model Ada.Core.ViewModel.Resource.MediaView
+@{
+    Layout = "~/Views/Shared/_Layout_Web.cshtml";
+    ViewBag.Title = "文案";
+    var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("writer");
+}
+<div class="row wrapper border-bottom white-bg page-heading m-t-xs">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+    </div>
+</div>
+
+
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+
+    @Html.Partial("Filter", meidaType)
+
+
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+    @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/laddaStyles")
+    <link href="@Url.Content("~/Content/plugins/jqLabelauty/jquery-labelauty.css")" rel="stylesheet" type="text/css" />
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/ladda")
+    <script href="@Url.Content("~/Scripts/plugins/jqLabelauty/jquery-labelauty.js")"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            initFilter();
+           $('#table').bootstrapTable({
+                url: '@Url.Action("GetList","Media")', //请求后台的URL（*）
+                method: 'post',
+                classes: "table table-no-bordered",
+                toolbar: '#toolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "desc",                   //排序方式
+                sortName:"Id",
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
+                showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                singleSelect: true,                  //设置True 将禁止多选
+               uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+               searchAlign: "left",
+               buttonsAlign: "left",
+               toolbarAlign: "right",
+                ajaxOptions:{
+                    headers: { "__RequestVerificationToken": $("input[name='__RequestVerificationToken']").val() }
+                },
+                    formatSearch: function() {
+                        return "编辑名称关键字";
+                    },
+               onLoadSuccess: onLoadSuccess ,
+                mobileResponsive: true,
+                queryParams: function (parameters) {
+                    parameters.MediaTypeId = '@meidaType.Id';
+                    return searchFrm.queryParams(parameters);
+                },
+                columns: [
+
+
+                    {
+                        field: 'MediaLogo',
+                        align: "right", valign: "middle",
+                        formatter: formatter.mediaLogo
+
+                    },
+                    {
+                        field: 'MediaName',
+                        title: '编辑名称',
+                        valign: "middle",
+                        align: "left",
+                        formatter: formatter.mediaInfo
+                    },
+                    {
+                        field: 'AvgReadNum',
+                        title: '文案信息',
+                        valign: "middle",
+                        align: "left",
+                        formatter: formatter.mediaData
+                    },
+                    {
+                        field: 'MediaPrices',
+                        title: '参考价格',
+                        valign: "middle",
+                        align: "left",
+                        formatter: formatter.mediaPrice,
+                        //align: "center"
+                    },
+                    {
+                        field: 'Id',
+                        title: '操作',
+                        valign: "middle",
+                        align: "center",
+                        formatter: formatter.mediaOperation
+                    }
+                ]
+            });
+
+        });
+    </script>
+}
+
+
+
+
+

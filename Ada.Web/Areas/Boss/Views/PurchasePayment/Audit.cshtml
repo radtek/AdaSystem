@@ -146,14 +146,9 @@
                                             <table class="table table-striped">
                                                 <thead>
                                                     <tr>
+                                                       
                                                         <th>
-                                                            媒体类型
-                                                        </th>
-                                                        <th>
-                                                            媒体名称
-                                                        </th>
-                                                        <th>
-                                                            广告位
+                                                            采购内容
                                                         </th>
                                                         <th>
                                                             成本金额
@@ -165,10 +160,13 @@
                                                             税额
                                                         </th>
                                                         <th>
-                                                            采购金额
+                                                            采购金额(无税)
                                                         </th>
                                                         <th>
                                                             出刊日期
+                                                        </th>
+                                                        <th>
+                                                            媒介备注
                                                         </th>
                                                         <th>
                                                             销售人员
@@ -181,36 +179,44 @@
                                                 <tbody>
                                                     @foreach (var item in details)
                                                     {
-                                                        <tr>
-                                                            <td>@item.PurchaseOrderDetail.MediaTypeName</td>
-                                                            <td>@item.PurchaseOrderDetail.MediaName</td>
-                                                            <td>@item.PurchaseOrderDetail.AdPositionName</td>
-                                                            <td>@item.PurchaseOrderDetail.CostMoney</td>
-                                                            <td>@item.PurchaseOrderDetail.Tax</td>
-                                                            <td>@item.PurchaseOrderDetail.TaxMoney</td>
-                                                            <td>@item.PurchaseOrderDetail.Money</td>
-                                                            <td>
-                                                                @{
-                                                                    var publishDate = "暂未出刊";
-                                                                    if (item.PurchaseOrderDetail.PublishDate.HasValue)
-                                                                    {
-                                                                        publishDate = item.PurchaseOrderDetail.PublishDate.Value.ToString("yyyy年MM月dd日");
-                                                                    }
+                                                        var waring = "";
+                                                        if (item.PurchaseOrderDetail.CostMoney<item.PurchaseOrderDetail.PurchaseMoney)
+                                                        {
+                                                            waring = "danger";
+                                                        }
+                                                    <tr class="@waring">
+                                                        
+                                                        <td>
+                                                            [ @item.PurchaseOrderDetail.MediaTypeName ] @item.PurchaseOrderDetail.MediaName<br />
+                                                            [ 广告位 ] @item.PurchaseOrderDetail.AdPositionName
+                                                        </td>
+                                                        
+                                                        <td>@item.PurchaseOrderDetail.CostMoney</td>
+                                                        <td>@item.PurchaseOrderDetail.Tax</td>
+                                                        <td>@item.PurchaseOrderDetail.TaxMoney</td>
+                                                        <td>@item.PurchaseOrderDetail.PurchaseMoney</td>
+                                                        <td>
+                                                            @{
+                                                                var publishDate = "暂未出刊";
+                                                                if (item.PurchaseOrderDetail.PublishDate.HasValue)
+                                                                {
+                                                                    publishDate = item.PurchaseOrderDetail.PublishDate.Value.ToString("yyyy年MM月dd日");
+                                                                }
                                                             }
                                                             @publishDate
                                                         </td>
+                                                        <td>@item.PurchaseOrderDetail.Remark</td>
                                                         <td>@item.PurchaseOrderDetail.PurchaseOrder.BusinessBy</td>
                                                         <td>@item.PurchaseOrderDetail.Transactor</td>
                                                     </tr>
                                                 }
                                                     <tr>
-                                                        <td></td>
-                                                        <td></td>
                                                         <td>合计</td>
                                                         <td>@details.Sum(d => d.PurchaseOrderDetail.CostMoney)</td>
                                                         <td></td>
                                                         <td>@details.Sum(d => d.PurchaseOrderDetail.TaxMoney)</td>
                                                         <td>@details.Sum(d => d.PurchaseOrderDetail.Money)</td>
+                                                        <td></td>
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>

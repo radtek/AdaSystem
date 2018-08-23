@@ -14,8 +14,8 @@
         <div class="navbar-collapse collapse" id="navbar">
             <ul class="nav navbar-nav">
                 @*<li class="@Html.IsActive("usercenter","index")">
-                    <a aria-expanded="false" role="button" href="@Url.Action("Index","UserCenter")"> 会员中心</a>
-                </li>*@
+            <a aria-expanded="false" role="button" href="@Url.Action("Index","UserCenter")"> 会员中心</a>
+        </li>*@
                 <li class="dropdown @Html.IsActive("usercenter")">
                     <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> 会员中心 <span class="caret"></span></a>
                     <ul role="menu" class="dropdown-menu">
@@ -38,7 +38,9 @@
                 <li class="@Html.IsActive("media", "zhihu")">
                     <a aria-expanded="false" role="button" href="@Url.Action("ZhiHu", "Media")"> 知乎</a>
                 </li>
-
+                <li class="@Html.IsActive("media", "writer")">
+                    <a aria-expanded="false" role="button" href="@Url.Action("Writer", "Media")"> 文案</a>
+                </li>
 
                 @*<li class="dropdown">
             <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> Menu item <span class="caret"></span></a>

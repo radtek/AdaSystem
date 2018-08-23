@@ -83,6 +83,10 @@ namespace Ada.Services.Business
             {
                 mediaComments = mediaComments.Where(d => d.BusinessOrderDetail.BusinessOrder.Remark.Contains(viewModel.search) || d.BusinessOrderDetail.MediaName.Contains(viewModel.search) && d.Transactor.Contains(viewModel.search));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeId))
+            {
+                mediaComments = mediaComments.Where(d => d.BusinessOrderDetail.MediaPrice.Media.MediaTypeId==viewModel.MediaTypeId);
+            }
             if (viewModel.Score != null)
             {
                 mediaComments = mediaComments.Where(d => d.Score == viewModel.Score);

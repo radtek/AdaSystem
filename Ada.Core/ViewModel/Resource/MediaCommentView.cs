@@ -46,6 +46,11 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "媒体资源")]
         public string MediaId { get; set; }
         /// <summary>
+        /// 媒体类型
+        /// </summary>
+        [Display(Name = "媒体类型")]
+        public string MediaTypeId { get; set; }
+        /// <summary>
         /// 媒体资源
         /// </summary>
         [Display(Name = "媒体资源")]

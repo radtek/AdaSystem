@@ -690,6 +690,11 @@ namespace Resource.Controllers
                         sellKey = "HotSellPriceRange";
                     }
                 }
+                if (media.MediaType.CallIndex == "writer")
+                {
+                    sellKey = "WriterPriceRange";
+                    marketKey = "WriterPriceRange";
+                }
                 var sellPriceRange = _fieldService.GetFieldsByKey(sellKey).ToList();
                 var marketPriceRange = _fieldService.GetFieldsByKey(marketKey).ToList();
                 for (int j = 0; j < adpostionNames.Count; j++)
@@ -1039,6 +1044,12 @@ namespace Resource.Controllers
                 sellKey = "SellPriceRangeByR&D";
                 marketKey = "SellPriceRangeByR&D";
             }
+
+            if (viewModel.MediaTypeIndex == "writer")
+            {
+                sellKey = "WriterPriceRange";
+                marketKey = "WriterPriceRange";
+            }
             var sellPriceRange = _fieldService.GetFieldsByKey(sellKey).ToList();
             var marketPriceRange = _fieldService.GetFieldsByKey(marketKey).ToList();
             foreach (var viewModelMediaPrice in viewModel.MediaPrices)
@@ -1231,6 +1242,11 @@ namespace Resource.Controllers
                 {
                     sellKey = "HotSellPriceRange";
                 }
+            }
+            if (viewModel.MediaTypeIndex == "writer")
+            {
+                sellKey = "WriterPriceRange";
+                marketKey = "WriterPriceRange";
             }
             var sellPriceRange = _fieldService.GetFieldsByKey(sellKey).ToList();
             var marketPriceRange = _fieldService.GetFieldsByKey(marketKey).ToList();

@@ -1,8 +1,13 @@
 ﻿
 @using System.Web.Optimization
+@using Ada.Core
+@using Ada.Core.Domain.Resource
+@using Ada.Core.Infrastructure
 @model Ada.Core.ViewModel.Resource.MediaCommentView
 @{
     ViewBag.Title = "销售评论";
+    var repository = EngineContext.Current.Resolve<IRepository<MediaType>>();
+    var types = repository.LoadEntities(d => d.IsComment == true && d.IsDelete == false).ToList();
 }
 @Html.Partial("Bread")
 
@@ -31,6 +36,16 @@
 
             </select>
         </div>
+        <div class="form-group">
+            <select name="MediaTypeId" class="form-control" id="MediaTypeId">
+                <option value="">媒体类型</option>
+                @foreach (var item in types)
+                {
+                    <option value="@item.Id">@item.TypeName</option>
+                }
+
+            </select>
+        </div>
     </div>
 </div>
 @section Styles {
@@ -46,7 +61,7 @@
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
-            $("#Score").change(function () {
+            $("#Score").add("#MediaTypeId").change(function () {
                 refreshTable();
             });
         });
@@ -87,6 +102,7 @@
                 mobileResponsive: true,
                     queryParams: function (parameters) {
                         parameters.Score = $("#Score").val();
+                        parameters.MediaTypeId = $("#MediaTypeId").val();
                         return searchFrm.queryParams(parameters);
                     },
                     columns: [

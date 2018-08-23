@@ -24,14 +24,14 @@ namespace Ada.Framework
         public void Register(ContainerBuilder builder)
         {
             //注册数据存储
-            builder.Register<DbContext>(d => new AdaEFDbcontext()).InstancePerLifetimeScope();//EF上下文
-            builder.RegisterGeneric(typeof(AdaEFRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();//数据仓储
+            builder.Register<DbContext>(d => new AdaEFDbcontext()).InstancePerRequest();//EF上下文
+            builder.RegisterGeneric(typeof(AdaEFRepository<>)).As(typeof(IRepository<>)).InstancePerRequest();//数据仓储
             var isRedis = ConfigurationManager.AppSettings["RedisEnabled"];
             try
             {
                 if (string.Equals(isRedis, "true", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    builder.RegisterType<RedisCacheStorageProvider>().As<ICacheStorageProvider>().InstancePerLifetimeScope();
+                    builder.RegisterType<RedisCacheStorageProvider>().As<ICacheStorageProvider>().InstancePerRequest();
                 }
                 else
                 {
@@ -51,7 +51,7 @@ namespace Ada.Framework
             //注册依赖
             builder.RegisterAssemblyTypes(assemblys)
                 .Where(t => dependencyType.IsAssignableFrom(t) && t != dependencyType && !t.IsAbstract)
-                .AsImplementedInterfaces().InstancePerLifetimeScope();
+                .AsImplementedInterfaces().InstancePerRequest();
             //注册单例
             builder.RegisterAssemblyTypes(assemblys)
                 .Where(t => singletonType.IsAssignableFrom(t) && t != singletonType && !t.IsAbstract)

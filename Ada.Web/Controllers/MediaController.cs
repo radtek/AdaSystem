@@ -90,6 +90,10 @@ namespace Ada.Web.Controllers
         {
             return View();
         }
+        public ActionResult Writer()
+        {
+            return View();
+        }
         public ActionResult CommentDetail(string id)
         {
             var media = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -154,6 +158,8 @@ namespace Ada.Web.Controllers
                     IsRecommend = d.IsRecommend,
                     IsTop = d.IsTop,
                     MediaLogo = d.MediaLogo,
+                    ResourceType=d.ResourceType,
+                    Efficiency=d.Efficiency,
                     PriceProtectionDate = d.PriceProtectionDate,
                     PriceProtectionIsPrePay = d.PriceProtectionIsPrePay,
                     PriceProtectionRemark = d.PriceProtectionRemark,
@@ -598,7 +604,9 @@ namespace Ada.Web.Controllers
                 if (fields.Contains("PublishFrequency")) jo.Add("月发布频次", media.PublishFrequency);
                 if (fields.Contains("MonthPostNum")) jo.Add("最近月发文数", media.MonthPostNum);
                 if (fields.Contains("LastPushDate")) jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
-
+                //文案
+                if (fields.Contains("ResourceType")) jo.Add("擅长类型", media.ResourceType);
+                if (fields.Contains("Efficiency")) jo.Add("出稿速度", media.Efficiency);
                 if (fields.Contains("SellPrice"))
                 {
                     jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
@@ -673,6 +681,10 @@ namespace Ada.Web.Controllers
                             break;
                         case "zhihu":
                             jo.Add("地区", media.Area);
+                            break;
+                        case "writer":
+                            jo.Add("擅长类型", media.ResourceType);
+                            jo.Add("出稿速度", media.Efficiency);
                             break;
                     }
                 }

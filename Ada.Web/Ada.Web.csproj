@@ -2980,6 +2980,7 @@
     <Content Include="Views\Shared\_Layout_Home.cshtml" />
     <Content Include="Views\Login\Binding.cshtml" />
     <Content Include="Views\Shared\MangerInfo.cshtml" />
+    <Content Include="Views\Media\Writer.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

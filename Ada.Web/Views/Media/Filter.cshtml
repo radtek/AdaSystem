@@ -136,6 +136,15 @@ new SelectListItem(){Text = @"200-500万",Value = "200-500"},
 new SelectListItem(){Text = @"500万以上",Value = "500-"},
 };
             break;
+        case "writer":
+            priceRange = new List<SelectListItem>()
+            {
+                new SelectListItem(){Text = @"1000元以下",Value = "1-1000"},
+                new SelectListItem(){Text = @"1000-2000",Value = "1000-2000"},
+                new SelectListItem(){Text = @"2000-3000",Value = "2000-3000"},
+                new SelectListItem(){Text = @"3000元以上",Value = "3000-"},
+            };
+            break;
     }
 }
 
@@ -143,23 +152,26 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
     <div class="ibox-content m-b-sm border-bottom">
         <div class="row">
             @Html.AntiForgeryToken()
-
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="control-label">媒体分类</label>
-                    <div class="row">
-                        @foreach (var item in tags)
-                        {
-                            <div class="col-md-1 col-xs-6">
-                                <div class="checkbox checkbox-success checkbox-inline">
-                                    <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
-                                    <label for="@item.Id">@item.TagName</label>
+            @if (tags.Any())
+            {
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label">媒体分类</label>
+                        <div class="row">
+                            @foreach (var item in tags)
+                            {
+                                <div class="col-md-1 col-xs-6">
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
+                                        <label for="@item.Id">@item.TagName</label>
+                                    </div>
                                 </div>
-                            </div>
-                        }
+                            }
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
+            
             <div class="col-sm-12">
                 <div class="form-group">
                     <label class="control-label">价格区间 </label><small class="text-muted"> (注：请先选择广告位，再选择区间)</small>
@@ -203,37 +215,40 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
 
                 </div>
             </div>
+            @if (fansRange.Any())
+            {
+                <div class="col-sm-12">
+                    <div class="form-group" id="fans">
 
-            <div class="col-sm-12">
-                <div class="form-group" id="fans">
-
-                    <div class="row">
-                        <label class="control-label col-md-1">粉丝数 <small class="text-muted"> (单位：万)</small></label>
-                        <div class="col-md-6">
-                            <ul class="ul-labelauty">
-                                @foreach (var item in fansRange)
-                                {
-                                    <li><input type="radio" name="radio" data-labelauty="@item.Text" value="@item.Value"></li>
-                                }
-                            </ul>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="input-daterange input-group">
-                                <input type="text" name="FansNumStart" id="FansNumStart" value="" class="form-control" />
-                                <span class="input-group-addon">至</span>
-                                <div class="input-group">
-                                    <input type="text" name="FansNumEnd" id="FansNumEnd" value="" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
-                                            确定
-                                        </button>
-                                    </span>
+                        <div class="row">
+                            <label class="control-label col-md-1">粉丝数 <small class="text-muted"> (单位：万)</small></label>
+                            <div class="col-md-6">
+                                <ul class="ul-labelauty">
+                                    @foreach (var item in fansRange)
+                                    {
+                                        <li><input type="radio" name="radio" data-labelauty="@item.Text" value="@item.Value"></li>
+                                    }
+                                </ul>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="input-daterange input-group">
+                                    <input type="text" name="FansNumStart" id="FansNumStart" value="" class="form-control" />
+                                    <span class="input-group-addon">至</span>
+                                    <div class="input-group">
+                                        <input type="text" name="FansNumEnd" id="FansNumEnd" value="" class="form-control" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                                                确定
+                                            </button>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
+            
         </div>
         <div class="ibox collapsed">
             <div class="ibox-title">

@@ -270,7 +270,7 @@ function onLoadSuccess(data) {
             $('#resultModal').modal('show');
         }
     }
-
+    initTooltip();
 }
 
 function initFilter() {
@@ -362,7 +362,11 @@ formatter.mediaLogo = function (value, row) {
         detail = "<a class='btn btn-warning btn-outline btn-xs' href='/Media/Detail/" + row.Id + "' target='_blank'><i class='fa fa-info-circle'></i> 查看详情</a>";
     }
     var line = detail ? "<div class='p-xxs text-center'>" + detail + "</div>" : "";
-    var comment = "<div class='p-xxs text-center'><a class='btn btn-danger btn-outline btn-xs' href='/Media/CommentDetail/" + row.Id + "' target='_blank'><i class='fa fa-comment'></i> 评价详情</a></div>";
+    
+    var comment = "";
+    if (row.MediaTypeIndex != "writer") {
+        comment = "<div class='p-xxs text-center'><a class='btn btn-danger btn-outline btn-xs' href='/Media/CommentDetail/" + row.Id + "' target='_blank'><i class='fa fa-comment'></i> 评价详情</a></div>";
+    }
     return '<div class="p-xxs text-center">' + logo + '</div>' + vg + line + comment;
 };
 formatter.mediaInfo = function (value, row) {
@@ -394,7 +398,11 @@ formatter.mediaInfo = function (value, row) {
     if (row.Areas) {
         area = " <span class='btn btn-info btn-outline btn-xs'><i class='fa fa-map-marker'></i> " + row.Areas + "</span>";
     }
-    var fans = "<span class='btn btn-danger btn-xs btn-outline'><i class='fa fa-users'></i> 粉丝：" + (row.FansNum ? row.FansNum.toFixed(1) + " 万" : "不详") + "</span>";
+    var fans = "";
+    if (row.FansNum) {
+        fans = "<span class='btn btn-danger btn-xs btn-outline'><i class='fa fa-users'></i> 粉丝：" + row.FansNum.toFixed(1) + " 万</span>";
+    }
+        
     var tags = "";
     if (row.MediaTags) {
         var arr = [];
@@ -420,14 +428,27 @@ formatter.mediaInfo = function (value, row) {
             value = " <a class='label' href='" + row.MediaLink + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
         }
     }
+    var remark = "";
+    if (row.MediaTypeIndex == "writer") {
+        var temp = row.Content ? row.Content : "暂无相关简介";
+        remark = '<span class="btn btn-info btn-xs btn-outline" data-toggle="tooltip" data-placement="bottom" title="' + temp+'">' +
+            '<i class="fa fa-address-card-o"></i> 文案简介</span>';
+    }
+    var article = "";
+    if (row.MediaTypeIndex == "writer") {
+        article = "<a class='btn btn-danger btn-xs btn-outline' href='javascript:;' onclick=\"articleDetails('" +
+            row.Id +
+            "');\");'><i class='fa fa-newspaper-o'></i> 查看案例</a> ";
+    }
     var line1 = "<div class='p-xxs'>" + sex + isAuth + value + "</div>";
     var line2 = weixinid ? "<div class='p-xxs'>" + weixinid + "</div>" : "";
     var line3 = area ? "<div class='p-xxs'>" + area + "</div>" : "";
     var line0 = aType ? "<div class='p-xxs'>" + aType + "</div>" : "";
     var line4 = tags ? "<div class='p-xxs'>" + tags + "</div>" : "";
-    var line5 = "<div class='p-xxs'>" + fans + "</div>";
-
-    return line1 + line2 + line3 + line0 + line4 + line5;
+    var line5 = fans ? "<div class='p-xxs'>" + fans + "</div>" : "";
+    var line6 = remark ? "<div class='p-xxs'>" + remark + "</div>" : "";
+    var line7 = article ? "<div class='p-xxs'>" + article + "</div>" : "";
+    return line1 + line2 + line3 + line0 + line4 + line5 + line6 + line7;
 };
 formatter.mediaPrice = function (value, row) {
     var arr = [];
@@ -533,6 +554,15 @@ formatter.mediaData = function (value, row) {
     if (row.LikesNum) {
         zc = " <span class='label label-info'>赞与收藏：" + row.LikesNum + "</span>";
     }
+    var sclx = "";
+    if (row.ResourceType) {
+        sclx = " <span class='label label-info'>擅长类型：" + row.ResourceType + "</span>";
+    }
+    var cgsd = "";
+    if (row.Efficiency) {
+        cgsd = " <span class='label label-info'>出稿速度：" + row.Efficiency + "</span>";
+    }
+   
     var line1 = read ? "<div class='p-xxs'>" + read + "</div>" : "";
     var line2 = like ? "<div class='p-xxs'>" + like + "</div>" : "";
     var line3 = comment ? "<div class='p-xxs'>" + comment + "</div>" : "";
@@ -547,6 +577,8 @@ formatter.mediaData = function (value, row) {
     var linesc = sc ? "<div class='p-xxs'>" + sc + "</div>" : "";
     var linebj = bj ? "<div class='p-xxs'>" + bj + "</div>" : "";
     var linezc = zc ? "<div class='p-xxs'>" + zc + "</div>" : "";
+    var linesclx = sclx ? "<div class='p-xxs'>" + sclx + "</div>" : "";
+    var linecgsd = cgsd ? "<div class='p-xxs'>" + cgsd + "</div>" : "";
     var line = "";
     if (row.MediaTypeIndex == "weixin") {
         line = line1 + line6 + line4 + line9 + line7;
@@ -559,6 +591,9 @@ formatter.mediaData = function (value, row) {
     }
     if (row.MediaTypeIndex == "redbook") {
         line = linedz + line3 + linesc + line8 + linezc + linebj;
+    }
+    if (row.MediaTypeIndex == "writer") {
+        line = linesclx + linecgsd;
     }
     return line || "<span class='label label-warning'>抱歉！暂无相关数据</span>";
 };
@@ -1184,4 +1219,12 @@ function exportGroup() {
             subBtn.ladda('stop');
         }
     });
+}
+
+function articleDetails(id) {
+    $("#modalView").load("/Resource/Media/ArticleDetails?id=" + id,
+        function () {
+            $('#modalView .modal').modal('show');
+        });
+
 }

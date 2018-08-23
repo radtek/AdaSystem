@@ -45,7 +45,10 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.Media.MediaName.Contains(viewModel.search) || d.Media.MediaID.Contains(viewModel.search)&&d.Transactor.Contains(viewModel.search));
             }
-
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeId))
+            {
+                allList = allList.Where(d => d.Media.MediaTypeId==viewModel.MediaTypeId);
+            }
             if (viewModel.Score!=null)
             {
                 allList = allList.Where(d => d.Score == viewModel.Score);

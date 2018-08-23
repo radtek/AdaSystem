@@ -104,6 +104,10 @@
     <Compile Include="Domain\Business\OfferRatio.cs" />
     <Compile Include="Domain\Business\OfferRatioDetail.cs" />
     <Compile Include="Domain\Business\OrderDetailComment.cs" />
+    <Compile Include="Domain\Common\Attachment.cs" />
+    <Compile Include="Domain\Common\Feedback.cs" />
+    <Compile Include="Domain\Content\Article.cs" />
+    <Compile Include="Domain\Content\Column.cs" />
     <Compile Include="Domain\Customer\Commpany.cs" />
     <Compile Include="Domain\Customer\LinkMan.cs" />
     <Compile Include="Domain\Business\BusinessOffer.cs" />

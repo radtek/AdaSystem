@@ -438,8 +438,8 @@ namespace Ada.Web.Controllers
                     return Content("此文件没有导入数据，请填充数据再进行导入");
                 }
 
-                var transactor = "吴璇";
-                var transactorId = "X1801180851430024";
+                var transactor = "郑娜";
+                var transactorId = "X1807031436217658";
                 for (int i = 1; i <= sheet.LastRowNum; i++)
                 {
                     IRow row = sheet.GetRow(i);
