@@ -84,18 +84,22 @@ namespace QuartzTask.Jobs
                                         var mediaInfo = result.data[0];
                                         if (mediaInfo != null)
                                         {
-                                            media.MediaName = Utils.FilterEmoji(mediaInfo.screenName);
-                                            media.Content = mediaInfo.biography;
-                                            media.FansNum = mediaInfo.fansCount;
-                                            media.PostNum = mediaInfo.postCount;
-                                            media.MediaLink = mediaInfo.url;
-                                            media.FriendNum = mediaInfo.followCount;
-                                            media.LikesNum = mediaInfo.likeCount;
-                                            media.MediaLogo = mediaInfo.avatarUrl;
-                                            media.AuthenticateType = mediaInfo.idGrade;
-                                            media.Area = string.IsNullOrWhiteSpace(mediaInfo.location)
-                                                ? null
-                                                : mediaInfo.location.Trim();
+                                            if (!string.IsNullOrWhiteSpace(mediaInfo.screenName))
+                                            {
+                                                media.MediaName = Utils.FilterEmoji(mediaInfo.screenName);
+                                                media.Content = mediaInfo.biography;
+                                                media.FansNum = mediaInfo.fansCount;
+                                                media.PostNum = mediaInfo.postCount;
+                                                media.MediaLink = mediaInfo.url;
+                                                media.FriendNum = mediaInfo.followCount;
+                                                media.LikesNum = mediaInfo.likeCount;
+                                                media.MediaLogo = mediaInfo.avatarUrl;
+                                                media.AuthenticateType = mediaInfo.idGrade;
+                                                media.Area = string.IsNullOrWhiteSpace(mediaInfo.location)
+                                                    ? null
+                                                    : mediaInfo.location.Trim();
+                                            }
+                                            
                                            
                                         }
 

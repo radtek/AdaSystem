@@ -264,6 +264,9 @@
                                     <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-user">
+                                    <li>
+                                        <a href="javascript:getTop('业务一部','', 'ibox1');">全部</a>
+                                    </li>
                                     @for (int i = 0; i < 12; i++)
                                     {
                                         <li>
@@ -287,6 +290,7 @@
                                         <th>销售额（不含税）</th>
                                         <th>利润率(%)</th>
                                         <th>利润</th>
+                                        <th>回款率(%)</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -303,6 +307,9 @@
                                     <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-user">
+                                    <li>
+                                        <a href="javascript:getTop('业务二部','', 'ibox2');">全部</a>
+                                    </li>
                                     @for (int i = 0; i < 12; i++)
                                     {
                                         <li>
@@ -325,6 +332,7 @@
                                         <th>销售额（不含税）</th>
                                         <th>利润率(%)</th>
                                         <th>利润</th>
+                                        <th>回款率(%)</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -377,7 +385,7 @@
 
         function getTop(oname,date, id) {
             var $top = $("#" + id),$table = $("#" + id + " tbody");
-            $("#" + id + " .currentdate").text(date);
+            $("#" + id + " .currentdate").text(date||"全部");
             $.ajax({
                 type: "get",
                 url: "@Url.Action("GetBusinessPerformance")",
@@ -386,12 +394,17 @@
                     $table.empty();
                     var totalSell = 0, totalProfit = 0;
                     $.each(data,
-                        function(k, v) {
+                        function (k, v) {
+                            var hkl = 0;
+                            if (v.TotalSellMoney>0) {
+                                hkl = (v.TotalConfirmVerificationMoney / v.TotalSellMoney)*100;
+                            }
                             $table.append('<tr>' +
                                 '<td class="text-center">' + (k + 1) + '</td><td>' + v.Transactor+'</td>' +
                                 '<td><span class="label label-primary">¥ ' + v.TotalSellMoney + '</span></td>' +
-                                '<td><span class="label label-info">' + v.Profit + '</span></td>' +
-                                '<td><span class="label label-warning">¥ ' +v.TotalProfitMoney+'</span></td>' +
+                                '<td><span class="label label-info">' + v.Profit.toFixed(2) + '</span></td>' +
+                                '<td><span class="label label-warning">¥ ' + v.TotalProfitMoney + '</span></td>' +
+                                '<td><span class="label label-danger">' + hkl.toFixed(2) + '</span></td>' +
                                 '</tr>');
                             totalSell += v.TotalSellMoney;
                             totalProfit += v.TotalProfitMoney;
@@ -400,7 +413,8 @@
                         '<td class="text-center"></td><td>合计</td>' +
                         '<td><span class="label label-primary">¥ ' + totalSell.toFixed(2) + '</span></td>' +
                         '<td></td>' +
-                        '<td><span class="label label-warning">¥ ' + totalProfit.toFixed(2)+'</span></td>' +
+                        '<td><span class="label label-warning">¥ ' + totalProfit.toFixed(2) + '</span></td>' +
+                        '<td></td>' +
                         '</tr>');
                 },
                 error: function () {

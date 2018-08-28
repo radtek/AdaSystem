@@ -123,6 +123,7 @@
     <Compile Include="Mapping\WeiXin\WeiXinKeywordMatchMap.cs" />
     <Compile Include="Mapping\WeiXin\WeiXinKeywordMap.cs" />
     <Compile Include="Mapping\WeiXin\WeiXinAccountMap.cs" />
+    <Compile Include="Mapping\WorkFlow\WorkFlowDefinitionMap.cs" />
     <Compile Include="Migrations\201710221333304_ManagerLoginLog.cs" />
     <Compile Include="Migrations\201710221333304_ManagerLoginLog.Designer.cs">
       <DependentUpon>201710221333304_ManagerLoginLog.cs</DependentUpon>
