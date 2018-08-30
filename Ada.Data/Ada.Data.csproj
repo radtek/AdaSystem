@@ -81,6 +81,11 @@
     <Compile Include="Mapping\Business\OrderDetailCommentMap.cs" />
     <Compile Include="Mapping\Business\OfferRatioDetailMap.cs" />
     <Compile Include="Mapping\Business\OfferRatioMap.cs" />
+    <Compile Include="Mapping\Common\AttachmentMap.cs" />
+    <Compile Include="Mapping\Common\FeedbackMap.cs" />
+    <Compile Include="Mapping\Common\FansMap.cs" />
+    <Compile Include="Mapping\Content\ArticleMap.cs" />
+    <Compile Include="Mapping\Content\ColumnMap.cs" />
     <Compile Include="Mapping\Customer\FollowUpMap.cs" />
     <Compile Include="Mapping\Customer\PayAccountMap.cs" />
     <Compile Include="Mapping\Customer\LinkManMap.cs" />
@@ -123,6 +128,8 @@
     <Compile Include="Mapping\WeiXin\WeiXinKeywordMatchMap.cs" />
     <Compile Include="Mapping\WeiXin\WeiXinKeywordMap.cs" />
     <Compile Include="Mapping\WeiXin\WeiXinAccountMap.cs" />
+    <Compile Include="Mapping\WorkFlow\WorkFlowActivityMap.cs" />
+    <Compile Include="Mapping\WorkFlow\WorkFlowsTransitionMap.cs" />
     <Compile Include="Mapping\WorkFlow\WorkFlowDefinitionMap.cs" />
     <Compile Include="Migrations\201710221333304_ManagerLoginLog.cs" />
     <Compile Include="Migrations\201710221333304_ManagerLoginLog.Designer.cs">
@@ -356,6 +363,10 @@
     <Compile Include="Migrations\201808030343398_UpdateQuarters.Designer.cs">
       <DependentUpon>201808030343398_UpdateQuarters.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808300324187_UserProfile.cs" />
+    <Compile Include="Migrations\201808300324187_UserProfile.Designer.cs">
+      <DependentUpon>201808300324187_UserProfile.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -546,6 +557,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808030343398_UpdateQuarters.resx">
       <DependentUpon>201808030343398_UpdateQuarters.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808300324187_UserProfile.resx">
+      <DependentUpon>201808300324187_UserProfile.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

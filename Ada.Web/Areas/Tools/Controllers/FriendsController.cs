@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Ada.Framework.Filter;
+using Tools.Models;
 
 namespace Tools.Controllers
 {
@@ -12,7 +13,8 @@ namespace Tools.Controllers
         // GET: Friends
         public ActionResult Index()
         {
-            return View();
+            FriendsSet view=new FriendsSet();
+            return View(view);
         }
         [AllowAnonymous]
         public ActionResult Preview()

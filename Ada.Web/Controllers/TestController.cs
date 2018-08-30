@@ -411,10 +411,10 @@ namespace Ada.Web.Controllers
                     var mediaId = row.GetCell(0)?.ToString();
                     var media = _media.LoadEntities(d => d.Id == mediaId.Trim()).FirstOrDefault();
                     if (media == null) continue;
-                    media.Transactor = "郑娜";
-                    media.TransactorId = "X1807031436217658";
-                    media.LinkMan.Transactor = "郑娜";
-                    media.LinkMan.TransactorId = "X1807031436217658";
+                    media.Transactor = "刘雪";
+                    media.TransactorId = "X1807121117097012";
+                    media.LinkMan.Transactor = "刘雪";
+                    media.LinkMan.TransactorId = "X1807121117097012";
 
                     count++;
                 }

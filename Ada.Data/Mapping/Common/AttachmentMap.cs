@@ -1,24 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.ModelConfiguration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ada.Core.Domain.WeiXin;
-using Ada.Core.Domain.WorkFlow;
+﻿using System.Data.Entity.ModelConfiguration;
+using Ada.Core.Domain.Common;
+using Ada.Core.Domain.Content;
 
-namespace Ada.Data.Mapping.WorkFlow
+namespace Ada.Data.Mapping.Common
 {
-    public class WorkFlowDefinitionMap : EntityTypeConfiguration<WorkFlowDefinition>
+    public class AttachmentMap : EntityTypeConfiguration<Attachment>
     {
-        public WorkFlowDefinitionMap()
+        public AttachmentMap()
         {
             //配置主键
             HasKey(s => s.Id);
             //配置字段
 
-            Property(s => s.Name).IsRequired().HasMaxLength(32);
-
+            Property(s => s.Title).HasMaxLength(128);
+            Property(s => s.Describe).HasMaxLength(512);
+            Property(s => s.Path).HasMaxLength(512);
+            Property(s => s.ThumbPath).HasMaxLength(512);
+            Property(s => s.FileExt).HasMaxLength(8);
 
             Property(s => s.AddedBy).HasMaxLength(32);
             Property(s => s.AddedById).HasMaxLength(32);
@@ -31,7 +29,7 @@ namespace Ada.Data.Mapping.WorkFlow
             Property(s => s.Remark).HasMaxLength(1024);
 
             //配置表
-            ToTable("WorkFlowDefinition");
+            ToTable("Attachment");
         }
     }
 }

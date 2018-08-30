@@ -47,22 +47,34 @@
                     </div>
                     <div class="col-sm-2">
                         <div class="form-group">
+                            @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark) + "：", new { @class = "control-label" })
+                            @Html.TextBoxFor(d => d.Remark, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
                             @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status) + "：", new { @class = "control-label" })
                             @Html.DropDownListFor(d => d.Status, purchaseStatus, "请选择", new { @class = "form-control input-sm" })
                         </div>
                     </div>
                     @*<div class="col-sm-3">
-                <div class="form-group">
-                    @Html.LabelFor(d => d.PublishDateStartEnd, Html.DisplayNameFor(d => d.PublishDateStartEnd) + "：", new { @class = "control-label" })
-                    @Html.TextBoxFor(d => d.PublishDateStartEnd, new { @class = "form-control input-sm", @readonly = "" })
-                    @Html.HiddenFor(d => d.PublishDateStart)
-                    @Html.HiddenFor(d => d.PublishDateEnd)
-                </div>
-            </div>*@
+            <div class="form-group">
+                @Html.LabelFor(d => d.PublishDateStartEnd, Html.DisplayNameFor(d => d.PublishDateStartEnd) + "：", new { @class = "control-label" })
+                @Html.TextBoxFor(d => d.PublishDateStartEnd, new { @class = "form-control input-sm", @readonly = "" })
+                @Html.HiddenFor(d => d.PublishDateStart)
+                @Html.HiddenFor(d => d.PublishDateEnd)
+            </div>
+        </div>*@
                     <div class="col-sm-2">
                         <div class="form-group">
                             @Html.LabelFor(d => d.IsPayment, Html.DisplayNameFor(d => d.IsPayment) + "：", new { @class = "control-label" })
                             @Html.DropDownListFor(d => d.IsPayment, yesnos, "请选择", new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            @Html.LabelFor(d => d.IsLose, Html.DisplayNameFor(d => d.IsLose) + "：", new { @class = "control-label" })
+                            @Html.DropDownListFor(d => d.IsLose, yesnos, "请选择", new { @class = "form-control input-sm" })
                         </div>
                     </div>
                     <div class="col-sm-2">
@@ -204,15 +216,11 @@
                     },
                     {
                         field: 'MediaTypeName',
-                        title: '@Html.DisplayNameFor(d=>d.MediaTypeName)',
-                        align: "center", valign: "middle",
+                        title: '媒体信息',
+                        align: "left", valign: "middle", formatter: function (value,row) {
+                            return value + " - " + row.MediaName;
+                        }
                     },
-                    {
-                        field: 'MediaName',
-                        title: '@Html.DisplayNameFor(d=>d.MediaName)',
-                        align: "left", valign: "middle"
-                    }
-                    ,
                     {
                         field: 'AdPositionName',
                         title: '@Html.DisplayNameFor(d=>d.AdPositionName)',
@@ -222,17 +230,6 @@
                         field: 'CostMoney',
                         title: '@Html.DisplayNameFor(d=>d.CostMoney)',
                         align: "center", valign: "middle",
-                    },
-                    {
-                        field: 'Money',
-                        title: '@Html.DisplayNameFor(d=>d.Money)',
-                        align: "center", valign: "middle",
-                        footerFormatter: function (data) {
-                            if (data[0]) {
-                                return data[0].TotalMoney;
-                            }
-                            return 0;
-                        }
                     },
                     {
                         field: 'PurchaseMoney',
@@ -247,6 +244,18 @@
                     }
                     ,
                     {
+                        field: 'Money',
+                        title: '@Html.DisplayNameFor(d=>d.Money)',
+                        align: "center", valign: "middle",
+                        footerFormatter: function (data) {
+                            if (data[0]) {
+                                return data[0].TotalMoney;
+                            }
+                            return 0;
+                        }
+                    },
+                    
+                    {
                         field: 'TaxMoney',
                         title: '@Html.DisplayNameFor(d=>d.TaxMoney)',
                         align: "center", valign: "middle",
@@ -258,15 +267,10 @@
                         }
                     },
                     {
-                        field: 'DiscountMoney',
-                        title: '@Html.DisplayNameFor(d=>d.DiscountMoney)',
-                        align: "center", valign: "middle",
-                        footerFormatter: function (data) {
-                            if (data[0]) {
-                                return data[0].TotalDiscountMoney;
-                            }
-                            return 0;
-                        }
+                        field: 'Remark',
+                        title: '@Html.DisplayNameFor(d=>d.Remark)',
+                        align: "center", valign: "middle"
+                        
                     },
                     {
                         field: 'PublishDate',

@@ -49,6 +49,7 @@ namespace DataReport.Controllers
                     CostMoney = d.CostMoney,
                     PurchaseMoney = d.PurchaseMoney,
                     Tax = d.Tax,
+                    Remark = d.Remark,
                     TaxMoney = d.TaxMoney,
                     DiscountMoney = d.DiscountMoney,
                     Money = d.Money,

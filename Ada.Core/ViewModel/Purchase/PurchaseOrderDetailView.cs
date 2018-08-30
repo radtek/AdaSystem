@@ -263,5 +263,10 @@ namespace Ada.Core.ViewModel.Purchase
         /// </summary>
         [Display(Name = "图片")]
         public string Image { get; set; }
+        /// <summary>
+        /// 是否亏损
+        /// </summary>
+        [Display(Name = "是否亏损")]
+        public bool? IsLose { get; set; }
     }
 }

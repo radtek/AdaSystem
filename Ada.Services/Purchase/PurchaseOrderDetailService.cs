@@ -45,7 +45,7 @@ namespace Ada.Services.Purchase
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.MediaName.Contains(viewModel.search)|| d.LinkManName.Contains(viewModel.search)|| d.MediaTitle.Contains(viewModel.search));
+                allList = allList.Where(d => d.MediaName.Contains(viewModel.search) || d.LinkManName.Contains(viewModel.search) || d.MediaTitle.Contains(viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaName))
             {
@@ -74,6 +74,10 @@ namespace Ada.Services.Purchase
             {
                 allList = allList.Where(d => d.LinkManId.Contains(viewModel.LinkManId));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.Remark))
+            {
+                allList = allList.Where(d => d.Remark.Contains(viewModel.Remark));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.Transactor))
             {
                 allList = allList.Where(d => d.Transactor.Contains(viewModel.Transactor));
@@ -92,7 +96,11 @@ namespace Ada.Services.Purchase
             }
             if (viewModel.IsPayment == true)//过滤没有请款的，并且采购失败的
             {
-                allList = allList.Where(d => d.PurchasePaymentOrderDetails.Count>0);
+                allList = allList.Where(d => d.PurchasePaymentOrderDetails.Count > 0);
+            }
+            if (viewModel.IsLose == true)
+            {
+                allList = allList.Where(d => d.PurchaseMoney > d.CostMoney);
             }
             if (viewModel.PublishDateStart != null)
             {

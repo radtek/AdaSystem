@@ -106,6 +106,7 @@
     <Compile Include="Domain\Business\OrderDetailComment.cs" />
     <Compile Include="Domain\Common\Attachment.cs" />
     <Compile Include="Domain\Common\Feedback.cs" />
+    <Compile Include="Domain\Common\Fans.cs" />
     <Compile Include="Domain\Content\Article.cs" />
     <Compile Include="Domain\Content\Column.cs" />
     <Compile Include="Domain\Customer\Commpany.cs" />
@@ -215,6 +216,7 @@
     <Compile Include="ViewModel\Business\BusinessPaymentView.cs" />
     <Compile Include="ViewModel\Business\InvoiceWriteOffView.cs" />
     <Compile Include="ViewModel\Business\OrderDetailCommentView.cs" />
+    <Compile Include="ViewModel\Common\FansView.cs" />
     <Compile Include="ViewModel\LoginModel.cs" />
     <Compile Include="ViewModel\Purchase\PurchaseReturnOrderView.cs" />
     <Compile Include="ViewModel\Resource\MediaAppointmentView.cs" />

@@ -1,6 +1,6 @@
 ﻿
 @using System.Web.Optimization
-
+@model Tools.Models.FriendsSet
 @{
     ViewBag.Title = "朋友圈生成器";
 
@@ -22,36 +22,497 @@
 </div>
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <p class="bg-danger">@Html.ValidationMessage("message") </p>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>手机配置</h5>
+                    </div>
+                    <div class="ibox-content">
 
-                <div class="ibox-content">
-                    @using (Html.BeginForm())
-                    {
-                        @Html.AntiForgeryToken()
-                        <p class="bg-danger">@Html.ValidationMessage("message") </p>
                         <div class="form-horizontal">
-                            <h3>相关参数配置</h3>
-                            
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.PhoneType, Html.DisplayNameFor(d => d.PhoneType).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @{
+                                        var iphoneX = Model.PhoneType == "iphoneX" ? "checked=''" : "";
+                                        var iPhone = Model.PhoneType == "iphone" ? "checked=''" : "";
+                                        var iPhoneP = Model.PhoneType == "iphone+" ? "checked=''" : "";
+                                    }
+                                    <div class="radio radio-success radio-inline">
+                                        <input type="radio" id="iphoneX" name="PhoneType" value="iphoneX" @iphoneX>
+                                        <label for="iphoneX"> iPhone X </label>
+                                    </div>
+                                    <div class="radio radio-success radio-inline">
+                                        <input type="radio" id="iPhone" name="PhoneType" value="iphone" @iPhone>
+                                        <label for="iPhone"> iPhone </label>
+                                    </div>
+                                    <div class="radio radio-success radio-inline">
+                                        <input type="radio" id="iPhone+" name="PhoneType" value="iphone+" @iPhoneP>
+                                        <label for="iPhone+"> iPhone Plus </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">手机图标</label>
+
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            @Html.DropDownListFor(d => d.Signal, new List<SelectListItem>()
+                                            {
+                                                new SelectListItem(){Value = "1",Text = "1格"},
+                                                new SelectListItem(){Value = "2",Text = "2格"},
+                                                new SelectListItem(){Value = "3",Text = "3格"},
+                                                new SelectListItem(){Value = "4",Text = "4格"},
+                                                new SelectListItem(){Value = "5",Text = "5格"}
+                                            },"信号",new { @class = "form-control" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.DropDownListFor(d => d.Operator, new List<SelectListItem>()
+                                            {
+                                                new SelectListItem(){Value = "中国移动",Text = "中国移动"},
+                                                new SelectListItem(){Value = "中国联通",Text = "中国联通"},
+                                                new SelectListItem(){Value = "中国电信",Text = "中国电信"}
+                                            },"运营商",new { @class = "form-control" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.DropDownListFor(d => d.Network, new List<SelectListItem>()
+                                            {
+                                                new SelectListItem(){Value = "WIFI",Text = "WIFI"},
+                                                new SelectListItem(){Value = "4G",Text = "4G"},
+                                                new SelectListItem(){Value = "3G",Text = "3G"}
+                                            },"网络制式",new { @class = "form-control" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.TextBoxFor(d => d.Power, new { @class = "form-control", type = "number", placeholder = "电量值" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <div class="col-sm-4 col-sm-offset-2">
-                                    <a class="btn btn-success" href="@Url.Action("Preview")" target="_blank"><i class="fa fa-floppy-o"></i> 预览</a>
+                                <label class="col-sm-2 control-label">其他图标</label>
+                                <div class="col-sm-10">
+                                    @{
+                                        var isCheckedLock = Model.LockIco ? "checked=''" : "";
+                                        var isCheckedLocation = Model.LocationIco ? "checked=''" : "";
+                                        var isCheckedClock = Model.ClockIco ? "checked=''" : "";
+                                        var isCheckedBluetooth = Model.BluetoothIco ? "checked=''" : "";
+                                        var isCheckedPower = Model.PowerIco ? "checked=''" : "";
+                                    }
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" id="LockIco" name="LockIco" value="true" @isCheckedLock>
+                                        <label for="LockIco"> 锁定 </label>
+                                    </div>
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" id="LocationIco" name="LocationIco" value="true" @isCheckedLocation>
+                                        <label for="LocationIco"> 定位 </label>
+                                    </div>
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" id="ClockIco" name="ClockIco" value="true" @isCheckedClock>
+                                        <label for="ClockIco"> 闹钟 </label>
+                                    </div>
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" id="BluetoothIco" name="BluetoothIco" value="true" @isCheckedBluetooth>
+                                        <label for="BluetoothIco"> 蓝牙 </label>
+                                    </div>
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" id="PowerIco" name="PowerIco" value="true" @isCheckedPower>
+                                        <label for="PowerIco"> 电量 </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    }
 
+
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>内容配置</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.FriendId, Html.DisplayNameFor(d => d.FriendId).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    <select class="form-control" required="" name="FriendId" id="FriendId">
+                                        <option value="@Model.FriendId">@Model.FriendId</option>
+                                    </select>
+                                    @Html.HiddenFor(d => d.FriendName)
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.ContentType, Html.DisplayNameFor(d => d.ContentType).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(d => d.ContentType, new List<SelectListItem>()
+                                    {
+                                        new SelectListItem() {Value = "text", Text = "文字"},
+                                        new SelectListItem() {Value = "image", Text = "图片"},
+                                        new SelectListItem() {Value = "link", Text = "链接"}
+                                    }, "请选择", new {@class = "form-control"})
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Text, Html.DisplayNameFor(d => d.Text).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextAreaFor(d => d.Text, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.LinkContent, Html.DisplayNameFor(d => d.LinkContent).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.LinkContent, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Images, Html.DisplayNameFor(d => d.Images).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;"></div>
+                                        <div>
+                                            <span class="btn btn-success btn-sm btn-file">
+                                                <span class="fileinput-new">选择图片</span><span class="fileinput-exists">更换图片</span>
+                                                <input type="file" name="Images">
+                                            </span>
+                                            <a href="#" class="btn btn-warning btn-sm fileinput-exists" data-dismiss="fileinput">移除图片</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.PublishDate, Html.DisplayNameFor(d => d.PublishDate).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.PublishDate, new { @class = "form-control", placeholder = "发布时间" })
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Likes, Html.DisplayNameFor(d => d.Likes).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.Likes, new { @class = "form-control", type = "number" })
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Comments, Html.DisplayNameFor(d => d.Comments).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.Comments, new { @class = "form-control", type = "number" })
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-12 col-sm-offset-2">
+                                    <button class="btn btn-primary btn-outline" type="button"><i class="fa fa-paper-plane"></i> 发布朋友圈</button>
+                                    <button class="btn btn-danger btn-outline" type="button"><i class="fa fa-crop"></i> 朋友圈截图</button>
+                                    <button class="btn btn-warning btn-outline" type="button"><i class="fa fa-crop"></i> 详情页截图</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>内容预览</h5>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div class="social-feed-box">
+                            <div class="pull-right social-action dropdown">
+                                <button data-toggle="dropdown" class="dropdown-toggle btn-white">
+                                    <i class="fa fa-angle-down"></i>
+                                </button>
+                                <ul class="dropdown-menu m-t-xs">
+                                    <li><a href="javascript:;">新增留言</a></li>
+                                    <li><a href="javascript:;">删除内容</a></li>
+                                </ul>
+                            </div>
+                            <div class="social-avatar">
+                                <a href="" class="pull-left">
+                                    <img alt="image" src="~/Images/a1.jpg">
+                                </a>
+                                <div class="media-body">
+                                    <a href="javascript:;">
+                                        测试1
+                                    </a>
+                                    <small class="text-muted">2018-08-08 11:11:11</small>
+                                </div>
+                            </div>
+                            <div class="social-body">
+                                <p>
+                                    发布的纯文字内容，很长很长。。。。。。。。。。
+                                </p>
+
+                                <div class="btn-group">
+                                    <button class="btn btn-danger btn-xs"><i class="fa fa-heart"></i> 1000</button>
+                                </div>
+                            </div>
+                            <div class="social-footer">
+                                <div class="social-comment">
+                                    <a href="" class="pull-left">
+                                        <img alt="image" src="~/Images/a1.jpg">
+                                    </a>
+                                    <div class="media-body">
+                                        <span class="label">
+                                            某某1
+                                        </span>
+                                        <a href="#" class="editable m-l">回复内容11</a>
+                                        <br />
+                                        <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
+                                        <small class="text-muted"><a href="#" class="editable">1分钟前</a></small>
+                                    </div>
+                                </div>
+
+                                <div class="social-comment">
+                                    <a href="" class="pull-left">
+                                        <img alt="image" src="~/Images/a2.jpg">
+                                    </a>
+                                    <div class="media-body">
+                                        <span class="label">
+                                            某某2
+                                        </span>
+                                        <a href="#" class="editable m-l">回复内容22</a>
+                                        <br />
+                                        <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
+                                        <small class="text-muted"><a href="#" class="editable">11:12</a></small>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="social-feed-box">
+                            <div class="pull-right social-action dropdown">
+                                <button data-toggle="dropdown" class="dropdown-toggle btn-white">
+                                    <i class="fa fa-angle-down"></i>
+                                </button>
+                                <ul class="dropdown-menu m-t-xs">
+                                    <li><a href="javascript:;">新增留言</a></li>
+                                    <li><a href="javascript:;">删除内容</a></li>
+                                </ul>
+                            </div>
+                            <div class="social-avatar">
+                                <a href="" class="pull-left">
+                                    <img alt="image" src="~/Images/a6.jpg">
+                                </a>
+                                <div class="media-body">
+                                    <a href="javascript:;">
+                                        测试1
+                                    </a>
+                                    <small class="text-muted">2018-08-11 11:11:11</small>
+                                </div>
+                            </div>
+                            <div class="social-body">
+                                <p>
+                                    发布的图片内容，很长的文字。。。。。。。。。。
+                                </p>
+                                <img src="~/Images/gallery/3.jpg" class="img-responsive">
+                                <div class="btn-group">
+                                    <button class="btn btn-danger btn-xs"><i class="fa fa-heart"></i> 1000</button>
+                                </div>
+                            </div>
+                            <div class="social-footer">
+                                <div class="social-comment">
+                                    <a href="" class="pull-left">
+                                        <img alt="image" src="~/Images/a1.jpg">
+                                    </a>
+                                    <div class="media-body">
+                                        <a href="javascript:;">
+                                            某某2
+                                        </a>
+                                        回复内容22.
+                                        <br />
+                                        <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
+                                        <small class="text-muted">11:12</small>
+                                    </div>
+                                </div>
+
+                                <div class="social-comment">
+                                    <a href="" class="pull-left">
+                                        <img alt="image" src="~/Images/a2.jpg">
+                                    </a>
+                                    <div class="media-body">
+                                        <a href="javascript:;">
+                                            某某3
+                                        </a>
+                                        回复内容33.
+                                        <br />
+                                        <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
+                                        <small class="text-muted">11:32</small>
+                                    </div>
+                                </div>
+
+                                <div class="social-comment">
+                                    <a href="" class="pull-left">
+                                        <img alt="image" src="~/Images/a8.jpg">
+                                    </a>
+                                    <div class="media-body">
+                                        <a href="javascript:;">
+                                            某某4
+                                        </a>
+                                        回复内容44.
+                                        <br />
+                                        <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
+                                        <small class="text-muted">11:42</small>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
 </div>
 
 
 @section Styles {
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
+    @Styles.Render("~/plugins/select2Styles")
+    @Styles.Render("~/plugins/jasnyBootstrapStyles")
+    @Styles.Render("~/plugins/dateRangeStyles")
+    @Styles.Render("~/plugins/bootstrapEditTableStyle")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/select2")
+    @Scripts.Render("~/plugins/jasnyBootstrap")
+    @Scripts.Render("~/plugins/dateRange")
+    @Scripts.Render("~/plugins/bootstrapEditTableScript")
+    <script>
+
+        $(function () {
+            var options = {};
+            options.id = "FriendId";
+            options.url = "@Url.Action("GetList","Fans")";
+            options.paramsData = function (params) {
+                return {
+                    search: params.term
+                };
+            };
+            options.processResults = function (data, params) {
+                var result = $.map(data.rows,
+                    function (v, k) {
+                        return { id: v.Id, text: v.NickName, avatar: v.Avatar };
+                    });
+                return {
+                    results: result
+                };
+            };
+            options.formatRepo = function (repo) {
+                if (repo.loading) {
+                    return repo.text;
+                }
+                return "<p>" + repo.avatar + " 【 " + repo.text + " 】 <p>";
+            };
+            options.formatRepoSelection = function (repo) {
+                $("#FriendName").val(repo.text);
+                return repo.text;
+            };
+            initSelect2(options);
+            initDate();
+            initEditTable();
+            $(".wrapper.wrapper-content form").validate({
+                submitHandler: function (form) {
+                    //form.submit();
+                }
+            });
+        });
+
+        function initEditTable() {
+           $('.editable').editable({
+                type: 'text',
+                mode: "inline",
+                emptytext: '请输入'
+            });
+        }
+        function initDate() {
+            $('input[name="PublishDate"]').daterangepicker({
+                timePicker: true,
+                timePicker24Hour: true,
+                drops: "up",
+                startDate: moment().startOf('hour'),
+                endDate: moment().startOf('hour').add(32, 'hour'),
+                locale: {
+                    format: 'YYYY-MM-DD HH:mm',
+                    separator: "至",
+                    applyLabel: "确认",
+                    cancelLabel: "取消",
+                    fromLabel: "从",
+                    toLabel: "到",
+                    customRangeLabel: "自定义",
+                    weekLabel: "周",
+                    daysOfWeek: [
+                        "日",
+                        "一",
+                        "二",
+                        "三",
+                        "四",
+                        "五",
+                        "六"
+                    ],
+                    monthNames: [
+                        "一月",
+                        "二月",
+                        "三月",
+                        "四月",
+                        "五月",
+                        "六月",
+                        "七月",
+                        "八月",
+                        "九月",
+                        "十月",
+                        "十一月",
+                        "十二月"
+                    ]
+                }
+            });
+        }
+        function initSelect2(opt) {
+            $("#" + opt.id).select2({
+                placeholder: "请输入关键字",
+                language: "zh-CN",
+                ajax: {
+                    url: opt.url,
+                    dataType: 'json',
+                    delay: 250,
+                    data: opt.paramsData,
+                    processResults: opt.processResults,
+                    cache: true
+                },
+                escapeMarkup: function (markup) { return markup; }, // 字符转义处理
+                minimumInputLength: 1,
+                templateResult: opt.formatRepo, //返回结果回调function formatRepo(repo){return repo.text},这样就可以将返回结果的的text显示到下拉框里，当然你可以return repo.text+"1";等
+                templateSelection: opt.formatRepoSelection //选中项回调function formatRepoSelection(repo) { return repo.text }
+
+            });
+        }
+    </script>
 
 }

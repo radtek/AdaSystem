@@ -1,0 +1,83 @@
+﻿
+@model Ada.Core.ViewModel.Common.FansView
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox">
+            <div class="ibox-title">
+                <a class="btn btn-outline btn-default btn-sm" href="javascript:goBackOrClose();"><i class="fa fa-reply"></i> 返回</a>
+                <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
+            </div>
+            <div class="ibox-content">
+                <div class="sk-spinner sk-spinner-wave">
+                    <div class="sk-rect2"></div>
+                    <div class="sk-rect3"></div>
+                    <div class="sk-rect4"></div>
+                    <div class="sk-rect5"></div>
+                </div>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.NickName, Html.DisplayNameFor(d => d.NickName).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.NickName, new { @class = "form-control", required = "" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Avatar, Html.DisplayNameFor(d => d.Avatar).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @{
+                                var isAvatar = string.IsNullOrWhiteSpace(Model.Avatar) ? "fileinput-new" : "fileinput-exists";
+                            }
+                            <div class="fileinput @isAvatar" data-provides="fileinput">
+                                <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;">
+                                    @if (!string.IsNullOrWhiteSpace(Model.Avatar))
+                                    {
+                                        <img src="@Model.Avatar" />
+                                    }
+                                </div>
+                                <div>
+                                    <span class="btn btn-success btn-sm btn-file">
+                                        <span class="fileinput-new">选择图片</span><span class="fileinput-exists">更换图片</span>
+                                        <input type="file" name="Avatar">
+                                    </span>
+                                    <a href="#" class="btn btn-warning btn-sm fileinput-exists" data-dismiss="fileinput">移除图片</a>
+                                </div>
+                            </div>
+                            
+
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Cover, Html.DisplayNameFor(d => d.Cover).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @{
+                                var isCover = string.IsNullOrWhiteSpace(Model.Cover) ? "fileinput-new" : "fileinput-exists";
+                            }
+                            <div class="fileinput @isCover" data-provides="fileinput">
+                                <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;">
+                                    @if (!string.IsNullOrWhiteSpace(Model.Cover))
+                                    {
+                                        <img src="@Model.Cover" />
+                                    }
+                                </div>
+                                <div>
+                                    <span class="btn btn-success btn-sm btn-file">
+                                        <span class="fileinput-new">选择图片</span><span class="fileinput-exists">更换图片</span>
+                                        <input type="file" name="Cover">
+                                    </span>
+                                    <a href="#" class="btn btn-warning btn-sm fileinput-exists" data-dismiss="fileinput">移除图片</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @Html.HiddenFor(d => d.Id)
+                    @Html.HiddenFor(d => d.Type)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
