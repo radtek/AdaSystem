@@ -109,9 +109,11 @@ namespace QuartzTask.Jobs
                     var apiUrls = job.ApiUrl.Split(',');
                     var wxInfoApi = apiUrls[0];
                     var wxArticleApi = apiUrls[1];
+                    var now = DateTime.Now.AddMonths(-3);
                     var media = db.Set<Media>().FirstOrDefault(d =>
                       d.IsDelete == false &&
                       where.Contains(d.TransactorId) &&
+                      (d.LastPushDate > now || d.LastPushDate==null)&&
                       d.MediaType.CallIndex == "weixin" &&
                       d.IsSlide == true &&
                       d.Status == Consts.StateNormal &&
@@ -119,7 +121,7 @@ namespace QuartzTask.Jobs
                     if (media != null)
                     {
                         media.CollectionDate = DateTime.Now;
-                        
+
                         var lastPost = media.LastPushDate;
                         //是否要更新文章
                         var isUpdateArticle = lastPost == null;
@@ -171,13 +173,13 @@ namespace QuartzTask.Jobs
                                                 {
                                                     //如果最后一次发布日期与存储的最后一次发布日期一致，但最后一次发布日期与当前时间在2天范围内，也更新
                                                     var now2Day = DateTime.Now.Date.AddDays(-2);
-                                                    if (date>= now2Day)
+                                                    if (date >= now2Day)
                                                     {
                                                         isUpdateArticle = true;
                                                     }
                                                 }
-                                                
-                                                
+
+
                                             }
                                         }
                                         //更新文章
@@ -305,7 +307,7 @@ namespace QuartzTask.Jobs
                             }).GroupBy(d => d.Date).Count();
                             media.PublishFrequency = count;
                             db.SaveChanges();
-                            
+
                         }
                         catch (Exception ex)
                         {
@@ -326,7 +328,7 @@ namespace QuartzTask.Jobs
             }
         }
 
-        private static string GetBrands(string content,List<string> brands)
+        private static string GetBrands(string content, List<string> brands)
         {
             string htmlstr = string.Empty;
             int request = 1;
@@ -334,7 +336,7 @@ namespace QuartzTask.Jobs
             {
                 try
                 {
-                    htmlstr= HttpUtility.Post(
+                    htmlstr = HttpUtility.Post(
                         "http://120.76.205.241:8000/nlp/segment/bitspaceman?apikey=aHkIQg6KZL5nKgqhcAbrT7AYq484DkAfmFzd8rBgYDrK6CItsvAAOWwz7BiFkoQx",
                         new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("text", content) });
                     request = 9999;

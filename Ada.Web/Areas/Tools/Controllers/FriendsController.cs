@@ -21,5 +21,10 @@ namespace Tools.Controllers
         {
             return View();
         }
+        [AllowAnonymous]
+        public ActionResult Publish()
+        {
+            return View();
+        }
     }
 }
