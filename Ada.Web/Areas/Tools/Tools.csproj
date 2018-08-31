@@ -125,6 +125,7 @@
   <ItemGroup>
     <Compile Include="Controllers\FansController.cs" />
     <Compile Include="Controllers\FriendsController.cs" />
+    <Compile Include="Models\FriendContent.cs" />
     <Compile Include="Models\FriendsSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToolsAreaRegistration.cs" />
@@ -143,6 +144,7 @@
     <Content Include="Views\Fans\Add.cshtml" />
     <Content Include="Views\Fans\Update.cshtml" />
     <Content Include="Views\Fans\Edit.cshtml" />
+    <Content Include="Views\Friends\ContentPreview.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -2208,6 +2208,7 @@
     <Content Include="Scripts\plugins\jqLabelauty\jquery-labelauty.js" />
     <Content Include="Scripts\plugins\tagcanvas\jquery.tagcanvas.js" />
     <Content Include="Scripts\plugins\tagcanvas\jquery.tagcanvas.min.js" />
+    <Content Include="Scripts\plugins\validate\jquery.validate.js" />
     <Content Include="Scripts\web.js" />
     <Content Include="Scripts\base.js" />
     <Content Include="Scripts\bootstrap.js" />

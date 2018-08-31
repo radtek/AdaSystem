@@ -1,0 +1,59 @@
+﻿@using Ada.Core.Tools
+@model Tools.Models.FriendContent
+@{
+    var guid = Guid.NewGuid().ToString("N");
+}
+<div class="social-feed-box" id="@guid">
+    <div class="pull-right social-action dropdown">
+        <button data-toggle="dropdown" class="dropdown-toggle btn-white">
+            <i class="fa fa-angle-down"></i>
+        </button>
+        <ul class="dropdown-menu m-t-xs">
+            <li><a href="javascript:;">新增留言</a></li>
+            <li><a href="javascript:$('#@guid').remove();">删除内容</a></li>
+        </ul>
+    </div>
+    <div class="social-avatar">
+        <a href="" class="pull-left">
+            <img alt="image" src="@Model.PublishFans.Avatar">
+        </a>
+        <div class="media-body">
+            <a href="javascript:;">
+                @Model.PublishFans.NickName
+            </a>
+            <small class="text-muted">@Model.PublishDate.ToString("yyyy-MM-dd HH:mm")</small>
+        </div>
+    </div>
+    <div class="social-body">
+        <p>
+            @Model.Content
+        </p>
+        <div class="btn-group">
+            <button class="btn btn-danger btn-xs" type="button"><i class="fa fa-heart"></i> @Model.Likes</button>
+        </div>
+    </div>
+    @if (Model.FansMessages.Any())
+    {
+        <div class="social-footer">
+            @foreach (var item in Model.FansMessages)
+            {
+                var currentDiv = Guid.NewGuid().ToString("N");
+                <div class="social-comment" id="@currentDiv">
+                    <a href="" class="pull-left">
+                        <img alt="image" src="@item.Fans.Avatar">
+                    </a>
+                    <div class="media-body">
+                        <strong>
+                            @item.Fans.NickName
+                        </strong>
+                        <a href="#" class="editable m-l"></a>
+                        <br />
+                        <a href="javascript:;" class="small"> <i class="fa fa-reply"></i> 回复</a>
+                        <small class="text-muted m-l-xs"><i class="fa fa-clock-o"></i> <a href="#" class="editable">@item.MessageDate.ToString("yyyy-MM-dd HH:mm")</a></small>
+                        <a class="btn btn-danger btn-xs btn-outline pull-right" href="javascript:$('#@currentDiv').remove();">删除</a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

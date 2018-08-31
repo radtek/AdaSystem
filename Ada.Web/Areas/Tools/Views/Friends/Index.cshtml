@@ -143,14 +143,14 @@
                         <h5>内容配置</h5>
                     </div>
                     <div class="ibox-content">
-                        <div class="form-horizontal">
+                        <div class="form-horizontal" id="contentConfig">
                             <div class="form-group">
                                 @Html.LabelFor(d => d.FriendId, Html.DisplayNameFor(d => d.FriendId).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
                                     <select class="form-control" required="" name="FriendId" id="FriendId">
                                         <option value="@Model.FriendId">@Model.FriendId</option>
                                     </select>
-                                    @Html.HiddenFor(d => d.FriendName)
+
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -162,23 +162,23 @@
                                         new SelectListItem() {Value = "text", Text = "文字"},
                                         new SelectListItem() {Value = "image", Text = "图片"},
                                         new SelectListItem() {Value = "link", Text = "链接"}
-                                    }, "请选择", new {@class = "form-control"})
+                                    }, "请选择", new {@class = "form-control",required=""})
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
-                            <div class="form-group">
+                            <div class="form-group hide" id="textDv">
                                 @Html.LabelFor(d => d.Text, Html.DisplayNameFor(d => d.Text).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
-                                    @Html.TextAreaFor(d => d.Text, new { @class = "form-control" })
+                                    @Html.TextAreaFor(d => d.Text, new { @class = "form-control"})
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group hide" id="linkDv">
                                 @Html.LabelFor(d => d.LinkContent, Html.DisplayNameFor(d => d.LinkContent).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
                                     @Html.TextBoxFor(d => d.LinkContent, new { @class = "form-control" })
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group hide" id="imgDv">
                                 @Html.LabelFor(d => d.Images, Html.DisplayNameFor(d => d.Images).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
                                     <div class="fileinput fileinput-new" data-provides="fileinput">
@@ -198,27 +198,27 @@
                             <div class="form-group">
                                 @Html.LabelFor(d => d.PublishDate, Html.DisplayNameFor(d => d.PublishDate).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.PublishDate, new { @class = "form-control", placeholder = "发布时间" })
+                                    @Html.TextBoxFor(d => d.PublishDate, new { @class = "form-control", placeholder = "发布时间", required = "" })
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 @Html.LabelFor(d => d.Likes, Html.DisplayNameFor(d => d.Likes).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.Likes, new { @class = "form-control", type = "number" })
+                                    @Html.TextBoxFor(d => d.Likes, new { @class = "form-control", type = "number", required = "" })
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 @Html.LabelFor(d => d.Comments, Html.DisplayNameFor(d => d.Comments).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.Comments, new { @class = "form-control", type = "number" })
+                                    @Html.TextBoxFor(d => d.Comments, new { @class = "form-control", type = "number", required = "" })
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-12 col-sm-offset-2">
-                                    <button class="btn btn-primary btn-outline" type="button"><i class="fa fa-paper-plane"></i> 发布朋友圈</button>
+                                    <button class="btn btn-primary btn-outline" type="submit"><i class="fa fa-paper-plane"></i> 发布朋友圈</button>
                                     <button class="btn btn-danger btn-outline" type="button"><i class="fa fa-crop"></i> 朋友圈截图</button>
                                     <button class="btn btn-warning btn-outline" type="button"><i class="fa fa-crop"></i> 详情页截图</button>
                                 </div>
@@ -235,154 +235,88 @@
                     <div class="ibox-title">
                         <h5>内容预览</h5>
                     </div>
-                    <div class="ibox-content">
+                    <div class="ibox-content" id="contentPreview">
 
-                        <div class="social-feed-box">
-                            <div class="pull-right social-action dropdown">
-                                <button data-toggle="dropdown" class="dropdown-toggle btn-white">
-                                    <i class="fa fa-angle-down"></i>
-                                </button>
-                                <ul class="dropdown-menu m-t-xs">
-                                    <li><a href="javascript:;">新增留言</a></li>
-                                    <li><a href="javascript:;">删除内容</a></li>
-                                </ul>
-                            </div>
-                            <div class="social-avatar">
-                                <a href="" class="pull-left">
-                                    <img alt="image" src="~/Images/a1.jpg">
-                                </a>
-                                <div class="media-body">
-                                    <a href="javascript:;">
-                                        测试1
-                                    </a>
-                                    <small class="text-muted">2018-08-08 11:11:11</small>
+                       @*<div class="social-feed-box">
+                                <div class="pull-right social-action dropdown">
+                                    <button data-toggle="dropdown" class="dropdown-toggle btn-white">
+                                        <i class="fa fa-angle-down"></i>
+                                    </button>
+                                    <ul class="dropdown-menu m-t-xs">
+                                        <li><a href="javascript:;">新增留言</a></li>
+                                        <li><a href="javascript:;">删除内容</a></li>
+                                    </ul>
                                 </div>
-                            </div>
-                            <div class="social-body">
-                                <p>
-                                    发布的纯文字内容，很长很长。。。。。。。。。。
-                                </p>
-
-                                <div class="btn-group">
-                                    <button class="btn btn-danger btn-xs"><i class="fa fa-heart"></i> 1000</button>
-                                </div>
-                            </div>
-                            <div class="social-footer">
-                                <div class="social-comment">
+                                <div class="social-avatar">
                                     <a href="" class="pull-left">
-                                        <img alt="image" src="~/Images/a1.jpg">
-                                    </a>
-                                    <div class="media-body">
-                                        <span class="label">
-                                            某某1
-                                        </span>
-                                        <a href="#" class="editable m-l">回复内容11</a>
-                                        <br />
-                                        <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
-                                        <small class="text-muted"><a href="#" class="editable">1分钟前</a></small>
-                                    </div>
-                                </div>
-
-                                <div class="social-comment">
-                                    <a href="" class="pull-left">
-                                        <img alt="image" src="~/Images/a2.jpg">
-                                    </a>
-                                    <div class="media-body">
-                                        <span class="label">
-                                            某某2
-                                        </span>
-                                        <a href="#" class="editable m-l">回复内容22</a>
-                                        <br />
-                                        <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
-                                        <small class="text-muted"><a href="#" class="editable">11:12</a></small>
-                                    </div>
-                                </div>
-
-
-                            </div>
-
-                        </div>
-
-                        <div class="social-feed-box">
-                            <div class="pull-right social-action dropdown">
-                                <button data-toggle="dropdown" class="dropdown-toggle btn-white">
-                                    <i class="fa fa-angle-down"></i>
-                                </button>
-                                <ul class="dropdown-menu m-t-xs">
-                                    <li><a href="javascript:;">新增留言</a></li>
-                                    <li><a href="javascript:;">删除内容</a></li>
-                                </ul>
-                            </div>
-                            <div class="social-avatar">
-                                <a href="" class="pull-left">
-                                    <img alt="image" src="~/Images/a6.jpg">
-                                </a>
-                                <div class="media-body">
-                                    <a href="javascript:;">
-                                        测试1
-                                    </a>
-                                    <small class="text-muted">2018-08-11 11:11:11</small>
-                                </div>
-                            </div>
-                            <div class="social-body">
-                                <p>
-                                    发布的图片内容，很长的文字。。。。。。。。。。
-                                </p>
-                                <img src="~/Images/gallery/3.jpg" class="img-responsive">
-                                <div class="btn-group">
-                                    <button class="btn btn-danger btn-xs"><i class="fa fa-heart"></i> 1000</button>
-                                </div>
-                            </div>
-                            <div class="social-footer">
-                                <div class="social-comment">
-                                    <a href="" class="pull-left">
-                                        <img alt="image" src="~/Images/a1.jpg">
+                                        <img alt="image" src="~/Images/a6.jpg">
                                     </a>
                                     <div class="media-body">
                                         <a href="javascript:;">
-                                            某某2
+                                            测试1
                                         </a>
-                                        回复内容22.
-                                        <br />
-                                        <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
-                                        <small class="text-muted">11:12</small>
+                                        <small class="text-muted">2018-08-11 11:11:11</small>
                                     </div>
                                 </div>
-
-                                <div class="social-comment">
-                                    <a href="" class="pull-left">
-                                        <img alt="image" src="~/Images/a2.jpg">
-                                    </a>
-                                    <div class="media-body">
-                                        <a href="javascript:;">
-                                            某某3
-                                        </a>
-                                        回复内容33.
-                                        <br />
-                                        <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
-                                        <small class="text-muted">11:32</small>
+                                <div class="social-body">
+                                    <p>
+                                        发布的图片内容，很长的文字。。。。。。。。。。
+                                    </p>
+                                    <img src="~/Images/gallery/3.jpg" class="img-responsive">
+                                    <div class="btn-group">
+                                        <button class="btn btn-danger btn-xs"><i class="fa fa-heart"></i> 1000</button>
                                     </div>
                                 </div>
-
-                                <div class="social-comment">
-                                    <a href="" class="pull-left">
-                                        <img alt="image" src="~/Images/a8.jpg">
-                                    </a>
-                                    <div class="media-body">
-                                        <a href="javascript:;">
-                                            某某4
+                                <div class="social-footer">
+                                    <div class="social-comment">
+                                        <a href="" class="pull-left">
+                                            <img alt="image" src="~/Images/a1.jpg">
                                         </a>
-                                        回复内容44.
-                                        <br />
-                                        <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
-                                        <small class="text-muted">11:42</small>
+                                        <div class="media-body">
+                                            <a href="javascript:;">
+                                                某某2
+                                            </a>
+                                            回复内容22.
+                                            <br />
+                                            <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
+                                            <small class="text-muted">11:12</small>
+                                        </div>
                                     </div>
+
+                                    <div class="social-comment">
+                                        <a href="" class="pull-left">
+                                            <img alt="image" src="~/Images/a2.jpg">
+                                        </a>
+                                        <div class="media-body">
+                                            <a href="javascript:;">
+                                                某某3
+                                            </a>
+                                            回复内容33.
+                                            <br />
+                                            <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
+                                            <small class="text-muted">11:32</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="social-comment">
+                                        <a href="" class="pull-left">
+                                            <img alt="image" src="~/Images/a8.jpg">
+                                        </a>
+                                        <div class="media-body">
+                                            <a href="javascript:;">
+                                                某某4
+                                            </a>
+                                            回复内容44.
+                                            <br />
+                                            <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
+                                            <small class="text-muted">11:42</small>
+                                        </div>
+                                    </div>
+
+
                                 </div>
 
-
-                            </div>
-
-                        </div>
+                            </div>*@
                     </div>
                 </div>
             </div>
@@ -429,19 +363,62 @@
                 if (repo.loading) {
                     return repo.text;
                 }
-                return "<p>" + repo.avatar + " 【 " + repo.text + " 】 <p>";
+                return '<span><img src="' + repo.avatar+'" style="width:40px;height:40px;" /> ' +repo.text +'</span>';
             };
             options.formatRepoSelection = function (repo) {
-                $("#FriendName").val(repo.text);
+                //$("#FriendName").val(repo.text);
                 return repo.text;
             };
             initSelect2(options);
             initDate();
-            initEditTable();
+            $("#ContentType").change(function() {
+                var current = $(this).val();
+                switch (current) {
+                    case "text":
+                        $("#textDv").removeClass("hide");
+                        $("#linkDv").add("#imgDv").removeClass("hide").addClass("hide");
+                        break;
+                    case "image":
+                        $("#textDv").add("#imgDv").removeClass("hide");
+                        $("#linkDv").removeClass("hide").addClass("hide");
+                        break;
+                    case "link":
+                        $("#textDv").add("#imgDv").add("#linkDv").removeClass("hide");
+                        break;
+                    default:
+                        $("#textDv").add("#imgDv").add("#linkDv").removeClass("hide").addClass("hide");
+                        break;
+                }
+                //alert(current);
+            });
+            //$(".wrapper.wrapper-content form").validate({
+            //    submitHandler: function (form) {
+            //        //form.submit();
+            //    }
+            //});
             $(".wrapper.wrapper-content form").validate({
                 submitHandler: function (form) {
-                    //form.submit();
+                    var $form = $(form),
+                        data = $form.serialize(); //序列化表单数据
+                    $.ajax({
+                        type: "post",
+                        dataType:"html",
+                        url: "@Url.Action("Publish")",
+                        data: data,
+                        success: function (res) {
+                            $("#contentPreview").append(res);
+                            initEditTable();
+                        },
+                        error: function () {
+                            swal("操作失败", "系统错误", "error");
+                        },
+                        complete: function () {
+
+                        }
+
+                    });
                 }
+
             });
         });
 
@@ -449,7 +426,7 @@
            $('.editable').editable({
                 type: 'text',
                 mode: "inline",
-                emptytext: '请输入'
+                emptytext: '请输入留言内容'
             });
         }
         function initDate() {
@@ -512,6 +489,16 @@
                 templateSelection: opt.formatRepoSelection //选中项回调function formatRepoSelection(repo) { return repo.text }
 
             });
+        }
+
+        function publish() {
+            //var params = {};
+            //$('#contentConfig').find('input[name],select[name],textarea[name]').each(function () {
+            //    params[$(this).attr('name')] = $(this).val();
+            //});
+            //alert(JSON.stringify(params));
+            
+            
         }
     </script>
 
