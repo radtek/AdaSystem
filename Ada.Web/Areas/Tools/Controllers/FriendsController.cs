@@ -22,6 +22,8 @@ namespace Tools.Controllers
         public ActionResult Index()
         {
             FriendsSet view = new FriendsSet();
+            view.Network = "4G";
+            view.Operator = "中国移动";
             return View(view);
         }
         [AllowAnonymous]

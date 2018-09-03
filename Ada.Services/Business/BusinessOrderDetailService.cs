@@ -123,6 +123,14 @@ namespace Ada.Services.Business
                           where b.Id == p.BusinessOrderDetailId && p.Status == viewModel.PurchaseStatus
                           select b;
             }
+            if (viewModel.IsOrderLater == true)
+            {
+
+                allList = from b in allList
+                          from p in purchaseOrderDetails
+                          where b.Id == p.BusinessOrderDetailId && p.Status != Consts.PurchaseStatusFail && p.PublishDate < p.AddedDate && p.MediaPrice.Media.MediaType.IsComment == true
+                          select b;
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaByPurchase))
             {
 
@@ -166,29 +174,29 @@ namespace Ada.Services.Business
                                             where b.Id == p.BusinessOrderDetailId
                                             select p).Sum(d => d.PurchaseMoney);
             var returnMoney = (from b in allList
-                from p in purchaseOrderDetails
-                where b.Id == p.BusinessOrderDetailId
-                select p).Sum(d => d.PurchaseReturenOrderDetails.Sum(p=>p.Money));
-            viewModel.TotalPurchaseMoney = viewModel.TotalPurchaseMoney - (returnMoney??0);
+                               from p in purchaseOrderDetails
+                               where b.Id == p.BusinessOrderDetailId
+                               select p).Sum(d => d.PurchaseReturenOrderDetails.Sum(p => p.Money));
+            viewModel.TotalPurchaseMoney = viewModel.TotalPurchaseMoney - (returnMoney ?? 0);
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
             if (!string.IsNullOrWhiteSpace(viewModel.PublishDateOrder))
             {
-                if (viewModel.PublishDateOrder.Trim().ToLower()=="asc")
+                if (viewModel.PublishDateOrder.Trim().ToLower() == "asc")
                 {
-                   return (from b in allList
-                        from p in purchaseOrderDetails
-                        where b.Id == p.BusinessOrderDetailId
-                        orderby p.PublishDate
-                        select b).Skip(offset).Take(rows);
+                    return (from b in allList
+                            from p in purchaseOrderDetails
+                            where b.Id == p.BusinessOrderDetailId
+                            orderby p.PublishDate
+                            select b).Skip(offset).Take(rows);
                 }
                 if (viewModel.PublishDateOrder.Trim().ToLower() == "desc")
                 {
                     return (from b in allList
-                        from p in purchaseOrderDetails
-                        where b.Id == p.BusinessOrderDetailId
-                        orderby p.PublishDate descending 
-                        select b).Skip(offset).Take(rows);
+                            from p in purchaseOrderDetails
+                            where b.Id == p.BusinessOrderDetailId
+                            orderby p.PublishDate descending
+                            select b).Skip(offset).Take(rows);
                 }
             }
             string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
@@ -198,8 +206,6 @@ namespace Ada.Services.Business
             }
             return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
         }
-
-        
         /// <summary>
         /// 销售业绩统计(按经办人分组)
         /// </summary>
@@ -244,7 +250,7 @@ namespace Ada.Services.Business
                         VerificationMoney = b.VerificationMoney,
                         ConfirmVerificationMoney = b.ConfirmVerificationMoney,
                         PurchaseMoney = p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Where(a => a.PurchaseReturnOrder.AuditStatus == Consts.StateNormal).Sum(d => d.Money) ?? 0),
-                        ProfitMoney = b.SellMoney - (p.PurchaseMoney- (p.PurchaseReturenOrderDetails.Where(a => a.PurchaseReturnOrder.AuditStatus == Consts.StateNormal).Sum(d => d.Money) ?? 0)),
+                        ProfitMoney = b.SellMoney - (p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Where(a => a.PurchaseReturnOrder.AuditStatus == Consts.StateNormal).Sum(d => d.Money) ?? 0)),
                         Transactor = b.BusinessOrder.Transactor,
                         TransactorId = b.BusinessOrder.TransactorId
                     }).GroupBy(d => d.Transactor).Select(d => new BusinessPerformance
@@ -330,7 +336,7 @@ namespace Ada.Services.Business
                         VerificationMoney = b.VerificationMoney,
                         ConfirmVerificationMoney = b.ConfirmVerificationMoney,
                         PurchaseMoney = p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Where(a => a.PurchaseReturnOrder.AuditStatus == Consts.StateNormal).Sum(d => d.Money) ?? 0),
-                        ProfitMoney = b.SellMoney - (p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Where(a=>a.PurchaseReturnOrder.AuditStatus==Consts.StateNormal).Sum(d => d.Money) ?? 0)),
+                        ProfitMoney = b.SellMoney - (p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Where(a => a.PurchaseReturnOrder.AuditStatus == Consts.StateNormal).Sum(d => d.Money) ?? 0)),
                         MediaTypeName = b.MediaTypeName
                     }).GroupBy(d => d.MediaTypeName).Select(d => new BusinessPerformance
                     {
@@ -359,7 +365,7 @@ namespace Ada.Services.Business
         }
         public void Update(Expression<Func<BusinessOrderDetail, bool>> whereLambda, Expression<Func<BusinessOrderDetail, BusinessOrderDetail>> updateLambda)
         {
-            _repository.Update(whereLambda,updateLambda);
+            _repository.Update(whereLambda, updateLambda);
             _dbContext.SaveChanges();
         }
         public void Delete(BusinessOrderDetail entity)

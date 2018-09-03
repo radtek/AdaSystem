@@ -45,11 +45,16 @@ namespace Dashboards.Controllers
                 business = business.Where(d => d.BusinessOrder.TransactorId == userId);
             }
             var purchase = _purchaseRepository.LoadEntities(d => d.IsDelete == false);
-            var temp = business.Where(d => d.Status != 0);
-            viewModel.OrderCount = temp.Count();
-            viewModel.SellMoney = temp.Sum(d => d.SellMoney);
-            viewModel.ConfirmVerificationMoney = temp.Sum(d => d.ConfirmVerificationMoney);
-            viewModel.VerificationMoney = temp.Sum(d => d.VerificationMoney);
+            //var temp = business.Where(d => d.Status != 0);
+            viewModel.OrderCount = string.IsNullOrWhiteSpace(userId)?purchase.Count(d=>d.Status!=Consts.PurchaseStatusFail): purchase.Count(d => d.Status != Consts.PurchaseStatusFail&&d.PurchaseOrder.BusinessById==userId);
+            var moneyTotal= _businessOrderDetailService.BusinessPerformanceGroupByUser(new BusinessOrderDetailView());
+            if (!string.IsNullOrWhiteSpace(userId))
+            {
+                moneyTotal = moneyTotal.Where(d => d.Transactor == CurrentManager.UserName);
+            }
+            viewModel.SellMoney = moneyTotal.Sum(d=>d.TotalSellMoney);
+            viewModel.ConfirmVerificationMoney = moneyTotal.Sum(d => d.TotalConfirmVerificationMoney);
+            viewModel.VerificationMoney = moneyTotal.Sum(d => d.TotalVerificationMoney);
             viewModel.Waiting = business.Count(d => d.Status == Consts.StateLock);
 
             viewModel.Doing = (from b in business

@@ -276,6 +276,16 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "出刊日期排序")]
         public string PublishDateOrder { get; set; }
+        /// <summary>
+        /// 是否延时下单
+        /// </summary>
+        [Display(Name = "是否延时下单")]
+        public bool? IsOrderLater { get; set; }
+        /// <summary>
+        /// 转单日期
+        /// </summary>
+        [Display(Name = "转单日期")]
+        public DateTime? OrderToDate { get; set; }
 
     }
 }

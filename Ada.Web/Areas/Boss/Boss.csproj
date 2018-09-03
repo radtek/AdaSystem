@@ -47,6 +47,12 @@
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.8.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -106,6 +112,7 @@
   <ItemGroup>
     <Compile Include="BossAreaRegistration.cs" />
     <Compile Include="Controllers\BusinessOrderController.cs" />
+    <Compile Include="Controllers\BusinessOrderDetailController.cs" />
     <Compile Include="Controllers\BusinessPriceController.cs" />
     <Compile Include="Controllers\PayAccountController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
@@ -130,6 +137,7 @@
     <Content Include="Views\BusinessPrice\Index.cshtml" />
     <Content Include="Views\PurchaseReturn\Index.cshtml" />
     <Content Include="Views\PurchaseReturn\Audit.cshtml" />
+    <Content Include="Views\BusinessOrderDetail\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

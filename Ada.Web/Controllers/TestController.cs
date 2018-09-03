@@ -376,18 +376,25 @@ namespace Ada.Web.Controllers
 
         public ActionResult ChangeMedia()
         {
-            var medias = _media.LoadEntities(d => d.TransactorId == "X1801091653080193").ToList();
-            foreach (var media in medias)
+            var medias = _media.LoadEntities(d => d.TransactorId == "X1807121117097012").ToList();
+            var mediaId = "";
+            try
             {
-                media.Transactor = "戴秋红";
-                media.TransactorId = "X1712181402380029";
-                media.LinkMan.Transactor = "戴秋红";
-                media.LinkMan.TransactorId = "X1712181402380029";
-                media.LinkMan.Commpany.Transactor = "戴秋红";
-                media.LinkMan.Commpany.TransactorId = "X1712181402380029";
-            }
+                foreach (var media in medias)
+                {
+                    mediaId = media.Id;
+                    media.Transactor = "刘娟";
+                    media.TransactorId = "X1809031204013244";
+                    media.LinkMan.Transactor = "刘娟";
+                    media.LinkMan.TransactorId = "X1809031204013244";
+                }
 
-            _dbContext.SaveChanges();
+                _dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return Content("异常：" + mediaId);
+            }
             return Content("成功转移：" + medias.Count());
         }
         public ActionResult ChangeMediaXls()
@@ -411,10 +418,10 @@ namespace Ada.Web.Controllers
                     var mediaId = row.GetCell(0)?.ToString();
                     var media = _media.LoadEntities(d => d.Id == mediaId.Trim()).FirstOrDefault();
                     if (media == null) continue;
-                    media.Transactor = "刘雪";
-                    media.TransactorId = "X1807121117097012";
-                    media.LinkMan.Transactor = "刘雪";
-                    media.LinkMan.TransactorId = "X1807121117097012";
+                    media.Transactor = "乐玲";
+                    media.TransactorId = "X1712181351220014";
+                    media.LinkMan.Transactor = "乐玲";
+                    media.LinkMan.TransactorId = "X1712181351220014";
 
                     count++;
                 }
@@ -476,8 +483,8 @@ namespace Ada.Web.Controllers
         }
         public ActionResult ChangeOrder()
         {
-            var result = _ptemp.Update(d => d.IsDelete == false && !d.PurchasePaymentOrderDetails.Any() && d.TransactorId == "X1806111602430001",
-                o => new PurchaseOrderDetail() { TransactorId = "X1807041543215103", Transactor = "刘甜" });
+            var result = _ptemp.Update(d => d.IsDelete == false && !d.PurchasePaymentOrderDetails.Any() && d.TransactorId == "X1807121117097012",
+                o => new PurchaseOrderDetail() { TransactorId = "X1809031204013244", Transactor = "刘娟" });
             return Content("成功更换" + result + "条订单");
         }
         public ActionResult CloseMediaXls()

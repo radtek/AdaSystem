@@ -696,6 +696,7 @@ namespace Business.Controllers
                 purchaseOrderDetail.DiscountMoney = 0;
                 purchaseOrderDetail.PurchaseMoney = 0;
                 purchaseOrderDetail.DiscountRate = 100;
+                purchaseOrderDetail.AddedDate = DateTime.Now;
                 purchaseOrder.PurchaseOrderDetails.Add(purchaseOrderDetail);
             }
 

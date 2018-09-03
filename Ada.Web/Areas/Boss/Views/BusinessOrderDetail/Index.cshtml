@@ -1,0 +1,203 @@
+﻿
+@using System.Web.Optimization
+@model Ada.Core.ViewModel.Business.BusinessOrderDetailView
+@{
+    ViewBag.Title = "延迟订单";
+}
+@Html.Partial("Bread")
+
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <table id="table"></table>
+                    <div id="toolbar">
+                        <div class="form-inline" role="form">
+                            <div class="form-group">
+                                <input type="text" placeholder="请选择出刊日期" class="form-control" id="datepicker">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/dateRangeStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/dateRange")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var table = new TableInit();
+            table.Init();
+            var $datepicker = $('#datepicker');
+            $datepicker.daterangepicker({
+                autoUpdateInput: false,
+                opens: "center",
+                linkedCalendars: false,
+                ranges: {
+                    '本月': [moment().startOf('month'), moment().endOf('month')],
+                    '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    separator: "至",
+                    applyLabel: "确认",
+                    cancelLabel: "取消",
+                    fromLabel: "从",
+                    toLabel: "到",
+                    customRangeLabel: "自定义",
+                    weekLabel: "周",
+                    daysOfWeek: [
+                        "日",
+                        "一",
+                        "二",
+                        "三",
+                        "四",
+                        "五",
+                        "六"
+                    ],
+                    monthNames: [
+                        "一月",
+                        "二月",
+                        "三月",
+                        "四月",
+                        "五月",
+                        "六月",
+                        "七月",
+                        "八月",
+                        "九月",
+                        "十月",
+                        "十一月",
+                        "十二月"
+                    ],
+                    firstDay: 1
+                }
+            },
+                function (start, end, label) {
+                    
+                });
+
+            $datepicker.on('apply.daterangepicker', function (ev, picker) {
+                $(this).val(picker.startDate.format('YYYY-MM-DD') + '至' + picker.endDate.format('YYYY-MM-DD'));
+                $('#table').bootstrapTable("refresh");
+            });
+            $datepicker.on('cancel.daterangepicker', function (ev, picker) {
+                $(this).val('');
+                $('#table').bootstrapTable("refresh");
+            });
+        });
+        var TableInit = function() {
+            var obj = new Object();
+            obj.Init = function() {
+                $('#table').bootstrapTable({
+                url: '@Url.Action("GetList")',         //请求后台的URL（*）
+                toolbar: '#toolbar',                //工具按钮用哪个容器
+                classes: "table table-no-bordered",
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "desc",                   //排序方式
+                sortName: "Id",
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
+                showColumns: true,                  //是否显示所有的列
+                showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                singleSelect: true,                  //设置True 将禁止多选
+                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
+                showFooter:true,
+                formatSearch: function() {
+                    return "经办业务";
+                },
+                mobileResponsive: true,
+                    queryParams: function (parameters) {
+                        parameters.PublishDateStr = $("#datepicker").val();
+                        return searchFrm.queryParams(parameters);
+                    },
+
+                columns: [
+                    {
+                        field: 'OrderNum',
+                        title: '项目编号',
+                        align: "center", valign: "middle",
+                        formatter: function(value,row) {
+                            return "<a class='label' href='@Url.Action("Update", "Order",new{area="Business"})?id=" + row.BusinessOrderId+"' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
+                        }
+                    },
+                    {
+                        field: 'MediaName',
+                        title: '媒体名称',
+                        align: "left", valign: "middle"
+                    }
+                    ,
+
+                    {
+                        field: 'AddedDate',
+                        title: '转单日期',
+                        align: "center", valign: "middle",
+                        formatter: function (value) {
+                            if (value) {
+                                return moment(value).format("YYYY-MM-DD");
+                            }
+                        }
+                    },
+                    {
+                        field: 'PublishDate',
+                        title: '出刊日期',
+                        align: "center", valign: "middle",
+                        formatter: function (value) {
+                            if (value) {
+                                return moment(value).format("YYYY-MM-DD");
+                            }
+                        }
+                    },
+                    {
+                        field: 'Diff',
+                        title: '延迟时间（天）',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'Transactor',
+                        title: '经办业务',
+                        align: "center", valign: "middle"
+                    }
+
+
+
+                ]
+            });
+            };
+
+            return obj;
+        };
+
+
+    </script>
+}
+
+
+
+
+
+
+
+

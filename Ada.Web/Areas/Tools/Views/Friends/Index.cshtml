@@ -428,6 +428,11 @@
                 mode: "inline",
                 emptytext: '请输入留言内容'
             });
+            $('.select2').editable({
+                type: 'text',
+                mode: "inline",
+                emptytext: '回复'
+            });
         }
         function initDate() {
             $('input[name="PublishDate"]').daterangepicker({
@@ -475,6 +480,7 @@
             $("#" + opt.id).select2({
                 placeholder: "请输入关键字",
                 language: "zh-CN",
+                allowClear:true,
                 ajax: {
                     url: opt.url,
                     dataType: 'json',
