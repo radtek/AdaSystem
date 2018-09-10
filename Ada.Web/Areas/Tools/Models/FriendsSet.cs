@@ -116,5 +116,10 @@ namespace Tools.Models
         /// </summary>
         [Display(Name = "链接内容")]
         public string LinkContent { get; set; }
+        /// <summary>
+        /// 评价内容
+        /// </summary>
+        [Display(Name = "评价内容")]
+        public string CommentContent { get; set; }
     }
 }

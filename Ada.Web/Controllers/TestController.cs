@@ -391,13 +391,13 @@ namespace Ada.Web.Controllers
 
                 _dbContext.SaveChanges();
             }
-            catch (Exception ex)
+            catch 
             {
                 return Content("异常：" + mediaId);
             }
             return Content("成功转移：" + medias.Count());
         }
-        public ActionResult ChangeMediaXls()
+        public ActionResult ChangeMediaXls(string name,string id)
         {
             string path = Server.MapPath("~/upload/change.xlsx");
             int count = 0;
@@ -418,10 +418,10 @@ namespace Ada.Web.Controllers
                     var mediaId = row.GetCell(0)?.ToString();
                     var media = _media.LoadEntities(d => d.Id == mediaId.Trim()).FirstOrDefault();
                     if (media == null) continue;
-                    media.Transactor = "乐玲";
-                    media.TransactorId = "X1712181351220014";
-                    media.LinkMan.Transactor = "乐玲";
-                    media.LinkMan.TransactorId = "X1712181351220014";
+                    media.Transactor = name;
+                    media.TransactorId = id;
+                    media.LinkMan.Transactor = name;
+                    media.LinkMan.TransactorId = id;
 
                     count++;
                 }
@@ -430,7 +430,7 @@ namespace Ada.Web.Controllers
             }
             return Content("成功更换" + count + "条资源");
         }
-        public ActionResult ChangeMediaForLinkmanXls()
+        public ActionResult ChangeMediaForLinkmanXls(string name, string id)
         {
             string path = Server.MapPath("~/upload/change.xlsx");
             int count = 0;
@@ -445,8 +445,8 @@ namespace Ada.Web.Controllers
                     return Content("此文件没有导入数据，请填充数据再进行导入");
                 }
 
-                var transactor = "郑娜";
-                var transactorId = "X1807031436217658";
+                var transactor = name;
+                var transactorId = id;
                 for (int i = 1; i <= sheet.LastRowNum; i++)
                 {
                     IRow row = sheet.GetRow(i);
@@ -456,8 +456,8 @@ namespace Ada.Web.Controllers
                     if (media == null) continue;
                     if (!string.IsNullOrWhiteSpace(linkId))
                     {
-                        var id = linkId;
-                        var link = _linkman.LoadEntities(d => d.Id == id.Trim()).FirstOrDefault();
+                        var lid = linkId;
+                        var link = _linkman.LoadEntities(d => d.Id == lid.Trim()).FirstOrDefault();
                         if (link == null)
                         {
                             continue;

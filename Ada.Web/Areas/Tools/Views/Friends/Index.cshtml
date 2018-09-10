@@ -169,7 +169,7 @@
                             <div class="form-group hide" id="textDv">
                                 @Html.LabelFor(d => d.Text, Html.DisplayNameFor(d => d.Text).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
-                                    @Html.TextAreaFor(d => d.Text, new { @class = "form-control"})
+                                    @Html.TextAreaFor(d => d.Text, new { @class = "form-control" })
                                 </div>
                             </div>
                             <div class="form-group hide" id="linkDv">
@@ -219,7 +219,7 @@
                             <div class="form-group">
                                 <div class="col-sm-12 col-sm-offset-2">
                                     <button class="btn btn-primary btn-outline" type="submit"><i class="fa fa-paper-plane"></i> 发布朋友圈</button>
-                                    <button class="btn btn-danger btn-outline" type="button"><i class="fa fa-crop"></i> 朋友圈截图</button>
+                                    <button class="btn btn-danger btn-outline" type="button" onclick="publish();"><i class="fa fa-crop"></i> 朋友圈截图</button>
                                     <button class="btn btn-warning btn-outline" type="button"><i class="fa fa-crop"></i> 详情页截图</button>
                                 </div>
                             </div>
@@ -236,8 +236,8 @@
                         <h5>内容预览</h5>
                     </div>
                     <div class="ibox-content" id="contentPreview">
-
-                       @*<div class="social-feed-box">
+                        @Html.HiddenFor(d=>d.CommentContent)
+                        @*<div class="social-feed-box">
                                 <div class="pull-right social-action dropdown">
                                     <button data-toggle="dropdown" class="dropdown-toggle btn-white">
                                         <i class="fa fa-angle-down"></i>
@@ -339,6 +339,7 @@
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/dateRange")
     @Scripts.Render("~/plugins/bootstrapEditTableScript")
+    @Scripts.Render("~/plugins/lodash")
     <script>
 
         $(function () {
@@ -429,9 +430,29 @@
                 emptytext: '请输入留言内容'
             });
             $('.select2').editable({
-                type: 'text',
+                type: 'select',
                 mode: "inline",
-                emptytext: '回复'
+                emptytext: '回复',
+                source: function () {
+                    var list = $(".social-feed-box"), arr = [{ text: "", value: "" }], user = $("#FriendId option:selected").html();
+                    if (list.length>0) {
+                        var comments = $(list[0]).find(".social-comment");
+                        if (comments) {
+                            arr.push({ text: user, value: user });
+                            $.each(comments,
+                                function (k, v) {
+                                    var text = $(v).find("strong").html();
+                                    var index = _.findIndex(arr, { 'text': text });
+                                    if (index<0) {
+                                        arr.push({ text: text, value: text });
+                                    }
+                                    
+                                });
+                            return arr;
+                        }
+                    }
+
+                }
             });
         }
         function initDate() {
@@ -498,13 +519,29 @@
         }
 
         function publish() {
-            //var params = {};
-            //$('#contentConfig').find('input[name],select[name],textarea[name]').each(function () {
-            //    params[$(this).attr('name')] = $(this).val();
-            //});
-            //alert(JSON.stringify(params));
-            
-            
+            //var $form = $(".wrapper.wrapper-content form"),
+            //    data = $form.serialize();
+            var first = $(".social-feed-box:first"), arr = [];
+            var temp = first.data("value");
+            if (temp) {
+                //评论
+                var comments = $(".social-feed-box:first .social-footer .social-comment");
+                $.each(comments,
+                    function(k, v) {
+                        var comment = {
+                            FansId: $(v).find("strong").data("id"),
+                            ReplyFans: $(v).find(".select2").html() === "回复" ? "" : $(v).find(".select2").html(),
+                            Message: $(v).find(".commentmsg").html() === "请输入留言内容" ? "" : $(v).find(".commentmsg").html(),
+                            MessageDate: $(v).find(".commentdate").html()
+                        };
+                        arr.push(comment);
+                    });
+                //alert(JSON.stringify(arr));
+                temp.FansMessages = arr;
+                alert(JSON.stringify(temp));
+                $("#CommentContent").val(JSON.stringify(temp));
+            }
+
         }
     </script>
 

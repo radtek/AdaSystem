@@ -15,10 +15,10 @@ namespace Tools.Models
             PublishDate = DateTime.Now;
         }
         public Fans PublishFans { get; set; }
+        public string PublishFansId { get; set; }
         public DateTime PublishDate { get; set; }
         public int Likes { get; set; }
         public string Content { get; set; }
-
         public List<FansMessage> FansMessages { get; set; }
     }
 
@@ -26,5 +26,9 @@ namespace Tools.Models
     {
         public Fans Fans { get; set; }
         public DateTime MessageDate { get; set; }
+        public string FansId { get; set; }
+        public string ReplyFans { get; set; }
+        public string Message { get; set; }
+
     }
 }
