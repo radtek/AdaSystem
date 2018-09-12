@@ -2,7 +2,16 @@
 @model Tools.Models.FriendContent
 @{
     var guid = Guid.NewGuid().ToString("N");
-    var dataJson = Json.Encode(new { PublishFansId = Model.PublishFans.Id, PublishDate = Model.PublishDate, Content = Model.Content, Likes = Model.Likes});
+    var dataJson = Json.Encode(new
+    {
+        PublishFansId = Model.PublishFans.Id,
+        PublishDate = Model.PublishDate.ToString("yyyy-MM-dd HH:mm"),
+        Model.Content,
+        Model.Likes,
+        Model.Image,
+        Model.Type,
+        Model.LinkContent
+    });
 }
 <div class="social-feed-box" id="@guid" data-value='@dataJson'>
     <div class="pull-right social-action dropdown">
@@ -23,16 +32,29 @@
                 @Model.PublishFans.NickName
             </a>
             <small class="text-muted">@Model.PublishDate.ToString("yyyy-MM-dd HH:mm")</small>
-            @*<input type="hidden" name="PublishFansId" value="@Model.PublishFans.Id" />
-            <input type="hidden" name="PublishDate" value="@Model.PublishDate" />
-            <input type="hidden" name="Content" value="@Model.Content" />
-            <input type="hidden" name="Likes" value="@Model.Likes" />*@
         </div>
     </div>
     <div class="social-body">
         <p>
             @Model.Content
         </p>
+        @if (Model.Type == "link")
+        {
+            <div class="media bg-muted">
+                <div class="media-left">
+                    <a href="javascript:;">
+                        <img class="media-object img-md" src="@Model.Image">
+                    </a>
+                </div>
+                <div class="media-body">
+                    @Model.LinkContent
+                </div>
+            </div>
+        }
+        @if (Model.Type == "image")
+        {
+            <img src="@Model.Image" class="img-responsive img-lg">
+        }
         <div class="btn-group">
             <button class="btn btn-danger btn-xs" type="button"><i class="fa fa-heart"></i> @Model.Likes</button>
         </div>
@@ -53,7 +75,7 @@
                 </strong>
                 <a href="#" class="editable commentmsg m-l"></a>
                 <br />
-                <span class="small"> <i class="fa fa-reply"></i> <a href="#" class="select2"></a></span>
+                <span class="small"> <i class="fa fa-reply"></i> <a href="#" class="editselect2"></a></span>
                 <small class="text-muted m-l-xs"><i class="fa fa-clock-o"></i> <a href="#" class="editable commentdate">@item.MessageDate.ToString("yyyy-MM-dd HH:mm")</a></small>
                 <a class="btn btn-danger btn-xs btn-outline pull-right" href="javascript:$('#@currentDiv').remove();">删除</a>
             </div>

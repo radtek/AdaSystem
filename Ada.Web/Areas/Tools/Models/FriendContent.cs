@@ -19,6 +19,9 @@ namespace Tools.Models
         public DateTime PublishDate { get; set; }
         public int Likes { get; set; }
         public string Content { get; set; }
+        public string LinkContent { get; set; }
+        public string Image { get; set; }
+        public string Type { get; set; }
         public List<FansMessage> FansMessages { get; set; }
     }
 

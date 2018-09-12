@@ -3,7 +3,6 @@
 @model Tools.Models.FriendsSet
 @{
     ViewBag.Title = "朋友圈生成器";
-
 }
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
@@ -69,8 +68,7 @@
                                                 new SelectListItem(){Value = "1",Text = "1格"},
                                                 new SelectListItem(){Value = "2",Text = "2格"},
                                                 new SelectListItem(){Value = "3",Text = "3格"},
-                                                new SelectListItem(){Value = "4",Text = "4格"},
-                                                new SelectListItem(){Value = "5",Text = "5格"}
+                                                new SelectListItem(){Value = "4",Text = "满格"}
                                             },"信号",new { @class = "form-control" })
                                         </div>
                                         <div class="col-md-3">
@@ -95,7 +93,21 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">日期24小时制</label>
+                                <div class="col-sm-10">
+                                    @{
+                                        var is24 = Model.Is24Hour ? "checked=''" : "";
+                                        
+                                    }
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" id="Is24Hour" name="Is24Hour" value="true" @is24>
+                                        <label for="Is24Hour"> 是 </label>
+                                    </div>
+                                   
+                                </div>
+                            </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">其他图标</label>
@@ -186,7 +198,8 @@
                                         <div>
                                             <span class="btn btn-success btn-sm btn-file">
                                                 <span class="fileinput-new">选择图片</span><span class="fileinput-exists">更换图片</span>
-                                                <input type="file" name="Images">
+                                                <input type="file">
+                                                @Html.HiddenFor(d=>d.Images)
                                             </span>
                                             <a href="#" class="btn btn-warning btn-sm fileinput-exists" data-dismiss="fileinput">移除图片</a>
                                         </div>
@@ -219,8 +232,8 @@
                             <div class="form-group">
                                 <div class="col-sm-12 col-sm-offset-2">
                                     <button class="btn btn-primary btn-outline" type="submit"><i class="fa fa-paper-plane"></i> 发布朋友圈</button>
-                                    <button class="btn btn-danger btn-outline" type="button" onclick="publish();"><i class="fa fa-crop"></i> 朋友圈截图</button>
-                                    <button class="btn btn-warning btn-outline" type="button"><i class="fa fa-crop"></i> 详情页截图</button>
+                                    @*<button class="btn btn-danger btn-outline" type="button" onclick="publish();"><i class="fa fa-crop"></i> 朋友圈截图</button>*@
+                                    <button class="btn btn-warning btn-outline ladda-button" type="button" onclick="publish();" data-style="zoom-in"><i class="fa fa-crop"></i> 详情页截图</button>
                                 </div>
                             </div>
                         </div>
@@ -260,9 +273,22 @@
                                 </div>
                                 <div class="social-body">
                                     <p>
-                                        发布的图片内容，很长的文字。。。。。。。。。。
+            发布的图片内容，很长的文字。。。。。。。。。。
+        </p>
+        <img src="~/Images/gallery/3.jpg" class="img-responsive">
+                                    <p>
+                                        文字内容，很长的文字。。。。。。。。。。
                                     </p>
-                                    <img src="~/Images/gallery/3.jpg" class="img-responsive">
+                                    <div class="media bg-muted">
+                                        <div class="media-left">
+                                            <a href="javascript:;">
+                                                <img class="media-object img-md" src="~/Images/gallery/3.jpg" alt="...">
+                                            </a>
+                                        </div>
+                                        <div class="media-body">
+                                            链接内容很长很长。。。。。。。。。
+                                        </div>
+                                    </div>
                                     <div class="btn-group">
                                         <button class="btn btn-danger btn-xs"><i class="fa fa-heart"></i> 1000</button>
                                     </div>
@@ -332,14 +358,16 @@
     @Styles.Render("~/plugins/jasnyBootstrapStyles")
     @Styles.Render("~/plugins/dateRangeStyles")
     @Styles.Render("~/plugins/bootstrapEditTableStyle")
+    @Styles.Render("~/plugins/laddaStyles")
 }
 
 @section Scripts {
     @Scripts.Render("~/plugins/select2")
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/dateRange")
-    @Scripts.Render("~/plugins/bootstrapEditTableScript")
+    @Scripts.Render("~/plugins/bootstrapEditTableScriptOnly")
     @Scripts.Render("~/plugins/lodash")
+    @Scripts.Render("~/plugins/ladda")
     <script>
 
         $(function () {
@@ -399,6 +427,11 @@
             //});
             $(".wrapper.wrapper-content form").validate({
                 submitHandler: function (form) {
+                    var type = $("#ContentType").val();
+                    if (type !== "text") {
+                        var imgSrc = $("#imgDv img").attr("src");
+                        $("#Images").val(imgSrc);
+                    }
                     var $form = $(form),
                         data = $form.serialize(); //序列化表单数据
                     $.ajax({
@@ -429,7 +462,7 @@
                 mode: "inline",
                 emptytext: '请输入留言内容'
             });
-            $('.select2').editable({
+            $('.editselect2').editable({
                 type: 'select',
                 mode: "inline",
                 emptytext: '回复',
@@ -519,8 +552,7 @@
         }
 
         function publish() {
-            //var $form = $(".wrapper.wrapper-content form"),
-            //    data = $form.serialize();
+            
             var first = $(".social-feed-box:first"), arr = [];
             var temp = first.data("value");
             if (temp) {
@@ -536,10 +568,36 @@
                         };
                         arr.push(comment);
                     });
-                //alert(JSON.stringify(arr));
                 temp.FansMessages = arr;
-                alert(JSON.stringify(temp));
                 $("#CommentContent").val(JSON.stringify(temp));
+                $("#Images").val("");
+                var $form = $(".wrapper.wrapper-content form"),
+                    jsondata = $form.serialize();
+                var subBtn = $('.ladda-button').ladda();
+                $.ajax({
+                    type: "post",
+                    headers: {
+                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                    },
+                    url: "@Url.Action("SaveSet")",
+                    data: jsondata,
+                    success: function (res) {
+                        if (res.State == 1) {
+                            window.open("@Url.Action("PreviewDetail")");
+                        } else {
+                            swal("操作提醒", res.Msg, "warning");
+                        }
+                    },
+                    error: function () {
+                        swal("操作失败", "系统错误", "error");
+                    },
+                    beforeSend: function () {
+                        subBtn.ladda('start');
+                    },
+                    complete: function () {
+                        subBtn.ladda('stop');
+                    }
+                });
             }
 
         }

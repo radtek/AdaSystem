@@ -1,0 +1,653 @@
+/*
+ * What follows is the result of much research on cross-browser styling.
+ * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
+ * Kroc Camen, and the H5BP dev community and team.
+ */
+
+/* ==========================================================================
+   Base styles: opinionated defaults
+   ========================================================================== */
+*{
+    margin: 0;
+    padding: 0;
+}
+
+@font-face {
+    font-family: 'PingFang Bold';
+    src: url('../font/PingFang Bold.ttf');
+}
+@font-face {
+    font-family: 'PingFang Medium';
+    src: url('../font/PingFang Medium.ttf');
+}
+@font-face {
+    font-family: 'SFUIText Regular';
+    src: url('../font/SFUIText-Regular.otf');
+}
+@font-face {
+    font-family: 'system_fontmedium';
+    src: url('../font/sfuitext-medium.woff2') format('woff2'), url('sfuitext-medium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+html {
+    color: #222;
+    font-size: 1em;
+    line-height: 1.4;
+    width: 750px;
+}
+body {
+    font-family:'PingFang Medium';
+}
+.main{
+    background: #FFFFFF;
+    width: 750px;
+    height: 1334px;
+    OVERFLOW-X: hidden;
+}
+.photo {
+    background: url("../img/photo.jpg") no-repeat;
+    width: 750px;
+    height: 640px;
+    margin-bottom: 98px;
+}
+
+/**
+light
+ */
+.top.light {
+    background: -webkit-linear-gradient(top, rgba(243, 243, 243, 0.99), rgba(243, 243, 243, 1));
+    opacity: 1;
+    border-bottom: 1px #e5e5e5 solid;
+}
+.light .signal {
+    background: url("../img/Signal_light.png") top left no-repeat;
+    background-size: 33px 80px;
+}
+.light .batteryIcon1 {
+    background: url("../img/Battery_light2.png")no-repeat;
+    background-size: 41px 15px;
+}
+.light .battery1 {
+    background: url("../img/Battery_light1.png")no-repeat;
+    background-size: 54px 23px;
+}.light .battery3{
+    color: #000;
+}
+.light .titleBarTitle{
+    display: inline-block;
+    color: #000;
+}.light .backArrowTitle{
+    color: #000;
+}
+.light .operator{
+    color: #000;
+}
+.light .network {
+    background: url("../img/network_light.png") top left no-repeat;
+    background-size: 25px 19px;
+}
+.light .time{
+    color: #000;
+}
+.light .settingsIcon {
+    background: url("../img/SettingsIcon2.png")no-repeat;
+    background-size: 115px 27px;
+}
+.light .backArrow {
+    background: url("../img/BackArrow2.png") no-repeat;
+    background-size: 22px 36px;
+}
+.light .camera {
+    background: url("../img/camera2.png") no-repeat;
+    background-size: 46px 36px;
+}
+
+
+.top{
+    background: -webkit-linear-gradient(top, rgba(243, 243, 243, 0.48), rgba(243, 243, 243, 0));
+    opacity: 0.99;
+    width:750px;
+    height:  128px;
+    position: fixed;
+    top: 0;
+    z-index: 9;
+}
+
+.details .top{
+    background: rgb(59, 58, 62);
+    opacity: 1;
+}
+
+.startBar{
+    height: 38px;
+    width: 100%;
+}
+.elements{
+    display: inline-block;
+    float: right;
+    margin-top: 5px;
+}
+.settingsIcon {
+    background: url("../img/SettingsIcon.png")no-repeat;
+    background-size: 115px 27px;
+    width: 30px;
+    height: 27px;
+}
+.lock{
+    display: inline-block;
+    background-position: -0 -0!important;
+}
+.location{
+    display: inline-block;
+    background-position: -34px 0!important;
+}
+.alarm{
+    display: inline-block;
+    background-position: -67px 0!important;
+}
+.bluetooth{
+    display: inline-block;
+    background-position: -98px 0!important;
+}
+.signal {
+    background: url("../img/Signal_dark.png") top left no-repeat;
+    background-size: 33px 80px;
+    width: 33px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: top;
+    zoom: 1;
+    margin: 11px 0 0 13px;
+}
+.signal_5{
+    background-position: -0px -0px;
+}
+.signal_4{
+    background-position: -0px -0px;
+}
+.signal_3{
+    background-position: -0px -20px;
+}
+.signal_2{
+    background-position: -0px -40px;
+}
+.signal_1{
+    background-position: -0px -60px;
+}
+.operator{
+    margin:4px 0 0 2px ;
+    color: #FFF;
+    display: inline-block;
+    font-size: 24px;
+    letter-spacing: 1px;
+}
+.network {
+    background: url("../img/network_dark.png") top left no-repeat;
+    background-size: 25px 19px;
+    width: 25px;
+    height: 19px;
+    display: inline-block;
+    vertical-align: top;
+    zoom: 1;
+    margin: 10px 0 0 1px;
+}
+.networkText{
+    color: #FFF;
+    font-size: 24px;
+    margin:0 0 0 10px;
+}
+.network_1{
+    background-position: -0px -0px;
+}
+.time{
+    color: #FFF;
+    font-family: 'system_fontmedium';
+    font-size: 24px;
+    padding-left: 152px;
+}
+.battery1 {
+    background: url("../img/Battery_dark1.png")no-repeat;
+    background-size: 54px 23px;
+    width: 54px;
+    height: 23px;
+    float: right;
+    margin: 8px 11px 0 0;
+    position: relative;
+}
+.battery2{
+    width: 41px;
+    height: 15px;
+    left: 4px;
+    top: 4px;
+    position: absolute;
+}
+.batteryIcon1 {
+    background: url("../img/Battery_dark2.png")no-repeat;
+    background-size: 41px 15px;
+}
+.batteryIcon2 {
+    background: url("../img/battery3.png")no-repeat;
+    background-size: 41px 15px;
+}
+.battery3{
+    font-family: 'SFUIText Regular';
+    color: #FFF;
+    float: right;
+    font-size: 24px;
+    display: inline-block;
+    margin: 3px 9px 0 0;
+}
+
+.shadow{
+    background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.02) 0%,rgba(0, 0, 0, 0.3) 100%);
+    width:750px;
+    height: 100px;
+    position: absolute;
+    top: 540px;
+}
+.uName{
+    font-family: 'PingFang Bold';
+    font-size: 32px;
+    color: #FFF;
+    text-shadow: #212227 0 2px 0;
+    bottom: 20px;
+    right: 212px;
+    position: absolute;
+    letter-spacing: 1px;
+}
+.uAvatar{
+    width: 141px;
+    height:141px;
+    border: 1px solid #d4d4d4 ;
+    right: 19px;
+    bottom: -47px;
+    position: absolute;
+    padding: 3px;
+    background-color: #FFF;
+    -webkit-box-shadow: #d4d4d4 0px 0px 5px;
+    -moz-box-shadow: #d4d4d4 0px 0px 5px;
+    box-shadow: #d4d4d4 0px 0px 5px;
+}
+.uAvatar img{
+    width: 140px;
+    height:140px;
+}
+.emoji{
+    width: 34px;
+    height: 34px;
+    /*margin-top: 1px;*/
+    vertical-align:bottom;
+}
+.titleBar{
+    padding: 20px 0 21px 0;
+}
+.backArrow {
+    background: url("../img/BackArrow.png") no-repeat;
+    background-size: 22px 36px;
+    width: 22px;
+    height: 36px;
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 21px;
+    margin-top: 3px;
+}
+.backArrowTitle{
+    color: #FFF;
+    font-size: 30px;
+    letter-spacing: 1px;
+}
+.ArrowTitle1{
+    margin-left: 2px;
+}
+.ArrowTitle2{
+    margin-left: 6px;
+}
+.backArrowTitleDone{
+    color: #20d81f;
+    font-size: 32px;
+    letter-spacing: 1px;
+    padding-left: 20px;
+}
+.titleArrow{
+    width: 120px;
+    display: inline-block;
+}
+.titleBarTitle{
+    width: 500px;
+    display: none;
+    color: #FFF;
+    font-size: 36px;
+    letter-spacing: 1px;
+    text-align: center;
+}
+.details .titleBarTitle{
+    width: 500px;
+    display: inline-block;
+}
+.titleBarIcon{
+    width: 119px;
+    display: inline;
+}
+.camera {
+    background: url("../img/camera.png") no-repeat;
+    background-size: 46px 36px;
+    width: 46px;
+    height: 36px;
+    margin: 9px 28px 0 0;
+    float: right;
+}
+.placeholder{
+    padding-top: 128px;
+}
+.placeholder2{
+    padding-top: 75px;
+}
+.content1{
+    padding-top: 31px;
+    overflow:hidden
+}
+.content2{
+    padding-top: 18px;
+    overflow:hidden
+}
+.contentLeft1{
+    float: left;
+    width: 126px;
+}
+.contentRight1{
+    float: left;
+    width: 608px;
+}
+.contentLeft2{
+    float: left;
+    width: 126px;
+}
+.contentRight2{
+    float: left;
+    width: 608px;
+}
+.line{
+    padding-top: 28px;
+    border-bottom: 1px solid #e0e0e2;
+}
+.line2 {
+    padding-top: 14px;
+    border-bottom: 1px solid #e0e0e2;
+    margin-left: 50px;
+    margin-right: 10px;
+}
+.cAvatar1{
+    padding: 2px 0 0 22px;
+}
+.cAvatar1 img{
+    width:84px;
+    height: 84px;
+}
+.cAvatar2{
+    padding: 2px 0 0 22px;
+}
+.cAvatar2 img{
+    width:84px;
+    height: 84px;
+}
+.cName{
+    font-family:  'PingFang Bold';
+    color: #576b95;
+    font-size: 30px;
+    letter-spacing: 1px;
+}
+.cContent{
+    padding: 5px 0 14px 0;
+    color: #111111;
+    font-size: 30px;
+    width: 560px;
+}
+.cContent1{
+    width: 560px;
+}
+.cContent2{
+    width: 560px;
+}
+.cContent P{
+    word-wrap:break-word;
+    word-break:normal;
+    line-height: 34px;
+}
+.cLink{
+    width: 600px;
+    height: 100px;
+    background: #f3f3f5;
+    margin-top: 13px;
+    display: table;
+    overflow: hidden;
+}
+.cLinkImg{
+    padding:10px;
+    width: 80px;
+    height: 80px;
+    float: left;
+}
+.cLinkImg img{
+    width: 80px;
+    height: 80px;
+}
+.cLinkContent{
+    color: #000;
+    font-size: 28px;
+    line-height: 32px;
+    vertical-align: middle;
+    display: table-cell;
+}
+.cSite{
+    color: #576b95;
+    font-size: 24px;
+    padding-bottom: 10px;
+}
+.cOthers{
+    overflow: hidden;
+}
+.cTime{
+    color: #737373;
+    font-size: 24px;
+    float: left;
+}
+.cSource{
+    color: #737373;
+    font-size: 24px;
+    float: left;
+    padding-left: 18px;
+}
+.cDel{
+    color: #576b95;
+    font-size: 24px;
+    float: left;
+    padding-left: 39px;
+}
+.cDel2{
+    padding-left: 22px;
+}
+.cFullText{
+    color: #576b95;
+    padding: 10px 0;
+}
+.cCommentIcon {
+    float: right;
+    width: 41px;
+    height: 30px;
+    background: url("../img/CommentIcon.png") no-repeat;
+    background-size: 41px 30px;
+    margin: 0 10px 0 0;
+}
+.cCommentIcon2{
+    margin-right: 13px;
+}
+.cComment1{
+    margin-top: 10px;
+}
+.cComment2{
+    padding-left: 20px;
+    padding-right: 30px;
+    margin-top: 34px;
+}
+.cCommentCont {
+    font-size: 28px;
+    background: url("../img/Comment.png") no-repeat 23px 39px;
+    background-size: 23px 21px;
+    padding: 6px 10px 10px 16px;
+}
+.cCommentArrow{
+    width:0;
+    height:0;
+    border-left:12px solid transparent;
+    border-right:12px solid transparent;
+    border-bottom:12px solid #f3f3f5;
+    margin-left: 21px;
+}
+.cCommentBox{
+    background: #f3f3f5;
+    padding-bottom: 3px;
+}
+.cCommentRow{
+    padding: 5px 18px 0 16px;
+}
+.cCommentRow2{
+    padding-left: 50px;
+    padding-top: 11px;
+    overflow: hidden;
+}
+.cCommentLeft{
+    float: left;
+}
+.cCommentRight{
+    float: left;
+    width: 535px;
+    padding-left: 11px;
+    margin-top: -5px;
+}
+.cCommentBox .isPraise1{
+    border-top:1px solid #e0e0e2;
+    padding-top: 18px;
+}
+.cCommentBox .isPraise2{
+    border-top:1px solid #e0e0e2;
+    padding-top: 18px;
+}
+.cCommentAvatar img{
+    width: 70px;
+    height: 70px;
+}
+.cCommentName{
+    font-family:  'PingFang Bold';
+    color: #576b95;
+    font-size: 28px;
+}
+.cCommentTime{
+    float: right;
+    color: #737373;
+    font-family: 'PingFang Medium';
+    font-size: 24px;
+    margin-top: 6px;
+}
+.inline{
+    display: inline;
+}
+.cCommentContent{
+    color: #000;
+    font-size: 28px;
+    display: inline;
+}
+.cCommentPraise{
+    font-family: 'PingFang Bold';
+    color: #576b95;
+    font-size: 28px;
+}
+.cCommentHeart1 {
+    background: url("../img/heart.png") no-repeat 25px 14px;
+    background-size: 23px 20px;
+}
+.cCommentHeart2 {
+    background: url("../img/heart.png") no-repeat 23px 40px;
+    background-size: 23px 20px;
+}
+.PraiseName{
+    padding: 6px 10px 10px 16px;
+    word-wrap: break-word;
+    text-indent: 46px;
+}
+.PraiseAvatar{
+    padding: 16px 10px 6px 68px;
+}
+.cCommentPraise img{
+    width: 70px;
+    height: 70px;
+    padding-right: 10px;
+}
+.reply{
+    font-family:  'PingFang Medium';
+    color: #000;
+    font-size: 28px;
+}
+.div{
+    font-family:  'PingFang Medium';
+    color: #000;
+    font-size: 28px;
+    padding-right: 8px;
+}
+.cContentPic{
+    padding-top: 15px;
+}
+.cContentPic .img{
+    max-width: 480px;
+    max-height: 480px;
+}
+.cContentMultiPic{
+    padding-top: 15px;
+}
+.cContentMultiPic .img{
+    display: inline-block;
+    width: 158px;
+    height: 158px;
+    margin-right: 10px;
+}
+
+#btn_screen{
+    position: fixed;
+    top: 53px;
+    left: 580px;
+    -webkit-animation-name: greenPulse;
+    -webkit-animation-duration: 3s;
+    -webkit-animation-iteration-count: infinite;
+    border-style: solid;
+    border-radius: 4px;
+    box-shadow: 0 -2px 0 rgba(0,0,0,0.2) inset !important;
+    border-width: 0;
+    cursor: pointer;
+    line-height: normal;
+    margin: 0 0 1.25em;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+    padding-top: 0.75em;
+    padding-right: 1.5em;
+    padding-bottom: 0.8125em;
+    padding-left: 1.5em;
+    background-color: #2daebf;
+    border-color: #238896;
+    color: white;
+    z-index: 99;
+    font-size: 22px;
+}
+@-webkit-keyframes greenPulse {
+    from { background-color: #749a02; -webkit-box-shadow: 0 0 9px #333; }
+    50% { background-color: #91bd09; -webkit-box-shadow: 0 0 18px #91bd09; }
+    to { background-color: #749a02; -webkit-box-shadow: 0 0 9px #333; }
+}
+.ButtonComment {
+    position: absolute;
+    top: 1244px;
+    width: 750px;
+    height: 96px;
+    background: url("../img/ButtonComment.png") no-repeat;
+    background-size: 750px 96px;
+}

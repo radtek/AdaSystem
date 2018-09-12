@@ -399,6 +399,10 @@ namespace Ada.Web.Controllers
         }
         public ActionResult ChangeMediaXls(string name,string id)
         {
+            if (string.IsNullOrWhiteSpace(name)||string.IsNullOrWhiteSpace(id))
+            {
+                return Content("参数错误");
+            }
             string path = Server.MapPath("~/upload/change.xlsx");
             int count = 0;
             using (FileStream ms = new FileStream(path, FileMode.Open))

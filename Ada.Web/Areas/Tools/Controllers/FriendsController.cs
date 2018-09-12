@@ -9,6 +9,9 @@ using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel.Common;
 using Ada.Framework.Filter;
+using Ada.Services.Cache;
+using Ada.Services.Setting;
+using Newtonsoft.Json;
 using Tools.Models;
 
 namespace Tools.Controllers
@@ -16,25 +19,73 @@ namespace Tools.Controllers
     public class FriendsController : BaseController
     {
         private readonly IRepository<Fans> _repository;
-        private static Random _random=new Random(DateTime.Now.Second);
-        public FriendsController(IRepository<Fans> repository)
+        private readonly ISettingService _settingService;
+        private readonly ICacheService _cacheService;
+        private static Random _random = new Random(DateTime.Now.Second);
+        public FriendsController(IRepository<Fans> repository,
+            ISettingService settingService,
+            ICacheService cacheService)
         {
             _repository = repository;
+            _settingService = settingService;
+            _cacheService = cacheService;
         }
         public ActionResult Index()
         {
             FriendsSet view = new FriendsSet
             {
                 Network = "4G",
-                Operator = "中国移动"
+                Operator = "中国移动",
+                Is24Hour = true
             };
             return View(view);
         }
         [HttpPost]
-        public ActionResult Preview(FriendsSet friendsSet)
+        [AdaValidateAntiForgeryToken]
+        public ActionResult SaveSet(FriendsSet friendsSet)
         {
+            //var comments = SerializeHelper.DeserializeToObject<FriendContent>(friendsSet.CommentContent);
+            //if (comments.Type!="text")
+            //{
+            //    _cacheService.Put("FriendsImage",comments.Image);
+            //}
+            //comments.Image = "";
+            //friendsSet.CommentContent = SerializeHelper.SerializeToString(comments);
+            var setting = new Ada.Core.Domain.Admin.Setting
+            {
+                SettingName = typeof(FriendsSet).Name,
+                Content = JsonConvert.SerializeObject(friendsSet)
+            };
+            _settingService.AddOrUpdate(setting);
+            return Json(new { State = 1, Msg = "OK" });
+        }
+        public ActionResult PreviewDetail()
+        {
+            var friendsSet = _settingService.GetSetting<FriendsSet>();
+            friendsSet.FriendContent = new FriendContent();
+            var comments = SerializeHelper.DeserializeToObject<FriendContent>(friendsSet.CommentContent);
+            friendsSet.FriendContent.Content = comments.Content;
+            friendsSet.FriendContent.Likes = comments.Likes;
+            friendsSet.FriendContent.Image = comments.Image;
+            friendsSet.FriendContent.Type = comments.Type;
+            friendsSet.FriendContent.LinkContent = comments.LinkContent;
+            friendsSet.FriendContent.PublishDate = comments.PublishDate;
+            friendsSet.FriendContent.PublishFans = _repository.LoadEntities(d => d.Id == comments.PublishFansId).FirstOrDefault();
+            foreach (var commentsFansMessage in comments.FansMessages)
+            {
+                var fans = _repository.LoadEntities(d => d.Id == commentsFansMessage.FansId).FirstOrDefault();
+                FansMessage msg = new FansMessage
+                {
+                    Fans = fans,
+                    Message = commentsFansMessage.Message,
+                    MessageDate = commentsFansMessage.MessageDate,
+                    ReplyFans = commentsFansMessage.ReplyFans
+                };
+                friendsSet.FriendContent.FansMessages.Add(msg);
+            }
 
-            return View();
+            ViewBag.Fans = _repository.LoadEntities(d => d.IsDelete == false).Take(friendsSet.FriendContent.Likes).ToList();
+            return View(friendsSet);
         }
         [AllowAnonymous]
         public ActionResult Publish(FriendsSet friendsSet)
@@ -45,6 +96,9 @@ namespace Tools.Controllers
             friendContent.Content = friendsSet.Text;
             friendContent.Likes = friendsSet.Likes;
             friendContent.PublishDate = DateTime.Parse(dateRange[0]);
+            friendContent.Type = friendsSet.ContentType;
+            friendContent.LinkContent = friendsSet.LinkContent;
+            friendContent.Image = friendsSet.Images;
             var fans = GetRandomFans(friendsSet.Comments);
             foreach (var fan in fans)
             {
@@ -59,8 +113,8 @@ namespace Tools.Controllers
 
         private List<Fans> GetRandomFans(int count)
         {
-           var fans= _repository.LoadEntities(d => d.IsDelete == false).ToList();
-            List<Fans> result=new List<Fans>();
+            var fans = _repository.LoadEntities(d => d.IsDelete == false).ToList();
+            List<Fans> result = new List<Fans>();
             for (int i = 0; i < count; i++)
             {
                 var index = _random.Next(0, fans.Count);
@@ -78,7 +132,7 @@ namespace Tools.Controllers
         private DateTime GetRandomTime(DateTime startime, DateTime endtime)
         {
 
-          
+
             DateTime newtime;
             TimeSpan tsp = endtime - startime;
             do

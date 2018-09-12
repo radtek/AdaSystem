@@ -489,6 +489,8 @@ namespace Ada.Web
             bundles.Add(new ScriptBundle("~/plugins/bootstrapEditTableScript").Include(
                 "~/Scripts/plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js",
                 "~/Scripts/plugins/bootstrap-table/extensions/editable/bootstrap-editable.min.js"));
+            bundles.Add(new ScriptBundle("~/plugins/bootstrapEditTableScriptOnly").Include(
+                "~/Scripts/plugins/bootstrap-table/extensions/editable/bootstrap-editable.js"));
             //Bootstrap Table Export
             bundles.Add(new ScriptBundle("~/plugins/bootstrapTableExport").Include(
                 "~/Scripts/plugins/bootstrap-table/extensions/export/bootstrap-table-export.min.js",

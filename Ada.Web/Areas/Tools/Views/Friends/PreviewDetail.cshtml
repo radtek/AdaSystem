@@ -1,0 +1,234 @@
+﻿@using Ada.Core.Domain.Common
+@model Tools.Models.FriendsSet
+@{
+    Layout = null;
+    List<Fans> list = ViewBag.Fans;
+    var isPlus = 1;
+    switch (Model.PhoneType)
+    {
+        case "iphone":
+            isPlus = 1;
+            break;
+        case "iphone+":
+            isPlus = 2;
+            break;
+        case "iphoneX":
+            isPlus = 3;
+            break;
+    }
+    var css = "main" + isPlus + ".css?v="+DateTime.Now.ToString("MMddHHmmss");
+}
+
+
+<!doctype html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>预览</title>
+    <meta name="description" content="">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Place favicon.ico in the root directory -->
+    <link rel="stylesheet" href="@Url.Content("~/Areas/Tools/Content/Friends/css/jquery.mCustomScrollbar.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/Areas/Tools/Content/Friends/css/"+css)">
+
+</head>
+<body>
+    <div id="page">
+        <div id="main" class="main details">
+            <div class="top">
+                <div class="startBar">
+                    @if (isPlus == 3)
+                    {
+                        var now = Model.Is24Hour ? DateTime.Now.ToString("HH:mm") : DateTime.Now.ToString("h:mm");
+                        <span class="time">@now</span>
+                        if (Model.LocationIco)
+                        {
+                            <span class="location"></span>
+                        }
+                        <div class="battery1">
+                            @{
+                                var width = Model.Power * 0.63 + "px";
+                                var isWaring = Model.Power > 20 ? "batteryIcon1" : "batteryIcon2";
+                            }
+                            <span class="battery2 @isWaring" style="Width: @width"></span>
+                        </div>
+                        <div class="elements">
+                            <span class="signal signal_@Model.Signal"></span>
+                            @if (Model.Network == "WIFI")
+                            {
+                                <span class="network"></span>
+                            }
+                            else
+                            {
+                                <span class="networkText" style="font-weight: bold; line-height: 62px;">@Model.Network</span>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <span class="signal signal_@Model.Signal"></span>
+                        <span class="operator">@Model.Operator</span>
+                        if (Model.Network == "WIFI")
+                        {
+                            <span class="network"></span>
+                        }
+                        else
+                        {
+                            <span class="networkText">@Model.Network</span>
+                        }
+                        var now = Model.Is24Hour ? DateTime.Now.ToString("HH:mm") : DateTime.Now.ToString("tth:mm");
+                        <span class="time">@now</span>
+                        <div class="battery1">
+                            @{
+                                var width = Model.Power * 0.63 + "px";
+                                var isWaring = Model.Power > 20 ? "batteryIcon1" : "batteryIcon2";
+                            }
+                            <span class="battery2 @isWaring" style="Width: @width"></span>
+                        </div>
+                        <span class="battery3">
+                            @if (Model.PowerIco)
+                            {
+                                var power = Model.Power + "%";
+                                @power
+                            }
+                        </span>
+                        <div class="elements">
+                            @if (Model.LockIco)
+                            {
+                                <span class="settingsIcon lock"></span>
+                            }
+                            @if (Model.LocationIco)
+                            {
+                                <span class="settingsIcon location"></span>
+                            }
+                            @if (Model.ClockIco)
+                            {
+                                <span class="settingsIcon alarm"></span>
+                            }
+                            @if (Model.BluetoothIco)
+                            {
+                                <span class="settingsIcon bluetooth"></span>
+                            }
+
+                        </div>
+                    }
+
+                </div>
+                <div class="titleBar">
+                    <div class="titleArrow">
+                        <span class="backArrowTitleDone">完成</span>
+                    </div>
+                    <div class="titleBarTitle">详情</div>
+                </div>
+            </div>
+            <div class="placeholder"></div>
+            <div class="content2">
+                <div class="contentLeft2">
+                    <div class="cAvatar2">
+                        <img src="@Model.FriendContent.PublishFans.Avatar" alt="">
+                    </div>
+                </div>
+                <div class="contentRight2">
+                    <div class="cName">@Model.FriendContent.PublishFans.NickName</div>
+                    <div class="cContent cContent2">
+
+                        <p style="text-align: justify;">@Model.FriendContent.Content</p>
+                        @if (Model.FriendContent.Type == "link")
+                        {
+                            <div class="cLink">
+                                <div class="cLinkImg">
+                                    <img src="@Model.FriendContent.Image">
+                                </div>
+                                <div class="cLinkContent"><p>@Model.FriendContent.LinkContent</p></div>
+                            </div>
+                        }
+                        @if (Model.FriendContent.Type == "image")
+                        {
+                            <div class="cContentPic">
+                                <img src="@Model.FriendContent.Image" alt="" style="max-width: 480px; max-height: 480px;">
+                            </div>
+                        }
+                    </div>
+
+                    <div class="cOthers cOthers2">
+                        <div class="cTime">@Model.FriendContent.PublishDate.ToString("yyyy年M月d日 HH:mm")</div>
+                        <div class="cDel cDel2">删除</div>
+                        <div class="cCommentIcon cCommentIcon2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cComment2">
+                <div class="cCommentArrow"></div>
+                <div class="cCommentBox">
+                    <div class="cCommentPraise cCommentHeart2 PraiseAvatar">
+                        @foreach (var item in list)
+                        {
+                            <img src="@item.Avatar" alt="">
+                        }
+                    </div>
+                    <div class="cCommentCont isPraise2">
+                        @foreach (var item in Model.FriendContent.FansMessages)
+                        {
+                            <div class="cCommentRow2">
+                                <div class="cCommentLeft">
+                                    <div class="cCommentAvatar">
+                                        <img src="@item.Fans.Avatar" alt="">
+                                    </div>
+                                </div>
+                                <div class="cCommentRight">
+                                    <div class="cCommentName">
+                                        @item.Fans.NickName
+                                        <div class="cCommentTime">
+                                            @item.MessageDate.ToString("M月d日 HH:mm")
+                                        </div>
+                                    </div>
+                                    <div class="cCommentContent">
+                                        @if (string.IsNullOrWhiteSpace(item.ReplyFans))
+                                        {
+                                            @item.Message
+                                        }
+                                        else
+                                        {
+                                            <span class="reply">回复</span>
+                                            <div class="cCommentName inline">
+                                                @item.ReplyFans
+                                            </div>
+                                            <span class="div">:</span>
+                                            @item.Message
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line2"></div>
+                        }
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="placeholder2"></div>
+        </div>
+        <div class="ButtonComment"></div>
+    </div>
+
+
+    <a id="btn_screen">保存截图</a>
+
+    <script src="@Url.Content("~/Areas/Tools/Scripts/Friends/modernizr-2.8.3.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery-3.1.1.min.js")"></script>
+    <script src="@Url.Content("~/Areas/Tools/Scripts/Friends/html2canvas.min.js")"></script>
+    <script src="@Url.Content("~/Areas/Tools/Scripts/Friends/jquery.mCustomScrollbar.concat.min.js")"></script>
+    <script src="@Url.Content("~/Areas/Tools/Scripts/Friends/jQuery.md5.js")"></script>
+
+    <script>
+        var Ver = @isPlus ;
+        var Type = 1;
+
+    </script>
+    <script src="@Url.Content("~/Areas/Tools/Scripts/Friends/main.js")"></script>
+</body>
+</html>

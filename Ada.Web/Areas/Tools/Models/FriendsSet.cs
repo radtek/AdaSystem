@@ -11,15 +11,16 @@ namespace Tools.Models
         public FriendsSet()
         {
             PhoneType = "iphone";
-            Signal = 5;
+            Signal = 4;
             Power = 88;
             LockIco = false;
             LocationIco = false;
             ClockIco = false;
             BluetoothIco = false;
-            PowerIco = true;
+            PowerIco = false;
             Likes = 0;
             Comments = 0;
+            Is24Hour = false;
         }
         /// <summary>
         /// 手机类型
@@ -41,6 +42,11 @@ namespace Tools.Models
         /// </summary>
         [Display(Name = "网络制式")]
         public string Network { get; set; }
+        /// <summary>
+        /// 日期24小时制
+        /// </summary>
+        [Display(Name = "日期24小时制")]
+        public bool Is24Hour { get; set; }
         /// <summary>
         /// 电量百分比
         /// </summary>
@@ -121,5 +127,10 @@ namespace Tools.Models
         /// </summary>
         [Display(Name = "评价内容")]
         public string CommentContent { get; set; }
+        /// <summary>
+        /// 评价内容
+        /// </summary>
+        [Display(Name = "评价内容")]
+        public FriendContent  FriendContent { get; set; }
     }
 }

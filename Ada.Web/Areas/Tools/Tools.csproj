@@ -102,7 +102,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Friends\css\jquery.mCustomScrollbar.min.css" />
+    <Content Include="Content\Friends\css\main1.css" />
     <Content Include="Content\Friends\css\main2.css" />
+    <Content Include="Content\Friends\css\main3.css" />
     <Content Include="Content\Friends\img\Avatar.jpg" />
     <Content Include="Content\Friends\img\battery3.png" />
     <Content Include="Content\Friends\img\Battery_dark1.png" />
@@ -112,6 +114,7 @@
     <Content Include="Content\Friends\img\CommentIcon.png" />
     <Content Include="Content\Friends\img\head.jpg" />
     <Content Include="Content\Friends\img\heart.png" />
+    <Content Include="Content\Friends\img\location_dark.png" />
     <Content Include="Content\Friends\img\network_dark.png" />
     <Content Include="Content\Friends\img\SettingsIcon.png" />
     <Content Include="Content\Friends\img\Signal_dark.png" />
@@ -138,13 +141,14 @@
     <Content Include="Content\Friends\font\sfuitext-medium.woff2" />
     <None Include="packages.config" />
     <Content Include="Views\Friends\Index.cshtml" />
-    <Content Include="Views\Friends\Preview.cshtml" />
+    <Content Include="Views\Friends\PreviewDetail.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Fans\Index.cshtml" />
     <Content Include="Views\Fans\Add.cshtml" />
     <Content Include="Views\Fans\Update.cshtml" />
     <Content Include="Views\Fans\Edit.cshtml" />
     <Content Include="Views\Friends\ContentPreview.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
