@@ -235,12 +235,11 @@ namespace Ada.Web
 
             // summernote styles
             bundles.Add(new StyleBundle("~/plugins/summernoteStyles").Include(
-                      "~/Content/plugins/summernote/summernote.css",
-                      "~/Content/plugins/summernote/summernote-bs3.css"));
+                      "~/Content/plugins/summernote/summernote.css"));
 
             // summernote 
             bundles.Add(new ScriptBundle("~/plugins/summernote").Include(
-                      "~/Scripts/plugins/summernote/summernote.min.js"));
+                      "~/Scripts/plugins/summernote/summernote.js", "~/Scripts/plugins/summernote/lang/summernote-zh-CN.js"));
 
             // toastr notification 
             bundles.Add(new ScriptBundle("~/plugins/toastr").Include(
@@ -337,11 +336,14 @@ namespace Ada.Web
             // Select2 Styless
             bundles.Add(new StyleBundle("~/plugins/select2Styles").Include(
                       "~/Content/plugins/select2/select2.min.css"));
-
+            bundles.Add(new StyleBundle("~/plugins/select2ThemeStyles").Include(
+                "~/Content/plugins/select2/select2-bootstrap.css"));
             // Select2
             bundles.Add(new ScriptBundle("~/plugins/select2").Include(
                       "~/Scripts/plugins/select2/select2.full.min.js", "~/Scripts/plugins/select2/i18n/zh-CN.js"));
-
+            // Select2Tree
+            bundles.Add(new ScriptBundle("~/plugins/select2Tree").Include(
+                "~/Scripts/plugins/select2/select2tree.js"));
             // Masonry
             bundles.Add(new ScriptBundle("~/plugins/masonry").Include(
                       "~/Scripts/plugins/masonary/masonry.pkgd.min.js"));
@@ -483,6 +485,9 @@ namespace Ada.Web
                 "~/Scripts/plugins/bootstrap-table/bootstrap-table.min.js",
                 "~/Scripts/plugins/bootstrap-table/extensions/mobile/bootstrap-table-mobile.min.js",
                 "~/Scripts/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"));
+            // Bootstrap Table-treeview
+            bundles.Add(new ScriptBundle("~/plugins/bootstrapTableTreeViewScript").Include(
+                "~/Scripts/plugins/bootstrap-table/extensions/tree-grid/bootstraptable-treeview.js"));
             //Bootstrap Table Edit
             bundles.Add(new StyleBundle("~/plugins/bootstrapEditTableStyle").Include(
                 "~/Content/plugins/bootstrap-table/extensions/editable/css/bootstrap-editable.css", new CssRewriteUrlTransform()));
@@ -519,6 +524,13 @@ namespace Ada.Web
             // jqtagcanvas
             bundles.Add(new ScriptBundle("~/plugins/tagcanvasScript").Include(
                 "~/Scripts/plugins/tagcanvas/jquery.tagcanvas.js"));
+
+            // jqTreegrid Styles
+            bundles.Add(new StyleBundle("~/plugins/jqTreegridStyle").Include(
+                "~/Content/plugins/bootstrap-table/extensions/tree-grid/jquery.treegrid.min.css"));
+            // jqTreegrid
+            bundles.Add(new ScriptBundle("~/plugins/jqTreegridScript").Include(
+                "~/Scripts/plugins/bootstrap-table/extensions/tree-grid/bootstrap-table-treegrid.js", "~/Scripts/plugins/bootstrap-table/extensions/tree-grid/jquery.treegrid.min.js"));
             //===========================前端=============================
             //bootstrap 4.0
             bundles.Add(new StyleBundle("~/WebGlobal/bootstrapStyle").Include(

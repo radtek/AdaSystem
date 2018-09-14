@@ -99,13 +99,13 @@
                                 <div class="col-sm-10">
                                     @{
                                         var is24 = Model.Is24Hour ? "checked=''" : "";
-                                        
+
                                     }
                                     <div class="checkbox checkbox-success checkbox-inline">
                                         <input type="checkbox" id="Is24Hour" name="Is24Hour" value="true" @is24>
                                         <label for="Is24Hour"> 是 </label>
                                     </div>
-                                   
+
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -199,7 +199,7 @@
                                             <span class="btn btn-success btn-sm btn-file">
                                                 <span class="fileinput-new">选择图片</span><span class="fileinput-exists">更换图片</span>
                                                 <input type="file">
-                                                @Html.HiddenFor(d=>d.Images)
+                                                @Html.HiddenFor(d => d.Images)
                                             </span>
                                             <a href="#" class="btn btn-warning btn-sm fileinput-exists" data-dismiss="fileinput">移除图片</a>
                                         </div>
@@ -249,100 +249,100 @@
                         <h5>内容预览</h5>
                     </div>
                     <div class="ibox-content" id="contentPreview">
-                        @Html.HiddenFor(d=>d.CommentContent)
+                        @Html.HiddenFor(d => d.CommentContent)
                         @*<div class="social-feed-box">
-                                <div class="pull-right social-action dropdown">
-                                    <button data-toggle="dropdown" class="dropdown-toggle btn-white">
-                                        <i class="fa fa-angle-down"></i>
-                                    </button>
-                                    <ul class="dropdown-menu m-t-xs">
-                                        <li><a href="javascript:;">新增留言</a></li>
-                                        <li><a href="javascript:;">删除内容</a></li>
-                                    </ul>
-                                </div>
-                                <div class="social-avatar">
-                                    <a href="" class="pull-left">
-                                        <img alt="image" src="~/Images/a6.jpg">
-                                    </a>
-                                    <div class="media-body">
-                                        <a href="javascript:;">
-                                            测试1
-                                        </a>
-                                        <small class="text-muted">2018-08-11 11:11:11</small>
-                                    </div>
-                                </div>
-                                <div class="social-body">
-                                    <p>
-            发布的图片内容，很长的文字。。。。。。。。。。
-        </p>
-        <img src="~/Images/gallery/3.jpg" class="img-responsive">
-                                    <p>
-                                        文字内容，很长的文字。。。。。。。。。。
-                                    </p>
-                                    <div class="media bg-muted">
-                                        <div class="media-left">
-                                            <a href="javascript:;">
-                                                <img class="media-object img-md" src="~/Images/gallery/3.jpg" alt="...">
-                                            </a>
-                                        </div>
-                                        <div class="media-body">
-                                            链接内容很长很长。。。。。。。。。
-                                        </div>
-                                    </div>
-                                    <div class="btn-group">
-                                        <button class="btn btn-danger btn-xs"><i class="fa fa-heart"></i> 1000</button>
-                                    </div>
-                                </div>
-                                <div class="social-footer">
-                                    <div class="social-comment">
-                                        <a href="" class="pull-left">
-                                            <img alt="image" src="~/Images/a1.jpg">
-                                        </a>
-                                        <div class="media-body">
-                                            <a href="javascript:;">
-                                                某某2
-                                            </a>
-                                            回复内容22.
-                                            <br />
-                                            <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
-                                            <small class="text-muted">11:12</small>
-                                        </div>
-                                    </div>
+                                                    <div class="pull-right social-action dropdown">
+                                                        <button data-toggle="dropdown" class="dropdown-toggle btn-white">
+                                                            <i class="fa fa-angle-down"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu m-t-xs">
+                                                            <li><a href="javascript:;">新增留言</a></li>
+                                                            <li><a href="javascript:;">删除内容</a></li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="social-avatar">
+                                                        <a href="" class="pull-left">
+                                                            <img alt="image" src="~/Images/a6.jpg">
+                                                        </a>
+                                                        <div class="media-body">
+                                                            <a href="javascript:;">
+                                                                测试1
+                                                            </a>
+                                                            <small class="text-muted">2018-08-11 11:11:11</small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="social-body">
+                                                        <p>
+                                发布的图片内容，很长的文字。。。。。。。。。。
+                            </p>
+                            <img src="~/Images/gallery/3.jpg" class="img-responsive">
+                                                        <p>
+                                                            文字内容，很长的文字。。。。。。。。。。
+                                                        </p>
+                                                        <div class="media bg-muted">
+                                                            <div class="media-left">
+                                                                <a href="javascript:;">
+                                                                    <img class="media-object img-md" src="~/Images/gallery/3.jpg" alt="...">
+                                                                </a>
+                                                            </div>
+                                                            <div class="media-body">
+                                                                链接内容很长很长。。。。。。。。。
+                                                            </div>
+                                                        </div>
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-danger btn-xs"><i class="fa fa-heart"></i> 1000</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="social-footer">
+                                                        <div class="social-comment">
+                                                            <a href="" class="pull-left">
+                                                                <img alt="image" src="~/Images/a1.jpg">
+                                                            </a>
+                                                            <div class="media-body">
+                                                                <a href="javascript:;">
+                                                                    某某2
+                                                                </a>
+                                                                回复内容22.
+                                                                <br />
+                                                                <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
+                                                                <small class="text-muted">11:12</small>
+                                                            </div>
+                                                        </div>
 
-                                    <div class="social-comment">
-                                        <a href="" class="pull-left">
-                                            <img alt="image" src="~/Images/a2.jpg">
-                                        </a>
-                                        <div class="media-body">
-                                            <a href="javascript:;">
-                                                某某3
-                                            </a>
-                                            回复内容33.
-                                            <br />
-                                            <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
-                                            <small class="text-muted">11:32</small>
-                                        </div>
-                                    </div>
+                                                        <div class="social-comment">
+                                                            <a href="" class="pull-left">
+                                                                <img alt="image" src="~/Images/a2.jpg">
+                                                            </a>
+                                                            <div class="media-body">
+                                                                <a href="javascript:;">
+                                                                    某某3
+                                                                </a>
+                                                                回复内容33.
+                                                                <br />
+                                                                <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
+                                                                <small class="text-muted">11:32</small>
+                                                            </div>
+                                                        </div>
 
-                                    <div class="social-comment">
-                                        <a href="" class="pull-left">
-                                            <img alt="image" src="~/Images/a8.jpg">
-                                        </a>
-                                        <div class="media-body">
-                                            <a href="javascript:;">
-                                                某某4
-                                            </a>
-                                            回复内容44.
-                                            <br />
-                                            <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
-                                            <small class="text-muted">11:42</small>
-                                        </div>
-                                    </div>
+                                                        <div class="social-comment">
+                                                            <a href="" class="pull-left">
+                                                                <img alt="image" src="~/Images/a8.jpg">
+                                                            </a>
+                                                            <div class="media-body">
+                                                                <a href="javascript:;">
+                                                                    某某4
+                                                                </a>
+                                                                回复内容44.
+                                                                <br />
+                                                                <a href="javascript:;" class="small"><i class="fa fa-clock-o"></i> </a>
+                                                                <small class="text-muted">11:42</small>
+                                                            </div>
+                                                        </div>
 
 
-                                </div>
+                                                    </div>
 
-                            </div>*@
+                                                </div>*@
                     </div>
                 </div>
             </div>
@@ -355,6 +355,7 @@
 @section Styles {
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
     @Styles.Render("~/plugins/select2Styles")
+    @*@Styles.Render("~/plugins/select2ThemeStyles")*@
     @Styles.Render("~/plugins/jasnyBootstrapStyles")
     @Styles.Render("~/plugins/dateRangeStyles")
     @Styles.Render("~/plugins/bootstrapEditTableStyle")
@@ -363,6 +364,7 @@
 
 @section Scripts {
     @Scripts.Render("~/plugins/select2")
+    @*@Scripts.Render("~/plugins/select2Tree")*@
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/dateRange")
     @Scripts.Render("~/plugins/bootstrapEditTableScriptOnly")
@@ -371,6 +373,7 @@
     <script>
 
         $(function () {
+            //$("#test").select2tree();
             var options = {};
             options.id = "FriendId";
             options.url = "@Url.Action("GetList","Fans")";
@@ -479,7 +482,7 @@
                                     if (index<0) {
                                         arr.push({ text: text, value: text });
                                     }
-                                    
+
                                 });
                             return arr;
                         }
@@ -552,7 +555,7 @@
         }
 
         function publish() {
-            
+
             var first = $(".social-feed-box:first"), arr = [];
             var temp = first.data("value");
             if (temp) {
@@ -562,7 +565,7 @@
                     function(k, v) {
                         var comment = {
                             FansId: $(v).find("strong").data("id"),
-                            ReplyFans: $(v).find(".select2").html() === "回复" ? "" : $(v).find(".select2").html(),
+                            ReplyFans: $(v).find(".editselect2").html() === "回复" ? "" : $(v).find(".editselect2").html(),
                             Message: $(v).find(".commentmsg").html() === "请输入留言内容" ? "" : $(v).find(".commentmsg").html(),
                             MessageDate: $(v).find(".commentdate").html()
                         };

@@ -363,7 +363,7 @@ namespace Business.Controllers
                     //    detail.VerificationMoney = 0;
                     //    detail.ConfirmVerificationMoney = businessOrderDetail.SellMoney;
                     //}
-                   
+
                     //可以修改稿件标题
                     detail.MediaTitle = businessOrderDetail.MediaTitle;
                     detail.PrePublishDate = businessOrderDetail.PrePublishDate;

@@ -572,7 +572,7 @@ light
 .cCommentPraise img{
     width: 105px;
     height: 105px;
-    padding-right: 15px;
+    padding-right: 0px;
 }
 .reply{
     font-family:  'PingFang Medium';

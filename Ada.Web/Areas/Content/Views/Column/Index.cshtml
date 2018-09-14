@@ -1,0 +1,138 @@
+﻿@using System.Web.Optimization
+@{
+    ViewBag.Title = "栏目管理";
+}
+@Html.Partial("Bread")
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <table id="table"></table>
+                </div>
+                <div id="toolbar" class="btn-group">
+                    <a class="btn btn-primary btn-outline" href="@Url.Action("Add")">
+                        <i class="fa fa-plus"></i> 新增栏目
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Styles {
+    @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/jqTreegridStyle")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/jqTreegridScript")
+    <script type="text/javascript">
+        var $table = $('#table');
+        $(function () {
+            $table.bootstrapTable({
+                url: '@Url.Action("GetList")',
+                classes: "table table-no-bordered",
+                toolbar: '#toolbar',
+                height: $(window).height(),
+                striped: true,
+                sidePagination: 'server',
+                idField: 'Id',
+                columns: [
+                    {
+                        field: 'Title',
+                        title: '栏目名称',
+                        align: 'left',
+                        formatter: function (value, row) {
+                            if (row.ParentId) {
+                                return value + "  [" + row.Count + "]";
+                            } else {
+                                return value;
+                            }
+                            
+                        }
+                    },
+                    // {field: 'id', title: '编号', sortable: true, align: 'center'},
+                    // {field: 'pid', title: '所属上级'},
+                    //{
+                    //    field: 'Count',
+                    //    title: '关联文章数',
+                    //    align: 'center',
+                    //    formatter: function(value) {
+                    //        return '<span class="label label-success">' + value + '</span>';
+                    //    }
+                    //},
+                    {
+                        field: 'Id',
+                        title: '操作',
+                        align: 'center',
+                        valign: "middle",
+                        formatter: function (value, row) {
+
+                            return "<div class='btn-group'>" +
+                                "<a class='btn btn-success btn-outline btn-xs' href='@Url.Action("Update")?id=" + value + "'><i class='fa fa-pencil'></i> 编辑</a> " +
+                                "<button class='btn btn-danger btn-outline btn-xs' onclick=\"cancle('" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button></div>";
+                        }
+                    }
+                ],
+                treeShowField: 'Title',
+                parentIdField: 'ParentId',
+                onLoadSuccess: function (data) {
+                    $table.treegrid({
+                        // initialState: 'collapsed',
+                        //treeColumn: 0,
+                        // expanderExpandedClass: 'glyphicon glyphicon-minus',
+                        // expanderCollapsedClass: 'glyphicon glyphicon-plus',
+                        onChange: function () {
+                            $table.bootstrapTable('resetWidth');
+                        }
+                    });
+                }
+            });
+        });
+        function cancle(id) {
+            swal({
+                title: "您确定吗?",
+                text: "确认要删除此栏目吗?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true
+            }, function () {
+                $.ajax({
+                    type: "post",
+                    headers: {
+                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                    },
+                    url: "@Url.Action("Delete")",
+                    data: { "id": id },
+                    success: function (data) {
+                        if (data.State == 1) {
+                            $("#table").bootstrapTable('refresh');
+                            swal({
+                                title: "操作成功",
+                                text: data.Msg,
+                                timer: 2000,
+                                type:"success",
+                                showConfirmButton: false
+                            });
+
+                        } else {
+                            swal("操作提醒", data.Msg, "warning");
+                        }
+                    },
+                    error: function () {
+                        swal("操作失败", "系统错误", "error");
+                    },
+                    complete: function () {
+
+                    }
+
+                });
+            });
+        }
+    </script>
+}

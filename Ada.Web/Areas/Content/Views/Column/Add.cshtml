@@ -1,0 +1,31 @@
+﻿@using System.Web.Optimization
+@model Ada.Core.ViewModel.Content.ColumnView
+@{
+    ViewBag.Title = "新建栏目";
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "栏目管理", Value = Url.Action("Index") } };
+}
+@Html.Partial("Bread")
+<div class="wrapper wrapper-content animated fadeInRight">
+    @using (Html.BeginForm("Add", "Column", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <p class="bg-danger">@Html.ValidationMessage("message") </p>
+        @Html.Partial("Edit")
+    }
+</div>
+@section Styles {
+    @Styles.Render("~/plugins/jasnyBootstrapStyles")
+    @Styles.Render("~/plugins/select2Styles")
+    @Styles.Render("~/plugins/select2ThemeStyles")
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/select2")
+    @Scripts.Render("~/plugins/select2Tree")
+    @Scripts.Render("~/plugins/jasnyBootstrap")
+    <script>
+        $(function () {
+            $("#ParentId").select2tree();
+        });
+    </script>
+}
+

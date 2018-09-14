@@ -10,7 +10,7 @@
       return 'Lade, bitte warten...';
     },
     formatRecordsPerPage: function (pageNumber) {
-      return pageNumber + ' Einträge pro Seite.';
+      return pageNumber + ' Zeilen pro Seite.';
     },
     formatShowingRows: function (pageFrom, pageTo, totalRows) {
       return 'Zeige Zeile ' + pageFrom + ' bis ' + pageTo + ' von ' + totalRows + ' Zeile' + ((totalRows > 1) ? "n" : "")+".";
@@ -19,10 +19,13 @@
       return 'Zeige ' + totalRows + ' Zeile' + ((totalRows > 1) ? "n" : "")+".";
     },
     formatSearch: function () {
-      return 'Suchen ...';
+      return 'Suchen';
     },
     formatNoMatches: function () {
-      return 'Keine passenden Ergebnisse gefunden.';
+      return 'Keine passenden Ergebnisse gefunden';
+    },
+    formatPaginationSwitch: function () {
+      return 'Verstecke/Zeige Nummerierung';
     },
     formatRefresh: function () {
       return 'Neu laden';
@@ -35,7 +38,13 @@
     },
     formatAllRows: function () {
       return 'Alle';
-    }
+    },
+    formatExport: function () {
+      return 'Datenexport';
+    },
+    formatClearFilters: function () {
+      return 'Lösche Filter';
+     }
   };
 
     $.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales['de-DE']);

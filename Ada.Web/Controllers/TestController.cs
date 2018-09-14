@@ -478,6 +478,8 @@ namespace Ada.Web.Controllers
                         media.LinkMan.Transactor = transactor;
                         media.LinkMan.TransactorId = transactorId;
                     }
+
+                    media.IsDelete = false;
                     count++;
                 }
 

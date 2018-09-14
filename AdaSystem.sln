@@ -53,6 +53,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crawler", "Ada.Web\Areas\Cr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools", "Ada.Web\Areas\Tools\Tools.csproj", "{ED43983A-C2E4-4FB6-8FA7-115DE80C0770}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Content", "Ada.Web\Areas\Content\Content.csproj", "{74B444C8-A4DE-4320-94AF-887B27D515F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -155,6 +157,10 @@ Global
 		{ED43983A-C2E4-4FB6-8FA7-115DE80C0770}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED43983A-C2E4-4FB6-8FA7-115DE80C0770}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED43983A-C2E4-4FB6-8FA7-115DE80C0770}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74B444C8-A4DE-4320-94AF-887B27D515F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74B444C8-A4DE-4320-94AF-887B27D515F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74B444C8-A4DE-4320-94AF-887B27D515F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74B444C8-A4DE-4320-94AF-887B27D515F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -178,6 +184,7 @@ Global
 		{CA257809-9D21-4DDF-B494-4AE146A038F8} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
 		{5BC03BE5-006C-4C36-928D-192D7614C8EB} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
 		{ED43983A-C2E4-4FB6-8FA7-115DE80C0770} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
+		{74B444C8-A4DE-4320-94AF-887B27D515F4} = {212D2A4D-0325-443C-94B2-4EA3CDE18248}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AB64B513-252F-4F91-A011-A6FD97731889}

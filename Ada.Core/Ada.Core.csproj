@@ -217,6 +217,8 @@
     <Compile Include="ViewModel\Business\InvoiceWriteOffView.cs" />
     <Compile Include="ViewModel\Business\OrderDetailCommentView.cs" />
     <Compile Include="ViewModel\Common\FansView.cs" />
+    <Compile Include="ViewModel\Content\ArticleView.cs" />
+    <Compile Include="ViewModel\Content\ColumnView.cs" />
     <Compile Include="ViewModel\LoginModel.cs" />
     <Compile Include="ViewModel\Purchase\PurchaseReturnOrderView.cs" />
     <Compile Include="ViewModel\Resource\MediaAppointmentView.cs" />

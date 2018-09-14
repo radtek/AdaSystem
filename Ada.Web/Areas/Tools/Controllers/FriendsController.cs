@@ -84,7 +84,7 @@ namespace Tools.Controllers
                 friendsSet.FriendContent.FansMessages.Add(msg);
             }
 
-            ViewBag.Fans = _repository.LoadEntities(d => d.IsDelete == false).Take(friendsSet.FriendContent.Likes).ToList();
+            ViewBag.Fans = _repository.LoadEntities(d => d.IsDelete == false).OrderBy(d=>Guid.NewGuid()).Take(friendsSet.FriendContent.Likes).ToList();
             return View(friendsSet);
         }
         [AllowAnonymous]

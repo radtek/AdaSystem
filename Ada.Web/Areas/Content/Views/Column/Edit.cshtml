@@ -1,0 +1,111 @@
+﻿@using Ada.Core.ViewModel
+@model Ada.Core.ViewModel.Content.ColumnView
+@{
+    List<TreeView> treeViews = ViewBag.Trees;
+}
+@helper Tree(List<TreeView> trees,string id)
+{
+if (trees.Any(d=>d.ParentId==id))
+{
+    foreach (var item in trees.Where(d=>d.ParentId==id))
+    {
+            var isSelect = Model.ParentId == item.Id ? "selected='selected'" : "";
+            <option value="@item.Id" parent="@item.ParentId" @isSelect>@item.Text</option>
+            @Tree(item.Children,item.Id)
+        }
+    }
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox">
+            <div class="ibox-title">
+                <a class="btn btn-outline btn-default btn-sm" href="javascript:goBackOrClose();"><i class="fa fa-reply"></i> 返回</a>
+                <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
+            </div>
+            <div class="ibox-content">
+                <div class="sk-spinner sk-spinner-wave">
+                    <div class="sk-rect2"></div>
+                    <div class="sk-rect3"></div>
+                    <div class="sk-rect4"></div>
+                    <div class="sk-rect5"></div>
+                </div>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.ParentId, Html.DisplayNameFor(d => d.ParentId).ToString(), new {@class = "col-sm-2 control-label"})
+                        <div class="col-sm-10">
+                            <select id="ParentId" name="ParentId" class="form-control">
+                                <option value="" parent="0">请选择上级栏目</option>
+                                @Tree(treeViews, null)
+                              </select>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Title, Html.DisplayNameFor(d => d.Title).ToString(), new {@class = "col-sm-2 control-label"})
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.Title, new {@class = "form-control", required = ""})
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.CallIndex, Html.DisplayNameFor(d => d.CallIndex).ToString(), new {@class = "col-sm-2 control-label"})
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.CallIndex, new {@class = "form-control", required = ""})
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Url, Html.DisplayNameFor(d => d.Url).ToString(), new {@class = "col-sm-2 control-label"})
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.Url, new {@class = "form-control"})
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.CoverPic, Html.DisplayNameFor(d => d.CoverPic).ToString(), new {@class = "col-sm-2 control-label"})
+                        <div class="col-sm-10">
+                            @{
+                                var isAvatar = string.IsNullOrWhiteSpace(Model.CoverPic) ? "fileinput-new" : "fileinput-exists";
+                            }
+                            <div class="fileinput @isAvatar" data-provides="fileinput">
+                                <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;">
+                                    @if (!string.IsNullOrWhiteSpace(Model.CoverPic))
+                                    {
+                                        <img src="@Model.CoverPic"/>
+                                    }
+                                </div>
+                                <div>
+                                    <span class="btn btn-success btn-sm btn-file">
+                                        <span class="fileinput-new">选择图片</span><span class="fileinput-exists">更换图片</span>
+                                        <input type="file" name="CoverPic">
+                                    </span>
+                                    <a href="#" class="btn btn-warning btn-sm fileinput-exists" data-dismiss="fileinput">移除图片</a>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Content, Html.DisplayNameFor(d => d.Content).ToString(), new {@class = "col-sm-2 control-label"})
+                        <div class="col-sm-10">
+                            @Html.TextAreaFor(d => d.Content, new {@class = "form-control"})
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Taxis, Html.DisplayNameFor(d => d.Taxis).ToString(), new {@class = "col-sm-2 control-label"})
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.Taxis, new {@class = "form-control", required = "",type="number"})
+                        </div>
+                    </div>
+                    @Html.HiddenFor(d => d.Id)
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
