@@ -1222,6 +1222,7 @@
     <Content Include="Content\plugins\bootstrap-table\extensions\img\expand.png" />
     <Content Include="Content\plugins\bootstrap-table\extensions\tree-grid\jquery.treegrid.min.css" />
     <Content Include="Content\plugins\bootstrap-tagsinput\bootstrap-tagsinput.css" />
+    <Content Include="Content\plugins\bootstrap-treeview\bootstrap-treeview.css" />
     <Content Include="Content\plugins\bootstrapSocial\bootstrap-social.css" />
     <Content Include="Content\plugins\bootstrapTour\bootstrap-tour.min.css" />
     <Content Include="Content\plugins\c3\c3.min.css" />
@@ -2211,6 +2212,7 @@
     <Content Include="Scripts\plugins\bootstrap-table\extensions\tree-grid\bootstrap-table-treegrid.js" />
     <Content Include="Scripts\plugins\bootstrap-table\extensions\tree-grid\bootstraptable-treeview.js" />
     <Content Include="Scripts\plugins\bootstrap-table\extensions\tree-grid\jquery.treegrid.min.js" />
+    <Content Include="Scripts\plugins\bootstrap-treeview\bootstrap-treeview.js" />
     <Content Include="Scripts\plugins\fullcalendar\fullcalendar.js" />
     <Content Include="Scripts\plugins\fullcalendar\locale-all.js" />
     <Content Include="Scripts\plugins\ionRangeSlider\ion.rangeSlider.js" />

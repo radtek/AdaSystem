@@ -3,21 +3,13 @@ using System.Collections.Generic;
 using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Runtime.Caching;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
-using Ada.Core.Domain.API;
 using Ada.Core.Domain.QuartzTask;
 using Ada.Core.Domain.Resource;
-using Ada.Core.Infrastructure;
-using Ada.Core.Tools;
 using Ada.Core.ViewModel.API.iDataAPI;
 using Ada.Data;
-using Ada.Services.API;
-using Ada.Services.Cache;
 using log4net;
 using Newtonsoft.Json;
 using Quartz;
@@ -109,7 +101,7 @@ namespace QuartzTask.Jobs
                     var apiUrls = job.ApiUrl.Split(',');
                     var wxInfoApi = apiUrls[0];
                     var wxArticleApi = apiUrls[1];
-                    var now = DateTime.Now.AddMonths(-3);
+                    var now = DateTime.Now.AddMonths(-6);
                     var media = db.Set<Media>().FirstOrDefault(d =>
                       d.IsDelete == false &&
                       where.Contains(d.TransactorId) &&
@@ -252,7 +244,11 @@ namespace QuartzTask.Jobs
                                                             article.LikeCount = articleData.likeCount;
                                                             article.ViewCount = articleData.viewCount;
                                                             article.Title = articleData.title;
-
+                                                            media.MediaLink = articleData.biz;
+                                                            if (!string.IsNullOrWhiteSpace(articleData.posterId))
+                                                            {
+                                                                media.MediaID = articleData.posterId;
+                                                            }
                                                         }
                                                         else
                                                         {
@@ -276,7 +272,11 @@ namespace QuartzTask.Jobs
                                                             article.ViewCount = articleData.viewCount;
                                                             article.Title = articleData.title;
                                                             media.MediaArticles.Add(article);
-
+                                                            media.MediaLink = articleData.biz;
+                                                            if (!string.IsNullOrWhiteSpace(articleData.posterId))
+                                                            {
+                                                                media.MediaID = articleData.posterId;
+                                                            }
                                                         }
                                                     }
                                                 }

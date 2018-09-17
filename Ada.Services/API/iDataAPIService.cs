@@ -253,6 +253,11 @@ namespace Ada.Services.API
                             article.LikeCount = articleData.likeCount;
                             article.ViewCount = articleData.viewCount;
                             article.Title = articleData.title;
+                            media.MediaLink = articleData.biz;
+                            if (!string.IsNullOrWhiteSpace(articleData.posterId))
+                            {
+                                media.MediaID = articleData.posterId;
+                            }
                             updateCount++;
                         }
                         else
@@ -275,6 +280,11 @@ namespace Ada.Services.API
                             article.ViewCount = articleData.viewCount;
                             article.Title = articleData.title;
                             media.MediaArticles.Add(article);
+                            media.MediaLink = articleData.biz;
+                            if (!string.IsNullOrWhiteSpace(articleData.posterId))
+                            {
+                                media.MediaID = articleData.posterId;
+                            }
                             addCount++;
                         }
                     }
@@ -660,6 +670,7 @@ namespace Ada.Services.API
                                                 article.LikeCount = articleData.likeCount;
                                                 article.ViewCount = articleData.viewCount;
                                                 article.Title = articleData.title;
+                                                media.MediaLink = articleData.biz;
                                                 updateCount++;
 
                                             }
@@ -683,6 +694,7 @@ namespace Ada.Services.API
                                                 article.ViewCount = articleData.viewCount;
                                                 article.Title = articleData.title;
                                                 media.MediaArticles.Add(article);
+                                                media.MediaLink = articleData.biz;
                                                 addCount++;
 
                                             }

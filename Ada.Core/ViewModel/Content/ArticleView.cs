@@ -115,5 +115,10 @@ namespace Ada.Core.ViewModel.Content
         /// </summary>
         [Display(Name = "文章类型")]
         public string Type { get; set; }
+        /// <summary>
+        /// 排序
+        /// </summary>
+        [Display(Name = "排序")]
+        public int? Taxis { get; set; }
     }
 }

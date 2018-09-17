@@ -119,6 +119,9 @@
     <Content Include="Views\Column\Add.cshtml" />
     <Content Include="Views\Column\Update.cshtml" />
     <Content Include="Views\Column\Edit.cshtml" />
+    <Content Include="Views\Article\Add.cshtml" />
+    <Content Include="Views\Article\Update.cshtml" />
+    <Content Include="Views\Article\Edit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

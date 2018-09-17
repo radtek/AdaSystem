@@ -531,6 +531,11 @@ namespace Ada.Web
             // jqTreegrid
             bundles.Add(new ScriptBundle("~/plugins/jqTreegridScript").Include(
                 "~/Scripts/plugins/bootstrap-table/extensions/tree-grid/bootstrap-table-treegrid.js", "~/Scripts/plugins/bootstrap-table/extensions/tree-grid/jquery.treegrid.min.js"));
+            // Bootstrap TreeView
+            bundles.Add(new ScriptBundle("~/plugins/bootstrapTreeViewScript").Include(
+                "~/Scripts/plugins/bootstrap-treeview/bootstrap-treeview.js"));
+            bundles.Add(new StyleBundle("~/plugins/bootstrapTreeViewStyles").Include(
+                "~/Content/plugins/bootstrap-treeview/bootstrap-treeview.css"));
             //===========================前端=============================
             //bootstrap 4.0
             bundles.Add(new StyleBundle("~/WebGlobal/bootstrapStyle").Include(

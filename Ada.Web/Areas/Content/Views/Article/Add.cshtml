@@ -1,0 +1,64 @@
+﻿@using System.Web.Optimization
+@model Ada.Core.ViewModel.Content.ArticleView
+@{
+    ViewBag.Title = "新建文章";
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "文章管理", Value = Url.Action("Index") } };
+}
+@Html.Partial("Bread")
+<div class="wrapper wrapper-content animated fadeInRight">
+    @using (Html.BeginForm("Add", "Article", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <p class="bg-danger">@Html.ValidationMessage("message") </p>
+        @Html.Partial("Edit")
+    }
+</div>
+@section Styles {
+    @Styles.Render("~/plugins/summernoteStyles")
+    @Styles.Render("~/plugins/jasnyBootstrapStyles")
+    @Styles.Render("~/plugins/select2Styles")
+    @Styles.Render("~/plugins/select2ThemeStyles")
+
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/summernote")
+    @Scripts.Render("~/plugins/select2")
+    @Scripts.Render("~/plugins/select2Tree")
+    @Scripts.Render("~/plugins/jasnyBootstrap")
+
+    <script>
+        $(function () {
+            $("#ColumnId").select2tree();
+            $.ajax({
+                url: 'https://api.github.com/emojis',
+                async: false 
+            }).then(function(data) {
+                window.emojis = Object.keys(data);
+                window.emojiUrls = data; 
+            });
+            $('#Content').summernote({
+                lang: 'zh-CN',
+                height: 500,
+                hint: {
+                    match: /:([\-+\w]+)$/,
+                    search: function (keyword, callback) {
+                        callback($.grep(emojis, function (item) {
+                            return item.indexOf(keyword)  === 0;
+                        }));
+                    },
+                    template: function (item) {
+                        var content = emojiUrls[item];
+                        return '<img src="' + content + '" width="20" /> :' + item + ':';
+                    },
+                    content: function (item) {
+                        var url = emojiUrls[item];
+                        if (url) {
+                            return $('<img />').attr('src', url).css('width', 20)[0];
+                        }
+                        return '';
+                    }
+                }
+            });
+        });
+    </script>
+}
