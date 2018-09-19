@@ -13,6 +13,7 @@ using Ada.Core.Tools;
 using Ada.Core.ViewModel;
 using Ada.Core.ViewModel.Admin;
 using Ada.Framework.Caching;
+using Ada.Framework.UploadFile;
 using Ada.Services.Admin;
 using Autofac;
 using ClosedXML.Excel;
@@ -213,6 +214,57 @@ namespace Ada.Framework.Filter
                 workbook.SaveAs(fullPath);
             }
             return fileName;
+        }
+        /// <summary>
+        /// 上传图片
+        /// </summary>
+        /// <param name="name">file字段名称</param>
+        /// <returns>服务器路径</returns>
+        public string UploadImageFile(string name)
+        {
+            UEditorModel uploadConfig = new UEditorModel()
+            {
+                AllowExtensions = UEditorConfig.GetStringList("imageAllowFiles"),
+                PathFormat = UEditorConfig.GetString("imagePathFormat"),
+                SizeLimit = UEditorConfig.GetInt("imageMaxSize"),
+                UploadFieldName = name
+            };
+            var file = Request.Files[name];
+            if (file == null) return null;
+            try
+            {
+                if (string.IsNullOrWhiteSpace(file.FileName))
+                {
+                    return null;
+                }
+                var uploadFileName = file.FileName;
+                var fileExtension = Path.GetExtension(uploadFileName).ToLower();
+                if (!uploadConfig.AllowExtensions.Select(x => x.ToLower()).Contains(fileExtension))
+                {
+                    throw new ApplicationException("请上传正确的图片格式文件");
+                    //ModelState.AddModelError("message", "请上传正确的图片格式文件");
+                }
+                if (!(file.ContentLength < uploadConfig.SizeLimit))
+                {
+                    throw new ApplicationException("上传的图片最大只能为：" + uploadConfig.SizeLimit + "B");
+                    //ModelState.AddModelError("message", "上传的图片最大只能为：" + uploadConfig.SizeLimit + "B");
+                }
+                var uploadFileBytes = new byte[file.ContentLength];
+                file.InputStream.Read(uploadFileBytes, 0, file.ContentLength);
+                var savePath = PathFormatter.Format(uploadFileName, uploadConfig.PathFormat);
+                var localPath = Server.MapPath(savePath);
+                if (!Directory.Exists(Path.GetDirectoryName(localPath)))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(localPath));
+                }
+                System.IO.File.WriteAllBytes(localPath, uploadFileBytes);
+                return savePath;
+
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
         }
     }
 }

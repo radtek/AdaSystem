@@ -235,7 +235,7 @@ namespace Ada.Web
 
             // summernote styles
             bundles.Add(new StyleBundle("~/plugins/summernoteStyles").Include(
-                      "~/Content/plugins/summernote/summernote.css"));
+                      "~/Content/plugins/summernote/summernote.css", new CssRewriteUrlTransform()));
 
             // summernote 
             bundles.Add(new ScriptBundle("~/plugins/summernote").Include(
@@ -527,7 +527,7 @@ namespace Ada.Web
 
             // jqTreegrid Styles
             bundles.Add(new StyleBundle("~/plugins/jqTreegridStyle").Include(
-                "~/Content/plugins/bootstrap-table/extensions/tree-grid/jquery.treegrid.min.css"));
+                "~/Content/plugins/bootstrap-table/extensions/tree-grid/jquery.treegrid.min.css", new CssRewriteUrlTransform()));
             // jqTreegrid
             bundles.Add(new ScriptBundle("~/plugins/jqTreegridScript").Include(
                 "~/Scripts/plugins/bootstrap-table/extensions/tree-grid/bootstrap-table-treegrid.js", "~/Scripts/plugins/bootstrap-table/extensions/tree-grid/jquery.treegrid.min.js"));

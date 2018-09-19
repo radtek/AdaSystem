@@ -41,7 +41,10 @@ namespace Ada.Services.Content
             {
                 allList = allList.Where(d => d.Title.Contains(viewModel.search));
             }
-            
+            if (!string.IsNullOrWhiteSpace(viewModel.ColumnId))
+            {
+                allList = allList.Where(d => d.Column.TreePath.Contains(viewModel.ColumnId));
+            }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;

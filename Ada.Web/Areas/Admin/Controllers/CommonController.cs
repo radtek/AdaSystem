@@ -12,14 +12,14 @@ namespace Admin.Controllers
     public class CommonController : BaseController
     {
         [HttpPost]
-        public ActionResult UploadImage()
+        public ActionResult UploadImage(string filename)
         {
             UEditorModel uploadConfig = new UEditorModel()
             {
                 AllowExtensions = UEditorConfig.GetStringList("imageAllowFiles"),
                 PathFormat = UEditorConfig.GetString("imagePathFormat"),
                 SizeLimit = UEditorConfig.GetInt("imageMaxSize"),
-                UploadFieldName = UEditorConfig.GetString("imageFieldName")
+                UploadFieldName = string.IsNullOrWhiteSpace(filename) ? UEditorConfig.GetString("imageFieldName") : filename
             };
             var file = Request.Files[uploadConfig.UploadFieldName];
             var uploadFileName = file.FileName;

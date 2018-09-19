@@ -92,11 +92,58 @@ if (trees.Any(d=>d.ParentId==id))
 
                                 </div>
                             </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">文章属性</label>
+                                <div class="col-sm-10">
+                                    @{
+                                        var isCheckedIsSlide = Model.IsSlide == true ? "checked=''" : "";
+                                        var isCheckedIsPush = Model.IsPush == true ? "checked=''" : "";
+                                        var isCheckedIsRecommend = Model.IsRecommend == true ? "checked=''" : "";
+                                        var isCheckedIsTop = Model.IsTop == true ? "checked=''" : "";
+                                        var isCheckedIsHot = Model.IsHot == true ? "checked=''" : "";
+                                    }
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" id="@Html.IdFor(d => d.IsSlide)" name="@Html.IdFor(d => d.IsSlide)" value="true" @isCheckedIsSlide>
+                                        <label for="@Html.IdFor(d => d.IsSlide)"> 轮播 </label>
+                                    </div>
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" id="@Html.IdFor(d => d.IsPush)" name="@Html.IdFor(d => d.IsPush)" value="true" @isCheckedIsPush>
+                                        <label for="@Html.IdFor(d => d.IsPush)"> 推送 </label>
+                                    </div>
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" id="@Html.IdFor(d => d.IsRecommend)" name="@Html.IdFor(d => d.IsRecommend)" value="true" @isCheckedIsRecommend>
+                                        <label for="@Html.IdFor(d => d.IsRecommend)"> 推荐 </label>
+                                    </div>
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" id="@Html.IdFor(d => d.IsTop)" name="@Html.IdFor(d => d.IsTop)" value="true" @isCheckedIsTop>
+                                        <label for="@Html.IdFor(d => d.IsTop)"> 置首 </label>
+                                    </div>
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" id="@Html.IdFor(d => d.IsHot)" name="@Html.IdFor(d => d.IsHot)" value="true" @isCheckedIsHot>
+                                        <label for="@Html.IdFor(d => d.IsHot)"> 热门 </label>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 @Html.LabelFor(d => d.Taxis, Html.DisplayNameFor(d => d.Taxis).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
                                     @Html.TextBoxFor(d => d.Taxis, new { @class = "form-control", required = "", type = "number" })
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">发布状态</label>
+                                <div class="col-sm-10">
+                                    @{
+                                        var isCheckedIsStatus = Model.Status == 1 ? "checked=''" : "";
+                                    }
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" id="@Html.IdFor(d => d.Status)" name="@Html.IdFor(d => d.Status)" value="1" @isCheckedIsStatus>
+                                        <label for="@Html.IdFor(d => d.Status)"> 发布 </label>
+                                    </div>
                                 </div>
                             </div>
                             @Html.HiddenFor(d => d.Id)
@@ -109,7 +156,7 @@ if (trees.Any(d=>d.ParentId==id))
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-sm-12">
-                                @Html.TextAreaFor(d => d.Content, new { @class = "form-control" })
+                                @Html.TextAreaFor(d => d.Content, new { @class = "form-control summernote" })
                             </div>
                         </div>
                     </div>

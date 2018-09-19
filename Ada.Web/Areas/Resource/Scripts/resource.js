@@ -1,5 +1,5 @@
 ﻿jQuery.validator.addMethod("isMediaId", function (value, element) {
-    var reg = /^[A-Za-z0-9_\-]+$/ig;
+    var reg = /^[A-Za-z0-9_\-\.]+$/ig;
     return this.optional(element) || (reg.test(value));
 }, "请正确填写媒体ID");
 $(function () {
@@ -52,9 +52,9 @@ $(function () {
             form.submit();
         },
         rules: {
-            MediaLink: {
-                url: true
-            },
+            //MediaLink: {
+            //    url: true
+            //},
             MediaID: {
                 isMediaId: true
             }

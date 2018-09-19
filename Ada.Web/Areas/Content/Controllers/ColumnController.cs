@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -68,6 +69,12 @@ namespace Content.Controllers
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
                 return View(viewModel);
             }
+            IDictionary idc = new Dictionary<string, string>();
+            foreach (var filesAllKey in Request.Files.AllKeys)
+            {
+                var path = UploadImageFile(filesAllKey);
+                idc.Add(filesAllKey, path);
+            }
             Column column = new Column
             {
                 Id = IdBuilder.CreateIdNum(),
@@ -78,10 +85,9 @@ namespace Content.Controllers
                 Title = viewModel.Title,
                 ParentId = viewModel.ParentId,
                 CallIndex = viewModel.CallIndex,
-                CoverPic = viewModel.CoverPic,
+                CoverPic = idc["CoverPic"]?.ToString(),
                 Taxis = viewModel.Taxis,
                 Url = viewModel.Url
-
             };
             _service.Add(column);
             TempData["Msg"] = "添加成功";
@@ -100,7 +106,6 @@ namespace Content.Controllers
                 CoverPic = entity.CoverPic,
                 Taxis = entity.Taxis,
                 Url = entity.Url
-
             };
             var entities = _repository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis).ToList();
             ViewBag.Trees = GetTree(null, entities);
@@ -116,7 +121,12 @@ namespace Content.Controllers
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
                 return View(viewModel);
             }
-
+            IDictionary idc = new Dictionary<string, string>();
+            foreach (var filesAllKey in Request.Files.AllKeys)
+            {
+                var path = UploadImageFile(filesAllKey);
+                idc.Add(filesAllKey, path);
+            }
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
             entity.ModifiedById = CurrentManager.Id;
             entity.ModifiedBy = CurrentManager.UserName;
@@ -125,7 +135,7 @@ namespace Content.Controllers
             entity.ParentId = viewModel.ParentId;
             entity.Content = viewModel.Content;
             entity.CallIndex = viewModel.CallIndex;
-            entity.CoverPic = viewModel.CoverPic;
+            entity.CoverPic = idc["CoverPic"] == null ? entity.CoverPic : idc["CoverPic"]?.ToString();
             entity.Taxis = viewModel.Taxis;
             entity.Url = viewModel.Url;
             _service.Update(entity);

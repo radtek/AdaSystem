@@ -2994,7 +2994,7 @@
     <Content Include="Assets\vendor\bootstrap\bootstrap.js.map" />
     <Content Include="Assets\vendor\bootstrap\bootstrap.min.js.map" />
     <None Include="packages.config" />
-    <Content Include="Views\Default\Index.cshtml" />
+    <Content Include="Views\Default\IndexBack.cshtml" />
     <Content Include="Scripts\api\typehead_collection.json" />
     <Content Include="Scripts\plugins\chartist\chartist.min.js.map" />
     <Content Include="Scripts\plugins\diff_match_patch\COPYING" />
@@ -3041,6 +3041,7 @@
     <Content Include="Views\Login\Binding.cshtml" />
     <Content Include="Views\Shared\MangerInfo.cshtml" />
     <Content Include="Views\Media\Writer.cshtml" />
+    <Content Include="Views\Default\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

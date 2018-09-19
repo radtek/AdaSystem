@@ -18,45 +18,18 @@
     @Styles.Render("~/plugins/select2Styles")
     @Styles.Render("~/plugins/select2ThemeStyles")
     @Styles.Render("~/plugins/summernoteStyles")
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
 }
 @section Scripts {
     @Scripts.Render("~/plugins/select2")
     @Scripts.Render("~/plugins/select2Tree")
     @Scripts.Render("~/plugins/jasnyBootstrap")
     @Scripts.Render("~/plugins/summernote")
+    <script src="@Url.Content("~/Areas/Content/Scripts/summernote.js?v="+DateTime.Now.ToString("yyMMdd"))"></script>
     <script>
         $(function () {
             $("#ColumnId").select2tree();
-            $.ajax({
-                url: 'https://api.github.com/emojis',
-                async: false
-            }).then(function (data) {
-                window.emojis = Object.keys(data);
-                window.emojiUrls = data;
-            });
-            $('#Content').summernote({
-                lang: 'zh-CN',
-                height: 500,
-                hint: {
-                    match: /:([\-+\w]+)$/,
-                    search: function (keyword, callback) {
-                        callback($.grep(emojis, function (item) {
-                            return item.indexOf(keyword) === 0;
-                        }));
-                    },
-                    template: function (item) {
-                        var content = emojiUrls[item];
-                        return '<img src="' + content + '" width="20" /> :' + item + ':';
-                    },
-                    content: function (item) {
-                        var url = emojiUrls[item];
-                        if (url) {
-                            return $('<img />').attr('src', url).css('width', 20)[0];
-                        }
-                        return '';
-                    }
-                }
-            });
+            initSummernote();
         });
     </script>
 }

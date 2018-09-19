@@ -342,7 +342,12 @@ namespace Ada.Core.Tools
             return tempString;
         }
         #endregion
-
+        #region 清除HTML标记且返回相应的长度
+        public static string DropHtml(string htmlstring, int strLen)
+        {
+            return CutString(DropHtml(htmlstring), strLen);
+        }
+        #endregion
         #region 清除HTML标记
         public static string DropHtml(string htmlstring)
         {

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain.Content;
+using Ada.Core.Tools;
 using Ada.Core.ViewModel;
 using Ada.Core.ViewModel.Content;
 using Ada.Framework.Filter;
@@ -70,7 +71,7 @@ namespace Content.Controllers
         {
             var entities = _columnRepository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis).ToList();
             ViewBag.Trees = GetTree(null, entities);
-            return View(new ArticleView(){Taxis = 99,ColumnId = id});
+            return View(new ArticleView(){Taxis = 99,ColumnId = id,Status = 1});
         }
         [HttpPost,ValidateInput(false)]
         [ValidateAntiForgeryToken]
@@ -84,7 +85,7 @@ namespace Content.Controllers
             IDictionary idc = new Dictionary<string, string>();
             foreach (var filesAllKey in Request.Files.AllKeys)
             {
-                var path = UploadImage(filesAllKey);
+                var path = UploadImageFile(filesAllKey);
                 idc.Add(filesAllKey, path);
             }
             Article entity = new Article
@@ -98,8 +99,16 @@ namespace Content.Controllers
                 Type = viewModel.Type,
                 ColumnId = viewModel.ColumnId,
                 CoverPic = idc["CoverPic"]?.ToString(),
-                Taxis = viewModel.Taxis
-                
+                Taxis = viewModel.Taxis,
+                IsHot = viewModel.IsHot,
+                IsPush = viewModel.IsPush,
+                IsRecommend = viewModel.IsRecommend,
+                IsTop = viewModel.IsTop,
+                IsSlide = viewModel.IsSlide,
+                Status = viewModel.Status,
+                Url = viewModel.Url,
+                Summary = Utils.DropHtml(string.IsNullOrWhiteSpace(viewModel.Summary) ? viewModel.Content : viewModel.Summary, 255),
+                Author = viewModel.Author
             };
             _service.Add(entity);
             TempData["Msg"] = "添加成功";
@@ -118,7 +127,17 @@ namespace Content.Controllers
                 Type = item.Type,
                 ColumnId = item.ColumnId,
                 Content = item.Content,
-                Taxis = item.Taxis
+                Taxis = item.Taxis,
+                IsHot = item.IsHot,
+                IsPush = item.IsPush,
+                IsRecommend = item.IsRecommend,
+                IsTop = item.IsTop,
+                IsSlide = item.IsSlide,
+                Status = item.Status,
+                Url = item.Url,
+                Summary = item.Summary,
+                Author = item.Author
+
             };
             return View(entity);
         }
@@ -135,7 +154,7 @@ namespace Content.Controllers
             IDictionary idc = new Dictionary<string, string>();
             foreach (var filesAllKey in Request.Files.AllKeys)
             {
-                var path = UploadImage(filesAllKey);
+                var path = UploadImageFile(filesAllKey);
                 idc.Add(filesAllKey, path);
             }
             entity.ModifiedById = CurrentManager.Id;
@@ -147,6 +166,15 @@ namespace Content.Controllers
             entity.ColumnId = viewModel.ColumnId;
             entity.Content = viewModel.Content;
             entity.Taxis = viewModel.Taxis;
+            entity.IsHot = viewModel.IsHot;
+            entity.IsPush = viewModel.IsPush;
+            entity.IsRecommend = viewModel.IsRecommend;
+            entity.IsTop = viewModel.IsTop;
+            entity.IsSlide = viewModel.IsSlide;
+            entity.Status = viewModel.Status;
+            entity.Url = viewModel.Url;
+            entity.Summary = Utils.DropHtml(string.IsNullOrWhiteSpace(viewModel.Summary) ? viewModel.Content : viewModel.Summary, 255);
+            entity.Author = viewModel.Author;
             _service.Update(entity);
             TempData["Msg"] = "编辑成功";
             return RedirectToAction("Index");
@@ -159,52 +187,22 @@ namespace Content.Controllers
             _service.Delete(entity);
             return Json(new { State = 1, Msg = "删除成功" });
         }
-
-        private string UploadImage(string name)
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult Publish(string id)
         {
-            UEditorModel uploadConfig = new UEditorModel()
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (entity.Status==1)
             {
-                AllowExtensions = UEditorConfig.GetStringList("imageAllowFiles"),
-                PathFormat = UEditorConfig.GetString("imagePathFormat"),
-                SizeLimit = UEditorConfig.GetInt("imageMaxSize"),
-                UploadFieldName = name
-            };
-            var file = Request.Files[name];
-            if (file == null) return null;
-            try
-            {
-                if (string.IsNullOrWhiteSpace(file.FileName))
-                {
-                    return null;
-                }
-                var uploadFileName = file.FileName;
-                var fileExtension = Path.GetExtension(uploadFileName).ToLower();
-                if (!uploadConfig.AllowExtensions.Select(x => x.ToLower()).Contains(fileExtension))
-                {
-                    throw new ApplicationException("请上传正确的图片格式文件");
-                    //ModelState.AddModelError("message", "请上传正确的图片格式文件");
-                }
-                if (!(file.ContentLength < uploadConfig.SizeLimit))
-                {
-                    throw new ApplicationException("上传的图片最大只能为：" + uploadConfig.SizeLimit + "B");
-                    //ModelState.AddModelError("message", "上传的图片最大只能为：" + uploadConfig.SizeLimit + "B");
-                }
-                var uploadFileBytes = new byte[file.ContentLength];
-                file.InputStream.Read(uploadFileBytes, 0, file.ContentLength);
-                var savePath = PathFormatter.Format(uploadFileName, uploadConfig.PathFormat);
-                var localPath = Server.MapPath(savePath);
-                if (!Directory.Exists(Path.GetDirectoryName(localPath)))
-                {
-                    Directory.CreateDirectory(Path.GetDirectoryName(localPath));
-                }
-                System.IO.File.WriteAllBytes(localPath, uploadFileBytes);
-                return savePath;
-
+                entity.Status = null;
             }
-            catch (Exception ex)
+            else
             {
-                throw new ApplicationException(ex.Message);
+                entity.Status = 1;
             }
+            _service.Update(entity);
+            return Json(new { State = 1, Msg = "操作成功" });
         }
+       
     }
 }
