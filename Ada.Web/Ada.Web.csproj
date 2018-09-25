@@ -1181,6 +1181,13 @@
     <Content Include="Content\landing\avatar_all.png" />
     <Content Include="Content\landing\header_one.jpg" />
     <Content Include="Content\landing\header_two.jpg" />
+    <Content Include="Content\plugins\cubeportfolio\css\cubeportfolio.min.css" />
+    <Content Include="Content\plugins\cubeportfolio\img\cbp-sprite.png" />
+    <Content Include="Images\landing\douyin.png" />
+    <Content Include="Images\landing\fl1.png" />
+    <Content Include="Images\landing\fl2.png" />
+    <Content Include="Images\landing\fl3.png" />
+    <Content Include="Images\landing\ku.png" />
     <Content Include="Content\landing\word_map.png" />
     <Content Include="Content\patterns\1.png" />
     <Content Include="Content\patterns\2.png" />
@@ -2170,8 +2177,11 @@
     <Content Include="Images\landing\avatar9.jpg" />
     <Content Include="Images\landing\dashboard.png" />
     <Content Include="Images\landing\iphone.jpg" />
+    <Content Include="Images\landing\kol.PNG" />
     <Content Include="Images\landing\laptop.png" />
     <Content Include="Images\landing\perspective.png" />
+    <Content Include="Images\landing\wglhmp.jpg" />
+    <Content Include="Images\landing\xiaohongshu.png" />
     <Content Include="Images\man.png" />
     <Content Include="Images\medialogo\brush.jpg" />
     <Content Include="Images\medialogo\douyin.jpg" />
@@ -2213,6 +2223,7 @@
     <Content Include="Scripts\plugins\bootstrap-table\extensions\tree-grid\bootstraptable-treeview.js" />
     <Content Include="Scripts\plugins\bootstrap-table\extensions\tree-grid\jquery.treegrid.min.js" />
     <Content Include="Scripts\plugins\bootstrap-treeview\bootstrap-treeview.js" />
+    <Content Include="Scripts\plugins\cubeportfolio\js\jquery.cubeportfolio.min.js" />
     <Content Include="Scripts\plugins\fullcalendar\fullcalendar.js" />
     <Content Include="Scripts\plugins\fullcalendar\locale-all.js" />
     <Content Include="Scripts\plugins\ionRangeSlider\ion.rangeSlider.js" />
@@ -2824,6 +2835,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\FansCalculator.cs" />
     <Compile Include="Models\HtmlHelperExt.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\UserController.cs" />
@@ -3042,6 +3054,8 @@
     <Content Include="Views\Shared\MangerInfo.cshtml" />
     <Content Include="Views\Media\Writer.cshtml" />
     <Content Include="Views\Default\Index.cshtml" />
+    <Content Include="Views\Media\Fans.cshtml" />
+    <Content Include="Views\Default\Test.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

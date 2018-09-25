@@ -67,7 +67,11 @@ namespace Ada.Core.ViewModel.Content
         /// </summary>
         [Display(Name = "调用别名")]
         public string CallIndex { get; set; }
-
+        /// <summary>
+        /// 栏目说明
+        /// </summary>
+        [Display(Name = "栏目说明")]
+        public string Remark { get; set; }
         /// <summary>
         /// 栏目类别
         /// </summary>

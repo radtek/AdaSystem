@@ -29,7 +29,7 @@ namespace Content.Controllers
         }
         public ActionResult GetList()
         {
-            var result = _repository.LoadEntities(d => d.IsDelete == false).ToList();
+            var result = _repository.LoadEntities(d => d.IsDelete == false).OrderBy(d=>d.Taxis).ToList();
             return Json(result.Select(d => new
             {
                 d.Id,
@@ -60,7 +60,7 @@ namespace Content.Controllers
             ViewBag.Trees = GetTree(null, entities);
             return View(new ColumnView() { Taxis = 99 });
         }
-        [HttpPost]
+        [HttpPost, ValidateInput(false)]
         [ValidateAntiForgeryToken]
         public ActionResult Add(ColumnView viewModel)
         {
@@ -87,7 +87,8 @@ namespace Content.Controllers
                 CallIndex = viewModel.CallIndex,
                 CoverPic = idc["CoverPic"]?.ToString(),
                 Taxis = viewModel.Taxis,
-                Url = viewModel.Url
+                Url = viewModel.Url,
+                Remark = viewModel.Remark
             };
             _service.Add(column);
             TempData["Msg"] = "添加成功";
@@ -105,13 +106,14 @@ namespace Content.Controllers
                 CallIndex = entity.CallIndex,
                 CoverPic = entity.CoverPic,
                 Taxis = entity.Taxis,
-                Url = entity.Url
+                Url = entity.Url,
+                Remark = entity.Remark
             };
             var entities = _repository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Taxis).ToList();
             ViewBag.Trees = GetTree(null, entities);
             return View(item);
         }
-        [HttpPost]
+        [HttpPost, ValidateInput(false)]
         [ValidateAntiForgeryToken]
         public ActionResult Update(ColumnView viewModel)
         {
@@ -138,6 +140,7 @@ namespace Content.Controllers
             entity.CoverPic = idc["CoverPic"] == null ? entity.CoverPic : idc["CoverPic"]?.ToString();
             entity.Taxis = viewModel.Taxis;
             entity.Url = viewModel.Url;
+            entity.Remark = viewModel.Remark;
             _service.Update(entity);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");

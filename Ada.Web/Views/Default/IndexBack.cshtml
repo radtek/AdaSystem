@@ -1,5 +1,40 @@
 ﻿@{
     Layout = null;
+    var setting = EngineContext.Current.Resolve<ISettingService>().GetSetting<Site>();
+    var columnRepository = EngineContext.Current.Resolve<IRepository<Column>>();
+    ViewBag.Title = setting.SiteName;
+    //导航
+    //联系我们
+    var contact= columnRepository.LoadEntities(d => d.CallIndex == "Contact").FirstOrDefault();
+
+
+
+#line default
+#line hidden
+
+#line 8 "C:\MyCode\AdaSystem\Ada.Web\Views\Default\Index.cshtml"
+    __o = ViewBag.Title;
+
+
+#line default
+#line hidden
+
+#line 9 "C:\MyCode\AdaSystem\Ada.Web\Views\Default\Index.cshtml"
+    __o = Url.Content("~/Scripts/plugins/jquery-ui/jquery-ui.min.css");
+
+
+#line default
+#line hidden
+
+#line 10 "C:\MyCode\AdaSystem\Ada.Web\Views\Default\Index.cshtml"
+    __o = Styles.Render("~/Content/css");
+
+
+#line default
+#line hidden
+
+#line 11 "C:\MyCode\AdaSystem\Ada.Web\Views\Default\Index.cshtml"
+    __o = Styles.Render("~/font-awesome/css");
 }
 
 

@@ -1,0 +1,211 @@
+﻿@using System.Web.Optimization
+@using Ada.Core.Infrastructure
+@using Ada.Services.Admin
+@model Ada.Web.Models.FansCalculator
+@{
+    Layout = "~/Views/Shared/_Layout_Web.cshtml";
+    ViewBag.Title = "公众号涨粉";
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var areas = fieldService.GetFieldsByKey("FansArea").OrderBy(d=>d.Value).ThenBy(d=>d.Text).Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+}
+<div class="row wrapper border-bottom white-bg page-heading m-t-xs">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+    </div>
+</div>
+
+
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+
+    <h2>
+        粉丝计算器
+    </h2>
+    <p>
+        用于微信公众号新增不同区域、性别的粉丝量价格计算器，如有相应需求请联系我们的业务代表吧：）.
+    </p>
+    <form id="form" action="#" class="wizard-big">
+        <h1>区域选择</h1>
+        <fieldset>
+            <h2>请选择粉丝分布的区域</h2>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="form-group">
+                        <label>区域 *</label>
+                        @Html.DropDownListFor(d=>d.AreaGrade,areas,new {@class= "form-control required" })
+                    </div>
+                    
+
+                </div>
+                <div class="col-lg-4">
+                    <div class="text-center">
+                        <div style="margin-top: 20px">
+                            <i class="fa fa-sign-in" style="font-size: 180px;color: #e5e5e5 "></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <h1>性别选择</h1>
+        <fieldset>
+            <h2>请选择粉丝的性别</h2>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="form-group">
+                        <label>性别 *</label>
+                        @{
+                            var isChecked = Model.Sex == 0 ? "checked=''" : "";
+                        }
+                        <div class="radio radio-success ">
+                            <input type="radio" id="man" name="Sex" value="1" required="" @isChecked>
+                            <label for="man"> 男生 </label>
+                        </div>
+                        <div class="radio radio-success ">
+                            <input type="radio" id="woman" name="Sex" value="2" required="" @isChecked>
+                            <label for="woman"> 女生 </label>
+                        </div>
+                        <div class="radio radio-success ">
+                            <input type="radio" id="random" name="Sex" value="0" required="" @isChecked>
+                            <label for="random"> 随机 </label>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="text-center">
+                        <div style="margin-top: 20px">
+                            <i class="fa fa-sign-in" style="font-size: 180px;color: #e5e5e5 "></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </fieldset>
+        <h1>确认数量</h1>
+        <fieldset>
+            <h2>请输入新增粉丝的数量</h2>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="form-group">
+                        <label>粉丝数 *</label>
+                        @Html.TextBoxFor(d => d.FansTotal, new { @class = "form-control required", type = "number" })
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="text-center">
+                        <div style="margin-top: 20px">
+                            <i class="fa fa-calculator" style="font-size: 180px;color: #e5e5e5 "></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+
+</div>
+
+
+@section Styles {
+    @Styles.Render("~/plugins/wizardStepsStyles")
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/wizardSteps")
+    @Scripts.Render("~/plugins/validate")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#form").steps({
+                bodyTag: "fieldset",
+                labels: {
+                    cancel: "取消",
+                    finish: "开始计算",
+                    next: "下一步",
+                    previous: "上一步",
+                    loading: "计算中 ..."
+                },
+                onStepChanging: function (event, currentIndex, newIndex) {
+                    // Always allow going backward even if the current step contains invalid fields!
+                    if (currentIndex > newIndex) {
+                        return true;
+                    }
+
+                    // Forbid suppressing "Warning" step if the user is to young
+                    if (newIndex === 3 && Number($("#age").val()) < 18) {
+                        return false;
+                    }
+
+                    var form = $(this);
+
+                    // Clean up if user went backward before
+                    if (currentIndex < newIndex) {
+                        // To remove error styles
+                        $(".body:eq(" + newIndex + ") label.error", form).remove();
+                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                    }
+
+                    // Disable validation on fields that are disabled or hidden.
+                    form.validate().settings.ignore = ":disabled,:hidden";
+
+                    // Start validation; Prevent going forward if false
+                    return form.valid();
+                },
+                onStepChanged: function (event, currentIndex, priorIndex) {
+                    // Suppress (skip) "Warning" step if the user is old enough.
+                    if (currentIndex === 2 && Number($("#age").val()) >= 18) {
+                        $(this).steps("next");
+                    }
+
+                    // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
+                    if (currentIndex === 2 && priorIndex === 3) {
+                        $(this).steps("previous");
+                    }
+                },
+                onFinishing: function (event, currentIndex) {
+                    var form = $(this);
+
+                    // Disable validation on fields that are disabled.
+                    // At this point it's recommended to do an overall check (mean ignoring only disabled fields)
+                    form.validate().settings.ignore = ":disabled";
+
+                    // Start validation; Prevent form submission if false
+                    return form.valid();
+                },
+                onFinished: function (event, currentIndex) {
+                    var form = $(this);
+                    var jsondata = form.serializeObject();
+                    jsondata.Area = $("#AreaGrade").find("option:selected").text();
+                    jsondata.SexStr = $("input[name='Sex']:checked").next("label").text();
+                    // Submit form input
+                    $.ajax({
+                        type: "post",
+                        headers: {
+                            '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                        },
+                        url: "@Url.Action("FansComputer")",
+                        data: jsondata,
+                        success: function (data) {
+                            if (data.State == 1) {
+                                swal("计算结果", data.Msg, "success");
+                            } else {
+                                swal("操作提醒", data.Msg, "error");
+                            }
+                        },
+                        error: function () {
+                            swal("操作失败", "系统错误", "error");
+                        },
+                        complete: function () {
+
+                        }
+                    });
+                }
+            }).validate({
+                errorPlacement: function (error, element) {
+                    element.before(error);
+                }
+                
+            });
+
+        });
+    </script>
+}

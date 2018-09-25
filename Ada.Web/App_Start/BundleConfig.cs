@@ -536,6 +536,16 @@ namespace Ada.Web
                 "~/Scripts/plugins/bootstrap-treeview/bootstrap-treeview.js"));
             bundles.Add(new StyleBundle("~/plugins/bootstrapTreeViewStyles").Include(
                 "~/Content/plugins/bootstrap-treeview/bootstrap-treeview.css"));
+
+            // cubeportfolio
+            bundles.Add(new ScriptBundle("~/plugins/cubeportfolioScript").Include(
+                "~/Scripts/plugins/cubeportfolio/js/jquery.cubeportfolio.min.js"));
+            bundles.Add(new StyleBundle("~/plugins/cubeportfolioStyles").Include(
+                "~/Content/plugins/cubeportfolio/css/cubeportfolio.min.css"));
+
+
+
+
             //===========================前端=============================
             //bootstrap 4.0
             bundles.Add(new StyleBundle("~/WebGlobal/bootstrapStyle").Include(

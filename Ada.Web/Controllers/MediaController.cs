@@ -68,7 +68,7 @@ namespace Ada.Web.Controllers
             _mediaDevelopRepository = mediaDevelopRepository;
             _managerService = managerService;
             _managerRepository = managerRepository;
-            
+
         }
         public ActionResult WeiXin()
         {
@@ -93,6 +93,76 @@ namespace Ada.Web.Controllers
         public ActionResult Writer()
         {
             return View();
+        }
+        public ActionResult Fans()
+        {
+            FansCalculator fansCalculator = new FansCalculator();
+            fansCalculator.AreaGrade = 0;
+            fansCalculator.Sex = 0;
+            fansCalculator.FansTotal = 0;
+            return View(fansCalculator);
+        }
+        [HttpPost]
+        [AdaValidateAntiForgeryToken]
+        public ActionResult FansComputer(FansCalculator fansCalculator)
+        {
+            decimal price = 0;
+            switch (fansCalculator.AreaGrade)
+            {
+                case 1:
+                    {
+                        switch (fansCalculator.Sex)
+                        {
+                            case 0:
+                                price = 2 * fansCalculator.FansTotal;
+                                break;
+                            case 1:
+                                price = 2.5M * fansCalculator.FansTotal;
+                                break;
+                            case 2:
+                                price = 3 * fansCalculator.FansTotal;
+                                break;
+                        }
+
+                        break;
+                    }
+                case 2:
+                    {
+                        switch (fansCalculator.Sex)
+                        {
+                            case 0:
+                                price = 1.5M * fansCalculator.FansTotal;
+                                break;
+                            case 1:
+                                price = 2 * fansCalculator.FansTotal;
+                                break;
+                            case 2:
+                                price = 2.5M * fansCalculator.FansTotal;
+                                break;
+                        }
+
+                        break;
+                    }
+                case 0:
+                    {
+                        switch (fansCalculator.Sex)
+                        {
+                            case 0:
+                                price = 1 * fansCalculator.FansTotal;
+                                break;
+                            case 1:
+                                price = 1.5M * fansCalculator.FansTotal;
+                                break;
+                            case 2:
+                                price = 2 * fansCalculator.FansTotal;
+                                break;
+                        }
+
+                        break;
+                    }
+            }
+
+            return Json(new { State = 1, Msg = fansCalculator.Area+" " + fansCalculator.FansTotal + "个【" + fansCalculator.SexStr + "】粉丝 预估价格：" + price + "元" });
         }
         public ActionResult CommentDetail(string id)
         {
@@ -158,8 +228,8 @@ namespace Ada.Web.Controllers
                     IsRecommend = d.IsRecommend,
                     IsTop = d.IsTop,
                     MediaLogo = d.MediaLogo,
-                    ResourceType=d.ResourceType,
-                    Efficiency=d.Efficiency,
+                    ResourceType = d.ResourceType,
+                    Efficiency = d.Efficiency,
                     PriceProtectionDate = d.PriceProtectionDate,
                     PriceProtectionIsPrePay = d.PriceProtectionIsPrePay,
                     PriceProtectionRemark = d.PriceProtectionRemark,
@@ -167,7 +237,7 @@ namespace Ada.Web.Controllers
                     IsGroup = d.MediaGroups.Any(g => g.GroupType == Consts.StateLock && g.AddedById == CurrentUser.Id),
                     MediaGroups = d.MediaGroups.Where(m => m.GroupType == Consts.StateNormal).Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
                     MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).Take(6).ToList(),
-                    MediaPrices = d.MediaPrices.Where(c=>c.IsDelete==false).Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, SellPrice = p.SellPrice }).OrderByDescending(c => c.AdPositionName).ToList()
+                    MediaPrices = d.MediaPrices.Where(c => c.IsDelete == false).Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, SellPrice = p.SellPrice }).OrderByDescending(c => c.AdPositionName).ToList()
                 })
             });
         }
@@ -316,7 +386,7 @@ namespace Ada.Web.Controllers
                             .Where(d => !string.IsNullOrWhiteSpace(d.OpenId)).Select(d => d.OpenId).ToList();
                         var manager = _managerRepository.LoadEntities(d => d.Id == CurrentUser.TransactorId)
                             .FirstOrDefault();
-                        if (manager!=null)
+                        if (manager != null)
                         {
                             if (!string.IsNullOrWhiteSpace(manager.OpenId))
                             {
@@ -327,7 +397,7 @@ namespace Ada.Web.Controllers
                         {
                             var retrunUrl = Request.Url.Scheme + "://" + Request.Url.Authority +
                                       "/Resource/MediaDevelopAllot";
-                            var url= Request.Url.Scheme + "://" + Request.Url.Authority +
+                            var url = Request.Url.Scheme + "://" + Request.Url.Authority +
                                      "/weixin/login/manager?returnUrl=" + Uri.EscapeDataString(retrunUrl);
                             var dic = new Dictionary<string, object>
                             {
@@ -346,7 +416,7 @@ namespace Ada.Web.Controllers
                             };
                             _messageService.Send("Push", dic);
                         }
-                       
+
                     }
                 }
 
@@ -383,7 +453,7 @@ namespace Ada.Web.Controllers
                 })
             });
         }
-       
+
         [HttpPost]
         [AdaValidateAntiForgeryToken]
         public ActionResult GetMediaComments(MediaCommentView search)
@@ -432,7 +502,7 @@ namespace Ada.Web.Controllers
             }
             //校验唯一性
             var temp = _mediaGroupRepository
-                .LoadEntities(d => d.GroupName.Equals(viewModel.GroupName, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false && d.AddedById == CurrentUser.Id&&d.GroupType==Consts.StateLock)
+                .LoadEntities(d => d.GroupName.Equals(viewModel.GroupName, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false && d.AddedById == CurrentUser.Id && d.GroupType == Consts.StateLock)
                 .FirstOrDefault();
             if (temp != null)
             {
@@ -614,7 +684,7 @@ namespace Ada.Web.Controllers
                     foreach (var mediaMediaPrice in priceList)
                     {
                         var price = mediaMediaPrice.SellPrice ?? 0;
-                        jo.Add(mediaMediaPrice.AdPositionName+"[税前]", price);
+                        jo.Add(mediaMediaPrice.AdPositionName + "[税前]", price);
                     }
                     foreach (var mediaMediaPrice in priceList)
                     {
@@ -688,7 +758,7 @@ namespace Ada.Web.Controllers
                             break;
                     }
                 }
-                foreach (var mediaMediaPrice in media.MediaPrices.Where(d=>d.IsDelete==false))
+                foreach (var mediaMediaPrice in media.MediaPrices.Where(d => d.IsDelete == false))
                 {
                     var price = mediaMediaPrice.SellPrice ?? 0;
                     jo.Add(mediaMediaPrice.AdPositionName, price);

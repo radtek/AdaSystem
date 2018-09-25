@@ -41,7 +41,9 @@
                 <li class="@Html.IsActive("media", "writer")">
                     <a aria-expanded="false" role="button" href="@Url.Action("Writer", "Media")"> 文案</a>
                 </li>
-
+                <li class="@Html.IsActive("media", "fans") count-info">
+                    <a aria-expanded="false" role="button" href="@Url.Action("Fans", "Media")"> 公众号涨粉 <span class="label label-danger" style="right: 0px;">新</span></a>
+                </li>
                 @*<li class="dropdown">
             <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> Menu item <span class="caret"></span></a>
             <ul role="menu" class="dropdown-menu">
