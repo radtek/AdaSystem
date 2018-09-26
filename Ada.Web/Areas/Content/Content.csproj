@@ -101,7 +101,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\summernote.js" />
+    <Content Include="Scripts\htmledit.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

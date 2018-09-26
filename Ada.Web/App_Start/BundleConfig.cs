@@ -239,7 +239,8 @@ namespace Ada.Web
 
             // summernote 
             bundles.Add(new ScriptBundle("~/plugins/summernote").Include(
-                      "~/Scripts/plugins/summernote/summernote.js", "~/Scripts/plugins/summernote/lang/summernote-zh-CN.js"));
+                      "~/Scripts/plugins/summernote/summernote.js",
+                "~/Scripts/plugins/summernote/lang/summernote-zh-CN.js"));
 
             // toastr notification 
             bundles.Add(new ScriptBundle("~/plugins/toastr").Include(

@@ -1,1717 +1,472 @@
-﻿@{
+﻿@using System.Web.Optimization
+@using Ada.Core
+@using Ada.Core.Domain.Content
+@using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Setting
+@using Ada.Services.Setting
+@{
     Layout = null;
-}
+    var setting = EngineContext.Current.Resolve<ISettingService>().GetSetting<Site>();
+    var columnRepository = EngineContext.Current.Resolve<IRepository<Column>>();
+    var articleRepository = EngineContext.Current.Resolve<IRepository<Article>>();
+    ViewBag.Title = setting.SiteName;
+    //导航
+    var home = columnRepository.LoadEntities(d => d.CallIndex == "Home").FirstOrDefault();
+    var about = columnRepository.LoadEntities(d => d.CallIndex == "About").FirstOrDefault();
+    var cases = columnRepository.LoadEntities(d => d.CallIndex == "Case").FirstOrDefault();
+    var casesTypes = columnRepository.LoadEntities(d => d.ParentId == cases.Id).OrderBy(d => d.Taxis).ToList();
+    var casesArticles = articleRepository.LoadEntities(d => d.Column.TreePath.Contains(cases.Id)).ToList();
+    var join = columnRepository.LoadEntities(d => d.CallIndex == "JoinUs").FirstOrDefault();
+    var news = columnRepository.LoadEntities(d => d.CallIndex == "News").FirstOrDefault();
+    var pics = columnRepository.LoadEntities(d => d.CallIndex == "CompanyPic").FirstOrDefault();
+    //联系我们
+    var contact = columnRepository.LoadEntities(d => d.CallIndex == "Contact").FirstOrDefault();
 
+}
 
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- Title -->
-    <title>江西微广联合文化传播有限公司</title>
-    <!-- Required Meta Tags Always Come First -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <!-- Favicon -->
-    @*<link rel="shortcut icon" href="~/favicon.ico">*@
-    @* <!-- Google Fonts -->
-    <link rel="stylesheet" href="//fonts.googleapis.com/css913c.css?family=PT+Sans%7CMerriweather%7COpen+Sans%3A300%2C400%2C600%2C700%2C800%7CPlayfair+Display%7CRoboto%7CRaleway%7CSpectral%7CRubik">*@
-    <!-- CSS Global Compulsory -->
-    <link rel="stylesheet" href="/assets/vendor/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="/assets/vendor/icon-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/assets/vendor/icon-line-pro/style.css">
-    <!-- CSS Implementing Plugins -->
-    <link rel="stylesheet" href="/assets/vendor/icon-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/assets/vendor/icon-hs/style.css">
-    <link rel="stylesheet" href="/assets/vendor/hamburgers/hamburgers.min.css">
-    <link rel="stylesheet" href="/assets/vendor/dzsparallaxer/dzsparallaxer.css">
-    <link rel="stylesheet" href="/assets/vendor/dzsparallaxer/dzsscroller/scroller.css">
-    <link rel="stylesheet" href="/assets/vendor/dzsparallaxer/advancedscroller/plugin.css">
-    <link rel="stylesheet" href="/assets/vendor/slick-carousel/slick/slick.css">
-    <link rel="stylesheet" href="/assets/vendor/cubeportfolio-full/cubeportfolio/css/cubeportfolio.min.css">
-    <link rel="stylesheet" href="/assets/vendor/fancybox/jquery.fancybox.css">
-    <!-- CSS Template -->
-    <link rel="stylesheet" href="/assets/website/css/styles.op-consulting.css">
-    <!-- Revolution Slider -->
-    <link rel="stylesheet" href="/assets/vendor/revolution-slider/revolution/fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css">
-    <link rel="stylesheet" href="/assets/vendor/revolution-slider/revolution/css/settings.css">
-    <link rel="stylesheet" href="/assets/vendor/revolution-slider/revolution/css/layers.css">
-    <link rel="stylesheet" href="/assets/vendor/revolution-slider/revolution/css/navigation.css">
-    <link rel="stylesheet" href="/assets/vendor/revolution-slider/revolution-addons/typewriter/css/typewriter.css">
-    <!-- CSS Customization -->
-    <link rel="stylesheet" href="/assets/css/custom.css">
-</head>
-<body id="home-section">
-    <main>
-        <!-- Header -->
-        <header id="js-header" class="u-header u-header--sticky-top u-header--change-appearance u-header--change-logo"
-                data-header-fix-moment="0">
-            <div class="u-header__section g-bg-black-opacity-0_2 g-transition-0_3 g-py-7 g-py-23--md"
-                 data-header-fix-moment-exclude="g-bg-black-opacity-0_5 g-py-23--md"
-                 data-header-fix-moment-classes="u-shadow-v19 g-bg-white g-py-15--md">
-                <nav class="navbar navbar-expand-lg g-py-0">
-                    <div class="container g-pos-rel">
-                        <!-- Logo -->
-                        <a href="#!" class="js-go-to navbar-brand u-header__logo"
-                           data-type="static">
-                            <img class="u-header__logo-img u-header__logo-img--main g-width-90" src="/Images/vglogo.png" alt="Image description">
-                            <img class="u-header__logo-img g-width-90" src="/Images/vglogo.png" alt="Image description">
-                        </a>
-                        <!-- End Logo -->
-                        <!-- Navigation -->
-                        <div class="collapse navbar-collapse align-items-center flex-sm-row" id="navBar">
-                            <ul id="js-scroll-nav" class="navbar-nav text-uppercase g-letter-spacing-1 g-font-size-14 g-pt-20 g-pt-0--lg ml-auto">
-                                <li class="nav-item g-mr-15--lg g-mb-7 g-mb-0--lg">
-                                    <a href="#home-section" class="nav-link p-0">江西微广 <span class="sr-only">(current)</span></a>
-                                </li>
-                                <li class="nav-item g-mx-15--lg g-mb-7 g-mb-0--lg">
-                                    <a href="#about-section" class="nav-link p-0">关于我们</a>
-                                </li>
-                                <li class="nav-item g-mx-15--lg g-mb-7 g-mb-0--lg">
-                                    <a href="#services-section" class="nav-link p-0">微广服务</a>
-                                </li>
-                                <li class="nav-item g-mx-15--lg g-mb-7 g-mb-0--lg">
-                                    <a href="#news-section" class="nav-link p-0">最新动态</a>
-                                </li>
-                                <li class="nav-item g-mx-15--lg g-mb-7 g-mb-0--lg">
-                                    <a href="#portfolio-section" class="nav-link p-0">微广案例</a>
-                                </li>
-                                <li class="nav-item g-mx-15--lg g-mb-7 g-mb-0--lg">
-                                    <a href="#contact-section" class="nav-link p-0">联系我们</a>
-                                </li>
-                                <li class="nav-item g-ml-15--lg">
-                                    <a href="@Url.Action("Order","UserCenter")" class="nav-link p-0">会员中心</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <!-- End Navigation -->
-                        <!-- Responsive Toggle Button -->
-                        <button class="navbar-toggler btn g-line-height-1 g-brd-none g-pa-0 g-pos-abs g-top-15 g-right-0" type="button"
-                                aria-label="Toggle navigation"
-                                aria-expanded="false"
-                                aria-controls="navBar"
-                                data-toggle="collapse"
-                                data-target="#navBar">
-                            <span class="hamburger hamburger--slider">
-                                <span class="hamburger-box">
-                                    <span class="hamburger-inner"></span>
-                                </span>
-                            </span>
-                        </button>
-                        <!-- End Responsive Toggle Button -->
-                    </div>
-                </nav>
-            </div>
-        </header>
-        <!-- End Header -->
-        <!-- Revolution Slider -->
-        <div class="g-overflow-hidden">
-            <div id="rev_slider_1014_1_wrapper" class="rev_slider_wrapper fullscreen-container" data-alias="typewriter-effect" data-source="gallery" style="background-color:transparent;padding:0px;">
-                <!-- START REVOLUTION SLIDER 5.4.1 fullscreen mode -->
-                <div id="rev_slider_1014_1" class="rev_slider fullscreenbanner" style="display:none;" data-version="5.4.1">
-                    <ul>
-                        <!-- SLIDE  -->
-                        <li data-index="rs-2800" data-transition="curtain-1" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off" data-easein="default" data-easeout="default" data-masterspeed="default" data-thumb="/assets/website/img-temp/1920x1080/img1.jpg" data-rotate="0" data-saveperformance="off" data-title="Slide" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10="" data-description="">
-                            <!-- MAIN IMAGE -->
-                            <img src="/assets/website/img-temp/1920x1080/img1.jpg" alt="" data-bgposition="center center" data-bgfit="cover" class="rev-slidebg">
-                            <!-- LAYERS -->
-                            <!-- LAYER NR. 1 -->
-                            <div class="tp-caption tp-shape tp-shapewrapper "
-                                 id="slide-2800-layer-7"
-                                 data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                 data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']"
-                                 data-width="full"
-                                 data-height="full"
-                                 data-whitespace="nowrap"
-                                 data-type="shape"
-                                 data-basealign="slide"
-                                 data-responsive_offset="off"
-                                 data-responsive="off"
-                                 data-frames='[{"from":"opacity:0;","speed":500,"to":"o:1;","delay":0,"ease":"Power4.easeOut"},{"speed":5000,"to":"opacity:0;","ease":"Power4.easeInOut"}]'
-                                 data-textAlign="['left','left','left','left']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[0,0,0,0]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[0,0,0,0]"
-                                 style="z-index: 5;background-color:rgba(0, 0, 0, 0.3);border-color:rgba(0, 0, 0, 0);border-width:0px;"></div>
-                            <!-- LAYER NR. 2 -->
-                            <div class="tp-caption   tp-resizeme rs-parallaxlevel-4"
-                                 id="slide-2800-layer-1"
-                                 data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                 data-y="['middle','middle','middle','middle']" data-voffset="['-100','-100','-100','-100']"
-                                 data-fontsize="['37','34','25','30']"
-                                 data-lineheight="['37','34','25','30']"
-                                 data-width="none"
-                                 data-height="none"
-                                 data-whitespace="nowrap"
-                                 data-type="text"
-                                 data-responsive_offset="on"
-                                 data-frames='[{"from":"y:50px;sX:1;sY:1;opacity:0;","speed":2500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":300,"to":"opacity:0;","ease":"nothing"}]'
-                                 data-textAlign="['center','center','center','center']"
-                                 data-paddingtop="[20,20,20,20]"
-                                 data-paddingright="[40,40,40,40]"
-                                 data-paddingbottom="[20,20,20,20]"
-                                 data-paddingleft="[40,40,40,40]"
-                                 style="z-index: 6; white-space: nowrap; color: rgba(255, 255, 255, 1.00);border-top: 2px solid #fff; border-bottom: 2px solid #fff;">
-                                <i class="g-hidden-sm-down g-font-size-20 g-pos-rel g-top-minus-5 mr-2 icon-media-119 u-line-icon-pro"></i>
-                                微广联合文化传播有限公司
-                                <i class="g-hidden-sm-down g-font-size-20 g-pos-rel g-top-minus-5 ml-2 icon-media-119 u-line-icon-pro"></i>
-                            </div>
-                            <!-- LAYER NR. 4 -->
-                            <div class="tp-caption   tp-resizeme rs-parallaxlevel-4"
-                                 id="slide-2800-layer-2"
-                                 data-x="['center','center','center','center']" data-hoffset="['-10','-10','-10','-10']"
-                                 data-y="['middle','middle','middle','middle']" data-voffset="['50','50','50','50']"
-                                 data-fontsize="['27','27','25','30']"
-                                 data-lineheight="['40','40','35','40']"
-                                 data-width="none"
-                                 data-height="none"
-                                 data-whitespace="nowrap"
-                                 data-type="text"
-                                 data-responsive_offset="on"
-                                 data-frames='[{"from":"y:50px;sX:1;sY:1;opacity:0;","speed":2500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":300,"to":"opacity:0;","ease":"nothing"}]'
-                                 data-textAlign="['center','center','center','center']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[0,0,0,0]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[0,0,0,0]"
-                                 style="z-index: 8; white-space: nowrap; font-weight: 400; color: rgba(255, 255, 255, 1.00);border-width:0px;">
-                                新媒体广告营销领导品牌
-                            </div>
-                            <!-- LAYER NR. 3 -->
-                            <div class="tp-caption tp-shape tp-shapewrapper  tp-resizeme rs-parallaxlevel-4"
-                                 id="slide-2800-layer-3"
-                                 data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                 data-y="['middle','middle','middle','middle']" data-voffset="['150','150','150','150']"
-                                 data-width="100"
-                                 data-height="1"
-                                 data-whitespace="nowrap"
-                                 data-type="shape"
-                                 data-responsive_offset="on"
-                                 data-frames='[{"from":"y:50px;opacity:0;","speed":2500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":300,"to":"opacity:0;","ease":"nothing"}]'
-                                 data-textAlign="['left','left','left','left']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[0,0,0,0]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[0,0,0,0]"
-                                 style="z-index: 7;background-color:rgba(255, 255, 255, 1.00);border-color:rgba(0, 0, 0, 0);border-width:0px;"></div>
-                            <!-- LAYER NR. 5 -->
-                            <div class="tp-caption rev-btn  tp-resizeme rs-parallaxlevel-4"
-                                 id="slide-2800-layer-4"
-                                 data-x="['right','right','center','center']" data-hoffset="['630','525','-105','100']"
-                                 data-y="['middle','middle','middle','middle']" data-voffset="['240','240','240','240']"
-                                 data-width="none"
-                                 data-height="none"
-                                 data-whitespace="nowrap"
-                                 data-type="button"
-                                 data-actions='[{"event":"click","action":"scrollbelow","offset":"px","delay":""}]'
-                                 data-responsive_offset="on"
-                                 data-frames='[{"from":"x:-50px;opacity:0;","speed":2500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":300,"to":"opacity:0;","ease":"nothing"},{"frame":"hover","speed":"150","ease":"Power2.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(0, 0, 0, 1.00);bg:rgba(255, 255, 255, 1.00);bc:rgba(255, 255, 255, 0);bw:2px 2px 2px 2px;"}]'
-                                 data-textAlign="['left','left','left','left']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[50,50,50,50]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[50,50,50,50]"
-                                 style="z-index: 9; white-space: nowrap; font-size: 15px; line-height: 46px; color: rgba(255, 255, 255, 1.00);background-color:rgba(0, 0, 0, 0);border-color:rgba(255, 255, 255, 1);border-style:solid;border-width:2px;border-radius:30px;outline:none;box-shadow:none;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;cursor:pointer;">
-                                更多
-                            </div>
-                            <!-- LAYER NR. 7 -->
-                            <div class="tp-caption rev-btn  tp-resizeme rs-parallaxlevel-4"
-                                 href="#portfolio-section" target="_self" id="slide-2800-layer-5"
-                                 data-x="['left','left','center','center']" data-hoffset="['630','525','105','100']"
-                                 data-y="['middle','middle','middle','middle']" data-voffset="['240','240','240','240']"
-                                 data-width="none"
-                                 data-height="none"
-                                 data-whitespace="nowrap"
-                                 data-type="button"
-                                 data-actions='[{"event":"click","action":"scrollbelow","offset":"px","delay":""}]'
-                                 data-responsive_offset="on"
-                                 data-frames='[{"from":"x:50px;opacity:0;","speed":2500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":300,"to":"opacity:0;","ease":"nothing"},{"frame":"hover","speed":"150","ease":"Power2.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(0, 0, 0, 1.00);bg:rgba(255, 255, 255, 1.00);bc:rgba(255, 255, 255, 0);bw:2px 2px 2px 2px;"}]'
-                                 data-textAlign="['left','left','left','left']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[50,50,50,50]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[50,50,50,50]"
-                                 style="z-index: 9; white-space: nowrap; font-size: 15px; line-height: 46px; color: rgba(255, 255, 255, 1.00);background-color:rgba(0, 0, 0, 0);border-color:rgba(255, 255, 255, 1);border-style:solid;border-width:2px;border-radius:30px;outline:none;box-shadow:none;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;cursor:pointer;">
-                                关于
-                            </div>
-                        </li>
-                        <li data-index="rs-2801" data-transition="slideup" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off" data-easein="default" data-easeout="default" data-masterspeed="default" data-thumb="assets/img-temp/1920x1080/img2.jpg" data-rotate="0" data-saveperformance="off" data-title="Slide" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10="" data-description="">
-                            <!-- MAIN IMAGE -->
-                            <img src="/assets/website/img-temp/1920x1080/img2.jpg" alt="" data-bgposition="center center" data-bgfit="cover" class="rev-slidebg">
-                            <!-- LAYERS -->
-                            <!-- LAYER NR. 1 -->
-                            <div class="tp-caption tp-shape tp-shapewrapper "
-                                 id="slide-2801-layer-7"
-                                 data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                 data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']"
-                                 data-width="full"
-                                 data-height="full"
-                                 data-whitespace="nowrap"
-                                 data-type="shape"
-                                 data-basealign="slide"
-                                 data-responsive_offset="off"
-                                 data-responsive="off"
-                                 data-frames='[{"from":"opacity:0;","speed":500,"to":"o:1;","delay":0,"ease":"Power4.easeOut"},{"speed":5000,"to":"opacity:0;","ease":"Power4.easeInOut"}]'
-                                 data-textAlign="['left','left','left','left']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[0,0,0,0]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[0,0,0,0]"
-                                 style="z-index: 5;background-color:rgba(0, 0, 0, 0.3);border-color:rgba(0, 0, 0, 0);border-width:0px;"></div>
-                            <!-- LAYER NR. 2 -->
-                            <div class="tp-caption   tp-resizeme rs-parallaxlevel-4"
-                                 id="slide-2801-layer-1"
-                                 data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                 data-y="['middle','middle','middle','middle']" data-voffset="['-100','-100','-100','-100']"
-                                 data-fontsize="['37','34','25','30']"
-                                 data-lineheight="['37','34','25','30']"
-                                 data-width="none"
-                                 data-height="none"
-                                 data-whitespace="nowrap"
-                                 data-type="text"
-                                 data-responsive_offset="on"
-                                 data-frames='[{"from":"y:50px;sX:1;sY:1;opacity:0;","speed":2500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":300,"to":"opacity:0;","ease":"nothing"}]'
-                                 data-textAlign="['center','center','center','center']"
-                                 data-paddingtop="[20,20,20,20]"
-                                 data-paddingright="[40,40,40,40]"
-                                 data-paddingbottom="[20,20,20,20]"
-                                 data-paddingleft="[40,40,40,40]"
-                                 style="z-index: 6; white-space: nowrap; color: rgba(255, 255, 255, 1.00);border-top: 2px solid #fff; border-bottom: 2px solid #fff;">
-                                <i class="g-hidden-sm-down g-font-size-20 g-pos-rel g-top-minus-5 mr-2 icon-media-119 u-line-icon-pro"></i>
-                                微广联合10年营销经验
-                                <i class="g-hidden-sm-down g-font-size-20 g-pos-rel g-top-minus-5 ml-2 icon-media-119 u-line-icon-pro"></i>
-                            </div>
-                            <!-- LAYER NR. 4 -->
-                            <div class="tp-caption   tp-resizeme rs-parallaxlevel-4"
-                                 id="slide-2801-layer-2"
-                                 data-x="['center','center','center','center']" data-hoffset="['-10','-10','-10','-10']"
-                                 data-y="['middle','middle','middle','middle']" data-voffset="['50','50','50','50']"
-                                 data-fontsize="['27','27','25','30']"
-                                 data-lineheight="['40','40','35','40']"
-                                 data-width="none"
-                                 data-height="none"
-                                 data-whitespace="nowrap"
-                                 data-type="text"
-                                 data-responsive_offset="on"
-                                 data-frames='[{"from":"y:50px;sX:1;sY:1;opacity:0;","speed":2500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":300,"to":"opacity:0;","ease":"nothing"}]'
-                                 data-textAlign="['center','center','center','center']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[0,0,0,0]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[0,0,0,0]"
-                                 style="z-index: 8; white-space: nowrap; font-weight: 400; color: rgba(255, 255, 255, 1.00);border-width:0px;">
-                                 为您提供最实效的案例分析
-                            </div>
-                            <!-- LAYER NR. 3 -->
-                            <div class="tp-caption tp-shape tp-shapewrapper  tp-resizeme rs-parallaxlevel-4"
-                                 id="slide-2801-layer-3"
-                                 data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                 data-y="['middle','middle','middle','middle']" data-voffset="['150','150','150','150']"
-                                 data-width="100"
-                                 data-height="1"
-                                 data-whitespace="nowrap"
-                                 data-type="shape"
-                                 data-responsive_offset="on"
-                                 data-frames='[{"from":"y:50px;opacity:0;","speed":2500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":300,"to":"opacity:0;","ease":"nothing"}]'
-                                 data-textAlign="['left','left','left','left']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[0,0,0,0]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[0,0,0,0]"
-                                 style="z-index: 7;background-color:rgba(255, 255, 255, 1.00);border-color:rgba(0, 0, 0, 0);border-width:0px;"></div>
-                            <!-- LAYER NR. 5 -->
-                            <div class="tp-caption rev-btn  tp-resizeme rs-parallaxlevel-4"
-                                 id="slide-2801-layer-4"
-                                 data-x="['right','right','center','center']" data-hoffset="['630','525','-105','100']"
-                                 data-y="['middle','middle','middle','middle']" data-voffset="['240','240','240','240']"
-                                 data-width="none"
-                                 data-height="none"
-                                 data-whitespace="nowrap"
-                                 data-type="button"
-                                 data-actions='[{"event":"click","action":"scrollbelow","offset":"px","delay":""}]'
-                                 data-responsive_offset="on"
-                                 data-frames='[{"from":"x:-50px;opacity:0;","speed":2500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":300,"to":"opacity:0;","ease":"nothing"},{"frame":"hover","speed":"150","ease":"Power2.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(0, 0, 0, 1.00);bg:rgba(255, 255, 255, 1.00);bc:rgba(255, 255, 255, 0);bw:2px 2px 2px 2px;"}]'
-                                 data-textAlign="['left','left','left','left']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[50,50,50,50]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[50,50,50,50]"
-                                 style="z-index: 9; white-space: nowrap; font-size: 15px; line-height: 46px; color: rgba(255, 255, 255, 1.00);background-color:rgba(0, 0, 0, 0);border-color:rgba(255, 255, 255, 1);border-style:solid;border-width:2px;border-radius:30px;outline:none;box-shadow:none;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;cursor:pointer;">
-                                更多
-                            </div>
-                            <!-- LAYER NR. 7 -->
-                            <div class="tp-caption rev-btn  tp-resizeme rs-parallaxlevel-4"
-                                 href="#portfolio-section" target="_self" id="slide-2801-layer-5"
-                                 data-x="['left','left','center','center']" data-hoffset="['630','525','105','100']"
-                                 data-y="['middle','middle','middle','middle']" data-voffset="['240','240','240','240']"
-                                 data-width="none"
-                                 data-height="none"
-                                 data-whitespace="nowrap"
-                                 data-type="button"
-                                 data-actions='[{"event":"click","action":"scrollbelow","offset":"px","delay":""}]'
-                                 data-responsive_offset="on"
-                                 data-frames='[{"from":"x:50px;opacity:0;","speed":2500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":300,"to":"opacity:0;","ease":"nothing"},{"frame":"hover","speed":"150","ease":"Power2.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(0, 0, 0, 1.00);bg:rgba(255, 255, 255, 1.00);bc:rgba(255, 255, 255, 0);bw:2px 2px 2px 2px;"}]'
-                                 data-textAlign="['left','left','left','left']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[50,50,50,50]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[50,50,50,50]"
-                                 style="z-index: 9; white-space: nowrap; font-size: 15px; line-height: 46px; color: rgba(255, 255, 255, 1.00);background-color:rgba(0, 0, 0, 0);border-color:rgba(255, 255, 255, 1);border-style:solid;border-width:2px;border-radius:30px;outline:none;box-shadow:none;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;cursor:pointer;">
-                                关于
-                            </div>
-                        </li>
-                        <li data-index="rs-2802" data-transition="slidedown" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off" data-easein="default" data-easeout="default" data-masterspeed="default" data-thumb="assets/img-temp/1920x1080/img3.jpg" data-rotate="0" data-saveperformance="off" data-title="Slide" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10="" data-description="">
-                            <!-- MAIN IMAGE -->
-                            <img src="/assets/website/img-temp/1920x1080/img3.jpg" alt="" data-bgposition="center center" data-bgfit="cover" class="rev-slidebg">
-                            <!-- LAYERS -->
-                            <!-- LAYER NR. 1 -->
-                            <div class="tp-caption tp-shape tp-shapewrapper "
-                                 id="slide-2802-layer-7"
-                                 data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                 data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']"
-                                 data-width="full"
-                                 data-height="full"
-                                 data-whitespace="nowrap"
-                                 data-type="shape"
-                                 data-basealign="slide"
-                                 data-responsive_offset="off"
-                                 data-responsive="off"
-                                 data-frames='[{"from":"opacity:0;","speed":500,"to":"o:1;","delay":0,"ease":"Power4.easeOut"},{"speed":5000,"to":"opacity:0;","ease":"Power4.easeInOut"}]'
-                                 data-textAlign="['left','left','left','left']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[0,0,0,0]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[0,0,0,0]"
-                                 style="z-index: 5;background-color:rgba(0, 0, 0, 0.3);border-color:rgba(0, 0, 0, 0);border-width:0px;"></div>
-                            <!-- LAYER NR. 2 -->
-                            <div class="tp-caption   tp-resizeme rs-parallaxlevel-4"
-                                 id="slide-2802-layer-1"
-                                 data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                 data-y="['middle','middle','middle','middle']" data-voffset="['-100','-100','-100','-100']"
-                                 data-fontsize="['37','34','25','30']"
-                                 data-lineheight="['37','34','25','30']"
-                                 data-width="none"
-                                 data-height="none"
-                                 data-whitespace="nowrap"
-                                 data-type="text"
-                                 data-responsive_offset="on"
-                                 data-frames='[{"from":"y:50px;sX:1;sY:1;opacity:0;","speed":2500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":300,"to":"opacity:0;","ease":"nothing"}]'
-                                 data-textAlign="['center','center','center','center']"
-                                 data-paddingtop="[20,20,20,20]"
-                                 data-paddingright="[40,40,40,40]"
-                                 data-paddingbottom="[20,20,20,20]"
-                                 data-paddingleft="[40,40,40,40]"
-                                 style="z-index: 6; white-space: nowrap; color: rgba(255, 255, 255, 1.00);border-top: 2px solid #fff; border-bottom: 2px solid #fff;">
-                                <i class="g-hidden-sm-down g-font-size-20 g-pos-rel g-top-minus-5 mr-2 icon-media-119 u-line-icon-pro"></i>
-                                尽细微  致广大
-                                <i class="g-hidden-sm-down g-font-size-20 g-pos-rel g-top-minus-5 ml-2 icon-media-119 u-line-icon-pro"></i>
-                            </div>
-                            <!-- LAYER NR. 4 -->
-                            <div class="tp-caption   tp-resizeme rs-parallaxlevel-4"
-                                 id="slide-2802-layer-2"
-                                 data-x="['center','center','center','center']" data-hoffset="['-10','-10','-10','-10']"
-                                 data-y="['middle','middle','middle','middle']" data-voffset="['50','50','50','50']"
-                                 data-fontsize="['27','27','25','30']"
-                                 data-lineheight="['40','40','35','40']"
-                                 data-width="none"
-                                 data-height="none"
-                                 data-whitespace="nowrap"
-                                 data-type="text"
-                                 data-responsive_offset="on"
-                                 data-frames='[{"from":"y:50px;sX:1;sY:1;opacity:0;","speed":2500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":300,"to":"opacity:0;","ease":"nothing"}]'
-                                 data-textAlign="['center','center','center','center']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[0,0,0,0]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[0,0,0,0]"
-                                 style="z-index: 8; white-space: nowrap; font-weight: 400; color: rgba(255, 255, 255, 1.00);border-width:0px;">
-                                服务10000+广告客户<br/>品牌直播营销的最佳渠道
-                            </div>
-                            <!-- LAYER NR. 3 -->
-                            <div class="tp-caption tp-shape tp-shapewrapper  tp-resizeme rs-parallaxlevel-4"
-                                 id="slide-2802-layer-3"
-                                 data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                                 data-y="['middle','middle','middle','middle']" data-voffset="['150','150','150','150']"
-                                 data-width="100"
-                                 data-height="1"
-                                 data-whitespace="nowrap"
-                                 data-type="shape"
-                                 data-responsive_offset="on"
-                                 data-frames='[{"from":"y:50px;opacity:0;","speed":2500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":300,"to":"opacity:0;","ease":"nothing"}]'
-                                 data-textAlign="['left','left','left','left']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[0,0,0,0]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[0,0,0,0]"
-                                 style="z-index: 7;background-color:rgba(255, 255, 255, 1.00);border-color:rgba(0, 0, 0, 0);border-width:0px;"></div>
-                            <!-- LAYER NR. 5 -->
-                            <div class="tp-caption rev-btn  tp-resizeme rs-parallaxlevel-4"
-                                 id="slide-2802-layer-4"
-                                 data-x="['right','right','center','center']" data-hoffset="['630','525','-105','100']"
-                                 data-y="['middle','middle','middle','middle']" data-voffset="['240','240','240','240']"
-                                 data-width="none"
-                                 data-height="none"
-                                 data-whitespace="nowrap"
-                                 data-type="button"
-                                 data-actions='[{"event":"click","action":"scrollbelow","offset":"px","delay":""}]'
-                                 data-responsive_offset="on"
-                                 data-frames='[{"from":"x:-50px;opacity:0;","speed":2500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":300,"to":"opacity:0;","ease":"nothing"},{"frame":"hover","speed":"150","ease":"Power2.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(0, 0, 0, 1.00);bg:rgba(255, 255, 255, 1.00);bc:rgba(255, 255, 255, 0);bw:2px 2px 2px 2px;"}]'
-                                 data-textAlign="['left','left','left','left']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[50,50,50,50]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[50,50,50,50]"
-                                 style="z-index: 9; white-space: nowrap; font-size: 15px; line-height: 46px; color: rgba(255, 255, 255, 1.00);background-color:rgba(0, 0, 0, 0);border-color:rgba(255, 255, 255, 1);border-style:solid;border-width:2px;border-radius:30px;outline:none;box-shadow:none;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;cursor:pointer;">
-                                更多
-                            </div>
-                            <!-- LAYER NR. 7 -->
-                            <div class="tp-caption rev-btn  tp-resizeme rs-parallaxlevel-4"
-                                 href="#portfolio-section" target="_self" id="slide-2802-layer-5"
-                                 data-x="['left','left','center','center']" data-hoffset="['630','525','105','100']"
-                                 data-y="['middle','middle','middle','middle']" data-voffset="['240','240','240','240']"
-                                 data-width="none"
-                                 data-height="none"
-                                 data-whitespace="nowrap"
-                                 data-type="button"
-                                 data-actions='[{"event":"click","action":"scrollbelow","offset":"px","delay":""}]'
-                                 data-responsive_offset="on"
-                                 data-frames='[{"from":"x:50px;opacity:0;","speed":2500,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":300,"to":"opacity:0;","ease":"nothing"},{"frame":"hover","speed":"150","ease":"Power2.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(0, 0, 0, 1.00);bg:rgba(255, 255, 255, 1.00);bc:rgba(255, 255, 255, 0);bw:2px 2px 2px 2px;"}]'
-                                 data-textAlign="['left','left','left','left']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[50,50,50,50]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[50,50,50,50]"
-                                 style="z-index: 9; white-space: nowrap; font-size: 15px; line-height: 46px; color: rgba(255, 255, 255, 1.00);background-color:rgba(0, 0, 0, 0);border-color:rgba(255, 255, 255, 1);border-style:solid;border-width:2px;border-radius:30px;outline:none;box-shadow:none;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;cursor:pointer;">
-                                关于
-                            </div>
-                        </li>
-                    </ul>
-                    <div class="tp-bannertimer" style="height: 2px; background-color: rgba(255, 255, 255, .5);"></div>
-                </div>
-            </div>
-        </div>
-        <!--</div>-->
-        <!-- End Revolution Slider -->
-        <!-- About -->
-        <div id="about-section" class="g-overflow-hidden">
-            <div class="container g-pt-100">
-                <!-- Heading -->
-                <div class="g-max-width-550 mx-auto g-mb-100">
-                    <h1 class="text-uppercase g-color-main-light-v1 g-font-weight-600 g-font-size-16 g-letter-spacing-2 mb-4 text-center">关于微广</h1>
-                    <p class="g-font-size-14">
-                        公司于2010年8月成立，目前年营业收入已破亿。
-                    </p>
-                    <p class="g-font-size-14">
-                        微广联合基于对新媒体的深度研究形成"专业服务客户、缔造品牌价值"的品牌服务理念，为国际及本土品牌服务，为中国市场提供创意整合营销方案。
-                    </p>
-                    <p class="g-font-size-14">
-                        目前公司拥有众多优势媒体广告资源，聚集了综合行销、传播、广告等多种技术和方法，在以往的传播经验基础上，加入了微博、微信、视频等多种新媒体手段，组合出拳，最大化地实现客户的传播诉求。
-                    </p>
-                    <p class="g-font-size-14">
-                        此外，公司还为客户提供优质的媒介服务工作，包括媒介的策划、购买、调研等方面。传播效果的不可控是客户最担心的问题之一。但微广致力于将风险控制在最低水平，宏观把控传播导向和受众情绪，让传播效果创造最优价值。让客户的客户获得满意，是微广的基本要求。
-                    </p>
-                    <p class="g-font-size-14">
-                        公司是国内媒体广告资源经营行业的领先企业之一，和大多数4A广告公司保持着良好合作关系；公司的高级管理人员都具有近10年的行业管理经验，且拥有丰富的人脉资源。
-                    </p>
-                </div>
-                <!-- End Heading -->
-                <!-- Icon Blocks -->
-                <ul class="row list-inline u-info-v9-1 g-pb-70 mb-0">
-                    <li class="col-md-4 list-inline-item g-mx-0 g-mb-30">
-                        <!-- Icon Blocks -->
-                        <div class="u-block-hover text-center g-px-40">
-                            <div class="g-mb-5">
-                                <span class="u-icon-v1 g-width-85 g-height-85 g-color-main g-font-size-50 rounded-circle">
-                                    <i class="icon-education-024 u-line-icon-pro"></i>
-                                </span>
-                            </div>
-                            <div class="g-mb-25">
-                                <span class="u-icon-v2 u-shadow-v22 g-width-25 g-height-25 g-color-primary g-bg-white g-font-size-9 rounded-circle">
-                                    <i class="fa fa-check"></i>
-                                </span>
-                            </div>
-                            <h3 class="g-color-primary g-font-weight-600 g-font-size-17 text-uppercase mb-3">
-                                <span class="g-color-main g-font-weight-700">01.</span>
-                                目标
-                            </h3>
-                            <p>我们的目标是把重点放在建立与客户的关系上.</p>
-                        </div>
-                        <!-- End Icon Blocks -->
-                    </li>
-                    <li class="col-md-4 list-inline-item g-mx-0 g-mb-30">
-                        <!-- Icon Blocks -->
-                        <div class="u-block-hover text-center g-px-40">
-                            <div class="g-mb-5">
-                                <span class="u-icon-v1 g-width-85 g-height-85 g-color-main g-font-size-50 rounded-circle">
-                                    <i class="icon-education-073 u-line-icon-pro"></i>
-                                </span>
-                            </div>
-                            <div class="g-mb-25">
-                                <span class="u-icon-v2 u-shadow-v22 g-width-25 g-height-25 g-color-white g-bg-primary g-font-size-9 rounded-circle">
-                                    <i class="fa fa-check"></i>
-                                </span>
-                            </div>
-                            <h3 class="g-color-primary g-font-weight-600 g-font-size-17 text-uppercase mb-3">
-                                <span class="g-color-main g-font-weight-700">02.</span>
-                                创造
-                            </h3>
-                            <p>我们致力于拥抱和推动我们行业的变革，使我们能够保持与客户的关系.</p>
-                        </div>
-                        <!-- End Icon Blocks -->
-                    </li>
-                    <li class="col-md-4 list-inline-item g-mx-0 g-mb-30">
-                        <!-- Icon Blocks -->
-                        <div class="u-block-hover text-center g-px-40">
-                            <div class="g-mb-5">
-                                <span class="u-icon-v1 g-width-85 g-height-85 g-color-main g-font-size-50 rounded-circle">
-                                    <i class="icon-communication-180 u-line-icon-pro"></i>
-                                </span>
-                            </div>
-                            <div class="g-mb-25">
-                                <span class="u-icon-v2 u-shadow-v22 g-width-25 g-height-25 g-color-primary g-bg-white g-font-size-9 rounded-circle">
-                                    <i class="fa fa-check"></i>
-                                </span>
-                            </div>
-                            <h3 class="g-color-primary g-font-weight-600 g-font-size-17 text-uppercase mb-3">
-                                <span class="g-color-main g-font-weight-700">03.</span>
-                                快乐
-                            </h3>
-                            <p>在一天结束的时候，重要的是不要让忙碌分散我们的乐趣.</p>
-                        </div>
-                        <!-- End Icon Blocks -->
-                    </li>
-                </ul>
-                <!-- End Icon Blocks -->
-                @*<!-- Mockup Image -->
-                <img class="img-fluid w-100" src="/assets/website/img-temp/1445x750/img1.png" alt="Image Description">
-                <!-- End Mockup Image -->
-                <div class="g-pt-100 g-pb-70">
-                    <!-- Heading -->
-                    <div class="g-max-width-550 text-center mx-auto g-mb-100">
-                        <div class="d-inline-block g-width-60 g-height-2 g-bg-secondary-light-v1 mb-3"></div>
-                        <h2 class="h3">Our end to end suite includes Customer Support, Responsiveness, 1610+ Ui Elements and more.</h2>
-                    </div>
-                    <!-- End Heading -->
-                    <!-- Vision & Mission -->
-                    <div class="g-pos-rel">
-                        <div class="row justify-content-between">
-                            <div class="col-lg-5 g-mb-30">
-                                <div class="g-mt-20 mb-5">
-                                    <h3 class="h6 text-uppercase g-color-main-light-v1 g-font-weight-600 g-letter-spacing-2 mb-3">Vision</h3>
-                                    <h2 class="mb-4">Our Vision and Mission</h2>
-                                    <p class="g-line-height-2">We aim high at being focused on building relationships with our clients and community. Working together on the daily requires each individual to let the greater good of the team's work surface above their own ego.</p>
-                                </div>
-                                <!-- Icon Block -->
-                                <div class="media mb-4">
-                                    <div class="d-flex mr-4">
-                                        <span class="u-icon-v3 g-width-50 g-height-50 g-color-bluegray g-bg-bluegray-opacity-0_1 g-font-size-16 rounded-circle">
-                                            <i class="icon-communication-114 u-line-icon-pro"></i>
-                                        </span>
-                                    </div>
-                                    <div class="media-body">
-                                        <span class="g-font-weight-700">31,500+</span>
-                                        <p class="g-text">Happy clients all over the world</p>
-                                    </div>
-                                </div>
-                                <!-- End Icon Block -->
-                                <!-- Icon Block -->
-                                <div class="media mb-4">
-                                    <div class="d-flex mr-4">
-                                        <span class="u-icon-v3 g-width-50 g-height-50 g-color-primary g-bg-primary-opacity-0_1 g-font-size-16 rounded-circle">
-                                            <i class="icon-finance-091 u-line-icon-pro"></i>
-                                        </span>
-                                    </div>
-                                    <div class="media-body">
-                                        <span class="g-font-weight-700">No. 1</span>
-                                        <p class="g-text">WrapBootstrap theme of all time</p>
-                                    </div>
-                                </div>
-                                <!-- End Icon Block -->
-                                <!-- Icon Block -->
-                                <div class="media mb-4">
-                                    <div class="d-flex mr-4">
-                                        <span class="u-icon-v3 g-width-50 g-height-50 g-color-red g-bg-red-opacity-0_1 g-font-size-16 rounded-circle">
-                                            <i class="icon-communication-116 u-line-icon-pro"></i>
-                                        </span>
-                                    </div>
-                                    <div class="media-body">
-                                        <span class="g-font-weight-700">1610+</span>
-                                        <p class="g-text">UI Elements &amp; Features</p>
-                                    </div>
-                                </div>
-                                <!-- End Icon Block -->
-                            </div>
-                        </div>
-                        <div class="col-lg-6 g-pos-abs--lg g-top-0--lg g-right-0--lg g-mb-30">
-                            <img class="w-100 g-width-auto--lg" src="/assets/website/img-temp/900x535/img1.png" alt="Image Description">
-                        </div>
-                    </div>
-                    <!-- End Vision & Mission -->
-                </div>*@
-            </div>
-        </div>
-        <!-- End About -->
-        <!-- Quote -->
-        <div class="dzsparallaxer auto-init height-is-based-on-content use-loading" data-options='{direction: "reverse", settings_mode_oneelement_max_offset: "150"}'>
-            <div class="divimage dzsparallaxer--target w-100 g-bg-size-cover g-bg-img-hero g-bg-cover g-bg-black-opacity-0_6--after" style="height: 130%; background-image: url(/assets/website/img-temp/1920x1080/img5.jpg);"></div>
-            <div class="container text-center g-pos-rel g-z-index-1 g-py-100">
-                <blockquote class="g-color-white g-font-family-merriweather g-font-size-30 g-font-size-40--md g-line-height-1_4 g-mb-50">
-                    <span class="g-color-primary g-font-family-ptsans g-font-size-90 g-line-height-0_7 g-pos-rel g-top-30">&#8220;</span>
-                    做利他的事，做牛逼的人
-                    <span class="g-color-primary g-font-family-ptsans g-font-size-90 g-line-height-0_7 g-pos-rel g-top-30">&#8221;</span>
-                </blockquote>
-                <h4 class="g-color-white g-font-size-15 text-uppercase mb-1"><span class="d-inline-block align-middle g-width-40 g-height-2 g-bg-primary mr-3"></span> 江西微广</h4>
-            </div>
-        </div>
-        <!-- End Quote -->
-        <!-- Team -->
-        <div class="container g-py-100">
-            <!-- Heading -->
-            @*<div class="g-max-width-550 text-center mx-auto g-mb-100">
-                <h2 class="text-uppercase g-color-main-light-v1 g-font-weight-600 g-font-size-13 g-letter-spacing-2 mb-4">What are you waiting for?</h2>
-                <h2 class="h3">Join thousands of Unifiers making a difference every day using Unify.</h2>
-            </div>*@
-            <!-- End Heading -->
-            <div class="row g-mx-minus-25 g-mb-40">
-                <div class="col-6 col-lg-3 g-px-25 g-mb-50">
-                    <!-- Team -->
-                    <div class="text-center">
-                        <img class="u-shadow-v29 g-width-110 g-height-110 rounded-circle mb-5" src="/Images/medialogo/weixin.jpg" alt="Image Description">
-                        <h4 class="h5 g-font-weight-600 mb-1">微信广告</h4>
-                        @*<span class="d-block g-color-primary">Founder</span>*@
-                        <hr class="g-brd-gray-light-v4 g-my-15">
-                        <a class="u-link-v5 g-color-text g-color-main--hover g-font-size-13" href="#!">借助社会化大数据，深入挖掘公众号价值，为您推荐最为合适的公众号。</a>
-                    </div>
-                    <!-- End Team -->
-                </div>
-                <div class="col-6 col-lg-3 g-px-25 g-mb-50">
-                    <!-- Team -->
-                    <div class="text-center">
-                        <img class="u-shadow-v29 g-width-110 g-height-110 rounded-circle mb-5" src="/Images/medialogo/sinablog.jpg" alt="Image Description">
-                        <h4 class="h5 g-font-weight-600 mb-1">微博广告</h4>
-                        @*<span class="d-block g-color-primary">Manager</span>*@
-                        <hr class="g-brd-gray-light-v4 g-my-15">
-                        <a class="u-link-v5 g-color-text g-color-main--hover g-font-size-13" href="#!">多维度透彻分析微博账号价值，精选意见领袖 网络草根红人等媒体质疑，让您的推广效果事半功倍。</a>
-                    </div>
-                    <!-- End Team -->
-                </div>
-                <div class="col-6 col-lg-3 g-px-25 g-mb-50">
-                    <!-- Team -->
-                    <div class="text-center">
-                        <img class="u-shadow-v29 g-width-110 g-height-110 rounded-circle mb-5" src="/Images/medialogo/friend.jpg" alt="Image Description">
-                        <h4 class="h5 g-font-weight-600 mb-1">朋友圈广告</h4>
-                        @*<span class="d-block g-color-primary">Developer</span>*@
-                        <hr class="g-brd-gray-light-v4 g-my-15">
-                        <a class="u-link-v5 g-color-text g-color-main--hover g-font-size-13" href="#!">用户可以通过朋友圈发表文章和图片，达到广告的二次传播</a>
-                    </div>
-                    <!-- End Team -->
-                </div>
-                <div class="col-6 col-lg-3 g-px-25 g-mb-50">
-                    <!-- Team -->
-                    <div class="text-center">
-                        <img class="u-shadow-v29 g-width-110 g-height-110 rounded-circle mb-5" src="/Images/medialogo/headline.jpg" alt="Image Description">
-                        <h4 class="h5 g-font-weight-600 mb-1">今日头条</h4>
-                        @*<span class="d-block g-color-primary">Designer</span>*@
-                        <hr class="g-brd-gray-light-v4 g-my-15">
-                        <a class="u-link-v5 g-color-text g-color-main--hover g-font-size-13" href="#!">基于数据挖掘的推荐引擎产品，它能5秒钟内通过算法解读使用者的兴趣DNA，用户每次动作后，10秒更新用户模型，越用越懂用户，从而进行精准的阅读内容推荐。</a>
-                    </div>
-                    <!-- End Team -->
-                </div>
-                <div class="col-6 col-lg-3 g-px-25 g-mb-50">
-                    <!-- Team -->
-                    <div class="text-center">
-                        <img class="u-shadow-v29 g-width-110 g-height-110 rounded-circle mb-5" src="/Images/medialogo/zhihu.jpg" alt="Image Description">
-                        <h4 class="h5 g-font-weight-600 mb-1">知乎广告</h4>
-                        @*<span class="d-block g-color-primary">Developer</span>*@
-                        <hr class="g-brd-gray-light-v4 g-my-15">
-                        <a class="u-link-v5 g-color-text g-color-main--hover g-font-size-13" href="#!">提供对用户有价值的内容，软化广告推广信息,与微博微信等社交平台不同，知乎以内容为主，所以内容必须是对用户有利的，是用户需要的，知乎强调的不是曝光量，而是内容的传播效果</a>
-                    </div>
-                    <!-- End Team -->
-                </div>
-                <div class="col-6 col-lg-3 g-px-25 g-mb-50">
-                    <!-- Team -->
-                    <div class="text-center">
-                        <img class="u-shadow-v29 g-width-110 g-height-110 rounded-circle mb-5" src="/Images/medialogo/redbook.jpg" alt="Image Description">
-                        <h4 class="h5 g-font-weight-600 mb-1">小红书广告</h4>
-                        @*<span class="d-block g-color-primary">Developer</span>*@
-                        <hr class="g-brd-gray-light-v4 g-my-15">
-                        <a class="u-link-v5 g-color-text g-color-main--hover g-font-size-13" href="#!">小红书的产品功能形成完美闭环，电商架构以女性用户需求三大需求为核心，四层架构，三个板块互为补充，给运营推广带来最大的助力.</a>
-                    </div>
-                    <!-- End Team -->
-                </div>
-                <div class="col-6 col-lg-3 g-px-25 g-mb-50">
-                    <!-- Team -->
-                    <div class="text-center">
-                        <img class="u-shadow-v29 g-width-110 g-height-110 rounded-circle mb-5" src="/Images/medialogo/douyin.jpg" alt="Image Description">
-                        <h4 class="h5 g-font-weight-600 mb-1">网络直播</h4>
-                        @*<span class="d-block g-color-primary">Developer</span>*@
-                        <hr class="g-brd-gray-light-v4 g-my-15">
-                        <a class="u-link-v5 g-color-text g-color-main--hover g-font-size-13" href="#!">打通线上线下渠道，运用网红直播热潮精准触达目标人群，根据客户需求与品牌调性提供对性网红服务与品牌营销新思路。</a>
-                    </div>
-                    <!-- End Team -->
-                </div>
-                <div class="col-6 col-lg-3 g-px-25 g-mb-50">
-                    <!-- Team -->
-                    <div class="text-center">
-                        <img class="u-shadow-v29 g-width-110 g-height-110 rounded-circle mb-5" src="/Images/medialogo/website.jpg" alt="Image Description">
-                        <h4 class="h5 g-font-weight-600 mb-1">门户发稿</h4>
-                        @*<span class="d-block g-color-primary">Developer</span>*@
-                        <hr class="g-brd-gray-light-v4 g-my-15">
-                        <a class="u-link-v5 g-color-text g-color-main--hover g-font-size-13" href="#!">新闻稿出现在一些优秀的网站上面，这样有助于建立企业的专业、权威的形象。</a>
-                    </div>
-                    <!-- End Team -->
-                </div>
-            </div>
-            @*<div class="text-center">
-                <a class="btn u-btn-primary g-bg-secondary g-color-primary g-color-white--hover g-bg-primary--hover g-font-weight-600 g-font-size-12 g-rounded-30 g-py-15 g-px-35" href="#!">Join Unify</a>
-            </div>*@
-        </div>
-        <!-- End Team -->
-        <!-- Services -->
-        <div id="services-section" class="g-bg-secondary g-py-100">
-            <div class="container">
-                <!-- Heading -->
-                <div class="g-max-width-550 text-center mx-auto g-mb-70">
-                    <h2 class="text-uppercase g-color-main-light-v1 g-font-weight-600 g-font-size-13 g-letter-spacing-2 mb-4">我们是最好的团队</h2>
-                    <h2 class="h3 mb-5">数据待更新</h2>
-                </div>
-                <!-- End Heading -->
-                @*<div class="row justify-content-center g-mb-20">
-                    <div class="col-md-6 col-lg-4 g-mb-50">
-                        <!-- Services -->
-                        <div class="u-shadow-v28 g-bg-white text-left text-md-center rounded g-py-40">
-                            <!-- Services - Header -->
-                            <header class="text-center g-px-30 mb-5">
-                                <div class="g-mb-25">
-                                    <span class="u-icon-v2 u-icon-size--md g-brd-text g-color-primary rounded-circle">
-                                        <i class="icon-finance-211 u-line-icon-pro"></i>
-                                    </span>
-                                </div>
-                                <h2 class="h5 g-font-weight-600">Marketing &amp; Consulting</h2>
-                                <p class="g-font-size-13">This is where we sit down, grab a cup of coffee and dial in the details.</p>
-                            </header>
-                            <!-- End Services - Header -->
-                            <!-- Services - List -->
-                            <ul class="list-unstyled mb-0">
-                                <li class="d-flex align-items-center g-px-35 g-py-15">
-                                    <svg width="13" height="13" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z" fill="#21a79b" />
-                                    </svg>
-                                    <span class="g-color-text ml-3">24/7 support</span>
-                                </li>
-                                <li class="d-flex align-items-center u-shadow-v19 g-bg-secondary g-px-35 g-py-15">
-                                    <svg width="13" height="13" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z" fill="#21a79b" />
-                                    </svg>
-                                    <span class="g-color-text ml-3">1610+ elements</span>
-                                </li>
-                                <li class="d-flex align-items-center g-px-35 g-py-15">
-                                    <svg width="13" height="13" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z" fill="#21a79b" />
-                                    </svg>
-                                    <span class="g-color-text ml-3">400+ pages</span>
-                                </li>
-                                <li class="d-flex align-items-center u-shadow-v19 g-bg-secondary g-px-35 g-py-15">
-                                    <svg width="13" height="13" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z" fill="#21a79b" />
-                                    </svg>
-                                    <span class="g-color-text ml-3">Unlimited domain or user</span>
-                                </li>
-                            </ul>
-                            <!-- End Services - List -->
-                        </div>
-                        <!-- End Services -->
-                    </div>
-                    <div class="col-md-6 col-lg-4 g-mb-50">
-                        <!-- Services -->
-                        <div class="u-shadow-v29 g-bg-primary text-left text-md-center rounded g-py-40">
-                            <!-- Services - Header -->
-                            <header class="text-center g-px-35 mb-5">
-                                <div class="g-mb-25">
-                                    <span class="u-icon-v3 u-icon-size--md g-color-text g-bg-secondary rounded-circle">
-                                        <i class="icon-finance-257 u-line-icon-pro"></i>
-                                    </span>
-                                </div>
-                                <h2 class="h5 g-color-white g-font-weight-600">SEO &amp; Advertising</h2>
-                                <p class="g-color-white-opacity-0_9 g-font-size-13">Now that we've aligned the details, it's time to get things organized.</p>
-                            </header>
-                            <!-- End Services - Header -->
-                            <!-- Services - List -->
-                            <ul class="list-unstyled g-color-white-opacity-0_8 mb-0">
-                                <li class="d-flex align-items-center g-px-35 g-py-15">
-                                    <svg width="13" height="13" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z" fill="#fff" />
-                                    </svg>
-                                    <span class="ml-3">24/7 support</span>
-                                </li>
-                                <li class="d-flex align-items-center u-shadow-v19 g-bg-white-opacity-0_1 g-px-35 g-py-15">
-                                    <svg width="13" height="13" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z" fill="#fff" />
-                                    </svg>
-                                    <span class="ml-3">1610+ elements</span>
-                                </li>
-                                <li class="d-flex align-items-center g-px-35 g-py-15">
-                                    <svg width="13" height="13" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z" fill="#fff" />
-                                    </svg>
-                                    <span class="ml-3">400+ pages</span>
-                                </li>
-                                <li class="d-flex align-items-center u-shadow-v19 g-bg-white-opacity-0_1 g-px-35 g-py-15">
-                                    <svg width="13" height="13" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z" fill="#fff" />
-                                    </svg>
-                                    <span class="ml-3">Unlimited domain or user</span>
-                                </li>
-                            </ul>
-                            <!-- End Services - List -->
-                        </div>
-                        <!-- End Services -->
-                    </div>
-                    <div class="col-md-6 col-lg-4 g-mb-50">
-                        <!-- Services -->
-                        <div class="u-shadow-v28 g-bg-white text-left text-md-center rounded g-py-40">
-                            <!-- Services - Header -->
-                            <header class="text-center g-px-35 mb-5">
-                                <div class="g-mb-25">
-                                    <span class="u-icon-v2 u-icon-size--md g-brd-text g-color-primary rounded-circle">
-                                        <i class="icon-communication-164 u-line-icon-pro"></i>
-                                    </span>
-                                </div>
-                                <h2 class="h5 g-font-weight-600">Design &amp; Development</h2>
-                                <p class="g-font-size-13">This is where we begin to visualize your sketches and make them into beautiful pixels.</p>
-                            </header>
-                            <!-- End Services - Header -->
-                            <!-- Services - List -->
-                            <ul class="list-unstyled mb-0">
-                                <li class="d-flex align-items-center g-px-35 g-py-15">
-                                    <svg width="13" height="13" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z" fill="#21a79b" />
-                                    </svg>
-                                    <span class="g-color-text ml-3">24/7 support</span>
-                                </li>
-                                <li class="d-flex align-items-center u-shadow-v19 g-bg-secondary g-px-35 g-py-15">
-                                    <svg width="13" height="13" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z" fill="#21a79b" />
-                                    </svg>
-                                    <span class="g-color-text ml-3">1610+ elements</span>
-                                </li>
-                                <li class="d-flex align-items-center g-px-35 g-py-15">
-                                    <svg width="13" height="13" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z" fill="#21a79b" />
-                                    </svg>
-                                    <span class="g-color-text ml-3">400+ pages</span>
-                                </li>
-                                <li class="d-flex align-items-center u-shadow-v19 g-bg-secondary g-px-35 g-py-15">
-                                    <svg width="13" height="13" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z" fill="#21a79b" />
-                                    </svg>
-                                    <span class="g-color-text ml-3">Unlimited domain or user</span>
-                                </li>
-                            </ul>
-                            <!-- End Services - List -->
-                        </div>
-                        <!-- End Services -->
-                    </div>
-                </div>
-                <div class="text-center">
-                    <a class="btn u-btn-outline-primary g-font-weight-600 g-font-size-12 g-rounded-30 g-py-15 g-px-35" href="https://wrapbootstrap.com/theme/unify-responsive-website-template-WB0412697?ref=htmlstream">Purchase Unify</a>
-                </div>*@
-            </div>
-        </div>
-        <!-- End Services -->
-        <!-- Counters -->
-        <div class="dzsparallaxer auto-init height-is-based-on-content use-loading" data-options='{direction: "reverse", settings_mode_oneelement_max_offset: "150"}'>
-            <div class="divimage dzsparallaxer--target w-100 g-bg-size-cover g-bg-img-hero g-bg-cover g-bg-black-opacity-0_7--after" style="height: 130%; background-image: url(/assets/website/img-temp/1920x500/img2.jpg);"></div>
-            <div class="container g-pt-100 g-pb-70">
-                <div class="row">
-                    <div class="col-sm-6 col-lg-3 align-items-end mt-auto g-mb-50">
-                        <div class="text-center">
-                            <span class="js-counter g-color-primary g-font-weight-600 g-font-size-60 g-line-height-0_9 mr-2">50</span>
-                            <h3 class="d-inline-block g-color-secondary g-font-weight-600 g-font-size-22 mb-0">+销售人员</h3>
-                        </div>
-                    </div>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords"
+          content="@setting.SiteSEO">
+    <meta name="description"
+          content="@setting.SiteSEOContent">
+    <title>@ViewBag.Title</title>
+    <link href="@Url.Content("~/Scripts/plugins/jquery-ui/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+    <style>
 
-                    <div class="col-sm-6 col-lg-3 align-items-end mt-auto g-mb-50">
-                        <div class="text-center">
-                            <span class="js-counter g-color-primary g-font-weight-600 g-font-size-60 g-line-height-0_9 mr-2">20</span>
-                            <h3 class="d-inline-block g-color-secondary g-font-weight-600 g-font-size-22 mb-0">+媒介人员</h3>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-lg-3 align-items-end mt-auto g-mb-50">
-                        <div class="text-center">
-                            <span class="js-counter g-color-primary g-font-weight-600 g-font-size-60 g-line-height-0_9 mr-2">50000</span>
-                            <h3 class="d-inline-block g-color-secondary g-font-weight-600 g-font-size-22 mb-0">+资源</h3>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-lg-3 align-items-end mt-auto g-mb-50">
-                        <div class="text-center">
-                            <span class="js-counter g-color-primary g-font-weight-600 g-font-size-60 g-line-height-0_9 mr-2">6000</span>
-                            <h3 class="d-inline-block g-color-secondary g-font-weight-600 g-font-size-22 mb-0">+成功项目</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- End Counters -->
-        <!-- Cube Portfolio Blocks - Content -->
-        <div id="portfolio-section" class="container g-py-100">
-            <!-- Heading -->
-            <div class="g-max-width-550 text-center mx-auto g-mb-70">
-                <h2 class="text-uppercase g-color-main-light-v1 g-font-weight-600 g-font-size-16 g-letter-spacing-2 mb-4">我们已经完成了一些很棒的工作</h2>
-                <h2 class="h4 mb-5">令客户满意的高质量创意 &amp; 设计文案.</h2>
-            </div>
-            <!-- End Heading -->
-            <!-- Cube Portfolio Blocks - Filter -->
-            <ul id="filterControls" class="d-block list-inline text-center g-mb-50">
-                <li class="list-inline-item cbp-filter-item cbp-filter-item-active g-brd-around g-brd-secondary-light-v2 g-brd-primary--active g-color-gray-dark-v4 g-color-primary--hover g-color-primary--active g-font-size-13 g-rounded-30 g-transition-0_3 g-px-20 g-py-7 mb-2" role="button"
-                    data-filter="*">
-                    所有
-                </li>
-                <li class="list-inline-item cbp-filter-item g-brd-around g-brd-secondary-light-v2 g-brd-primary--active g-color-gray-dark-v4 g-color-primary--hover g-color-primary--active g-font-size-13 g-rounded-30 g-transition-0_3 g-px-20 g-py-7 mb-2" role="button"
-                    data-filter=".identity">
-                    个性
-                </li>
-                <li class="list-inline-item cbp-filter-item g-brd-around g-brd-secondary-light-v2 g-brd-primary--active g-color-gray-dark-v4 g-color-primary--hover g-color-primary--active g-font-size-13 g-rounded-30 g-transition-0_3 g-px-20 g-py-7 mb-2" role="button"
-                    data-filter=".design">
-                    创意
-                </li>
-                <li class="list-inline-item cbp-filter-item g-brd-around g-brd-secondary-light-v2 g-brd-primary--active g-color-gray-dark-v4 g-color-primary--hover g-color-primary--active g-font-size-13 g-rounded-30 g-transition-0_3 g-px-20 g-py-7 mb-2" role="button"
-                    data-filter=".design, .identity">
-                    创意 &amp; 个性
-                </li>
-            </ul>
-            <!-- End Cube Portfolio Blocks - Filter -->
-            <div class="cbp g-mb-50"
-                 data-controls="#filterControls"
-                 data-animation="quicksand"
-                 data-x-gap="30"
-                 data-y-gap="30"
-                 data-media-queries='[
-               {"width": 1500, "cols": 3},
-               {"width": 1100, "cols": 3},
-               {"width": 800, "cols": 3},
-               {"width": 480, "cols": 2},
-               {"width": 300, "cols": 1}
-             ]'>
-                <!-- Cube Portfolio Blocks - Item -->
-                <div class="cbp-item identity design">
-                    <div class="u-block-hover g-parent">
-                        <img class="img-fluid g-transform-scale-1_1--parent-hover g-transition-0_5 g-transition--ease-in-out" src="/assets/website/img-temp/500x335/img1.jpg" alt="Image description">
-                        <div class="d-flex w-100 h-100 g-bg-primary-opacity-0_6 opacity-0 g-opacity-1--parent-hover g-pos-abs g-top-0 g-left-0 g-transition-0_3 g-transition--ease-in u-block-hover__additional--fade u-block-hover__additional--fade-in g-pa-20">
-                            <ul class="align-items-end flex-column list-inline mt-auto ml-auto mb-0">
-                                <li class="list-inline-item">
-                                    <a class="u-icon-v2 u-icon-size--sm g-brd-white g-color-black g-bg-white rounded-circle" href="#!">
-                                        <i class="icon-communication-095 u-line-icon-pro"></i>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="cbp-lightbox u-icon-v2 u-icon-size--sm g-brd-white g-color-black g-bg-white rounded-circle" href="/assets/website/img-temp/500x335/img1.jpg">
-                                        <i class="icon-communication-017 u-line-icon-pro"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="text-center g-pa-25 mb-1">
-                        <h3 class="h5 g-font-weight-600 mb-1">待更新</h3>
-                        <p class="mb-0">创意, 设计</p>
-                    </div>
-                </div>
-                <!-- End Cube Portfolio Blocks - Item -->
-                <!-- Cube Portfolio Blocks - Item -->
-                <div class="cbp-item design">
-                    <div class="u-block-hover g-parent">
-                        <img class="img-fluid g-transform-scale-1_1--parent-hover g-transition-0_5 g-transition--ease-in-out" src="/assets/website/img-temp/500x335/img2.jpg" alt="Image description">
-                        <div class="d-flex w-100 h-100 g-bg-primary-opacity-0_6 opacity-0 g-opacity-1--parent-hover g-pos-abs g-top-0 g-left-0 g-transition-0_3 g-transition--ease-in u-block-hover__additional--fade u-block-hover__additional--fade-in g-pa-20">
-                            <ul class="align-items-end flex-column list-inline mt-auto ml-auto mb-0">
-                                <li class="list-inline-item">
-                                    <a class="u-icon-v2 u-icon-size--sm g-brd-white g-color-black g-bg-white rounded-circle" href="#!">
-                                        <i class="icon-communication-095 u-line-icon-pro"></i>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="cbp-lightbox u-icon-v2 u-icon-size--sm g-brd-white g-color-black g-bg-white rounded-circle" href="/assets/website/img-temp/500x335/img2.jpg">
-                                        <i class="icon-communication-017 u-line-icon-pro"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="text-center g-pa-25 mb-1">
-                        <h3 class="h5 g-font-weight-600 mb-1">待更新</h3>
-                        <p class="mb-0">设计</p>
-                    </div>
-                </div>
-                <!-- End Cube Portfolio Blocks - Item -->
-                <!-- Cube Portfolio Blocks - Item -->
-                <div class="cbp-item identity">
-                    <div class="u-block-hover g-parent">
-                        <img class="img-fluid g-transform-scale-1_1--parent-hover g-transition-0_5 g-transition--ease-in-out" src="/assets/website/img-temp/500x335/img3.jpg" alt="Image description">
-                        <div class="d-flex w-100 h-100 g-bg-primary-opacity-0_6 opacity-0 g-opacity-1--parent-hover g-pos-abs g-top-0 g-left-0 g-transition-0_3 g-transition--ease-in u-block-hover__additional--fade u-block-hover__additional--fade-in g-pa-20">
-                            <ul class="align-items-end flex-column list-inline mt-auto ml-auto mb-0">
-                                <li class="list-inline-item">
-                                    <a class="u-icon-v2 u-icon-size--sm g-brd-white g-color-black g-bg-white rounded-circle" href="#!">
-                                        <i class="icon-communication-095 u-line-icon-pro"></i>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="cbp-lightbox u-icon-v2 u-icon-size--sm g-brd-white g-color-black g-bg-white rounded-circle" href="/assets/website/img-temp/500x335/img3.jpg">
-                                        <i class="icon-communication-017 u-line-icon-pro"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="text-center g-pa-25 mb-1">
-                        <h3 class="h5 g-font-weight-600 mb-1">待更新</h3>
-                        <p class="mb-0">创意</p>
-                    </div>
-                </div>
-                <!-- End Cube Portfolio Blocks - Item -->
-                <!-- Cube Portfolio Blocks - Item -->
-                <div class="cbp-item design">
-                    <div class="u-block-hover g-parent">
-                        <img class="img-fluid g-transform-scale-1_1--parent-hover g-transition-0_5 g-transition--ease-in-out" src="/assets/website/img-temp/500x335/img4.jpg" alt="Image description">
-                        <div class="d-flex w-100 h-100 g-bg-primary-opacity-0_6 opacity-0 g-opacity-1--parent-hover g-pos-abs g-top-0 g-left-0 g-transition-0_3 g-transition--ease-in u-block-hover__additional--fade u-block-hover__additional--fade-in g-pa-20">
-                            <ul class="align-items-end flex-column list-inline mt-auto ml-auto mb-0">
-                                <li class="list-inline-item">
-                                    <a class="u-icon-v2 u-icon-size--sm g-brd-white g-color-black g-bg-white rounded-circle" href="#!">
-                                        <i class="icon-communication-095 u-line-icon-pro"></i>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="cbp-lightbox u-icon-v2 u-icon-size--sm g-brd-white g-color-black g-bg-white rounded-circle" href="/assets/website/img-temp/500x335/img4.jpg">
-                                        <i class="icon-communication-017 u-line-icon-pro"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="text-center g-pa-25 mb-1">
-                        <h3 class="h5 g-font-weight-600 mb-1">待更新</h3>
-                        <p class="mb-0">创意</p>
-                    </div>
-                </div>
-                <!-- End Cube Portfolio Blocks - Item -->
-                <!-- Cube Portfolio Blocks - Item -->
-                <div class="cbp-item identity">
-                    <div class="u-block-hover g-parent">
-                        <img class="img-fluid g-transform-scale-1_1--parent-hover g-transition-0_5 g-transition--ease-in-out" src="/assets/website/img-temp/500x335/img5.jpg" alt="Image description">
-                        <div class="d-flex w-100 h-100 g-bg-primary-opacity-0_6 opacity-0 g-opacity-1--parent-hover g-pos-abs g-top-0 g-left-0 g-transition-0_3 g-transition--ease-in u-block-hover__additional--fade u-block-hover__additional--fade-in g-pa-20">
-                            <ul class="align-items-end flex-column list-inline mt-auto ml-auto mb-0">
-                                <li class="list-inline-item">
-                                    <a class="u-icon-v2 u-icon-size--sm g-brd-white g-color-black g-bg-white rounded-circle" href="#!">
-                                        <i class="icon-communication-095 u-line-icon-pro"></i>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="cbp-lightbox u-icon-v2 u-icon-size--sm g-brd-white g-color-black g-bg-white rounded-circle" href="/assets/website/img-temp/500x335/img5.jpg">
-                                        <i class="icon-communication-017 u-line-icon-pro"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="text-center g-pa-25 mb-1">
-                        <h3 class="h5 g-font-weight-600 mb-1">待更新</h3>
-                        <p class="mb-0">设计</p>
-                    </div>
-                </div>
-                <!-- End Cube Portfolio Blocks - Item -->
-                <!-- Cube Portfolio Blocks - Item -->
-                <div class="cbp-item identity">
-                    <div class="u-block-hover g-parent">
-                        <img class="img-fluid g-transform-scale-1_1--parent-hover g-transition-0_5 g-transition--ease-in-out" src="/assets/website/img-temp/500x335/img6.jpg" alt="Image description">
-                        <div class="d-flex w-100 h-100 g-bg-primary-opacity-0_6 opacity-0 g-opacity-1--parent-hover g-pos-abs g-top-0 g-left-0 g-transition-0_3 g-transition--ease-in u-block-hover__additional--fade u-block-hover__additional--fade-in g-pa-20">
-                            <ul class="align-items-end flex-column list-inline mt-auto ml-auto mb-0">
-                                <li class="list-inline-item">
-                                    <a class="u-icon-v2 u-icon-size--sm g-brd-white g-color-black g-bg-white rounded-circle" href="#!">
-                                        <i class="icon-communication-095 u-line-icon-pro"></i>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="cbp-lightbox u-icon-v2 u-icon-size--sm g-brd-white g-color-black g-bg-white rounded-circle" href="/assets/website/img-temp/500x335/img6.jpg">
-                                        <i class="icon-communication-017 u-line-icon-pro"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="text-center g-pa-25 mb-1">
-                        <h3 class="h5 g-font-weight-600 mb-1">待更新</h3>
-                        <p class="mb-0">待更新</p>
-                    </div>
-                </div>
-                <!-- End Cube Portfolio Blocks - Item -->
-            </div>
-            @*<div class="text-center">
-                <a class="btn u-btn-primary g-bg-secondary g-color-primary g-color-white--hover g-bg-primary--hover g-font-weight-600 g-font-size-12 g-rounded-30 g-py-15 g-px-35" href="#!">View all Unify works</a>
-            </div>*@
-        </div>
-        <!-- End Cube Portfolio Blocks - Content -->
-        <!-- News -->
-        <div id="news-section" class="g-bg-secondary g-py-100">
-            <div class="container">
-                <!-- Heading -->
-                <div class="g-max-width-550 text-center mx-auto g-mb-70">
-                    <h2 class="text-uppercase g-color-main-light-v1 g-font-weight-600 g-font-size-16 g-letter-spacing-2 mb-4">公司动态</h2>
-                    <h2 class="h4 mb-5">暂无数据.</h2>
-                </div>
-                <!-- End Heading -->
-                <div class="row g-mx-minus-25 g-mb-50">
-                    @*<div class="col-lg-6 g-px-25 g-mb-50">
-                        <!-- Blog Grid Modern Blocks -->
-                        <article class="row align-items-stretch no-gutters u-shadow-v29 g-transition-0_3">
-                            <div class="col-sm-6 g-bg-white g-rounded-left-5">
-                                <div class="g-pa-35">
-                                    <ul class="list-inline g-color-gray-dark-v4 g-font-weight-600 g-font-size-12">
-                                        <li class="list-inline-item mr-0">Alex Teseira</li>
-                                        <li class="list-inline-item mx-2">&#183;</li>
-                                        <li class="list-inline-item">5 June 2017</li>
-                                    </ul>
-                                    <h2 class="h5 g-color-black g-font-weight-600 mb-4">
-                                        <a class="u-link-v5 g-color-black g-color-primary--hover g-cursor-pointer" href="#!">Announcing a free plan for small teams</a>
-                                    </h2>
-                                    <p class="g-color-gray-dark-v4 g-line-height-1_8 mb-4">At Wake, our mission has always been focused on bringing.</p>
-                                    <ul class="list-inline g-font-size-12 mb-0">
-                                        <li class="list-inline-item g-mb-10">
-                                            <a class="u-tags-v1 g-color-blue g-bg-blue-opacity-0_1 g-bg-blue--hover g-color-white--hover g-rounded-50 g-py-4 g-px-15" href="#!">Start-Up</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 g-bg-size-cover g-bg-pos-center g-min-height-300 g-rounded-right-5" data-bg-img-src="/assets/website/img-temp/400x500/img1.jpg"></div>
-                        </article>
-                        <!-- End Blog Grid Modern Blocks -->
-                    </div>
-                    <div class="col-lg-6 g-px-25 g-mb-50">
-                        <!-- Blog Grid Modern Blocks -->
-                        <article class="row align-items-stretch no-gutters u-shadow-v29 g-transition-0_3">
-                            <div class="col-sm-6 g-bg-white g-rounded-left-5">
-                                <div class="g-pa-35">
-                                    <ul class="list-inline g-color-gray-dark-v4 g-font-weight-600 g-font-size-12">
-                                        <li class="list-inline-item mr-0">Alex Teseira</li>
-                                        <li class="list-inline-item mx-2">&#183;</li>
-                                        <li class="list-inline-item">5 June 2017</li>
-                                    </ul>
-                                    <h2 class="h5 g-color-black g-font-weight-600 mb-4">
-                                        <a class="u-link-v5 g-color-black g-color-primary--hover g-cursor-pointer" href="#!">Exclusive interview with InVision's CEO</a>
-                                    </h2>
-                                    <p class="g-color-gray-dark-v4 g-line-height-1_8 mb-4">Clara Valberg is the founder and CEO of InVision.</p>
-                                    <ul class="list-inline g-font-size-12 mb-0">
-                                        <li class="list-inline-item g-mb-10">
-                                            <a class="u-tags-v1 g-color-brown g-bg-brown-opacity-0_1 g-bg-brown--hover g-color-white--hover g-rounded-50 g-py-4 g-px-15" href="#!">Start-Up</a>
-                                        </li>
-                                        <li class="list-inline-item g-mb-10">
-                                            <a class="u-tags-v1 g-color-pink g-bg-pink-opacity-0_1 g-bg-pink--hover g-color-white--hover g-rounded-50 g-py-4 g-px-15" href="#!">Interview</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 g-bg-size-cover g-bg-pos-center g-min-height-300 g-rounded-right-5" data-bg-img-src="/assets/website/img-temp/400x500/img2.jpg"></div>
-                        </article>
-                        <!-- End Blog Grid Modern Blocks -->
-                    </div>
-                    <div class="w-100"></div>
-                    <div class="col-lg-6 g-px-25 g-mb-50">
-                        <!-- Blog Grid Modern Blocks -->
-                        <article class="row align-items-stretch no-gutters u-shadow-v29 g-transition-0_3">
-                            <div class="col-sm-6 g-bg-white g-rounded-left-5">
-                                <div class="g-pa-35">
-                                    <ul class="list-inline g-color-gray-dark-v4 g-font-weight-600 g-font-size-12">
-                                        <li class="list-inline-item mr-0">Alex Teseira</li>
-                                        <li class="list-inline-item mx-2">&#183;</li>
-                                        <li class="list-inline-item">5 June 2017</li>
-                                    </ul>
-                                    <h2 class="h5 g-color-black g-font-weight-600 mb-4">
-                                        <a class="u-link-v5 g-color-black g-color-primary--hover g-cursor-pointer" href="#!">V’s Barbershop Opening First South Florida Location</a>
-                                    </h2>
-                                    <p class="g-color-gray-dark-v4 g-line-height-1_8 mb-4">There’s nothing like a good barbershop.</p>
-                                    <ul class="list-inline g-font-size-12 mb-0">
-                                        <li class="list-inline-item g-mb-10">
-                                            <a class="u-tags-v1 g-color-bluegray g-bg-bluegray-opacity-0_1 g-bg-bluegray--hover g-color-white--hover g-rounded-50 g-py-4 g-px-15" href="#!">Barber</a>
-                                        </li>
-                                        <li class="list-inline-item g-mb-10">
-                                            <a class="u-tags-v1 g-color-primary g-bg-primary-opacity-0_1 g-bg-primary--hover g-color-white--hover g-rounded-50 g-py-4 g-px-15" href="#!">Style</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 g-bg-size-cover g-bg-pos-center g-min-height-300 g-rounded-right-5" data-bg-img-src="/assets/website/img-temp/400x500/img3.jpg"></div>
-                        </article>
-                        <!-- End Blog Grid Modern Blocks -->
-                    </div>
-                    <div class="col-lg-6 g-px-25 g-mb-50">
-                        <!-- Blog Grid Modern Blocks -->
-                        <article class="row align-items-stretch no-gutters u-shadow-v29 g-transition-0_3">
-                            <div class="col-sm-6 g-bg-white g-rounded-left-5">
-                                <div class="g-pa-35">
-                                    <ul class="list-inline g-color-gray-dark-v4 g-font-weight-600 g-font-size-12">
-                                        <li class="list-inline-item mr-0">Alex Teseira</li>
-                                        <li class="list-inline-item mx-2">&#183;</li>
-                                        <li class="list-inline-item">5 June 2017</li>
-                                    </ul>
-                                    <h2 class="h5 g-color-black g-font-weight-600 mb-4">
-                                        <a class="u-link-v5 g-color-black g-color-primary--hover g-cursor-pointer" href="#!">The Hypnotic Allure of Cinemagraphic Waves</a>
-                                    </h2>
-                                    <p class="g-color-gray-dark-v4 g-line-height-1_8 mb-4">Ocean waves are, by definition, in a constant state of motion.</p>
-                                    <ul class="list-inline g-font-size-12 mb-0">
-                                        <li class="list-inline-item g-mb-10">
-                                            <a class="u-tags-v1 g-color-brown g-bg-brown-opacity-0_1 g-bg-brown--hover g-color-white--hover g-rounded-50 g-py-4 g-px-15" href="#!">Animation</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 g-bg-size-cover g-bg-pos-center g-min-height-300 g-rounded-right-5" data-bg-img-src="/assets/website/img-temp/400x500/img4.jpg"></div>
-                        </article>
-                        <!-- End Blog Grid Modern Blocks -->
-                    </div>*@
-                </div>
-                @*<div class="text-center">
-                    <a class="btn u-btn-outline-primary g-font-weight-600 g-font-size-12 g-rounded-30 g-py-15 g-px-35" href="#">Read more News</a>
-                </div>*@
-            </div>
-        </div>
-        <!-- End News -->
-        <!-- Clients -->
-        @*<div class="container g-mb-100--xl u-shadow-v29 g-bg-size-cover g-bg-img-hero g-bg-cover g-bg-black-opacity-0_5--after g-rounded-100 g-rounded-100--after g-mt-100 g-mb-10 g-py-60" style="background-image: url(assets/img-temp/1920x500/img1.jpg);">
-            <div class="js-carousel g-pos-rel g-z-index-1"
-                 data-infinite="true"
-                 data-autoplay="true"
-                 data-lazy-load="ondemand"
-                 data-slides-show="6"
-                 data-responsive='[{
-               "breakpoint": 1200,
-               "settings": {
-                 "slidesToShow": 6
-               }
-             }, {
-               "breakpoint": 992,
-               "settings": {
-                 "slidesToShow": 4
-               }
-             }, {
-               "breakpoint": 768,
-               "settings": {
-                 "slidesToShow": 3
-               }
-             }, {
-               "breakpoint": 576,
-               "settings": {
-                 "slidesToShow": 3
-               }
-             }, {
-               "breakpoint": 446,
-               "settings": {
-                 "slidesToShow": 2
-               }
-             }]'>
-                <div class="js-slide u-block-hover">
-                    <img class="mx-auto g-width-80 u-block-hover__main--white g-opacity-0_8 g-opacity-1--hover g-cursor-pointer" data-lazy="/assets/img-temp/200x100/img1.png" alt="Image description">
-                </div>
-                <div class="js-slide u-block-hover">
-                    <img class="mx-auto g-width-80 u-block-hover__main--white g-opacity-0_8 g-opacity-1--hover g-cursor-pointer" data-lazy="/assets/img-temp/200x100/img2.png" alt="Image description">
-                </div>
-                <div class="js-slide u-block-hover">
-                    <img class="mx-auto g-width-80 u-block-hover__main--white g-opacity-0_8 g-opacity-1--hover g-cursor-pointer" data-lazy="/assets/img-temp/200x100/img3.png" alt="Image description">
-                </div>
-                <div class="js-slide u-block-hover">
-                    <img class="mx-auto g-width-80 u-block-hover__main--white g-opacity-0_8 g-opacity-1--hover g-cursor-pointer" data-lazy="/assets/img-temp/200x100/img4.png" alt="Image description">
-                </div>
-                <div class="js-slide u-block-hover">
-                    <img class="mx-auto g-width-80 u-block-hover__main--white g-opacity-0_8 g-opacity-1--hover g-cursor-pointer" data-lazy="/assets/img-temp/200x100/img5.png" alt="Image description">
-                </div>
-                <div class="js-slide u-block-hover">
-                    <img class="mx-auto g-width-80 u-block-hover__main--white g-opacity-0_8 g-opacity-1--hover g-cursor-pointer" data-lazy="/assets/img-temp/200x100/img7.png" alt="Image description">
-                </div>
-                <div class="js-slide u-block-hover">
-                    <img class="mx-auto g-width-80 u-block-hover__main--white g-opacity-0_8 g-opacity-1--hover g-cursor-pointer" data-lazy="/assets/img-temp/200x100/img8.png" alt="Image description">
-                </div>
-            </div>
-        </div>*@
-        <!-- End Clients -->
-        @*<!-- Testimonials -->
-        <div class="container g-pt-70 g-pb-100">
-            <div id="carouselCus2" class="js-carousel u-carousel-indicators-v32 g-pos-stc g-width-200 text-center mx-auto g-mb-20"
-                 data-infinite="true"
-                 data-center-mode="true"
-                 data-slides-show="3"
-                 data-is-thumbs="true"
-                 data-nav-for="#carouselCus1">
-                <div class="js-slide d-flex text-center g-opacity-1 g-cursor-pointer g-px-13 g-py-50">
-                    <img class="u-shadow-v22 u-carousel-indicators-v32-img g-width-40 g-height-40 g-brd-around g-brd-2 g-brd-transparent rounded-circle" src="/assets/website/img-temp/100x100/img3.jpg" alt="Image Description">
-                </div>
-                <div class="js-slide d-flex text-center g-opacity-1 g-cursor-pointer g-px-13 g-py-50">
-                    <img class="u-shadow-v22 u-carousel-indicators-v32-img g-width-40 g-height-40 g-brd-around g-brd-2 g-brd-transparent rounded-circle" src="/assets/website/img-temp/100x100/img2.jpg" alt="Image Description">
-                </div>
-                <div class="js-slide d-flex text-center g-opacity-1 g-cursor-pointer g-px-13 g-py-50">
-                    <img class="u-shadow-v22 u-carousel-indicators-v32-img g-width-40 g-height-40 g-brd-around g-brd-2 g-brd-transparent rounded-circle" src="/assets/website/img-temp/100x100/img1.jpg" alt="Image Description">
-                </div>
-                <div class="js-slide d-flex text-center g-opacity-1 g-cursor-pointer g-px-13 g-py-50">
-                    <img class="u-shadow-v22 u-carousel-indicators-v32-img g-width-40 g-height-40 g-brd-around g-brd-2 g-brd-transparent rounded-circle" src="/assets/website/img-temp/100x100/img4.jpg" alt="Image Description">
-                </div>
-            </div>
-            <div id="carouselCus1" class="js-carousel g-px-50 g-px-200--lg"
-                 data-infinite="true"
-                 data-arrows-classes="u-arrow-v1 g-absolute-centered--y g-width-45 g-height-45 g-font-size-30 g-color-main-light-v1 g-color-primary--hover"
-                 data-arrow-left-classes="fa fa-angle-left g-left-0 g-left-40--lg g-mt-minus-50"
-                 data-arrow-right-classes="fa fa-angle-right g-right-0 g-right-40--lg g-mt-minus-50"
-                 data-nav-for="#carouselCus2">
-                <div class="js-slide text-center">
-                    <blockquote class="g-color-text g-font-size-default g-font-size-18--md g-mb-60">Your customer support is the best I have experienced with any theme I have purchased. You have a theme that far exceeds all others. Thanks for providing such a fantastic theme, all your efforts are greatly appreciated on our end.</blockquote>
-                    <h4 class="g-font-weight-700 g-font-size-15 g-mb-1">Dick Pottorf</h4>
-                    <span class="d-block g-color-text g-font-size-13">Reason: Unify Support</span>
-                </div>
-                <div class="js-slide text-center">
-                    <blockquote class="g-color-text g-font-size-default g-font-size-18--md g-mb-60">Hi there purchased a couple of days ago and the site looks great, big thanks to the htmlstream guys, they gave me some great help with some fiddly setup issues.</blockquote>
-                    <h4 class="g-font-weight-700 g-font-size-15 g-mb-1">Bastien Rojanawisut</h4>
-                    <span class="d-block g-color-text g-font-size-13">Reason: Template Quality</span>
-                </div>
-                <div class="js-slide text-center">
-                    <blockquote class="g-color-text g-font-size-default g-font-size-18--md g-mb-60">Dear Htmlstream team, I just bought the Unify template some weeks ago. The template is really nice and offers quite a large set of options.</blockquote>
-                    <h4 class="g-font-weight-700 g-font-size-15 g-mb-1">Alex Pottorf</h4>
-                    <span class="d-block g-color-text g-font-size-13">Reason: Template Quality</span>
-                </div>
-                <div class="js-slide text-center">
-                    <blockquote class="g-color-text g-font-size-default g-font-size-18--md g-mb-60">New Unify template looks great!. Love the multiple layout examples for Shortcodes and the new Show code Copy code snippet feature is brilliant.</blockquote>
-                    <h4 class="g-font-weight-700 g-font-size-15 g-mb-1">Mark Mcmanus</h4>
-                    <span class="d-block g-color-text g-font-size-13">Reason: Code Quality</span>
-                </div>
-            </div>
-            <!-- End Carousel -->
-        </div>
-        <!-- End Testimonials -->*@
-        <!-- Contact -->
-        <footer id="contact-section" class="g-pos-rel">
-            <!-- Content -->
-            <div class="g-bg-size-cover g-bg-img-hero u-bg-overlay g-bg-black-opacity-0_7--after g-pt-120 g-pb-70" style="background-image: url(/assets/website/img-temp/1920x1080/img4.jpg);">
-                <div class="container u-bg-overlay__inner">
-                    <div class="row align-items-center">
-                        <div class="col-md-4 g-mb-50">
-                            <h3 class="h4 g-color-white mb-4">联系方式</h3>
-                            <!-- Icon Block -->
-                            <div class="media align-items-center mb-4">
-                                <div class="d-flex">
-                                    <span class="u-icon-v1 u-icon-size--sm g-color-white mr-2">
-                                        <i class="icon-hotel-restaurant-235 u-line-icon-pro"></i>
-                                    </span>
-                                </div>
-                                <div class="media-body">
-                                    <p class="g-color-white-opacity-0_6 mb-0">（总部）江西省吉安亿都国际30栋三楼</p>
-                                </div>
-                            </div>
-                            <!-- End Icon Block -->
-                            <!-- Icon Block -->
-                            <div class="media align-items-center mb-4">
-                                <div class="d-flex">
-                                    <span class="u-icon-v1 u-icon-size--sm g-color-white mr-2">
-                                        <i class="icon-communication-033 u-line-icon-pro"></i>
-                                    </span>
-                                </div>
-                                <div class="media-body">
-                                    <p class="g-color-white-opacity-0_6 mb-0">+86 (0796) 8797969</p>
-                                </div>
-                            </div>
-                            <!-- End Icon Block -->
-                            <!-- Icon Block -->
-                            <div class="media align-items-center g-mb-60">
-                                <div class="d-flex">
-                                    <span class="u-icon-v1 u-icon-size--sm g-color-white mr-2">
-                                        <i class="icon-communication-062 u-line-icon-pro"></i>
-                                    </span>
-                                </div>
-                                <div class="media-body">
-                                    <p class="g-color-white-opacity-0_6 mb-0">contact@jxweiguang.com</p>
-                                </div>
-                            </div>
-                            <!-- End Icon Block -->
-                            <div class="media align-items-center mb-4">
-                                <div class="d-flex">
-                                    <span class="u-icon-v1 u-icon-size--sm g-color-white mr-2">
-                                        <i class="icon-hotel-restaurant-235 u-line-icon-pro"></i>
-                                    </span>
-                                </div>
-                                <div class="media-body">
-                                    <p class="g-color-white-opacity-0_6 mb-0">（分部）上海市徐汇区淮海中路1045号 淮海国际广场8楼-No.57</p>
-                                </div>
-                            </div>
-                            <!-- End Icon Block -->
-                            <!-- Icon Block -->
-                            <div class="media align-items-center mb-4">
-                                <div class="d-flex">
-                                    <span class="u-icon-v1 u-icon-size--sm g-color-white mr-2">
-                                        <i class="icon-communication-033 u-line-icon-pro"></i>
-                                    </span>
-                                </div>
-                                <div class="media-body">
-                                    <p class="g-color-white-opacity-0_6 mb-0">+86 (021) 60600657</p>
-                                </div>
-                            </div>
-                            <!-- End Icon Block -->
-                            <div class="media align-items-center mb-4">
-                                <div class="d-flex">
-                                    <span class="u-icon-v1 u-icon-size--sm g-color-white mr-2">
-                                        <i class="icon-hotel-restaurant-235 u-line-icon-pro"></i>
-                                    </span>
-                                </div>
-                                <div class="media-body">
-                                    <p class="g-color-white-opacity-0_6 mb-0">（分部）广州市天河区珠江西路8号 高德置地冬广场H座15楼-V09</p>
-                                </div>
-                            </div>
-                            <!-- End Icon Block -->
-                            <!-- Icon Block -->
-                            <div class="media align-items-center mb-4">
-                                <div class="d-flex">
-                                    <span class="u-icon-v1 u-icon-size--sm g-color-white mr-2">
-                                        <i class="icon-communication-033 u-line-icon-pro"></i>
-                                    </span>
-                                </div>
-                                <div class="media-body">
-                                    <p class="g-color-white-opacity-0_6 mb-0">+86 (020) 32689909</p>
-                                </div>
-                            </div>
-                            <!-- End Icon Block -->
-                            @*<!-- Social Icons -->
-        <h3 class="h4 g-color-white">Social Networks</h3>
-        <ul class="list-inline mb-0">
-            <li class="list-inline-item g-mx-2">
-                <a class="u-icon-v1 u-icon-size--sm g-color-white g-bg-white-opacity-0_1 g-bg-primary--hover g-font-size-13 rounded-circle" href="https://www.facebook.com/htmlstream">
-                    <i class="fa fa-facebook"></i>
-                </a>
-            </li>
-            <li class="list-inline-item g-mx-2">
-                <a class="u-icon-v1 u-icon-size--sm g-color-white g-bg-white-opacity-0_1 g-bg-primary--hover g-font-size-13 rounded-circle" href="https://twitter.com/htmlstream">
-                    <i class="fa fa-twitter"></i>
-                </a>
-            </li>
-            <li class="list-inline-item g-mx-2">
-                <a class="u-icon-v1 u-icon-size--sm g-color-white g-bg-white-opacity-0_1 g-bg-primary--hover g-font-size-13 rounded-circle" href="https://github.com/htmlstream">
-                    <i class="fa fa-github"></i>
-                </a>
-            </li>
-            <li class="list-inline-item g-mx-2">
-                <a class="u-icon-v1 u-icon-size--sm g-color-white g-bg-white-opacity-0_1 g-bg-primary--hover g-font-size-13 rounded-circle" href="https://dribbble.com/htmlstream">
-                    <i class="fa fa-dribbble"></i>
-                </a>
-            </li>
-        </ul>
-        <!-- End Social Icons -->*@
-                        </div>
-                        <div class="col-md-8 g-mb-50">
-                            <div class="g-brd-around g-brd-white-opacity-0_6 g-px-45 g-py-60">
-                                <div class="row">
-                                    <div class="col-md-4 g-mb-30">
-                                        <h2 class="h1 g-color-white">联系我们</h2>
-                                    </div>
-                                    <div class="col-md-8 g-mb-30">
-                                        <!-- Contact Form -->
-                                        <form>
-                                            <div class="mb-3">
-                                                <input class="form-control g-brd-none g-brd-bottom g-brd-white g-brd-primary--focus g-color-white g-bg-transparent g-placeholder-gray-light-v5 rounded-0 g-py-13 g-px-0 mb-2" type="text" placeholder="您的尊称">
-                                            </div>
-                                            <div class="mb-3">
-                                                <input class="form-control g-brd-none g-brd-bottom g-brd-white g-brd-primary--focus g-color-white g-bg-transparent g-placeholder-gray-light-v5 rounded-0 g-py-13 g-px-0 mb-2" type="text" placeholder="您的联系电话或者邮箱">
-                                            </div>
-                                            <div class="mb-4">
-                                                <textarea class="form-control g-brd-none g-brd-bottom g-brd-white g-brd-primary--focus g-color-white g-bg-transparent g-placeholder-gray-light-v5 g-resize-none rounded-0 g-py-13 g-px-0 mb-5" rows="5" placeholder="留言内容"></textarea>
-                                            </div>
-                                            <button class="btn u-btn-primary g-bg-secondary g-color-primary g-color-white--hover g-bg-primary--hover g-font-weight-600 g-font-size-12 g-rounded-30 g-py-15 g-px-35" type="submit" role="button" disabled="disabled">提交</button>
-                                        </form>
-                                        <!-- End Contact Form -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Content -->
-            <!-- Go To Top -->
-            <a class="js-go-to text-center g-color-main g-color-primary--hover g-left-50x g-ml-minus-100" href="#!"
-               data-type="absolute"
-               data-position='{
-             "bottom": 65
-           }'
-               data-offset-top="400"
-               data-compensation="#js-header"
-               data-show-effect="fadeInUp">
-                <svg version="1.1" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="208px" height="50px">
-                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#fff" d="M111.042,0h-0.085C81.962,0.042,50.96,42.999,6,42.999c-6,0-6,0-6,0v1h214v-1v-0.015C169.917,42.349,139.492,0.042,111.042,0z" />
-                </svg>
-                <i class="g-font-size-20 g-pos-abs g-bottom-20 g-left-50x g-ml-2 fa fa-angle-double-up"></i>
-            </a>
-            <!-- End Go To Top -->
-            <!-- Copyright -->
-            <div class="container text-center g-py-30">
-                <p class="g-font-size-13 mb-0">&copy; @DateTime.Now.Year  江西微广联合文化传播有限公司版权所有</p>
-                <p class="g-font-size-13 mb-0">赣ICP备17007519号-1</p>
-            </div>
-            <!-- End Copyright -->
-        </footer>
-        <!-- End Contact -->
-    </main>
-    <!-- JS Global Compulsory -->
-    <script src="/assets/vendor/jquery/jquery.min.js"></script>
-    <script src="/assets/vendor/jquery-migrate/jquery-migrate.min.js"></script>
-    <script src="/assets/vendor/popper.min.js"></script>
-    <script src="/assets/vendor/bootstrap/bootstrap.min.js"></script>
-    <!-- JS Implementing Plugins -->
-    <script src="/assets/vendor/appear.js"></script>
-    <script src="/assets/vendor/slick-carousel/slick/slick.js"></script>
-    <script src="/assets/vendor/cubeportfolio-full/cubeportfolio/js/jquery.cubeportfolio.min.js"></script>
-    <script src="/assets/vendor/dzsparallaxer/dzsparallaxer.js"></script>
-    <script src="/assets/vendor/dzsparallaxer/dzsscroller/scroller.js"></script>
-    <script src="/assets/vendor/dzsparallaxer/advancedscroller/plugin.js"></script>
-    <script src="/assets/vendor/fancybox/jquery.fancybox.js"></script>
-    <!-- JS Unify -->
-    <script src="/assets/js/hs.core.js"></script>
-    <script src="/assets/js/components/hs.header.js"></script>
-    <script src="/assets/js/helpers/hs.hamburgers.js"></script>
-    <script src="/assets/js/components/hs.scroll-nav.js"></script>
-    <script src="/assets/js/components/hs.counter.js"></script>
-    <script src="/assets/js/components/hs.carousel.js"></script>
-    <script src="/assets/js/components/hs.cubeportfolio.js"></script>
-    <script src="/assets/js/components/hs.popup.js"></script>
-    <script src="/assets/js/components/hs.go-to.js"></script>
-    <!-- JS Revolution Slider -->
-    <script src="/assets/vendor/revolution-slider/revolution/js/jquery.themepunch.tools.min.js"></script>
-    <script src="/assets/vendor/revolution-slider/revolution/js/jquery.themepunch.revolution.min.js"></script>
-    <script src="/assets/vendor/revolution-slider/revolution-addons/typewriter/js/revolution.addon.typewriter.min.js"></script>
-    <script src="/assets/vendor/revolution-slider/revolution/js/extensions/revolution.extension.actions.min.js"></script>
-    <script src="/assets/vendor/revolution-slider/revolution/js/extensions/revolution.extension.carousel.min.js"></script>
-    <script src="/assets/vendor/revolution-slider/revolution/js/extensions/revolution.extension.kenburn.min.js"></script>
-    <script src="/assets/vendor/revolution-slider/revolution/js/extensions/revolution.extension.layeranimation.min.js"></script>
-    <script src="/assets/vendor/revolution-slider/revolution/js/extensions/revolution.extension.migration.min.js"></script>
-    <script src="/assets/vendor/revolution-slider/revolution/js/extensions/revolution.extension.navigation.min.js"></script>
-    <script src="/assets/vendor/revolution-slider/revolution/js/extensions/revolution.extension.parallax.min.js"></script>
-    <script src="/assets/vendor/revolution-slider/revolution/js/extensions/revolution.extension.slideanims.min.js"></script>
-    <script src="/assets/vendor/revolution-slider/revolution/js/extensions/revolution.extension.video.min.js"></script>
-    <!-- JS Customization -->
-    <script src="/assets/js/custom.js"></script>
-    <!-- JS Plugins Init. -->
-    <script>
-      $(document).on('ready', function () {
-        // initialization of carousel
-        $.HSCore.components.HSCarousel.init('.js-carousel');
-
-        // initialization of header
-        $.HSCore.components.HSHeader.init($('#js-header'));
-        $.HSCore.helpers.HSHamburgers.init('.hamburger');
-
-        // initialization of go to section
-        $.HSCore.components.HSGoTo.init('.js-go-to');
-
-        // initialization of counters
-        var counters = $.HSCore.components.HSCounter.init('[class*="js-counter"]');
-
-        // initialization of popups
-        $.HSCore.components.HSPopup.init('.js-fancybox');
-      });
-
-      $(window).on('load', function() {
-        // initialization of HSScrollNav
-        $.HSCore.components.HSScrollNav.init($('#js-scroll-nav'), {
-          duration: 700
-        });
-
-        // initialization of cubeportfolio
-        $.HSCore.components.HSCubeportfolio.init('.cbp');
-      });
-
-      var tpj = jQuery;
-
-      var revapi1014;
-      tpj(document).ready(function () {
-        if (tpj("#rev_slider_1014_1").revolution == undefined) {
-          revslider_showDoubleJqueryError("#rev_slider_1014_1");
-        } else {
-          revapi1014 = tpj("#rev_slider_1014_1").show().revolution({
-            sliderType: "standard",
-            jsFileLocation: "revolution/js/",
-            sliderLayout: "fullscreen",
-            dottedOverlay: "none",
-            delay: 9000,
-            navigation: {
-              keyboardNavigation: "off",
-              keyboard_direction: "horizontal",
-              mouseScrollNavigation: "off",
-              mouseScrollReverse: "default",
-              onHoverStop: "off",
-              touch: {
-                touchenabled: "on",
-                swipe_threshold: 75,
-                swipe_min_touches: 1,
-                swipe_direction: "horizontal",
-                drag_block_vertical: false
-              },
-              arrows: {
-                style: "hermes",
-                enable: true,
-                hide_onmobile: true,
-                hide_under: 768,
-                hide_onleave: false,
-                tmp: '<div class="tp-arr-allwrapper"><div class="tp-arr-imgholder"></div><div class="tp-arr-titleholder">{{title}}</div></div>',
-                left: {
-                  h_align: "left",
-                  v_align: "center",
-                  h_offset: 0,
-                  v_offset: 0
-                },
-                right: {
-                  h_align: "right",
-                  v_align: "center",
-                  h_offset: 0,
-                  v_offset: 0
-                }
-              }
-            },
-            responsiveLevels:[1240,1024,778,778],
-            gridwidth:[1240,1024,778,480],
-            gridheight:[600,500,400,300],
-            lazyType: 'smart',
-            scrolleffect: {
-              fade: "on",
-              grayscale: "on",
-              on_slidebg: "on",
-              on_parallax_layers: "on",
-              direction: "top",
-              multiplicator_layers: "1.4",
-              tilt: "10",
-              disable_on_mobile: "off",
-            },
-            parallax: {
-              type: "scroll",
-              origo: "slidercenter",
-              speed: 400,
-              levels: [5, 10, 15, 20, 25, 30, 35, 40, 45, 46, 47, 48, 49, 50, 51, 55],
-            },
-            shadow: 0,
-            spinner: "off",
-            stopLoop: 'off',
-            stopAfterLoops: -1,
-            stopAtSlide: -1,
-            shuffle: "off",
-            autoHeight: "off",
-            fullScreenAutoWidth: "off",
-            fullScreenAlignForce: "off",
-            fullScreenOffsetContainer: "",
-            fullScreenOffset: "0px",
-            hideThumbsOnMobile: "off",
-            hideSliderAtLimit: 0,
-            hideCaptionAtLimit: 0,
-            hideAllCaptionAtLilmit: 0,
-            debugMode: false,
-            fallbacks: {
-              simplifyAll: "off",
-              nextSlideOnWindowFocus: "off",
-              disableFocusListener: false,
-            }
-          });
+        .lightBoxGallery {
+            text-align: center;
         }
 
-        RsTypewriterAddOn(tpj, revapi1014);
-      });
+            .lightBoxGallery img {
+                margin: 5px;
+                width: 120px;
+                height: 120px;
+            }
+    </style>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/font-awesome/css")
+    @Styles.Render("~/plugins/blueimp")
+    @Styles.Render("~/plugins/cubeportfolioStyles")
+</head>
+
+<body id="page-top" class="landing-page">
+    <div class="navbar-wrapper">
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header page-scroll">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="@Url.Action("Order", "UserCenter")" target="_blank">会员中心</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a class="page-scroll" href="#page-top">@home.Title</a></li>
+                        <li><a class="page-scroll" href="#about">@about.Title</a></li>
+                        <li><a class="page-scroll" href="#case">@cases.Title</a></li>
+                        <li><a class="page-scroll" href="#news">@news.Title</a></li>
+                        <li><a class="page-scroll" href="#join">@join.Title</a></li>
+                        <li><a class="page-scroll" href="#Contact">@contact.Title</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div id="inSlider" class="carousel carousel-fade" data-ride="carousel">
+        @{
+            var slides = home.Articles.Where(d => d.IsSlide == true).OrderBy(d => d.Taxis).ToList();
+        }
+        <ol class="carousel-indicators">
+            @foreach (var item in slides)
+            {
+                if (item.Taxis == 1)
+                {
+                    <li data-target="#inSlider" data-slide-to="@item.Taxis" class="active"></li>
+                }
+                else
+                {
+                    <li data-target="#inSlider" data-slide-to="@item.Taxis"></li>
+                }
+            }
+        </ol>
+        <div class="carousel-inner" role="listbox">
+            @foreach (var item in slides)
+            {
+                if (item.Taxis == 1)
+                {
+                    <div class="item active">
+                        <div class="container">
+                            <div class="carousel-caption">
+                            </div>
+                        </div>
+                        <!-- Set background for slide in css -->
+                        <div class="header-back" style="background: url('@item.CoverPic') 50% 0 no-repeat;"></div>
+                    </div>
+                }
+                else
+                {
+                    <div class="item">
+                        <div class="container">
+                            <div class="carousel-caption blank">
+                            </div>
+                        </div>
+                        <!-- Set background for slide in css -->
+                        <div class="header-back" style="background: url('@item.CoverPic') 50% 0 no-repeat;"></div>
+                    </div>
+                }
+            }
+
+
+        </div>
+        <a class="left carousel-control" href="#inSlider" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#inSlider" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+
+
+    @Html.Raw(home.Content)
+
+    <section id="case" class="team">
+        <div class="container">
+            <div class="row m-b-lg">
+                <div class="col-lg-12 text-center">
+                    <div class="navy-line"></div>
+                    <h1>@cases.Title</h1>
+                    <p>@cases.Remark</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="clearfix">
+                    <ul id="filterControls" class="d-block list-inline text-center m-b-lg">
+                        <li class="list-inline-item cbp-filter-item cbp-filter-item-active p-xs border-top-bottom border-left-right" role="button" data-filter="*">
+                            所有
+                        </li>
+                        @foreach (var item in casesTypes)
+                        {
+                            <li class="list-inline-item cbp-filter-item p-xs border-top-bottom border-left-right" role="button" data-filter=".@item.CallIndex">
+                                @item.Title
+                            </li>
+                        }
+
+                    </ul>
+                    @if (casesArticles.Any())
+                    {
+                        <div class="cbp" data-controls="#filterControls" data-animation="quicksand" data-x-gap="30" data-y-gap="30">
+
+                            @foreach (var item in casesArticles)
+                            {
+                                <div class="cbp-item @item.Column.CallIndex">
+                                    <a href="javascript:;">
+                                        <img class="img-fluid" src="@item.CoverPic" alt="@item.Title">
+                                    </a>
+                                    <div class="text-center m-t-sm">
+                                        <h3 class="h4">@item.Title</h3>
+                                        <p>@item.Column.Title</p>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    }
+                    else
+                    {
+                        <p>数据待更新</p>
+                    }
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="navy-section testimonials">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center wow zoomIn">
+                    <i class="fa fa-handshake-o big-icon"></i>
+                    <h1>
+                        合作客户
+                    </h1>
+                    <div class="testimonials-text">
+                        <i>1000+大品牌优质客户的广泛任何与信赖，聚合1000+渠道客户的战略合作</i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+
+    <section id="news" class="features">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="navy-line"></div>
+                    <h1>@news.Title</h1>
+                    <p>@news.Remark </p>
+                </div>
+            </div>
+            <div class="row">
+                @foreach (var item in news.Articles.OrderBy(d => d.Id))
+                {
+                    <div class="col-lg-5 col-lg-offset-1 features-text">
+                        <small>微广联合</small>
+                        <h2>@item.Title</h2>
+                        <i class="fa fa-rss-square big-icon pull-right"></i>
+                        <p>@item.Summary</p>
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </section>
+
+    @Html.Raw(join.Content)
+    <section class="team">
+        <div class="container">
+            <div class="row m-b-lg">
+                <div class="col-lg-12 text-center">
+                    <div class="navy-line"></div>
+                    <h1>@pics.Title</h1>
+                    <p>@pics.Remark</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="lightBoxGallery">
+                    @foreach (var item in pics.Articles.Where(d => d.Status == 1).OrderBy(d => d.Taxis).ToList())
+                    {
+                        <a href="@item.CoverPic" title="@item.Title" data-gallery=""><img src="@item.CoverPic"></a>
+                    }
+                    <!-- The Gallery as lightbox dialog, should be a child element of the document body -->
+                    <div id="blueimp-gallery" class="blueimp-gallery">
+                        <div class="slides"></div>
+                        <h3 class="title"></h3>
+                        <a class="prev">‹</a>
+                        <a class="next">›</a>
+                        <a class="close">×</a>
+                        <a class="play-pause"></a>
+                        <ol class="indicator"></ol>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="Contact" class="gray-section contact">
+        @Html.Raw(contact.Content)
+    </section>
+
+    <section id="footer">
+        <div class="container">
+            <div class="row  m-t-lg">
+                <div class="col-lg-12 text-center">
+                    <p class="m-t-sm">
+                        关注联系我们
+                    </p>
+                    <ul class="list-inline social-icon">
+                        <li>
+                            <a href="javascript:;" data-toggle="modal" data-target="#mp"><i class="fa fa-weixin"></i></a>
+                            <div class="modal inmodal fade" id="mp" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-sm">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                            <h4 class="modal-title">扫一扫关注我们</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <img src="/Images/landing/wglhmp.jpg" class="img-responsive" alt="微广联合文化传播" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="http://wpa.qq.com/msgrd?v=3&uin=86276718&Site=qq&Menu=yes" target="_blank"><i class="fa fa-qq"></i></a>
+                        </li>
+                        <li>
+                            <a href="mailto:@setting.CompanyEmail"><i class="fa fa-envelope"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center m-t-sm m-b-lg">
+                    <p><strong>版权所有 &copy; 2010-@DateTime.Now.Year @setting.CompanyName</strong><br />@setting.SiteICP</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal inmodal" id="mapModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="embed-responsive embed-responsive-4by3">
+                        <iframe class="embed-responsive-item" src=""></iframe>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/plugins/slimScroll")
+    @Scripts.Render("~/plugins/wow")
+    @Scripts.Render("~/bundles/inspinia")
+    @Scripts.Render("~/plugins/lightboxGallery")
+    @Scripts.Render("~/plugins/cubeportfolioScript")
+    <script>
+        var initCub = {
+            _baseConfig: {},
+            pageCollection: $(),
+            init: function (selector, config) {
+                this.collection = selector && $(selector).length ? $(selector) : $();
+                if (!$(selector).length) return;
+                this.config = config && $.isPlainObject(config) ?
+                    $.extend({}, this._baseConfig, config) : this._baseConfig;
+                this.config.itemSelector = selector;
+                this.initCubeportfolio();
+                return this.pageCollection;
+            },
+            initCubeportfolio: function () {
+                //Variables
+                var $self = this,
+                    config = $self.config,
+                    collection = $self.pageCollection;
+                //Actions
+                this.collection.each(function (i, el) {
+                    //Variables
+                    var $this = $(el),
+                        setControls = $this.data('controls'),
+                        setLayout = $this.data('layout'),
+                        setXGap = $this.data('x-gap'),
+                        setYGap = $this.data('y-gap'),
+                        setAnimation = $this.data('animation'),
+                        setCaptionAnimation = $this.data('caption-animation'),
+                        setDefaultMediaQueries = [{
+                            width: 1500,
+                            cols: 3
+                        }, {
+                            width: 1100,
+                            cols: 3
+                        }, {
+                            width: 800,
+                            cols: 3
+                        }, {
+                            width: 480,
+                            cols: 2,
+                            options: {
+                                caption: '',
+                                gapHorizontal: 10,
+                                gapVertical: 10
+                            }
+                        }],
+                        setMeidaQueries = [{ 'width': 1500, 'cols': 4 }, { 'width': 1100, 'cols': 4 }, { 'width': 800, 'cols': 3 }, { 'width': 480, 'cols': 2 }, { 'width': 300, 'cols': 1 }];
+
+                    $this.cubeportfolio({
+                        filters: setControls,
+                        layoutMode: setLayout,
+                        defaultFilter: '*',
+                        sortToPreventGaps: true,
+                        gapHorizontal: setXGap,
+                        gapVertical: setYGap,
+                        animationType: setAnimation,
+                        gridAdjustment: 'responsive',
+                        mediaQueries: setMeidaQueries,
+                        caption: setCaptionAnimation ? setCaptionAnimation : 'overlayBottomAlong',
+                        displayType: 'sequentially',
+                        displayTypeSpeed: 100
+
+                    });
+                    collection = collection.add($this);
+                });
+            }
+        };
+        $(document).ready(function () {
+            $('body').scrollspy({
+                target: '.navbar-fixed-top',
+                offset: 80
+            });
+            $('a.page-scroll').bind('click', function (event) {
+                var link = $(this);
+                $('html, body').stop().animate({
+                    scrollTop: $(link.attr('href')).offset().top - 50
+                }, 500);
+                event.preventDefault();
+                $('#navbar').collapse('hide');
+            });
+            initCub.init(".cbp");
+        });
+
+        var cbpAnimatedHeader = (function () {
+            var docElem = document.documentElement,
+                header = document.querySelector('.navbar-default'),
+                didScroll = false,
+                changeHeaderOn = 200;
+            function init() {
+                window.addEventListener('scroll', function (event) {
+                    if (!didScroll) {
+                        didScroll = true;
+                        setTimeout(scrollPage, 250);
+                    }
+                }, false);
+            }
+            function scrollPage() {
+                var sy = scrollY();
+                if (sy >= changeHeaderOn) {
+                    $(header).addClass('navbar-scroll');
+                }
+                else {
+                    $(header).removeClass('navbar-scroll');
+                }
+                didScroll = false;
+            }
+            function scrollY() {
+                return window.pageYOffset || docElem.scrollTop;
+            }
+            init();
+        })();
+
+
+
+        function baiduMap(name, url) {
+            $('#mapModal').on('shown.bs.modal', function () {
+                $(this).find(".modal-title").html(name);
+                $(this).find("iframe").attr("src", url);
+            });
+            $('#mapModal').modal('show');
+        }
+
+
     </script>
+
 </body>
 </html>
+

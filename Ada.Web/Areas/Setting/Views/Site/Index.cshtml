@@ -95,6 +95,20 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
+                                @Html.LabelFor(d => d.SiteSEO, Html.DisplayNameFor(d => d.SiteSEO).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextAreaFor(d => d.SiteSEO, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.SiteSEOContent, Html.DisplayNameFor(d => d.SiteSEOContent).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextAreaFor(d => d.SiteSEOContent, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
                                 @Html.LabelFor(d => d.SiteStatus, Html.DisplayNameFor(d => d.SiteStatus).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
                                     <div class="radio radio-info radio-inline">

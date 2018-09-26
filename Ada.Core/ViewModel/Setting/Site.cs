@@ -83,6 +83,16 @@ namespace Ada.Core.ViewModel.Setting
         /// </summary>
         [Display(Name = "网站微信登陆")]
         public bool WebIsWeiXinLogin { get; set; }
+        /// <summary>
+        /// SEO关键字
+        /// </summary>
+        [Display(Name = "SEO关键字")]
+        public string SiteSEO { get; set; }
+        /// <summary>
+        /// SEO描述
+        /// </summary>
+        [Display(Name = "SEO描述")]
+        public string SiteSEOContent { get; set; }
 
     }
 }
