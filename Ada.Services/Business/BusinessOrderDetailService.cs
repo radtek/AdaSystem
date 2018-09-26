@@ -202,9 +202,32 @@ namespace Ada.Services.Business
             string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
             if (order == "desc")
             {
-                return allList.OrderByDescending(d => d.Id).Skip(offset).Take(rows);
+                switch (viewModel.sort)
+                {
+                    case "SellMoney":
+                        return allList.OrderByDescending(d => d.SellMoney).Skip(offset).Take(rows);
+                    case "Money":
+                        return allList.OrderByDescending(d => d.Money).Skip(offset).Take(rows);
+                    case "PrePublishDate":
+                        return allList.OrderByDescending(d => d.PrePublishDate).Skip(offset).Take(rows);
+                    default:
+                        return allList.OrderByDescending(d => d.Id).Skip(offset).Take(rows);
+                }
+                
             }
-            return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
+
+            switch (viewModel.sort)
+            {
+                case "SellMoney":
+                    return allList.OrderBy(d => d.SellMoney).Skip(offset).Take(rows);
+                case "Money":
+                    return allList.OrderBy(d => d.Money).Skip(offset).Take(rows);
+                case "PrePublishDate":
+                    return allList.OrderBy(d => d.PrePublishDate).Skip(offset).Take(rows);
+                default:
+                    return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
+            }
+
         }
         /// <summary>
         /// 销售业绩统计(按经办人分组)

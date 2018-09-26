@@ -434,9 +434,26 @@ namespace Ada.Services.Resource
                 string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
                 if (order == "desc")
                 {
-                    return allList.OrderByDescending(d => d.IsTop).ThenByDescending(d => d.IsHot).ThenByDescending(d => d.IsRecommend).ThenByDescending(d => d.MediaName).ThenByDescending(d => d.Id).Skip(offset).Take(rows);
+                    if (viewModel.sort== "Transactor")
+                    {
+                        return allList.OrderByDescending(d => d.Transactor).Skip(offset).Take(rows);
+                    }
+                    else
+                    {
+                        return allList.OrderByDescending(d => d.IsTop).ThenByDescending(d => d.IsHot).ThenByDescending(d => d.IsRecommend).ThenByDescending(d => d.MediaName).ThenByDescending(d => d.Id).Skip(offset).Take(rows);
+                    }
+                    
                 }
-                return allList.OrderByDescending(d => d.IsTop).ThenByDescending(d => d.IsHot).ThenByDescending(d => d.IsRecommend).ThenBy(d => d.MediaName).ThenBy(d => d.Id).Skip(offset).Take(rows);
+
+                if (viewModel.sort == "Transactor")
+                {
+                    return allList.OrderBy(d => d.Transactor).Skip(offset).Take(rows);
+                }
+                else
+                {
+                    return allList.OrderByDescending(d => d.IsTop).ThenByDescending(d => d.IsHot).ThenByDescending(d => d.IsRecommend).ThenBy(d => d.MediaName).ThenBy(d => d.Id).Skip(offset).Take(rows);
+                }
+
             }
 
         }

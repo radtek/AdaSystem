@@ -75,24 +75,12 @@
                         <h1>
                             @Model.Title
                         </h1>
-                        <span class="text-muted"><i class="fa fa-clock-o"></i> @Model.AddedDate.Value.ToString("yyyy月MM年dd日")</span>
+                        <span class="text-muted"><i class="fa fa-clock-o"></i> @Model.AddedDate.Value.ToString("yyyy月MM年dd日") </span>
+                        <span class="text-muted pull-right"><i class="fa fa-eye"> </i> @Model.Click </span>
                     </div>
                     @Html.Raw(Model.Content)
                     <hr>
-                    @*<div class="row">
-                        <div class="col-md-6">
-                            <h5>Tags:</h5>
-                            <button class="btn btn-primary btn-xs" type="button">Model</button>
-                            <button class="btn btn-white btn-xs" type="button">Publishing</button>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="small text-right">
-                                <h5>Stats:</h5>
-                                <div> <i class="fa fa-comments-o"> </i> 56 comments </div>
-                                <i class="fa fa-eye"> </i> 144 views
-                            </div>
-                        </div>
-                    </div>*@
+                  
                 </div>
             </div>
         </div>

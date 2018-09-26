@@ -255,7 +255,7 @@
                     {
                         field: 'SellMoney',
                         title: '@Html.DisplayNameFor(d=>d.SellMoney)',
-                        align: "center", valign: "middle",
+                        align: "center", valign: "middle", sortable:true,
                         footerFormatter: function (data) {
                             if (data[0]) {
                                 return data[0].TotalSellMoney;
@@ -266,7 +266,7 @@
                     {
                         field: 'Money',
                         title: '@Html.DisplayNameFor(d=>d.Money)',
-                        align: "center", valign: "middle",
+                        align: "center", valign: "middle", sortable: true,
                         footerFormatter: function (data) {
                             if (data[0]) {
                                 return data[0].TotalMoney;
@@ -299,7 +299,7 @@
                     {
                         field: 'PrePublishDate',
                         title: '@Html.DisplayNameFor(d=>d.PrePublishDate)',
-                        align: "center", valign: "middle",
+                        align: "center", valign: "middle", sortable: true,
                         formatter: function (value) {
                             if (value) {
                                 return moment(value).format("YYYY-MM-DD");

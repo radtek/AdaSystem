@@ -9,6 +9,7 @@ using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Content;
 using Ada.Core.Infrastructure;
 using Ada.Framework.Filter;
+using Ada.Services.Content;
 using log4net;
 
 namespace Ada.Web.Controllers
@@ -17,10 +18,12 @@ namespace Ada.Web.Controllers
     public class DefaultController : Controller
     {
         private readonly IRepository<Article> _articleRepository;
-
-        public DefaultController(IRepository<Article> articleRepository)
+        private readonly IArticleService _articleService;
+        public DefaultController(IRepository<Article> articleRepository,
+            IArticleService articleService)
         {
             _articleRepository = articleRepository;
+            _articleService = articleService;
         }
         public ActionResult Index()
         {
@@ -29,6 +32,8 @@ namespace Ada.Web.Controllers
         public ActionResult Detail(string id)
         {
             var article = _articleRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            article.Click = article.Click == null ? 1 : article.Click+1;
+            _articleService.Update(article);
             return View(article);
         }
     }
