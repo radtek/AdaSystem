@@ -3093,6 +3093,8 @@
     <Content Include="Views\Media\Fans.cshtml" />
     <Content Include="Views\Default\Test.cshtml" />
     <Content Include="Scripts\plugins\summernote\summernote.js.map" />
+    <Content Include="Views\Default\Detail.cshtml" />
+    <Content Include="Views\Shared\_Layout_Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

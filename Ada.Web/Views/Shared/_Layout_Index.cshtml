@@ -1,0 +1,162 @@
+﻿@using System.Web.Optimization
+@using Ada.Core
+@using Ada.Core.Domain.Content
+@using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Setting
+@using Ada.Services.Setting
+@{
+    var setting = EngineContext.Current.Resolve<ISettingService>().GetSetting<Site>();
+    var columnRepository = EngineContext.Current.Resolve<IRepository<Column>>();
+    var home = columnRepository.LoadEntities(d => d.CallIndex == "Home").FirstOrDefault();
+    var contact = columnRepository.LoadEntities(d => d.CallIndex == "Contact").FirstOrDefault();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords"
+          content="@setting.SiteSEO">
+    <meta name="description"
+          content="@setting.SiteSEOContent">
+    <title>@setting.CompanyName</title>
+    <link href="@Url.Content("~/Scripts/plugins/jquery-ui/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/font-awesome/css")
+    @if (IsSectionDefined("Styles"))
+    {@RenderSection("Styles", required: false)}
+</head>
+<body id="page-top" class="landing-page">
+    
+
+
+
+    @RenderBody()
+
+    <section id="Contact" class="gray-section contact">
+        @Html.Raw(contact.Content)
+    </section>
+
+    <section id="footer">
+        <div class="container">
+            <div class="row  m-t-lg">
+                <div class="col-lg-12 text-center">
+                    <p class="m-t-sm">
+                        关注联系我们
+                    </p>
+                    <ul class="list-inline social-icon">
+                        <li>
+                            <a href="javascript:;" data-toggle="modal" data-target="#mp"><i class="fa fa-weixin"></i></a>
+                            <div class="modal inmodal fade" id="mp" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-sm">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                            <h4 class="modal-title">扫一扫关注我们</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <img src="/Images/landing/wglhmp.jpg" class="img-responsive" alt="微广联合文化传播" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="http://wpa.qq.com/msgrd?v=3&uin=86276718&Site=qq&Menu=yes" target="_blank"><i class="fa fa-qq"></i></a>
+                        </li>
+                        <li>
+                            <a href="mailto:@setting.CompanyEmail"><i class="fa fa-envelope"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center m-t-sm m-b-lg">
+                    <p><strong>版权所有 &copy; 2010-@DateTime.Now.Year @setting.CompanyName</strong><br />@setting.SiteICP</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="modal inmodal" id="mapModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="embed-responsive embed-responsive-4by3">
+                        <iframe class="embed-responsive-item" src=""></iframe>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/plugins/slimScroll")
+    @Scripts.Render("~/plugins/wow")
+    @Scripts.Render("~/bundles/inspinia")
+
+    @RenderSection("Scripts", required: false)
+    <script>
+        $(document).ready(function () {
+            $('body').scrollspy({
+                target: '.navbar-fixed-top',
+                offset: 80
+            });
+            $('a.page-scroll').bind('click', function (event) {
+                var link = $(this);
+                $('html, body').stop().animate({
+                    scrollTop: $(link.attr('href')).offset().top - 50
+                }, 500);
+                event.preventDefault();
+                $('#navbar').collapse('hide');
+            });
+
+        });
+        var cbpAnimatedHeader = (function () {
+            var docElem = document.documentElement,
+                header = document.querySelector('.navbar-default'),
+                didScroll = false,
+                changeHeaderOn = 200;
+            function init() {
+                window.addEventListener('scroll', function (event) {
+                    if (!didScroll) {
+                        didScroll = true;
+                        setTimeout(scrollPage, 250);
+                    }
+                }, false);
+            }
+            function scrollPage() {
+                var sy = scrollY();
+                if (sy >= changeHeaderOn) {
+                    $(header).addClass('navbar-scroll');
+                }
+                else {
+                    $(header).removeClass('navbar-scroll');
+                }
+                didScroll = false;
+            }
+            function scrollY() {
+                return window.pageYOffset || docElem.scrollTop;
+            }
+            init();
+        })();
+
+
+
+        function baiduMap(name, url) {
+            $('#mapModal').on('shown.bs.modal', function () {
+                $(this).find(".modal-title").html(name);
+                $(this).find("iframe").attr("src", url);
+            });
+            $('#mapModal').modal('show');
+        }
+    </script>
+</body>
+</html>

@@ -245,10 +245,10 @@ namespace QuartzTask.Jobs
                                                             article.ViewCount = articleData.viewCount;
                                                             article.Title = articleData.title;
                                                             media.MediaLink = articleData.biz;
-                                                            if (!string.IsNullOrWhiteSpace(articleData.posterId))
-                                                            {
-                                                                media.MediaID = articleData.posterId;
-                                                            }
+                                                            //if (!string.IsNullOrWhiteSpace(articleData.posterId))
+                                                            //{
+                                                            //    media.MediaID = articleData.posterId;
+                                                            //}
                                                         }
                                                         else
                                                         {
@@ -273,10 +273,10 @@ namespace QuartzTask.Jobs
                                                             article.Title = articleData.title;
                                                             media.MediaArticles.Add(article);
                                                             media.MediaLink = articleData.biz;
-                                                            if (!string.IsNullOrWhiteSpace(articleData.posterId))
-                                                            {
-                                                                media.MediaID = articleData.posterId;
-                                                            }
+                                                            //if (!string.IsNullOrWhiteSpace(articleData.posterId))
+                                                            //{
+                                                            //    media.MediaID = articleData.posterId;
+                                                            //}
                                                         }
                                                     }
                                                 }
