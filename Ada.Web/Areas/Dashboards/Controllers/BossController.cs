@@ -118,7 +118,37 @@ namespace Dashboards.Controllers
                     Transactor = d.Key,
                     Count = d.Count()
                 }).OrderByDescending(d => d.Count).ToList();
+            //媒介订单采购成本与实际采购的统计
+            total.PurchaseOrderTotals = GetPurchaseOrderTotal();
             return View(total);
+        }
+
+        public ActionResult GetPurchaseOrder(string date)
+        {
+            return Json(GetPurchaseOrderTotal(date),JsonRequestBehavior.AllowGet);
+        }
+
+        private List<PurchaseOrderTotal> GetPurchaseOrderTotal(string date=null)
+        {
+            var orders = _purchaseRepository
+                .LoadEntities(d =>
+                    d.MediaPrice.Media.MediaType.IsComment == true && d.IsDelete == false &&
+                    d.Status == Consts.PurchaseStatusSuccess);
+            if (!string.IsNullOrWhiteSpace(date))
+            {
+                var dateTime = DateTime.Parse(date);
+                var start=new DateTime(dateTime.Year,dateTime.Month,1);
+                var end= new DateTime(dateTime.Year, dateTime.Month, DateTime.DaysInMonth(dateTime.Year, dateTime.Month)).AddDays(1);
+                orders = orders.Where(d => d.PublishDate >= start && d.PublishDate < end);
+            }
+
+            return orders.GroupBy(d => d.Transactor).Select(d => new PurchaseOrderTotal
+            {
+                Transactor = d.Key,
+                PurchaseMoney = d.Sum(p => p.PurchaseMoney),
+                CostMoney = d.Sum(p => p.CostMoney),
+                Diff = d.Sum(p => p.CostMoney) - d.Sum(p => p.PurchaseMoney)
+            }).ToList();
         }
     }
 }

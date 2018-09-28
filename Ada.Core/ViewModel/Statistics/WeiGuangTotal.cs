@@ -16,6 +16,7 @@ namespace Ada.Core.ViewModel.Statistics
             MediaOrders=new List<MediaOrder>();
             OrderComments=new List<Comment>();
             MediaComments=new List<Comment>();
+            PurchaseOrderTotals=new List<PurchaseOrderTotal>();
         }
         /// <summary>
         /// 销售订单
@@ -82,6 +83,11 @@ namespace Ada.Core.ViewModel.Statistics
         /// </summary>
         [Display(Name = "资源评价")]
         public List<Comment> MediaComments { get; set; }
+        /// <summary>
+        /// 采购统计
+        /// </summary>
+        [Display(Name = "采购统计")]
+        public List<PurchaseOrderTotal> PurchaseOrderTotals { get; set; }
 
     }
 
@@ -98,5 +104,12 @@ namespace Ada.Core.ViewModel.Statistics
     {
         public string Transactor { get; set; }
         public int? Count { get; set; }
+    }
+    public class PurchaseOrderTotal
+    {
+        public string Transactor { get; set; }
+        public decimal? PurchaseMoney { get; set; }
+        public decimal? CostMoney { get; set; }
+        public decimal? Diff { get; set; }
     }
 }

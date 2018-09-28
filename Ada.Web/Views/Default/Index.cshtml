@@ -108,12 +108,12 @@
         <div class="row">
             <div class="clearfix">
                 <ul id="filterControls" class="d-block list-inline text-center m-b-lg">
-                    <li class="list-inline-item cbp-filter-item cbp-filter-item-active p-xs border-top-bottom border-left-right" role="button" data-filter="*">
+                    <li class="list-inline-item cbp-filter-item p-xxs border-top-bottom border-left-right bg-warning" role="button" data-filter="*" >
                         所有
                     </li>
                     @foreach (var item in casesTypes)
                     {
-                        <li class="list-inline-item cbp-filter-item p-xs border-top-bottom border-left-right" role="button" data-filter=".@item.CallIndex">
+                        <li class="list-inline-item cbp-filter-item p-xxs border-top-bottom border-left-right m-l-md" role="button" data-filter=".@item.CallIndex">
                             @item.Title
                         </li>
                     }
@@ -125,8 +125,9 @@
 
                         @foreach (var item in casesArticles)
                         {
+                            var url = string.IsNullOrWhiteSpace(item.Url) ? Url.Action("Detail", new {id = item.Id}) : item.Url;
                             <div class="cbp-item @item.Column.CallIndex">
-                                <a href="javascript:;">
+                                <a href="@url" target="_blank">
                                     <img class="img-fluid" src="@item.CoverPic" alt="@item.Title">
                                 </a>
                                 <div class="text-center m-t-sm">
@@ -149,23 +150,7 @@
     </div>
 </section>
 
-<section class="navy-section testimonials">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center wow zoomIn">
-                <i class="fa fa-handshake-o big-icon"></i>
-                <h1>
-                    合作客户
-                </h1>
-                <div class="testimonials-text">
-                    <i>1000+大品牌优质客户的广泛认可与信赖，聚合1000+渠道客户的战略合作</i>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</section>
-
+@Html.Raw(cases.Content)
 
 
 <section id="news" class="features">
@@ -228,7 +213,10 @@
 </section>
 @section Styles {
     <style>
-
+        .list-inline-item {
+            padding-left: 15px !important;
+            padding-right: 15px !important;
+        }
         .lightBoxGallery {
             text-align: center;
         }
@@ -256,6 +244,10 @@
                     $.extend({}, this._baseConfig, config) : this._baseConfig;
                 this.config.itemSelector = selector;
                 this.initCubeportfolio();
+                $(".list-inline-item").click(function () {
+                    $(this).siblings().removeClass("bg-warning");
+                    $(this).addClass("bg-warning");
+                });
                 return this.pageCollection;
             },
             initCubeportfolio: function () {
