@@ -33,6 +33,10 @@ namespace Customer.Controllers
             ViewBag.IsAdmin = !PremissionData().Any();
             return View();
         }
+        public ActionResult VIP()
+        {
+            return View();
+        }
         public ActionResult GetList(LinkManView viewModel)
         {
             viewModel.Managers = PremissionData();
@@ -55,8 +59,9 @@ namespace Customer.Controllers
                     CommpanyName = d.Commpany.Name,
                     Transactor = d.Transactor,
                     IsLock = d.IsLock,
-                    LoginName = d.LoginName
-                    
+                    LoginName = d.LoginName,
+                    LastLoginTime=d.FollowUps.OrderByDescending(l => l.NextTime).FirstOrDefault() == null ? "从未登陆" : Utils.ToRead(d.FollowUps.OrderByDescending(l => l.NextTime).FirstOrDefault().NextTime)
+
                 })
             }, JsonRequestBehavior.AllowGet);
         }

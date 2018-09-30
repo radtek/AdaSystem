@@ -148,9 +148,9 @@ namespace Finance.Controllers
             entity.AccountName = viewModel.AccountName.Trim().Replace(" ", "");
             entity.AccountNum = viewModel.AccountNum;
             entity.Money = viewModel.Money;
-            if (entity.BusinessPayees.Count > 0)
+            if (entity.BusinessPayees.Any())
             {
-                ModelState.AddModelError("message", "此收款单据已被领款，无法修改");
+                ModelState.AddModelError("message", "此收款单据已被领款，不能再次修改，如需修改请先撤销领款，再进行修改");
                 return View(viewModel);
             }
             var account = _settleAccountrepository.LoadEntities(d => d.Id == viewModel.SettleAccountId).FirstOrDefault();

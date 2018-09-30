@@ -104,5 +104,10 @@ namespace Ada.Core.ViewModel.Customer
         /// </summary>
         [Display(Name = "是否锁定")]
         public bool? IsLock { get; set; }
+        /// <summary>
+        /// 上次登陆
+        /// </summary>
+        [Display(Name = "上次登陆")]
+        public string LastLoginTime { get; set; }
     }
 }

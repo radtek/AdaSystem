@@ -162,6 +162,7 @@ namespace Business.Controllers
                 PurchaseStatus = GetPurchaseOrderDetail(d.Id)?.Status,
                 CostMoney = GetPurchaseOrderDetail(d.Id)?.PurchaseMoney - GetPurchaseOrderDetail(d.Id)?.PurchaseReturenOrderDetails.Sum(p => p.Money)
             });
+            ViewBag.Invoices= item.BusinessInvoiceDetails.ToList();
             return PartialView("OrderDetails", details);
         }
 

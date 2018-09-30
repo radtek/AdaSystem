@@ -24,11 +24,14 @@
     <div class="form-inline" role="form">
         <div class="form-group">
             @*<select name="IsLock" class="form-control" id="IsLock">
-                    <option value="">是否开通VIP</option>
-                    <option value="false">是</option>
-                </select>*@
+            <option value="">是否开通VIP</option>
+            <option value="false">是</option>
+        </select>*@
             <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
-                <i class="fa fa-plus"></i> 新增
+                <i class="fa fa-plus"></i> 新增客户
+            </a>
+            <a class="btn btn-warning btn-outline" href="@Url.Action("VIP")">
+                <i class="fa fa-diamond"></i> 我的会员
             </a>
         </div>
     </div>

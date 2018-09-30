@@ -755,7 +755,7 @@ namespace Resource.Controllers
                         {
                             //找到最近更新的对比
                             var change = mediaPrice.MediaPriceChanges.OrderByDescending(d => d.AddedDate).FirstOrDefault();
-                            if (change != null && change.ChangeDate?.Date != mediaPrice.InvalidDate?.Date)
+                            if (change != null && (change.ChangeDate?.Date != mediaPrice.InvalidDate?.Date || change.PurchasePrice != mediaPrice.PurchasePrice))
                             {
                                 mediaPrice.MediaPriceChanges.Add(new MediaPriceChange()
                                 {
@@ -1285,7 +1285,7 @@ namespace Resource.Controllers
                     {
                         //找到最近更新的对比
                         var change = price.MediaPriceChanges.OrderByDescending(d => d.AddedDate).FirstOrDefault();
-                        if (change != null && change.ChangeDate?.Date != price.InvalidDate?.Date)
+                        if (change != null && (change.ChangeDate?.Date != price.InvalidDate?.Date||change.PurchasePrice!=price.PurchasePrice))
                         {
                             price.MediaPriceChanges.Add(new MediaPriceChange()
                             {

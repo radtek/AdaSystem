@@ -53,7 +53,7 @@ namespace Ada.Services.Business
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.Transactor.Contains(viewModel.search));
+                allList = allList.Where(d => d.Transactor.Contains(viewModel.search)||d.BusinessOrderDetails.Any(o=>o.BusinessOrder.OrderNum==viewModel.search)||d.BusinessPayees.Any(p=>p.Receivables.AccountName.Contains(viewModel.search)));
             }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
