@@ -21,6 +21,8 @@ namespace Tools.Models
             Likes = 0;
             Comments = 0;
             Is24Hour = false;
+            FansRangeMax = 0;
+            FansRangeMin = 0;
         }
         /// <summary>
         /// 手机类型
@@ -132,5 +134,15 @@ namespace Tools.Models
         /// </summary>
         [Display(Name = "评价内容")]
         public FriendContent  FriendContent { get; set; }
+        /// <summary>
+        /// 粉丝区间
+        /// </summary>
+        [Display(Name = "粉丝区间")]
+        public int FansRangeMin { get; set; }
+        /// <summary>
+        /// 粉丝区间
+        /// </summary>
+        [Display(Name = "粉丝区间")]
+        public int FansRangeMax { get; set; }
     }
 }

@@ -257,6 +257,7 @@
     <Compile Include="ViewModel\Wages\AttendanceDetailView.cs" />
     <Compile Include="ViewModel\Wages\QuartersView.cs" />
     <Compile Include="ViewModel\WeiXin\WeiXinAccountView.cs" />
+    <Compile Include="ViewModel\WorkFlow\WorkFlowDefinitionView.cs" />
     <Compile Include="ViewModel\WorkLog\WorkLogView.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -32,11 +32,18 @@ namespace Tools.Controllers
         }
         public ActionResult Index()
         {
+            IList<string> netWorkList = new List<string>() { "4G", "WIFI" };
+            IList<string> operatorList = new List<string>() { "中国移动", "中国联通", "中国电信" };
+
             FriendsSet view = new FriendsSet
             {
-                Network = "4G",
-                Operator = "中国移动",
-                Is24Hour = true
+                Network = netWorkList[_random.Next(0, netWorkList.Count)],
+                Operator = operatorList[_random.Next(0, operatorList.Count)],
+                Is24Hour = true,
+                PowerIco = true,
+                Signal = (short)_random.Next(2, 5),
+                Power = (short)_random.Next(1, 100),
+                FansRangeMax = _repository.LoadEntities(d => d.IsDelete == false).Count()
             };
             return View(view);
         }
@@ -51,6 +58,15 @@ namespace Tools.Controllers
             //}
             //comments.Image = "";
             //friendsSet.CommentContent = SerializeHelper.SerializeToString(comments);
+            var max = _repository.LoadEntities(d => d.IsDelete == false).Count();
+            if (friendsSet.FansRangeMax>max)
+            {
+                return Json(new { State = 0, Msg = "粉丝区间最大值超出粉丝总数" });
+            }
+            if (friendsSet.FansRangeMax - friendsSet.FansRangeMin < friendsSet.Likes)
+            {
+                return Json(new { State = 0, Msg = "粉丝区间总数不满足点赞数" });
+            }
             var setting = new Ada.Core.Domain.Admin.Setting
             {
                 SettingName = typeof(FriendsSet).Name,
@@ -83,8 +99,9 @@ namespace Tools.Controllers
                 };
                 friendsSet.FriendContent.FansMessages.Add(msg);
             }
-
-            ViewBag.Fans = _repository.LoadEntities(d => d.IsDelete == false).OrderBy(d=>Guid.NewGuid()).Take(friendsSet.FriendContent.Likes).ToList();
+            var allFans = _repository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Id)
+                .Skip(friendsSet.FansRangeMin).Take(friendsSet.FansRangeMax - friendsSet.FansRangeMin);
+            ViewBag.Fans = allFans.OrderBy(d => Guid.NewGuid()).Take(friendsSet.FriendContent.Likes).ToList();
             return View(friendsSet);
         }
         [AllowAnonymous]
@@ -99,7 +116,7 @@ namespace Tools.Controllers
             friendContent.Type = friendsSet.ContentType;
             friendContent.LinkContent = friendsSet.LinkContent;
             friendContent.Image = friendsSet.Images;
-            var fans = GetRandomFans(friendsSet.Comments);
+            var fans = GetRandomFans(friendsSet.Comments,friendsSet.FansRangeMin,friendsSet.FansRangeMax);
             foreach (var fan in fans)
             {
                 FansMessage fansMessage = new FansMessage();
@@ -111,9 +128,14 @@ namespace Tools.Controllers
             return PartialView("ContentPreview", friendContent);
         }
 
-        private List<Fans> GetRandomFans(int count)
+        private List<Fans> GetRandomFans(int count, int min = 0, int max = 0)
         {
-            var fans = _repository.LoadEntities(d => d.IsDelete == false).ToList();
+            var allFans = _repository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Id);
+            if (max == 0)
+            {
+                max = allFans.Count();
+            }
+            var fans = allFans.Skip(min).Take(max - min).ToList();
             List<Fans> result = new List<Fans>();
             for (int i = 0; i < count; i++)
             {

@@ -177,7 +177,7 @@
                     <h5>近四月销售概况</h5>
                 </div>
 
-                @foreach (var item in Model.BusinessPerformances.OrderByDescending(d => d.Month).Take(4))
+                @foreach (var item in Model.BusinessPerformances.OrderByDescending(d => DateTime.Parse(d.Month)).Take(4))
                 {
                     <div class="ibox-content">
                         <div class="row">
@@ -456,7 +456,7 @@
                 xAxis : [
                     {
                         type : 'category',
-                        data : @Html.Raw(Json.Encode(Model.BusinessPerformances.Select(d => d.Month)))
+                        data : @Html.Raw(Json.Encode(Model.BusinessPerformances.OrderBy(d => DateTime.Parse(d.Month)).Select(d => d.Month)))
                     }
                 ],
                 yAxis : [
@@ -468,13 +468,13 @@
                     {
                         name:'未核销',
                         type:'bar',
-                        data:@Html.Raw(Json.Encode(Model.BusinessPerformances.Select(d => d.TotalVerificationMoney)))
+                        data:@Html.Raw(Json.Encode(Model.BusinessPerformances.OrderBy(d => DateTime.Parse(d.Month)).Select(d => d.TotalVerificationMoney)))
 
                     },
                     {
                         name:'已核销',
                         type:'bar',
-                        data:@Html.Raw(Json.Encode(Model.BusinessPerformances.Select(d => d.TotalConfirmVerificationMoney)))
+                        data:@Html.Raw(Json.Encode(Model.BusinessPerformances.OrderBy(d => DateTime.Parse(d.Month)).Select(d => d.TotalConfirmVerificationMoney)))
 
                     }
                 ]
