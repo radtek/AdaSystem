@@ -169,6 +169,7 @@
     <Compile Include="Controllers\WriterController.cs" />
     <Compile Include="Controllers\WebSiteController.cs" />
     <Compile Include="Controllers\WeiXinController.cs" />
+    <Compile Include="Controllers\TaoBaoController.cs" />
     <Compile Include="Controllers\ZhiHuController.cs" />
     <Compile Include="ResourceAreaRegistration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -242,6 +243,8 @@
     <Content Include="Views\Writer\Index.cshtml" />
     <Content Include="Views\Shared\Writer.cshtml" />
     <Content Include="Views\Shared\ArticleDetails.cshtml" />
+    <Content Include="Views\TaoBao\Index.cshtml" />
+    <Content Include="Views\Shared\TaoBao.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

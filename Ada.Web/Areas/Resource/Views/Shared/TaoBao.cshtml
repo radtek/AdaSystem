@@ -1,0 +1,143 @@
+﻿
+@using Ada.Core.Infrastructure
+@using Ada.Services.Admin
+@using Ada.Services.Resource
+@using Microsoft.Ajax.Utilities
+@model Ada.Core.ViewModel.Resource.MediaView
+@{
+    var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var cooperations = fieldService.GetFieldsByKey("Cooperation").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="tabs-container">
+            <p class="bg-danger">@Html.ValidationMessage("message") </p>
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#tab-1"> 基本信息</a></li>
+                <li class=""><a data-toggle="tab" href="#tab-2"> 媒体价格</a></li>
+                <li class=""><a data-toggle="tab" href="#tab-5"> 媒体保价</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane active">
+                    <div class="panel-body">
+                        <fieldset class="form-horizontal">
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.LinkManId, Html.DisplayNameFor(d => d.LinkManId).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    <select class="form-control" required="" name="LinkManId" id="LinkManId">
+                                        <option value="@Model.LinkManId">@Model.LinkManName</option>
+                                    </select>
+                                </div>
+                                @Html.HiddenFor(d => d.LinkManName)
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.MediaName, "淘宝达人", new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.MediaName, new { @class = "form-control", required = "" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.MediaID, "达人ID", new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.MediaID, new { @class = "form-control", required = "" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Areas, Html.DisplayNameFor(d => d.Areas).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.Areas, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @foreach (var item in tags)
+                                    {
+                                        var isChecked = Model.MediaTagIds == null ? "" : Model.MediaTagIds.Contains(item.Id) ? "checked=''" : "";
+                                        <div class="checkbox checkbox-success checkbox-inline">
+                                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id" @isChecked>
+                                            <label for="@item.Id">@item.TagName</label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.RetentionTime, Html.DisplayNameFor(d => d.RetentionTime).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.RetentionTime, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.FansNum, Html.DisplayNameFor(d => d.FansNum).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.FansNum, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Cooperation, Html.DisplayNameFor(d => d.Cooperation).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(d => d.Cooperation, cooperations, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Content, Html.DisplayNameFor(d => d.Content).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextAreaFor(d => d.Content, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextAreaFor(d => d.Remark, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Status, Html.DisplayNameFor(d => d.Status).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    <div class="radio radio-info radio-inline">
+                                        @Html.RadioButtonFor(d => d.Status, 1)
+                                        <label> 正常 </label>
+                                    </div>
+                                    <div class="radio radio-info radio-inline">
+                                        @Html.RadioButtonFor(d => d.Status, 0)
+                                        <label> 关闭 </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.TransactorId, Html.DisplayNameFor(d => d.TransactorId).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    <select class="form-control" required="" name="TransactorId" id="TransactorId">
+                                        <option value="@Model.TransactorId">@Model.Transactor</option>
+                                    </select>
+                                </div>
+                                @Html.HiddenFor(d => d.Transactor)
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <a class="btn btn-outline btn-default" href="javascript:goBackOrClose();"><i class="fa fa-reply"></i> 返回</a>
+                                    <button class="btn btn-primary" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div id="tab-2" class="tab-pane">
+                    <div class="panel-body">
+                        @Html.Partial("MediaPrices",Model)
+
+                    </div>
+                </div>
+                @Html.Partial("MediaPriceProtection", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+

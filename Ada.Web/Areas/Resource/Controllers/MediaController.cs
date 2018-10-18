@@ -997,6 +997,9 @@ namespace Resource.Controllers
             if (viewModel.MediaTypeIndex == "zhihu")
             {
                 entity.MediaLink = "https://www.zhihu.com/people/" + entity.MediaID;
+            }else if (viewModel.MediaTypeIndex == "taobao")
+            {
+                entity.MediaLink = "https://v.taobao.com/v/home/?userId=" + entity.MediaID;
             }
             else
             {
@@ -1186,6 +1189,10 @@ namespace Resource.Controllers
             if (viewModel.MediaTypeIndex == "zhihu")
             {
                 entity.MediaLink = "https://www.zhihu.com/people/" + entity.MediaID;
+            }
+            else if (viewModel.MediaTypeIndex == "taobao")
+            {
+                entity.MediaLink = "https://v.taobao.com/v/home/?userId=" + entity.MediaID;
             }
             else
             {
@@ -1599,6 +1606,7 @@ namespace Resource.Controllers
                 case "zhihu":
                 case "sinablog":
                 case "douyin":
+                case "taobao":
                 case "redbook":
                     whereLambda = d =>
                           d.MediaID.Equals(viewModel.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == isDelete &&
