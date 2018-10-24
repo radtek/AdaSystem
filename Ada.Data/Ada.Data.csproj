@@ -128,7 +128,9 @@
     <Compile Include="Mapping\WeiXin\WeiXinKeywordMatchMap.cs" />
     <Compile Include="Mapping\WeiXin\WeiXinKeywordMap.cs" />
     <Compile Include="Mapping\WeiXin\WeiXinAccountMap.cs" />
+    <Compile Include="Mapping\WorkFlow\WorkFlowRecordMap.cs" />
     <Compile Include="Mapping\WorkFlow\WorkFlowActivityMap.cs" />
+    <Compile Include="Mapping\WorkFlow\WorkFlowRecordDetailMap.cs" />
     <Compile Include="Mapping\WorkFlow\WorkFlowsTransitionMap.cs" />
     <Compile Include="Mapping\WorkFlow\WorkFlowDefinitionMap.cs" />
     <Compile Include="Migrations\201710221333304_ManagerLoginLog.cs" />
@@ -367,6 +369,14 @@
     <Compile Include="Migrations\201808300324187_UserProfile.Designer.cs">
       <DependentUpon>201808300324187_UserProfile.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810230326124_WorkFlowUpdate.cs" />
+    <Compile Include="Migrations\201810230326124_WorkFlowUpdate.Designer.cs">
+      <DependentUpon>201810230326124_WorkFlowUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810240943303_WorkFlowUpdate20181024.cs" />
+    <Compile Include="Migrations\201810240943303_WorkFlowUpdate20181024.Designer.cs">
+      <DependentUpon>201810240943303_WorkFlowUpdate20181024.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -560,6 +570,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808300324187_UserProfile.resx">
       <DependentUpon>201808300324187_UserProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810230326124_WorkFlowUpdate.resx">
+      <DependentUpon>201810230326124_WorkFlowUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810240943303_WorkFlowUpdate20181024.resx">
+      <DependentUpon>201810240943303_WorkFlowUpdate20181024.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

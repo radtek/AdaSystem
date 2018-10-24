@@ -165,7 +165,9 @@
     <Compile Include="WeiXin\IWeiXinAccountService.cs" />
     <Compile Include="WeiXin\WeiXinAccountService.cs" />
     <Compile Include="WorkFlow\IWorkFlowDefinitionService.cs" />
+    <Compile Include="WorkFlow\IWorkFlowService.cs" />
     <Compile Include="WorkFlow\WorkFlowDefinitionService.cs" />
+    <Compile Include="WorkFlow\WorkFlowService.cs" />
     <Compile Include="WorkLog\WorkLogService.cs" />
     <Compile Include="WorkLog\IWorkLogService.cs" />
   </ItemGroup>

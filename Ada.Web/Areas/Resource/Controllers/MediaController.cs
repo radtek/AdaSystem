@@ -248,7 +248,16 @@ namespace Resource.Controllers
                         {
                             jo.Add("媒体频道", media.Channel);
                         }
-                        jo.Add("媒体链接", media.MediaLink);
+
+                        if (viewModel.MediaTypeIndex=="taobao")
+                        {
+                            jo.Add("媒体链接", "https://market.m.taobao.com/apps/abs/9/41/index?accountId=" + media.MediaID);
+                        }
+                        else
+                        {
+                            jo.Add("媒体链接", media.MediaLink);
+                        }
+                        
                         jo.Add("性别", media.Sex);
                         jo.Add("地区", media.Area);
                         if (!string.IsNullOrWhiteSpace(media.ResourceType))
@@ -695,6 +704,11 @@ namespace Resource.Controllers
                     sellKey = "WriterPriceRange";
                     marketKey = "WriterPriceRange";
                 }
+                if (media.MediaType.CallIndex == "zhihu")
+                {
+                    sellKey = "ExportPrice";
+                    marketKey = "ExportPrice";
+                }
                 var sellPriceRange = _fieldService.GetFieldsByKey(sellKey).ToList();
                 var marketPriceRange = _fieldService.GetFieldsByKey(marketKey).ToList();
                 for (int j = 0; j < adpostionNames.Count; j++)
@@ -1053,6 +1067,11 @@ namespace Resource.Controllers
                 sellKey = "WriterPriceRange";
                 marketKey = "WriterPriceRange";
             }
+            if (viewModel.MediaTypeIndex == "zhihu")
+            {
+                sellKey = "ExportPrice";
+                marketKey = "ExportPrice";
+            }
             var sellPriceRange = _fieldService.GetFieldsByKey(sellKey).ToList();
             var marketPriceRange = _fieldService.GetFieldsByKey(marketKey).ToList();
             foreach (var viewModelMediaPrice in viewModel.MediaPrices)
@@ -1255,6 +1274,11 @@ namespace Resource.Controllers
                 sellKey = "WriterPriceRange";
                 marketKey = "WriterPriceRange";
             }
+            if (viewModel.MediaTypeIndex == "zhihu")
+            {
+                sellKey = "ExportPrice";
+                marketKey = "ExportPrice";
+            }
             var sellPriceRange = _fieldService.GetFieldsByKey(sellKey).ToList();
             var marketPriceRange = _fieldService.GetFieldsByKey(marketKey).ToList();
             foreach (var viewModelMediaPrice in viewModel.MediaPrices)
@@ -1399,7 +1423,7 @@ namespace Resource.Controllers
             if (entity.Cooperation != Consts.StateNormal)
             {
                 //小红书和抖音不影响
-                if (entity.MediaType.CallIndex != "redbook" || entity.MediaType.CallIndex != "douyin")
+                if (entity.MediaType.CallIndex != "redbook" || entity.MediaType.CallIndex != "douyin" || entity.MediaType.CallIndex != "zhihu")
                 {
                     var sellPriceRange = _fieldService.GetFieldsByKey(entity.IsHot == true ? "HotSellPriceRange" : "SellPriceRange").ToList();
                     foreach (var entityMediaPrice in entity.MediaPrices)

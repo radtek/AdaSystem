@@ -9,16 +9,22 @@ using Ada.Core.Domain.WorkFlow;
 
 namespace Ada.Data.Mapping.WorkFlow
 {
-    public class WorkFlowDefinitionMap : EntityTypeConfiguration<WorkFlowDefinition>
+    public class WorkFlowRecordDetailMap : EntityTypeConfiguration<WorkFlowRecordDetail>
     {
-        public WorkFlowDefinitionMap()
+        public WorkFlowRecordDetailMap()
         {
             //配置主键
             HasKey(s => s.Id);
             //配置字段
 
-            Property(s => s.Name).IsRequired().HasMaxLength(32);
-            Property(s => s.ActityType).HasMaxLength(512);
+            Property(s => s.Name).HasMaxLength(128);
+            Property(s => s.ProcessBy).HasMaxLength(32);
+            Property(s => s.ProcessById).HasMaxLength(32);
+            Property(s => s.ProcessResult).HasMaxLength(256);
+            Property(s => s.ProcessComment).HasMaxLength(512);
+            Property(s => s.ParentDetailId).HasMaxLength(32);
+            Property(s => s.WorkFlowRecordId).HasMaxLength(32);
+
 
             Property(s => s.AddedBy).HasMaxLength(32);
             Property(s => s.AddedById).HasMaxLength(32);
@@ -31,7 +37,8 @@ namespace Ada.Data.Mapping.WorkFlow
             Property(s => s.Remark).HasMaxLength(1024);
 
             //配置表
-            ToTable("WorkFlowDefinition");
+            ToTable("WorkFlowRecordDetail");
+            HasRequired(s => s.WorkFlowRecord).WithMany(s => s.WorkFlowRecordDetails).HasForeignKey(s => s.WorkFlowRecordId).WillCascadeOnDelete(true);
         }
     }
 }

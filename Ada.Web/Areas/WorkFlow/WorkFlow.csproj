@@ -47,6 +47,9 @@
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.8.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -54,6 +57,11 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.DurableInstancing" />
+    <Reference Include="System.Runtime.DurableInstancing" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activities" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -84,6 +92,7 @@
     <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
@@ -104,8 +113,16 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ApproveController.cs" />
     <Compile Include="Controllers\DefinitionController.cs" />
+    <Compile Include="Controllers\LaunchController.cs" />
+    <Compile Include="Controllers\RecordController.cs" />
+    <Compile Include="Models\WorkFlowEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Template\IWorkFlowProvider.cs" />
+    <Compile Include="Template\SetStepActivity.cs" />
+    <Compile Include="Template\Wait4InputDataAcitvity.cs" />
+    <Compile Include="Template\WorkFlowProvider.cs" />
     <Compile Include="WorkFlowAreaRegistration.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +132,15 @@
     <Content Include="Views\Definition\Index.cshtml" />
     <Content Include="Views\Definition\Update.cshtml" />
     <Content Include="Views\Definition\ParopertiesView.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Views\Definition\Add.cshtml" />
+    <Content Include="Views\Definition\Edit.cshtml" />
+    <Content Include="Views\Launch\Index.cshtml" />
+    <Content Include="Views\Launch\Add.cshtml" />
+    <Content Include="Views\Record\Index.cshtml" />
+    <Content Include="Views\Record\Detail.cshtml" />
+    <Content Include="Views\Approve\Index.cshtml" />
+    <Content Include="Views\Approve\Examination.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -122,9 +148,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\Ada.Core\Ada.Core.csproj">
       <Project>{1E0B290A-3337-43C9-9CE9-BFB8CE741DBA}</Project>
@@ -138,6 +162,12 @@
       <Project>{290B1457-586C-4AB4-9B82-6DBBA35F5BD5}</Project>
       <Name>Ada.Services</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <XamlAppDef Include="Template\FincalActivity.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </XamlAppDef>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

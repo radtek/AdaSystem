@@ -131,12 +131,15 @@ filterFormat.mediaPrice = function (value, row) {
     var arr = [];
     $.each(value,
         function (k, v) {
-            arr.push("<li class='list-group-item p-xxs'>" +
-                "<span class='badge badge-success'>成本 : <i class='fa fa-jpy'></i> " + v.PurchasePrice+"</span> " +
-                "<span class='badge badge-danger'>销售 : <i class='fa fa-jpy'></i> " + v.MarketPrice +"</span> " +
-                "<span class='badge badge-warning'>零售 : <i class='fa fa-jpy'></i> " + v.SellPrice +"</span> "+
-                 v.AdPositionName +
-                "</li>");
+            if (v.PurchasePrice) {
+                arr.push("<li class='list-group-item p-xxs'>" +
+                    "<span class='badge badge-success'>成本 : <i class='fa fa-jpy'></i> " + v.PurchasePrice + "</span> " +
+                    "<span class='badge badge-danger'>销售 : <i class='fa fa-jpy'></i> " + v.MarketPrice + "</span> " +
+                    "<span class='badge badge-warning'>零售 : <i class='fa fa-jpy'></i> " + v.SellPrice + "</span> " +
+                    v.AdPositionName +
+                    "</li>"); 
+            }
+            
         });
     arr.push("<li class='list-group-item p-xxs'><span class='badge'>" + moment(value[0].InvalidDate).format("YYYY-MM-DD") + "</span>价格有效期</li>");
     return "<ul class='list-group m-b-none'>" + arr.join('') + "</ul>";

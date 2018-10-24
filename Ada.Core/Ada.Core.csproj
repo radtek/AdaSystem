@@ -160,6 +160,8 @@
     <Compile Include="Domain\WeiXin\WeiXinRequestReocrd.cs" />
     <Compile Include="Domain\WorkFlow\WorkFlowActivity.cs" />
     <Compile Include="Domain\WorkFlow\WorkFlowDefinition.cs" />
+    <Compile Include="Domain\WorkFlow\WorkFlowRecord.cs" />
+    <Compile Include="Domain\WorkFlow\WorkFlowRecordDetail.cs" />
     <Compile Include="Domain\WorkFlow\WorkFlowsTransition.cs" />
     <Compile Include="IAppStart.cs" />
     <Compile Include="ICacheStorageProvider.cs" />
@@ -258,6 +260,8 @@
     <Compile Include="ViewModel\Wages\QuartersView.cs" />
     <Compile Include="ViewModel\WeiXin\WeiXinAccountView.cs" />
     <Compile Include="ViewModel\WorkFlow\WorkFlowDefinitionView.cs" />
+    <Compile Include="ViewModel\WorkFlow\WorkFlowRecordDetailView.cs" />
+    <Compile Include="ViewModel\WorkFlow\WorkFlowRecordView.cs" />
     <Compile Include="ViewModel\WorkLog\WorkLogView.cs" />
   </ItemGroup>
   <ItemGroup>

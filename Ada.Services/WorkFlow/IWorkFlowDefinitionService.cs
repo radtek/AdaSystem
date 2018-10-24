@@ -11,6 +11,6 @@ namespace Ada.Services.WorkFlow
        void Add(WorkFlowDefinition entity);
        void Update(WorkFlowDefinition entity);
        void Delete(WorkFlowDefinition entity);
-       IQueryable<WorkFlowDefinition> LoadEntitiesFilter(WorkFlowDefinitionView viewModel);
+        IQueryable<WorkFlowDefinition> LoadEntitiesFilter(WorkFlowDefinitionView viewModel);
    }
 }

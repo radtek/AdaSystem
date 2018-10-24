@@ -19,5 +19,20 @@ namespace Ada.Core.ViewModel.WorkFlow
         /// </summary>
         [Display(Name = "是否开启")]
         public bool Enabled { get; set; }
+        /// <summary>
+        /// 流程描述
+        /// </summary>
+        [Display(Name = "流程描述")]
+        public string Description { get; set; }
+        /// <summary>
+        /// 流程模板
+        /// </summary>
+        [Display(Name = "流程模板")]
+        public string TempForm { get; set; }
+        /// <summary>
+        /// 流程类型
+        /// </summary>
+        [Display(Name = "流程类型")]
+        public string ActityType { get; set; }
     }
 }

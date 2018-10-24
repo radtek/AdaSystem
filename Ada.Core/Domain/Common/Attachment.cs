@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core.Domain.Content;
+using Ada.Core.Domain.WorkFlow;
 
 namespace Ada.Core.Domain.Common
 {
@@ -13,6 +14,7 @@ namespace Ada.Core.Domain.Common
         public Attachment()
         {
             Articles=new HashSet<Article>();
+            WorkFlowRecords=new HashSet<WorkFlowRecord>();
         }
         /// <summary>
         /// 附件名称
@@ -56,5 +58,6 @@ namespace Ada.Core.Domain.Common
         public string ThumbPath { get; set; }
 
         public virtual ICollection<Article> Articles { get; set; }
+        public virtual ICollection<WorkFlowRecord> WorkFlowRecords { get; set; }
     }
 }
