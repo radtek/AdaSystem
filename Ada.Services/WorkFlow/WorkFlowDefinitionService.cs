@@ -1,4 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity.Validation;
+using System.Linq;
+using System.Text;
 using Ada.Core;
 using Ada.Core.Domain.WorkFlow;
 using Ada.Core.ViewModel.WorkFlow;
@@ -26,6 +30,24 @@ namespace Ada.Services.WorkFlow
         {
             _repository.Update(entity);
             _dbContext.SaveChanges();
+            //try
+            //{
+
+            //}
+            //catch (DbEntityValidationException ex)
+            //{
+            //    StringBuilder errors = new StringBuilder();
+            //    IEnumerable<DbEntityValidationResult> validationResult = ex.EntityValidationErrors;
+            //    foreach (DbEntityValidationResult result in validationResult)
+            //    {
+            //        ICollection<DbValidationError> validationError = result.ValidationErrors;
+            //        foreach (DbValidationError err in validationError)
+            //        {
+            //            errors.Append(err.PropertyName + ":" + err.ErrorMessage + "\r\n");
+            //        }
+            //    }
+            //    throw new ApplicationException(errors.ToString());
+            //}
         }
 
         public void Delete(WorkFlowDefinition entity)

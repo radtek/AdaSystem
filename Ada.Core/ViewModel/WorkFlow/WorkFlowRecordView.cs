@@ -49,5 +49,25 @@ namespace Ada.Core.ViewModel.WorkFlow
         /// </summary>
         [Display(Name = "流转至")]
         public string FlowTo { get; set; }
+        /// <summary>
+        /// 流程状态
+        /// </summary>
+        [Display(Name = "流程状态")]
+        public short? Status { get; set; }
+        /// <summary>
+        /// 我的待审批
+        /// </summary>
+        [Display(Name = "我的待审批")]
+        public bool? MyApprove { get; set; }
+        /// <summary>
+        /// 提交日期
+        /// </summary>
+        [Display(Name = "提交日期")]
+        public DateTime? AddedDate { get; set; }
+        /// <summary>
+        /// 申请人
+        /// </summary>
+        [Display(Name = "申请人")]
+        public string AddedBy { get; set; }
     }
 }

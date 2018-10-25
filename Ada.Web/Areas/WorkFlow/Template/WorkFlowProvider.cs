@@ -5,6 +5,7 @@ using System.Activities.XamlIntegration;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using System.Web;
@@ -30,10 +31,12 @@ namespace WorkFlow.Template
         public WorkflowApplication CreateWorkflowApp(string xamlPath, Dictionary<string, object> dicParam)
         {
             AutoResetEvent autoResetEvent = new AutoResetEvent(false);
-            var settings = new XamlXmlReaderSettings() { LocalAssembly = typeof(SetStepActivity).Assembly };
-            var reader = new XamlXmlReader(xamlPath, settings);
-            Activity workflow = ActivityXamlServices.Load(reader);
-            var wfApp = dicParam == null ? new WorkflowApplication(workflow) : new WorkflowApplication(workflow, dicParam);
+            //var settings = new XamlXmlReaderSettings() { LocalAssembly = typeof(WorkFlowProvider).Assembly };
+            //var reader = new XamlXmlReader(xamlPath, settings);
+            //Activity workflow = ActivityXamlServices.Load(reader);
+            Assembly assembly = Assembly.GetExecutingAssembly(); // 获取当前程序集 
+            Activity obj = assembly.CreateInstance(xamlPath) as Activity;
+            var wfApp = dicParam == null ? new WorkflowApplication(obj) : new WorkflowApplication(obj, dicParam);
             wfApp.Idle += a =>//当工作流停下来的时候，执行此事件响应方法。
             {
                 //Console.WriteLine("工作流停下来了...");
@@ -71,17 +74,15 @@ namespace WorkFlow.Template
 
             //wfApp在进行持久化的时候，保存到上面对象配置的数据库里面去。
             wfApp.InstanceStore = store;
-            wfApp.Run();
             return wfApp;
         }
 
         public WorkflowApplication ResumeBookMark(string xamlPath, Guid instanceId, string bookmarkName, object value)
         {
             AutoResetEvent autoResetEvent = new AutoResetEvent(false);
-            var settings = new XamlXmlReaderSettings() { LocalAssembly = typeof(SetStepActivity).Assembly };
-            var reader = new XamlXmlReader(xamlPath, settings);
-            Activity workflow = ActivityXamlServices.Load(reader);
-            WorkflowApplication wfApp = new WorkflowApplication(workflow);
+            Assembly assembly = Assembly.GetExecutingAssembly(); // 获取当前程序集 
+            Activity obj = assembly.CreateInstance(xamlPath) as Activity;
+            WorkflowApplication wfApp = new WorkflowApplication(obj);
             wfApp.Idle += a =>//当工作流停下来的时候，执行此事件响应方法。
             {
                 //Console.WriteLine("工作流停下来了...");

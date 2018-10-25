@@ -59,8 +59,11 @@ function formatterPrice(value, row, index) {
     var arr = [];
     $.each(value,
         function (k, v) {
-            var price = "<i class='fa fa-jpy'></i> " + v.PurchasePrice;
-            arr.push("<li class='list-group-item p-xxs'><span class='badge badge-success'>" + price + "</span> " + v.AdPositionName + "</li>");
+            if (v.PurchasePrice) {
+                var price = "<i class='fa fa-jpy'></i> " + v.PurchasePrice;
+                arr.push("<li class='list-group-item p-xxs'><span class='badge badge-success'>" + price + "</span> " + v.AdPositionName + "</li>");
+            }
+            
         });
     arr.push("<li class='list-group-item p-xxs'><span class='badge'>" + moment(value[0].InvalidDate).format("YYYY-MM-DD") + "</span>价格有效期</li>");
     return "<ul class='list-group m-b-none'>" + arr.join('') + "</ul>";

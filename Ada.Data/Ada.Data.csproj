@@ -377,6 +377,10 @@
     <Compile Include="Migrations\201810240943303_WorkFlowUpdate20181024.Designer.cs">
       <DependentUpon>201810240943303_WorkFlowUpdate20181024.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810250121478_WorkflowUpdate1025.cs" />
+    <Compile Include="Migrations\201810250121478_WorkflowUpdate1025.Designer.cs">
+      <DependentUpon>201810250121478_WorkflowUpdate1025.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -576,6 +580,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810240943303_WorkFlowUpdate20181024.resx">
       <DependentUpon>201810240943303_WorkFlowUpdate20181024.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810250121478_WorkflowUpdate1025.resx">
+      <DependentUpon>201810250121478_WorkflowUpdate1025.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

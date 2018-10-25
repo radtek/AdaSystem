@@ -32,14 +32,19 @@ namespace WorkFlow.Template
 
             var status = (short) WorkFlowEnum.UnProecess;
             var detail = wf.WorkFlowRecordDetails.FirstOrDefault(d => d.Status == status);
-            detail.Name = text;
-            detail.IsEnd = end;
-            if (end)
+            if (detail!=null)
             {
-                detail.ProcessResult = "审批结束";
-                wf.Status = (short) WorkFlowEnum.Processed;
+                detail.Name = text;
+                detail.IsEnd = end;
+                if (end)
+                {
+                    detail.ProcessResult = "审批结束";
+                    wf.Status = (short)WorkFlowEnum.Processed;
+                    service.UpdateRecord(wf);
+                }
+                service.UpdateDetail(detail);
             }
-            service.UpdateRecord(wf);
+            
         }
     }
 }

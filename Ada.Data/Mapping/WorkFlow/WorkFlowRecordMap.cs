@@ -19,7 +19,7 @@ namespace Ada.Data.Mapping.WorkFlow
 
             Property(s => s.Title).IsRequired().HasMaxLength(128);
             Property(s => s.WorkFlowDefinitionId).HasMaxLength(32);
-            Property(s => s.WfInstanceId).HasMaxLength(32);
+            Property(s => s.WfInstanceId).HasMaxLength(128);
 
             Property(s => s.AddedBy).HasMaxLength(32);
             Property(s => s.AddedById).HasMaxLength(32);

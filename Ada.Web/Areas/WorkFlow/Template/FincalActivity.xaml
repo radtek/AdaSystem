@@ -22,10 +22,13 @@
   <TextExpression.ReferencesForImplementation>
     <sco:Collection x:TypeArguments="AssemblyReference">
       <AssemblyReference>Antlr3.Runtime</AssemblyReference>
+      <AssemblyReference>log4net</AssemblyReference>
       <AssemblyReference>Microsoft.CodeDom.Providers.DotNetCompilerPlatform</AssemblyReference>
       <AssemblyReference>Microsoft.CSharp</AssemblyReference>
       <AssemblyReference>Newtonsoft.Json</AssemblyReference>
       <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Activities.DurableInstancing</AssemblyReference>
+      <AssemblyReference>System.Runtime.DurableInstancing</AssemblyReference>
       <AssemblyReference>System.ServiceModel</AssemblyReference>
       <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
       <AssemblyReference>System.Web.DynamicData</AssemblyReference>
@@ -57,9 +60,6 @@
       <AssemblyReference>Ada.Core</AssemblyReference>
       <AssemblyReference>Ada.Framework</AssemblyReference>
       <AssemblyReference>Ada.Services</AssemblyReference>
-      <AssemblyReference>System.Activities.DurableInstancing</AssemblyReference>
-      <AssemblyReference>System.Runtime.DurableInstancing</AssemblyReference>
-      <AssemblyReference>log4net</AssemblyReference>
       <AssemblyReference>mscorlib</AssemblyReference>
       <AssemblyReference>WorkFlow</AssemblyReference>
     </sco:Collection>
@@ -153,19 +153,41 @@
                                 </State.Entry>
                                 <State.Transitions>
                                   <Transition DisplayName="总经理通过" sap2010:WorkflowViewState.IdRef="Transition_1">
+                                    <Transition.To>
+                                      <State x:Name="__ReferenceID3" DisplayName="审批结束" sap2010:WorkflowViewState.IdRef="State_1" IsFinal="True">
+                                        <State.Entry>
+                                          <local:SetStepActivity sap2010:WorkflowViewState.IdRef="SetStepActivity_5" IsEnd="True">
+                                            <local:SetStepActivity.StepName>
+                                              <InArgument x:TypeArguments="x:String">
+                                                <mca:CSharpValue x:TypeArguments="x:String">TempBookmarkName</mca:CSharpValue>
+                                              </InArgument>
+                                            </local:SetStepActivity.StepName>
+                                          </local:SetStepActivity>
+                                        </State.Entry>
+                                      </State>
+                                    </Transition.To>
+                                    <Transition.Action>
+                                      <Assign sap2010:WorkflowViewState.IdRef="Assign_8">
+                                        <Assign.To>
+                                          <OutArgument x:TypeArguments="x:String">
+                                            <mca:CSharpReference x:TypeArguments="x:String">TempBookmarkName</mca:CSharpReference>
+                                          </OutArgument>
+                                        </Assign.To>
+                                        <Assign.Value>
+                                          <InArgument x:TypeArguments="x:String">流程结束</InArgument>
+                                        </Assign.Value>
+                                      </Assign>
+                                    </Transition.Action>
                                     <Transition.Condition>
                                       <mca:CSharpValue x:TypeArguments="x:Boolean">Result==1</mca:CSharpValue>
                                     </Transition.Condition>
-                                    <Transition.To>
-                                      <State x:Name="__ReferenceID3" DisplayName="审批结束" sap2010:WorkflowViewState.IdRef="State_1" IsFinal="True" />
-                                    </Transition.To>
                                   </Transition>
                                   <Transition DisplayName="总经理驳回" sap2010:WorkflowViewState.IdRef="Transition_3">
                                     <Transition.To>
                                       <State x:Name="__ReferenceID1" DisplayName="用户重新提交" sap2010:WorkflowViewState.IdRef="State_2">
                                         <State.Entry>
                                           <Sequence sap2010:WorkflowViewState.IdRef="Sequence_4">
-                                            <local:SetStepActivity sap2010:WorkflowViewState.IdRef="SetStepActivity_4" IsEnd="False">
+                                            <local:SetStepActivity sap2010:WorkflowViewState.IdRef="SetStepActivity_4" IsEnd="True">
                                               <local:SetStepActivity.StepName>
                                                 <InArgument x:TypeArguments="x:String">
                                                   <mca:CSharpValue x:TypeArguments="x:String">TempBookmarkName</mca:CSharpValue>
@@ -321,7 +343,7 @@
       <Variable x:TypeArguments="x:String" Name="TempBookmarkName" />
       <Variable x:TypeArguments="x:Int32" Name="Result" />
     </StateMachine.Variables>
-    <sads:DebugSymbol.Symbol>d0dDOlxNeUNvZGVcQWRhU3lzdGVtXEFkYS5XZWJcQXJlYXNcV29ya0Zsb3dcVGVtcGxhdGVcRmluY2FsQWN0aXZpdHkueGFtbEBDA8UCEgIBAUUHuAIPAgF0TA+oAhcCAVSgASegAZQBAgFSZxeEAh8CATKCAR/gAScCARelASfNAS8CAQJHC0dWAgF8qwIPtAIYAgF2ThNiHgIBZ5MCF5MCXwIBY4cCF5ACIAIBXqQCF6QCXwIBW5gCF6ECIAIBVmkbfSYCAUXvAR/vAWcCAUHjAR/sASgCATyAAh+AAmcCATn0AR/9ASgCATSEASOYAS4CASWdASedAW8CASHcASfcAW8CAR7QASfZATACARmnASu7ATYCAQrAAS/JATgCAQRHSUdTAgF9sgI6sgI+AgF6rgIVrgJrAgF3TxVVLQIBb1YVYTQCAWiOAkKOAkYCAWKKAh2KAnMCAV+fAkKfAkoCAVqbAh2bAnMCAVdqHXA1AgFNcR18PAIBRuoBSuoBTwIBQOYBJeYBewIBPfsBSvsBUgIBOPcBJfcBewIBNYUBJYsBPQIBLYwBJZcBRAIBJtcBUtcBWgIBHdMBLdMBgwECARqoAS2uAUUCARKvAS26AUwCAQvHAVrHAV4CAQjDATXDAYsBAgEFUhtSaQIBcU9mT20CAXBeG15mAgFsWRtZaQIBaW0jbXECAU9qbmp1AgFOeSN5bgIBSnQjdHECAUeIASuIAXkCAS+FAXaFAX0CAS6UASuUAXYCASqPASuPAXkCASerATOrAYEBAgEUqAF+qAGFAQIBE7cBM7cBfgIBD7IBM7IBgQECAQw=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d0dDOlxNeUNvZGVcQWRhU3lzdGVtXEFkYS5XZWJcQXJlYXNcV29ya0Zsb3dcVGVtcGxhdGVcRmluY2FsQWN0aXZpdHkueGFtbEZDA9sCEgIBAUUHzgIPAgF+TA++AhcCAV6dASenAS8CAVdnF5oCHwIBN4IBH/YBJwIBF7sBJ+MBLwIBAkcLR1YDAYYBwQIPygIYAwGAAU4TYh4CAXGpAhepAl8CAW2dAhemAiACAWi6Ahe6Al8CAWWuAhe3AiACAWCfASulAUMCAVlpG30mAgFKhQIfhQJnAgFG+QEfggIoAgFBlgIflgJnAgE+igIfkwIoAgE5hAEjmAEuAgEqtgEntgFvAgEmqgEnswEwAgEh8gEn8gFvAgEe5gEn7wEwAgEZvQEr0QE2AgEK1gEv3wE4AgEER0lHUwMBhwHIAjrIAj4DAYQBxAIVxAJrAwGBAU8VVS0CAXlWFWE0AgFypAJCpAJGAgFsoAIdoAJzAgFptQJCtQJKAgFksQIdsQJzAgFhogExogF/AgFbnwF8nwGCAQIBWmodcDUCAVJxHXw8AgFLgAJKgAJPAgFF/AEl/AF7AgFCkQJKkQJSAgE9jQIljQJ7AgE6hQEliwE9AgEyjAEllwFEAgErsQFSsQFWAgElrQEtrQGDAQIBIu0BUu0BWgIBHekBLekBgwECARq+AS3EAUUCARLFAS3QAUwCAQvdAVrdAV4CAQjZATXZAYsBAgEFUhtSaQIBe09mT20CAXpeG15mAgF2WRtZaQIBc20jbXECAVRqbmp1AgFTeSN5bgIBT3QjdHECAUyIASuIAXkCATSFAXaFAX0CATOUASuUAXYCAS+PASuPAXkCASzBATPBAYEBAgEUvgF+vgGEAQIBE80BM80BfgIBD8gBM8gBgQECAQw=</sads:DebugSymbol.Symbol>
   </StateMachine>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
@@ -353,6 +375,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="SetStepActivity_5" sap:VirtualizedContainerService.HintSize="200,22.4" />
       <sap2010:ViewStateData Id="State_1" sap:VirtualizedContainerService.HintSize="114.4,61.6">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -362,6 +385,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_8" sap:VirtualizedContainerService.HintSize="244,61.6" />
       <sap2010:ViewStateData Id="Transition_1" sap:VirtualizedContainerService.HintSize="429.6,511.2">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -390,7 +414,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="State_2" sap:VirtualizedContainerService.HintSize="114.4,61.6">
+      <sap2010:ViewStateData Id="State_2" sap:VirtualizedContainerService.HintSize="325.6,572.8">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">412.8,129.2</av:Point>

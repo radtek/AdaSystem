@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.WorkFlow;
+using Ada.Core.Tools;
 using Ada.Core.ViewModel.WorkFlow;
 using Ada.Framework.Filter;
 using Ada.Services.WorkFlow;
@@ -22,17 +24,20 @@ namespace WorkFlow.Controllers
     {
         private readonly IRepository<WorkFlowDefinition> _repository;
         private readonly IWorkFlowDefinitionService _service;
+        private readonly IWorkFlowService _workFlowService;
         private readonly IWorkFlowProvider _workFlowProvider;
         private readonly IRepository<Manager> _managerRepository;
         public LaunchController(IRepository<WorkFlowDefinition> repository,
             IRepository<Manager> managerRepository,
             IWorkFlowDefinitionService service,
-            IWorkFlowProvider workFlowProvider)
+            IWorkFlowProvider workFlowProvider,
+            IWorkFlowService workFlowService)
         {
             _repository = repository;
             _managerRepository = managerRepository;
             _service = service;
             _workFlowProvider = workFlowProvider;
+            _workFlowService = workFlowService;
         }
         /// <summary>
         /// 选择工作流
@@ -68,13 +73,14 @@ namespace WorkFlow.Controllers
         [HttpPost, ValidateInput(false), ValidateAntiForgeryToken]
         public ActionResult Add(WorkFlowRecordView viewModel)
         {
-            //启动工作流
+            
             var workFlow = _repository.LoadEntities(d => d.Enabled && d.Id == viewModel.WorkFlowDefinitionId).FirstOrDefault();
             if (workFlow == null)
             {
                 TempData["Warning"] = "工作流程未开启或者未定义";
                 return View(viewModel);
             }
+            //启动工作流
             var wfApp = _workFlowProvider.CreateWorkflowApp(workFlow.ActityType, null);
             //在工作流记录表添加一条数据：
             WorkFlowRecord workFlowRecord = new WorkFlowRecord();
@@ -113,6 +119,9 @@ namespace WorkFlow.Controllers
             workFlowRecord.WorkFlowRecordDetails.Add(nextDetail);
             workFlow.WorkFlowRecords.Add(workFlowRecord);
             _service.Update(workFlow);
+            //workFlowRecord.WfInstanceId = wfApp.Id.ToString();
+            //_workFlowService.UpdateRecord(workFlowRecord);
+            wfApp.Run();
             //返回我的工作记录表
             return RedirectToAction("Index","Record");
         }

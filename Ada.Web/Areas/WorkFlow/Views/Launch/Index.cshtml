@@ -1,6 +1,6 @@
 ﻿@model List<Ada.Core.Domain.WorkFlow.WorkFlowDefinition>
 @{
-    ViewBag.Title = "发起流程";
+    ViewBag.Title = "发起申请";
 }
 @Html.Partial("Bread")
 
@@ -19,7 +19,7 @@
                         <div class="m-t-xs btn-group">
                             @if (item.Enabled)
                             {
-                                <a class="btn btn-primary btn-outline" href="@Url.Action("Add", new {id = item.Id})"><i class="fa fa-paper-plane"></i> 发起流程 </a>
+                                <a class="btn btn-primary btn-outline" href="@Url.Action("Add", new {id = item.Id})"><i class="fa fa-paper-plane"></i> 开始申请 </a>
                             }
                             else
                             {

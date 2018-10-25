@@ -454,11 +454,12 @@ formatter.mediaPrice = function (value, row) {
     var arr = [];
     $.each(value,
         function (k, v) {
-            var price = !v.SellPrice ? "<span class='badge badge-success'>税前 : 不接单</span> " : "<span class='badge badge-success'>税前 : <i class='fa fa-jpy'></i> " + v.SellPrice + "</span> ";
-            var tax = !v.SellPrice
-                ? "<span class='badge badge-warning'>税后 : 不接单</span> "
-                : "<span class='badge badge-warning'>税后 : <i class='fa fa-jpy'></i> " + v.SellPrice * 1.06 + "</span> ";
-            arr.push("<li class='list-group-item p-xxs'>" + tax+price + v.AdPositionName + "</li>");
+            if (v.SellPrice) {
+                var price =  "<span class='badge badge-success'>税前 : <i class='fa fa-jpy'></i> " + v.SellPrice + "</span> ";
+                var tax ="<span class='badge badge-warning'>税后 : <i class='fa fa-jpy'></i> " + v.SellPrice * 1.06 + "</span> ";
+                arr.push("<li class='list-group-item p-xxs'>" + tax + price + v.AdPositionName + "</li>");
+            }
+            
         });
     arr.push("<li class='list-group-item p-xxs'><span class='badge'>" + moment(value[0].InvalidDate).format("YYYY-MM-DD") + "</span>价格有效期</li>");
     return "<ul class='list-group m-b-none'>" + arr.join('') + "</ul>";
