@@ -9,8 +9,11 @@ using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.WorkFlow;
 using Ada.Core.Tools;
+using Ada.Core.ViewModel.Setting;
 using Ada.Core.ViewModel.WorkFlow;
 using Ada.Framework.Filter;
+using Ada.Framework.Messaging;
+using Ada.Services.Setting;
 using Ada.Services.WorkFlow;
 using WorkFlow.Models;
 using WorkFlow.Template;
@@ -24,20 +27,23 @@ namespace WorkFlow.Controllers
     {
         private readonly IRepository<WorkFlowDefinition> _repository;
         private readonly IWorkFlowDefinitionService _service;
-        private readonly IWorkFlowService _workFlowService;
+        private readonly IMessageService _messageService;
         private readonly IWorkFlowProvider _workFlowProvider;
         private readonly IRepository<Manager> _managerRepository;
+        private readonly ISettingService _settingService;
         public LaunchController(IRepository<WorkFlowDefinition> repository,
             IRepository<Manager> managerRepository,
             IWorkFlowDefinitionService service,
             IWorkFlowProvider workFlowProvider,
-            IWorkFlowService workFlowService)
+            IMessageService messageService,
+            ISettingService settingService)
         {
             _repository = repository;
             _managerRepository = managerRepository;
             _service = service;
             _workFlowProvider = workFlowProvider;
-            _workFlowService = workFlowService;
+            _messageService = messageService;
+            _settingService = settingService;
         }
         /// <summary>
         /// 选择工作流
@@ -73,7 +79,7 @@ namespace WorkFlow.Controllers
         [HttpPost, ValidateInput(false), ValidateAntiForgeryToken]
         public ActionResult Add(WorkFlowRecordView viewModel)
         {
-            
+
             var workFlow = _repository.LoadEntities(d => d.Enabled && d.Id == viewModel.WorkFlowDefinitionId).FirstOrDefault();
             if (workFlow == null)
             {
@@ -90,11 +96,11 @@ namespace WorkFlow.Controllers
             workFlowRecord.Level = viewModel.Level;
             workFlowRecord.WfInstanceId = wfApp.Id.ToString();
             workFlowRecord.Status = (short)WorkFlowEnum.UnProecess;
-            workFlowRecord.AddedDate=DateTime.Now;
+            workFlowRecord.AddedDate = DateTime.Now;
             workFlowRecord.AddedBy = CurrentManager.UserName;
             workFlowRecord.AddedById = CurrentManager.Id;
             //在工作流记录明细表里面添加两条步骤。一个当前已经处理的完成步骤。
-            WorkFlowRecordDetail initDetail=new WorkFlowRecordDetail();
+            WorkFlowRecordDetail initDetail = new WorkFlowRecordDetail();
             initDetail.Id = IdBuilder.CreateIdNum();
             initDetail.Name = "提交申请信息";
             initDetail.IsEnd = false;
@@ -103,14 +109,14 @@ namespace WorkFlow.Controllers
             initDetail.ProcessById = CurrentManager.Id;
             initDetail.ProcessComment = "提交申请";
             initDetail.ProcessResult = "通过";
-            initDetail.ProcessDate=DateTime.Now;
-            initDetail.Status = (short) WorkFlowEnum.Processed;
+            initDetail.ProcessDate = DateTime.Now;
+            initDetail.Status = (short)WorkFlowEnum.Processed;
             workFlowRecord.WorkFlowRecordDetails.Add(initDetail);
             //二个步骤：下一步谁审批的步骤
             var nextProcess = _managerRepository.LoadEntities(d => d.Id == viewModel.FlowTo).FirstOrDefault();
-            WorkFlowRecordDetail nextDetail=new WorkFlowRecordDetail();
+            WorkFlowRecordDetail nextDetail = new WorkFlowRecordDetail();
             nextDetail.Id = IdBuilder.CreateIdNum();
-            nextDetail.AddedDate=DateTime.Now;
+            nextDetail.AddedDate = DateTime.Now;
             nextDetail.IsEnd = false;
             nextDetail.IsStart = false;
             nextDetail.Status = (short)WorkFlowEnum.UnProecess;
@@ -119,11 +125,35 @@ namespace WorkFlow.Controllers
             workFlowRecord.WorkFlowRecordDetails.Add(nextDetail);
             workFlow.WorkFlowRecords.Add(workFlowRecord);
             _service.Update(workFlow);
-            //workFlowRecord.WfInstanceId = wfApp.Id.ToString();
-            //_workFlowService.UpdateRecord(workFlowRecord);
             wfApp.Run();
+            //微信提醒
+            var setting = _settingService.GetSetting<WeiGuang>();
+            if (setting.WorkFlowPush)
+            {
+                var retrunUrl = Request.Url.Scheme + "://" + Request.Url.Authority +
+                                "/WorkFlow/Approve/Examination/" + workFlowRecord.Id;
+                var url = Request.Url.Scheme + "://" + Request.Url.Authority +
+                          "/weixin/login/manager?returnUrl=" + Uri.EscapeDataString(retrunUrl);
+                var dic = new Dictionary<string, object>
+                {
+                    {"Title", "您有新的申请需要审核！\r\n"},
+                    {"Remark", "\r\n点击详情进行审批"},
+                    {"Url",url},
+                    {"AppId", "wxcd1a304c25e0ea53"},
+                    {"TemplateId", "1iKylsb9ogt5eH9vUsIQOVCqvnsnYTIPWFbr-6ZY8mY"},
+                    {"TemplateName", "申请审核通知"},
+                    {"OpenIds", nextProcess.OpenId},
+                    {"KeyWord1", viewModel.Title},
+                    {"KeyWord2", CurrentManager.UserName},
+                    {"KeyWord3", workFlow.Name},
+                    {"KeyWord4", DateTime.Now.ToString("yyyy-MM-dd HH:mm")}
+
+                };
+                _messageService.Send("Push", dic);
+            }
+
             //返回我的工作记录表
-            return RedirectToAction("Index","Record");
+            return RedirectToAction("Index", "Record");
         }
     }
 }

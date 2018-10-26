@@ -7,8 +7,11 @@ using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.WorkFlow;
+using Ada.Core.ViewModel.Setting;
 using Ada.Core.ViewModel.WorkFlow;
 using Ada.Framework.Filter;
+using Ada.Framework.Messaging;
+using Ada.Services.Setting;
 using Ada.Services.WorkFlow;
 using WorkFlow.Models;
 using WorkFlow.Template;
@@ -23,13 +26,19 @@ namespace WorkFlow.Controllers
         private readonly IWorkFlowService _service;
         private readonly IWorkFlowProvider _workFlowProvider;
         private readonly IRepository<Manager> _managerRepository;
+        private readonly IMessageService _messageService;
+        private readonly ISettingService _settingService;
         public ApproveController(IWorkFlowService service, 
             IWorkFlowProvider workFlowProvider,
-            IRepository<Manager> managerRepository)
+            IRepository<Manager> managerRepository,
+            IMessageService messageService,
+            ISettingService settingService)
         {
             _service = service;
             _workFlowProvider = workFlowProvider;
             _managerRepository = managerRepository;
+            _messageService = messageService;
+            _settingService = settingService;
         }
         public ActionResult Index()
         {
@@ -81,9 +90,10 @@ namespace WorkFlow.Controllers
             nextDetail.Id = IdBuilder.CreateIdNum();
             nextDetail.IsEnd = false;
             nextDetail.IsStart = false;
-            if (!string.IsNullOrWhiteSpace(view.FlowTo))
+            Manager nextProcess=null;
+            if (!string.IsNullOrWhiteSpace(view.FlowTo)&&view.FlowTo!="1")
             {
-                var nextProcess = _managerRepository.LoadEntities(d => d.Id == view.FlowTo).FirstOrDefault();
+                nextProcess = _managerRepository.LoadEntities(d => d.Id == view.FlowTo).FirstOrDefault();
                 nextDetail.ProcessById = view.FlowTo;
                 nextDetail.ProcessBy = nextProcess.UserName;
             }
@@ -98,6 +108,68 @@ namespace WorkFlow.Controllers
                 Guid.Parse(detail.WorkFlowRecord.WfInstanceId),
                 detail.Name,
                 isOk);
+            //微信提醒
+            var setting = _settingService.GetSetting<WeiGuang>();
+            if (setting.WorkFlowPush)
+            {
+                if (nextProcess != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(nextProcess.OpenId))
+                    {
+                        var retrunUrl = Request.Url.Scheme + "://" + Request.Url.Authority +
+                                        "/WorkFlow/Approve/Examination/" + detail.WorkFlowRecord.Id;
+                        var url = Request.Url.Scheme + "://" + Request.Url.Authority +
+                                  "/weixin/login/manager?returnUrl=" + Uri.EscapeDataString(retrunUrl);
+                        var dic = new Dictionary<string, object>
+                    {
+                        {"Title", "您有新的申请需要审核！\r\n"},
+                        {"Remark", "\r\n点击详情进行审批"},
+                        {"Url",url},
+                        {"AppId", "wxcd1a304c25e0ea53"},
+                        {"TemplateId", "1iKylsb9ogt5eH9vUsIQOVCqvnsnYTIPWFbr-6ZY8mY"},
+                        {"TemplateName", "申请审核通知"},
+                        {"OpenIds", nextProcess.OpenId},
+                        {"KeyWord1", detail.WorkFlowRecord.Title},
+                        {"KeyWord2", detail.WorkFlowRecord.AddedBy},
+                        {"KeyWord3", detail.WorkFlowRecord.WorkFlowDefinition.Name},
+                        {"KeyWord4", detail.WorkFlowRecord.AddedDate}
+
+                    };
+                        _messageService.Send("Push", dic);
+                    }
+
+                }
+                //通知申请人
+                var recordBy = _managerRepository.LoadEntities(d => d.Id == detail.WorkFlowRecord.AddedById).FirstOrDefault();
+                if (recordBy != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(recordBy.OpenId))
+                    {
+                        var retrunUrl1 = Request.Url.Scheme + "://" + Request.Url.Authority +
+                                         "/WorkFlow/Record/Detail/" + detail.WorkFlowRecord.Id;
+                        var url1 = Request.Url.Scheme + "://" + Request.Url.Authority +
+                                   "/weixin/login/manager?returnUrl=" + Uri.EscapeDataString(retrunUrl1);
+
+                        var dic1 = new Dictionary<string, object>
+                    {
+                        {"Title", "您的申请有新的进展！\r\n"},
+                        {"Remark", "\r\n点击详情进行查看"},
+                        {"Url",url1},
+                        {"AppId", "wxcd1a304c25e0ea53"},
+                        {"TemplateId", "zt0urD-W03g9q1_68_4H3pYHdEWVQD8w2XyLgVsxAxY"},
+                        {"TemplateName", "申请结果通知"},
+                        {"OpenIds", recordBy.OpenId},
+                        {"KeyWord1", detail.WorkFlowRecord.AddedBy},
+                        {"KeyWord2", detail.WorkFlowRecord.AddedDate},
+                        {"KeyWord3", detail.WorkFlowRecord.Title},
+                        {"KeyWord4", detail.ProcessResult}
+                    };
+                        _messageService.Send("Push", dic1);
+                    }
+                }
+            }
+            
+            
             TempData["Msg"] = "操作成功";
             return RedirectToAction("Index");
         }

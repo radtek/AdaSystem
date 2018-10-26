@@ -133,12 +133,13 @@
                                 </div>
                                 <div class="form-group">
                                     <label>流转至</label>
-                                    <select name="FlowTo" class="form-control">
+                                    <select name="FlowTo" class="form-control" required="">
                                         <option value="">请选择</option>
                                         @foreach (var item in (List<SelectListItem>)ViewBag.FlowTos)
                                         {
                                             <option value="@item.Value">@item.Text</option>
                                         }
+                                        <option value="1">流程结束</option>
                                     </select>
                                 </div>
                                 <div>

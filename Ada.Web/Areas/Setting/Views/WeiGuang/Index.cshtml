@@ -201,7 +201,19 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.WorkFlowPush, Html.DisplayNameFor(d => d.WorkFlowPush).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    <div class="radio radio-info radio-inline">
+                                        @Html.RadioButtonFor(d => d.WorkFlowPush, true)
+                                        <label> 开启 </label>
+                                    </div>
+                                    <div class="radio radio-info radio-inline">
+                                        @Html.RadioButtonFor(d => d.WorkFlowPush, false)
+                                        <label> 关闭 </label>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">

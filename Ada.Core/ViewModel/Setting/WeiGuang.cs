@@ -34,6 +34,7 @@ namespace Ada.Core.ViewModel.Setting
             CancleAppointmentPush = true;
             AppointmentPush = false;
             UserRequestMediaCount = 10;
+            WorkFlowPush = false;
         }
         /// <summary>
         /// 媒介资源查询数
@@ -145,5 +146,10 @@ namespace Ada.Core.ViewModel.Setting
         /// </summary>
         [Display(Name = "预约提醒推送")]
         public bool AppointmentPush { get; set; }
+        /// <summary>
+        /// 工作流程提醒推送
+        /// </summary>
+        [Display(Name = "工作流程提醒推送")]
+        public bool WorkFlowPush { get; set; }
     }
 }
