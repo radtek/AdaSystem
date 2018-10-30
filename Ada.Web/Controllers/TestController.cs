@@ -42,6 +42,7 @@ namespace Ada.Web.Controllers
         private readonly IRepository<Manager> _manager;
         private readonly IRepository<PurchaseOrderDetail> _ptemp;
         private readonly IRepository<LinkMan> _linkman;
+        private readonly IRepository<Commpany> _commpanyRepository;
         private readonly IDbContext _dbContext;
         private readonly ICacheService _cacheService;//IBusinessOrderDetailService
         private readonly IBusinessOrderDetailService _businessOrderDetailService;
@@ -60,7 +61,8 @@ namespace Ada.Web.Controllers
             IRepository<MediaArticle> mediaArticleRepository,
             IBusinessOrderDetailService businessOrderDetailService,
             IRepository<Manager> manager,
-            IRepository<LinkMan> linkman)
+            IRepository<LinkMan> linkman,
+            IRepository<Commpany> commpanyRepository)
         {
             _dbContext = dbContext;
             _ptemp = ptemp;
@@ -74,6 +76,7 @@ namespace Ada.Web.Controllers
             _businessOrderDetailService = businessOrderDetailService;
             _manager = manager;
             _linkman = linkman;
+            _commpanyRepository = commpanyRepository;
         }
 
         public ActionResult CheckOrder()
@@ -391,15 +394,15 @@ namespace Ada.Web.Controllers
 
                 _dbContext.SaveChanges();
             }
-            catch 
+            catch
             {
                 return Content("异常：" + mediaId);
             }
             return Content("成功转移：" + medias.Count());
         }
-        public ActionResult ChangeMediaXls(string name,string id)
+        public ActionResult ChangeMediaXls(string name, string id)
         {
-            if (string.IsNullOrWhiteSpace(name)||string.IsNullOrWhiteSpace(id))
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(id))
             {
                 return Content("参数错误");
             }
@@ -694,6 +697,55 @@ namespace Ada.Web.Controllers
             }
             return Content("成功更新" + count + "条资源");
         }
+        public ActionResult UpdateCommpany()
+        {
+            string path = Server.MapPath("~/upload/commpany.xlsx");
+            int count = 0;
+            List<string> noList = new List<string>();
+            List<string> noSelf = new List<string>();
+            using (FileStream ms = new FileStream(path, FileMode.Open))
+            {
+                //创建工作薄
+                IWorkbook wk = new XSSFWorkbook(ms);
+                //1.获取第一个工作表
+                ISheet sheet = wk.GetSheetAt(0);
+                if (sheet.LastRowNum < 1)
+                {
+                    return Content("此文件没有导入数据，请填充数据再进行导入");
+                }
+
+                for (int i = 1; i <= sheet.LastRowNum; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+                    var name = row.GetCell(0)?.ToString();
+                    var manager = _commpanyRepository.LoadEntities(d => d.Name == name).FirstOrDefault();
+                    if (manager == null)
+                    {
+                        noList.Add(name);
+                        continue;
+                    }
+                    //验证是否包含自运营
+                    var isSelf = manager.LinkMans.Any(d => d.BusinessOrders.Any(b =>
+                        b.BusinessOrderDetails.Any(o =>
+                            o.MediaPrice.Media.Cooperation == 1 &&
+                            o.MediaPrice.Media.MediaType.CallIndex == "weixin")));
+                    if (isSelf)
+                    {
+                        manager.IsCooperation = true;
+                    }
+                    else
+                    {
+                        noSelf.Add(name);
+                    }
+
+
+                    count++;
+                }
+
+                _dbContext.SaveChanges();
+            }
+            return Content("成功更新" + count + "条公司，" + "其中" + string.Join(",", noList) + "不存在,其中" + string.Join(",", noSelf) + "没有自运营订单");
+        }
         public ActionResult Export()
         {
             var medias = _media.LoadEntities(d => d.IsDelete == false & d.TransactorId != d.LinkMan.TransactorId).ToList();
@@ -735,7 +787,7 @@ namespace Ada.Web.Controllers
         public async Task<ActionResult> Http(string p)
         {
             CookieContainer cookieContainer = new CookieContainer();
-            cookieContainer.Add(new Uri("http://56062118-yuyue.m.weimob.com"),new Cookie("express.session", "s%3A7etJNperJt_uLjupxp5LEbZRGukKh5id.wcrED5PA%2BRd4Ply59ERMDBPqdMJ7RoZUGWBbFfQTYb8"));
+            cookieContainer.Add(new Uri("http://56062118-yuyue.m.weimob.com"), new Cookie("express.session", "s%3A7etJNperJt_uLjupxp5LEbZRGukKh5id.wcrED5PA%2BRd4Ply59ERMDBPqdMJ7RoZUGWBbFfQTYb8"));
             //cookieContainer.Add(new Cookie("express.session", "s%3A7etJNperJt_uLjupxp5LEbZRGukKh5id.wcrED5PA%2BRd4Ply59ERMDBPqdMJ7RoZUGWBbFfQTYb8"));
             HttpClientHandler handler = new HttpClientHandler();
             handler.CookieContainer = cookieContainer;
@@ -799,7 +851,7 @@ namespace Ada.Web.Controllers
     {
         public result()
         {
-            data=new data();
+            data = new data();
         }
         public data data { get; set; }
         public code code { get; set; }
@@ -813,7 +865,7 @@ namespace Ada.Web.Controllers
     {
         public data()
         {
-            items=new List<items>();
+            items = new List<items>();
         }
         public List<items> items { get; set; }
     }

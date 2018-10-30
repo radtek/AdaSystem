@@ -55,5 +55,10 @@ namespace Ada.Core.ViewModel.Customer
         /// </summary>
         [Display(Name = "经办人员")]
         public string TransactorId { get; set; }
+        /// <summary>
+        /// 是否合作公司
+        /// </summary>
+        [Display(Name = "是否合作公司")]
+        public bool? IsCooperation { get; set; }
     }
 }

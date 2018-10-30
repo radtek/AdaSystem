@@ -58,6 +58,11 @@ namespace Ada.Core.Domain.Customer
         /// </summary>
         [Display(Name = "是否供应商")]
         public bool IsBusiness { get; set; }
+        /// <summary>
+        /// 是否合作公司
+        /// </summary>
+        [Display(Name = "是否合作公司")]
+        public bool? IsCooperation { get; set; }
 
         public virtual ICollection<LinkMan> LinkMans { get; set; }
 

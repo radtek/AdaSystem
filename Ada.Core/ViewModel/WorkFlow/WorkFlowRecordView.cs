@@ -45,6 +45,11 @@ namespace Ada.Core.ViewModel.WorkFlow
         [Display(Name = "流程说明")]
         public string WorkFlowDefinitionDescription { get; set; }
         /// <summary>
+        /// 流程类别
+        /// </summary>
+        [Display(Name = "流程类别")]
+        public short? WorkFlowDefinitionType { get; set; }
+        /// <summary>
         /// 流转至
         /// </summary>
         [Display(Name = "流转至")]

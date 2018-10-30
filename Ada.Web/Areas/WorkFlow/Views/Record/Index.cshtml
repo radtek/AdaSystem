@@ -58,13 +58,18 @@
                     //detailFormatter: detailFormatter,
                     mobileResponsive: true,
                     formatSearch: function() {
-                        return "@Html.DisplayNameFor(d => d.Title)";
+                        return "申请主题|申请人";
                     },
                     columns: [
 
                         {
                             field: 'WorkFlowDefinitionName',
                             title: '@Html.DisplayNameFor(d => d.WorkFlowDefinitionName)',
+                            align: "center", valign: "middle"
+                        },
+                        {
+                            field: 'AddedBy',
+                            title: '@Html.DisplayNameFor(d => d.AddedBy)',
                             align: "center", valign: "middle"
                         },
                         {
@@ -97,10 +102,10 @@
                             title: '操作',
                             align: "center",
                             valign: "middle",
-                            formatter: function(value, row) {
-                                return "<div class='btn-group'>" +
-                                    
-                                    "<a class='btn btn-success btn-outline btn-xs' href='@Url.Action("Detail")?id=" + value + "'><i class='fa fa-search'></i> 详情</a> " +
+                            formatter: function (value, row) {
+                                var pay = (row.WorkFlowDefinitionType == 1 && row.Status==1) ? "<a class='btn btn-warning btn-outline btn-xs' href='@Url.Action("Add", "ExpenseOut", new{area= "Finance" })?t=3&tid=" + value + "'><i class='fa fa-jpy'></i> 支出</a> " : "";
+                                return "<div class='btn-group'>" + 
+                                    "<a class='btn btn-success btn-outline btn-xs' href='@Url.Action("Detail")?id=" + value + "'><i class='fa fa-search'></i> 详情</a> " + pay +
                                     "<button class='btn btn-danger btn-outline btn-xs' onclick=\"cancle('" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button></div>";
 
                             }

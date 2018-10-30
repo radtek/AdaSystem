@@ -35,8 +35,11 @@ namespace Boss.Controllers
                 {
                     return Json(new { State = 0, Msg = entity.MediaName+"，此订单已核销！审核失败" });
                 }
+
+                var oldSell = entity.SellMoney;
                 entity.Status = Consts.StateOK;
                 entity.SellMoney = entity.RequestSellMoney;
+                entity.RequestSellMoney = oldSell;
                 entity.VerificationMoney = entity.SellMoney;
                 entity.Money = entity.SellMoney * (1 + entity.Tax / 100);
                 entity.TaxMoney = entity.SellMoney * (entity.Tax / 100);

@@ -42,6 +42,7 @@ namespace Customer.Controllers
                     Name = d.Name,
                     CommpanyType = d.CommpanyType,
                     CommpanyGrade = d.CommpanyGrade,
+                    IsCooperation = d.IsCooperation,
                     City = d.City,
                     Address = d.Address,
                     Transactor = d.Transactor

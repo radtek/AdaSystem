@@ -54,8 +54,9 @@
                         };
                     },
                     processResults: function (data, params) {
-                        var result = $.map(data.rows, function(v, k) {
-                            return { id: v.Id, text: v.Name };
+                        var result = $.map(data.rows, function (v, k) {
+                            var commpanyName = v.IsCooperation ? "[合作客户] " + v.Name : v.Name;
+                            return { id: v.Id, text: commpanyName };
                         });
                         return {
                             results: result

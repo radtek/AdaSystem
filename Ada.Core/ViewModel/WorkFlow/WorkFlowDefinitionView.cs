@@ -34,5 +34,10 @@ namespace Ada.Core.ViewModel.WorkFlow
         /// </summary>
         [Display(Name = "流程类型")]
         public string ActityType { get; set; }
+        /// <summary>
+        /// 流程类别
+        /// </summary>
+        [Display(Name = "流程类别")]
+        public short? WFType { get; set; }
     }
 }

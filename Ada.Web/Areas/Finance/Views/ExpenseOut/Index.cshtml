@@ -73,7 +73,13 @@
                     {
                         field: 'BillNum',
                         title: '@Html.DisplayNameFor(d=>d.BillNum)',
-                        align: "center", valign: "middle"
+                        align: "center", valign: "middle", formatter: function (value,row) {
+                            if (row.RequestType==3) {
+                                return "<a class='label' href='@Url.Action("Detail", "Record", new{area= "WorkFlow" })?id=" + row.RequestNum+"' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
+                            } else {
+                                return value;
+                            }
+                        }
                     },
                     {
                         field: 'IncomeExpends',

@@ -100,7 +100,14 @@
                         {
                             field: 'CommpanyName',
                             title: '@Html.DisplayNameFor(d => d.CommpanyName)',
-                            align: "center", valign: "middle"
+                            align: "left", valign: "middle", formatter: function (value, row) {
+                                if (row.IsCooperation) {
+                                    return "<span class='label label-danger'>合作客户</span> "+value;
+                                } else {
+                                    return value;
+                                }
+                                
+                            }
                         },
                         {
                             field: 'Name',

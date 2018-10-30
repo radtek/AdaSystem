@@ -34,7 +34,8 @@ namespace Customer.Controllers
                 {
                     Id = d.Id,
                     Name = d.Name,
-                    CommpanyName = d.Commpany.Name
+                    CommpanyName = d.Commpany.Name,
+                    IsCooperation = d.Commpany.IsCooperation
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -54,7 +55,8 @@ namespace Customer.Controllers
                 rows = result.Select(d => new CommpanyView
                 {
                     Id = d.Id,
-                    Name = d.Name
+                    Name = d.Name,
+                    IsCooperation = d.IsCooperation
                 })
             }, JsonRequestBehavior.AllowGet);
         }

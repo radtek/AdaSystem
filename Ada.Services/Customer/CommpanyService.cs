@@ -31,6 +31,11 @@ namespace Ada.Services.Customer
             {
                 allList = allList.Where(d => d.CommpanyType.Contains(viewModel.CommpanyType));
             }
+
+            if (viewModel.IsCooperation==true)
+            {
+                allList = allList.Where(d => d.IsCooperation == true);
+            }
             allList = allList.Where(d => d.IsBusiness==viewModel.IsBusiness);
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;

@@ -94,7 +94,7 @@ namespace Resource.Controllers
                     //价格
                     MediaPrice price1 = new MediaPrice();
                     price1.Id = IdBuilder.CreateIdNum();
-                    price1.AdPositionId = "X1810170906012784";
+                    price1.AdPositionId = "X1810251617060016";
                     price1.AdPositionName = "淘宝头条视频";
                     price1.InvalidDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
                     decimal.TryParse(row.GetCell(6)?.ToString(), out var pt1);
@@ -104,7 +104,7 @@ namespace Resource.Controllers
 
                     MediaPrice price2 = new MediaPrice();
                     price2.Id = IdBuilder.CreateIdNum();
-                    price2.AdPositionId = "X1810170906012785";
+                    price2.AdPositionId = "X1810251617060017";
                     price2.AdPositionName = "淘宝头条图文";
                     price2.InvalidDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
                     decimal.TryParse(row.GetCell(7)?.ToString(), out var pt2);
@@ -114,7 +114,7 @@ namespace Resource.Controllers
 
                     MediaPrice price3 = new MediaPrice();
                     price3.Id = IdBuilder.CreateIdNum();
-                    price3.AdPositionId = "X1810170906012786";
+                    price3.AdPositionId = "X1810251617060018";
                     price3.AdPositionName = "微淘视频";
                     price3.InvalidDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
                     decimal.TryParse(row.GetCell(8)?.ToString(), out var pt3);
@@ -124,7 +124,7 @@ namespace Resource.Controllers
 
                     MediaPrice price4 = new MediaPrice();
                     price4.Id = IdBuilder.CreateIdNum();
-                    price4.AdPositionId = "X1810170906012787";
+                    price4.AdPositionId = "X1810251617060019";
                     price4.AdPositionName = "微淘图文";
                     price4.InvalidDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
                     decimal.TryParse(row.GetCell(9)?.ToString(), out var pt4);
@@ -134,7 +134,7 @@ namespace Resource.Controllers
 
                     MediaPrice price5 = new MediaPrice();
                     price5.Id = IdBuilder.CreateIdNum();
-                    price5.AdPositionId = "X1810170906012788";
+                    price5.AdPositionId = "X1810251617060020";
                     price5.AdPositionName = "有好货视频";
                     price5.InvalidDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
                     decimal.TryParse(row.GetCell(10)?.ToString(), out var pt5);
@@ -144,7 +144,7 @@ namespace Resource.Controllers
 
                     MediaPrice price6 = new MediaPrice();
                     price6.Id = IdBuilder.CreateIdNum();
-                    price6.AdPositionId = "X1810170906012789";
+                    price6.AdPositionId = "X1810251617060021";
                     price6.AdPositionName = "有好货图文";
                     price6.InvalidDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
                     decimal.TryParse(row.GetCell(11)?.ToString(), out var pt6);
@@ -152,6 +152,25 @@ namespace Resource.Controllers
                     price6.PriceDate = DateTime.Now;
                     media.MediaPrices.Add(price6);
 
+                    MediaPrice price7 = new MediaPrice();
+                    price7.Id = IdBuilder.CreateIdNum();
+                    price7.AdPositionId = "X1810251617060022";
+                    price7.AdPositionName = "专场直播";
+                    price7.InvalidDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+                    decimal.TryParse(row.GetCell(12)?.ToString(), out var pt7);
+                    price7.PurchasePrice = pt7;
+                    price7.PriceDate = DateTime.Now;
+                    media.MediaPrices.Add(price7);
+
+                    MediaPrice price8 = new MediaPrice();
+                    price8.Id = IdBuilder.CreateIdNum();
+                    price8.AdPositionId = "X1810251617060023";
+                    price8.AdPositionName = "混场直播";
+                    price8.InvalidDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+                    decimal.TryParse(row.GetCell(13)?.ToString(), out var pt8);
+                    price8.PurchasePrice = pt8;
+                    price8.PriceDate = DateTime.Now;
+                    media.MediaPrices.Add(price8);
                     var tags = row.GetCell(5)?.ToString();
                     if (!string.IsNullOrWhiteSpace(tags))
                     {
@@ -167,11 +186,11 @@ namespace Resource.Controllers
                         }
                     }
                     media.Area = row.GetCell(4)?.ToString();
-                    media.Remark = row.GetCell(12)?.ToString();
-                    media.Content = row.GetCell(13)?.ToString();
+                    media.Remark = row.GetCell(14)?.ToString();
+                    media.Content = row.GetCell(15)?.ToString();
 
-                    media.Transactor = row.GetCell(14)?.ToString();
-                    media.TransactorId = row.GetCell(15)?.ToString();
+                    media.Transactor = row.GetCell(16)?.ToString();
+                    media.TransactorId = row.GetCell(17)?.ToString();
                     media.Status = Consts.StateNormal;
                     media.IsSlide = true;
                     _mediaService.Add(media);

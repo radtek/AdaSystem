@@ -58,9 +58,19 @@
 </div>
 
 <div id="toolbar" class="btn-group">
-    <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
-        <i class="fa fa-plus"></i> 新增
-    </a>
+   
+    <div class="form-inline" role="form">
+        <div class="form-group">
+            <select name="IsCooperation" class="form-control" id="IsCooperation">
+                <option value="">是否合作客户</option>
+                <option value="true">是</option>
+            </select>
+            <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
+                <i class="fa fa-plus"></i> 新增
+            </a>
+        </div>
+    </div>
+    
 </div>
 
 @section Styles {
@@ -74,9 +84,9 @@
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
-            ////2.初始化Button的点击事件
-            //var oButtonInit = new ButtonInit();
-            //oButtonInit.Init();
+            $("#IsCooperation").change(function () {
+                $("#table").bootstrapTable('refresh');
+            });
 
 
         });
@@ -111,6 +121,7 @@
                 mobileResponsive: true,
                 queryParams: function (parameters) {
                     parameters.IsBusiness = false;
+                    parameters.IsCooperation = $("#IsCooperation").val();
                     return parameters;
                 },
                 formatSearch: function() {
@@ -120,7 +131,15 @@
                     {
                         field: 'Name',
                         title: '@Html.DisplayNameFor(d=>d.Name)',
-                        align: "center", valign: "middle"
+                        align: "left", valign: "middle",
+                        formatter: function (value, row) {
+                            if (row.IsCooperation) {
+                                return "<span class='label label-danger'>合作客户</span> "+value;
+                            } else {
+                                return value;
+                            }
+                                
+                        }
                     },
                     {
                         field: 'City',

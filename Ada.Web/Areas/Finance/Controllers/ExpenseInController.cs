@@ -48,12 +48,13 @@ namespace Finance.Controllers
                     AccountNum = d.AccountNum,
                     Transactor = d.Transactor,
                     LinkManName = d.LinkManName,
+                    RequestType = d.RequestType,
+                    RequestNum = d.RequestNum,
                     Employe = d.Employe,
                     BillNum = d.BillNum,
                     BillDate = d.BillDate,
                     Money = d.ExpenseDetails.Sum(e => e.Money),
-                    IncomeExpends = string.Join(",",d.ExpenseDetails.Select(e=>e.IncomeExpend.SubjectName).Distinct())
-
+                    IncomeExpends = string.Join(",", d.ExpenseDetails.Select(e => e.IncomeExpend.SubjectName).Distinct())
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -72,6 +73,17 @@ namespace Finance.Controllers
             {
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
                 return View(viewModel);
+            }
+
+            if (!string.IsNullOrWhiteSpace(viewModel.RequestNum))
+            {
+                var isPay = _repository.LoadEntities(d => d.IsDelete == false && d.RequestNum == viewModel.RequestNum)
+                       .FirstOrDefault();
+                if (isPay != null)
+                {
+                    ModelState.AddModelError("message", "此笔数据已支出，请勿重复录入！");
+                    return View(viewModel);
+                }
             }
             var payDetails = JsonConvert.DeserializeObject<List<ExpenseDetail>>(viewModel.PayDetails);
             if (payDetails.Count <= 0)
@@ -98,6 +110,8 @@ namespace Finance.Controllers
             entity.BillNum = IdBuilder.CreateOrderNum(viewModel.IsIncom ? "SR" : "ZC");
             entity.BillDate = viewModel.BillDate;
             entity.Remark = viewModel.Remark;
+            entity.RequestNum = viewModel.RequestNum;
+            entity.RequestType = viewModel.RequestType;
             foreach (var detail in payDetails)
             {
                 if (string.IsNullOrWhiteSpace(detail.IncomeExpendId) && string.IsNullOrWhiteSpace(detail.SettleAccountId))
@@ -113,7 +127,7 @@ namespace Finance.Controllers
             }
             _expenseService.Add(entity);
             TempData["Msg"] = "添加成功";
-            return viewModel.IsIncom ? RedirectToAction("Index") : RedirectToAction("Index","ExpenseOut");
+            return viewModel.IsIncom ? RedirectToAction("Index") : RedirectToAction("Index", "ExpenseOut");
         }
         public ActionResult Update(string id)
         {
@@ -139,7 +153,7 @@ namespace Finance.Controllers
                 d.IncomeExpendId,
                 d.Money
             });
-            viewModel.IsIncom = (bool) entity.IsIncom;
+            viewModel.IsIncom = (bool)entity.IsIncom;
             viewModel.PayDetails = JsonConvert.SerializeObject(paydetails);
             return View(viewModel);
         }
@@ -152,6 +166,7 @@ namespace Finance.Controllers
                 ModelState.AddModelError("message", "数据校验失败，请核对输入的信息是否准确");
                 return View(viewModel);
             }
+
             var payDetails = JsonConvert.DeserializeObject<List<ExpenseDetail>>(viewModel.PayDetails);
             if (payDetails.Count <= 0)
             {
@@ -159,6 +174,7 @@ namespace Finance.Controllers
                 return View(viewModel);
             }
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
+
             entity.ModifiedBy = CurrentManager.UserName;
             entity.ModifiedById = CurrentManager.Id;
             entity.ModifiedDate = DateTime.Now;

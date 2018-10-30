@@ -27,11 +27,13 @@ namespace Finance.Controllers
         {
             return View();
         }
-        public ActionResult Add()
+        public ActionResult Add(short? t=null,string tid=null)
         {
             ExpenseView viewModel = new ExpenseView();
             viewModel.BillDate = DateTime.Now;
             viewModel.IsIncom = false;
+            viewModel.RequestType = t;
+            viewModel.RequestNum = tid;
             return View(viewModel);
         }
         public ActionResult Update(string id)

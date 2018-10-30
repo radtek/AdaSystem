@@ -37,7 +37,9 @@ namespace WorkFlow.Controllers
                     Title = d.Title,
                     WorkFlowDefinitionName = d.WorkFlowDefinition.Name,
                     AddedDate = d.AddedDate,
-                    Status = d.Status
+                    Status = d.Status,
+                    AddedBy = d.AddedBy,
+                    WorkFlowDefinitionType = d.WorkFlowDefinition.WFType
 
                 })
             }, JsonRequestBehavior.AllowGet);

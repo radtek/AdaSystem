@@ -37,6 +37,10 @@ namespace Customer.Controllers
         {
             return View();
         }
+        public ActionResult Cooperation()
+        {
+            return View();
+        }
         public ActionResult GetList(LinkManView viewModel)
         {
             viewModel.Managers = PremissionData();
@@ -57,6 +61,7 @@ namespace Customer.Controllers
                     Status = d.Status,
                     Address = d.Address,
                     CommpanyName = d.Commpany.Name,
+                    IsCooperation = d.Commpany.IsCooperation,
                     Transactor = d.Transactor,
                     IsLock = d.IsLock,
                     LoginName = d.LoginName,

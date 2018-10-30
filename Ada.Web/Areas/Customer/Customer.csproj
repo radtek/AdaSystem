@@ -153,6 +153,7 @@
     <Content Include="Views\Shared\LinkManDetail.cshtml" />
     <Content Include="Views\ClientLinkMan\CreateAccount.cshtml" />
     <Content Include="Views\ClientLinkMan\VIP.cshtml" />
+    <Content Include="Views\ClientLinkMan\Cooperation.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

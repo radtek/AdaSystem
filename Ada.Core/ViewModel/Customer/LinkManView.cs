@@ -90,6 +90,11 @@ namespace Ada.Core.ViewModel.Customer
         [Display(Name = "是否供应商")]
         public bool? IsBusiness { get; set; }
         /// <summary>
+        /// 是否合作公司
+        /// </summary>
+        [Display(Name = "是否合作公司")]
+        public bool? IsCooperation { get; set; }
+        /// <summary>
         /// 经办人员
         /// </summary>
         [Display(Name = "经办人员")]

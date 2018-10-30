@@ -47,6 +47,7 @@ namespace WorkFlow.Controllers
             workFlowDefinition.Id = IdBuilder.CreateIdNum();
             workFlowDefinition.Name = viewModel.Name;
             workFlowDefinition.ActityType = viewModel.ActityType;
+            workFlowDefinition.WFType = viewModel.WFType;
             workFlowDefinition.Description = viewModel.Description;
             workFlowDefinition.TempForm = viewModel.TempForm;
             workFlowDefinition.Enabled = viewModel.Enabled;
@@ -104,6 +105,7 @@ namespace WorkFlow.Controllers
             viewModel.Id = id;
             viewModel.Name = entity.Name;
             viewModel.ActityType = entity.ActityType;
+            viewModel.WFType = entity.WFType;
             viewModel.Description = entity.Description;
             viewModel.TempForm = entity.TempForm;
             viewModel.Enabled = entity.Enabled;
@@ -115,6 +117,7 @@ namespace WorkFlow.Controllers
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
             entity.Name = viewModel.Name;
             entity.ActityType = viewModel.ActityType;
+            entity.WFType = viewModel.WFType;
             entity.Description = viewModel.Description;
             entity.TempForm = viewModel.TempForm;
             entity.Enabled = viewModel.Enabled;

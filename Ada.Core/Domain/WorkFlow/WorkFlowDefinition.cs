@@ -41,6 +41,11 @@ namespace Ada.Core.Domain.WorkFlow
         /// </summary>
         [Display(Name = "流程类型")]
         public string ActityType { get; set; }
+        /// <summary>
+        /// 流程类别
+        /// </summary>
+        [Display(Name = "流程类别")]
+        public short? WFType { get; set; }
 
         public virtual ICollection<WorkFlowActivity> WorkFlowActivitys { get; set; }
         public virtual ICollection<WorkFlowsTransition> WorkFlowsTransitions { get; set; }
