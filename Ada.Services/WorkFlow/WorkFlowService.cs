@@ -65,7 +65,17 @@ namespace Ada.Services.WorkFlow
             {
                 allList = allList.Where(d => d.Title.Contains(viewModel.search)||d.AddedBy.Contains(viewModel.search));
             }
-
+            if (!string.IsNullOrWhiteSpace(viewModel.WorkFlowDefinitionId))
+            {
+                allList = allList.Where(d => d.WorkFlowDefinitionId==viewModel.WorkFlowDefinitionId);
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.AddedDateRange))
+            {
+                var temp = viewModel.AddedDateRange.Trim().Replace("至", "#").Split('#');
+                var min = Convert.ToDateTime(temp[0].Trim());
+                var max = Convert.ToDateTime(temp[1].Trim()).AddDays(1);
+                allList = allList.Where(d => d.AddedDate >= min && d.AddedDate < max);
+            }
             if (viewModel.MyApprove == true)
             {
                 allList = allList.Where(d =>d.Status==Consts.StateLock&&

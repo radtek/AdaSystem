@@ -42,7 +42,7 @@ namespace Customer.Controllers
                     Name = d.Name,
                     CommpanyType = d.CommpanyType,
                     CommpanyGrade = d.CommpanyGrade,
-                    IsCooperation = d.IsCooperation,
+                    IsCooperation = d.LinkMans.Any(o => o.BusinessOrders.Any(l => l.BusinessOrderDetails.Any(m => m.MediaPrice.Media.Cooperation == 1 && m.MediaPrice.Media.MediaType.CallIndex == "weixin"))),
                     City = d.City,
                     Address = d.Address,
                     Transactor = d.Transactor

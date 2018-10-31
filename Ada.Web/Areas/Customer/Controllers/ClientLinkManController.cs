@@ -20,13 +20,17 @@ namespace Customer.Controllers
         private readonly ILinkManService _linkManService;
         private readonly IFollowUpService _followUpService;
         private readonly IRepository<LinkMan> _repository;
+        private readonly IRepository<Commpany> _commpanyRepository;
         public ClientLinkManController(ILinkManService linkManService,
-            IRepository<LinkMan> repository, IFollowUpService followUpService
+            IRepository<LinkMan> repository,
+            IFollowUpService followUpService,
+            IRepository<Commpany> commpanyRepository
         )
         {
             _linkManService = linkManService;
             _repository = repository;
             _followUpService = followUpService;
+            _commpanyRepository = commpanyRepository;
         }
         public ActionResult Index()
         {
@@ -40,6 +44,21 @@ namespace Customer.Controllers
         public ActionResult Cooperation()
         {
             return View();
+        }
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Cooperation(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                ModelState.AddModelError("message", "请输入要搜索的关键字或公司名称");
+                return View();
+            }
+            var result = _commpanyRepository
+                .LoadEntities(d => d.IsBusiness == false && d.IsDelete == false && d.Name.Contains(key) && d.LinkMans.Any(o => o.BusinessOrders.Any(l => l.BusinessOrderDetails.Any(m => m.MediaPrice.Media.Cooperation == 1 && m.MediaPrice.Media.MediaType.CallIndex == "weixin"))));
+            ViewBag.Total = result.Count();
+            ViewBag.Key = key;
+            var companys = result.Take(3).ToList();
+            return View(companys);
         }
         public ActionResult GetList(LinkManView viewModel)
         {
@@ -61,11 +80,11 @@ namespace Customer.Controllers
                     Status = d.Status,
                     Address = d.Address,
                     CommpanyName = d.Commpany.Name,
-                    IsCooperation = d.Commpany.IsCooperation,
+                    IsCooperation = d.Commpany.LinkMans.Any(o => o.BusinessOrders.Any(l => l.BusinessOrderDetails.Any(m => m.MediaPrice.Media.Cooperation == 1 && m.MediaPrice.Media.MediaType.CallIndex == "weixin"))),
                     Transactor = d.Transactor,
                     IsLock = d.IsLock,
                     LoginName = d.LoginName,
-                    LastLoginTime=d.FollowUps.OrderByDescending(l => l.NextTime).FirstOrDefault() == null ? "从未登陆" : Utils.ToRead(d.FollowUps.OrderByDescending(l => l.NextTime).FirstOrDefault().NextTime)
+                    LastLoginTime = d.FollowUps.OrderByDescending(l => l.NextTime).FirstOrDefault() == null ? "从未登陆" : Utils.ToRead(d.FollowUps.OrderByDescending(l => l.NextTime).FirstOrDefault().NextTime)
 
                 })
             }, JsonRequestBehavior.AllowGet);
@@ -88,7 +107,7 @@ namespace Customer.Controllers
                 return View(viewModel);
             }
 
-            if (string.IsNullOrWhiteSpace(viewModel.QQ) && string.IsNullOrWhiteSpace(viewModel.Phone)&&string.IsNullOrWhiteSpace(viewModel.WeiXin))
+            if (string.IsNullOrWhiteSpace(viewModel.QQ) && string.IsNullOrWhiteSpace(viewModel.Phone) && string.IsNullOrWhiteSpace(viewModel.WeiXin))
             {
                 ModelState.AddModelError("message", "手机，微信，QQ联系方式必填写一种");
                 return View(viewModel);
@@ -240,7 +259,7 @@ namespace Customer.Controllers
         public ActionResult CreateAccount(LinkManView viewModel)
         {
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
-            if (entity==null)
+            if (entity == null)
             {
                 return Json(new { State = 0, Msg = "开通会员的客户联系人不存在！" });
             }
@@ -259,7 +278,7 @@ namespace Customer.Controllers
             entity.LoginName = viewModel.LoginName.Trim();
             //校验唯一性
             var temp = _repository
-                .LoadEntities(d => d.LoginName==entity.LoginName && d.IsDelete == false && d.IsLock != true)
+                .LoadEntities(d => d.LoginName == entity.LoginName && d.IsDelete == false && d.IsLock != true)
                 .FirstOrDefault();
             if (temp != null)
             {
@@ -289,7 +308,7 @@ namespace Customer.Controllers
         }
         [HttpPost]
         [AdaValidateAntiForgeryToken]
-        public ActionResult ResetPassword(string id,string p= "wglh666666")
+        public ActionResult ResetPassword(string id, string p = "wglh666666")
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             if (entity.IsLock == null)
@@ -300,13 +319,13 @@ namespace Customer.Controllers
             {
                 p = "wglh666666";
             }
-            if (p.Length<6)
+            if (p.Length < 6)
             {
                 return Json(new { State = 0, Msg = "密码长度不能少于6位！" });
             }
             entity.Password = Encrypt.Encode(p);
             _linkManService.Update(entity);
-            return Json(new { State = 1, Msg = "密码已重置为："+ p });
+            return Json(new { State = 1, Msg = "密码已重置为：" + p });
         }
     }
 }

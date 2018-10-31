@@ -22,6 +22,7 @@ namespace Ada.Web
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
             MvcHandler.DisableMvcResponseHeader = true;
+            GlobalFilters.Filters.Add(new AdaExceptionAttribute());
             //初始化引擎启动
             EngineContext.Initialize(false);
             // 在应用程序启动时运行的代码
@@ -29,7 +30,6 @@ namespace Ada.Web
             GlobalConfiguration.Configure(WebApiConfig.Register);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            GlobalFilters.Filters.Add(new AdaExceptionAttribute());
             AppStart.Register();
         }
         protected void Application_End()
@@ -47,6 +47,15 @@ namespace Ada.Web
             ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
             logger.Error("Application_End被触发");
 
+
+        }
+        protected void Application_Error()
+        {
+            var ex = Server.GetLastError();
+            ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+            logger.Error("Application_Error触发",ex);
+            Server.ClearError();
+            Response.Redirect("~/404.html",true);
         }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Ada.Core;
+using Ada.Core.Domain.WorkFlow;
 using Ada.Core.ViewModel.WorkFlow;
 using Ada.Framework.Filter;
 using Ada.Services.WorkFlow;
@@ -15,13 +17,15 @@ namespace WorkFlow.Controllers
     public class RecordController : BaseController
     {
         private readonly IWorkFlowService _service;
-
-        public RecordController(IWorkFlowService service)
+        private readonly IRepository<WorkFlowDefinition> _repository;
+        public RecordController(IWorkFlowService service, IRepository<WorkFlowDefinition> repository)
         {
             _service = service;
+            _repository = repository;
         }
         public ActionResult Index()
         {
+            ViewBag.WFS = _repository.LoadEntities(d => d.Enabled).ToList();
             return View();
         }
         public ActionResult GetList(WorkFlowRecordView viewModel)
@@ -39,6 +43,7 @@ namespace WorkFlow.Controllers
                     AddedDate = d.AddedDate,
                     Status = d.Status,
                     AddedBy = d.AddedBy,
+                    Result = d.WorkFlowRecordDetails.All(r => r.ProcessResult != "驳回"),
                     WorkFlowDefinitionType = d.WorkFlowDefinition.WFType
 
                 })

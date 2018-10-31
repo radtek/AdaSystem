@@ -202,6 +202,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="404.html" />
     <Content Include="Assets\img\logo\m_logo.png" />
     <Content Include="Assets\theme\real-estate\css\styles.multipage-real-estate.css" />
     <Content Include="Assets\theme\real-estate\img-temp\1920x1080\img1.jpg" />

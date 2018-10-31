@@ -70,9 +70,19 @@ namespace Ada.Core.ViewModel.WorkFlow
         [Display(Name = "提交日期")]
         public DateTime? AddedDate { get; set; }
         /// <summary>
+        /// 提交日期
+        /// </summary>
+        [Display(Name = "提交日期")]
+        public string AddedDateRange { get; set; }
+        /// <summary>
         /// 申请人
         /// </summary>
         [Display(Name = "申请人")]
         public string AddedBy { get; set; }
+        /// <summary>
+        /// 流程结果
+        /// </summary>
+        [Display(Name = "流程结果")]
+        public bool? Result { get; set; }
     }
 }

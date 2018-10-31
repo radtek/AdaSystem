@@ -34,7 +34,7 @@ namespace Ada.Services.Customer
 
             if (viewModel.IsCooperation==true)
             {
-                allList = allList.Where(d => d.IsCooperation == true);
+                allList = allList.Where(d => d.LinkMans.Any(o => o.BusinessOrders.Any(l => l.BusinessOrderDetails.Any(m => m.MediaPrice.Media.Cooperation == 1 && m.MediaPrice.Media.MediaType.CallIndex == "weixin"))));
             }
             allList = allList.Where(d => d.IsBusiness==viewModel.IsBusiness);
             viewModel.total = allList.Count();

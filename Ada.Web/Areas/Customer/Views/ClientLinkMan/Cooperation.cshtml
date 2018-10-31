@@ -1,1 +1,80 @@
-﻿
+﻿@model List<Ada.Core.Domain.Customer.Commpany>
+@{
+    ViewBag.Title = "深度合作客户";
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "客户信息", Value = Url.Action("Index") } };
+}
+@Html.Partial("Bread")
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="sk-spinner sk-spinner-wave">
+                        <div class="sk-rect2"></div>
+                        <div class="sk-rect3"></div>
+                        <div class="sk-rect4"></div>
+                        <div class="sk-rect5"></div>
+                    </div>
+                    <p class="bg-danger">@Html.ValidationMessage("message") </p>
+                    @if (ViewBag.Total != null)
+                    {
+                        int total = ViewBag.Total;
+                        string more = "";
+                        if (total > 3)
+                        {
+                            more = "，搜索结果只显示3条，您可以输入更全的公司关键字以缩小范围";
+                        }
+                        <h2>
+                            @total 条结果: <span class="text-navy">“@ViewBag.Key”</span> @more
+                        </h2>
+                    }
+
+                    <div class="search-form">
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="input-group">
+                                <input type="text" placeholder="请输入公司名称或者关键字" name="key" class="form-control input-lg" value="@ViewBag.Key">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-lg btn-primary" type="submit">
+                                        搜索
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model)
+                        {
+                            var str = string.Join("，", item.LinkMans.Select(d => d.Transactor).Distinct().ToList());
+                            
+                            <div class="hr-line-dashed"></div>
+                            <div class="search-result">
+                                <h3><a href="https://www.baidu.com/s?wd=@item.Name" target="_blank">@item.Name</a></h3>
+                                <a href="javascript:;" class="search-link">www.jxweiguang.com</a>
+                                <p>
+                                    对接业务员：@str 
+                                </p>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function() {
+            $(".wrapper.wrapper-content form").validate({
+                submitHandler: function(form) {
+                    $('.wrapper.wrapper-content .ibox').children('.ibox-content').toggleClass('sk-loading');
+                    form.submit();
+                }
+            });
+        });
+    </script>
+}

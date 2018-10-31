@@ -103,6 +103,7 @@ namespace Ada.Services.Business
         {
             decimal? totalInvoices = 0;
             decimal? totalReceivalues = 0;
+            decimal? totalPayee = 0;
             bool isTotal = false;
             foreach (var businessInvoicesId in businessInvoicesIds)
             {
@@ -111,6 +112,13 @@ namespace Ada.Services.Business
                 foreach (var receivaluesId in receivaluesIds)
                 {
                     var receivalues = _receivablesRepository.LoadEntities(d => d.Id == receivaluesId).FirstOrDefault();
+                    foreach (var payee in receivalues.BusinessPayees)
+                    {
+                        var tk = payee.BusinessPayments
+                            .Where(d => d.AuditStatus == Consts.StateNormal && d.Status == Consts.StateNormal)
+                            .Sum(d => d.PayMoney);
+                        totalPayee += tk;
+                    }
                     var temp2 = receivalues.AccountName.Trim().ToLower() +
                                 receivalues.SettleAccount.AccountName.Trim().ToLower();
                     if (temp!=temp2)
@@ -129,7 +137,7 @@ namespace Ada.Services.Business
                 totalInvoices += invoice.TotalMoney;
             }
             //||totalReceivalues!=totalInvoices*0.96M  //
-            if (totalReceivalues==totalInvoices|| totalReceivalues == totalInvoices * 0.96M)
+            if (totalReceivalues==totalInvoices|| totalReceivalues == totalInvoices * 0.96M|| totalReceivalues - totalPayee == totalInvoices)
             {
                 _dbContext.SaveChanges();
                 return true;

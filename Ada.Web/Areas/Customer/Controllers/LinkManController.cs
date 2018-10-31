@@ -35,7 +35,7 @@ namespace Customer.Controllers
                     Id = d.Id,
                     Name = d.Name,
                     CommpanyName = d.Commpany.Name,
-                    IsCooperation = d.Commpany.IsCooperation
+                    IsCooperation = d.BusinessOrders.Any(l=>l.BusinessOrderDetails.Any(m=>m.MediaPrice.Media.Cooperation==1&&m.MediaPrice.Media.MediaType.CallIndex=="weixin"))
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -56,7 +56,7 @@ namespace Customer.Controllers
                 {
                     Id = d.Id,
                     Name = d.Name,
-                    IsCooperation = d.IsCooperation
+                    IsCooperation = d.LinkMans.Any(o => o.BusinessOrders.Any(l => l.BusinessOrderDetails.Any(m => m.MediaPrice.Media.Cooperation == 1 && m.MediaPrice.Media.MediaType.CallIndex == "weixin")))
                 })
             }, JsonRequestBehavior.AllowGet);
         }
