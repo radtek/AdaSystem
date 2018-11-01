@@ -126,8 +126,10 @@
                         title: '操作',
                         align: "center", valign: "middle",
                         formatter: function (value, row) {
-                            var isdisabled = row.Status == 1 ? " disabled" : "";
-                            return "<a class='btn btn-success btn-sm" + isdisabled +"' href='@Url.Action("Pay")?id=" + value +"'><i class='fa fa-jpy'></i>  付款</a> ";
+                            var isdisabled = row.Status == 1 ? "" : "<a class='btn btn-danger btn-outline btn-xs' href='@Url.Action("Pay")?id=" + value + "'><i class='fa fa-jpy'></i> 付款</a>";
+                            return "<div class='btn-group'>" +
+                                "<a class='btn btn-info btn-outline btn-xs' href='javascript:initPayInfo(\"" + value +"\");'><i class='fa fa-pencil'></i> 修改</a>" + isdisabled +
+                                "</div>";
                         }
 
 
@@ -139,7 +141,47 @@
             return obj;
         };
 
+    function initPayInfo(id) {
+            $("#modalView").load("@Url.Action("PayInfo")?id="+id,
+                    function () {
+                        $('#modalView .modal').on('shown.bs.modal', function () {
+                            $("#modalView form").validate({
+                                submitHandler: function (form) {
+                                    var $form = $(form),
+                                        data = $form.serialize(); //序列化表单数据
+                                    $.ajax({
+                                        type: "post",
+                                        url: form.action,
+                                        data: data,
+                                        success: function (res) {
+                                            if (res.State == 1) {
+                                                $('#modalView .modal').modal('hide');
+                                                swal({
+                                                    title: "操作成功",
+                                                    text: res.Msg,
+                                                    timer: 2000,
+                                                    type: "success",
+                                                    showConfirmButton: false
+                                                });
 
+                                            } else {
+                                                swal("操作提醒", res.Msg, "warning");
+                                            }
+                                        },
+                                        error: function () {
+                                            swal("操作失败", "系统错误", "error");
+                                        }
+                                    });
+                                }
+                            });
+                        }).on('hidden.bs.modal', function () {
+
+                        });
+                        $('#modalView .modal').modal('show');
+
+                    });
+
+        }
 
 </script>
 }

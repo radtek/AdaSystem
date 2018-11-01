@@ -8,8 +8,10 @@ using Ada.Core.Domain;
 using Ada.Core.Domain.Finance;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.ViewModel.Finance;
+using Ada.Core.ViewModel.Purchase;
 using Ada.Framework.Filter;
 using Ada.Services.Finance;
+using Ada.Services.Purchase;
 using Newtonsoft.Json;
 
 namespace Finance.Controllers
@@ -21,16 +23,35 @@ namespace Finance.Controllers
     {
         private readonly IBillPaymentService _billPaymentService;
         private readonly IRepository<PurchasePaymentDetail> _repository;
-        public PurchasePayController(IBillPaymentService billPaymentService, IRepository<PurchasePaymentDetail> repository)
+        private readonly IPurchasePaymentDetailService _purchasePaymentDetailService;
+        public PurchasePayController(IBillPaymentService billPaymentService,
+            IRepository<PurchasePaymentDetail> repository,
+            IPurchasePaymentDetailService purchasePaymentDetailService)
         {
             _billPaymentService = billPaymentService;
             _repository = repository;
+            _purchasePaymentDetailService = purchasePaymentDetailService;
         }
         public ActionResult Index()
         {
             return View();
         }
-
+        [AllowAnonymous]
+        public ActionResult PayInfo(string id)
+        {
+            var payment = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            return PartialView("EditPayInfo", payment);
+        }
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult EditPay(PurchasePaymentDetailView view)
+        {
+            var payment = _repository.LoadEntities(d => d.Id == view.Id).FirstOrDefault();
+            payment.AccountBank = view.AccountBank;
+            payment.AccountName = view.AccountName;
+            payment.AccountNum = view.AccountNum;
+            _purchasePaymentDetailService.Update(payment);
+            return Json(new { State = 1, Msg = "修改成功" });
+        }
         public ActionResult Pay(string id)
         {
             var payment = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -63,7 +84,7 @@ namespace Finance.Controllers
                 return View(viewModel);
             }
             var payment = _repository.LoadEntities(d => d.Id == viewModel.RequestNum).FirstOrDefault();
-            if (payment.Status==Consts.StateNormal)
+            if (payment.Status == Consts.StateNormal)
             {
                 ModelState.AddModelError("message", "此请款已生成付款单据！");
                 return View(viewModel);
