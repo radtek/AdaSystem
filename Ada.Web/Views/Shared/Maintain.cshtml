@@ -1,0 +1,38 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>江西微广 | 网站维护</title>
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Fonts/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <link href="~/Content/animate.css" rel="stylesheet">
+    <link href="~/Content/style.css" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+
+
+<div class="middle-box text-center animated fadeInDown">
+    <h2><i class="fa fa-frown-o fa-5x"></i></h2>
+    <h2 class="font-bold">我们将很快恢复服务</h2>
+
+    <div class="error-desc">
+       @Html.Raw(Model.Msg)
+    </div>
+</div>
+
+</body>
+
+</html>

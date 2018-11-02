@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Resource;
 
@@ -17,6 +18,7 @@ namespace Ada.Core.ViewModel.Statistics
             OrderComments=new List<Comment>();
             MediaComments=new List<Comment>();
             PurchaseOrderTotals=new List<PurchaseOrderTotal>();
+            PriceChanges=new List<SelectListItem>();
         }
         /// <summary>
         /// 销售订单
@@ -88,6 +90,11 @@ namespace Ada.Core.ViewModel.Statistics
         /// </summary>
         [Display(Name = "采购统计")]
         public List<PurchaseOrderTotal> PurchaseOrderTotals { get; set; }
+        /// <summary>
+        /// 改价统计
+        /// </summary>
+        [Display(Name = "改价统计")]
+        public List<SelectListItem> PriceChanges { get; set; }
 
     }
 

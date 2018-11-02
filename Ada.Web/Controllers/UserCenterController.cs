@@ -22,6 +22,7 @@ using Ada.Web.Models;
 
 namespace Ada.Web.Controllers
 {
+    [WebStatus]
     public class UserCenterController : UserController
     {
         private readonly IRepository<BusinessOrderDetail> _businessRepository;

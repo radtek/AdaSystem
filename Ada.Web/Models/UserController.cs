@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -30,6 +31,16 @@ namespace Ada.Web.Models
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
+            //压缩
+            string format = filterContext.HttpContext.Request.Headers["Accept-Encoding"];
+            if (!string.IsNullOrWhiteSpace(format))
+            {
+                if (format.Contains("gzip"))
+                {
+                    filterContext.HttpContext.Response.AddHeader("Content-Encoding", "GZIP");
+                    filterContext.HttpContext.Response.Filter = new GZipStream(filterContext.HttpContext.Response.Filter, CompressionMode.Compress);
+                }
+            }
             //如果打了允许的标签就无须验证权限
             if (filterContext.ActionDescriptor.IsDefined(typeof(AllowAnonymousAttribute), true)
                 || filterContext.ActionDescriptor.ControllerDescriptor.IsDefined(typeof(AllowAnonymousAttribute), true))

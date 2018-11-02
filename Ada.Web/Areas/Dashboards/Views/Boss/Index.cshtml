@@ -170,7 +170,7 @@
     </div>
     
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-6">
             <div class="ibox float-e-margins" id="order">
                 <div class="ibox-title">
                     <h5>采购订单成本统计</h5>
@@ -200,37 +200,70 @@
                     <div class="scroll_content">
                         <table class="table table-hover">
                             <thead>
-                            <tr>
-                                <th class="text-center">媒介人员</th>
-                                <th class="text-center">参考成本</th>
-                                <th class="text-center">实际成本</th>
-                                <th class="text-center">成本差值</th>
-                            </tr>
+                                <tr>
+                                    <th class="text-center">媒介人员</th>
+                                    <th class="text-center">参考成本</th>
+                                    <th class="text-center">实际成本</th>
+                                    <th class="text-center">成本差值</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @foreach (var item in Model.PurchaseOrderTotals)
-                            {
-                                <tr>
-                                    <td class="text-center">
-                                        @item.Transactor
-                                    </td>
-                                    <td class="text-center">@item.PurchaseMoney</td>
-                                    <td class="text-center">
-                                        @item.CostMoney
-                                    </td>
-                                    <td class="text-center">
-                                        @if (item.Diff > 0)
-                                        {
-                                            <span class="label label-primary">@item.Diff</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="label label-danger">@item.Diff</span>
-                                        }
+                                @foreach (var item in Model.PurchaseOrderTotals)
+                                {
+                                    <tr>
+                                        <td class="text-center">
+                                            @item.Transactor
+                                        </td>
+                                        <td class="text-center">@item.PurchaseMoney</td>
+                                        <td class="text-center">
+                                            @item.CostMoney
+                                        </td>
+                                        <td class="text-center">
+                                            @if (item.Diff > 0)
+                                            {
+                                                <span class="label label-primary">@item.Diff</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="label label-danger">@item.Diff</span>
+                                            }
 
-                                    </td>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>销售人员改价统计</h5>
+                    
+                </div>
+                <div class="ibox-content">
+                    <div class="scroll_content">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">销售人员</th>
+                                    <th class="text-center">改价差值</th>
                                 </tr>
-                            }
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.PriceChanges)
+                                {
+                                    <tr>
+                                        <td class="text-center">
+                                            @item.Text
+                                        </td>
+                                        <td class="text-center">@item.Value</td>
+                                        
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>

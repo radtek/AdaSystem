@@ -120,15 +120,22 @@ namespace Dashboards.Controllers
                 }).OrderByDescending(d => d.Count).ToList();
             //媒介订单采购成本与实际采购的统计
             total.PurchaseOrderTotals = GetPurchaseOrderTotal();
+            //改价统计
+            total.PriceChanges = _businessRepository.LoadEntities(d => d.RequestSellMoney >= 0)
+                .GroupBy(d => d.BusinessOrder.Transactor).Select(d => new SelectListItem()
+                {
+                    Text = d.Key,
+                    Value = (d.Sum(r => r.RequestSellMoney) - d.Sum(r => r.SellMoney)) + ""
+                }).ToList();
             return View(total);
         }
 
         public ActionResult GetPurchaseOrder(string date)
         {
-            return Json(GetPurchaseOrderTotal(date),JsonRequestBehavior.AllowGet);
+            return Json(GetPurchaseOrderTotal(date), JsonRequestBehavior.AllowGet);
         }
 
-        private List<PurchaseOrderTotal> GetPurchaseOrderTotal(string date=null)
+        private List<PurchaseOrderTotal> GetPurchaseOrderTotal(string date = null)
         {
             var orders = _purchaseRepository
                 .LoadEntities(d =>
@@ -137,8 +144,8 @@ namespace Dashboards.Controllers
             if (!string.IsNullOrWhiteSpace(date))
             {
                 var dateTime = DateTime.Parse(date);
-                var start=new DateTime(dateTime.Year,dateTime.Month,1);
-                var end= new DateTime(dateTime.Year, dateTime.Month, DateTime.DaysInMonth(dateTime.Year, dateTime.Month)).AddDays(1);
+                var start = new DateTime(dateTime.Year, dateTime.Month, 1);
+                var end = new DateTime(dateTime.Year, dateTime.Month, DateTime.DaysInMonth(dateTime.Year, dateTime.Month)).AddDays(1);
                 orders = orders.Where(d => d.PublishDate >= start && d.PublishDate < end);
             }
 

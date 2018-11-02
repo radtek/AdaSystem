@@ -18,7 +18,7 @@ using Newtonsoft.Json;
 
 namespace Ada.Web.Controllers
 {
-    [UserException]
+    [UserException, Compress, WebStatus]
     public class LoginController : Controller
     {
         private readonly ILinkManService _linkManService;

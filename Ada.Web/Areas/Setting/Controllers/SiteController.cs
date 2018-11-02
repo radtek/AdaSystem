@@ -25,7 +25,7 @@ namespace Setting.Controllers
             return View(site);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken,ValidateInput(false)]
         public ActionResult Index(Site site)
         {
             var setting = new Ada.Core.Domain.Admin.Setting

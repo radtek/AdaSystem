@@ -14,7 +14,7 @@ using log4net;
 
 namespace Ada.Web.Controllers
 {
-    [UserException]
+    [UserException, Compress]
     public class DefaultController : Controller
     {
         private readonly IRepository<Article> _articleRepository;

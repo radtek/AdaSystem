@@ -623,153 +623,168 @@ namespace Resource.Controllers
             }
             for (int i = 1; i <= sheet.LastRowNum; i++)
             {
-                IRow row = sheet.GetRow(i);
-                if (row == null)
+                try
                 {
-                    continue;
-                }
-                var id = row.GetCell(0)?.StringCellValue;
-                if (string.IsNullOrWhiteSpace(id) || id == "不存在的资源")
-                {
-                    continue;
-                }
+                    IRow row = sheet.GetRow(i);
+                    if (row == null)
+                    {
+                        continue;
+                    }
+                    var id = row.GetCell(0)?.StringCellValue;
+                    if (string.IsNullOrWhiteSpace(id) || id == "不存在的资源")
+                    {
+                        continue;
+                    }
 
-                var media = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
-                if (media == null)
-                {
-                    continue;
-                }
-                //粉丝
-                decimal.TryParse(row.GetCell(6)?.ToString(), out var fansNum);
-                media.FansNum = Utils.SetFansNum(fansNum);
-                //地区
-                media.Area = row.GetCell(7)?.ToString();
-                //标签
-                if (row.GetCell(8) != null)
-                {
-                    media.MediaTags.Clear();
-                    var tags = row.GetCell(8).ToString().Trim().Replace("，", ",").Split(',');
-                    foreach (var tag in tags)
+                    var media = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+                    if (media == null)
                     {
-                        var mediaTag = _mediaTagRepository.LoadEntities(d => d.IsDelete == false && d.TagName == tag)
-                            .FirstOrDefault();
-                        media.MediaTags.Add(mediaTag);
+                        continue;
                     }
-                }
-                //保价
-                if (short.TryParse(row.GetCell(9)?.ToString(), out var ppd))
-                {
-                    media.PriceProtectionDate = ppd;
-                }
-                else
-                {
-                    media.PriceProtectionDate = null;
-                }
-                media.PriceProtectionIsPrePay = ParseBool(row.GetCell(10)?.ToString());
-                media.PriceProtectionIsBrand = ParseBool(row.GetCell(11)?.ToString());
-                media.PriceProtectionRemark = row.GetCell(12)?.ToString();
-                media.RetentionTime = row.GetCell(13)?.ToString();
-                //备注
-                media.Remark = row.GetCell(15)?.ToString();
-                DateTime date = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
-                    DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
-                if (row.GetCell(16) != null)
-                {
-                    var cellType = row.GetCell(16).CellType;
-                    if (cellType == CellType.String)
+                    //粉丝
+                    decimal.TryParse(row.GetCell(6)?.ToString(), out var fansNum);
+                    media.FansNum = Utils.SetFansNum(fansNum);
+                    //地区
+                    media.Area = row.GetCell(7)?.ToString();
+                    //标签
+                    if (row.GetCell(8) != null)
                     {
-                        DateTime.TryParse(row.GetCell(16)?.ToString(), out date);
-                    }
-                    if (cellType == CellType.Numeric)
-                    {
-                        date = row.GetCell(16).DateCellValue;
-                    }
-                }
-                var sellKey = "SellPriceRange";
-                var marketKey = "ExportPrice";
-                if (media.MediaType.CallIndex == "douyin" || media.MediaType.CallIndex == "redbook")
-                {
-                    sellKey = "SellPriceRangeByR&D";
-                    marketKey = "SellPriceRangeByR&D";
-                }
-                else
-                {
-                    if (media.IsHot == true)
-                    {
-                        sellKey = "HotSellPriceRange";
-                    }
-                }
-                if (media.MediaType.CallIndex == "writer")
-                {
-                    sellKey = "WriterPriceRange";
-                    marketKey = "WriterPriceRange";
-                }
-                if (media.MediaType.CallIndex == "zhihu")
-                {
-                    sellKey = "ExportPrice";
-                    marketKey = "ExportPrice";
-                }
-                var sellPriceRange = _fieldService.GetFieldsByKey(sellKey).ToList();
-                var marketPriceRange = _fieldService.GetFieldsByKey(marketKey).ToList();
-                for (int j = 0; j < adpostionNames.Count; j++)
-                {
-                    var name = adpostionNames[j];
-                    var mediaPrice = _mediaPriceRepository
-                        .LoadEntities(d => d.MediaId == id && d.AdPositionName == name).FirstOrDefault();
-                    var tempCell = row.GetCell(startPrice + j);
-                    double tempPrice = 0;
-                    if (tempCell != null)
-                    {
-                        if (tempCell.CellType == CellType.Formula || tempCell.CellType == CellType.Numeric)
+                        media.MediaTags.Clear();
+                        var tags = row.GetCell(8).ToString().Trim().Replace("，", ",").Split(',');
+                        foreach (var tag in tags)
                         {
-                            tempPrice = tempCell.NumericCellValue;
-                        }
-                        if (tempCell.CellType == CellType.String)
-                        {
-                            double.TryParse(tempCell.ToString(), out tempPrice);
+                            var mediaTag = _mediaTagRepository.LoadEntities(d => d.IsDelete == false && d.TagName == tag)
+                                .FirstOrDefault();
+                            media.MediaTags.Add(mediaTag);
                         }
                     }
-                    if (mediaPrice == null)
+                    //保价
+                    if (short.TryParse(row.GetCell(9)?.ToString(), out var ppd))
                     {
-                        var newPrice = media.MediaType.AdPositions.FirstOrDefault(d => d.Name == name);
-                        if (newPrice != null)
-                        {
-                            var price = new MediaPrice()
-                            {
-                                Id = IdBuilder.CreateIdNum(),
-                                PurchasePrice = Convert.ToDecimal(tempPrice),
-                                SellPrice = SetSalePrice(Convert.ToDecimal(tempPrice), sellPriceRange),
-                                MarketPrice = SetSalePrice(Convert.ToDecimal(tempPrice), marketPriceRange),
-                                PriceDate = DateTime.Now,
-                                InvalidDate = date,
-                                AdPositionName = newPrice.Name,
-                                AdPositionId = newPrice.Id
-                            };
-                            price.MediaPriceChanges.Add(new MediaPriceChange()
-                            {
-                                Id = IdBuilder.CreateIdNum(),
-                                ChangeDate = date,
-                                PurchasePrice = price.PurchasePrice,
-                                SellPrice = price.SellPrice,
-                                MarketPrice = price.MarketPrice,
-                                AddedDate = DateTime.Now
-                            });
-                            media.MediaPrices.Add(price);
-                        }
+                        media.PriceProtectionDate = ppd;
                     }
                     else
                     {
-                        //判断，如果价格更新了，就更新市场价格
-                        mediaPrice.PurchasePrice = Convert.ToDecimal(tempPrice);
-                        mediaPrice.SellPrice = media.Cooperation == Consts.StateNormal ? mediaPrice.SellPrice : SetSalePrice(Convert.ToDecimal(tempPrice), sellPriceRange);
-                        mediaPrice.MarketPrice = media.Cooperation == Consts.StateNormal ? mediaPrice.SellPrice : SetSalePrice(Convert.ToDecimal(tempPrice), marketPriceRange);
-                        mediaPrice.PriceDate = DateTime.Now;
-                        mediaPrice.InvalidDate = date;
-                        if (mediaPrice.MediaPriceChanges.Any())
+                        media.PriceProtectionDate = null;
+                    }
+                    media.PriceProtectionIsPrePay = ParseBool(row.GetCell(10)?.ToString());
+                    media.PriceProtectionIsBrand = ParseBool(row.GetCell(11)?.ToString());
+                    media.PriceProtectionRemark = row.GetCell(12)?.ToString();
+                    media.RetentionTime = row.GetCell(13)?.ToString();
+                    //备注
+                    media.Remark = row.GetCell(15)?.ToString();
+                    DateTime date = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
+                        DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+                    if (row.GetCell(16) != null)
+                    {
+                        var cellType = row.GetCell(16).CellType;
+                        if (cellType == CellType.String)
                         {
-                            //找到最近更新的对比
-                            var change = mediaPrice.MediaPriceChanges.OrderByDescending(d => d.AddedDate).FirstOrDefault();
-                            if (change != null && (change.ChangeDate?.Date != mediaPrice.InvalidDate?.Date || change.PurchasePrice != mediaPrice.PurchasePrice))
+                            DateTime.TryParse(row.GetCell(16)?.ToString(), out date);
+                        }
+                        if (cellType == CellType.Numeric)
+                        {
+                            date = row.GetCell(16).DateCellValue;
+                        }
+                    }
+                    var sellKey = "SellPriceRange";
+                    var marketKey = "ExportPrice";
+                    if (media.MediaType.CallIndex == "douyin" || media.MediaType.CallIndex == "redbook")
+                    {
+                        sellKey = "SellPriceRangeByR&D";
+                        marketKey = "SellPriceRangeByR&D";
+                    }
+                    else
+                    {
+                        if (media.IsHot == true)
+                        {
+                            sellKey = "HotSellPriceRange";
+                        }
+                    }
+                    if (media.MediaType.CallIndex == "writer")
+                    {
+                        sellKey = "WriterPriceRange";
+                        marketKey = "WriterPriceRange";
+                    }
+                    if (media.MediaType.CallIndex == "zhihu")
+                    {
+                        sellKey = "ExportPrice";
+                        marketKey = "ExportPrice";
+                    }
+                    var sellPriceRange = _fieldService.GetFieldsByKey(sellKey).ToList();
+                    var marketPriceRange = _fieldService.GetFieldsByKey(marketKey).ToList();
+                    for (int j = 0; j < adpostionNames.Count; j++)
+                    {
+                        var name = adpostionNames[j];
+                        var mediaPrice = _mediaPriceRepository
+                            .LoadEntities(d => d.MediaId == id && d.AdPositionName == name).FirstOrDefault();
+                        var tempCell = row.GetCell(startPrice + j);
+                        double tempPrice = 0;
+                        if (tempCell != null)
+                        {
+                            if (tempCell.CellType == CellType.Formula || tempCell.CellType == CellType.Numeric)
+                            {
+                                tempPrice = tempCell.NumericCellValue;
+                            }
+                            if (tempCell.CellType == CellType.String)
+                            {
+                                double.TryParse(tempCell.ToString(), out tempPrice);
+                            }
+                        }
+                        if (mediaPrice == null)
+                        {
+                            var newPrice = media.MediaType.AdPositions.FirstOrDefault(d => d.Name == name);
+                            if (newPrice != null)
+                            {
+                                var price = new MediaPrice()
+                                {
+                                    Id = IdBuilder.CreateIdNum(),
+                                    PurchasePrice = Convert.ToDecimal(tempPrice),
+                                    SellPrice = SetSalePrice(Convert.ToDecimal(tempPrice), sellPriceRange),
+                                    MarketPrice = SetSalePrice(Convert.ToDecimal(tempPrice), marketPriceRange),
+                                    PriceDate = DateTime.Now,
+                                    InvalidDate = date,
+                                    AdPositionName = newPrice.Name,
+                                    AdPositionId = newPrice.Id
+                                };
+                                price.MediaPriceChanges.Add(new MediaPriceChange()
+                                {
+                                    Id = IdBuilder.CreateIdNum(),
+                                    ChangeDate = date,
+                                    PurchasePrice = price.PurchasePrice,
+                                    SellPrice = price.SellPrice,
+                                    MarketPrice = price.MarketPrice,
+                                    AddedDate = DateTime.Now
+                                });
+                                media.MediaPrices.Add(price);
+                            }
+                        }
+                        else
+                        {
+                            //判断，如果价格更新了，就更新市场价格
+                            mediaPrice.PurchasePrice = Convert.ToDecimal(tempPrice);
+                            mediaPrice.SellPrice = media.Cooperation == Consts.StateNormal ? mediaPrice.SellPrice : SetSalePrice(Convert.ToDecimal(tempPrice), sellPriceRange);
+                            mediaPrice.MarketPrice = media.Cooperation == Consts.StateNormal ? mediaPrice.SellPrice : SetSalePrice(Convert.ToDecimal(tempPrice), marketPriceRange);
+                            mediaPrice.PriceDate = DateTime.Now;
+                            mediaPrice.InvalidDate = date;
+                            if (mediaPrice.MediaPriceChanges.Any())
+                            {
+                                //找到最近更新的对比
+                                var change = mediaPrice.MediaPriceChanges.OrderByDescending(d => d.AddedDate).FirstOrDefault();
+                                if (change != null && (change.ChangeDate?.Date != mediaPrice.InvalidDate?.Date || change.PurchasePrice != mediaPrice.PurchasePrice))
+                                {
+                                    mediaPrice.MediaPriceChanges.Add(new MediaPriceChange()
+                                    {
+                                        Id = IdBuilder.CreateIdNum(),
+                                        ChangeDate = date,
+                                        PurchasePrice = mediaPrice.PurchasePrice,
+                                        SellPrice = mediaPrice.SellPrice,
+                                        MarketPrice = mediaPrice.MarketPrice,
+                                        AddedDate = DateTime.Now
+                                    });
+                                }
+                            }
+                            else
                             {
                                 mediaPrice.MediaPriceChanges.Add(new MediaPriceChange()
                                 {
@@ -782,19 +797,12 @@ namespace Resource.Controllers
                                 });
                             }
                         }
-                        else
-                        {
-                            mediaPrice.MediaPriceChanges.Add(new MediaPriceChange()
-                            {
-                                Id = IdBuilder.CreateIdNum(),
-                                ChangeDate = date,
-                                PurchasePrice = mediaPrice.PurchasePrice,
-                                SellPrice = mediaPrice.SellPrice,
-                                MarketPrice = mediaPrice.MarketPrice,
-                                AddedDate = DateTime.Now
-                            });
-                        }
                     }
+                }
+                catch (Exception ex)
+                {
+
+                   throw new ApplicationException("第" + i + "行，导入异常，请检查数据", ex);
                 }
             }
         }

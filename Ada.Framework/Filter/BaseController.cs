@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Web.Mvc;
 using Ada.Core;
@@ -44,6 +45,16 @@ namespace Ada.Framework.Filter
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
+            //压缩
+            string format = filterContext.HttpContext.Request.Headers["Accept-Encoding"];
+            if (!string.IsNullOrWhiteSpace(format))
+            {
+                if (format.Contains("gzip"))
+                {
+                    filterContext.HttpContext.Response.AddHeader("Content-Encoding","GZIP");
+                    filterContext.HttpContext.Response.Filter=new GZipStream(filterContext.HttpContext.Response.Filter,CompressionMode.Compress);
+                }
+            }
             //如果打了允许的标签就无须验证权限
             
             
