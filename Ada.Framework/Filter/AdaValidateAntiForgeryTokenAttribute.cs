@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Helpers;
@@ -14,61 +15,89 @@ namespace Ada.Framework.Filter
     /// 用于AJAX的CSRF防伪验证方法
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public  class AdaValidateAntiForgeryTokenAttribute: FilterAttribute, IAuthorizationFilter
+    //public  class AdaValidateAntiForgeryTokenAttribute: FilterAttribute, IAuthorizationFilter
+    //{
+    //    //private readonly ILog _logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    //    private void ValidateRequestHeader(HttpRequestBase request)
+    //    {
+    //        //string cookieToken = string.Empty;
+    //        //string formToken = string.Empty;
+    //        //string tokenValue = request.Headers["RequestVerificationToken"];
+    //        //if (!string.IsNullOrEmpty(tokenValue))
+    //        //{
+    //        //    string[] tokens = tokenValue.Split(':');
+    //        //    if (tokens.Length == 2)
+    //        //    {
+    //        //        cookieToken = tokens[0].Trim();
+    //        //        formToken = tokens[1].Trim();
+    //        //    }
+    //        //}
+    //        //AntiForgery.Validate(cookieToken, formToken);
+    //        var antiForgeryCookie = request.Cookies[AntiForgeryConfig.CookieName];
+    //        var cookieValue = antiForgeryCookie?.Value;
+    //        var token = request.Headers["__RequestVerificationToken"];
+    //        //从cookies 和 Headers 中 验证防伪标记
+    //        //这里可以加try-catch
+    //        if (!string.IsNullOrWhiteSpace(cookieValue)&&!string.IsNullOrWhiteSpace(token))
+    //        {
+    //            AntiForgery.Validate(cookieValue,token);
+    //        }
+    //        else
+    //        {
+    //            AntiForgery.Validate();
+    //        }
+
+    //    }
+
+    //    public void OnAuthorization(AuthorizationContext filterContext)
+    //    {
+
+    //        try
+    //        {
+    //            if (filterContext.HttpContext.Request.IsAjaxRequest())
+    //            {
+    //                ValidateRequestHeader(filterContext.HttpContext.Request);
+    //            }
+    //            else
+    //            {
+    //                AntiForgery.Validate();
+    //            }
+    //        }
+    //        catch (HttpAntiForgeryException)
+    //        {
+    //            throw new HttpAntiForgeryException("防伪验证失败");
+    //        }
+    //    }
+    //}
+    public class AdaValidateAntiForgeryTokenAttribute : AuthorizeAttribute
     {
-        //private readonly ILog _logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private void ValidateRequestHeader(HttpRequestBase request)
+       //private ILog _logger = LogManager.GetLogger("AdaValidateAntiForgeryTokenAttribute");
+        public override void OnAuthorization(AuthorizationContext filterContext)
         {
-            //string cookieToken = string.Empty;
-            //string formToken = string.Empty;
-            //string tokenValue = request.Headers["RequestVerificationToken"];
-            //if (!string.IsNullOrEmpty(tokenValue))
-            //{
-            //    string[] tokens = tokenValue.Split(':');
-            //    if (tokens.Length == 2)
-            //    {
-            //        cookieToken = tokens[0].Trim();
-            //        formToken = tokens[1].Trim();
-            //    }
-            //}
-            //AntiForgery.Validate(cookieToken, formToken);
-            var antiForgeryCookie = request.Cookies[AntiForgeryConfig.CookieName];
-            var cookieValue = antiForgeryCookie?.Value;
-            var token = request.Headers["__RequestVerificationToken"];
-            //从cookies 和 Headers 中 验证防伪标记
-            //这里可以加try-catch
-            if (!string.IsNullOrWhiteSpace(cookieValue)&&!string.IsNullOrWhiteSpace(token))
-            {
-                AntiForgery.Validate(cookieValue,token);
-            }
-            else
-            {
-                AntiForgery.Validate();
-            }
             
-        }
-
-        public void OnAuthorization(AuthorizationContext filterContext)
-        {
-
-            try
+            var request = filterContext.HttpContext.Request;
+            
+            //  Only validate POSTs
+            if (request.HttpMethod.ToLower() == "post")
             {
-                if (filterContext.HttpContext.Request.IsAjaxRequest())
+                //  Ajax POSTs and normal form posts have to be treated differently when it comes
+                //  to validating the AntiForgeryToken
+                if (request.IsAjaxRequest())
                 {
-                    ValidateRequestHeader(filterContext.HttpContext.Request);
+                    var antiForgeryCookie = request.Cookies[AntiForgeryConfig.CookieName];
+                    var cookieValue = antiForgeryCookie?.Value;
+                    var token = request.Headers["__RequestVerificationToken"];
+                    //_logger.Debug("cookie["+ AntiForgeryConfig.CookieName + "]：" + cookieValue+",token:"+token);
+                    AntiForgery.Validate(cookieValue, token);
                 }
                 else
                 {
-                    AntiForgery.Validate();
+                    new ValidateAntiForgeryTokenAttribute()
+                        .OnAuthorization(filterContext);
                 }
-            }
-            catch (HttpAntiForgeryException)
-            {
-                throw new HttpAntiForgeryException("防伪验证失败");
             }
         }
     }
-
     /// <inheritdoc />
     /// <summary>
     /// 页面禁止缓存过滤器

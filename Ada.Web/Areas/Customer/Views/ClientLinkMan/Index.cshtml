@@ -23,10 +23,7 @@
 <div id="toolbar" class="btn-group">
     <div class="form-inline" role="form">
         <div class="form-group">
-            @*<select name="IsLock" class="form-control" id="IsLock">
-            <option value="">是否开通VIP</option>
-            <option value="false">是</option>
-        </select>*@
+            @Html.AntiForgeryToken()
             <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
                 <i class="fa fa-plus"></i> 新增客户
             </a>
@@ -203,7 +200,7 @@
                 $.ajax({
                     type: "post",
                     headers: {
-                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                        '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
                     },
                     url: "@Url.Action("Delete")",
                     data: { "id": id },
@@ -270,7 +267,7 @@
                                 $.ajax({
                                     type: "post",
                                     headers: {
-                                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                                        '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
                                     },
                                     url: form.action,
                                     data: data,
@@ -329,7 +326,7 @@
                 $.ajax({
                     type: "post",
                     headers: {
-                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                        '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
                     },
                     url: "@Url.Action("ResetPassword")",
                     data: { "id": id, p: inputValue},
@@ -370,21 +367,25 @@
                 closeOnConfirm: false,
                 showLoaderOnConfirm: true
             }, function () {
-                $.ajax({
+                var token = $("input[name='__RequestVerificationToken']").val(),
+                requestOption = {
                     type: "post",
                     headers: {
-                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
+                        '__RequestVerificationToken': token
                     },
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    cache: false,
                     url: "@Url.Action("LockAccount")",
-                    data: { "id": id },
-                    success: function (data) {
+                    data: JSON.stringify({ id: id }),
+                    success: function(data) {
                         if (data.State == 1) {
                             $("#table").bootstrapTable('refresh');
                             swal({
                                 title: "操作成功",
                                 text: data.Msg,
                                 timer: 2000,
-                                type:"success",
+                                type: "success",
                                 showConfirmButton: false
                             });
 
@@ -392,13 +393,14 @@
                             swal("操作提醒", data.Msg, "warning");
                         }
                     },
-                    error: function () {
+                    error: function() {
                         swal("操作失败", "系统错误", "error");
                     },
-                    complete: function () {
+                    complete: function() {
 
                     }
-                });
+                };
+                $.ajax(requestOption);
             });
         }
 </script>

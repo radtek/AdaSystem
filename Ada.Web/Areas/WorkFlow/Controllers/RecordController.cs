@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
+using Ada.Core.Domain;
 using Ada.Core.Domain.WorkFlow;
 using Ada.Core.ViewModel.WorkFlow;
 using Ada.Framework.Filter;
@@ -55,18 +56,33 @@ namespace WorkFlow.Controllers
         /// <returns></returns>
         public ActionResult Detail(string id)
         {
-           var record= _service.GetRecordById(id);
+            var record = _service.GetRecordById(id);
             return View(record);
         }
         /// <summary>
         /// 删除审批记录
         /// </summary>
         /// <returns></returns>
-        [HttpPost,AdaValidateAntiForgeryToken]
+        [HttpPost, AdaValidateAntiForgeryToken]
         public ActionResult Delete(string id)
         {
             _service.DeleteRecord(id);
-            return Json(new{State=1,Msg="删除成功"});
+            return Json(new { State = 1, Msg = "删除成功" });
+        }
+        /// <summary>
+        /// 撤销审批记录
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, AdaValidateAntiForgeryToken]
+        public ActionResult Cancle(string id)
+        {
+            var record = _service.GetRecordById(id);
+            if (record.Status == Consts.StateNormal)
+            {
+                return Json(new { State = 0, Msg = "流程已审批，无法撤销!" });
+            }
+            _service.DeleteRecord(id);
+            return Json(new { State = 1, Msg = "撤销成功" });
         }
     }
 }
