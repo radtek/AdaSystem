@@ -437,7 +437,9 @@ light
     font-size: 28px;
     line-height: 32px;
     vertical-align: middle;
-    display: table-cell;
+    /*display: table-cell;*/
+    padding-left: 5px;
+    margin-top: 24px;
 }
 .cSite{
     color: #576b95;

@@ -150,5 +150,10 @@ namespace Resource.Controllers
             }
             return Content("导入成功" + count + "条资源");
         }
+
+        public ActionResult CrawlerUserInfo(string id)
+        {
+            return null;
+        }
     }
 }

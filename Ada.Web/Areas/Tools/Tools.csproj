@@ -110,6 +110,7 @@
     <Content Include="Content\Friends\img\Battery_dark1.png" />
     <Content Include="Content\Friends\img\Battery_dark2.png" />
     <Content Include="Content\Friends\img\ButtonComment.png" />
+    <Content Include="Content\Friends\img\ButtonCommentX.png" />
     <Content Include="Content\Friends\img\Comment.png" />
     <Content Include="Content\Friends\img\CommentIcon.png" />
     <Content Include="Content\Friends\img\head.jpg" />

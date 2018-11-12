@@ -9,7 +9,7 @@ if(Ver==1){
         height=336;
         draggerTopHeight=2074;
     }else if(Ver==3){
-        height=336;
+        height=236;
         draggerTopHeight=2610;
     }else if(Ver==6){
         height=336;

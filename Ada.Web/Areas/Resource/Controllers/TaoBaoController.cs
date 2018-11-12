@@ -201,5 +201,11 @@ namespace Resource.Controllers
             }
             return Content("导入成功" + count + "条资源");
         }
+        [AllowAnonymous]
+        public ActionResult CrawlerUserInfo(string url)
+        {
+            var html = Ada.Core.Tools.HttpUtility.Get(url);
+            return Json(new { State = 1, Msg = html },JsonRequestBehavior.AllowGet);
+        }
     }
 }
