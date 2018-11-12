@@ -90,7 +90,7 @@ namespace QuartzTask.Jobs
             if (!string.IsNullOrWhiteSpace(nick))
             {
                 var url = e.Uri.ToString();
-                var fansNum = Utils.SetFansNum(decimal.Parse(fans.Trim().Replace("万", "")));
+                var fansNum = fans.Contains("万") ? Utils.SetFansNum(decimal.Parse(fans.Trim().Replace("万", ""))) : int.Parse(fans);
                 var abilitynum = int.Parse(ability);
                 var logo = imageReg.Groups[1].Value;
                 var sevice = EngineContext.Current.Resolve<IMediaService>();
