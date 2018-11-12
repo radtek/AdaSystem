@@ -126,6 +126,7 @@
     <Compile Include="Controllers\JobController.cs" />
     <Compile Include="Jobs\RedBookArticlesJob.cs" />
     <Compile Include="Jobs\DouYinArticlesJob.cs" />
+    <Compile Include="Jobs\TaoBaoInfoJob.cs" />
     <Compile Include="Jobs\RedBookInfoJob.cs" />
     <Compile Include="Jobs\DouYinInfoJob.cs" />
     <Compile Include="Jobs\UpdateMediaSellPriceJob.cs" />
@@ -175,6 +176,10 @@
     <ProjectReference Include="..\..\..\Ada.Services\Ada.Services.csproj">
       <Project>{290B1457-586C-4AB4-9B82-6DBBA35F5BD5}</Project>
       <Name>Ada.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Crawler\Crawler.csproj">
+      <Project>{5BC03BE5-006C-4C36-928D-192D7614C8EB}</Project>
+      <Name>Crawler</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

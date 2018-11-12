@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
@@ -665,7 +666,11 @@ namespace Ada.Services.Resource
             _repository.Update(entity);
             _dbContext.SaveChanges();
         }
-
+        public void Update(Expression<Func<Media, bool>> whereLambda, Expression<Func<Media, Media>> updateLambda)
+        {
+            _repository.Update(whereLambda,updateLambda);
+            _dbContext.SaveChanges();
+        }
         public IQueryable<MediaCommentView> LoadComments(string id, int pageindex, int pagesize, out int total)
         {
             var mediaComments = _mediaCommentRepository.LoadEntities(d => d.MediaId == id);

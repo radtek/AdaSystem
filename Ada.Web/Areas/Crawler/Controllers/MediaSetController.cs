@@ -18,9 +18,11 @@ namespace Crawler.Controllers
     public class MediaSetController : BaseController
     {
         private readonly ISettingService _settingService;
-        public MediaSetController(ISettingService settingService)
+        private readonly IWebCrawler _webCrawler;
+        public MediaSetController(ISettingService settingService, IWebCrawler webCrawler)
         {
             _settingService = settingService;
+            _webCrawler = webCrawler;
         }
         public ActionResult Index()
         {
@@ -46,10 +48,9 @@ namespace Crawler.Controllers
         public async Task<ActionResult> TestBlog(string url)
         {
             var config = _settingService.GetSetting<MediaCrawlerSet>();
-            var webCrawler = new WebCrawler("spider");
-            webCrawler.OnStart += Crawler_OnStart;
-            webCrawler.OnError += Crawler_OnError;
-            webCrawler.OnCompleted += (o, e) =>
+            _webCrawler.OnStart += Crawler_OnStart;
+            _webCrawler.OnError += Crawler_OnError;
+            _webCrawler.OnCompleted += (o, e) =>
             {
                 string like, comment, collction;
                 if (url.Contains("https://m.weibo.cn"))
@@ -81,7 +82,7 @@ namespace Crawler.Controllers
 
                 }));
             };
-            await webCrawler.Start(new Uri(url), null, new Operation() { Timeout = 5000 });
+            await _webCrawler.Start(new Uri(url), null, new Operation() { Timeout = 5000 });
             return Json(new { State = 1, Msg = "提交成功" });
         }
         [HttpPost]

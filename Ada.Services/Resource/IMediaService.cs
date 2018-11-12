@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
@@ -18,6 +19,7 @@ namespace Ada.Services.Resource
         IQueryable<Ada.Core.ViewModel.Statistics.MediaUpdate> GetMediaUpdatedInfo(MediaView view);
         void Add(Media entity);
         void Update(Media entity);
+        void Update(Expression<Func<Media, bool>> whereLambda, Expression<Func<Media, Media>> updateLambda);
         void Delete(Media entity);
     }
 }

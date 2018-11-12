@@ -8,7 +8,7 @@ using Crawler.Models;
 
 namespace Crawler.Services
 {
-   public interface IWebCrawler
+    public interface IWebCrawler : IDependency
     {
         /// <summary>
         /// 爬虫启动事件
@@ -29,6 +29,10 @@ namespace Crawler.Services
         /// <param name="script">执行脚本</param>
         /// <param name="operation">执行操作</param>
         /// <returns></returns>
-        Task Start(Uri uri, Script script, Operation operation); 
+        Task Start(Uri uri, Script script = null, Operation operation = null);
+
+        string FindElementByXpath(OnCompletedEventArgs e, string xpath);
+        string FindElementByClassName(OnCompletedEventArgs e, string className);
+        string FindElementByClassName(OnCompletedEventArgs e, string className, string attribute);
     }
 }

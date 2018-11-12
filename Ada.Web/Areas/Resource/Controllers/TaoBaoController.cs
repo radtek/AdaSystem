@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Customer;
 using Ada.Core.Domain.Resource;
+using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Filter;
 using Ada.Services.Resource;
+using Crawler.Models;
+using Crawler.Services;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -26,18 +30,20 @@ namespace Resource.Controllers
         private readonly IRepository<Media> _repository;
         private readonly IRepository<LinkMan> _linkManRepository;
         private readonly IRepository<MediaTag> _mediaTagRepository;
+        private readonly IWebCrawler _webCrawler;
 
         public TaoBaoController(IMediaService mediaService,
             IRepository<Media> repository,
             IRepository<LinkMan> linkManRepository,
-            IRepository<MediaTag> mediaTagRepository
-
+            IRepository<MediaTag> mediaTagRepository,
+                IWebCrawler webCrawler
         )
         {
             _mediaService = mediaService;
             _repository = repository;
             _linkManRepository = linkManRepository;
             _mediaTagRepository = mediaTagRepository;
+            _webCrawler = webCrawler;
 
         }
         public ActionResult Index()
@@ -201,11 +207,45 @@ namespace Resource.Controllers
             }
             return Content("导入成功" + count + "条资源");
         }
-        [AllowAnonymous]
         public ActionResult CrawlerUserInfo(string url)
         {
-            var html = Ada.Core.Tools.HttpUtility.Get(url);
-            return Json(new { State = 1, Msg = html },JsonRequestBehavior.AllowGet);
+            _webCrawler.OnCompleted += Crawler_OnCompleted;
+            _webCrawler.OnError += Crawler_OnError;
+            _webCrawler.Start(new Uri(url));
+            return Json(new { State = 1, Msg = "请求成功，请稍候刷新，查看结果。" }, JsonRequestBehavior.AllowGet);
+        }
+        private void Crawler_OnCompleted(object sender, OnCompletedEventArgs e)
+        {
+            var nick = _webCrawler.FindElementByXpath(e, "//h3[@class='nick']/span");
+            var fans = _webCrawler.FindElementByXpath(e, "//div[@class='fans']/span[@class='nums']");
+            var ability = _webCrawler.FindElementByXpath(e, "//div[@class='abilitynum']/span[@class='num']");
+            var tags = _webCrawler.FindElementByXpath(e, "//div[@class='tags']/a[@class='tag']");
+            var content = _webCrawler.FindElementByXpath(e, "//div[@class='IceEditorPreview v3vcom']");
+            var imageStyle = _webCrawler.FindElementByClassName(e, "v3-userinfo-box", "style");
+            var imageReg = Regex.Match(imageStyle,
+                @"url\(""(.+)""\)");
+            if (!string.IsNullOrWhiteSpace(nick))
+            {
+                var url = e.Uri.ToString();
+                var fansNum = Utils.SetFansNum(decimal.Parse(fans.Trim().Replace("万", "")));
+                var abilitynum = int.Parse(ability);
+                var logo = imageReg.Groups[1].Value;
+                var sevice = EngineContext.Current.Resolve<IMediaService>();
+                sevice.Update(d => d.MediaLink == url, m => new Media()
+                {
+                    MediaName = nick,
+                    FansNum = fansNum,
+                    AvgReadNum = abilitynum,
+                    Content = content,
+                    MediaLogo = logo,
+                    Abstract = tags
+                });
+            }
+            
+        }
+        private void Crawler_OnError(object sender, OnErrorEventArgs e)
+        {
+            Log.Error("爬取异常：" + e.Uri, e.Exception);
         }
     }
 }
