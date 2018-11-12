@@ -437,9 +437,15 @@ light
     font-size: 28px;
     line-height: 32px;
     vertical-align: middle;
-    /*display: table-cell;*/
+    display: table-cell;
+}
+.cLinkContentTwo {
+    color: #000;
+    font-size: 28px;
+    line-height: 32px;
+    vertical-align: middle;
     padding-left: 5px;
-    margin-top: 24px;
+    margin-top: 33px;
 }
 .cSite{
     color: #576b95;

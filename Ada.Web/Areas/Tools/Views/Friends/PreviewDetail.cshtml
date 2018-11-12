@@ -137,11 +137,12 @@
                         <p style="text-align: justify;">@Model.FriendContent.Content</p>
                         @if (Model.FriendContent.Type == "link")
                         {
+                            var lineCss = Model.FriendContent.LinkContent.Length > 17 ? "cLinkContent" : "cLinkContentTwo";
                             <div class="cLink">
                                 <div class="cLinkImg">
                                     <img src="@Model.FriendContent.Image">
                                 </div>
-                                <div class="cLinkContent"><p>@Model.FriendContent.LinkContent</p></div>
+                                <div class="@lineCss"><p>@Model.FriendContent.LinkContent</p></div>
                             </div>
                         }
                         @if (Model.FriendContent.Type == "image")
