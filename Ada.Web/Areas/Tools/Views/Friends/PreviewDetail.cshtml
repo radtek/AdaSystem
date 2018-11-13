@@ -17,6 +17,10 @@
             break;
     }
     var css = "main" + isPlus + ".css?v="+DateTime.Now.ToString("MMddHHmmss");
+    var dateRange = Model.PublishDate.Split('至');
+    var publishStart = DateTime.Parse(dateRange[0]);
+    var publishEnd = DateTime.Parse(dateRange[1]);
+    var publishDiff = publishEnd.Date - publishStart.Date;
 }
 
 
@@ -154,7 +158,18 @@
                     </div>
 
                     <div class="cOthers cOthers2">
-                        <div class="cTime">@Model.FriendContent.PublishDate.ToString("yyyy年M月d日 HH:mm")</div>
+                        @{
+                            var dateStr = Model.FriendContent.PublishDate.ToString("yyyy年M月d日 HH:mm");
+                            if (publishDiff.TotalDays==0)
+                            {
+                                dateStr = Model.FriendContent.PublishDate.ToString("HH:mm");
+                            }
+                            if (publishDiff.TotalDays == 1)
+                            {
+                                dateStr ="昨天 " +Model.FriendContent.PublishDate.ToString("HH:mm");
+                            }
+                        }
+                        <div class="cTime">@dateStr</div>
                         <div class="cDel cDel2">删除</div>
                         <div class="cCommentIcon cCommentIcon2"></div>
                     </div>
@@ -183,7 +198,17 @@
                                     <div class="cCommentName">
                                         @item.Fans.NickName
                                         <div class="cCommentTime">
-                                            @item.MessageDate.ToString("M月d日 HH:mm")
+                                            @{
+
+                                                var str = item.MessageDate.ToString("M月d日 HH:mm");
+                                                var diffSpan = item.MessageDate.Date - publishStart.Date;
+                                                
+                                                if (diffSpan.TotalDays == 1)
+                                                {
+                                                    str = item.MessageDate.ToString("HH:mm");
+                                                }
+                                            }
+                                            @str
                                         </div>
                                     </div>
                                     <div class="cCommentContent">

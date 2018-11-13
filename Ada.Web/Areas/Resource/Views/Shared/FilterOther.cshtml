@@ -479,7 +479,29 @@
     </div>
 
 }
+@if (Model == "taobao")
+{
 
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">综合能力指数</label>
+            <div class="input-daterange input-group">
+                <input type="number" name="AvgReadNumStart" value="" class="form-control" />
+                <span class="input-group-addon">至</span>
+                <div class="input-group">
+                    <input type="number" name="AvgReadNumEnd" value="" class="form-control" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary btn-outline" onclick="searchTable();">
+                            确定
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    
+}
 <div class="col-sm-3">
     <div class="form-group">
         <label class="control-label">媒体简介</label>

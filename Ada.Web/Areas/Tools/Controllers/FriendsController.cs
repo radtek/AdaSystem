@@ -51,13 +51,6 @@ namespace Tools.Controllers
         [AdaValidateAntiForgeryToken]
         public ActionResult SaveSet(FriendsSet friendsSet)
         {
-            //var comments = SerializeHelper.DeserializeToObject<FriendContent>(friendsSet.CommentContent);
-            //if (comments.Type!="text")
-            //{
-            //    _cacheService.Put("FriendsImage",comments.Image);
-            //}
-            //comments.Image = "";
-            //friendsSet.CommentContent = SerializeHelper.SerializeToString(comments);
             var max = _repository.LoadEntities(d => d.IsDelete == false).Count();
             if (friendsSet.FansRangeMax>max)
             {

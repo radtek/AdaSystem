@@ -231,6 +231,7 @@ namespace Ada.Services.Admin
                 RoleName = role.RoleName,
                 RoleList = manager.Roles.Select(d => new RoleView() { Id = d.Id, RoleName = d.RoleName }),
                 Roles = manager.Roles.Count > 0 ? string.Join(",", manager.Roles.Select(d => d.RoleName)) : "",
+                OrganizationIds = string.Join("/",manager.Organizations.Select(d=>d.Id)),
                 Organizations = manager.Organizations.Count > 0 ? String.Join("-", manager.Organizations.Select(d => d.OrganizationName)) : ""
             };
         }
@@ -308,6 +309,7 @@ namespace Ada.Services.Admin
                 RoleName = role.RoleName,
                 RoleList = manager.Roles.Select(d => new RoleView() { Id = d.Id, RoleName = d.RoleName }),
                 Roles = manager.Roles.Count > 0 ? string.Join(",", manager.Roles.Select(d => d.RoleName)) : "",
+                OrganizationIds = string.Join("/", manager.Organizations.Select(d => d.Id)),
                 Organizations = manager.Organizations.Count > 0 ? String.Join("-", manager.Organizations.Select(d => d.OrganizationName)) : ""
             };
         }

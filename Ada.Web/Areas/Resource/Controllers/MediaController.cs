@@ -238,6 +238,10 @@ namespace Resource.Controllers
                         jo.Add("擅长类型", media.ResourceType);
                         jo.Add("出稿速度", media.Efficiency);
                         break;
+                    case "taobao":
+                        jo.Add("达人类型", media.Abstract);
+                        jo.Add("综合能力指数", media.AvgReadNum);
+                        break;
                     default:
                         jo.Add("平台", media.Platform);
                         if (!string.IsNullOrWhiteSpace(media.Client))

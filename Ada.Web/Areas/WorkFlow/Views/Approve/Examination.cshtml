@@ -4,6 +4,7 @@
     ViewBag.Title = "审批";
     ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "审批流程", Value = Url.Action("Index") } };
     string id = "";
+    string next = "";
 }
 @Html.Partial("Bread")
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -62,31 +63,22 @@
                             <div id="vertical-timeline" class="vertical-container dark-timeline">
                                 @foreach (var item in Model.WorkFlowRecordDetails)
                                 {
-                                    <div class="vertical-timeline-block">
-                                        <div class="vertical-timeline-icon gray-bg">
-                                            <i class="fa fa-gavel"></i>
-                                        </div>
-                                        <div class="vertical-timeline-content">
-                                            <p>
-                                                审批流程：@item.Name
-                                            </p>
-                                            <p>
-                                                审批建议：@item.ProcessComment
-                                            </p>
-                                            <p>
-                                                审批结果：
-                                                @if (item.Status == 1)
-                                                {
-                                                    @item.ProcessResult
-                                                }
-                                                else
-                                                {
-                                                    <text>等待 [ @item.ProcessBy ] 审批 </text>
-                                                    id = item.Id;
-                                                }
-                                            </p>
-                                            @if (item.Status == 1)
-                                            {
+                                    if (item.Status == 1)
+                                    {
+                                        <div class="vertical-timeline-block">
+                                            <div class="vertical-timeline-icon gray-bg">
+                                                <i class="fa fa-gavel"></i>
+                                            </div>
+                                            <div class="vertical-timeline-content">
+                                                <p>
+                                                    审批流程：@item.Name
+                                                </p>
+                                                <p>
+                                                    审批建议：@item.ProcessComment
+                                                </p>
+                                                <p>
+                                                    审批结果：@item.ProcessResult
+                                                </p>
                                                 <span class="vertical-date small text-muted">
                                                     @item.ProcessBy <i class="fa fa-clock-o"></i>
                                                     @if (item.ProcessDate.HasValue)
@@ -94,23 +86,22 @@
                                                         @item.ProcessDate.Value.ToString("yyyy-MM-dd HH:mm")
                                                     }
                                                 </span>
-                                            }
-                                            else
-                                            {
-                                                <span class="vertical-date small text-muted">
-                                                    <i class="fa fa-hourglass"></i>
-
-                                                </span>
-                                            }
 
 
+                                            </div>
                                         </div>
-                                    </div>
+                                    }
+                                    else
+                                    {
+                                        id = item.Id;
+                                        next = item.Name+" ["+item.ProcessBy+"]";
+                                    }
+
                                 }
 
 
                             </div>
-                            <h2><strong>审批流程</strong></h2>
+                            <h2><strong>@next</strong></h2>
                             <div class="hr-line-dashed"></div>
                             @using (Html.BeginForm())
                             {

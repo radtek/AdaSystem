@@ -176,9 +176,10 @@ filterFormat.priceProtection = function (value, row) {
 }
 
 filterFormat.mediaData = function (value, row) {
-    var read = "";
+    var read = "",tbzh="";
     if (row.AvgReadNum) {
         read = " <span class='label label-info'>平均浏览数：" + row.AvgReadNum + "</span>";
+        tbzh = " <span class='label label-info'>综合能力指数：" + row.AvgReadNum + "</span>";
     }
     var lastread = "";
     if (row.LastReadNum) {
@@ -257,6 +258,7 @@ filterFormat.mediaData = function (value, row) {
     var linezc = zc ? "<div class='p-xxs'>" + zc + "</div>" : "";
     var linesclx = sclx ? "<div class='p-xxs'>" + sclx + "</div>" : "";
     var linecgsd = cgsd ? "<div class='p-xxs'>" + cgsd + "</div>" : "";
+    var linetbzh = tbzh ? "<div class='p-xxs'>" + tbzh + "</div>" : "";
     var line = "";
     if (row.MediaTypeIndex == "weixin") {
         line = line1 + line6 + line4 + line9 + line7;
@@ -272,6 +274,9 @@ filterFormat.mediaData = function (value, row) {
     }
     if (row.MediaTypeIndex == "writer") {
         line = linesclx + linecgsd;
+    }
+    if (row.MediaTypeIndex == "taobao") {
+        line = linetbzh;
     }
     return line || "<span class='label label-warning'>抱歉！暂无相关数据</span>";
 };
