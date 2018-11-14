@@ -40,7 +40,7 @@ namespace QuartzTask.Jobs
                 }
                 var media = db.Set<Media>().FirstOrDefault(d =>
                       d.IsDelete == false && d.MediaType.CallIndex == "redbook" && d.Status == Consts.StateNormal &&
-                      (d.ApiUpDate == null || SqlFunctions.DateDiff("hour", d.CollectionDate, DateTime.Now) > hour));
+                      (d.ApiUpDate == null || SqlFunctions.DateDiff("hour", d.ApiUpDate, DateTime.Now) > hour));
                 if (media != null)
                 {
                     media.ApiUpDate = DateTime.Now;

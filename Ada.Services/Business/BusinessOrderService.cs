@@ -39,7 +39,7 @@ namespace Ada.Services.Business
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.LinkManName.Contains(viewModel.search)||d.OrderNum==viewModel.search||d.Remark.Contains(viewModel.search));
+                allList = allList.Where(d => d.LinkManName.Contains(viewModel.search) || d.OrderNum == viewModel.search || d.Remark.Contains(viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.CompanyName))
             {
@@ -110,9 +110,9 @@ namespace Ada.Services.Business
 
             }
 
-            if (viewModel.IsWriteOff==true)
+            if (viewModel.IsWriteOff == true)
             {
-                allList = allList.Where(d => d.BusinessInvoiceDetails.Any(i => i.BusinessInvoice.Receivableses.Any())||d.Tax==0);
+                allList = allList.Where(d => d.BusinessInvoiceDetails.Any(i => i.BusinessInvoice.Receivableses.Any()) || d.Tax == 0);
             }
             if (viewModel.AuditStatus != null)
             {
@@ -128,7 +128,8 @@ namespace Ada.Services.Business
             }
             if (viewModel.IsInvoice == true)
             {
-                allList = allList.Where(d => d.Tax>0&&!d.BusinessInvoiceDetails.Any());
+                //allList = allList.Where(d => d.Tax>0&&!d.BusinessInvoiceDetails.Any());
+                allList = allList.Where(d => d.Tax > 0 && (d.BusinessInvoiceDetails.Sum(i => i.InvoiceMoney) < d.BusinessOrderDetails.Sum(o => o.Money)|| !d.BusinessInvoiceDetails.Any()));
             }
             viewModel.total = allList.Count();
             viewModel.AllMoney = allList.Sum(d => d.BusinessOrderDetails.Where(a => a.Status == Consts.StateOK).Sum(b => b.Money));
