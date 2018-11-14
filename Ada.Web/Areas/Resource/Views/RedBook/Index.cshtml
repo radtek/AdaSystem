@@ -188,6 +188,9 @@
     <button type="button" class="btn btn-primary btn-outline" data-toggle="modal" data-target="#uploadModal">
         <i class="fa fa-upload"></i> 更新导入
     </button>
+    <button type="button" class="btn btn-primary btn-outline" onclick='collectInfo("@Url.Action("CrawlerUserInfo")");'>
+        <i class="fa fa-cloud"></i> 采集用户
+    </button>
 </div>
 
 @section Styles {
@@ -206,7 +209,7 @@
     @Scripts.Render("~/plugins/clipboard")
     @Scripts.Render("~/plugins/dataPicker")
     @Scripts.Render("~/plugins/dateRange")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=20180611")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v="+DateTime.Now.Ticks)"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -256,7 +259,10 @@
                         initTooltip();
                         new Clipboard('.btn-white');
                     } ,
-                columns: [
+                    columns: [
+                        {
+                            checkbox: true
+                        },
                     {
                         field: 'MediaLogo',
                         align: "right", valign: "middle",

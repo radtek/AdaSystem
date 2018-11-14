@@ -29,7 +29,7 @@ namespace Crawler.Services
         /// <param name="script">执行脚本</param>
         /// <param name="operation">执行操作</param>
         /// <returns></returns>
-        Task Start(Uri uri, Script script = null, Operation operation = null);
+        Task Start(Uri uri,  Operation operation = null, Script script = null);
 
         string FindElementByXpath(OnCompletedEventArgs e, string xpath);
         string FindElementByClassName(OnCompletedEventArgs e, string className);

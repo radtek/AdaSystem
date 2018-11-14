@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Customer;
 using Ada.Core.Domain.Resource;
+using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Filter;
 using Ada.Services.Resource;
+using Crawler.Models;
+using Crawler.Services;
+using Newtonsoft.Json;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -26,11 +31,12 @@ namespace Resource.Controllers
         private readonly IRepository<Media> _repository;
         private readonly IRepository<LinkMan> _linkManRepository;
         private readonly IRepository<MediaTag> _mediaTagRepository;
-
+        private readonly IWebCrawler _webCrawler;
         public RedBookController(IMediaService mediaService,
             IRepository<Media> repository,
             IRepository<LinkMan> linkManRepository,
-            IRepository<MediaTag> mediaTagRepository
+            IRepository<MediaTag> mediaTagRepository,
+            IWebCrawler webCrawler
 
         )
         {
@@ -38,6 +44,7 @@ namespace Resource.Controllers
             _repository = repository;
             _linkManRepository = linkManRepository;
             _mediaTagRepository = mediaTagRepository;
+            _webCrawler = webCrawler;
 
         }
         public ActionResult Index()
@@ -76,7 +83,7 @@ namespace Resource.Controllers
                     media.MediaID = row.GetCell(2)?.ToString();
                     //校验ID不能重复
                     var temp = _repository.LoadEntities(d =>
-                        d.MediaID==media.MediaID &&
+                        d.MediaID == media.MediaID &&
                         d.IsDelete == false &&
                         d.MediaTypeId == media.MediaTypeId).FirstOrDefault();
                     if (temp != null)
@@ -88,7 +95,7 @@ namespace Resource.Controllers
                     {
                         continue;
                     }
-                    
+
                     decimal.TryParse(row.GetCell(3)?.ToString(), out var fans);
                     media.FansNum = Utils.SetFansNum(fans);
                     //价格
@@ -136,7 +143,7 @@ namespace Resource.Controllers
                             }
                         }
                     }
-                    media.Area= row.GetCell(4)?.ToString();
+                    media.Area = row.GetCell(4)?.ToString();
                     media.Remark = row.GetCell(9)?.ToString();
                     media.Transactor = row.GetCell(10)?.ToString();
                     media.TransactorId = row.GetCell(11)?.ToString();
@@ -153,7 +160,64 @@ namespace Resource.Controllers
 
         public ActionResult CrawlerUserInfo(string id)
         {
-            return null;
+            var media = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            _webCrawler.OnCompleted += Crawler_OnCompleted;
+            _webCrawler.OnError += Crawler_OnError;
+            _webCrawler.Start(new Uri("https://www.xiaohongshu.com/user/profile/" + media.MediaID), new Operation() { SleepTime = 500 });
+            return Json(new { State = 1, Msg = "请求成功，请稍候刷新，查看结果。" }, JsonRequestBehavior.AllowGet);
         }
+        private void Crawler_OnCompleted(object sender, OnCompletedEventArgs e)
+        {
+            var jsonStr = Regex.Match(e.PageSource, @"{""UserDetail"":(.+),""notesDetail""").Groups[1].Value;
+            var user = JsonConvert.DeserializeObject<RedBookUser>(jsonStr);
+            if (user != null)
+            {
+                if (!string.IsNullOrWhiteSpace(user.id))
+                {
+                    var sevice = EngineContext.Current.Resolve<IMediaService>();
+                    sevice.Update(d => d.MediaID == user.id, m => new Media()
+                    {
+                        MediaName = user.nickname,
+                        FansNum = user.fans,
+                        PostNum = user.notes,
+                        FriendNum = user.follows,
+                        LikesNum = user.collected + user.liked,
+                        Content = user.desc,
+                        MediaLogo = user.images,
+                        Area = user.location,
+                        AuthenticateType = user.level.name,
+                        MediaLink = "https://www.xiaohongshu.com/user/profile/"+user.id
+                    });
+                }
+
+
+            }
+
+        }
+        private void Crawler_OnError(object sender, OnErrorEventArgs e)
+        {
+            Log.Error("爬取异常：" + e.Uri, e.Exception);
+        }
+    }
+    class RedBookUser
+    {
+        public int collected { get; set; }
+        public int fans { get; set; }
+        public int follows { get; set; }
+        public int gender { get; set; }
+        public int liked { get; set; }
+        public int notes { get; set; }
+        public string id { get; set; }
+        public string images { get; set; }
+        public string desc { get; set; }
+        public string location { get; set; }
+        public string nickname { get; set; }
+        public RedBookUserLevel level { get; set; }
+    }
+
+    class RedBookUserLevel
+    {
+        public string image { get; set; }
+        public string name { get; set; }
     }
 }

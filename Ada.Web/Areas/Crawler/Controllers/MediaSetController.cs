@@ -82,7 +82,7 @@ namespace Crawler.Controllers
 
                 }));
             };
-            await _webCrawler.Start(new Uri(url), null, new Operation() { Timeout = 5000 });
+            await _webCrawler.Start(new Uri(url),  new Operation() { Timeout = 5000 },null);
             return Json(new { State = 1, Msg = "提交成功" });
         }
         [HttpPost]
@@ -93,7 +93,7 @@ namespace Crawler.Controllers
             webCrawler.OnStart += Crawler_OnStart;
             webCrawler.OnError += Crawler_OnError;
             webCrawler.OnCompleted += RedBook_OnCompleted;
-            await webCrawler.Start(new Uri(url), null, new Operation() { Timeout = 5000 });
+            await webCrawler.Start(new Uri(url),  new Operation() { Timeout = 5000 },null);
             return Json(new { State = 1, Msg = "提交成功" });
         }
 

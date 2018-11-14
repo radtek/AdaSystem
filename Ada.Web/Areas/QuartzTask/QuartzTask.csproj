@@ -126,6 +126,7 @@
     <Compile Include="Controllers\JobController.cs" />
     <Compile Include="Jobs\RedBookArticlesJob.cs" />
     <Compile Include="Jobs\DouYinArticlesJob.cs" />
+    <Compile Include="Jobs\RedBookInfoSelfJob.cs" />
     <Compile Include="Jobs\TaoBaoInfoJob.cs" />
     <Compile Include="Jobs\RedBookInfoJob.cs" />
     <Compile Include="Jobs\DouYinInfoJob.cs" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Crawler.Models;
 using Microsoft.Ajax.Utilities;
@@ -15,7 +16,7 @@ namespace Crawler.Services
         public event EventHandler<OnCompletedEventArgs> OnCompleted;
         public event EventHandler<OnErrorEventArgs> OnError;
         public string Proxy { get; set; }
-        public async Task Start(Uri uri, Script script=null, Operation operation=null)
+        public async Task Start(Uri uri, Operation operation=null, Script script = null)
         {
             await Task.Run(() =>
             {
@@ -47,9 +48,13 @@ namespace Crawler.Services
                         Stopwatch watcher = new Stopwatch();
                         watcher.Start();
                         driver.Navigate().GoToUrl(uri.ToString());
+                        if (operation!=null)
+                        {
+                            Thread.Sleep(operation.SleepTime);
+                        }
                         if (script != null) driver.ExecuteScript(script.Code, script.Args);//执行Javascript代码
                         operation?.WebAction?.Invoke(driver);
-                        var threadId = System.Threading.Thread.CurrentThread.ManagedThreadId;//获取当前任务线程ID
+                        var threadId = Thread.CurrentThread.ManagedThreadId;//获取当前任务线程ID
                         var pageSource = driver.PageSource;//获取网页Dom结构
                         watcher.Stop();
 

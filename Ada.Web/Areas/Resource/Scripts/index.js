@@ -703,3 +703,50 @@ function collectDouYin(url) {
 
 
 }
+
+function collectInfo(url) {
+    var arrselections = $("#table").bootstrapTable('getSelections');
+    if (arrselections.length == 1) {
+        swal({
+            title: "采集数据",
+            text: "确认要采集用户信息吗?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            closeOnConfirm: false,
+            showLoaderOnConfirm: true
+
+        }, function () {
+            $.ajax({
+                type: "get",
+                url: url,
+                data: { id: arrselections[0].Id },
+                success: function (data) {
+                    if (data.State == 1) {
+                        swal({
+                            title: "操作成功",
+                            text: data.Msg,
+                            type: "success"
+                        });
+                    } else {
+                        swal("操作提醒", data.Msg, "warning");
+                    }
+                },
+                error: function () {
+                    swal("操作失败", "系统错误", "error");
+                },
+                complete: function () {
+
+                }
+            });
+        });
+
+    } else {
+        swal("操作提醒", "请选择一条数据", "warning");
+        return;
+    }
+
+
+}

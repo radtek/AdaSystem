@@ -253,7 +253,7 @@ namespace Ada.Services.Business
                     .LoadEntities(d => d.OrganizationName == viewModel.OrganizationName).FirstOrDefault();
                 if (organization != null)
                 {
-                    var mangers = _managerRepository.LoadEntities(d => d.IsDelete == false && d.Status == Consts.StateNormal);
+                    var mangers = _managerRepository.LoadEntities(d => d.IsDelete == false );
                     businessOrders = from b in businessOrders
                                      from m in mangers
                                      where b.BusinessOrder.TransactorId == m.Id && m.Organizations.Any(o => o.TreePath.Contains(organization.Id))

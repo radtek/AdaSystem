@@ -17,113 +17,90 @@
         <div class="col-sm-12">
             <div class="ibox">
                 <div class="ibox-content">
-                    <div class="client-detail">
-                        <div class="full-height-scroll">
+                    <h2><strong>申请信息</strong></h2>
+                    <div class="hr-line-dashed"></div>
+                    <ul class="list-group clear-list">
+                        <li class="list-group-item fist-item">
+                            <span class="pull-right"> @Model.WorkFlowDefinition.Name </span>
+                            <strong>流程类型</strong>
+                        </li>
+                        <li class="list-group-item">
+                            <span class="pull-right"> @Model.Title </span>
+                            <strong>申请主题</strong>
+                        </li>
+                        <li class="list-group-item">
+                            <span class="pull-right"> @Model.WorkFlowDefinition.Description </span>
+                            <strong>流程说明</strong>
+                        </li>
+                        <li class="list-group-item">
 
-                            <h2><strong>申请信息</strong></h2>
-                            <div class="hr-line-dashed"></div>
-                            <ul class="list-group clear-list">
-                                <li class="list-group-item fist-item">
-                                    <span class="pull-right"> @Model.WorkFlowDefinition.Name </span>
-                                    <strong>流程类型</strong>
-                                </li>
-                                <li class="list-group-item">
-                                    <span class="pull-right"> @Model.Title </span>
-                                    <strong>申请主题</strong>
-                                </li>
-                                <li class="list-group-item">
-                                    <span class="pull-right"> @Model.WorkFlowDefinition.Description </span>
-                                    <strong>流程说明</strong>
-                                </li>
-                                <li class="list-group-item">
+                            @if (Model.Level == 0)
+                            {
+                                <span class="label label-primary pull-right">一般</span>
+                            }
+                            else if (Model.Level == 1)
+                            {
+                                <span class="label label-warning pull-right">紧急</span>
+                            }
+                            else if (Model.Level == 2)
+                            {
+                                <span class="label label-danger pull-right">速办</span>
+                            }
 
-                                    @if (Model.Level == 0)
-                                    {
-                                        <span class="label label-primary pull-right">一般</span>
-                                    }
-                                    else if (Model.Level == 1)
-                                    {
-                                        <span class="label label-warning pull-right">紧急</span>
-                                    }
-                                    else if (Model.Level == 2)
-                                    {
-                                        <span class="label label-danger pull-right">速办</span>
-                                    }
-
-                                    <strong>紧急程度</strong>
-                                </li>
-                                <li class="list-group-item">
-                                    <span class="pull-right"> @Model.AddedDate.Value.ToString("yyyy年MM月dd日 HH:mm") </span>
-                                    <strong>申请日期</strong>
-                                </li>
-                            </ul>
-                            <h2><strong>申请内容</strong></h2>
-                            <div class="hr-line-dashed"></div>
-                            <p>
-                                @Html.Raw(Model.Content)
-                            </p>
-                            <hr />
-                            <h2><strong>审批记录</strong></h2>
-                            <div class="hr-line-dashed"></div>
-                            <div id="vertical-timeline" class="vertical-container dark-timeline">
-                                @foreach (var item in Model.WorkFlowRecordDetails)
-                                {
-                                    <div class="vertical-timeline-block">
-                                        <div class="vertical-timeline-icon gray-bg">
-                                            <i class="fa fa-gavel"></i>
-                                        </div>
-                                        <div class="vertical-timeline-content">
-                                            <p>
-                                                审批流程：@item.Name
-                                            </p>
-                                            <p>
-                                                审批建议：@item.ProcessComment
-                                            </p>
-                                            <p>
-                                                审批结果：
-                                                @if (item.Status == 1)
-                                                {
-                                                    @item.ProcessResult
-                                                }
-                                                else
-                                                {
-                                                    if (!string.IsNullOrWhiteSpace(item.ProcessBy))
-                                                    {
-                                                        <text>等待 [ @item.ProcessBy ] 审批 </text>
-                                                    }
-
-                                                }
-                                            </p>
-                                            @if (item.Status == 1)
-                                            {
-                                                <span class="vertical-date small text-muted">
-                                                    @item.ProcessBy <i class="fa fa-clock-o"></i> 
-                                                    @if (item.ProcessDate.HasValue)
-                                                    {
-                                                        @item.ProcessDate.Value.ToString("yyyy-MM-dd HH:mm")
-                                                    }
-                                                </span>
-                                            }
-                                            else
-                                            {
-                                                if (!string.IsNullOrWhiteSpace(item.ProcessBy))
-                                                {
-                                                    <span class="vertical-date small text-muted">
-                                                        <i class="fa fa-hourglass"></i>
-                                                    
-                                                    </span>
-                                                }
-                                                
-                                            }
+                            <strong>紧急程度</strong>
+                        </li>
+                        <li class="list-group-item">
+                            <span class="pull-right"> @Model.AddedDate.Value.ToString("yyyy年MM月dd日 HH:mm") </span>
+                            <strong>申请日期</strong>
+                        </li>
+                    </ul>
+                    <h2><strong>申请内容</strong></h2>
+                    <div class="hr-line-dashed"></div>
+                    <p>
+                        @Html.Raw(Model.Content)
+                    </p>
+                    <hr />
+                    <h2><strong>审批记录</strong></h2>
+                    <div class="hr-line-dashed"></div>
+                    <div id="vertical-timeline" class="vertical-container dark-timeline">
+                        @foreach (var item in Model.WorkFlowRecordDetails)
+                        {
+                            var result = item.Status == 1 ? item.ProcessResult : "等待 ["+ item.ProcessBy + "] 审批";
+                            var fa = item.Status == 1 ? "fa-gavel text-navy" : "fa-hourglass text-warning";
+                            if (item.IsEnd==false)
+                             {
+                                 <div class="vertical-timeline-block">
+                                     <div class="vertical-timeline-icon gray-bg">
+                                         <i class="fa @fa"></i>
+                                     </div>
+                                     <div class="vertical-timeline-content">
+                                         <p>
+                                             审批流程：@item.Name
+                                         </p>
+                                         <p>
+                                             审批建议：@item.ProcessComment
+                                         </p>
+                                         <p>
+                                             审批结果：@result
+                                         </p>
+                                         @if (item.Status == 1)
+                                         {
+                                             <p class="text-info">
+                                                 @item.ProcessBy <i class="fa fa-clock-o"></i>
+                                                 @if (item.ProcessDate.HasValue)
+                                                 {
+                                                     @item.ProcessDate.Value.ToString("yyyy-MM-dd HH:mm")
+                                                 }
+                                             </p>
+                                         }
+                                    
+                                     </div>
+                                 </div>
+                             }
+                            
+                        }
 
 
-                                        </div>
-                                    </div>
-                                }
-
-
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

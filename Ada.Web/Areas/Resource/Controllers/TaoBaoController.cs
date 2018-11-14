@@ -207,11 +207,12 @@ namespace Resource.Controllers
             }
             return Content("导入成功" + count + "条资源");
         }
-        public ActionResult CrawlerUserInfo(string url)
+        public ActionResult CrawlerUserInfo(string id)
         {
+            var media = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             _webCrawler.OnCompleted += Crawler_OnCompleted;
             _webCrawler.OnError += Crawler_OnError;
-            _webCrawler.Start(new Uri(url));
+            _webCrawler.Start(new Uri(media.MediaLink));
             return Json(new { State = 1, Msg = "请求成功，请稍候刷新，查看结果。" }, JsonRequestBehavior.AllowGet);
         }
         private void Crawler_OnCompleted(object sender, OnCompletedEventArgs e)
@@ -241,7 +242,7 @@ namespace Resource.Controllers
                     Abstract = tags
                 });
             }
-            
+
         }
         private void Crawler_OnError(object sender, OnErrorEventArgs e)
         {

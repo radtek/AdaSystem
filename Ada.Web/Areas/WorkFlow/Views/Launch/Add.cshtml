@@ -74,7 +74,8 @@
                                     <div class="form-group">
                                         @Html.LabelFor(d => d.FlowTo, Html.DisplayNameFor(d => d.FlowTo).ToString(), new { @class = "col-sm-2 control-label" })
                                         <div class="col-sm-10">
-                                            @Html.DropDownListFor(d=>d.FlowTo,(List<SelectListItem>)ViewBag.FlowTos, "请选择", new { @class = "form-control", required = "" })
+                                            @Html.DropDownListFor(d => d.FlowTo, (List<SelectListItem>)ViewBag.FlowTos, "请选择", new { @class = "form-control", required = "" })
+                                            <span class="help-block m-b-none text-warning">注：根据【流程说明】选择对应的审批人，如审批人为自己，请选择自己进行自审</span>
                                         </div>
                                     </div>
                                     @Html.HiddenFor(d => d.WorkFlowDefinitionId)
