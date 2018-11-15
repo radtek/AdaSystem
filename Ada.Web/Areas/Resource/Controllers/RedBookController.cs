@@ -163,7 +163,8 @@ namespace Resource.Controllers
             var media = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             _webCrawler.OnCompleted += Crawler_OnCompleted;
             _webCrawler.OnError += Crawler_OnError;
-            _webCrawler.Start(new Uri("https://www.xiaohongshu.com/user/profile/" + media.MediaID), new Operation() { SleepTime = 500 });
+            _webCrawler.Start(new Uri("https://www.xiaohongshu.com/user/profile/" + media.MediaID),
+                new Operation() { Timeout = 5000, Condition = d => d.PageSource.Contains("UserDetail") });
             return Json(new { State = 1, Msg = "请求成功，请稍候刷新，查看结果。" }, JsonRequestBehavior.AllowGet);
         }
         private void Crawler_OnCompleted(object sender, OnCompletedEventArgs e)
@@ -186,7 +187,7 @@ namespace Resource.Controllers
                         MediaLogo = user.images,
                         Area = user.location,
                         AuthenticateType = user.level.name,
-                        MediaLink = "https://www.xiaohongshu.com/user/profile/"+user.id
+                        MediaLink = "https://www.xiaohongshu.com/user/profile/" + user.id
                     });
                 }
 

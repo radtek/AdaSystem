@@ -202,8 +202,12 @@
 
                                                 var str = item.MessageDate.ToString("M月d日 HH:mm");
                                                 var diffSpan = item.MessageDate.Date - publishStart.Date;
-                                                
+
                                                 if (diffSpan.TotalDays == 1)
+                                                {
+                                                    str = item.MessageDate.ToString("HH:mm");
+                                                }
+                                                if (diffSpan.TotalDays == 0)
                                                 {
                                                     str = item.MessageDate.ToString("HH:mm");
                                                 }
