@@ -85,14 +85,19 @@ namespace QuartzTask.Jobs
             var tags = _webCrawler.FindElementByXpath(e, "//div[@class='tags']/a[@class='tag']");
             var content = _webCrawler.FindElementByXpath(e, "//div[@class='IceEditorPreview v3vcom']");
             var imageStyle = _webCrawler.FindElementByClassName(e, "v3-userinfo-box", "style");
-            var imageReg = Regex.Match(imageStyle,
-                @"url\(""(.+)""\)");
+            string imgLogo = null;
+            if (!string.IsNullOrWhiteSpace(imageStyle))
+            {
+                imgLogo= Regex.Match(imageStyle,
+                    @"url\(""(.+)""\)").Groups[1].Value;
+            }
+
             if (!string.IsNullOrWhiteSpace(nick))
             {
                 var url = e.Uri.ToString();
                 var fansNum = fans.Contains("万") ? Utils.SetFansNum(decimal.Parse(fans.Trim().Replace("万", ""))) : int.Parse(fans);
                 var abilitynum = int.Parse(ability);
-                var logo = imageReg.Groups[1].Value;
+                var logo = imgLogo;
                 var sevice = EngineContext.Current.Resolve<IMediaService>();
                 sevice.Update(d => d.MediaLink == url, m => new Media()
                 {
