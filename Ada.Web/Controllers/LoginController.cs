@@ -14,11 +14,12 @@ using Ada.Services.Cache;
 using Ada.Services.Customer;
 using Ada.Services.Setting;
 using Ada.Web.Models;
+using MvcThrottle;
 using Newtonsoft.Json;
 
 namespace Ada.Web.Controllers
 {
-    [UserException, Compress, WebStatus]
+    [UserException, Compress, WebStatus, EnableThrottling]
     public class LoginController : Controller
     {
         private readonly ILinkManService _linkManService;

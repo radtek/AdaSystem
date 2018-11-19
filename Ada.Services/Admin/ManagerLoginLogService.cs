@@ -32,7 +32,7 @@ namespace Ada.Services.Admin
             
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.Manager.UserName.Contains(viewModel.search));
+                allList = allList.Where(d => d.Manager.UserName.Contains(viewModel.search)||d.IpAddress==viewModel.search);
             }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;

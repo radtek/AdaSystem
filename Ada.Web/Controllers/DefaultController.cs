@@ -11,10 +11,11 @@ using Ada.Core.Infrastructure;
 using Ada.Framework.Filter;
 using Ada.Services.Content;
 using log4net;
+using MvcThrottle;
 
 namespace Ada.Web.Controllers
 {
-    [UserException, Compress]
+    [UserException, Compress, EnableThrottling]
     public class DefaultController : Controller
     {
         private readonly IRepository<Article> _articleRepository;

@@ -24,13 +24,16 @@ using Ada.Core.ViewModel.Business;
 using Ada.Services.Business;
 using Ada.Services.Cache;
 using ClosedXML.Excel;
+using MvcThrottle;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using Action = System.Action;
 
 namespace Ada.Web.Controllers
 {
+    [EnableThrottling]
     public class TestController : Controller
     {
         private readonly IRepository<BusinessOrderDetail> _temp;
@@ -79,6 +82,10 @@ namespace Ada.Web.Controllers
             _commpanyRepository = commpanyRepository;
         }
 
+        public ActionResult Error()
+        {
+            throw new ApplicationException("测试异常");
+        }
         public ActionResult CheckOrder()
         {
 

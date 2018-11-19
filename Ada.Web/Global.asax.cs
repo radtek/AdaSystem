@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using System.Web.Security;
-using System.Web.SessionState;
 using System.Web.Http;
 using System.Web.Optimization;
 using Ada.Core.Infrastructure;
-using Ada.Framework.Filter;
+using Ada.Core.Tools;
 using log4net;
 
 namespace Ada.Web
@@ -22,7 +18,8 @@ namespace Ada.Web
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
             MvcHandler.DisableMvcResponseHeader = true;
-            GlobalFilters.Filters.Add(new AdaExceptionAttribute());
+            //全局过滤器
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             //初始化引擎启动
             EngineContext.Initialize(false);
             // 在应用程序启动时运行的代码
@@ -43,9 +40,9 @@ namespace Ada.Web
         {
             var ex = Server.GetLastError();
             ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-            logger.Error("Application_Error触发",ex);
+            logger.Error("Application_Error触发，请求IP：" + Utils.GetIpAddress(), ex);
             Server.ClearError();
-            Response.Redirect("~/404.html",true);
+            Response.Redirect("~/404.html", true);
         }
     }
 }

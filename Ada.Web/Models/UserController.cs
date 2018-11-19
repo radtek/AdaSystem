@@ -13,11 +13,12 @@ using Ada.Framework.Filter;
 using Ada.Services.Cache;
 using Ada.Services.Customer;
 using ClosedXML.Excel;
+using MvcThrottle;
 using Newtonsoft.Json;
 
 namespace Ada.Web.Models
 {
-    [UserException]
+    [UserException, EnableThrottling, WebStatus]
     public class UserController:Controller
     {
         private readonly ICacheService _cacheService;

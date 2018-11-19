@@ -19,11 +19,13 @@ using Ada.Services.Admin;
 using Autofac;
 using ClosedXML.Excel;
 using log4net;
+using MvcThrottle;
 using Newtonsoft.Json;
 using Action = Ada.Core.Domain.Admin.Action;
 
 namespace Ada.Framework.Filter
 {
+    //[EnableThrottling]
     public abstract class BaseController : Controller
     {
 

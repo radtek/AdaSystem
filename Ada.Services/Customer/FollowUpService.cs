@@ -43,7 +43,9 @@ namespace Ada.Services.Customer
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.LinkMan.LoginName.Contains(viewModel.search)||d.LinkMan.Name.Contains(viewModel.search)||d.IpAddress.Contains(viewModel.search));
+                allList = allList.Where(d => d.LinkMan.LoginName.Contains(viewModel.search)
+                                             ||d.LinkMan.Name.Contains(viewModel.search)
+                                             ||d.IpAddress.Contains(viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.LinkManId))
             {
