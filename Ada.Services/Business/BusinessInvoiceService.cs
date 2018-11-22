@@ -136,7 +136,8 @@ namespace Ada.Services.Business
                 invoice.MoneyStatus = Consts.StateNormal;
                 totalInvoices += invoice.TotalMoney;
             }
-            //||totalReceivalues!=totalInvoices*0.96M  //
+            //_dbContext.SaveChanges();
+            //return true;
             if (totalReceivalues==totalInvoices|| totalReceivalues == totalInvoices * 0.96M|| totalReceivalues - totalPayee == totalInvoices)
             {
                 _dbContext.SaveChanges();

@@ -63,7 +63,7 @@ namespace Ada.Services.WorkFlow
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.Title.Contains(viewModel.search)||d.AddedBy.Contains(viewModel.search));
+                allList = allList.Where(d => d.Title.Contains(viewModel.search)||d.AddedBy.Contains(viewModel.search)||d.Remark.Contains(viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.WorkFlowDefinitionId))
             {

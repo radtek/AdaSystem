@@ -16,11 +16,11 @@
             isPlus = 3;
             break;
     }
-    var css = "main" + isPlus + ".css?v="+DateTime.Now.ToString("MMddHHmmss");
+    var css = "main" + isPlus + ".css?v=" + DateTime.Now.ToString("MMddHHmmss");
     var dateRange = Model.PublishDate.Split('至');
     var publishStart = DateTime.Parse(dateRange[0]);
     var publishEnd = DateTime.Parse(dateRange[1]);
-    var publishDiff = publishEnd.Date - publishStart.Date;
+    var publishDiff = publishEnd - publishStart;
 }
 
 
@@ -160,13 +160,17 @@
                     <div class="cOthers cOthers2">
                         @{
                             var dateStr = Model.FriendContent.PublishDate.ToString("yyyy年M月d日 HH:mm");
-                            if (publishDiff.TotalDays==0)
+                            //if (publishDiff.TotalDays == 0)
+                            //{
+                            //    dateStr = Model.FriendContent.PublishDate.ToString("HH:mm");
+                            //}
+                            //if (publishDiff.TotalDays == 1)
+                            //{
+                            //    dateStr = "昨天 " + Model.FriendContent.PublishDate.ToString("HH:mm");
+                            //}
+                            if (publishDiff.TotalDays < 2)
                             {
-                                dateStr = Model.FriendContent.PublishDate.ToString("HH:mm");
-                            }
-                            if (publishDiff.TotalDays == 1)
-                            {
-                                dateStr ="昨天 " +Model.FriendContent.PublishDate.ToString("HH:mm");
+                                dateStr = Model.FriendContent.PublishDate.ToString(publishDiff.TotalDays>=1 ? "昨天 HH:mm" : "HH:mm");
                             }
                         }
                         <div class="cTime">@dateStr</div>
@@ -201,16 +205,13 @@
                                             @{
 
                                                 var str = item.MessageDate.ToString("M月d日 HH:mm");
-                                                var diffSpan = item.MessageDate.Date - publishStart.Date;
+                                                var diffSpan =   publishEnd- item.MessageDate;
 
-                                                if (diffSpan.TotalDays == 1)
+                                                if (diffSpan.TotalDays < 2)
                                                 {
-                                                    str = item.MessageDate.ToString("HH:mm");
+                                                    str = item.MessageDate.ToString(diffSpan.TotalDays>=1 ? "昨天 HH:mm" : "HH:mm");
                                                 }
-                                                if (diffSpan.TotalDays == 0)
-                                                {
-                                                    str = item.MessageDate.ToString("HH:mm");
-                                                }
+
                                             }
                                             @str
                                         </div>

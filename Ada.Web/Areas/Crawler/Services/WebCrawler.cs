@@ -63,9 +63,10 @@ namespace Crawler.Services
                         if (operation != null)
                         {
                             operation.WebAction?.Invoke(driver);
-                            var wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(operation.Timeout));
+                            
                             if (operation.Condition != null)
                             {
+                                var wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(operation.Timeout));
                                 wait.Until(operation.Condition);
                             }
                         }

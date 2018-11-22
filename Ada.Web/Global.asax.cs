@@ -44,5 +44,6 @@ namespace Ada.Web
             Server.ClearError();
             Response.Redirect("~/404.html", true);
         }
+       
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -43,7 +44,27 @@ namespace Ada.Data
         /// <returns></returns>
         public int SaveChanges()
         {
-            return _dbContext.SaveChanges();
+            try
+            {
+                return _dbContext.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                if (e is DbEntityValidationException exception)
+                {
+                    throw new Exception(GetFullErrorText(exception), exception);
+                }
+                throw new Exception("数据保存异常",e);
+            }
+            
+        }
+        protected string GetFullErrorText(DbEntityValidationException exc)
+        {
+            var msg = string.Empty;
+            foreach (var validationErrors in exc.EntityValidationErrors)
+            foreach (var error in validationErrors.ValidationErrors)
+                msg += $"属性: {error.PropertyName} 错误: {error.ErrorMessage}" + Environment.NewLine;
+            return msg;
         }
     }
 }

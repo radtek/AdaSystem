@@ -47,7 +47,8 @@ namespace WorkFlow.Controllers
                     Status = d.Status,
                     AddedBy = d.AddedBy,
                     Result = d.WorkFlowRecordDetails.All(r => r.ProcessResult != "驳回"),
-                    WorkFlowDefinitionType = d.WorkFlowDefinition.WFType
+                    WorkFlowDefinitionType = d.WorkFlowDefinition.WFType,
+                    Remark = d.Remark
 
                 })
             }, JsonRequestBehavior.AllowGet);
@@ -66,9 +67,18 @@ namespace WorkFlow.Controllers
                 jo.Add("申请人员", workFlowRecord.AddedBy);
                 jo.Add("申请日期", workFlowRecord.AddedDate.Value.ToString("yyyy-MM-dd"));
                 jo.Add("申请主题", workFlowRecord.Title);
-                jo.Add("流程状态", workFlowRecord.Status==1?"已审批":"审批中");
+                string jg;
+                if (workFlowRecord.Status == 1)
+                {
+                    jg = workFlowRecord.WorkFlowRecordDetails.All(r => r.ProcessResult != "驳回") ? "申请通过" : "申请驳回";
+                }
+                else
+                {
+                    jg = "审批中";
+                }
+                jo.Add("流程状态", jg);
                 jo.Add("申请内容", Utils.DropHtml(workFlowRecord.Content).Replace(" ","").Replace("请假条尊敬的领导：我因（请假原因：简单陈述即可）",""));
-                jo.Add("备注", "");
+                jo.Add("备注", workFlowRecord.Remark);
                 jObjects.Add(jo);
             }
             return Json(new {State = 1, Msg = ExportFile(jObjects.ToString(),"申请记录")});
@@ -106,6 +116,18 @@ namespace WorkFlow.Controllers
             }
             _service.DeleteRecord(id);
             return Json(new { State = 1, Msg = "撤销成功" });
+        }
+        /// <summary>
+        /// 备注记录
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, AdaValidateAntiForgeryToken]
+        public ActionResult Remark(string id,string content)
+        {
+            var record = _service.GetRecordById(id);
+            record.Remark = string.IsNullOrWhiteSpace(content) ? null : content;
+            _service.UpdateRecord(record);
+            return Json(new { State = 1, Msg = "保存成功" });
         }
     }
 }

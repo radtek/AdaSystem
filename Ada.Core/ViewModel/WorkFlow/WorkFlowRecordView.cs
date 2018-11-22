@@ -84,5 +84,10 @@ namespace Ada.Core.ViewModel.WorkFlow
         /// </summary>
         [Display(Name = "流程结果")]
         public bool? Result { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        [Display(Name = "备注")]
+        public string Remark { get; set; }
     }
 }
