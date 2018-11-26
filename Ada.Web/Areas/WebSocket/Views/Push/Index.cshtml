@@ -1,0 +1,95 @@
+﻿
+@using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Setting
+@using Ada.Services.Setting
+@model System.Collections.Concurrent.ConcurrentDictionary<string, string>
+
+@{
+    ViewBag.Title = "信息推送";
+    var setting = EngineContext.Current.Resolve<ISettingService>().GetSetting<WeiGuang>();
+}
+@Html.Partial("Bread")
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    @if (setting.ErpWebSocket)
+    {
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>信息内容</h5>
+                </div>
+                <div class="ibox-content">
+                    <form role="form" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="ContentType">信息类型</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="ContentType" name="ContentType" required="">
+                                    <option value="">请选择</option>
+                                    <option value="success">通知信息</option>
+                                    <option value="info">温馨提醒</option>
+                                    <option value="warning">紧急信息</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="Text">信息内容</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" cols="20" id="Text" name="Text" rows="6"></textarea>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="col-sm-12 col-sm-offset-2">
+                                <button class="btn btn-primary btn-outline" type="button" id="btnSubmit"><i class="fa fa-paper-plane"></i> 推送</button>
+                            </div>
+                        </div>
+
+                    </form>
+                    <div class="hr-line-dashed"></div>
+                    <h4 class="font-bold">在线用户</h4>
+                    <p class="users-list">
+                        @foreach (var item in Model.Select(d => d.Value).Distinct())
+                        {
+                            <span class="label label-info">@item</span>
+                        }
+                    </p>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    }
+    else
+    {
+        <div class="alert alert-danger">WebSocket模块未开启</div>
+    }
+
+    
+</div>
+
+@section Scripts {
+    
+    <script>
+        $(function () {
+            $("#btnSubmit").click(function () {
+                $.SignalRHelper.PushClientData("all", $("#ContentType").val(), $("#Text").val());
+            });
+            var userList = $(".users-list");
+            $.SignalRHelper.SubscribeServerData("userChange", function (data) {
+                userList.empty();
+                for (var i = 0; i < data.users.length; i++) {
+                    if (data.users[i]) {
+                        userList.append('<span class="label label-info">' +data.users[i] +'</span> ');
+                    }
+                    
+                }
+            });
+        });
+
+    </script>
+}

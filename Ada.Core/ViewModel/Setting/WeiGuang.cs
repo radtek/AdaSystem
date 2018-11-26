@@ -35,6 +35,7 @@ namespace Ada.Core.ViewModel.Setting
             AppointmentPush = false;
             UserRequestMediaCount = 10;
             WorkFlowPush = false;
+            ErpWebSocket = false;
         }
         /// <summary>
         /// 媒介资源查询数
@@ -151,5 +152,10 @@ namespace Ada.Core.ViewModel.Setting
         /// </summary>
         [Display(Name = "工作流程提醒推送")]
         public bool WorkFlowPush { get; set; }
+        /// <summary>
+        /// 系统内部网页推送
+        /// </summary>
+        [Display(Name = "系统内部网页推送")]
+        public bool ErpWebSocket { get; set; }
     }
 }

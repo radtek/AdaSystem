@@ -1,4 +1,4 @@
-﻿function initSummernote() {
+﻿function initSummernote(height) {
     $.ajax({
         url: 'https://api.github.com/emojis',
         async: false
@@ -8,7 +8,7 @@
     });
     $('.summernote').summernote({
         lang: 'zh-CN',
-        height: 500,
+        height: height||500,
         hint: {
             match: /:([\-+\w]+)$/,
             search: function (keyword, callback) {

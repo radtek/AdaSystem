@@ -20,7 +20,7 @@
     var dateRange = Model.PublishDate.Split('至');
     var publishStart = DateTime.Parse(dateRange[0]);
     var publishEnd = DateTime.Parse(dateRange[1]);
-    var publishDiff = publishEnd - publishStart;
+    var publishDiff = publishEnd.Date - publishStart.Date;
 }
 
 
@@ -45,7 +45,7 @@
                 <div class="startBar">
                     @if (isPlus == 3)
                     {
-                        var now = Model.Is24Hour ? DateTime.Now.ToString("HH:mm") : DateTime.Now.ToString("h:mm");
+                        var now = Model.Is24Hour ? publishEnd.ToString("HH:mm") : publishEnd.ToString("h:mm");
                         <span class="time">@now</span>
                         if (Model.LocationIco)
                         {
@@ -82,7 +82,7 @@
                         {
                             <span class="networkText">@Model.Network</span>
                         }
-                        var now = Model.Is24Hour ? DateTime.Now.ToString("HH:mm") : DateTime.Now.ToString("tth:mm");
+                        var now = Model.Is24Hour ? publishEnd.ToString("HH:mm") : publishEnd.ToString("tth:mm");
                         <span class="time">@now</span>
                         <div class="battery1">
                             @{
@@ -205,11 +205,11 @@
                                             @{
 
                                                 var str = item.MessageDate.ToString("M月d日 HH:mm");
-                                                var diffSpan =   publishEnd- item.MessageDate;
+                                                var diffSpan =   item.MessageDate.Date-publishStart.Date;
 
-                                                if (diffSpan.TotalDays < 2)
+                                                if (diffSpan.TotalDays < 2&& publishDiff.TotalDays < 2)
                                                 {
-                                                    str = item.MessageDate.ToString(diffSpan.TotalDays>=1 ? "昨天 HH:mm" : "HH:mm");
+                                                    str = item.MessageDate.ToString(diffSpan.TotalDays<1 ? "昨天 HH:mm" : "HH:mm");
                                                 }
 
                                             }
