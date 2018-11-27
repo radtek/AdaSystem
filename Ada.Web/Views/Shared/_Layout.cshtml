@@ -1,12 +1,11 @@
 ﻿@using System.Web.Optimization
 @using Ada.Core.Infrastructure
-@using Ada.Core.ViewModel.Admin
 @using Ada.Core.ViewModel.Setting
 @using Ada.Framework
 @using Ada.Services.Setting
 @{
     var setting = EngineContext.Current.Resolve<ISettingService>().GetSetting<WeiGuang>();
-    
+
 }
 <!DOCTYPE html>
 <html>
@@ -80,23 +79,8 @@
     @Scripts.Render("~/bundles/base")
     @if (setting.ErpWebSocket)
     {
-        var manager = (ManagerView)ViewBag.CurrentManager;
         <script src="@Url.Content("~/Areas/WebSocket/Scripts/jquery.signalR-2.4.0.min.js")"></script>
         <script src="@Url.Content("~/Areas/WebSocket/Scripts/jquery.signalR.helper.js?v="+DateTime.Now.Ticks)"></script>
-        <script src="~/signalr/hubs"></script>
-        <script>
-            $(function () {
-                window.SignalRHelper("pushHub");
-                $.SignalRHelper.Conn.hub.qs = { "clientName": '@manager.UserName' };
-                $.SignalRHelper.SubscribeServerData("recive", function (data) {
-                    toastr.options = {
-                        positionClass: "toast-top-full-width",
-                        timeOut:0
-                    };
-                    toastr[data.title || "success"](data.message,data.date);
-                });
-            });
-        </script>
     }
     <!-- Handler for local scripts -->
     @RenderSection("Scripts", required: false)
@@ -116,7 +100,6 @@
                     });
                 </text>
             }
-/**/
             @if (TempData["Warning"]!= null){
                 <text>
                     swal({
@@ -127,9 +110,7 @@
                     });
                 </text>
             }
-/**/
-/**/
-          initChangePwd("@Url.Action("ChangePassword", "Manager",new{area="Admin"})",$('@Html.AntiForgeryToken()').val());
+            initChangePwd("@Url.Action("ChangePassword", "Manager",new{area="Admin"})",$('@Html.AntiForgeryToken()').val());
             initCropper("@Url.Action("UploadImage","Manager",new{area="Admin"})");
             initIdInfo("@Url.Action("BaseInfo","Manager",new{area="Admin"})");
         });

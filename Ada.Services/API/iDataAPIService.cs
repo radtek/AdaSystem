@@ -725,24 +725,7 @@ namespace Ada.Services.API
             requestResult.AddCount = addCount;
             requestResult.UpdateCount = updateCount;
             requestResult.Message = "采集成功！新增：" + addCount + "篇，更新：" + updateCount + "篇";
-            try
-            {
-                _dbContext.SaveChanges();
-            }
-            catch (DbEntityValidationException ex)
-            {
-                StringBuilder errors = new StringBuilder();
-                IEnumerable<DbEntityValidationResult> validationResult = ex.EntityValidationErrors;
-                foreach (DbEntityValidationResult result in validationResult)
-                {
-                    ICollection<DbValidationError> validationError = result.ValidationErrors;
-                    foreach (DbValidationError err in validationError)
-                    {
-                        errors.Append(err.PropertyName + ":" + err.ErrorMessage + "\r\n");
-                    }
-                }
-                requestResult.Message = errors.ToString();
-            }
+            _dbContext.SaveChanges();
             return requestResult;
         }
         public RequestResult GetWeiBoArticles(WeiBoParams wbparams)
@@ -933,6 +916,123 @@ namespace Ada.Services.API
             return requestResult;
         }
 
+        public RequestResult GetWeiBoArticlesByBiz(string id)
+        {
+            var media = _mediaRepository.LoadEntities(d => d.Id == id && d.IsDelete == false).FirstOrDefault();
+            RequestResult requestResult = new RequestResult();
+            if (string.IsNullOrWhiteSpace(media.MediaLink))
+            {
+                requestResult.Message = "微信Biz唯一标识不能为空";
+                return requestResult;
+            }
+            var apiInfo = _apiInterfacesService.GetAPIInterfacesByCallIndex("weixinprobiz");
+            string apiUrl = apiInfo.APIUrl + apiInfo.Parameters.Replace("{0}", media.MediaLink);
+            int times = apiInfo.TimeOut ?? 3;
+            string htmlstr = string.Empty;
+            int request = 1;
+            while (request <= times)
+            {
+                try
+                {
+                    htmlstr = HttpUtility.Get(apiUrl);
+                    request = 9999;
+                }
+                catch (Exception ex)
+                {
+                    if (request == times)
+                    {
+                        APIRequestRecord exrecord = new APIRequestRecord();
+                        exrecord.Id = IdBuilder.CreateIdNum();
+                        exrecord.RequestParameters = apiUrl;
+                        exrecord.IsSuccess = false;
+                        exrecord.Retcode = "500";
+                        exrecord.ReponseContent = ex.Message;
+                        exrecord.Retmsg = "请求异常";
+                        exrecord.ReponseDate = DateTime.Now;
+                        apiInfo.APIRequestRecords.Add(exrecord);
+                    }
+                    request++;
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(htmlstr))
+            {
+                requestResult.Message = "结果为空！";
+                return requestResult;
+            }
+            var result = JsonConvert.DeserializeObject<WeiXinProJSON>(htmlstr);
+            //失败日志
+            if (result.retcode != ReturnCode.请求成功)
+            {
+                requestResult.Message = htmlstr;
+                return requestResult;
+            }
+            if (result.data.Count > 0)
+            {
+                var brands = _fieldRepository.LoadEntities(d => d.FieldType.CallIndex == "Brand").Select(d => d.Text).ToList();
+                media.CollectionDate = DateTime.Now;
+                foreach (var articleData in result.data)
+                {
+                    var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
+                    if (article != null)
+                    {
+                        article.ArticleIdx = articleData.idx;
+                        article.ArticleUrl = articleData.url;
+                        article.IsOriginal = articleData.original;
+                        //article.OriginUrl = articleData.originUrl;
+                        article.Biz = articleData.biz;
+                        article.CommentCount = articleData.commentCount;
+                        article.Content = GetBrands(articleData.content, brands);
+                        article.IsTop = articleData.isTop;
+                        article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
+                            ? (DateTime?)null
+                            : DateTime.Parse(articleData.publishDateStr);
+                        article.LikeCount = articleData.likeCount;
+                        article.ViewCount = articleData.viewCount;
+                        article.Title = articleData.title;
+                        requestResult.UpdateCount++;
+                    }
+                    else
+                    {
+                        article = new MediaArticle();
+                        article.Id = IdBuilder.CreateIdNum();
+                        article.ArticleId = articleData.id;
+                        article.ArticleIdx = articleData.idx;
+                        article.ArticleUrl = articleData.url;
+                        article.IsOriginal = articleData.original;
+                        //article.OriginUrl = articleData.originUrl;
+                        article.Biz = articleData.biz;
+                        article.CommentCount = articleData.commentCount;
+                        article.Content = GetBrands(articleData.content, brands); ;
+                        article.IsTop = articleData.isTop;
+                        article.PublishDate = string.IsNullOrWhiteSpace(articleData.publishDateStr)
+                            ? (DateTime?)null
+                            : DateTime.Parse(articleData.publishDateStr);
+                        article.LikeCount = articleData.likeCount;
+                        article.ViewCount = articleData.viewCount;
+                        article.Title = articleData.title;
+                        media.MediaArticles.Add(article);
+                        requestResult.AddCount++;
+                    }
+                }
+                //更新统计数据
+                var viewCount = media.MediaArticles.Where(d => d.IsTop == true).OrderByDescending(d => d.PublishDate).Take(10)
+                    .Average(d => d.ViewCount);
+                media.AvgReadNum = Convert.ToInt32(viewCount);
+                media.LastReadNum = media.MediaArticles.Where(l => l.IsTop == true)
+                    .OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount;
+                var start30 = DateTime.Now.Date.AddDays(-30);
+                var end30 = DateTime.Now.AddDays(1).Date;
+                var count = media.MediaArticles.Where(d => d.PublishDate >= start30 && d.PublishDate < end30).Select(d => new
+                {
+                    Date = d.PublishDate.Value.ToString("yyyy-MM-dd")
+                }).GroupBy(d => d.Date).Count();
+                media.PublishFrequency = count;
+            }
+            _dbContext.SaveChanges();
+            requestResult.Message = "采集成功！新增：" + requestResult.AddCount + "篇，更新：" + requestResult.UpdateCount + "篇";
+            return requestResult;
+        }
         public RequestResult GetDouYinInfo(DouYinParams dyparams)
         {
             var apiInfo = _apiInterfacesService.GetAPIInterfacesByCallIndex(dyparams.CallIndex);

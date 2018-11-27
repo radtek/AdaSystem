@@ -231,7 +231,7 @@
     <button type="button" class="btn btn-primary btn-outline" data-toggle="modal" data-target="#uploadModal">
         <i class="fa fa-upload"></i> 更新导入
     </button>
-    <button type="button" class="btn btn-primary btn-outline" onclick="collectArticle('@Url.Action("WeiXinProCollection","Media")');">
+    <button type="button" class="btn btn-primary btn-outline" onclick="collectArticles();">
         <i class="fa fa-cloud"></i> 采集文章
     </button>
     <button type="button" class="btn btn-primary btn-outline" onclick="collectWeiXin('@Url.Action("WeixinCollection","Media")');">
@@ -258,7 +258,7 @@
     @Scripts.Render("~/plugins/clipboard")
     @Scripts.Render("~/plugins/dataPicker")
     @Scripts.Render("~/plugins/dateRange")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=20180611")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v="+DateTime.Now.Ticks)"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -404,7 +404,51 @@
             };
             return obj;
         };
+        function collectArticles() {
+            var arrselections = $("#table").bootstrapTable('getSelections');
+            if (arrselections.length == 1) {
+                swal({
+                    title: "您确定吗?",
+                    text: "确认要采集微信文章信息吗?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: true
 
+                }, function () {
+                    var id = arrselections[0].Id ;
+                    $.ajax({
+                        url: "@Url.Action("CrawlerArticles")",
+                        data: { id: id},
+                        success: function (data) {
+                            if (data.State == 1) {
+                                $("#table").bootstrapTable('refresh');
+                                swal({
+                                    title: "操作成功",
+                                    text: data.Msg,
+                                    type: "success"
+                                });
+                            } else {
+                                swal("操作提醒", data.Msg, "warning");
+                            }
+                        },
+                        error: function () {
+                            swal("操作失败", "系统错误", "error");
+                        },
+                        complete: function () {
+
+                        }
+                    });
+                });
+
+            } else {
+                swal("操作提醒", "请选择一条媒体记录", "warning");
+                return;
+            }
+        }
     </script>
 }
 

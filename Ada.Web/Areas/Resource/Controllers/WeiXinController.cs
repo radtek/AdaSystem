@@ -140,7 +140,7 @@ namespace Resource.Controllers
                     media.Remark = row.GetCell(9)?.ToString();
                     media.Transactor = row.GetCell(11)?.ToString();
                     media.TransactorId = row.GetCell(12)?.ToString();
-                    media.AddedDate=DateTime.Now;
+                    media.AddedDate = DateTime.Now;
                     media.Status = Consts.StateNormal;
                     media.IsSlide = true;
                     _mediaService.Add(media);
@@ -149,81 +149,12 @@ namespace Resource.Controllers
             }
             return Content("导入成功" + count + "条资源");
         }
-        public ActionResult IsCollection()
+       
+        public ActionResult CrawlerArticles(string id)
         {
-            string path = Server.MapPath("~/upload/wxcj.xlsx");
-            int count = 0;
-            using (FileStream ms = new FileStream(path, FileMode.Open))
-            {
-                //创建工作薄
-                IWorkbook wk = new XSSFWorkbook(ms);
-                //1.获取第一个工作表
-                ISheet sheet = wk.GetSheetAt(0);
-                if (sheet.LastRowNum <= 1)
-                {
-                    return Content("此文件没有导入数据，请填充数据再进行导入");
-                }
+            var result = _iDataAPIService.GetWeiBoArticlesByBiz(id);
+            return Json(new { State = 1, Msg = result.Message },JsonRequestBehavior.AllowGet);
+        }
 
-                for (int i = 1; i <= sheet.LastRowNum; i++)
-                {
-                    IRow row = sheet.GetRow(i);
-                    var uid = row.GetCell(1)?.ToString();
-                    var name = row.GetCell(0)?.ToString();
-                    if (string.IsNullOrWhiteSpace(uid))
-                    {
-                        continue;
-                    }
-                    var temp = _repository.LoadEntities(d =>
-                        d.MediaID.Equals(uid.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.MediaType.CallIndex == "weixin" && d.IsDelete == false).FirstOrDefault();
-                    if (temp == null) continue;
-                    temp.IsSlide = true;
-                    if (!string.IsNullOrWhiteSpace(name))
-                    {
-                        temp.MediaName = name;
-                    }
-                    _mediaService.Update(temp);
-                    count++;
-                }
-            }
-            return Content("共有" + count + "条资源加入采集行列");
-        }
-        [HttpPost]
-        public ActionResult CollectionWeixinInfoFree(string id)
-        {
-            TestParams testParams = new TestParams();
-            testParams.UID = id;
-            testParams.ApiId = 725;
-            testParams.ReginId = 1;
-            testParams.Apiype = 1;
-            testParams.CallIndex = "test_api";
-            var result = _iDataAPIService.TestApi(testParams);
-            if (string.IsNullOrWhiteSpace(result))
-            {
-                return Json(new { State = 0, Msg = "请求失败" });
-            }
-            var jsonResult = JsonConvert.DeserializeObject<TestJSON>(result);
-            if (jsonResult.error != 0) return Json(new {State = 0, Msg = jsonResult.api_result});
-            var weixinInfos = JsonConvert.DeserializeObject<WeiXinInfosJSON>(jsonResult.api_result);
-            if (weixinInfos.data.Count>0)
-            {
-                var media = _repository.LoadEntities(d => d.MediaID == id).FirstOrDefault();
-                var weixinInfo = weixinInfos.data[0];
-                media.IsAuthenticate = weixinInfo.idVerified;
-                media.MediaName = weixinInfo.screenName;
-                media.MonthPostNum = weixinInfo.monthPostCount;
-                media.MediaLogo = weixinInfo.avatarUrl;
-                media.MediaQR = weixinInfo.qrcodeUrl;
-                media.Content = weixinInfo.biography;
-                media.CollectionDate = DateTime.Now;
-                if (DateTime.TryParse(weixinInfo.lastPost?.date, out var date))
-                {
-                    media.LastPushDate = date;
-                }
-                _mediaService.Update(media);
-                return Json(new { State = 1, Msg = "更新成功" });
-            }
-            return Json(new { State = 0, Msg = jsonResult.api_result });
-        }
-        
     }
 }

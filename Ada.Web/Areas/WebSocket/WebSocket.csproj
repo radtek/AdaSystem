@@ -127,8 +127,11 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ChatRoomController.cs" />
     <Compile Include="Controllers\PushController.cs" />
+    <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Hubs\PushHub.cs" />
+    <Compile Include="Models\HubView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="WebSocketAreaRegistration.cs" />
@@ -139,6 +142,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Push\Index.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Views\ChatRoom\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -146,9 +150,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\Ada.Core\Ada.Core.csproj">
       <Project>{1E0B290A-3337-43C9-9CE9-BFB8CE741DBA}</Project>

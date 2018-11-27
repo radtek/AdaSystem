@@ -7,6 +7,8 @@ namespace Ada.Core.ViewModel.API
         public RequestResult()
         {
             IsSuccess = false;
+            UpdateCount = 0;
+            AddCount = 0;
         }
         public int AddCount { get; set; }
         public int UpdateCount { get; set; }
