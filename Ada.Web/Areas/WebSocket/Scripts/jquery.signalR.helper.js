@@ -54,6 +54,8 @@
 var signalr;
 (function ($, window) {
     signalr = $.hubConnection();
+    var user = $("#userInfo").data("user");
+    signalr.qs = { Name: user.UserName, UId: user.Id, Image: user.Image};
     var pushHub = signalr.createHubProxy('pushHub');
     pushHub.on('recive', function (data) {
         //var jsonData = JSON.parse(data);
@@ -62,6 +64,10 @@ var signalr;
             timeOut: 0
         };
         window.toastr[data.MessageType || "success"](data.Message, moment(data.Date).format("YYYY-MM-DD HH:mm:ss"));
+    });
+    pushHub.on('stop', function (data) {
+        console.log("连接超出范围，断开：" + data);
+        signalr.stop();
     });
     signalr.start()
         .done(function () {

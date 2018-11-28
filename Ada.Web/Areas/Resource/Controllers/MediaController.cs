@@ -218,6 +218,7 @@ namespace Resource.Controllers
                         jo.Add("平均浏览数", media.AvgReadNum);
                         jo.Add("平均评论数", media.CommentNum);
                         jo.Add("平均点赞数", media.LikesNum);
+                        jo.Add("星图价格", media.ChannelType);
                         break;
                     case "redbook":
                         jo.Add("媒体链接", media.MediaLink);

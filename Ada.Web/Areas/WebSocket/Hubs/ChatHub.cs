@@ -47,7 +47,7 @@ namespace WebSocket.Hubs
         {
             string clientName = Context.QueryString["clientName"];
             OnLineUsers.AddOrUpdate(Context.ConnectionId, clientName, (key, value) => clientName);
-
+            
             Clients.All.userChange(JsonConvert.SerializeObject(new
             {
                 date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),

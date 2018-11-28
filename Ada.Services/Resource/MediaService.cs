@@ -212,6 +212,10 @@ namespace Ada.Services.Resource
             {
                 allList = allList.Where(d => d.Channel.Contains(viewModel.Channel));
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.ChannelType))
+            {
+                allList = allList.Where(d => d.ChannelType.Contains(viewModel.ChannelType));
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.MediaID))
             {
                 viewModel.MediaID = viewModel.MediaID.Trim();

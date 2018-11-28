@@ -61,6 +61,12 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
+                        @Html.LabelFor(d => d.ChannelType, "星图价格", new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.ChannelType, new List<SelectListItem>(){new SelectListItem(){Value = "是",Text = "是"}, new SelectListItem() { Value = "否", Text = "否" } }, "请选择", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
                         @Html.LabelFor(d => d.Sex, Html.DisplayNameFor(d => d.Sex).ToString(), new { @class = "control-label" })
                         @Html.DropDownListFor(d => d.Sex, sex, "请选择", new { @class = "form-control" })
                     </div>
@@ -237,7 +243,7 @@
     @Scripts.Render("~/plugins/clipboard")
     @Scripts.Render("~/plugins/dataPicker")
     @Scripts.Render("~/plugins/dateRange")
-    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v=20180611")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/index.js?v="+DateTime.Now.Ticks)"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
