@@ -50,7 +50,7 @@ namespace QuartzTask.Jobs
                         {
                             _webCrawler.OnCompleted += Crawler_OnCompleted;
                             _webCrawler.OnError += Crawler_OnError;
-                            _webCrawler.Start(new Uri("https://www.xiaohongshu.com/user/profile/" + media.MediaID),new Operation(){Timeout = 30000, Condition = d => d.PageSource.Contains("UserDetail") });
+                            _webCrawler.Start(new Uri("https://www.xiaohongshu.com/user/profile/" + media.MediaID),new Operation(){Timeout = 60000, Condition = d => d.PageSource.Contains("UserDetail") });
                         }
                         //改变工作计划时间
                         if (context.NextFireTimeUtc != null)

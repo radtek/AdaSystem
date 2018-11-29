@@ -48,7 +48,7 @@ namespace Ada.Web.Controllers
         private readonly IRepository<Commpany> _commpanyRepository;
         private readonly IDbContext _dbContext;
         private readonly ICacheService _cacheService;//IBusinessOrderDetailService
-        private readonly IBusinessOrderDetailService _businessOrderDetailService;
+        private readonly IRepository<BusinessInvoice> _invoice;
 
         public TestController(
             IDbContext dbContext,
@@ -65,7 +65,8 @@ namespace Ada.Web.Controllers
             IBusinessOrderDetailService businessOrderDetailService,
             IRepository<Manager> manager,
             IRepository<LinkMan> linkman,
-            IRepository<Commpany> commpanyRepository)
+            IRepository<Commpany> commpanyRepository,
+            IRepository<BusinessInvoice> invoice)
         {
             _dbContext = dbContext;
             _ptemp = ptemp;
@@ -76,7 +77,7 @@ namespace Ada.Web.Controllers
             _fieldRepository = fieldRepository;
             _cacheService = cacheService;
             _mediaArticleRepository = mediaArticleRepository;
-            _businessOrderDetailService = businessOrderDetailService;
+            _invoice = invoice;
             _manager = manager;
             _linkman = linkman;
             _commpanyRepository = commpanyRepository;
@@ -159,6 +160,19 @@ namespace Ada.Web.Controllers
             }
             _dbContext.SaveChanges();
             return Content(i.ToString());
+
+
+        }
+        public ActionResult UpdateInvoice()
+        {
+
+            var lists = _invoice.LoadEntities(d => d.IsDelete == false);
+            foreach (var item in lists)
+            {
+                item.Company = item.Company.Trim().Replace(" ", "").Replace("　", "");
+            }
+            _dbContext.SaveChanges();
+            return Content("发票公司名称更新完成");
 
 
         }
