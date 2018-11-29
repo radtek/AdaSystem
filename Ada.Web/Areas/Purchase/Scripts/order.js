@@ -78,7 +78,7 @@ function initData() {
         startView: 2,
         minView: 2,
         forceParse: 0,
-        format: "yyyy年mm月dd日"
+        format: "yyyy-mm-dd"
     });
     if (!isReadonly) {
         initSelect2("LinkManId", linkmanSelect);
