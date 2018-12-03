@@ -15,25 +15,17 @@ namespace Crawler.Services
             _client = new HttpClient();
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"));
+            //_client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Chrome"));
         }
         public async Task<T> Get<T>(string apiUri)
         {
             var response = await _client.GetAsync(apiUri);
             response.EnsureSuccessStatusCode();
-            return default(T);
-            //return await response.Content.ReadAsAsync<T>();
-        }
-        public async Task Get<T>(string apiUri,Action<Task<T>> callBack)
-        {
-            var response = await _client.GetAsync(apiUri);
-            response.EnsureSuccessStatusCode();
-            //await response.Content.ReadAsAsync<T>().ContinueWith(callBack);
+            return await response.Content.ReadAsAsync<T>();
         }
         public async Task<HttpStatusCode> Post<T>(string apiUri, T newData)
         {
-            //var response = await _client.PostAsJsonAsync(apiUri, newData);
-            var response = await _client.GetAsync(apiUri);
+            var response = await _client.PostAsJsonAsync(apiUri, newData);
             response.EnsureSuccessStatusCode();
             return response.StatusCode;
 
@@ -42,14 +34,8 @@ namespace Crawler.Services
         {
             var response = await _client.PostAsync(apiUri, content);
             response.EnsureSuccessStatusCode();
-            //return await response.Content.ReadAsAsync<T>();
-            return default(T);
-        }
-        public async Task Post<T>(string apiUri, HttpContent content, Action<Task<T>> callBack)
-        {
-            var response = await _client.PostAsync(apiUri, content);
-            response.EnsureSuccessStatusCode();
-            //await response.Content.ReadAsAsync<T>().ContinueWith(callBack);
+            return await response.Content.ReadAsAsync<T>();
+
         }
     }
 }

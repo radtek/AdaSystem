@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-
+using Ada.Core.Domain.Resource;
+using Ada.Core.ViewModel.API.iDataAPI;
 using Ada.Framework.Filter;
+using Ada.Services.Resource;
 using Crawler.Models;
 using Crawler.Services;
 
@@ -14,20 +16,38 @@ namespace Crawler.Controllers
     public class ApiTestController : BaseController
     {
         private readonly IHttpHelper _httpHelper;
-        public ApiTestController(IHttpHelper httpHelper)
+        private readonly IMediaService _mediaService;
+        public ApiTestController(IHttpHelper httpHelper, IMediaService mediaService)
         {
             _httpHelper = httpHelper;
+            _mediaService = mediaService;
         }
         public ActionResult Index()
         {
+
             return View();
         }
-        [HttpPost,AdaValidateAntiForgeryToken,AllowAnonymous]
+        [HttpPost, AdaValidateAntiForgeryToken, AllowAnonymous]
         public async Task<ActionResult> WeiXin(ApiRequest apiRequest)
         {
-            var result = await _httpHelper.Get<ApiRequest>(apiRequest.UrlPath);
-            return Json(result);
+            //var result = await _httpHelper.Get<WeiXinInfosJSON>(apiRequest.UrlPath);
+            //return result.data.Any() ? Json(new{State=1,Msg= result.data.FirstOrDefault()?.biz }) : Json(new {State = 0, Msg = result.ToString()});
+            var result = _httpHelper.Get<WeiXinInfosJSON>(apiRequest.UrlPath);
+            await result.ContinueWith(d =>
+            {
+                if (!d.Result.data.Any()) return;
+                var weixin = d.Result.data.FirstOrDefault();
+                if (weixin != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(weixin.biz))
+                    {
+                        _mediaService.Update(m => m.MediaID == weixin.id && m.MediaType.CallIndex == "weixin", u => new Media() { MediaLink = weixin.biz });
+                    }
+
+                }
+            });
+            return Json(new {State = 1, Msg = "提交成功"});
         }
-        
+
     }
 }

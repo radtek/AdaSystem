@@ -54,6 +54,14 @@ namespace Ada.Core.ViewModel.API.iDataAPI
         /// 最后推送信息
         /// </summary>
         public LastPost lastPost { get; set; }
+        /// <summary>
+        /// 账号BIZ
+        /// </summary>
+        public string biz { get; set; }
+        /// <summary>
+        /// 微信号
+        /// </summary>
+        public string id { get; set; }
     }
 
     public class LastPost

@@ -74,11 +74,20 @@
                         },
                         data: data,
                         success: function (res) {
-                            swal({
-                                title: "操作成功",
-                                text: JSON.stringify(res),
-                                type: "success"
-                            });
+                            if (res.State==1) {
+                                swal({
+                                    title: "操作成功",
+                                    text: res.Msg,
+                                    type: "success"
+                                });
+                            } else {
+                                swal({
+                                    title: "操作失败",
+                                    text: res.Msg,
+                                    type: "warning"
+                                });
+                            }
+                            
                         },
                         error: function () {
                             swal("操作失败", "系统错误", "error");

@@ -104,7 +104,8 @@ namespace DataReport.Controllers
                     MediaByPurchase = p.Transactor,
                     MediaTitle = b.MediaTitle,
                     Money = b.Money,
-                    Transactor = b.BusinessOrder.Transactor
+                    Transactor = b.BusinessOrder.Transactor,
+                    RequestSellMoney = b.RequestSellMoney
                 };
             JArray jObjects = new JArray();
             foreach (var item in result)
@@ -125,6 +126,7 @@ namespace DataReport.Controllers
                 jo.Add("出刊链接", item.PublishLink);
                 jo.Add("经办媒介", item.MediaByPurchase);
                 jo.Add("销售人员", item.Transactor);
+                jo.Add("修改前金额", item.RequestSellMoney);
                 jObjects.Add(jo);
             }
             return File(ExportData(jObjects.ToString()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
