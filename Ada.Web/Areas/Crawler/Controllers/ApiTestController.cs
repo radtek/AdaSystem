@@ -32,21 +32,21 @@ namespace Crawler.Controllers
         {
             //var result = await _httpHelper.Get<WeiXinInfosJSON>(apiRequest.UrlPath);
             //return result.data.Any() ? Json(new{State=1,Msg= result.data.FirstOrDefault()?.biz }) : Json(new {State = 0, Msg = result.ToString()});
-            var result = _httpHelper.Get<WeiXinInfosJSON>(apiRequest.UrlPath);
-            await result.ContinueWith(d =>
-            {
-                if (!d.Result.data.Any()) return;
-                var weixin = d.Result.data.FirstOrDefault();
-                if (weixin != null)
-                {
-                    if (!string.IsNullOrWhiteSpace(weixin.biz))
-                    {
-                        _mediaService.Update(m => m.MediaID == weixin.id && m.MediaType.CallIndex == "weixin", u => new Media() { MediaLink = weixin.biz });
-                    }
-
-                }
-            });
-            return Json(new {State = 1, Msg = "提交成功"});
+            string biz = string.Empty;
+            await _httpHelper.Get<WeiXinInfosJSON>(apiRequest.UrlPath).ContinueWith(d =>
+             {
+                 if (!d.Result.data.Any()) return;
+                 var weixin = d.Result.data.FirstOrDefault();
+                 if (weixin != null)
+                 {
+                     if (!string.IsNullOrWhiteSpace(weixin.biz))
+                     {
+                         _mediaService.Update(m => m.MediaID == weixin.id && m.MediaType.CallIndex == "weixin", u => new Media() { MediaLink = weixin.biz });
+                         biz = weixin.biz;
+                     }
+                 }
+             });
+            return Json(new { State = 1, Msg = "更新BIZ成功：" + biz });
         }
 
     }

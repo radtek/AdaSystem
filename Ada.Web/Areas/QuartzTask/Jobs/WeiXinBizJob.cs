@@ -24,9 +24,8 @@ namespace QuartzTask.Jobs
     {
         private readonly ILog _logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly IHttpHelper _httpHelper = EngineContext.Current.Resolve<IHttpHelper>();
-        private string _currentWx;
 
-        public void Execute(IJobExecutionContext context)
+        public async void Execute(IJobExecutionContext context)
         {
             using (var db = new AdaEFDbcontext())
             {
@@ -34,43 +33,44 @@ namespace QuartzTask.Jobs
                 var group = context.JobDetail.Key.Group;
                 var job = db.Set<Job>().FirstOrDefault(d => d.GroupName == group && d.JobName == name);
                 int hour = job.Taxis ?? 66;
-                
+
                 var media = db.Set<Media>().FirstOrDefault(d =>
                       d.IsDelete == false && d.MediaType.CallIndex == "weixin" && d.Status == Consts.StateNormal && (d.MediaLink == null || d.MediaLink == "") &&
                       (d.ApiUpDate == null || SqlFunctions.DateDiff("hour", d.ApiUpDate, DateTime.Now) > hour));
                 if (media != null)
                 {
                     media.ApiUpDate = DateTime.Now;
-                    _currentWx = media.Id;
+                    string biz = string.Empty;
                     try
                     {
-                        _httpHelper.Get<WeiXinInfosJSON>(job.ApiUrl).ContinueWith(d =>
-                        {
+                        await _httpHelper.Get<WeiXinInfosJSON>(job.ApiUrl).ContinueWith(d =>
+                          {
 
-                            if (d.Result.data.Any())
-                            {
-                                var result = d.Result.data.FirstOrDefault();
-                                if (result!=null)
-                                {
-                                    if (!string.IsNullOrWhiteSpace(result.biz))
-                                    {
-                                        media.MediaLink = result.biz;
-                                    }
-                                }
-                            }
-                        });
+                              if (d.Result.data.Any())
+                              {
+                                  var result = d.Result.data.FirstOrDefault();
+                                  if (result != null)
+                                  {
+                                      if (!string.IsNullOrWhiteSpace(result.biz))
+                                      {
+                                          media.MediaLink = result.biz;
+                                          biz = result.biz;
+                                      }
+                                  }
+                              }
+                          });
                         //改变工作计划时间
                         if (context.NextFireTimeUtc != null)
                         {
                             job.NextTime = context.NextFireTimeUtc.Value.ToLocalTime().DateTime;
-                            job.Remark = "获取微信BIZ信息任务正在运行中，本次成功更新：" + media.MediaName + "-" + media.MediaID;
+                            job.Remark = "获取微信BIZ信息任务正在运行中，本次成功更新：" + media.MediaID + " - " + biz;
                         }
 
                         db.SaveChanges();
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error("获取【" + media.MediaName + "-" + media.MediaID + "】微信BIZ信息任务异常", ex);
+                        _logger.Error("获取【" + media.MediaID + "】微信BIZ信息任务异常", ex);
                         db.SaveChanges();
                     }
                 }
@@ -81,6 +81,6 @@ namespace QuartzTask.Jobs
                 }
             }
         }
-        
+
     }
 }
