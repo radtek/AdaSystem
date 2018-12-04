@@ -213,7 +213,7 @@ namespace Ada.Services.Business
                     default:
                         return allList.OrderByDescending(d => d.Id).Skip(offset).Take(rows);
                 }
-                
+
             }
 
             switch (viewModel.sort)
@@ -253,7 +253,7 @@ namespace Ada.Services.Business
                     .LoadEntities(d => d.OrganizationName == viewModel.OrganizationName).FirstOrDefault();
                 if (organization != null)
                 {
-                    var mangers = _managerRepository.LoadEntities(d => d.IsDelete == false );
+                    var mangers = _managerRepository.LoadEntities(d => d.IsDelete == false);
                     businessOrders = from b in businessOrders
                                      from m in mangers
                                      where b.BusinessOrder.TransactorId == m.Id && m.Organizations.Any(o => o.TreePath.Contains(organization.Id))
@@ -331,7 +331,7 @@ namespace Ada.Services.Business
         }
 
         /// <summary>
-        /// 销售业绩统计(按经办人分组)
+        /// 销售业绩统计(按媒体类型分组)
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
@@ -370,7 +370,57 @@ namespace Ada.Services.Business
                         TotalPurchaseMoney = d.Sum(o => o.PurchaseMoney),
                         TotalProfitMoney = d.Sum(o => o.ProfitMoney),
                         Profit = d.Sum(o => o.SellMoney) == 0 ? 0 : d.Sum(o => o.ProfitMoney) / d.Sum(o => o.SellMoney) * 100,
+                        OrderCount = d.Count()
+                    });
+        }
+        /// <summary>
+        /// 销售业绩统计(按媒体分组)
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        public IQueryable<BusinessPerformance> BusinessPerformanceGroupByMedia(BusinessOrderDetailView viewModel)
+        {
+            //var purchaseOrders = _purchaseOrderDetailRepository.LoadEntities(d => d.IsDelete == false && d.PurchaseOrder.IsDelete == false&&d.TransactorId!= "X1712181402100028");
+            var purchaseOrders = _purchaseOrderDetailRepository.LoadEntities(d => d.IsDelete == false && d.PurchaseOrder.IsDelete == false);
+            var businessOrders = _repository.LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false);
+            //过滤日期
+            if (viewModel.PublishDateStart != null && viewModel.PublishDateEnd != null)
+            {
+                var endDay = viewModel.PublishDateEnd.Value.AddDays(1);
+                purchaseOrders = purchaseOrders.Where(d =>
+                    d.PublishDate >= viewModel.PublishDateStart && d.PublishDate < endDay);
+            }
 
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeId))
+            {
+                purchaseOrders =
+                    purchaseOrders.Where(d => d.MediaPrice.Media.MediaType.CallIndex == viewModel.MediaTypeId);
+            }
+            return (from b in businessOrders
+                    from p in purchaseOrders
+                        //双方都是已完成的状态
+                    where p.Status == Consts.PurchaseStatusSuccess &&
+                          b.Status == Consts.StateOK &&
+                          b.Id == p.BusinessOrderDetailId
+                    select new BusinessOrderDetailView
+                    {
+                        SellMoney = b.SellMoney,
+                        VerificationMoney = b.VerificationMoney,
+                        ConfirmVerificationMoney = b.ConfirmVerificationMoney,
+                        PurchaseMoney = p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Where(a => a.PurchaseReturnOrder.AuditStatus == Consts.StateNormal).Sum(d => d.Money) ?? 0),
+                        ProfitMoney = b.SellMoney - (p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Where(a => a.PurchaseReturnOrder.AuditStatus == Consts.StateNormal).Sum(d => d.Money) ?? 0)),
+                        MediaId = b.MediaPrice.Media.Id,
+                        MediaName = b.MediaPrice.Media.MediaName
+                    }).GroupBy(d => new { d.MediaId, d.MediaName }).Select(d => new BusinessPerformance
+                    {
+                        MediaName = d.Key.MediaName,
+                        TotalSellMoney = d.Sum(o => o.SellMoney),
+                        TotalVerificationMoney = d.Sum(o => o.VerificationMoney),
+                        TotalConfirmVerificationMoney = d.Sum(o => o.ConfirmVerificationMoney),
+                        TotalPurchaseMoney = d.Sum(o => o.PurchaseMoney),
+                        TotalProfitMoney = d.Sum(o => o.ProfitMoney),
+                        Profit = d.Sum(o => o.SellMoney) == 0 ? 0 : d.Sum(o => o.ProfitMoney) / d.Sum(o => o.SellMoney) * 100,
+                        OrderCount = d.Count()
                     });
         }
         public void Update(BusinessOrderDetail entity)

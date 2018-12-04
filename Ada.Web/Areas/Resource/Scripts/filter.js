@@ -142,12 +142,7 @@ filterFormat.mediaPrice = function (value, row) {
             
         });
     arr.push("<li class='list-group-item p-xxs'><span class='badge'>" + moment(value[0].InvalidDate).format("YYYY-MM-DD") + "</span>价格有效期</li>");
-    var xtprice = "";
-    if (row.MediaTypeIndex == "douyin" && row.ChannelType == "是") {
-        xtprice =
-            "<div class='p-xxs'><span class='btn btn-warning btn-outline btn-xs'><i class='fa fa-star-o'></i> 星图价格</div>";
-    }
-    return "<ul class='list-group m-b-none'>" + arr.join('') + "</ul>"+xtprice;
+    return "<ul class='list-group m-b-none'>" + arr.join('') + "</ul>";
 };
 filterFormat.priceProtection = function (value, row) {
     if (value == 0 || !value) {
@@ -339,14 +334,6 @@ function groupDetail(id) {
 function onLoadSuccess(data) {
     if ($("#MediaBatch").val()) {
         if (data.no.length > 0) {
-            //$.each(data.no,
-            //    function (k, v) {
-            //        $('#resultModal .modal-body').append('<div class="checkbox checkbox-success checkbox-inline">' +
-            //            '<input type = "checkbox" id = "inlineCheckbox' + k + '" name = "Develop" value = "' + v + '" checked = "" >' +
-            //            '<label for="inlineCheckbox' + k + '"> ' + v + ' </label>' +
-            //            '</div>');
-                    
-            //    });
             $('#resultModal .modal-body').html(data.no.join(','));
             $('#resultModal').modal('show');
         }

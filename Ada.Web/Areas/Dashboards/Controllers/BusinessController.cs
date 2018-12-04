@@ -46,13 +46,13 @@ namespace Dashboards.Controllers
             }
             var purchase = _purchaseRepository.LoadEntities(d => d.IsDelete == false);
             //var temp = business.Where(d => d.Status != 0);
-            viewModel.OrderCount = string.IsNullOrWhiteSpace(userId)?purchase.Count(d=>d.Status!=Consts.PurchaseStatusFail): purchase.Count(d => d.Status != Consts.PurchaseStatusFail&&d.PurchaseOrder.BusinessById==userId);
-            var moneyTotal= _businessOrderDetailService.BusinessPerformanceGroupByUser(new BusinessOrderDetailView());
+            viewModel.OrderCount = string.IsNullOrWhiteSpace(userId) ? purchase.Count(d => d.Status != Consts.PurchaseStatusFail) : purchase.Count(d => d.Status != Consts.PurchaseStatusFail && d.PurchaseOrder.BusinessById == userId);
+            var moneyTotal = _businessOrderDetailService.BusinessPerformanceGroupByUser(new BusinessOrderDetailView());
             if (!string.IsNullOrWhiteSpace(userId))
             {
                 moneyTotal = moneyTotal.Where(d => d.Transactor == CurrentManager.UserName);
             }
-            viewModel.SellMoney = moneyTotal.Sum(d=>d.TotalSellMoney);
+            viewModel.SellMoney = moneyTotal.Sum(d => d.TotalSellMoney);
             viewModel.ConfirmVerificationMoney = moneyTotal.Sum(d => d.TotalConfirmVerificationMoney);
             viewModel.VerificationMoney = moneyTotal.Sum(d => d.TotalVerificationMoney);
             viewModel.Waiting = business.Count(d => d.Status == Consts.StateLock);
@@ -88,11 +88,11 @@ namespace Dashboards.Controllers
                 .Where(d => d.Status == Consts.StateOK && d.VerificationStatus == Consts.StateLock)
                 .GroupBy(d => d.BusinessOrder.LinkMan).Select(d => new VerificationInfo
                 {
-                    CompanyName=d.Key.Commpany.Name,
-                    LinkManName=d.Key.Name,
+                    CompanyName = d.Key.Commpany.Name,
+                    LinkManName = d.Key.Name,
                     LinkManId = d.Key.Id,
-                    VerificationMoney=d.Sum(o=>o.VerificationMoney)
-                }).OrderByDescending(d=>d.VerificationMoney).Take(50).ToList();
+                    VerificationMoney = d.Sum(o => o.VerificationMoney)
+                }).OrderByDescending(d => d.VerificationMoney).Take(50).ToList();
             return View(viewModel);
         }
         /// <summary>
@@ -112,7 +112,7 @@ namespace Dashboards.Controllers
                     quare.PublishDateStart = new DateTime(dateTime.Year, dateTime.Month, 1);
                     quare.PublishDateEnd = new DateTime(dateTime.Year, dateTime.Month, DateTime.DaysInMonth(dateTime.Year, dateTime.Month));
                 }
-                
+
             }
             quare.OrganizationName = o;
             var result = _businessOrderDetailService.BusinessPerformanceGroupByUser(quare).OrderByDescending(d => d.TotalProfitMoney);
@@ -154,7 +154,7 @@ namespace Dashboards.Controllers
             quare.PublishDateStart = new DateTime(now.Year, now.Month, 1);
             quare.PublishDateEnd = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
             var result = _businessOrderDetailService.BusinessPerformanceGroupByMediaType(quare);
-            return Json(result.Select(d => new { name = d.MediaTypeName, value = d.TotalProfitMoney }).ToList(), JsonRequestBehavior.AllowGet);
+            return Json(result.Select(d => new { name = d.MediaTypeName + "[" + d.OrderCount + "]", value = d.TotalProfitMoney }).ToList(), JsonRequestBehavior.AllowGet);
         }
     }
 }

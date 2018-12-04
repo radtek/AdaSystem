@@ -81,6 +81,10 @@ namespace Admin.Controllers
             Session["LoginManager"] = SerializeHelper.SerializeToString(result);
             //清空登陆日志缓存
             _signals.Trigger("LoginLog" + result.Id + ".Changed");
+            if (Session["LastUrl"] !=null)
+            {
+                return Redirect(Session["LastUrl"].ToString());
+            }
             return RedirectToAction("Index", "Home", new { area = "Dashboards" });
 
         }

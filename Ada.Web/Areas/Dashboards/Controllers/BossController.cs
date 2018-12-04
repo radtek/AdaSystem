@@ -28,6 +28,7 @@ namespace Dashboards.Controllers
         private readonly IRepository<MediaPrice> _mediaRepository;
         private readonly IRepository<OrderDetailComment> _orderDetailCommentRepository;
         private readonly IRepository<MediaComment> _mediaCommentRepository;
+        private readonly IBusinessOrderDetailService _businessOrderDetailService;
 
         public BossController(IRepository<BusinessOrderDetail> businessRepository,
             IRepository<PurchaseOrderDetail> purchaseRepository,
@@ -37,7 +38,9 @@ namespace Dashboards.Controllers
             IRepository<ExpenseDetail> expenseDetailDetailRepository,
             IRepository<MediaPrice> mediaRepository,
             IRepository<OrderDetailComment> orderDetailCommentRepository,
-            IRepository<MediaComment> mediaCommentRepository)
+            IRepository<MediaComment> mediaCommentRepository
+
+            )
         {
             _businessRepository = businessRepository;
             _purchaseRepository = purchaseRepository;
@@ -47,6 +50,7 @@ namespace Dashboards.Controllers
             _mediaRepository = mediaRepository;
             _orderDetailCommentRepository = orderDetailCommentRepository;
             _mediaCommentRepository = mediaCommentRepository;
+            _businessOrderDetailService = businessOrderDetailService;
         }
         public ActionResult Index()
         {
@@ -81,30 +85,6 @@ namespace Dashboards.Controllers
                 .Sum(d => d.Money);
             total.Income = receivables + income;
             total.Expend = expend + billpay;
-            ////资源数
-            //var types = _mediaTypeDetailRepository.LoadEntities(d => d.IsDelete == false).ToList();
-            //List<MediaTypeView> mediaTypeViews = new List<MediaTypeView>();
-            //foreach (var mediaType in types)
-            //{
-            //    MediaTypeView item = new MediaTypeView();
-            //    item.Image = mediaType.Image;
-            //    item.TypeName = mediaType.TypeName;
-            //    item.Taxis = mediaType.Medias.Count(d => d.IsDelete == false);
-            //    mediaTypeViews.Add(item);
-            //}
-
-            //total.MediaTypes = mediaTypeViews;
-            total.MediaOrders = _mediaRepository.LoadEntities(d =>
-                  d.Media.IsDelete == false && d.Media.Status == Consts.StateNormal &&
-                  (d.Media.MediaType.CallIndex == "weixin" || d.Media.MediaType.CallIndex == "sinablog")).Select(d => new MediaOrder
-                  {
-                      TypeName = d.Media.MediaType.TypeName,
-                      MediaName = d.Media.MediaName,
-                      MediaID = d.Media.MediaID,
-                      Count = d.BusinessOrderDetails.Count,
-                      AdPostion = d.AdPositionName,
-                      SellMoney = d.BusinessOrderDetails.Sum(o => o.SellMoney)
-                  }).OrderByDescending(d => d.Count).Take(20).ToList();
             //订单 资源评价
             total.OrderComments = _orderDetailCommentRepository.LoadEntities(d => d.IsDelete == false).GroupBy(d => d.Transactor).Select(d =>
                   new Comment
@@ -134,7 +114,21 @@ namespace Dashboards.Controllers
         {
             return Json(GetPurchaseOrderTotal(date), JsonRequestBehavior.AllowGet);
         }
-
+        public ActionResult GetMediaTypeBusinessTop(string index,string date)
+        {
+            BusinessOrderDetailView quare = new BusinessOrderDetailView();
+            if (!string.IsNullOrWhiteSpace(date))
+            {
+                if (DateTime.TryParse(date, out var dateTime))
+                {
+                    quare.PublishDateStart = new DateTime(dateTime.Year, dateTime.Month, 1);
+                    quare.PublishDateEnd = new DateTime(dateTime.Year, dateTime.Month, DateTime.DaysInMonth(dateTime.Year, dateTime.Month));
+                }
+            }
+            quare.MediaTypeId = index;
+            var result = _businessOrderDetailService.BusinessPerformanceGroupByMedia(quare).OrderByDescending(d => d.TotalProfitMoney).Take(20).ToList();
+            return Json(result,JsonRequestBehavior.AllowGet);
+        }
         private List<PurchaseOrderTotal> GetPurchaseOrderTotal(string date = null)
         {
             var orders = _purchaseRepository

@@ -118,10 +118,179 @@
         </div>
     </div>
 
-
-
-
     <div class="row">
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins" id="weixin">
+                <div class="ibox-title">
+                    <h5>微信销售业绩排行</h5>
+                    <div class="ibox-tools">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="label label-info pull-right"><span class="currentdate">出刊日期</span> <i class="fa fa-chevron-down"></i></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="javascript:getMediaOrder('weixin','');">出刊日期</a>
+                            </li>
+                            @for (int i = 0; i < 12; i++)
+                            {
+                                <li>
+                                    <a href="javascript:getMediaOrder('weixin','@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")');">@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")</a>
+                                </li>
+                            }
+                        </ul>
+
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="sk-spinner sk-spinner-double-bounce">
+                        <div class="sk-double-bounce1"></div>
+                        <div class="sk-double-bounce2"></div>
+                    </div>
+                    <div class="scroll_content">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">排序</th>
+                                    <th>媒体信息</th>
+                                    <th>利润总额[无税]</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins" id="sinablog">
+                <div class="ibox-title">
+                    <h5>微博销售业绩排行</h5>
+                    <div class="ibox-tools">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="label label-info pull-right"><span class="currentdate">出刊日期</span> <i class="fa fa-chevron-down"></i></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="javascript:getMediaOrder('sinablog','');">出刊日期</a>
+                            </li>
+                            @for (int i = 0; i < 12; i++)
+                            {
+                                <li>
+                                    <a href="javascript:getMediaOrder('sinablog','@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")');">@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")</a>
+                                </li>
+                            }
+                        </ul>
+
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="sk-spinner sk-spinner-double-bounce">
+                        <div class="sk-double-bounce1"></div>
+                        <div class="sk-double-bounce2"></div>
+                    </div>
+                    <div class="scroll_content">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">排序</th>
+                                    <th>媒体信息</th>
+                                    <th>利润总额[无税]</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins" id="redbook">
+                <div class="ibox-title">
+                    <h5>小红书销售业绩排行</h5>
+                    <div class="ibox-tools">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="label label-info pull-right"><span class="currentdate">出刊日期</span> <i class="fa fa-chevron-down"></i></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="javascript:getMediaOrder('redbook','');">出刊日期</a>
+                            </li>
+                            @for (int i = 0; i < 12; i++)
+                            {
+                                <li>
+                                    <a href="javascript:getMediaOrder('redbook','@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")');">@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")</a>
+                                </li>
+                            }
+                        </ul>
+
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="sk-spinner sk-spinner-double-bounce">
+                        <div class="sk-double-bounce1"></div>
+                        <div class="sk-double-bounce2"></div>
+                    </div>
+                    <div class="scroll_content">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">排序</th>
+                                    <th>媒体信息</th>
+                                    <th>利润总额[无税]</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins" id="douyin">
+                <div class="ibox-title">
+                    <h5>抖音销售业绩排行</h5>
+                    <div class="ibox-tools">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="label label-info pull-right"><span class="currentdate">出刊日期</span> <i class="fa fa-chevron-down"></i></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="javascript:getMediaOrder('douyin','');">出刊日期</a>
+                            </li>
+                            @for (int i = 0; i < 12; i++)
+                            {
+                                <li>
+                                    <a href="javascript:getMediaOrder('douyin','@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")');">@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")</a>
+                                </li>
+                            }
+                        </ul>
+
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="sk-spinner sk-spinner-double-bounce">
+                        <div class="sk-double-bounce1"></div>
+                        <div class="sk-double-bounce2"></div>
+                    </div>
+                    <div class="scroll_content">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">排序</th>
+                                    <th>媒体信息</th>
+                                    <th>利润总额[无税]</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @*<div class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
@@ -129,46 +298,46 @@
                 </div>
                 <div class="ibox-content">
                     <div class="scroll_content">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">排序</th>
-                                        <th class="text-center">媒体类型</th>
-                                        <th class="text-center">媒体信息</th>
-                                        <th class="text-center">广告位</th>
-                                        <th class="text-center">销售订单数</th>
-                                        <th>销售金额（无税）</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (Model.MediaOrders != null)
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">排序</th>
+                                    <th class="text-center">媒体类型</th>
+                                    <th class="text-center">媒体信息</th>
+                                    <th class="text-center">广告位</th>
+                                    <th class="text-center">销售订单数</th>
+                                    <th>销售金额（无税）</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.MediaOrders != null)
+                                {
+                                    var i = 1;
+                                    foreach (var item in Model.MediaOrders)
                                     {
-                                        var i = 1;
-                                        foreach (var item in Model.MediaOrders)
-                                        {
-                                            <tr>
-                                                <td class="text-center">@i</td>
-                                                <td class="text-center">
-                                                    @item.TypeName
-                                                </td>
-                                                <td class="text-center">@item.MediaName - @item.MediaID</td>
-                                                <td class="text-center">
-                                                    @item.AdPostion
-                                                </td>
-                                                <td class="text-center"><span class="label label-primary">@item.Count</span></td>
-                                                <td><span class="label label-warning">@item.SellMoney</span></td>
-                                            </tr>
-                                            i++;
-                                        }
+                                        <tr>
+                                            <td class="text-center">@i</td>
+                                            <td class="text-center">
+                                                @item.TypeName
+                                            </td>
+                                            <td class="text-center">@item.MediaName - @item.MediaID</td>
+                                            <td class="text-center">
+                                                @item.AdPostion
+                                            </td>
+                                            <td class="text-center"><span class="label label-primary">@item.Count</span></td>
+                                            <td><span class="label label-warning">@item.SellMoney</span></td>
+                                        </tr>
+                                        i++;
                                     }
-                                </tbody>
-                            </table>
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    
+    </div>*@
+
     <div class="row">
         <div class="col-lg-6">
             <div class="ibox float-e-margins" id="order">
@@ -242,7 +411,7 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>销售人员改价统计</h5>
-                    
+
                 </div>
                 <div class="ibox-content">
                     <div class="scroll_content">
@@ -261,7 +430,7 @@
                                             @item.Text
                                         </td>
                                         <td class="text-center">@item.Value</td>
-                                        
+
                                     </tr>
                                 }
                             </tbody>
@@ -272,7 +441,7 @@
         </div>
     </div>
 
-<div class="row">
+    <div class="row">
         <div class="col-lg-12">
             <div class="row">
                 <div class="col-lg-6">
@@ -284,23 +453,23 @@
                             <div class="scroll_content">
                                 <table class="table table-hover margin bottom">
                                     <thead>
-                                    <tr>
-                                        <th>评价人员</th>
-                                        <th>评价次数</th>
-                                    </tr>
+                                        <tr>
+                                            <th>评价人员</th>
+                                            <th>评价次数</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach (var item in Model.OrderComments)
-                                    {
-                                        <tr>
-                                            <td>@item.Transactor</td>
-                                            <td><span class="badge badge-success">@item.Count</span></td>
-                                        </tr>
-                                    }
+                                        @foreach (var item in Model.OrderComments)
+                                        {
+                                            <tr>
+                                                <td>@item.Transactor</td>
+                                                <td><span class="badge badge-success">@item.Count</span></td>
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -313,19 +482,19 @@
                             <div class="scroll_content">
                                 <table class="table table-hover margin bottom">
                                     <thead>
-                                    <tr>
-                                        <th>评价人员</th>
-                                        <th>评价次数</th>
-                                    </tr>
+                                        <tr>
+                                            <th>评价人员</th>
+                                            <th>评价次数</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach (var item in Model.MediaComments)
-                                    {
-                                        <tr>
-                                            <td>@item.Transactor</td>
-                                            <td><span class="badge badge-success">@item.Count</span></td>
-                                        </tr>
-                                    }
+                                        @foreach (var item in Model.MediaComments)
+                                        {
+                                            <tr>
+                                                <td>@item.Transactor</td>
+                                                <td><span class="badge badge-success">@item.Count</span></td>
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -343,6 +512,10 @@
             $('.scroll_content').slimscroll({
                 height: '380px'
             });
+            getMediaOrder("weixin");
+            getMediaOrder("sinablog");
+            getMediaOrder("douyin");
+            getMediaOrder("redbook");
         });
         function getPurchaseOrder(date) {
             var $top = $("#order"), $table = $("#order tbody");
@@ -363,6 +536,36 @@
                                 '<td class="text-center">' +
                                 '<span class="label label-' + color + '">' + v.Diff + '</span>' +
                                 '</td>' +
+                                '</tr>');
+                        });
+                },
+                error: function () {
+                    //swal("操作失败", "系统错误", "error");
+                },
+                complete: function () {
+                    $top.children('.ibox-content').toggleClass('sk-loading');
+                },
+                beforeSend: function() {
+                    $top.children('.ibox-content').toggleClass('sk-loading');
+                }
+            });
+        }
+        function getMediaOrder(index,date) {
+            var $top = $("#" + index), $table = $("#" + index+" tbody");
+            $("#" + index+" .currentdate").text(date ||"出刊日期");
+            $.ajax({
+                type: "get",
+                url: "@Url.Action("GetMediaTypeBusinessTop")",
+                data: {index:index, date:date },
+                success: function (data) {
+                    $table.empty();
+                    $.each(data,
+                        function (k, v) {
+                           
+                            $table.append('<tr>' +
+                                '<td class="text-center">' + (k+1)+'</td>' +
+                                '<td>' + v.MediaName + ' <span class="label label-warning">' + v.OrderCount +'</span></td>' +
+                                '<td><span class="label label-info">' + v.TotalProfitMoney+'</span></td>' +
                                 '</tr>');
                         });
                 },

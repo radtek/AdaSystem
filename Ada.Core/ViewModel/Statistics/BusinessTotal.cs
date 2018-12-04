@@ -159,5 +159,15 @@ namespace Ada.Core.ViewModel.Statistics
         /// </summary>
         [Display(Name = "媒体类型")]
         public string MediaTypeName { get; set; }
+        /// <summary>
+        /// 媒体名称
+        /// </summary>
+        [Display(Name = "媒体名称")]
+        public string MediaName { get; set; }
+        /// <summary>
+        /// 订单总数
+        /// </summary>
+        [Display(Name = "订单总数")]
+        public int? OrderCount { get; set; }
     }
 }

@@ -30,6 +30,7 @@ namespace Ada.Services.Business
         IQueryable<BusinessPerformance> BusinessPerformanceGroupByUser(BusinessOrderDetailView viewModel);
         IQueryable<BusinessPerformance> BusinessPerformanceGroupByDate(BusinessOrderDetailView viewModel);
         IQueryable<BusinessPerformance> BusinessPerformanceGroupByMediaType(BusinessOrderDetailView viewModel);
+        IQueryable<BusinessPerformance> BusinessPerformanceGroupByMedia(BusinessOrderDetailView viewModel);
         void Update(BusinessOrderDetail entity);
         void Update(List<BusinessOrderDetail> entitys);
         void Delete(BusinessOrderDetail entity);

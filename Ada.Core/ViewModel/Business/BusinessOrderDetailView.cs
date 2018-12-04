@@ -117,6 +117,11 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "媒体名称")]
         public string MediaName { get; set; }
         /// <summary>
+        /// 媒体名称
+        /// </summary>
+        [Display(Name = "媒体名称")]
+        public string MediaId { get; set; }
+        /// <summary>
         /// 经办媒介
         /// </summary>
         [Display(Name = "经办媒介")]
@@ -286,6 +291,6 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "转单日期")]
         public DateTime? OrderToDate { get; set; }
-
+        
     }
 }
