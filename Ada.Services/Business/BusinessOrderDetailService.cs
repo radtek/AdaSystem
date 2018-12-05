@@ -246,6 +246,11 @@ namespace Ada.Services.Business
                 purchaseOrders = purchaseOrders.Where(d =>
                     d.PublishDate >= viewModel.PublishDateStart && d.PublishDate < endDay);
             }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaTypeId))
+            {
+                purchaseOrders =
+                    purchaseOrders.Where(d => d.MediaPrice.Media.MediaType.CallIndex == viewModel.MediaTypeId);
+            }
             //过滤部门
             if (!string.IsNullOrWhiteSpace(viewModel.OrganizationName))
             {
@@ -261,6 +266,7 @@ namespace Ada.Services.Business
                 }
 
             }
+            
             return (from b in businessOrders
                     from p in purchaseOrders
                         //双方都是已完成的状态

@@ -151,7 +151,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">排序</th>
-                                    <th>媒体信息</th>
+                                    <th>销售人员</th>
                                     <th>利润总额[无税]</th>
                                 </tr>
                             </thead>
@@ -193,7 +193,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">排序</th>
-                                    <th>媒体信息</th>
+                                    <th>销售人员</th>
                                     <th>利润总额[无税]</th>
                                 </tr>
                             </thead>
@@ -235,7 +235,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">排序</th>
-                                    <th>媒体信息</th>
+                                    <th>销售人员</th>
                                     <th>利润总额[无税]</th>
                                 </tr>
                             </thead>
@@ -277,7 +277,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">排序</th>
-                                    <th>媒体信息</th>
+                                    <th>销售人员</th>
                                     <th>利润总额[无税]</th>
                                 </tr>
                             </thead>
@@ -561,11 +561,11 @@
                     $table.empty();
                     $.each(data,
                         function (k, v) {
-                           
+                            var total = v.TotalProfitMoney / 10000;
                             $table.append('<tr>' +
                                 '<td class="text-center">' + (k+1)+'</td>' +
-                                '<td>' + v.MediaName + ' <span class="label label-warning">' + v.OrderCount +'</span></td>' +
-                                '<td><span class="label label-info">' + v.TotalProfitMoney+'</span></td>' +
+                                '<td>' + v.Transactor + '</span></td>' +
+                                '<td><span class="label label-warning">' + total.toFixed(1)+' 万</span></td>' +
                                 '</tr>');
                         });
                 },

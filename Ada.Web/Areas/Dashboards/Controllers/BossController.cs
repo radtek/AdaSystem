@@ -126,7 +126,7 @@ namespace Dashboards.Controllers
                 }
             }
             quare.MediaTypeId = index;
-            var result = _businessOrderDetailService.BusinessPerformanceGroupByMedia(quare).OrderByDescending(d => d.TotalProfitMoney).Take(20).ToList();
+            var result = _businessOrderDetailService.BusinessPerformanceGroupByUser(quare).OrderByDescending(d => d.TotalProfitMoney).Take(20).ToList();
             return Json(result,JsonRequestBehavior.AllowGet);
         }
         private List<PurchaseOrderTotal> GetPurchaseOrderTotal(string date = null)

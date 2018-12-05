@@ -154,7 +154,7 @@ namespace Dashboards.Controllers
             quare.PublishDateStart = new DateTime(now.Year, now.Month, 1);
             quare.PublishDateEnd = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
             var result = _businessOrderDetailService.BusinessPerformanceGroupByMediaType(quare);
-            return Json(result.Select(d => new { name = d.MediaTypeName + "[" + d.OrderCount + "]", value = d.TotalProfitMoney }).ToList(), JsonRequestBehavior.AllowGet);
+            return Json(result.Select(d => new { name = d.MediaTypeName , value = d.TotalProfitMoney }).ToList(), JsonRequestBehavior.AllowGet);
         }
     }
 }
