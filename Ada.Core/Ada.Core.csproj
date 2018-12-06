@@ -101,6 +101,7 @@
     <Compile Include="Domain\Business\BusinessWriteOff.cs" />
     <Compile Include="Domain\Business\BusinessInvoice.cs" />
     <Compile Include="Domain\Business\BusinessInvoiceDetail.cs" />
+    <Compile Include="Domain\Business\BusinessWriteOffDetail.cs" />
     <Compile Include="Domain\Business\OfferRatio.cs" />
     <Compile Include="Domain\Business\OfferRatioDetail.cs" />
     <Compile Include="Domain\Business\OrderDetailComment.cs" />

@@ -71,6 +71,7 @@
     <Compile Include="Mapping\Business\BusinessInvoiceMap.cs" />
     <Compile Include="Mapping\Business\BusinessOfferDetailMap.cs" />
     <Compile Include="Mapping\Business\BusinessOfferMap.cs" />
+    <Compile Include="Mapping\Business\BusinessWriteOffDetailMap.cs" />
     <Compile Include="Mapping\Business\BusinessWriteOffMap.cs" />
     <Compile Include="Mapping\Business\BusinessPaymentMap.cs" />
     <Compile Include="Mapping\Business\BusinessPayeeMap.cs" />
@@ -385,6 +386,10 @@
     <Compile Include="Migrations\201810300050286_UpdateCommpany.Designer.cs">
       <DependentUpon>201810300050286_UpdateCommpany.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812060346594_UserProfile20181606.cs" />
+    <Compile Include="Migrations\201812060346594_UserProfile20181606.Designer.cs">
+      <DependentUpon>201812060346594_UserProfile20181606.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -590,6 +595,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810300050286_UpdateCommpany.resx">
       <DependentUpon>201810300050286_UpdateCommpany.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812060346594_UserProfile20181606.resx">
+      <DependentUpon>201812060346594_UserProfile20181606.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

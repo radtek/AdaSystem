@@ -16,6 +16,7 @@ namespace Ada.Core.Domain.Business
         {
             BusinessOrderDetails = new HashSet<BusinessOrderDetail>();
             BusinessPayees=new HashSet<BusinessPayee>();
+            BusinessWriteOffDetails=new HashSet<BusinessWriteOffDetail>();
         }
         /// <summary>
         /// 销账日期
@@ -39,5 +40,6 @@ namespace Ada.Core.Domain.Business
         public string TransactorId { get; set; }
         public virtual ICollection<BusinessPayee> BusinessPayees { get; set; }
         public virtual ICollection<BusinessOrderDetail> BusinessOrderDetails { get; set; }
+        public virtual ICollection<BusinessWriteOffDetail> BusinessWriteOffDetails { get; set; }
     }
 }

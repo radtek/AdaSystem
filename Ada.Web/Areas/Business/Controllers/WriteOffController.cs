@@ -10,8 +10,10 @@ using Ada.Core.Domain.Business;
 using Ada.Core.Domain.Finance;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.ViewModel.Business;
+using Ada.Core.ViewModel.Setting;
 using Ada.Framework.Filter;
 using Ada.Services.Business;
+using Ada.Services.Setting;
 
 namespace Business.Controllers
 {
@@ -27,13 +29,15 @@ namespace Business.Controllers
         private readonly IRepository<BusinessPayee> _businessPayeerepository;
         private readonly IRepository<BusinessPayment> _businessPaymentRepository;
         private readonly IRepository<Receivables> _receivablesRepository;
+        private readonly ISettingService _settingService;
         public WriteOffController(IBusinessWriteOffService businessWriteOffService,
             IRepository<BusinessWriteOff> repository,
             IRepository<BusinessOrderDetail> businessOrderDetailRepository,
             IRepository<BusinessPayee> businessPayeerepository,
             IRepository<PurchaseOrderDetail> purchaseOrderDetailRepository,
             IRepository<BusinessPayment> businessPaymentRepository,
-            IRepository<Receivables> receivablesRepository)
+            IRepository<Receivables> receivablesRepository,
+            ISettingService settingService)
         {
             _businessWriteOffService = businessWriteOffService;
             _repository = repository;
@@ -42,6 +46,7 @@ namespace Business.Controllers
             _purchaseOrderDetailRepository = purchaseOrderDetailRepository;
             _businessPaymentRepository = businessPaymentRepository;
             _receivablesRepository = receivablesRepository;
+            _settingService = settingService;
         }
         public ActionResult Index()
         {
@@ -118,11 +123,13 @@ namespace Business.Controllers
             decimal? orderMoney = 0;
             decimal? payeeMoney = 0;
             List<string> linkman=new List<string>();
+            var setting = _settingService.GetSetting<WeiGuang>();
             foreach (var orderId in orderIds)
             {
                 var order = _businessOrderDetailRepository.LoadEntities(d => d.Id == orderId).FirstOrDefault();
+                var purchase = _purchaseOrderDetailRepository.LoadEntities(d => d.BusinessOrderDetailId == orderId).FirstOrDefault();
                 //未核销 已完成 已采购完成
-                if (order.VerificationStatus != Consts.StateNormal && order.Status == Consts.StateOK && IsPurchased(orderId))
+                if (order.VerificationStatus != Consts.StateNormal && order.Status == Consts.StateOK && purchase.Status == Consts.PurchaseStatusSuccess)
                 {
                     orderMoney += order.VerificationMoney;
                     order.VerificationStatus = Consts.StateNormal;
@@ -130,6 +137,30 @@ namespace Business.Controllers
                     order.VerificationMoney = 0;
                     businessWriteOff.BusinessOrderDetails.Add(order);
                     linkman.Add(order.BusinessOrder.LinkManId);
+                    //提成明细
+                    BusinessWriteOffDetail businessWriteOffDetail=new BusinessWriteOffDetail();
+                    businessWriteOffDetail.Id = IdBuilder.CreateIdNum();
+                    businessWriteOffDetail.BusinessOrderId = order.BusinessOrderId;
+                    businessWriteOffDetail.BusinessOrderDetailId = orderId;
+                    businessWriteOffDetail.MediaTypeId = order.MediaPrice.Media.MediaTypeId;
+                    businessWriteOffDetail.PublishDate = purchase.PublishDate;
+                    businessWriteOffDetail.SellMoney = order.SellMoney ?? 0;
+                    var costMoney = purchase.PurchaseMoney - (purchase.PurchaseReturenOrderDetails.Where(a => a.PurchaseReturnOrder.AuditStatus == Consts.StateNormal).Sum(d => d.Money) ?? 0);
+                    businessWriteOffDetail.CostMoney = costMoney ?? 0;
+                    businessWriteOffDetail.Profit = Math.Round(businessWriteOffDetail.SellMoney - businessWriteOffDetail.CostMoney,2) ;
+                    var span = businessWriteOff.WriteOffDate - purchase.PublishDate;
+                    businessWriteOffDetail.MoneyBackDay = span == null ? 0 : (int)span.Value.TotalDays;
+                    if (businessWriteOffDetail.MoneyBackDay <= setting.ReturnDays2)
+                    {
+                        businessWriteOffDetail.Percentage = setting.Percentage2;
+                    }
+                    if (businessWriteOffDetail.MoneyBackDay <= setting.ReturnDays1)
+                    {
+                        businessWriteOffDetail.Percentage = setting.Percentage1;
+                    }
+                    businessWriteOffDetail.Commission =
+                        businessWriteOffDetail.Profit * businessWriteOffDetail.Percentage;
+                    businessWriteOff.BusinessWriteOffDetails.Add(businessWriteOffDetail);
                 }
 
             }
@@ -148,6 +179,8 @@ namespace Business.Controllers
                     payee.VerificationMoney = 0;
                     businessWriteOff.BusinessPayees.Add(payee);
                     linkman.Add(payee.LinkManId);
+                    
+
                 }
 
             }

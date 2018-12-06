@@ -49,7 +49,8 @@ namespace Ada.Web.Controllers
         private readonly IDbContext _dbContext;
         private readonly ICacheService _cacheService;//IBusinessOrderDetailService
         private readonly IRepository<BusinessInvoice> _invoice;
-
+        private readonly IBusinessWriteOffService _businessWriteOffService;
+        private readonly IRepository<BusinessWriteOffDetail> _businessWriteOffDetail;
         public TestController(
             IDbContext dbContext,
             IRepository<BusinessOrderDetail> temp,
@@ -66,7 +67,9 @@ namespace Ada.Web.Controllers
             IRepository<Manager> manager,
             IRepository<LinkMan> linkman,
             IRepository<Commpany> commpanyRepository,
-            IRepository<BusinessInvoice> invoice)
+            IRepository<BusinessInvoice> invoice,
+            IBusinessWriteOffService businessWriteOffService,
+            IRepository<BusinessWriteOffDetail> businessWriteOffDetail)
         {
             _dbContext = dbContext;
             _ptemp = ptemp;
@@ -81,6 +84,8 @@ namespace Ada.Web.Controllers
             _manager = manager;
             _linkman = linkman;
             _commpanyRepository = commpanyRepository;
+            _businessWriteOffService = businessWriteOffService;
+            _businessWriteOffDetail = businessWriteOffDetail;
         }
 
         public ActionResult Error()
@@ -670,6 +675,31 @@ namespace Ada.Web.Controllers
             _dbContext.SaveChanges();
             return Content("成功更换" + medias.Count + "条资源");
         }
+        //public ActionResult WriteOff()
+        //{
+        //    var result = _businessWriteOffService.LoadEntitiesFilter(new BusinessWriteOffDetailView());
+        //    IList<BusinessWriteOffDetail> list = new List<BusinessWriteOffDetail>();
+        //    foreach (var businessWriteOffDetailView in result)
+        //    {
+        //        BusinessWriteOffDetail item = new BusinessWriteOffDetail();
+        //        item.Id = IdBuilder.CreateIdNum();
+        //        item.BusinessWriteOffId = businessWriteOffDetailView.Id;
+        //        item.BusinessOrderId = businessWriteOffDetailView.OrderId;
+        //        item.BusinessOrderDetailId = businessWriteOffDetailView.OrderDetailId;
+        //        item.CostMoney = businessWriteOffDetailView.PurchaseMoney ?? 0;
+        //        item.MoneyBackDay = businessWriteOffDetailView.ReturnDays ?? 0;
+        //        item.Percentage = businessWriteOffDetailView.Percentage ?? 0;
+        //        item.SellMoney = businessWriteOffDetailView.BusinessMoney ?? 0;
+        //        item.Commission = businessWriteOffDetailView.Commission ?? 0;
+        //        item.MediaTypeId = businessWriteOffDetailView.MediaTypeId;
+        //        item.Profit = businessWriteOffDetailView.Profit ?? 0;
+        //        item.PublishDate = businessWriteOffDetailView.PublishDate;
+        //        list.Add(item);
+        //    }
+        //    _businessWriteOffDetail.Add(list);
+        //    _dbContext.SaveChanges();
+        //    return Content("提成明细添加成功：共" + list.Count + "条");
+        //}
         public ActionResult Tool()
         {
             //var result=  _businessOrderDetailService.BusinessPerformanceGroupByMediaType(new BusinessOrderDetailView()

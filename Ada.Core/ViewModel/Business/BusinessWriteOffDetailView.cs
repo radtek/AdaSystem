@@ -87,9 +87,21 @@ namespace Ada.Core.ViewModel.Business
         /// <summary>
         /// 订单编号
         /// </summary>
-        [Display(Name = "订单编号")]
+        [Display(Name = "销售项目")]
         [Required]
         public string OrderId { get; set; }
+        /// <summary>
+        /// 销售订单
+        /// </summary>
+        [Display(Name = "销售订单")]
+        [Required]
+        public string OrderDetailId { get; set; }
+        /// <summary>
+        /// 媒体类型
+        /// </summary>
+        [Display(Name = "媒体类型")]
+        [Required]
+        public string MediaTypeId { get; set; }
         /// <summary>
         /// 订单编号
         /// </summary>

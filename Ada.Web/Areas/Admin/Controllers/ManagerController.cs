@@ -326,8 +326,9 @@ namespace Admin.Controllers
                 {
                     if (item.EntryDate != null)
                     {
-                        var span = viewModel.EntryDate.Value - new DateTime(item.EntryDate.Value.Year,
-                                       item.EntryDate.Value.AddMonths(1).Month, 1);
+                        var temp = item.EntryDate.Value.AddMonths(1);
+                        var span = viewModel.EntryDate.Value - new DateTime(temp.Year,
+                                       temp.Month, 1);
                         jo.Add("入职天数（截至" + viewModel.EntryDate.Value.ToString("yyyy-MM-dd") + "）", span.TotalDays);
                     }
                 }

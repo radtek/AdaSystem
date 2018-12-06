@@ -26,29 +26,29 @@ namespace DataReport.Controllers
         public ActionResult GetList(BusinessWriteOffDetailView viewModel)
         {
             viewModel.Managers = PremissionData();
-            var result = _businessWriteOffService.LoadEntitiesFilterPage(viewModel).ToList();
+            var result = _businessWriteOffService.LoadEntitiesFiltersPage(viewModel).ToList();
             return Json(new
             {
                 viewModel.total,
-                rows = result.Select(d=>new
+                rows = result.Select(d=>new BusinessWriteOffDetailView
                 {
-                    d.Id,
-                    d.BusinessMoney,
-                    d.Commission,
-                    d.PurchaseMoney,
-                    d.Profit,
-                    d.OrderNum,
-                    d.OrderId,
-                    d.LinkManName,
-                    d.PublishDate,
-                    d.WriteOffDate,
-                    d.ReturnDays,
-                    d.Transactor,
-                    d.Percentage,
-                    viewModel.TotalCommission,
-                    viewModel.TotalBusinessMoney,
-                    viewModel.TotalProfit,
-                    viewModel.TotalPurchaseMoney
+                   Id = d.Id,
+                    BusinessMoney= d.SellMoney,
+                    Commission= d.Commission,
+                    PurchaseMoney= d.CostMoney,
+                    Profit=  d.Profit,
+                    OrderId= d.BusinessOrderId,
+                    //d.OrderId,
+                    //d.LinkManName,
+                    PublishDate= d.PublishDate,
+                    WriteOffDate= d.BusinessWriteOff.WriteOffDate,
+                    ReturnDays= d.MoneyBackDay,
+                    Transactor= d.BusinessWriteOff.Transactor,
+                    Percentage= d.Percentage,
+                    TotalCommission= viewModel.TotalCommission,
+                    TotalBusinessMoney= viewModel.TotalBusinessMoney,
+                    TotalProfit= viewModel.TotalProfit,
+                    TotalPurchaseMoney=viewModel.TotalPurchaseMoney
 
                 })
             }, JsonRequestBehavior.AllowGet);

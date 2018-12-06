@@ -15,7 +15,9 @@ namespace Ada.Services.Business
         void Update(BusinessWriteOff entity);
         void Delete(BusinessWriteOff entity);
         IQueryable<BusinessWriteOff> LoadEntitiesFilter(BusinessWriteOffView viewModel);
-        IQueryable<BusinessWriteOffDetailView> LoadEntitiesFilter(BusinessWriteOffDetailView viewModel);
-        IQueryable<BusinessWriteOffDetailView> LoadEntitiesFilterPage(BusinessWriteOffDetailView viewModel);
+        //IQueryable<BusinessWriteOffDetailView> LoadEntitiesFilter(BusinessWriteOffDetailView viewModel);
+        //IQueryable<BusinessWriteOffDetailView> LoadEntitiesFilterPage(BusinessWriteOffDetailView viewModel);
+        IQueryable<BusinessWriteOffDetail> LoadEntitiesFilters(BusinessWriteOffDetailView viewModel);
+        IQueryable<BusinessWriteOffDetail> LoadEntitiesFiltersPage(BusinessWriteOffDetailView viewModel);
     }
 }

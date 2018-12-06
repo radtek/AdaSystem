@@ -9,113 +9,189 @@
                 <h4 class="modal-title">核销明细</h4>
             </div>
             <div class="modal-body">
-                <div class="row">
+                
 
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <caption class="text-center">
-                                <h3 class="text-center">款项明细</h3>
-                            </caption>
-                            <thead>
-                                <tr>
-                                    <th>
-                                        客户名称
-                                    </th>
-                                    <th>
-                                        领款金额
-                                    </th>
-                                    <th>
-                                        领款日期
-                                    </th>
-                                    <th>
-                                        请款金额
-                                    </th>
-                                    <th>
-                                        核销金额
-                                    </th>
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#money">款项明细</a></li>
+                    <li class=""><a data-toggle="tab" href="#order">订单明细</a></li>
+                    <li class=""><a data-toggle="tab" href="#commission">销售提成</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="money" class="tab-pane active">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                客户名称
+                                            </th>
+                                            <th>
+                                                领款金额
+                                            </th>
+                                            <th>
+                                                领款日期
+                                            </th>
+                                            <th>
+                                                请款金额
+                                            </th>
+                                            <th>
+                                                核销金额
+                                            </th>
 
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.BusinessPayees)
-                                {
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.BusinessPayees)
+                                        {
+                                            <tr>
+                                                <td>@item.LinkManName</td>
+                                                <td>@item.Money</td>
+                                                <td>@item.ClaimDate</td>
+                                                <td>@item.BusinessPayments.Sum(d => d.PayMoney)</td>
+                                                <td>@item.ConfirmVerificationMoney</td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td>合计</td>
+                                            <td>@Model.BusinessPayees.Sum(d => d.Money)</td>
+                                            <td></td>
+                                            <td>@Model.BusinessPayees.Sum(d => d.BusinessPayments.Sum(p => p.PayMoney))</td>
+                                            <td>@Model.BusinessPayees.Sum(d => d.ConfirmVerificationMoney)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="order" class="tab-pane">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                订单编号
+                                            </th>
+                                            <th>
+                                                媒体类型
+                                            </th>
+                                            <th>
+                                                媒体名称
+                                            </th>
+                                            <th>
+                                                广告位
+                                            </th>
+                                            <th>
+                                                无税金额
+                                            </th>
+                                            <th>
+                                                核销金额
+                                            </th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.BusinessOrderDetails)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <a class='label' target="_blank" href='@Url.Action("Update", "Order", new{id=item.BusinessOrderId })'><i class='fa fa-link'></i>@item.BusinessOrder.OrderNum</a>
+                                                </td>
+                                                <td>@item.MediaTypeName</td>
+                                                <td>@item.MediaName</td>
+                                                <td>@item.AdPositionName</td>
+                                                <td>@item.SellMoney</td>
+                                                <td>@item.ConfirmVerificationMoney</td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td>合计</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>@Model.BusinessOrderDetails.Sum(d => d.SellMoney)</td>
+                                            <td>@Model.BusinessOrderDetails.Sum(d => d.ConfirmVerificationMoney)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="commission" class="tab-pane">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
                                     <tr>
-                                        <td>@item.LinkManName</td>
-                                        <td>@item.Money</td>
-                                        <td>@item.ClaimDate</td>
-                                        <td>@item.BusinessPayments.Sum(d => d.PayMoney)</td>
-                                        <td>@item.ConfirmVerificationMoney</td>
+                                        <th>
+                                            核销日期
+                                        </th>
+                                        <th>
+                                            销售金额
+                                        </th>
+                                        <th>
+                                            采购成本
+                                        </th>
+                                        <th>
+                                            利润金额
+                                        </th>
+                                        <th>
+                                            回款天数
+                                        </th>
+                                        <th>
+                                            提成系数
+                                        </th>
+                                        <th>
+                                            提成佣金
+                                        </th>
+
                                     </tr>
-                                }
-                                <tr>
-                                    <td>合计</td>
-                                    <td>@Model.BusinessPayees.Sum(d => d.Money)</td>
-                                    <td></td>
-                                    <td>@Model.BusinessPayees.Sum(d => d.BusinessPayments.Sum(p => p.PayMoney))</td>
-                                    <td>@Model.BusinessPayees.Sum(d => d.ConfirmVerificationMoney)</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.BusinessWriteOffDetails)
+                                        {
+                                        <tr>
+                                            <td>
+                                                @item.BusinessWriteOff.WriteOffDate.Value.ToString("yyyy-MM-dd")
+                                            </td>
+                                            <td>@item.SellMoney</td>
+                                            <td>@item.CostMoney</td>
+                                            <td>@item.Profit</td>
+                                            <td>@item.MoneyBackDay</td>
+                                            <td>@item.Percentage</td>
+                                            <td>@item.Commission</td>
+                                        </tr>
+                                        }
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>合计</td>
+                                            <td>@Model.BusinessWriteOffDetails.Sum(d => d.Commission)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="hr-line-dashed"></div>
-                <div class="row">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <caption class="text-center">
-                                <h3 class="text-center">订单明细</h3>
-                            </caption>
-                            <thead>
-                                <tr>
-                                    <th>
-                                        订单编号
-                                    </th>
-                                    <th>
-                                        媒体类型
-                                    </th>
-                                    <th>
-                                        媒体名称
-                                    </th>
-                                    <th>
-                                        广告位
-                                    </th>
-                                    <th>
-                                        无税金额
-                                    </th>
-                                    <th>
-                                        核销金额
-                                    </th>
 
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.BusinessOrderDetails)
-                                {
-                                <tr>
-                                    <td>
-                                        <a class='label' target="_blank" href='@Url.Action("Update", "Order", new{id=item.BusinessOrderId })'><i class='fa fa-link'></i>@item.BusinessOrder.OrderNum</a>
-                                    </td>
-                                    <td>@item.MediaTypeName</td>
-                                    <td>@item.MediaName</td>
-                                    <td>@item.AdPositionName</td>
-                                    <td>@item.SellMoney</td>
-                                    <td>@item.ConfirmVerificationMoney</td>
-                                </tr>
-                                }
-                                <tr>
-                                    <td>合计</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>@Model.BusinessOrderDetails.Sum(d => d.SellMoney)</td>
-                                    <td>@Model.BusinessOrderDetails.Sum(d => d.ConfirmVerificationMoney)</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
+
+
+
+
+
+
+
+
+
+
+       
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
             </div>

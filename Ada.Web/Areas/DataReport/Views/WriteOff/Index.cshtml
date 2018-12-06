@@ -145,17 +145,13 @@
                         }
                     }
                     ,
+                    
                     {
-                        field: 'LinkManName',
-                        title: '@Html.DisplayNameFor(d=>d.LinkManName)',
-                        align: "center", valign: "middle"
-                    },
-                    {
-                        field: 'OrderNum',
-                        title: '@Html.DisplayNameFor(d=>d.OrderNum)',
+                        field: 'OrderId',
+                        title: '@Html.DisplayNameFor(d=>d.OrderId)',
                         align: "center", valign: "middle",
                         formatter: function (value, row) {
-                            return "<a class='label' href='@Url.Action("Update", "Order", new{area= "Business" })?id=" + row.OrderId+"'><i class='fa fa-link'></i> " + value + "</a>";
+                            return "<a class='label' href='@Url.Action("Update", "Order", new{area= "Business" })?id=" + value+"'><i class='fa fa-link'></i> 查看订单</a>";
                         }
                     },
                     {
