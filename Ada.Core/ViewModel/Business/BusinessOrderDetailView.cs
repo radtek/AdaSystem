@@ -52,6 +52,16 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "无税金额")]
         public decimal? SellMoney { get; set; }
         /// <summary>
+        /// 无税金额
+        /// </summary>
+        [Display(Name = "无税金额")]
+        public decimal? StartSellMoney { get; set; }
+        /// <summary>
+        /// 无税金额
+        /// </summary>
+        [Display(Name = "无税金额")]
+        public decimal? EndSellMoney { get; set; }
+        /// <summary>
         /// 利润金额
         /// </summary>
         [Display(Name = "利润金额")]

@@ -111,6 +111,14 @@ namespace Ada.Services.Business
                 var endDate = viewModel.PrePublishDateEnd.Value.AddDays(1);
                 allList = allList.Where(d => d.PrePublishDate < endDate);
             }
+            if (viewModel.StartSellMoney != null)
+            {
+                allList = allList.Where(d => d.SellMoney >= viewModel.StartSellMoney);
+            }
+            if (viewModel.EndSellMoney != null)
+            {
+                allList = allList.Where(d => d.SellMoney <= viewModel.EndSellMoney);
+            }
             if (viewModel.VerificationStatus != null)
             {
                 allList = allList.Where(d => d.VerificationStatus == viewModel.VerificationStatus);

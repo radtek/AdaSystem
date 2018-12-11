@@ -108,6 +108,16 @@
                             @Html.DropDownListFor(d => d.VerificationStatus, vstatus, "请选择", new { @class = "form-control input-sm" })
                         </div>
                     </div>
+                    <div class="col-sm-2">
+                        @Html.LabelFor(d => d.StartSellMoney, Html.DisplayNameFor(d => d.StartSellMoney) + "：", new { @class = "control-label" })
+                        <div class="input-daterange input-group">
+                            @Html.TextBoxFor(d => d.StartSellMoney, new { @class = "form-control input-sm" })
+                            <span class="input-group-addon">至</span>
+                            <div class="input-group">
+                                @Html.TextBoxFor(d => d.EndSellMoney, new { @class = "form-control input-sm" })
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="row">
@@ -147,7 +157,7 @@
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/dateRange")
-<script type="text/javascript">
+    <script type="text/javascript">
 
         $(document).ready(function () {
             var table = new TableInit();
@@ -189,7 +199,7 @@
                     queryParams: function (parameters) {
                         return searchFrm.queryParams(parameters);
                     },
-                
+
                 columns: [
                     @*{
                         field: 'OrderDate',
@@ -250,7 +260,7 @@
                         field: 'AdPositionName',
                         title: '@Html.DisplayNameFor(d=>d.AdPositionName)',
                         align: "center", valign: "middle",
-                        
+
                     },
                     {
                         field: 'SellMoney',
@@ -482,12 +492,12 @@
                 }
             });
         });
-            
+
 
 
         }
-        
-</script>
+
+    </script>
 }
 
 
