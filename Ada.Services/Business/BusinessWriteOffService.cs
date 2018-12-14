@@ -120,10 +120,10 @@ namespace Ada.Services.Business
         public IQueryable<BusinessWriteOffDetail> LoadEntitiesFiltersPage(BusinessWriteOffDetailView viewModel)
         {
             var allList = LoadEntitiesFilters(viewModel);
-            viewModel.TotalBusinessMoney = allList.Sum(d => d.SellMoney);
-            viewModel.TotalCommission = allList.Sum(d => d.Commission);
-            viewModel.TotalProfit = allList.Sum(d => d.Profit);
-            viewModel.TotalPurchaseMoney = allList.Sum(d => d.CostMoney);
+            viewModel.TotalBusinessMoney = allList.Any()?allList.Sum(d => d.SellMoney):0;
+            viewModel.TotalCommission = allList.Any() ? allList.Sum(d => d.Commission):0;
+            viewModel.TotalProfit = allList.Any() ? allList.Sum(d => d.Profit):0;
+            viewModel.TotalPurchaseMoney = allList.Any() ? allList.Sum(d => d.CostMoney):0;
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;

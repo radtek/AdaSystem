@@ -180,6 +180,36 @@ formatter.ip = function (value, row, index) {
         return value;
     }
 };
+formatter.weather = function(ip) {
+    if (ip) {
+        $.ajax({
+            type: 'GET',
+            url: 'https://www.tianqiapi.com/api/',
+            data: 'version=v1&ip=' + ip,
+            dataType: 'JSON',
+            success: function(res) {
+                $(".welcome-message").html(res.data[0].date +"　"+ res.data[0].week + "　<i class='fa fa-map-marker'></i> " +
+                    res.city +
+                    "：" +
+                    res.data[0].wea +
+                    " " +
+                    res.data[0].tem1 +
+                    "~" +
+                    res.data[0].tem2 +
+                    " <span class='label label-info'>" +
+                    res.data[0].air_level +
+                    "</span>　明天：" +
+                    res.data[1].wea +
+                    " " +
+                    res.data[1].tem1 +
+                    "~" +
+                    res.data[1].tem2);
+            }
+        });
+    } else {
+        $(".welcome-message").html(moment().format('YYYY-MM-DD'));
+    }
+};
 
 function showIP(ip) {
     $('#ipmodal').on('shown.bs.modal', function () {

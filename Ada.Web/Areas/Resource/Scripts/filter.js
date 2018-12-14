@@ -14,10 +14,15 @@ filterFormat.mediaLogo = function (value, row) {
 
     var arr = [];
     if (row.IsHot) {
-        arr.push('<span class="badge badge-warning" data-toggle="tooltip" data-placement="bottom" title="对接广告主，在沟通，速度，效果方面表现优异">优质</span>');
+        var strIsHot = row.MediaTypeIndex === "redbook" ? "价格给我们优惠以及性价比高的" : "对接广告主，在沟通，速度，效果方面表现优异";
+        arr.push('<span class="badge badge-warning" data-toggle="tooltip" data-placement="bottom" title="' + strIsHot +'">优质</span>');
     }
     if (row.IsRecommend) {
-        arr.push('<span class="badge badge-danger" data-toggle="tooltip" data-placement="bottom" title="广告主的人气和关注度高">推荐</span>');
+        var strIsRecommend = row.MediaTypeIndex === "redbook" ? "好说话配合度好数据好的达人" : "广告主的人气和关注度高";
+        arr.push('<span class="badge badge-danger" data-toggle="tooltip" data-placement="bottom" title="' + strIsRecommend+'">推荐</span>');
+    }
+    if (row.IsTop && row.MediaTypeIndex === "redbook") {
+        arr.push('<span class="badge badge-success" data-toggle="tooltip" data-placement="bottom" title="签约及有签约意向的号主">置顶</span>');
     }
     var vg = '';
     if (arr.length > 0) {

@@ -233,7 +233,8 @@ namespace Salary.Controllers
             quare.WriteOffDateStar = new DateTime(viewModel.Date.Value.Year, viewModel.Date.Value.Month, 1);
             quare.WriteOffDateEnd = new DateTime(viewModel.Date.Value.Year, viewModel.Date.Value.Month, DateTime.DaysInMonth(viewModel.Date.Value.Year, viewModel.Date.Value.Month));
             quare.TransactorId = viewModel.ManagerId;
-            var saleCommission = _businessWriteOffService.LoadEntitiesFilters(quare).Sum(d => d.Commission);
+            var saleCommissionList = _businessWriteOffService.LoadEntitiesFilters(quare);
+            var saleCommission = saleCommissionList.Any() ? saleCommissionList.Sum(d => d.Commission) : 0;
             saleCommission = saleCommission * quarters.Commission;//乘以系数
             var total = gw + jt + kq + viewModel.Bonus + viewModel.Commission + saleCommission + sb + zwjt;
             //合计
@@ -426,7 +427,8 @@ namespace Salary.Controllers
             quare.WriteOffDateStar = new DateTime(viewModel.Date.Value.Year, viewModel.Date.Value.Month, 1);
             quare.WriteOffDateEnd = new DateTime(viewModel.Date.Value.Year, viewModel.Date.Value.Month, DateTime.DaysInMonth(viewModel.Date.Value.Year, viewModel.Date.Value.Month));
             quare.TransactorId = viewModel.ManagerId;
-            var saleCommission = _businessWriteOffService.LoadEntitiesFilters(quare).Sum(d => d.Commission);
+            var saleCommissionList = _businessWriteOffService.LoadEntitiesFilters(quare);
+            var saleCommission = saleCommissionList.Any()?saleCommissionList.Sum(d => d.Commission):0;
             saleCommission = saleCommission * quarters.Commission;//乘以系数
             var total = gw + jt + kq + viewModel.Bonus + viewModel.Commission + saleCommission + sb + zwjt;
             //合计

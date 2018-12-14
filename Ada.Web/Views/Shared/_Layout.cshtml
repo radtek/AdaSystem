@@ -1,5 +1,6 @@
 ﻿@using System.Web.Optimization
 @using Ada.Core.Infrastructure
+@using Ada.Core.Tools
 @using Ada.Core.ViewModel.Setting
 @using Ada.Framework
 @using Ada.Services.Setting
@@ -90,6 +91,7 @@
                 $(".bg-danger").addClass("p-xs").addClass("b-r-sm");
             }
             $('[data-toggle="tooltip"]').tooltip();
+            formatter.weather("@Utils.GetIpAddress()");
             @if (TempData["Msg"]!= null){
                 <text>
                     swal({

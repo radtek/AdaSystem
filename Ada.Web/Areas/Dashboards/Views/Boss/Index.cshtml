@@ -512,10 +512,10 @@
             $('.scroll_content').slimscroll({
                 height: '380px'
             });
-            getMediaOrder("weixin");
-            getMediaOrder("sinablog");
-            getMediaOrder("douyin");
-            getMediaOrder("redbook");
+            getMediaOrder("weixin","@DateTime.Now.ToString("yyyy年MM月")");
+            getMediaOrder("sinablog","@DateTime.Now.ToString("yyyy年MM月")");
+            getMediaOrder("douyin","@DateTime.Now.ToString("yyyy年MM月")");
+            getMediaOrder("redbook","@DateTime.Now.ToString("yyyy年MM月")");
         });
         function getPurchaseOrder(date) {
             var $top = $("#order"), $table = $("#order tbody");
