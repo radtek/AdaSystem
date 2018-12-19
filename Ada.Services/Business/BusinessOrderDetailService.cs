@@ -320,7 +320,8 @@ namespace Ada.Services.Business
                         //双方都是已完成的状态
                     where p.Status == Consts.PurchaseStatusSuccess &&
                           b.Status == Consts.StateOK &&
-                          b.Id == p.BusinessOrderDetailId
+                          b.Id == p.BusinessOrderDetailId&&
+                          p.PublishDate!=null
                     select new BusinessOrderDetailView
                     {
                         SellMoney = b.SellMoney,

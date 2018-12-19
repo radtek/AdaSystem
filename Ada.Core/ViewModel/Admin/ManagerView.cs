@@ -170,5 +170,10 @@ namespace Ada.Core.ViewModel.Admin
         /// </summary>
         [Display(Name = "开户名")]
         public string BankAccount { get; set; }
+        /// <summary>
+        /// 是否五险一金
+        /// </summary>
+        [Display(Name = "是否五险一金")]
+        public bool? IsInsurance { get; set; }
     }
 }

@@ -128,6 +128,11 @@ namespace Ada.Core.Domain.Admin
         /// </summary>
         [Display(Name = "岗位")]
         public string QuartersId { get; set; }
+        /// <summary>
+        /// 是否五险一金
+        /// </summary>
+        [Display(Name = "是否五险一金")]
+        public bool? IsInsurance { get; set; }
 
         public virtual ICollection<Organization> Organizations { get; set; }
         public virtual ICollection<Role> Roles { get; set; }

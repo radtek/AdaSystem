@@ -29,9 +29,9 @@ namespace Crawler.Services
             _service.HideCommandPromptWindow = true;
 
             _options = new ChromeOptions();
-
+            _options.AddUserProfilePreference("profile.managed_default_content_settings.images", 2);
             //option.AddArgument("disable-infobars"); //隐藏 自动化标题
-            _options.AddArgument("headless"); //隐藏 chorme浏览器
+            //_options.AddArgument("headless"); //隐藏 chorme浏览器
             //option.AddArgument("--incognito");//隐身模式
 
             if (!string.IsNullOrWhiteSpace(Proxy))

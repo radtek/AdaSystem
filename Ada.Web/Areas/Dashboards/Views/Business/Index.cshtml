@@ -176,7 +176,7 @@
                 <div class="ibox-title">
                     <h5>近四月销售概况</h5>
                 </div>
-
+                
                 @foreach (var item in Model.BusinessPerformances.OrderByDescending(d => DateTime.Parse(d.Month)).Take(4))
                 {
                     <div class="ibox-content">

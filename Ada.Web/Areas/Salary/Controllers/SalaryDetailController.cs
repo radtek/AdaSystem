@@ -237,14 +237,34 @@ namespace Salary.Controllers
             var saleCommission = saleCommissionList.Any() ? saleCommissionList.Sum(d => d.Commission) : 0;
             saleCommission = saleCommission * quarters.Commission;//乘以系数
             var total = gw + jt + kq + viewModel.Bonus + viewModel.Commission + saleCommission + sb + zwjt;
+            //五险+个人所得税
+            decimal tax = 0;
+            decimal wx = 0;
+            if (manager.IsInsurance == true)
+            {
+                wx = config.Endowment + config.Childbirth + config.Health + config.Injury + config.Unemployment + config.HousingFund;//五险
+                var gs = total - wx - config.IncomeTaxBase;
+                if (gs > 0)
+                {
+                    tax = Tax(config.TaxRange, gs);
+                }
+                salaryDetail.Endowment = config.Endowment;
+                salaryDetail.Childbirth = config.Childbirth;
+                salaryDetail.Health = config.Health;
+                salaryDetail.Injury = config.Injury;
+                salaryDetail.Unemployment = config.Unemployment;
+                salaryDetail.HousingFund = config.HousingFund;
+                salaryDetail.Tax = tax;
+            }
             //合计
-            salaryDetail.Total = Math.Round(total - deductTotal - viewModel.DeductMoney - hs - px);
+            salaryDetail.Total = Math.Round(total - wx - tax - deductTotal - viewModel.DeductMoney - hs - px);
             salaryDetail.Commission = viewModel.Commission;
             salaryDetail.Bonus = viewModel.Bonus;
             salaryDetail.Date = viewModel.Date;
             salaryDetail.DeductMoney = viewModel.DeductMoney;
             salaryDetail.SaleCommission = saleCommission;
             salaryDetail.AttendanceTotal = deductTotal;
+            
             salaryDetail.Remark = viewModel.Remark;
             if (isAddAttendance)
             {
@@ -428,12 +448,31 @@ namespace Salary.Controllers
             quare.WriteOffDateEnd = new DateTime(viewModel.Date.Value.Year, viewModel.Date.Value.Month, DateTime.DaysInMonth(viewModel.Date.Value.Year, viewModel.Date.Value.Month));
             quare.TransactorId = viewModel.ManagerId;
             var saleCommissionList = _businessWriteOffService.LoadEntitiesFilters(quare);
-            var saleCommission = saleCommissionList.Any()?saleCommissionList.Sum(d => d.Commission):0;
+            var saleCommission = saleCommissionList.Any() ? saleCommissionList.Sum(d => d.Commission) : 0;
             saleCommission = saleCommission * quarters.Commission;//乘以系数
             var total = gw + jt + kq + viewModel.Bonus + viewModel.Commission + saleCommission + sb + zwjt;
-            //合计
             SalaryDetail salaryDetail = manager.SalaryDetails.FirstOrDefault(d => d.Date == viewModel.Date);
-            salaryDetail.Total = Math.Round(total - deductTotal - viewModel.DeductMoney - hs - px);
+            //五险+个人所得税
+            decimal tax = 0;
+            decimal wx = 0;
+            if (manager.IsInsurance==true)
+            {
+                wx = config.Endowment + config.Childbirth + config.Health + config.Injury + config.Unemployment + config.HousingFund;//五险
+                var gs = total - wx - config.IncomeTaxBase;
+                if (gs > 0)
+                {
+                    tax = Tax(config.TaxRange, gs);
+                }
+                salaryDetail.Endowment = config.Endowment;
+                salaryDetail.Childbirth = config.Childbirth;
+                salaryDetail.Health = config.Health;
+                salaryDetail.Injury = config.Injury;
+                salaryDetail.Unemployment = config.Unemployment;
+                salaryDetail.HousingFund = config.HousingFund;
+                salaryDetail.Tax = tax;
+            }
+            //合计
+            salaryDetail.Total = Math.Round(total - wx - tax - deductTotal - viewModel.DeductMoney - hs - px);
             salaryDetail.Commission = viewModel.Commission;
             salaryDetail.Bonus = viewModel.Bonus;
             salaryDetail.DeductMoney = viewModel.DeductMoney;
@@ -508,5 +547,58 @@ namespace Salary.Controllers
             _service.Delete(id);
             return Json(new { State = 1, Msg = "删除成功" });
         }
+
+        private decimal Tax(string param, decimal money)
+        {
+            IList<TaxModel> taxModels = new List<TaxModel>();
+            var arrs = param.Trim().Replace("\r\n", ",").Split(',').Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
+            foreach (var item in arrs)
+            {
+                var temp = item.Split(':');
+                var range = temp[0].Split('-');
+                var taxModel = new TaxModel();
+                taxModel.Min = decimal.Parse(range[0]);
+                taxModel.Max = decimal.Parse(range[1]);
+                taxModel.Tax = decimal.Parse(temp[1]);
+                taxModels.Add(taxModel);
+            }
+            taxModels = taxModels.OrderBy(d => d.Tax).ToList();
+            //计算速算扣除数
+            List<decimal> list = new List<decimal>();
+            decimal last = 0;
+            list.Add(last);
+            for (int i = 0; i < taxModels.Count - 1; i++)
+            {
+                last = taxModels[i].Max * (taxModels[i + 1].Tax - taxModels[i].Tax) + last;
+                list.Add(last);
+            }
+            list = list.OrderBy(d => d).ToList();
+            //计算个人所得税
+            int currentLeve = 0;
+            decimal currentTax = 0;
+            for (int i = 0; i < taxModels.Count; i++)
+            {
+                if (money > taxModels[i].Min && money <= taxModels[i].Max)
+                {
+                    currentLeve = i;
+                    currentTax = taxModels[i].Tax;
+                    break;
+                }
+            }
+            return money * currentTax - list[currentLeve];
+        }
+    }
+
+    class TaxModel
+    {
+        public TaxModel()
+        {
+            Min = 0;
+            Max = 0;
+            Tax = 0;
+        }
+        public decimal Min { get; set; }
+        public decimal Max { get; set; }
+        public decimal Tax { get; set; }
     }
 }

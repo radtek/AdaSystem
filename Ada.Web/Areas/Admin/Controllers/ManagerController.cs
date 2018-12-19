@@ -187,6 +187,7 @@ namespace Admin.Controllers
                 BankNum = viewModel.BankNum,
                 QuartersId = viewModel.QuartersId,
                 Password = Encrypt.Encode(viewModel.Password),
+                IsInsurance = viewModel.IsInsurance,
                 Id = IdBuilder.CreateIdNum(),
                 AddedBy = CurrentManager.UserName,
                 AddedById = CurrentManager.Id,
@@ -216,6 +217,7 @@ namespace Admin.Controllers
             viewModel.BankAccount = manager.BankAccount;
             viewModel.BankName = manager.BankName;
             viewModel.BankNum = manager.BankNum;
+            viewModel.IsInsurance = manager.IsInsurance;
             viewModel.Roles = string.Join(",", manager.Roles.Select(r => r.Id));
             viewModel.OrganizationIds = manager.Organizations.Count > 0
                 ? string.Join(",", manager.Organizations.Select(r => r.Id))
@@ -266,6 +268,7 @@ namespace Admin.Controllers
             manager.BankNum = viewModel.BankNum;
             manager.PromotionDate = viewModel.PromotionDate;
             manager.Password = Encrypt.Encode(viewModel.Password);
+            manager.IsInsurance = viewModel.IsInsurance;
             manager.ModifiedById = CurrentManager.Id;
             manager.ModifiedBy = CurrentManager.UserName;
             manager.ModifiedDate = DateTime.Now;

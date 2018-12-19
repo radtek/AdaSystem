@@ -22,6 +22,12 @@ namespace Ada.Core.Domain.Wages
             DeductMoney = 0;
             SaleCommission = 0;
             AttendanceTotal = 0;
+            Endowment = 0;
+            Health = 0;
+            Childbirth = 0;
+            Unemployment = 0;
+            Tax = 0;
+            HousingFund = 0;
         }
         /// <summary>
         /// 工资月份
@@ -58,6 +64,41 @@ namespace Ada.Core.Domain.Wages
         /// </summary>
         [Display(Name = "考勤合计")]
         public decimal AttendanceTotal { get; set; }
+        /// <summary>
+        /// 养老保险
+        /// </summary>
+        [Display(Name = "养老保险")]
+        public decimal Endowment { get; set; }
+        /// <summary>
+        /// 医疗保险
+        /// </summary>
+        [Display(Name = "医疗保险")]
+        public decimal Health { get; set; }
+        /// <summary>
+        /// 工伤保险
+        /// </summary>
+        [Display(Name = "工伤保险")]
+        public decimal Injury { get; set; }
+        /// <summary>
+        /// 生育保险
+        /// </summary>
+        [Display(Name = "生育保险")]
+        public decimal Childbirth { get; set; }
+        /// <summary>
+        /// 失业保险
+        /// </summary>
+        [Display(Name = "失业保险")]
+        public decimal Unemployment { get; set; }
+        /// <summary>
+        /// 住房公积金
+        /// </summary>
+        [Display(Name = "住房公积金")]
+        public decimal HousingFund { get; set; }
+        /// <summary>
+        /// 个人所得税
+        /// </summary>
+        [Display(Name = "个人所得税")]
+        public decimal Tax { get; set; }
         /// <summary>
         /// 用户主键
         /// </summary>

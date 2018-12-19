@@ -6,79 +6,161 @@
 @Html.Partial("Bread")
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox">
 
-                <div class="ibox-content">
-                    @using (Html.BeginForm())
-                    {
-                        @Html.AntiForgeryToken()
-                        <p class="bg-danger">@Html.ValidationMessage("message") </p>
-                        <div class="form-horizontal">
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.NoClock, Html.DisplayNameFor(d => d.NoClock).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.NoClock, new { @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.Late, Html.DisplayNameFor(d => d.Late).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.Late, new { @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.OffWork, Html.DisplayNameFor(d => d.OffWork).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.OffWork, new { @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.Absenteeism, Html.DisplayNameFor(d => d.Absenteeism).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.Absenteeism, new { @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.Derate, Html.DisplayNameFor(d => d.Derate).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.Derate, new { @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.FoodFee, Html.DisplayNameFor(d => d.FoodFee).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.FoodFee, new { @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.SocialSecurity, Html.DisplayNameFor(d => d.SocialSecurity).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(d => d.SocialSecurity, new { @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-success" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
-                                </div>
-                            </div>
-                        </div>
-                    }
-
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox-title">
+                    <button class="btn btn-primary" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="tabs-container">
+                    <p class="bg-danger">@Html.ValidationMessage("message") </p>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#tab-1"> 考勤配置</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-2"> 五险配置</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-3"> 个人税率</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-4"> 其他配置</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.NoClock, Html.DisplayNameFor(d => d.NoClock).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.NoClock, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Late, Html.DisplayNameFor(d => d.Late).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Late, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.OffWork, Html.DisplayNameFor(d => d.OffWork).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.OffWork, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Absenteeism, Html.DisplayNameFor(d => d.Absenteeism).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Absenteeism, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Derate, Html.DisplayNameFor(d => d.Derate).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Derate, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                </div>
 
- 
+                            </div>
+                        </div>
+                        <div id="tab-2" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Endowment, Html.DisplayNameFor(d => d.Endowment).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Endowment, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Health, Html.DisplayNameFor(d => d.Health).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Health, new { @class = "form-control"})
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Injury, Html.DisplayNameFor(d => d.Injury).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Injury, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Childbirth, Html.DisplayNameFor(d => d.Childbirth).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Childbirth, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Unemployment, Html.DisplayNameFor(d => d.Unemployment).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Unemployment, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab-3" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.IncomeTaxBase, Html.DisplayNameFor(d => d.IncomeTaxBase).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.IncomeTaxBase, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.TaxRange, Html.DisplayNameFor(d => d.TaxRange).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextAreaFor(d => d.TaxRange, new { @class = "form-control", rows = "20", placeholder = "请输入相关内容" })
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div id="tab-4" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.FoodFee, Html.DisplayNameFor(d => d.FoodFee).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.FoodFee, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.SocialSecurity, Html.DisplayNameFor(d => d.SocialSecurity).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.SocialSecurity, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+
 </div>
 
 
