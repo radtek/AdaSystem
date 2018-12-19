@@ -298,6 +298,7 @@ namespace Admin.Controllers
                              m.BankAccount,
                              m.BankNum,
                              m.EntryDate,
+                             m.IsInsurance,
                              q.Title,
                              Group = GetOrganization(m)
                          };
@@ -335,6 +336,7 @@ namespace Admin.Controllers
                         jo.Add("入职天数（截至" + viewModel.EntryDate.Value.ToString("yyyy-MM-dd") + "）", span.TotalDays);
                     }
                 }
+                jo.Add("五险一金", item.IsInsurance == true ? "是" : "否");
                 jo.Add("开户行", item.BankName);
                 jo.Add("开户名", item.BankAccount);
                 jo.Add("开户号", item.BankNum);

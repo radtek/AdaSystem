@@ -164,7 +164,7 @@ namespace Resource.Controllers
             _webCrawler.OnCompleted += Crawler_OnCompleted;
             _webCrawler.OnError += Crawler_OnError;
             _webCrawler.Start(new Uri("https://www.xiaohongshu.com/user/profile/" + media.MediaID),
-                new Operation() { Timeout = 5000, Condition = d => d.PageSource.Contains("UserDetail") });
+                new Operation() { Timeout = 5000, Condition = d => d.Title!= "小红书" });
             return Json(new { State = 1, Msg = "请求成功，请稍候刷新，查看结果。" }, JsonRequestBehavior.AllowGet);
         }
         private void Crawler_OnCompleted(object sender, OnCompletedEventArgs e)

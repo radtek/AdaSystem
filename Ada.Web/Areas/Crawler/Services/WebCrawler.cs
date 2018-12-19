@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Crawler.Models;
+using log4net;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
@@ -14,6 +15,7 @@ namespace Crawler.Services
         public event EventHandler<OnStartEventArgs> OnStart;
         public event EventHandler<OnCompletedEventArgs> OnCompleted;
         public event EventHandler<OnErrorEventArgs> OnError;
+        public ILog Log { get; set; }
         public string Proxy { get; set; }
         /// <summary>
         /// 定义PhantomJS内核参数
@@ -26,7 +28,7 @@ namespace Crawler.Services
         public WebCrawler()
         {
             _service = ChromeDriverService.CreateDefaultService();
-            _service.HideCommandPromptWindow = true;
+            //_service.HideCommandPromptWindow = true;
 
             _options = new ChromeOptions();
             _options.AddUserProfilePreference("profile.managed_default_content_settings.images", 2);
@@ -63,15 +65,16 @@ namespace Crawler.Services
                         if (operation != null)
                         {
                             operation.WebAction?.Invoke(driver);
-                            
+                            //Log.Debug(driver.Title);
                             if (operation.Condition != null)
                             {
-                                var wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(operation.Timeout));
+                                var wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(operation.Timeout) );
                                 wait.Until(operation.Condition);
                             }
                         }
                         var threadId = Thread.CurrentThread.ManagedThreadId;//获取当前任务线程ID
                         var pageSource = driver.PageSource;//获取网页Dom结构
+                        //Log.Debug(driver.Title);
                         watcher.Stop();
                         OnCompleted?.Invoke(this, new OnCompletedEventArgs(uri, threadId, watcher.ElapsedMilliseconds, pageSource, driver));
                     }
