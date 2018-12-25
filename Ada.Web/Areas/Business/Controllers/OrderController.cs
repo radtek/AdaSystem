@@ -87,7 +87,7 @@ namespace Business.Controllers
                     TotalTaxMoney = d.BusinessOrderDetails.Sum(o => o.TaxMoney),
                     //DiscountMoney = d.TotalDiscountMoney,
                     //AdderBy = d.AddedBy,
-                    PurchaseSchedule = GetPurchaseSchedule(d),
+                    //PurchaseSchedule = GetPurchaseSchedule(d),
                     OrderDetailCount = d.BusinessOrderDetails.Count,
                     OrderSchedule = d.BusinessOrderDetails.Count(o => o.Status == Consts.StateOK) + "/" + d.BusinessOrderDetails.Count,
                     Remark = d.Remark

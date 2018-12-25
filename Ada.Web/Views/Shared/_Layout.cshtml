@@ -6,7 +6,7 @@
 @using Ada.Services.Setting
 @{
     var setting = EngineContext.Current.Resolve<ISettingService>().GetSetting<WeiGuang>();
-
+    List<string> msgs = ViewBag.TopMessage == null ? new List<string>() : ViewBag.TopMessage;
 }
 <!DOCTYPE html>
 <html>
@@ -86,13 +86,14 @@
     <!-- Handler for local scripts -->
     @RenderSection("Scripts", required: false)
     <script>
-        $(document).ready(function () {
-            if ($(".field-validation-error").text()) {
-                $(".bg-danger").addClass("p-xs").addClass("b-r-sm");
-            }
-            $('[data-toggle="tooltip"]').tooltip();
-            formatter.weather("@Utils.GetIpAddress()");
-            @if (TempData["Msg"]!= null){
+        var msg = @Html.Raw(Json.Encode(msgs));
+    $(document).ready(function () {
+        if ($(".field-validation-error").text()) {
+            $(".bg-danger").addClass("p-xs").addClass("b-r-sm");
+        }
+        $('[data-toggle="tooltip"]').tooltip();
+        formatter.weather("@Utils.GetIpAddress()");
+        @if (TempData["Msg"]!= null){
                 <text>
                     swal({
                         title: "@TempData["Msg"]",
@@ -102,7 +103,7 @@
                     });
                 </text>
             }
-            @if (TempData["Warning"]!= null){
+        @if (TempData["Warning"]!= null){
                 <text>
                     swal({
                         title: "@TempData["Warning"]",
@@ -112,10 +113,26 @@
                     });
                 </text>
             }
-            initChangePwd("@Url.Action("ChangePassword", "Manager",new{area="Admin"})",$('@Html.AntiForgeryToken()').val());
-            initCropper("@Url.Action("UploadImage","Manager",new{area="Admin"})");
-            initIdInfo("@Url.Action("BaseInfo","Manager",new{area="Admin"})");
-        });
+        initChangePwd("@Url.Action("ChangePassword", "Manager",new{area="Admin"})",$('@Html.AntiForgeryToken()').val());
+        initCropper("@Url.Action("UploadImage","Manager",new{area="Admin"})");
+        initIdInfo("@Url.Action("BaseInfo","Manager",new{area="Admin"})");
+        showMsg(0);
+    });
+        function showMsg(i) {
+            if (msg.length>1) {
+                if (i===msg.length) {
+                    i = 0;
+                }
+                $(".topmsg").html('<div class="alert alert-success fadeInLeft animated" style="padding: 6px;">' + msg[i]+'</div>');
+                setTimeout(function () {
+                        i++;
+                        showMsg(i);
+                    },
+                    5000);
+            } else {
+                $(".topmsg").html('<div class="alert alert-success fadeInLeft animated" style="padding: 6px;">' + msg[i] + '</div>');
+            }
+    }
     </script>
 </body>
 </html>

@@ -157,5 +157,10 @@ namespace Ada.Core.ViewModel.Setting
         /// </summary>
         [Display(Name = "系统内部网页推送")]
         public bool ErpWebSocket { get; set; }
+        /// <summary>
+        /// 当月自营号负责人
+        /// </summary>
+        [Display(Name = "当月自营号负责人")]
+        public string WeiXinHolder { get; set; }
     }
 }

@@ -136,15 +136,16 @@ namespace Ada.Services.Business
                 invoice.MoneyStatus = Consts.StateNormal;
                 totalInvoices += invoice.TotalMoney;
             }
-            //_dbContext.SaveChanges();
-            //return true;
-            if (totalReceivalues==totalInvoices|| totalReceivalues == totalInvoices * 0.96M || totalReceivalues == totalInvoices * 0.85M || totalReceivalues - totalPayee == totalInvoices)
+
+            if (totalReceivalues == totalInvoices || totalReceivalues == totalInvoices * 0.96M || totalReceivalues == totalInvoices * 0.85M || totalReceivalues - totalPayee == totalInvoices)
             {
                 _dbContext.SaveChanges();
                 return true;
-                
+
             }
             return false;
+            //_dbContext.SaveChanges();
+            //return true;
         }
 
         public void CancleWriteOff(string id)

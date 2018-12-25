@@ -60,6 +60,13 @@
                         其他奖金
                     </li>
                     <li class='list-group-item'>
+                        @{
+                            var total = quarters.BaseSalary + quarters.Allowance + quarters.Post + quarters.Attendance + Model.SaleCommission + setting.SocialSecurity + Model.Commission + Model.Bonus;
+                        }
+                        <span class='badge badge-success'>@total</span>
+                        <span class='text-primary'><strong>应发工资</strong></span>
+                    </li>
+                    <li class='list-group-item'>
                         <span class='badge badge-danger'>@Model.AttendanceTotal</span>
                         缺勤扣款
                         @if (Model.AttendanceTotal > 0)
@@ -126,7 +133,7 @@
                     </li>
                     <li class='list-group-item'>
                         <span class='badge badge-success'>@Model.Total</span>
-                        实发工资
+                        <span class='text-primary'><strong>实发工资</strong></span>
                     </li>
                 </ul>
             </div>

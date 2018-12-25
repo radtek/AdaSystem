@@ -13,9 +13,11 @@ using Ada.Core.Infrastructure;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel;
 using Ada.Core.ViewModel.Admin;
+using Ada.Core.ViewModel.Setting;
 using Ada.Framework.Caching;
 using Ada.Framework.UploadFile;
 using Ada.Services.Admin;
+using Ada.Services.Setting;
 using Autofac;
 using ClosedXML.Excel;
 using log4net;
@@ -25,11 +27,12 @@ using Action = Ada.Core.Domain.Admin.Action;
 
 namespace Ada.Framework.Filter
 {
-    //[EnableThrottling]
+    //[AdminAntiForgery]
     public abstract class BaseController : Controller
     {
 
         private readonly IPermissionService _permissionService;
+        private readonly ISettingService _settingService;
         private readonly IRepository<Manager> _repository;
         private readonly ICacheManager _cacheManager;
         private readonly ISignals _signals;
@@ -39,6 +42,7 @@ namespace Ada.Framework.Filter
             _repository = EngineContext.Current.Resolve<IRepository<Manager>>();
             _cacheManager = EngineContext.Current.ContainerManager.Scope().Resolve<ICacheManager>(new TypedParameter(typeof(Type), GetType().BaseType));
             _signals = EngineContext.Current.Resolve<ISignals>();
+            _settingService= EngineContext.Current.Resolve<ISettingService>();
         }
 
         public ILog Log { get; set; }
@@ -58,30 +62,7 @@ namespace Ada.Framework.Filter
                 }
             }
             //如果打了允许的标签就无须验证权限
-            
-            
-            var dateNow = DateTime.Now.Date.Month;
-            var birthdays = _repository.LoadEntities(d => d.Status == Consts.StateNormal && d.Birthday != null).ToList();
-            ChineseLunisolarCalendar cc = new ChineseLunisolarCalendar();
-            List<string> managerBirthdays=new List<string>();
-            foreach (var birthday in birthdays)
-            {
-                var month = birthday.Birthday.Value.Month;
-                if (birthday.IsLunar==true)
-                {
-                    var temp = cc.ToDateTime(DateTime.Now.Year, birthday.Birthday.Value.Month,
-                        birthday.Birthday.Value.Day, 0, 0, 0, 0);
-                    month = temp.Month;
-                }
-                if (dateNow==month)
-                {
-                    managerBirthdays.Add(birthday.UserName);
-                }
-            }
-            if (managerBirthdays.Any())
-            {
-                ViewBag.Birthday = managerBirthdays;
-            }
+            ViewBag.TopMessage = TopMessage();
             if (filterContext.ActionDescriptor.IsDefined(typeof(AllowAnonymousAttribute), true)
                 || filterContext.ActionDescriptor.ControllerDescriptor.IsDefined(typeof(AllowAnonymousAttribute), true))
             {
@@ -279,6 +260,42 @@ namespace Ada.Framework.Filter
             {
                 throw new ApplicationException(ex.Message);
             }
+        }
+
+        private List<string> TopMessage()
+        {
+            List<string> msgs = new List<string>();
+            //生日
+            var dateNow = DateTime.Now.Date.Month;
+            var birthdays = _repository.LoadEntities(d => d.Status == Consts.StateNormal && d.Birthday != null).ToList();
+            ChineseLunisolarCalendar cc = new ChineseLunisolarCalendar();
+            List<string> managerBirthdays = new List<string>();
+            foreach (var birthday in birthdays)
+            {
+                var month = birthday.Birthday.Value.Month;
+                if (birthday.IsLunar == true)
+                {
+                    var temp = cc.ToDateTime(DateTime.Now.Year, birthday.Birthday.Value.Month,
+                        birthday.Birthday.Value.Day, 0, 0, 0, 0);
+                    month = temp.Month;
+                }
+                if (dateNow == month)
+                {
+                    managerBirthdays.Add(birthday.UserName);
+                }
+            }
+            if (managerBirthdays.Any())
+            {
+                msgs.Add("在这美好的" + DateTime.Now.Date.Month + "月，微广全体同事祝 <span class='text-danger'>" + string.Join(" ", managerBirthdays) + "</span> 生日快乐！");
+            }
+            //值日
+            var zrSet = _settingService.GetSetting<WeiGuang>().WeiXinHolder;
+            if (!string.IsNullOrWhiteSpace(zrSet))
+            {
+                msgs.Add("本月公司自运营号负责人：<span class='text-danger'>"+zrSet+"</span>");
+            }
+
+            return msgs;
         }
     }
 }

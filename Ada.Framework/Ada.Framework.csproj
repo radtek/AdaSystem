@@ -130,6 +130,7 @@
     <Compile Include="Caching\Weak.cs" />
     <Compile Include="DependencyRegistrar.cs" />
     <Compile Include="ExceptionExtensions.cs" />
+    <Compile Include="Filter\AdminAntiForgeryAttribute.cs" />
     <Compile Include="Filter\ThrottleCustomFilter.cs" />
     <Compile Include="Filter\WebStatusAttribute.cs" />
     <Compile Include="Filter\CompressAttribute.cs" />
