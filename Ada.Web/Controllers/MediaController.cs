@@ -184,7 +184,7 @@ namespace Ada.Web.Controllers
             return PartialView("Articles", entity.MediaArticles.Where(d => !string.IsNullOrWhiteSpace(d.Content) && d.Content.Contains(kw)).OrderByDescending(d => d.PublishDate).Take(20).ToList());
 
         }
-        [HttpPost, AdminAntiForgery(true)]
+        [HttpPost]
         
         public ActionResult GetList(MediaView viewModel)
         {

@@ -321,11 +321,9 @@
                 var json = { id: id };
                 requestOption = {
                     type: "post",
-                    contentType: 'application/json',
-                    dataType: 'json',
                     cache: false,
                     url: "@Url.Action("LockAccount")",
-                    data: JSON.stringify(addAntiForgeryToken(json)),
+                    data: addAntiForgeryToken(json),
                     success: function(data) {
                         if (data.State == 1) {
                             $("#table").bootstrapTable('refresh');

@@ -403,7 +403,7 @@ namespace Resource.Controllers
             }
             return jObjects.ToString();
         }
-        [HttpPost,AdminAntiForgery(true)]
+        [HttpPost]
         public ActionResult GetListAll(MediaView viewModel)
         {
             viewModel.Status = Consts.StateNormal;
@@ -469,7 +469,7 @@ namespace Resource.Controllers
                 })
             });
         }
-        [HttpPost, AdminAntiForgery(true)]
+        [HttpPost]
         public ActionResult GetList(MediaView viewModel)
         {
             viewModel.Managers = PremissionData();
