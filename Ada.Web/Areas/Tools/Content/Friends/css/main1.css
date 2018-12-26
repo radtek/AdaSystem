@@ -114,8 +114,8 @@ light
     z-index: 9;
 }
 
-.details .top{
-    background: rgb(59, 58, 62);
+.details .top {
+    background: #f3f3f5 /*rgb(59, 58, 62)*/;
     opacity: 1;
 }
 
@@ -177,7 +177,7 @@ light
 }
 .operator{
     margin:4px 0 0 2px ;
-    color: #FFF;
+    color: black;
     display: inline-block;
     font-size: 24px;
     letter-spacing: 1px;
@@ -193,7 +193,7 @@ light
     margin: 10px 0 0 1px;
 }
 .networkText{
-    color: #FFF;
+    color: black;
     font-size: 24px;
     margin:0 0 0 10px;
 }
@@ -201,7 +201,7 @@ light
     background-position: -0px -0px;
 }
 .time{
-    color: #FFF;
+    color: black;
     font-family: 'system_fontmedium';
     font-size: 24px;
     padding-left: 152px;
@@ -232,7 +232,7 @@ light
 }
 .battery3{
     font-family: 'SFUIText Regular';
-    color: #FFF;
+    color: black;
     float: right;
     font-size: 24px;
     display: inline-block;
@@ -316,7 +316,7 @@ light
 .titleBarTitle{
     width: 500px;
     display: none;
-    color: #FFF;
+    color: black;
     font-size: 36px;
     letter-spacing: 1px;
     text-align: center;
@@ -387,10 +387,11 @@ light
 .cAvatar2{
     padding: 2px 0 0 22px;
 }
-.cAvatar2 img{
-    width:84px;
-    height: 84px;
-}
+    .cAvatar2 img {
+        width: 84px;
+        height: 84px;
+        border-radius: 6px;
+    }
 .cName{
     font-family:  'PingFang Bold';
     color: #576b95;
@@ -544,6 +545,7 @@ light
 .cCommentAvatar img{
     width: 70px;
     height: 70px;
+    border-radius: 6px;
 }
 .cCommentName{
     font-family:  'PingFang Bold';
@@ -589,7 +591,8 @@ light
 .cCommentPraise img{
     width: 70px;
     height: 70px;
-    padding-right: 10px;
+    padding-right: 0px;
+    border-radius: 6px;
 }
 .reply{
     font-family:  'PingFang Medium';
