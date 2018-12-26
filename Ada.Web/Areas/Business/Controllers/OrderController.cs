@@ -184,7 +184,7 @@ namespace Business.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(BusinessOrderView viewModel)
         {
             if (!ModelState.IsValid)
@@ -286,7 +286,7 @@ namespace Business.Controllers
             return View(entity);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(BusinessOrderView viewModel)
         {
             if (!ModelState.IsValid)
@@ -392,7 +392,7 @@ namespace Business.Controllers
             return RedirectToAction("Update", new { id = entity.Id });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -440,7 +440,7 @@ namespace Business.Controllers
             return Json(new { State = 0, Msg = "此订单状态无法删除" });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult DeleteDetail(string id)
         {
             var entity = _businessOrderDetailRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -461,7 +461,7 @@ namespace Business.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Confirms()
         {
             var details = Request["rows"];
@@ -535,7 +535,7 @@ namespace Business.Controllers
         /// <param name="viewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Confirm(BusinessOrderDetailView viewModel)
         {
             var entity = _businessOrderDetailRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
@@ -583,7 +583,7 @@ namespace Business.Controllers
         /// <param name="viewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult EditMoney(BusinessOrderDetailView viewModel)
         {
             var entity = _businessOrderDetailRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
@@ -602,7 +602,7 @@ namespace Business.Controllers
 
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult TransformPurchaseOrder(string id)
         {
             var details = Request["rows"];
@@ -717,7 +717,7 @@ namespace Business.Controllers
             return Json(new { State = 1, Msg = "成功转换" + i + "笔订单" });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult ImportOrder(BusinessOrderView viewModel)
         {
             if (!ModelState.IsValid)
@@ -879,7 +879,7 @@ namespace Business.Controllers
 
 
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult ImportOrders(BusinessOrderView viewModel)
         {
             if (!ModelState.IsValid)
@@ -1062,7 +1062,7 @@ namespace Business.Controllers
             return View(oreder);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Comment(CommentsView comments)
         {
             //
@@ -1088,7 +1088,7 @@ namespace Business.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult ChangeOrder()
         {
             var ids = Request["ids"];

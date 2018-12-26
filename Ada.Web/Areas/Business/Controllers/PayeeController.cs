@@ -93,7 +93,7 @@ namespace Business.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Payment(BusinessPaymentView viewModel)
         {
             if (!ModelState.IsValid)
@@ -144,7 +144,7 @@ namespace Business.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

@@ -45,7 +45,7 @@ namespace Tools.Controllers
             return View(new FansView());
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(FansView viewModel)
         {
             if (!ModelState.IsValid)
@@ -88,7 +88,7 @@ namespace Tools.Controllers
             return View(entity);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(FansView viewModel)
         {
             if (!ModelState.IsValid)
@@ -115,7 +115,7 @@ namespace Tools.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

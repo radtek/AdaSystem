@@ -79,7 +79,7 @@ namespace Business.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult AddPayAccount(PayAccountView viewModel)
         {
             var linkMan = _linkManRepository.LoadEntities(d => d.Id == viewModel.LinkManId).FirstOrDefault();
@@ -109,7 +109,7 @@ namespace Business.Controllers
         /// <param name="viewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Received(BusinessPayeeView viewModel)
         {
 

@@ -49,7 +49,7 @@ namespace Resource.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(MediaTypeView viewModel)
         {
             if (!ModelState.IsValid)
@@ -85,7 +85,7 @@ namespace Resource.Controllers
             return View(entity);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(MediaTypeView viewModel)
         {
             if (!ModelState.IsValid)
@@ -107,7 +107,7 @@ namespace Resource.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

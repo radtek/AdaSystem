@@ -109,7 +109,7 @@ namespace Purchase.Controllers
             return View(item);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(PurchaseOrderDetailView viewModel)
         {
             if (!ModelState.IsValid)
@@ -209,7 +209,7 @@ namespace Purchase.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _purchaseOrderDetailRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -275,7 +275,7 @@ namespace Purchase.Controllers
         /// <param name="viewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult EditOrder(PurchaseOrderDetailView viewModel)
         {
             var entity = _purchaseOrderDetailRepository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();

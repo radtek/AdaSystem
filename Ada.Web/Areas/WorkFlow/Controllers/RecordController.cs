@@ -54,7 +54,7 @@ namespace WorkFlow.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Export(WorkFlowRecordView viewModel)
         {
             viewModel.limit = 3000;
@@ -96,7 +96,7 @@ namespace WorkFlow.Controllers
         /// 删除审批记录
         /// </summary>
         /// <returns></returns>
-        [HttpPost, AdaValidateAntiForgeryToken]
+        [HttpPost]
         public ActionResult Delete(string id)
         {
             _service.DeleteRecord(id);
@@ -106,7 +106,7 @@ namespace WorkFlow.Controllers
         /// 撤销审批记录
         /// </summary>
         /// <returns></returns>
-        [HttpPost, AdaValidateAntiForgeryToken]
+        [HttpPost]
         public ActionResult Cancle(string id)
         {
             var record = _service.GetRecordById(id);
@@ -121,7 +121,7 @@ namespace WorkFlow.Controllers
         /// 备注记录
         /// </summary>
         /// <returns></returns>
-        [HttpPost, AdaValidateAntiForgeryToken]
+        [HttpPost]
         public ActionResult Remark(string id,string content)
         {
             var record = _service.GetRecordById(id);

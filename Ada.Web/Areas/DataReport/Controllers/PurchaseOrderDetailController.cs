@@ -68,7 +68,7 @@ namespace DataReport.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Export(PurchaseOrderDetailView viewModel)
         {
             viewModel.Managers = PremissionData();

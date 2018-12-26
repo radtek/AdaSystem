@@ -71,7 +71,7 @@ namespace Admin.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult AddOrUpdate(RoleView viewModel)
         {
             if (!string.IsNullOrWhiteSpace(viewModel.Id))
@@ -108,7 +108,7 @@ namespace Admin.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var role = _roleRepository.LoadEntities(d => d.Id == id).FirstOrDefault();

@@ -57,7 +57,7 @@ namespace Admin.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult AddOrUpdate(OrganizationView viewModel)
         {
             var entity = new Organization()
@@ -91,7 +91,7 @@ namespace Admin.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

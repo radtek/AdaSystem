@@ -40,7 +40,7 @@ namespace WorkFlow.Controllers
         {
             return View(new WorkFlowDefinitionView(){Enabled = true});
         }
-        [HttpPost, ValidateAntiForgeryToken,ValidateInput(false)]
+        [HttpPost,ValidateInput(false)]
         public ActionResult Add(WorkFlowDefinitionView viewModel)
         {
             WorkFlowDefinition workFlowDefinition=new WorkFlowDefinition();
@@ -67,7 +67,7 @@ namespace WorkFlow.Controllers
         //    var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
         //    return PartialView("ParopertiesView", new WorkFlowDefinitionView(){Name = entity.Name,Id = entity.Id});
         //}
-        //[HttpPost, AdaValidateAntiForgeryToken]
+        //[HttpPost]
         //public ActionResult Properties(WorkFlowDefinitionView viewModel)
         //{
         //    if (string.IsNullOrWhiteSpace(viewModel.Name))
@@ -111,7 +111,7 @@ namespace WorkFlow.Controllers
             viewModel.Enabled = entity.Enabled;
             return View(viewModel);
         }
-        [HttpPost, ValidateAntiForgeryToken, ValidateInput(false)]
+        [HttpPost, ValidateInput(false)]
         public ActionResult Update(WorkFlowDefinitionView viewModel)
         {
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
@@ -129,7 +129,7 @@ namespace WorkFlow.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

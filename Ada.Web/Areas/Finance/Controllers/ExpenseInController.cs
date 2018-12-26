@@ -66,7 +66,7 @@ namespace Finance.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(ExpenseView viewModel)
         {
             if (!ModelState.IsValid)
@@ -158,7 +158,7 @@ namespace Finance.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(ExpenseView viewModel)
         {
             if (!ModelState.IsValid)
@@ -207,7 +207,7 @@ namespace Finance.Controllers
             return viewModel.IsIncom ? RedirectToAction("Index") : RedirectToAction("Index", "ExpenseOut");
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

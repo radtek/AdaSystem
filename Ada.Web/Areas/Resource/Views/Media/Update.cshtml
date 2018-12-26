@@ -94,7 +94,7 @@
                         title: '操作',
                         align: "center", valign: "middle",
                         formatter: function (value) {
-                            return "<button class='btn btn-danger btn-xs btn-outline' type='button' onclick=\"deleteArticle('" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button>";
+                            return "<button class='btn btn-danger btn-xs btn-outline' type='button' onclick=\"deleteData('@Url.Action("DeleteArticle")','" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button>";
                         }
 
                     }
@@ -106,50 +106,7 @@
 
             return obj;
             };
-        //撤销
-        function deleteArticle(id) {
-            swal({
-                title: "您确定吗?",
-                text: "确认要删除此案例吗?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                closeOnConfirm: false,
-                showLoaderOnConfirm: true
-            }, function () {
-                $.ajax({
-                    type: "post",
-                    headers: {
-                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                    },
-                    url: "@Url.Action("DeleteArticle")",
-                    data: { "id": id },
-                    success: function (data) {
-                        if (data.State == 1) {
-                            $("#table").bootstrapTable('refresh');
-                            swal({
-                                title: "操作成功",
-                                text: data.Msg,
-                                timer: 1000,
-                                type:"success",
-                                showConfirmButton: false
-                            });
-
-                        } else {
-                            swal("操作提醒", data.Msg, "warning");
-                        }
-                    },
-                    error: function () {
-                        swal("操作失败", "系统错误", "error");
-                    },
-                    complete: function () {
-
-                    }
-                });
-            });
-            }
+        
             function addArticle(id) {
             //校验
             var title = $("#title").val(), url = $("#url").val();
@@ -162,6 +119,7 @@
                 formFile.append("Title", title);
                 formFile.append("ArticleUrl", url);
                 formFile.append("MediaId", id);
+                formFile.append("__RequestVerificationToken", $('input[name=__RequestVerificationToken]').val());
             var data = formFile;
             var subBtn = $('.ladda-button').ladda();
             $.ajax({
@@ -169,9 +127,6 @@
                 data: data,
                 type: "Post",
                 dataType: "json",
-                headers: {
-                    '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                },
                 cache: false, //上传文件无需缓存
                 processData: false, //用于对data参数进行序列化处理 这里必须false
                 contentType: false, //必须

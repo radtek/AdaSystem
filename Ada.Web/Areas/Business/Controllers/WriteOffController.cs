@@ -101,7 +101,7 @@ namespace Business.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(BusinessWriteOffView viewModel)
         {
             //校验数据
@@ -203,7 +203,7 @@ namespace Business.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

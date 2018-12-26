@@ -352,7 +352,7 @@ function serachFilter(parameters) {
     if (mediaBatch) {
         parameters.MediaTypeId = $("#MediaTypeId").val();
         parameters.MediaBatch = mediaBatch;
-        return parameters;
+        return addAntiForgeryToken(parameters);
     }
     var query = $("#searchFrm").serializeObject();
     $.each(query,
@@ -370,7 +370,7 @@ function serachFilter(parameters) {
     $('#toolbar').find('input[name],select[name]').each(function () {
         parameters[$(this).attr('name')] = $(this).val();
     });
-    return parameters;
+    return addAntiForgeryToken(parameters);
 }
 function exportFile() {
     if (!$("#MediaTypeId").val()) {
@@ -390,11 +390,8 @@ function exportFile() {
     var subBtn = $('.ladda-button').ladda();
     $.ajax({
         type: "post",
-        headers: {
-            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-        },
         url: "/Resource/Media/Exports",
-        data: parameters,
+        data: addAntiForgeryToken(parameters),
         success: function (data) {
             if (data.State == 1) {
                 $('#exportModal').modal('hide');

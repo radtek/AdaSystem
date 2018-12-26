@@ -80,7 +80,7 @@ namespace Business.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(BusinessInvoiceView viewModel)
         {
             if (!ModelState.IsValid)
@@ -163,7 +163,7 @@ namespace Business.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(BusinessInvoiceView viewModel)
         {
             if (!ModelState.IsValid)
@@ -220,7 +220,7 @@ namespace Business.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -258,7 +258,7 @@ namespace Business.Controllers
             return View();
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult WriteOff(InvoiceWriteOffView viewModel)
         {
             //校验数据

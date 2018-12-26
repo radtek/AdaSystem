@@ -61,7 +61,7 @@ namespace Content.Controllers
             return View(new ColumnView() { Taxis = 99 });
         }
         [HttpPost, ValidateInput(false)]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(ColumnView viewModel)
         {
             if (!ModelState.IsValid)
@@ -114,7 +114,7 @@ namespace Content.Controllers
             return View(item);
         }
         [HttpPost, ValidateInput(false)]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(ColumnView viewModel)
         {
 
@@ -146,7 +146,7 @@ namespace Content.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

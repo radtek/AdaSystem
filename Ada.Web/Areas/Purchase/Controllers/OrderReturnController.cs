@@ -72,7 +72,7 @@ namespace Purchase.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(PurchaseReturnOrderView viewModel)
         {
             if (!ModelState.IsValid)
@@ -163,7 +163,7 @@ namespace Purchase.Controllers
             return PartialView("Details", returnorder);
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var returnorder = _purchaseReturnOrderrepository.LoadEntities(d => d.Id == id).FirstOrDefault();

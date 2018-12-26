@@ -61,7 +61,7 @@ namespace Resource.Controllers
             return PartialView("AddMediaDevelopProgress", entity);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult AddProgress(MediaDevelopProgressView viewModel)
         {
             var entity = _repository.LoadEntities(d => d.Id == viewModel.MediaDevelopId).FirstOrDefault();
@@ -77,7 +77,7 @@ namespace Resource.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Finish(string id)
         {
             
@@ -97,7 +97,7 @@ namespace Resource.Controllers
             return Json(new { State = 1, Msg = "操作成功" });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Cancle(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -120,7 +120,7 @@ namespace Resource.Controllers
             return Json(new { State = 1, Msg = "撤销成功" });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

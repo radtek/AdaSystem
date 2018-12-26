@@ -145,7 +145,7 @@ namespace Admin.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(ManagerView viewModel)
         {
             if (!ModelState.IsValid)
@@ -226,7 +226,7 @@ namespace Admin.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(ManagerView viewModel)
         {
             if (!ModelState.IsValid)
@@ -278,7 +278,7 @@ namespace Admin.Controllers
         }
 
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Export(ManagerView viewModel)
         {
             viewModel.Managers = PremissionData();
@@ -345,7 +345,7 @@ namespace Admin.Controllers
             return Json(new { State = 1, Msg = ExportFile(jObjects.ToString()) });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             if (id == CurrentManager.Id)
@@ -360,7 +360,7 @@ namespace Admin.Controllers
             return Json(new { State = 1, Msg = "删除成功" });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult UnBinding(string id)
         {
             _managerService.UnBinding(id);
@@ -376,7 +376,7 @@ namespace Admin.Controllers
             return PartialView("MangerInfo", manager);
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult ChangePassword(string old, string fresh, string refresh)
         {
             if (string.IsNullOrWhiteSpace(old) || string.IsNullOrWhiteSpace(fresh) || string.IsNullOrWhiteSpace(refresh))

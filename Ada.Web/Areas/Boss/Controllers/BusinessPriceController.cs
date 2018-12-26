@@ -24,7 +24,7 @@ namespace Boss.Controllers
             return View();
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Audit(string ids)
         {
             var arr = ids.Split(',');

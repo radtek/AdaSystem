@@ -117,14 +117,11 @@
                 submitHandler: function (form) {
                     var subBtn = $('.ladda-button').ladda();
                     var $form = $(form),
-                        data = $form.serialize();
+                        data = $form.serializeObject();
                     $.ajax({
                         type: "post",
                         url: "@Url.Action("TestBlog")",
-                        data: data,
-                        headers: {
-                            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-                        },
+                        data: addAntiForgeryToken(data),
                         success: function (res) {
                             if (res.State == 1) {
                                 swal({

@@ -103,7 +103,7 @@ namespace Ada.Web.Controllers
             return View(fansCalculator);
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult FansComputer(FansCalculator fansCalculator)
         {
             decimal price = 0;
@@ -184,8 +184,8 @@ namespace Ada.Web.Controllers
             return PartialView("Articles", entity.MediaArticles.Where(d => !string.IsNullOrWhiteSpace(d.Content) && d.Content.Contains(kw)).OrderByDescending(d => d.PublishDate).Take(20).ToList());
 
         }
-        [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        [HttpPost, AdminAntiForgery(true)]
+        
         public ActionResult GetList(MediaView viewModel)
         {
             viewModel.Status = Consts.StateNormal;
@@ -242,7 +242,7 @@ namespace Ada.Web.Controllers
             });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Export(MediaView view)
         {
             var setting = _settingService.GetSetting<WeiGuang>();
@@ -283,7 +283,7 @@ namespace Ada.Web.Controllers
             return Json(new { State = 1, Msg = ExportData(jObjects.ToString()) });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult ExportGroup(string id, bool isData)
         {
             var setting = _settingService.GetSetting<WeiGuang>();
@@ -329,7 +329,7 @@ namespace Ada.Web.Controllers
 
 
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Develop(MediaDevelopView viewModel)
         {
             var medias = viewModel.MediaName.Replace("\r\n", ",").Trim(',').Split(',').ToList();
@@ -436,7 +436,7 @@ namespace Ada.Web.Controllers
             return Content("无可用文件下载");
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult GetOrderComments(MediaCommentView search)
         {
             var result = _orderDetailCommentService.LoadComments(search).ToList();
@@ -455,7 +455,7 @@ namespace Ada.Web.Controllers
         }
 
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult GetMediaComments(MediaCommentView search)
         {
             var result = _mediaCommentService.LoadEntitiesFilter(search).ToList();
@@ -486,7 +486,7 @@ namespace Ada.Web.Controllers
             return PartialView("AddGroup", groups.ToList());
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult AddGroup(MediaGroupView viewModel)
         {
             //组名不能超出10个字符
@@ -520,7 +520,7 @@ namespace Ada.Web.Controllers
         }
 
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult JoinGroup(string mId, string gIds)
         {
             var groups = gIds.Split(',');
@@ -533,7 +533,7 @@ namespace Ada.Web.Controllers
             return Json(new { State = 0, Msg = "媒体资源不存在" });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult RemoveGroup(string mId, string gId)
         {
 
@@ -546,7 +546,7 @@ namespace Ada.Web.Controllers
             return Json(new { State = 0, Msg = "媒体资源不存在" });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult DeleteGroup(string id)
         {
             var group = _mediaGroupRepository.LoadEntities(d => d.Id == id).FirstOrDefault();

@@ -24,8 +24,7 @@ namespace Setting.Controllers
             Site site = _settingService.GetSetting<Site>();
             return View(site);
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken,ValidateInput(false)]
+        [HttpPost,ValidateInput(false)]
         public ActionResult Index(Site site)
         {
             var setting = new Ada.Core.Domain.Admin.Setting

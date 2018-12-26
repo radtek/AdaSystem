@@ -17,7 +17,7 @@ namespace WebSocket.Controllers
         {
             return View(new HubView());
         }
-        [HttpPost,AdaValidateAntiForgeryToken]
+        [HttpPost]
         public ActionResult Index(HubView hubView)
         {
             hubView.From = CurrentManager.UserName;

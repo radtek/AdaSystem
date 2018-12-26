@@ -69,7 +69,7 @@ namespace Admin.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult AddOrUpdate(ActionView actionView)
         {
 
@@ -128,7 +128,7 @@ namespace Admin.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var action = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

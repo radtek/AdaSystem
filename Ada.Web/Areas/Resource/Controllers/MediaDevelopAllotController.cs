@@ -52,7 +52,7 @@ namespace Resource.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Allot(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

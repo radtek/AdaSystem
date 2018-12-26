@@ -110,13 +110,11 @@
                 closeOnConfirm: false,
                 showLoaderOnConfirm: true
             }, function () {
+                var post = { rows: JSON.stringify(arrselections), id: '@Model.Id' };
                 $.ajax({
                     type: "post",
-                    headers: {
-                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                    },
                     url: "@Url.Action("TransformPurchaseOrder")",
-                    data: { rows: JSON.stringify(arrselections) ,id:'@Model.Id'},
+                    data: addAntiForgeryToken(post),
                     success: function (data) {
                         if (data.State == 1) {
                             swal({
@@ -161,7 +159,7 @@
             inputStatus.attr("value", remark);
             var inputPage = $("<input type='text' name='Id'/>");
             inputPage.attr("value", id);
-            var inputToken = $('@Html.AntiForgeryToken()');
+            var inputToken = $('input[name=__RequestVerificationToken]');
             form.append(inputType);
             form.append(inputNumber);
             form.append(inputStatus);
@@ -194,13 +192,11 @@
                         closeOnConfirm: false,
                         showLoaderOnConfirm: true
                     }, function () {
+                        var json = { "id": arrselections[0].Id };
                         $.ajax({
                             type: "post",
-                            headers: {
-                                '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                            },
                             url: "@Url.Action("DeleteDetail")",
-                            data: { "id": arrselections[0].Id },
+                            data: addAntiForgeryToken(json),
                             success: function (data) {
                                 if (data.State == 1) {
                                     swal({
@@ -243,13 +239,11 @@
                 closeOnConfirm: false,
                 showLoaderOnConfirm: true
             }, function () {
+                var json = { rows: JSON.stringify(arrselections) };
                 $.ajax({
                     type: "post",
-                    headers: {
-                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                    },
                     url: "@Url.Action("Confirms")",
-                    data: { rows: JSON.stringify(arrselections)},
+                    data: addAntiForgeryToken(json),
                     success: function (data) {
                         if (data.State == 1) {
                             swal({
@@ -303,13 +297,11 @@
                     function(k, v) {
                         ids.push(v.Id);
                     });
+                var json = { ids: ids.join(','), on: value };
                 $.ajax({
                     type: "post",
-                    headers: {
-                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                    },
                     url: "@Url.Action("ChangeOrder")",
-                    data: { ids: ids.join(','),on:value},
+                    data: addAntiForgeryToken(json),
                     success: function (data) {
                         if (data.State == 1) {
                             swal({

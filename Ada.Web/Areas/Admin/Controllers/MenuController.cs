@@ -71,7 +71,7 @@ namespace Admin.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult AddOrUpdate(MenuView viewModel)
         {
 
@@ -115,7 +115,7 @@ namespace Admin.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.TreePath.Contains(id)).FirstOrDefault();

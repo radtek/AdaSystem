@@ -51,7 +51,7 @@ namespace Salary.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(QuartersView viewModel)
         {
             if (!ModelState.IsValid)
@@ -90,7 +90,7 @@ namespace Salary.Controllers
             return View(entity);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(QuartersView viewModel)
         {
             if (!ModelState.IsValid)
@@ -114,7 +114,7 @@ namespace Salary.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

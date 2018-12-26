@@ -40,8 +40,7 @@ namespace WeiXin.Controllers
             var account = _managerService.GetMangerByOpenId(openid);
             return View(account);
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost,ValidateAntiForgeryToken]
         public ActionResult Manger(string userName, string password)
         {
             var obj = Session["CurrentWeiXin"];

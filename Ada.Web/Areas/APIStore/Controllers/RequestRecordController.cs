@@ -44,7 +44,7 @@ namespace APIStore.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Export(APIRequestRecordView viewModel)
         {
             viewModel.limit = 10000;
@@ -69,7 +69,7 @@ namespace APIStore.Controllers
             return jObjects.ToString();
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete()
         {
             var ids = Request["Ids"].Split(',');

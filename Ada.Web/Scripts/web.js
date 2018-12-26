@@ -847,11 +847,8 @@ function exportDate() {
     var subBtn = $('.ladda-button').ladda();
     $.ajax({
         type: "post",
-        headers: {
-            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-        },
         url: "/Media/Export",
-        data: parameters,
+        data: addAntiForgeryToken(parameters),
         success: function (data) {
             if (data.State == 1) {
                 $('#exportModal').modal('hide');
@@ -904,13 +901,11 @@ function initScroll(el, callback) {
 
 }
 function nextPage(el, url, offset) {
+    var json = { MediaId: $("#MediaId").val(), offset: offset, limit: $("#PageSize").val() };
     $.ajax({
         type: "post",
-        headers: {
-            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-        },
         url: url,
-        data: { MediaId: $("#MediaId").val(), offset: offset, limit: $("#PageSize").val() },
+        data: addAntiForgeryToken(json),
         success: function (data) {
             $.each(data.rows,
                 function (k, v) {
@@ -964,13 +959,15 @@ function develop() {
         return;
     }
     var subBtn = $('.ladda-button').ladda();
+    var json = {
+        MediaName: arr.join(','),
+        MediaTypeId: $("#MediaTypeId").val(),
+        MediaTypeName: $("#MediaTypeName").val()
+    };
     $.ajax({
         type: "post",
-        headers: {
-            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-        },
         url: "/Media/Develop",
-        data: { MediaName: arr.join(','), MediaTypeId: $("#MediaTypeId").val(), MediaTypeName: $("#MediaTypeName").val() },
+        data: addAntiForgeryToken(json),
         success: function (data) {
             $('#resultModal').modal('hide');
             swal("消息", data.Msg, "success");
@@ -1015,13 +1012,11 @@ function addGroup() {
             return;
         } else {
             var subBtn = $('.btn-warning.ladda-button').ladda();
+            var json = { GroupName: groupName };
             $.ajax({
                 type: "post",
-                headers: {
-                    '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-                },
                 url: "/Media/AddGroup",
-                data: { GroupName: groupName },
+                data: addAntiForgeryToken(json),
                 success: function (data) {
                     if (data.State == 1) {
                         var id = data.Msg;
@@ -1064,13 +1059,11 @@ function joinGroup() {
         return;
     }
     var subBtn = $('.btn-primary.ladda-button').ladda();
+    var json = { gIds: arr.join(','), mId: $("#MediaId").val() };
     $.ajax({
         type: "post",
-        headers: {
-            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-        },
         url: "/Media/JoinGroup",
-        data: { gIds: arr.join(','), mId: $("#MediaId").val() },
+        data: addAntiForgeryToken(json),
         success: function (data) {
             $('#modalView .modal').modal('hide');
             var gid = $("#GroupId").val();
@@ -1107,13 +1100,11 @@ function removeMedia(name, id) {
         showLoaderOnConfirm: true
 
     }, function () {
+        var json = { mId: id, gId: $("#GroupId").val() };
         $.ajax({
             type: "post",
-            headers: {
-                '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-            },
             url: "/Media/RemoveGroup",
-            data: { mId: id, gId: $("#GroupId").val() },
+            data: addAntiForgeryToken(json),
             success: function (data) {
                 if (data.State == 1) {
                     $("#table").bootstrapTable('refresh');
@@ -1152,13 +1143,11 @@ function delGroup() {
         showLoaderOnConfirm: true
 
     }, function () {
+        var json = { id: $("#GroupId").val() };
         $.ajax({
             type: "post",
-            headers: {
-                '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-            },
             url: "/Media/DeleteGroup",
-            data: { id: $("#GroupId").val() },
+            data: addAntiForgeryToken(json),
             success: function (data) {
                 if (data.State == 1) {
 
@@ -1189,13 +1178,11 @@ function delGroup() {
 
 function exportGroup() {
     var subBtn = $('.ladda-button').ladda();
+    var json = { id: $("#GroupId").val(), isData: $("input[name='IsData']:checked").val() };
     $.ajax({
         type: "post",
-        headers: {
-            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-        },
         url: "/Media/ExportGroup",
-        data: { id: $("#GroupId").val(), isData: $("input[name='IsData']:checked").val() },
+        data: addAntiForgeryToken(json),
         success: function (data) {
             if (data.State == 1) {
                 $('#exportGroupModal').modal('hide');
@@ -1228,4 +1215,16 @@ function articleDetails(id) {
             $('#modalView .modal').modal('show');
         });
 
+}
+// CSRF (XSRF) security
+function addAntiForgeryToken(data) {
+    if (!data) {
+        data = {};
+    }
+    //add token
+    var tokenInput = $('input[name=__RequestVerificationToken]');
+    if (tokenInput.length) {
+        data.__RequestVerificationToken = tokenInput.val();
+    }
+    return data;
 }

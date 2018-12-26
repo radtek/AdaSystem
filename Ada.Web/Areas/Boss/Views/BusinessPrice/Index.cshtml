@@ -18,7 +18,7 @@
         </div>
     </div>
 </div>
-
+@Html.AntiForgeryToken()
 <div id="toolbar" class="btn-group">
     <div class="form-inline" role="form">
         <div class="form-group">
@@ -37,7 +37,7 @@
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
         $(document).ready(function () {
             var table = new TableInit();
@@ -205,13 +205,11 @@
                         closeOnConfirm: false,
                         showLoaderOnConfirm: true
                     }, function () {
+                        var post = { "ids": arr.join(',') };
                         $.ajax({
                             type: "post",
-                            headers: {
-                                '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                            },
                             url: "@Url.Action("Audit")",
-                            data: { "ids": arr.join(',') },
+                            data: addAntiForgeryToken(post),
                             success: function (data) {
                                 if (data.State == 1) {
                                     $("#table").bootstrapTable('refresh');
@@ -238,7 +236,7 @@
         }
 
 
-</script>
+    </script>
 }
 
 

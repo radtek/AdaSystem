@@ -173,7 +173,7 @@ namespace Ada.Web.Controllers
         }
 
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult WeiXinUpdateArticle(WeiXinProParams proParams)
         {
             var setting = _settingService.GetSetting<WeiGuang>();

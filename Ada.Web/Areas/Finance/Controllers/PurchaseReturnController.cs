@@ -58,7 +58,7 @@ namespace Finance.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult AddReceivable(ReceivablesView viewModel)
         {
             if (!ModelState.IsValid)
@@ -103,7 +103,7 @@ namespace Finance.Controllers
         }
 
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var returnorder = _purchaseReturnOrderrepository.LoadEntities(d => d.Id == id).FirstOrDefault();

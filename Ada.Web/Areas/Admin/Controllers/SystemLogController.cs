@@ -39,7 +39,7 @@ namespace Admin.Controllers
             },JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete()
         {
             var ids = Request["Ids"].Split(',');

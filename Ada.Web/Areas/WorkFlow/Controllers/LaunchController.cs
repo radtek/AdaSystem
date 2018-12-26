@@ -76,7 +76,7 @@ namespace WorkFlow.Controllers
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        [HttpPost, ValidateInput(false), ValidateAntiForgeryToken]
+        [HttpPost, ValidateInput(false)]
         public ActionResult Add(WorkFlowRecordView viewModel)
         {
 

@@ -45,7 +45,7 @@ namespace Customer.Controllers
         {
             return View();
         }
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         public ActionResult Cooperation(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
@@ -98,7 +98,7 @@ namespace Customer.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(LinkManView viewModel)
         {
             if (!ModelState.IsValid)
@@ -155,7 +155,7 @@ namespace Customer.Controllers
             return View(entity);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(LinkManView viewModel)
         {
             if (!ModelState.IsValid)
@@ -189,7 +189,7 @@ namespace Customer.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -215,7 +215,7 @@ namespace Customer.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult FollowUp(FollowUpView viewModel)
         {
             if (!ModelState.IsValid)
@@ -255,7 +255,7 @@ namespace Customer.Controllers
             return PartialView("CreateAccount", view);
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult CreateAccount(LinkManView viewModel)
         {
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
@@ -290,7 +290,7 @@ namespace Customer.Controllers
             return Json(new { State = 1, Msg = "开通会员成功!" });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult LockAccount(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -307,7 +307,7 @@ namespace Customer.Controllers
             return Json(new { State = 1, Msg = "锁定成功" });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult ResetPassword(string id, string p = "wglh666666")
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

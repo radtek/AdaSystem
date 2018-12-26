@@ -24,7 +24,7 @@ namespace Salary.Controllers
             return View(entity);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Index(SalarySet entity)
         {
             var setting = new Ada.Core.Domain.Admin.Setting

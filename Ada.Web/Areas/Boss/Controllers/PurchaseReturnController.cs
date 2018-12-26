@@ -35,7 +35,7 @@ namespace Boss.Controllers
             return View(entity);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Audit(PurchaseReturnOrderView viewModel)
         {
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();

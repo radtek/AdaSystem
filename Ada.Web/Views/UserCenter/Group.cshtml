@@ -156,16 +156,13 @@
                 singleSelect: true,                  //设置True 将禁止多选
                 uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
                 //searchAlign:"left",
-                ajaxOptions:{
-                    headers: { "__RequestVerificationToken": $("input[name='__RequestVerificationToken']").val() }
-                },
                 formatSearch: function() {
                     return "媒体名称或媒体ID";
                 },
                 mobileResponsive: true,
                 queryParams: function (parameters) {
                     parameters.GroupId = '@gIds';
-                    return searchFrm.queryParams(parameters);
+                    return searchFrm.queryParams(addAntiForgeryToken(parameters));
                  },
                  //onLoadSuccess: function(data) {
                  //    var gid = $("#GroupId").val();

@@ -50,7 +50,7 @@ namespace Finance.Controllers
             return View(entity);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(PurchasePaymentView viewModel)
         {
             //if (!ModelState.IsValid)

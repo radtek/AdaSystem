@@ -6,7 +6,7 @@
     Layout = "~/Views/Shared/_Layout_Web.cshtml";
     ViewBag.Title = "公众号涨粉";
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
-    var areas = fieldService.GetFieldsByKey("FansArea").OrderBy(d=>d.Value).ThenBy(d=>d.Text).Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var areas = fieldService.GetFieldsByKey("FansArea").OrderBy(d => d.Value).ThenBy(d => d.Text).Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 <div class="row wrapper border-bottom white-bg page-heading m-t-xs">
     <div class="col-lg-10">
@@ -16,7 +16,7 @@
 
 
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
-
+    @Html.AntiForgeryToken()
     <h2>
         粉丝计算器
     </h2>
@@ -31,9 +31,9 @@
                 <div class="col-lg-8">
                     <div class="form-group">
                         <label>区域 *</label>
-                        @Html.DropDownListFor(d=>d.AreaGrade,areas,new {@class= "form-control required" })
+                        @Html.DropDownListFor(d => d.AreaGrade, areas, new { @class = "form-control required" })
                     </div>
-                    
+
 
                 </div>
                 <div class="col-lg-4">
@@ -90,7 +90,7 @@
                         <div class="col-lg-10">
                             <p class="form-control-static" id="areastr"></p>
                         </div>
-                        
+
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">性别</label>
@@ -172,7 +172,7 @@
                         $("#sexstr").html($("input[name='Sex']:checked").next("label").text());
                         $(this).steps("next");
                     }
-                    
+
                     // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
                     if (currentIndex === 2 && priorIndex === 3) {
                         $(this).steps("previous");
@@ -196,11 +196,8 @@
                     // Submit form input
                     $.ajax({
                         type: "post",
-                        headers: {
-                            '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                        },
                         url: "@Url.Action("FansComputer")",
-                        data: jsondata,
+                        data: addAntiForgeryToken(jsondata),
                         success: function (data) {
                             if (data.State == 1) {
                                 swal("计算结果", data.Msg, "success");
@@ -220,7 +217,7 @@
                 errorPlacement: function (error, element) {
                     element.before(error);
                 }
-                
+
             });
 
         });

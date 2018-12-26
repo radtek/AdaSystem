@@ -19,11 +19,11 @@
     <div class="col-lg-2">
     </div>
 </div>
-
+@Html.AntiForgeryToken()
 <div class="wrapper wrapper-content animated fadeInRight">
     @using (Html.BeginForm())
     {
-        @Html.AntiForgeryToken()
+       
         <p class="bg-danger">@Html.ValidationMessage("message") </p>
         <div class="row">
             <div class="col-lg-12">
@@ -449,12 +449,12 @@
                         $("#Images").val(imgSrc);
                     }
                     var $form = $(form),
-                        data = $form.serialize(); //序列化表单数据
+                        data = $form.serializeObject(); //序列化表单数据
                     $.ajax({
                         type: "post",
                         dataType:"html",
                         url: "@Url.Action("Publish")",
-                        data: data,
+                        data: addAntiForgeryToken(data),
                         success: function (res) {
                             $("#contentPreview").append(res);
                             initEditTable();
@@ -588,15 +588,12 @@
                 $("#CommentContent").val(JSON.stringify(temp));
                 $("#Images").val("");
                 var $form = $(".wrapper.wrapper-content form"),
-                    jsondata = $form.serialize();
+                    jsondata = $form.serializeObject();
                 var subBtn = $('.ladda-button').ladda();
                 $.ajax({
                     type: "post",
-                    headers: {
-                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                    },
                     url: "@Url.Action("SaveSet")",
-                    data: jsondata,
+                    data: addAntiForgeryToken(jsondata),
                     success: function (res) {
                         if (res.State == 1) {
                             window.open("@Url.Action("PreviewDetail")");

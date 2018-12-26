@@ -29,8 +29,7 @@ namespace Crawler.Controllers
             var entity = _settingService.GetSetting<MediaCrawlerSet>();
             return View(entity);
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken,ValidateInput(false)]
+        [HttpPost,ValidateInput(false)]
         public ActionResult Index(MediaCrawlerSet entity)
         {
             var setting = new Ada.Core.Domain.Admin.Setting
@@ -44,7 +43,7 @@ namespace Crawler.Controllers
 
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public async Task<ActionResult> TestBlog(string url)
         {
             var config = _settingService.GetSetting<MediaCrawlerSet>();
@@ -86,7 +85,7 @@ namespace Crawler.Controllers
             return Json(new { State = 1, Msg = "提交成功" });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public async Task<ActionResult> TestRedbook(string url)
         {
             var webCrawler = new WebCrawler();

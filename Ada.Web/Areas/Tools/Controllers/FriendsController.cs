@@ -48,7 +48,7 @@ namespace Tools.Controllers
             return View(view);
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult SaveSet(FriendsSet friendsSet)
         {
             var max = _repository.LoadEntities(d => d.IsDelete == false).Count();

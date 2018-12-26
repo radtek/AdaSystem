@@ -126,9 +126,6 @@
                         type: "post",
                         url: "@Url.Action("TestSend")",
                         data: data,
-                        headers: {
-                            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-                        },
                         success: function (res) {
                             if (res.State == 1) {
                                 swal({

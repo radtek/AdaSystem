@@ -27,7 +27,7 @@ using Action = Ada.Core.Domain.Admin.Action;
 
 namespace Ada.Framework.Filter
 {
-    //[AdminAntiForgery]
+    [AdminAntiForgery]
     public abstract class BaseController : Controller
     {
 

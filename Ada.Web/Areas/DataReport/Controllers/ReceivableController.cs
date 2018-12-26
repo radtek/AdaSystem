@@ -49,7 +49,7 @@ namespace DataReport.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Export(ReceivablesView viewModel)
         {
             viewModel.limit = 5000;

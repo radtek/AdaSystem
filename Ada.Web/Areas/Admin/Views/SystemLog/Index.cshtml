@@ -30,13 +30,6 @@
                             @Html.TextBoxFor(d => d.Logger, new { @class = "form-control input-sm" })
                         </div>
                     </div>
-                    @*<div class="col-sm-4">
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.Message, Html.DisplayNameFor(d => d.Message).ToString(), new { @class = "control-label" })
-                                @Html.TextBoxFor(d => d.Message, new { @class = "form-control" })
-                            </div>
-                        </div>*@
-
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="row">
@@ -53,7 +46,7 @@
     </div>
 
 
-
+    @Html.AntiForgeryToken()
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
@@ -199,13 +192,11 @@
                         closeOnConfirm: false,
                         showLoaderOnConfirm: true
                     }, function () {
+                        var json = { "Ids": ids.join(',') };
                         $.ajax({
                             type: "post",
-                            headers: {
-                                '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                            },
                             url: "@Url.Action("Delete")",
-                            data: { "Ids": ids.join(',') },
+                            data: addAntiForgeryToken(json),
                             success: function (data) {
                                 if (data.State == 1) {
                                     $("#table").bootstrapTable('refresh');

@@ -87,7 +87,7 @@ namespace Boss.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Audit(PurchasePaymentDetailView viewModel)
         {
             var entity = _repository.LoadEntities(d => d.Id == viewModel.Id).FirstOrDefault();
@@ -142,7 +142,7 @@ namespace Boss.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

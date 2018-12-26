@@ -18,7 +18,7 @@ using Newtonsoft.Json;
 
 namespace Ada.Web.Models
 {
-    [UserException, EnableThrottling, WebStatus]
+    [UserException, EnableThrottling, WebStatus,AdminAntiForgery]
     public class UserController:Controller
     {
         private readonly ICacheService _cacheService;

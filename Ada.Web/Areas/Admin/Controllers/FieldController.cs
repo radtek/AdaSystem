@@ -63,7 +63,7 @@ namespace Admin.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult AddOrUpdateType(FieldTypeView viewModel)
         {
             var entity = new FieldType()
@@ -95,7 +95,7 @@ namespace Admin.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult DeleteType(string id)
         {
             var entity = _fieldTypeRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -137,7 +137,7 @@ namespace Admin.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult AddOrUpdateField(FieldView viewModel)
         {
 
@@ -175,7 +175,7 @@ namespace Admin.Controllers
             return Json(new { State = 1, Msg = msg });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult DeleteField(string id)
         {
             var entity = _fieldRepository.LoadEntities(d => d.Id == id).FirstOrDefault();

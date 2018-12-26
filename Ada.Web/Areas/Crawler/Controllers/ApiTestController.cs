@@ -27,7 +27,7 @@ namespace Crawler.Controllers
 
             return View();
         }
-        [HttpPost, AdaValidateAntiForgeryToken, AllowAnonymous]
+        [HttpPost, AllowAnonymous]
         public async Task<ActionResult> WeiXin(ApiRequest apiRequest)
         {
             //var result = await _httpHelper.Get<WeiXinInfosJSON>(apiRequest.UrlPath);

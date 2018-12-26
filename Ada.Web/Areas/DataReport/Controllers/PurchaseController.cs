@@ -28,7 +28,7 @@ namespace DataReport.Controllers
             return View();
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Index(string start, string end)
         {
             if (string.IsNullOrWhiteSpace(start) || string.IsNullOrWhiteSpace(end))

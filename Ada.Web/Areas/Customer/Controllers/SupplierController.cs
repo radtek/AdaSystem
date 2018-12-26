@@ -63,7 +63,7 @@ namespace Customer.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(CommpanyView viewModel)
         {
             if (!ModelState.IsValid)
@@ -120,7 +120,7 @@ namespace Customer.Controllers
             return View(item);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(CommpanyView viewModel)
         {
 
@@ -155,7 +155,7 @@ namespace Customer.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

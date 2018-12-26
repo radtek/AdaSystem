@@ -48,8 +48,7 @@ namespace Ada.Web.Controllers
             }
             return View();
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost,ValidateAntiForgeryToken]
         public ActionResult Index(LoginModel loginModel)
         {
 
@@ -113,8 +112,7 @@ namespace Ada.Web.Controllers
         {
             return View();
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost,ValidateAntiForgeryToken]
         public ActionResult Binding(string phone, string code)
         {
             //校验用户

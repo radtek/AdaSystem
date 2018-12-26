@@ -30,7 +30,7 @@ namespace Business.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string ids)
         {
             if (string.IsNullOrWhiteSpace(ids))

@@ -83,7 +83,7 @@ namespace Salary.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(AttendanceDetailView viewModel)
         {
             if (!ModelState.IsValid)
@@ -313,7 +313,7 @@ namespace Salary.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(AttendanceDetailView viewModel)
         {
             if (!ModelState.IsValid)
@@ -485,7 +485,7 @@ namespace Salary.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Export(string date)
         {
             if (string.IsNullOrWhiteSpace(date))
@@ -541,7 +541,7 @@ namespace Salary.Controllers
         }
 
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             _service.Delete(id);

@@ -63,7 +63,7 @@ namespace WeiXin.Controllers
             return View(entity);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(WeiXinAccountView viewModel)
         {
             if (!ModelState.IsValid)
@@ -116,7 +116,7 @@ namespace WeiXin.Controllers
             return View(entity);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(WeiXinAccountView viewModel)
         {
             if (!ModelState.IsValid)
@@ -147,7 +147,7 @@ namespace WeiXin.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -166,7 +166,7 @@ namespace WeiXin.Controllers
             return PartialView("TemplateMsg", viewModel);
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult TestSendMsg(TemplateMsgModel templateMsgModel)
         {
             var temp = templateMsgModel.TemplateId.Split('|');

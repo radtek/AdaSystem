@@ -466,13 +466,11 @@
             showLoaderOnConfirm: true
 
         }, function () {
+            var json = { CallIndex: "weixinpro", ArticleLinks: url };
             $.ajax({
                 type: "post",
-                headers: {
-                    '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-                },
                 url: "@Url.Action("WeiXinUpdateArticle", "Media", new{area= "Resource" })",
-                data: { CallIndex: "weixinpro", ArticleLinks: url },
+                data: addAntiForgeryToken(json),
                 success: function (data) {
                     if (data.State == 1) {
                         swal({

@@ -42,7 +42,7 @@ namespace Finance.Controllers
             var payment = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             return PartialView("EditPayInfo", payment);
         }
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         public ActionResult EditPay(PurchasePaymentDetailView view)
         {
             var payment = _repository.LoadEntities(d => d.Id == view.Id).FirstOrDefault();
@@ -69,7 +69,7 @@ namespace Finance.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Pay(BillPaymentView viewModel)
         {
             if (!ModelState.IsValid)

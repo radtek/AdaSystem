@@ -10,7 +10,7 @@
 }
 @Html.Partial("Bread")
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
-
+    @Html.AntiForgeryToken()
     <div class="ibox collapsed">
         <div class="ibox-title">
             <h5>高级筛选</h5>
@@ -213,13 +213,11 @@
                         closeOnConfirm: false,
                         showLoaderOnConfirm: true
                     }, function () {
+                        var data = { "Ids": ids.join(',') };
                         $.ajax({
                             type: "post",
-                            headers: {
-                                '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                            },
                             url: "@Url.Action("Delete")",
-                            data: { "Ids": ids.join(',') },
+                            data: addAntiForgeryToken(data),
                             success: function (data) {
                                 if (data.State == 1) {
                                     $("#table").bootstrapTable('refresh');

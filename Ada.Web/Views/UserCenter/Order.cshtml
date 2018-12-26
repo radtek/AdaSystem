@@ -419,13 +419,11 @@
                 showLoaderOnConfirm: true
 
             }, function () {
+                var data = { CallIndex: "weixinpro", ArticleLinks: url };
                 $.ajax({
                     type: "post",
-                    headers: {
-                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                    },
                     url: "@Url.Action("WeiXinUpdateArticle")",
-                    data: { CallIndex: "weixinpro", ArticleLinks: url },
+                    data: addAntiForgeryToken(data),
                     success: function (data) {
                         if (data.State == 1) {
                             swal({

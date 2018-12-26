@@ -77,7 +77,7 @@ namespace DataReport.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Export(BusinessOrderDetailView viewModel)
         {
             viewModel.Managers = PremissionData();

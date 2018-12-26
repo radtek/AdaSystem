@@ -7,7 +7,7 @@
 @Html.Partial("Bread")
 
 <div class="wrapper wrapper-content">
-
+    @Html.AntiForgeryToken()
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
@@ -138,7 +138,7 @@
                         align: "center", valign: "middle",
                         formatter: function (value,row) {
                             return "<a class='btn btn-success btn-sm' href='@Url.Action("Update")?id=" + value +"'><i class='fa fa-pencil'></i>  编辑</a> " +
-                                "<button class='btn btn-danger btn-sm' onclick=\"cancle('" + value +"');\"><i class='fa fa-trash-o'></i> 删除</button>";
+                                "<button class='btn btn-danger btn-sm' onclick=\"deleteData('@Url.Action("Delete")','" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button>";
                         }
 
                     }
@@ -149,50 +149,7 @@
             return obj;
         };
 
-        //撤销
-        function cancle(id) {
-            swal({
-                title: "您确定吗?",
-                text: "确认要删除此单据吗?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                closeOnConfirm: false,
-                showLoaderOnConfirm: true
-            }, function () {
-                $.ajax({
-                    type: "post",
-                    headers: {
-                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                    },
-                    url: "@Url.Action("Delete")",
-                    data: { "id": id },
-                    success: function (data) {
-                        if (data.State == 1) {
-                            $("#table").bootstrapTable('refresh');
-                            swal({
-                                title: "操作成功",
-                                text: data.Msg,
-                                timer: 2000,
-                                type:"success",
-                                showConfirmButton: false
-                            });
 
-                        } else {
-                            swal("操作提醒", data.Msg, "warning");
-                        }
-                    },
-                    error: function () {
-                        swal("操作失败", "系统错误", "error");
-                    },
-                    complete: function () {
-
-                    }
-                });
-            });
-        }
         function orderInfo(id, type) {
             var url = "";
             if (type == 0) {

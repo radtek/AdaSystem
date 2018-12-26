@@ -364,13 +364,11 @@ function formatterOperation(value, row) {
 
 
 function ajaxFun(url, data) {
+    var jsondata = data || {};
     $.ajax({
         type: "post",
-        headers: {
-            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-        },
         url: url,
-        data: data || {},
+        data: addAntiForgeryToken(jsondata),
         success: function (data) {
             if (data.State == 1) {
                 $("#table").bootstrapTable('refresh');
@@ -603,13 +601,11 @@ function collectWeiXin(url) {
         showLoaderOnConfirm: true
 
     }, function () {
+        var json = { CallIndex: "weixin", CallIndexWeiXinInfo: "weixinpro", UID: ids.join(',') };
         $.ajax({
             type: "post",
-            headers: {
-                '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-            },
             url: url,
-            data: { CallIndex: "weixin", CallIndexWeiXinInfo: "weixinpro", UID: ids.join(',') },
+            data: addAntiForgeryToken(json),
             success: function (data) {
                 if (data.State == 1) {
                     $("#table").bootstrapTable('refresh');
@@ -650,13 +646,11 @@ function collectDouYin(url) {
 
         }, function () {
             var kw = arrselections[0].Abstract || arrselections[0].MediaName;
+            var json = { CallIndex: "douyininfo", UID: arrselections[0].MediaID, KeyWord: kw };
             $.ajax({
                 type: "post",
-                headers: {
-                    '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-                },
                 url: url,
-                data: { CallIndex: "douyininfo", UID: arrselections[0].MediaID, KeyWord: kw },
+                data: addAntiForgeryToken(json),
                 success: function (data) {
                     if (data.State == 1) {
                         $("#table").bootstrapTable('refresh');

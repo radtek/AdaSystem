@@ -58,7 +58,7 @@ namespace Resource.Controllers
             return View();
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(MediaDevelopView viewModel)
         {
 
@@ -103,7 +103,7 @@ namespace Resource.Controllers
             return PartialView("MediaDevelopProgress",entity);
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

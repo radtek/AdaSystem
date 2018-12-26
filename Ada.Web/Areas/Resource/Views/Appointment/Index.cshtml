@@ -215,14 +215,18 @@
         function confirmYY() {
             var subBtn = $('.ladda-button').ladda();
             var isConfirm = $("input[name='IsConfirm']:checked").val();
+            var json = {
+                MediaId: "@media.Id",
+                Remark: $("#Remark").val(),
+                AppointmentDate: $("#AppointmentDate").val(),
+                State: isConfirm,
+                Taxis: $("#sort").val()
+            };
             $.ajax({
                 type: "post",
                 cache: false,
-                headers: {
-                    '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-                },
                 url: "@Url.Action("Make")",
-                data: { MediaId: "@media.Id", Remark: $("#Remark").val(), AppointmentDate: $("#AppointmentDate").val(), State: isConfirm, Taxis: $("#sort").val()},
+                data: addAntiForgeryToken(json),
                 success: function (data) {
                     if (data.State == 1) {
                         $('#yyModal').modal('hide');
@@ -264,13 +268,11 @@
                 closeOnConfirm: false,
                 showLoaderOnConfirm: true
             }, function () {
+                var json = { id: makeId };
                 $.ajax({
                     type: "post",
-                    headers: {
-                        '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-                    },
                     url: "@Url.Action("Cancle")",
-                    data: { id: makeId},
+                    data: addAntiForgeryToken(json),
                     success: function (data) {
                         if (data.State == 1) {
                             swal({

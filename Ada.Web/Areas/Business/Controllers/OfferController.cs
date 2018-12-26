@@ -69,7 +69,7 @@ namespace Business.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(BusinessOfferView viewModel)
         {
             if (!ModelState.IsValid)
@@ -127,7 +127,7 @@ namespace Business.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(BusinessOfferView viewModel)
         {
             if (!ModelState.IsValid)
@@ -183,7 +183,7 @@ namespace Business.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult ToPdf()
         {
             UEditorModel uploadConfig = new UEditorModel()

@@ -85,7 +85,7 @@ namespace Resource.Controllers
         /// <param name="viewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Exports(MediaView viewModel)
         {
 
@@ -308,7 +308,7 @@ namespace Resource.Controllers
             return jObjects;
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Export(MediaView viewModel)
         {
             viewModel.Managers = PremissionData();
@@ -403,7 +403,7 @@ namespace Resource.Controllers
             }
             return jObjects.ToString();
         }
-        [HttpPost]
+        [HttpPost,AdminAntiForgery(true)]
         public ActionResult GetListAll(MediaView viewModel)
         {
             viewModel.Status = Consts.StateNormal;
@@ -469,7 +469,7 @@ namespace Resource.Controllers
                 })
             });
         }
-        [HttpPost]
+        [HttpPost, AdminAntiForgery(true)]
         public ActionResult GetList(MediaView viewModel)
         {
             viewModel.Managers = PremissionData();
@@ -549,7 +549,7 @@ namespace Resource.Controllers
                 })
             }, JsonRequestBehavior.AllowGet);
         }
-        [HttpPost, AdaValidateAntiForgeryToken]
+        [HttpPost]
         public ActionResult AddArticle(MediaArticleView viewModel)
         {
             MediaArticle entity=new MediaArticle();
@@ -560,7 +560,7 @@ namespace Resource.Controllers
             _mediaArticleService.Add(entity);
             return Json(new { State = 1, Msg = "添加成功" });
         }
-        [HttpPost,AdaValidateAntiForgeryToken]
+        [HttpPost]
         public ActionResult DeleteArticle(string id)
         {
             string[] ids = { id };
@@ -992,7 +992,7 @@ namespace Resource.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(MediaView viewModel)
         {
 
@@ -1194,7 +1194,7 @@ namespace Resource.Controllers
             return View(entity);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(MediaView viewModel)
         {
             if (!ModelState.IsValid)
@@ -1361,7 +1361,7 @@ namespace Resource.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -1377,7 +1377,7 @@ namespace Resource.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Top(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -1398,7 +1398,7 @@ namespace Resource.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Recommend(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -1419,7 +1419,7 @@ namespace Resource.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Hot(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -1455,7 +1455,7 @@ namespace Resource.Controllers
             return View(entity);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Comment(MediaCommentView viewModel)
         {
 
@@ -1498,7 +1498,7 @@ namespace Resource.Controllers
 
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult WeiXinProCollection(WeiXinProParams viewModel)
         {
             var premission = PremissionData();
@@ -1525,7 +1525,7 @@ namespace Resource.Controllers
             return PartialView("WeiboCollection", view);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult WeiboCollection(WeiBoParams viewModel)
         {
             var premission = PremissionData();
@@ -1542,7 +1542,7 @@ namespace Resource.Controllers
             return Json(new { State = 1, Msg = msg.Message });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult WeixinCollection(WeiXinProParams baseParams)
         {
             var premission = PremissionData();
@@ -1559,7 +1559,7 @@ namespace Resource.Controllers
             return Json(new { State = 1, Msg = msg.Message });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult DouYinInfoCollection(DouYinParams baseParams)
         {
             var premission = PremissionData();
@@ -1576,7 +1576,7 @@ namespace Resource.Controllers
             return Json(new { State = 1, Msg = msg.Message });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult WeiXinUpdateArticle(WeiXinProParams proParams)
         {
             proParams.TransactorId = CurrentManager.Id;

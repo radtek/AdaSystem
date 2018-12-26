@@ -8,7 +8,7 @@
 }
 @Html.Partial("Bread")
 
-
+@Html.AntiForgeryToken()
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -147,7 +147,7 @@
                                 return "<div class='btn-group'>" +
                                     "<a class='btn btn-success btn-outline btn-xs' href='@Url.Action("Update")?id=" + value + "' target='_blank'><i class='fa fa-pencil'></i> 编辑</a> " +
                                     "<button class='btn btn-warning btn-outline btn-xs' onclick=\"unlock('" + value + "');\"><i class='fa fa-unlock'></i> 解绑</button> " +
-                                    "<button class='btn btn-danger btn-outline btn-xs' onclick=\"cancle('" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button></div>";
+                                    "<button class='btn btn-danger btn-outline btn-xs' onclick=\"deleteData('@Url.Action("Delete")','" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button></div>";
                             }
 
                         }
@@ -157,51 +157,6 @@
             return oTableInit;
         };
 
-
-        function cancle(id) {
-            swal({
-                title: "您确定吗?",
-                text: "确认要删除此人员吗?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                closeOnConfirm: false,
-                showLoaderOnConfirm: true
-            }, function () {
-                $.ajax({
-                    type: "post",
-                    headers: {
-                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                    },
-                    url: "@Url.Action("Delete")",
-                    data: { "id": id },
-                    success: function (data) {
-                        if (data.State == 1) {
-                            $("#table").bootstrapTable('refresh');
-                            swal({
-                                title: "操作成功",
-                                text: data.Msg,
-                                timer: 2000,
-                                type:"success",
-                                showConfirmButton: false
-                            });
-
-                        } else {
-                            swal("操作提醒", data.Msg, "warning");
-                        }
-                    },
-                    error: function () {
-                        swal("操作失败", "系统错误", "error");
-                    },
-                    complete: function () {
-
-                    }
-
-                });
-            });
-    }
         function unlock(id) {
             swal({
                 title: "您确定吗?",
@@ -214,13 +169,11 @@
                 closeOnConfirm: false,
                 showLoaderOnConfirm: true
             }, function () {
+                var data = { "id": id };
                 $.ajax({
                     type: "post",
-                    headers: {
-                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                    },
                     url: "@Url.Action("UnBinding")",
-                    data: { "id": id },
+                    data: addAntiForgeryToken(data),
                     success: function (data) {
                         if (data.State == 1) {
                             swal({
@@ -265,14 +218,12 @@
                 }
                 if (inputValue === "") {
                     inputValue = '@DateTime.Now.Date.ToString("yyyy-MM-dd")';
-                } 
+                }
+                var json = { Status: 1, limit: 1000, EntryDate: inputValue };
                 $.ajax({
                     type: "post",
-                    headers: {
-                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                    },
                     url: "@Url.Action("Export")",
-                    data: { Status: 1, limit: 1000, EntryDate: inputValue},
+                    data: addAntiForgeryToken(json),
                     success: function (data) {
                         if (data.State == 1) {
                             swal({

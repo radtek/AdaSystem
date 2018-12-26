@@ -10,7 +10,7 @@
     var purchaseStatus = fieldService.GetFieldsByKey("PurchaseStatus").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 @Html.Partial("Bread")
-
+@Html.AntiForgeryToken()
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
     <div class="ibox collapsed">
         <div class="ibox-title">
@@ -121,7 +121,7 @@
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/dateRange")
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
         $(document).ready(function () {
             var table = new TableInit();
@@ -258,7 +258,7 @@
                         field: 'MediaName',
                         title: '@Html.DisplayNameFor(d=>d.MediaName)',
                         align: "left", valign: "middle",
-                        
+
                     }
                     ,
                     {
@@ -355,7 +355,7 @@
                         align: "center", valign: "middle",
                         formatter: function (value) {
                             return "<a class='btn btn-success btn-sm' href='@Url.Action("Update")?id=" + value + "');' target='_blank'><i class='fa fa-pencil'></i> 处理</a> " +
-                                "<button class='btn btn-danger btn-sm' onclick=\"cancle('" + value + "');\"><i class='fa fa-reply'></i> 撤销</button>";
+                                "<button class='btn btn-danger btn-sm' onclick=\"deleteData('@Url.Action("Delete")','" + value + "');\"><i class='fa fa-reply'></i> 撤销</button>";
                         }
 
                     }
@@ -381,50 +381,7 @@
             $("#PublishDateStart").val("");
             $("#PublishDateEnd").val("");
         }
-        //撤销
-        function cancle(id) {
-            swal({
-                title: "您确定吗?",
-                text: "确认要撤销此单据吗?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                closeOnConfirm: false,
-                showLoaderOnConfirm: true
-            }, function () {
-                $.ajax({
-                    type: "post",
-                    headers: {
-                        '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                    },
-                    url: "@Url.Action("Delete")",
-                    data: { "id": id },
-                    success: function (data) {
-                        if (data.State == 1) {
-                            $("#table").bootstrapTable('refresh');
-                            swal({
-                                title: "操作成功",
-                                text: data.Msg,
-                                timer: 2000,
-                                type:"success",
-                                showConfirmButton: false
-                            });
 
-                        } else {
-                            swal("操作提醒", data.Msg, "warning");
-                        }
-                    },
-                    error: function () {
-                        swal("操作失败", "系统错误", "error");
-                    },
-                    complete: function () {
-
-                    }
-                });
-            });
-        }
 
         function editOrder() {
             var arrselections = $("#table").bootstrapTable('getSelections');
@@ -442,7 +399,7 @@
                 });
 
         }
-</script>
+    </script>
 }
 
 

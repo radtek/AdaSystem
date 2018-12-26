@@ -69,9 +69,6 @@
                     $.ajax({
                         type: "post",
                         url: "@Url.Action("WeiXin")",
-                        headers: {
-                            '__RequestVerificationToken': $("input[name='__RequestVerificationToken']").val()
-                        },
                         data: data,
                         success: function (res) {
                             if (res.State==1) {

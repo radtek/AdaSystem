@@ -25,7 +25,7 @@ namespace Boss.Controllers
             return View();
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Audit(string ids)
         {
             var arr = ids.Split(',');
@@ -40,7 +40,7 @@ namespace Boss.Controllers
             return Json(new { State = 1, Msg = "审批成功" });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Cancle(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

@@ -77,7 +77,7 @@ namespace WorkFlow.Controllers
         /// 审批
         /// </summary>
         /// <returns></returns>
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         public ActionResult Examination(WorkFlowRecordDetailView view)
         {
             var detail = _service.GetDetailById(view.Id);

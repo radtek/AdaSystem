@@ -25,7 +25,7 @@ namespace Message.Controllers
             return View(entity);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Index(AliYunSet entity)
         {
             var setting = new Ada.Core.Domain.Admin.Setting
@@ -39,7 +39,7 @@ namespace Message.Controllers
 
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult TestSend(AliYunMessage aliYunMessage)
         {
             _aliYunSmsChannel.Process(new Dictionary<string, object> {

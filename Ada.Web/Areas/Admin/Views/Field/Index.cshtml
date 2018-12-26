@@ -354,13 +354,11 @@ if (list.Count > 0)
                         closeOnConfirm: false,
                         showLoaderOnConfirm: true
                     }, function () {
+                        var data = { "id": arrselections[0].Id };
                         $.ajax({
                             type: "post",
-                            headers: {
-                                '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                            },
                             url: "@Url.Action("DeleteField")",
-                            data: { "id": arrselections[0].Id },
+                            data: addAntiForgeryToken(data),
                             success: function (data) {
                                 if (data.State == 1) {
                                     $("#table").bootstrapTable('refresh');
@@ -402,17 +400,14 @@ if (list.Count > 0)
                     },
                     submitHandler: function (form) {
                         var $form = $(form),
-                            data = $form.serialize(); //序列化表单数据
+                            data = $form.serializeObject(); //序列化表单数据
                         $.ajax({
                             type: "post",
-                            headers: {
-                                '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                            },
                             beforeSend: function() {
                                 subBtn.ladda('start');
                             },
                             url: form.action,
-                            data: data,
+                            data: addAntiForgeryToken(data),
                             success: function (res) {
                                 if (res.State == 1) {
                                     $('#modalfield').modal('hide');

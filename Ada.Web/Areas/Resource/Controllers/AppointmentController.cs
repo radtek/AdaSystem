@@ -53,7 +53,7 @@ namespace Resource.Controllers
             var media = string.IsNullOrWhiteSpace(id) ? medias.FirstOrDefault() : medias.FirstOrDefault(d => d.Id == id);
             return View(media);
         }
-        [HttpPost, AdaValidateAntiForgeryToken]
+        [HttpPost]
         public ActionResult Make(MediaAppointmentView view)
         {
             lock (Locker)
@@ -111,7 +111,7 @@ namespace Resource.Controllers
             }
 
         }
-        [HttpPost, AdaValidateAntiForgeryToken]
+        [HttpPost]
         public ActionResult Cancle(string id)
         {
             var make = _mediaAppointmentRepository.LoadEntities(d => d.Id == id).FirstOrDefault();

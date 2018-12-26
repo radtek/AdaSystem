@@ -61,9 +61,6 @@
                searchAlign: "left",
                buttonsAlign: "left",
                toolbarAlign: "right",
-                ajaxOptions:{
-                    headers: { "__RequestVerificationToken": $("input[name='__RequestVerificationToken']").val() }
-                },
                     formatSearch: function() {
                         return "知乎名称关键字";
                     },
@@ -71,7 +68,7 @@
                 mobileResponsive: true,
                 queryParams: function (parameters) {
                     parameters.MediaTypeId = '@meidaType.Id';
-                    return searchFrm.queryParams(parameters);
+                    return searchFrm.queryParams(addAntiForgeryToken(parameters));
                 },
                 columns: [
 

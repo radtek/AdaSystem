@@ -41,7 +41,7 @@ namespace Resource.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult AddOrUpdate(MediaTagView viewModel)
         {
             if (!ModelState.IsValid)
@@ -90,7 +90,7 @@ namespace Resource.Controllers
         }
        
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

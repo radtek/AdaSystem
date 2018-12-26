@@ -645,3 +645,55 @@ function syntaxHighlight(json) {
         return '<span class="' + cls + '">' + match + '</span>';
     });
 }
+// CSRF (XSRF) security
+function addAntiForgeryToken(data) {
+    if (!data) {
+        data = {};
+    }
+    //add token
+    var tokenInput = $('input[name=__RequestVerificationToken]');
+    if (tokenInput.length) {
+        data.__RequestVerificationToken = tokenInput.val();
+    }
+    return data;
+}
+function deleteData(url, id) {
+    swal({
+        title: "提醒",
+        text: "确认要这么做吗?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
+    }, function () {
+        var data = { id: id };
+        $.ajax({
+            type: "post",
+            url: url,
+            data: addAntiForgeryToken(data),
+            success: function (data) {
+                if (data.State === 1) {
+                    $("#table").bootstrapTable('refresh');
+                    swal({
+                        title: data.Msg,
+                        timer: 1600,
+                        type: "success",
+                        showConfirmButton: false
+                    });
+                } else {
+                    swal("操作提醒", data.Msg, "warning");
+                }
+            },
+            error: function () {
+                swal("操作失败", "系统错误", "error");
+            },
+            complete: function () {
+
+            }
+
+        });
+    });
+}

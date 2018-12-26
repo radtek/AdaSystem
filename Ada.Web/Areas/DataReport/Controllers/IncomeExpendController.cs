@@ -50,7 +50,7 @@ namespace DataReport.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Export(ReceiptExpenditureView viewModel)
         {
             viewModel.limit = 5000;

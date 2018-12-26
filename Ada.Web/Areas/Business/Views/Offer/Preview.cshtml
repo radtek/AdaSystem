@@ -62,7 +62,7 @@
                             <abbr title="Phone">联系电话:</abbr> @Model.LinkMan.Phone
                         </address>
                         <p>
-                            <span><strong>报价日期:</strong> @Model.OfferDate.Value.ToString("yyyy年MM月dd日")</span><br/>
+                            <span><strong>报价日期:</strong> @Model.OfferDate.Value.ToString("yyyy年MM月dd日")</span><br />
                             @*<span><strong>Due Date:</strong> March 24, 2014</span>*@
                         </p>
                     </div>
@@ -71,58 +71,58 @@
                 <div class="table-responsive m-t">
                     <table class="table invoice-table">
                         <thead>
-                        <tr>
-                            <th>媒体类型</th>
-                            <th>媒体名称</th>
-                            <th>广告位</th>
-                            <th class="hidden-xs">报价金额</th>
-                            <th class="hidden-xs">税额</th>
-                            <th>总金额</th>
-                        </tr>
+                            <tr>
+                                <th>媒体类型</th>
+                                <th>媒体名称</th>
+                                <th>广告位</th>
+                                <th class="hidden-xs">报价金额</th>
+                                <th class="hidden-xs">税额</th>
+                                <th>总金额</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        @foreach (var item in Model.BusinessOfferDetails)
-                        {
-                            <tr>
-                                <td><strong>@item.MediaPrice.Media.MediaType.TypeName</strong></td>
-                                <td><strong>@item.MediaPrice.Media.MediaName</strong></td>
-                                <td><strong>@item.MediaPrice.AdPositionName</strong></td>
-                                <td class="hidden-xs">¥@item.SellMoney</td>
-                                <td class="hidden-xs">¥@item.TaxMoney</td>
-                                <td>¥@item.Money</td>
-                            </tr>
-                        }
+                            @foreach (var item in Model.BusinessOfferDetails)
+                            {
+                                <tr>
+                                    <td><strong>@item.MediaPrice.Media.MediaType.TypeName</strong></td>
+                                    <td><strong>@item.MediaPrice.Media.MediaName</strong></td>
+                                    <td><strong>@item.MediaPrice.AdPositionName</strong></td>
+                                    <td class="hidden-xs">¥@item.SellMoney</td>
+                                    <td class="hidden-xs">¥@item.TaxMoney</td>
+                                    <td>¥@item.Money</td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div><!-- /table-responsive -->
 
                 <table class="table invoice-total">
                     <tbody>
-                    <tr>
-                        <td><strong>总报价金额 :</strong></td>
-                        <td>¥@Model.TotalSellMoney</td>
-                    </tr>
-                    <tr>
-                        <td><strong>总税额 :</strong></td>
-                        <td>¥@Model.TotalTaxMoney</td>
-                    </tr>
-                    <tr>
-                        <td><strong>优惠金额 :</strong></td>
-                        <td>¥@Model.DiscountMoney</td>
-                    </tr>
-                    <tr>
-                        <td><strong>总金额 :</strong></td>
-                        <td>¥@Model.TotalMoney</td>
-                    </tr>
+                        <tr>
+                            <td><strong>总报价金额 :</strong></td>
+                            <td>¥@Model.TotalSellMoney</td>
+                        </tr>
+                        <tr>
+                            <td><strong>总税额 :</strong></td>
+                            <td>¥@Model.TotalTaxMoney</td>
+                        </tr>
+                        <tr>
+                            <td><strong>优惠金额 :</strong></td>
+                            <td>¥@Model.DiscountMoney</td>
+                        </tr>
+                        <tr>
+                            <td><strong>总金额 :</strong></td>
+                            <td>¥@Model.TotalMoney</td>
+                        </tr>
                     </tbody>
                 </table>
                 @*<div class="text-right">
-                        <button class="btn btn-primary"><i class="fa fa-dollar"></i> 导出为PDF</button>
-                    </div>*@
-
+            <button class="btn btn-primary"><i class="fa fa-dollar"></i> 导出为PDF</button>
+        </div>*@
+                @Html.AntiForgeryToken()
                 <div class="well m-t">
-                    <strong>报价说明：</strong><br/>
-                    1.以上报价有效期为：@Model.ValidDays 天，逾期请再次联系。<br/>
+                    <strong>报价说明：</strong><br />
+                    1.以上报价有效期为：@Model.ValidDays 天，逾期请再次联系。<br />
                     2.如有任何疑问请及时联系，谢谢。
                 </div>
             </div>
@@ -137,13 +137,11 @@
             html2canvas(document.getElementById('offer'), {
                 onrendered: function(canvas){
                     var base64 = canvas.toDataURL();
+                    var json = { upfile: base64, offer: "@Model.OfferNum" };
                     $.ajax({
                         type: "post",
-                        headers: {
-                            '__RequestVerificationToken': $('@Html.AntiForgeryToken()').val()
-                        },
                         url: "@Url.Action("ToPdf")",
-                        data: { upfile: base64,offer:"@Model.OfferNum"},
+                        data: addAntiForgeryToken(json),
                         success: function (data) {
                             if (data.State == 1) {
                                 window.location.href = "@Url.Action("DownPdf")?path=" + data.Msg;

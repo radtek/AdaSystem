@@ -23,7 +23,7 @@ namespace Setting.Controllers
             return View(entity);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Index(WeiGuang entity)
         {
             var setting = new Ada.Core.Domain.Admin.Setting

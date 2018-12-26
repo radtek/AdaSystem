@@ -62,7 +62,7 @@ namespace Customer.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(LinkManView viewModel)
         {
             if (!ModelState.IsValid)
@@ -127,7 +127,7 @@ namespace Customer.Controllers
             return View(entity);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(LinkManView viewModel)
         {
             if (!ModelState.IsValid)
@@ -170,7 +170,7 @@ namespace Customer.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -181,7 +181,7 @@ namespace Customer.Controllers
             return Json(new { State = 1, Msg = "删除成功" });
         }
         //[HttpPost]
-        //[ValidateAntiForgeryToken]
+        //
         public ActionResult Export(LinkManView viewModel)
         {
             viewModel.Managers = PremissionData();

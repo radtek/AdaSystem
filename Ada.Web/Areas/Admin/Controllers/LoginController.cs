@@ -60,8 +60,7 @@ namespace Admin.Controllers
         }
 
        
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost,ValidateAntiForgeryToken]
         public ActionResult Index(string userName, string password)
         {
             //校验用户
@@ -93,8 +92,7 @@ namespace Admin.Controllers
         {
             return View();
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost,ValidateAntiForgeryToken]
         public ActionResult Phone(LoginPhoneModel loginModel)
         {
             if (!ModelState.IsValid)
@@ -171,8 +169,7 @@ namespace Admin.Controllers
             
             return View();
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost,ValidateAntiForgeryToken]
         public ActionResult Binding(string userName, string password)
         {
             //校验用户

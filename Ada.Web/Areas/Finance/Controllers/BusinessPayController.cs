@@ -45,7 +45,7 @@ namespace Finance.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Pay(BillPaymentView viewModel)
         {
             if (!ModelState.IsValid)

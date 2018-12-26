@@ -64,7 +64,7 @@ namespace Finance.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(ReceivablesView viewModel)
         {
             if (!ModelState.IsValid)
@@ -131,7 +131,7 @@ namespace Finance.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(ReceivablesView viewModel)
         {
             if (!ModelState.IsValid)
@@ -173,7 +173,7 @@ namespace Finance.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();

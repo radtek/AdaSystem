@@ -74,7 +74,7 @@ namespace Content.Controllers
             return View(new ArticleView(){Taxis = 99,ColumnId = id,Status = 1});
         }
         [HttpPost,ValidateInput(false)]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Add(ArticleView viewModel)
         {
             if (!ModelState.IsValid)
@@ -142,7 +142,7 @@ namespace Content.Controllers
             return View(entity);
         }
         [HttpPost, ValidateInput(false)]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult Update(ArticleView viewModel)
         {
             if (!ModelState.IsValid)
@@ -180,7 +180,7 @@ namespace Content.Controllers
             return RedirectToAction("Index");
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -188,7 +188,7 @@ namespace Content.Controllers
             return Json(new { State = 1, Msg = "删除成功" });
         }
         [HttpPost]
-        [AdaValidateAntiForgeryToken]
+        
         public ActionResult Publish(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
