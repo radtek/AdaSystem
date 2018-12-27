@@ -90,6 +90,10 @@ namespace Ada.Web.Controllers
         {
             return View();
         }
+        public ActionResult Taobao()
+        {
+            return View();
+        }
         public ActionResult Writer()
         {
             return View();

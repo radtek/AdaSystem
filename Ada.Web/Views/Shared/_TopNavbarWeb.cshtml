@@ -35,6 +35,9 @@
                 <li class="@Html.IsActive("media", "redbook")">
                     <a aria-expanded="false" role="button" href="@Url.Action("RedBook", "Media")"> 小红书</a>
                 </li>
+                <li class="@Html.IsActive("media", "taobao") count-info">
+                    <a aria-expanded="false" role="button" href="@Url.Action("Taobao", "Media")"> 淘宝达人 <span class="label label-danger" style="right: 0px;">新</span></a>
+                </li>
                 <li class="@Html.IsActive("media", "zhihu")">
                     <a aria-expanded="false" role="button" href="@Url.Action("ZhiHu", "Media")"> 知乎</a>
                 </li>

@@ -11,7 +11,7 @@
     var settingService = EngineContext.Current.Resolve<ISettingService>();
     var setConfig = settingService.GetSetting<WeiGuang>();
     var excelFields = fieldService.GetFieldsByKey(Model.CallIndex + "-excel");
-    var isData = new List<string>() { "weixin", "sinablog", "douyin", "redbook" };
+    var isData = new List<string>() { "weixin", "sinablog", "douyin", "redbook","taobao" };
     var areas = fieldService.GetFieldsByKey("Area").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var priceOrder = new List<SelectListItem>();
     foreach (var adPosition in Model.AdPositions.OrderByDescending(d=>d.Name))
@@ -114,6 +114,7 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
 };
             break;
         case "redbook":
+        case "taobao":
             priceRange = new List<SelectListItem>()
 {
 new SelectListItem(){Text = @"1000元以下",Value = "1-1000"},
@@ -291,11 +292,11 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
                     </div>
 
                     @*<div class="col-sm-5">
-                            <div class="form-group">
-                                <label class="control-label">平均浏览数</label>
-                                <input type="text" id="AvgReadNumRange" name="AvgReadNumRange" value=""/>
-                            </div>
-                        </div>*@
+            <div class="form-group">
+                <label class="control-label">平均浏览数</label>
+                <input type="text" id="AvgReadNumRange" name="AvgReadNumRange" value=""/>
+            </div>
+        </div>*@
                     @if (Model.CallIndex == "weixin")
                     {
                         @Html.Partial("FilterWeiXin")
@@ -311,6 +312,10 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
                     @if (Model.CallIndex == "redbook")
                     {
                         @Html.Partial("FilterRedBook")
+                    }
+                    @if (Model.CallIndex == "taobao")
+                    {
+                        @Html.Partial("FilterTaobao")
                     }
                 </div>
 

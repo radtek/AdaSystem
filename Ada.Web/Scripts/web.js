@@ -364,7 +364,7 @@ formatter.mediaLogo = function (value, row) {
     var line = detail ? "<div class='p-xxs text-center'>" + detail + "</div>" : "";
     
     var comment = "";
-    if (row.MediaTypeIndex != "writer") {
+    if (row.MediaTypeIndex != "writer" && row.MediaTypeIndex != "taobao") {
         comment = "<div class='p-xxs text-center'><a class='btn btn-danger btn-outline btn-xs' href='/Media/CommentDetail/" + row.Id + "' target='_blank'><i class='fa fa-comment'></i> 评价详情</a></div>";
     }
     return '<div class="p-xxs text-center">' + logo + '</div>' + vg + line + comment;
@@ -423,6 +423,8 @@ formatter.mediaInfo = function (value, row) {
     }
     if (row.MediaTypeIndex == "weixin") {
         value = " <a class='label' href='http://weixin.sogou.com/weixin?type=1&query=" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
+    } else if (row.MediaTypeIndex == "taobao") {
+        value = " <a class='label' href='https://market.m.taobao.com/apps/abs/9/41/index?accountId=" + row.MediaID + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
     } else {
         if (row.MediaLink) {
             value = " <a class='label' href='" + row.MediaLink + "' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
@@ -497,9 +499,10 @@ formatter.priceProtection = function (value, row) {
 
 formatter.mediaData = function (value, row) {
 
-    var read = "";
+    var read = "", tbzh = "";
     if (row.AvgReadNum) {
         read = " <span class='label label-info'>平均浏览数：" + row.AvgReadNum + "</span>";
+        tbzh = " <span class='label label-info'>综合能力指数：" + row.AvgReadNum + "</span>";
     }
 
     var lastread = "";
@@ -580,6 +583,7 @@ formatter.mediaData = function (value, row) {
     var linezc = zc ? "<div class='p-xxs'>" + zc + "</div>" : "";
     var linesclx = sclx ? "<div class='p-xxs'>" + sclx + "</div>" : "";
     var linecgsd = cgsd ? "<div class='p-xxs'>" + cgsd + "</div>" : "";
+    var linetbzh = tbzh ? "<div class='p-xxs'>" + tbzh + "</div>" : "";
     var line = "";
     if (row.MediaTypeIndex == "weixin") {
         line = line1 + line6 + line4 + line9 + line7;
@@ -595,6 +599,9 @@ formatter.mediaData = function (value, row) {
     }
     if (row.MediaTypeIndex == "writer") {
         line = linesclx + linecgsd;
+    }
+    if (row.MediaTypeIndex == "taobao") {
+        line = linetbzh;
     }
     return line || "<span class='label label-warning'>抱歉！暂无相关数据</span>";
 };
