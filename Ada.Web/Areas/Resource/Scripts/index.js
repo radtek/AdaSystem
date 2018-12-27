@@ -406,6 +406,7 @@ function upLoadFile() {
     }
     var formFile = new FormData();
     formFile.append("upfile", fileObj); //加入文件对象
+    formFile.append("__RequestVerificationToken", $('input[name=__RequestVerificationToken]').val());
     var data = formFile;
     var subBtn = $('.ladda-button').ladda();
     $.ajax({
@@ -454,6 +455,7 @@ function confirmFile() {
     }
     var formFile = new FormData();
     formFile.append("upfile", fileObj); //加入文件对象
+    formFile.append("__RequestVerificationToken", $('input[name=__RequestVerificationToken]').val());
     var data = formFile;
     var subBtn = $('.ladda-button').ladda();
     $.ajax({

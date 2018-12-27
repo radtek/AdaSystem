@@ -21,6 +21,7 @@
     var publishStart = DateTime.Parse(dateRange[0]);
     var publishEnd = DateTime.Parse(dateRange[1]);
     var publishDiff = publishEnd.Date - publishStart.Date;
+    var is24H = Model.Is24Hour ? "HH" : "tth";
 }
 
 
@@ -159,7 +160,7 @@
 
                     <div class="cOthers cOthers2">
                         @{
-                            var dateStr = Model.FriendContent.PublishDate.ToString("yyyy年M月d日 HH:mm");
+                            var dateStr = Model.FriendContent.PublishDate.ToString("yyyy年M月d日 "+ is24H + ":mm");
                             //if (publishDiff.TotalDays == 0)
                             //{
                             //    dateStr = Model.FriendContent.PublishDate.ToString("HH:mm");
@@ -170,7 +171,7 @@
                             //}
                             if (publishDiff.TotalDays < 2)
                             {
-                                dateStr = Model.FriendContent.PublishDate.ToString(publishDiff.TotalDays>=1 ? "昨天 HH:mm" : "HH:mm");
+                                dateStr = Model.FriendContent.PublishDate.ToString(publishDiff.TotalDays>=1 ? "昨天 " + is24H + ":mm" : "" + is24H + ":mm");
                             }
                         }
                         <div class="cTime">@dateStr</div>
@@ -204,12 +205,12 @@
                                         <div class="cCommentTime">
                                             @{
 
-                                                var str = item.MessageDate.ToString("M月d日 HH:mm");
+                                                var str = item.MessageDate.ToString("M月d日 " + is24H + ":mm");
                                                 var diffSpan =   item.MessageDate.Date-publishStart.Date;
 
                                                 if (diffSpan.TotalDays < 2&& publishDiff.TotalDays < 2)
                                                 {
-                                                    str = item.MessageDate.ToString(diffSpan.TotalDays<1 ? "昨天 HH:mm" : "HH:mm");
+                                                    str = item.MessageDate.ToString(diffSpan.TotalDays<1 ? "昨天 " + is24H + ":mm" : "" + is24H + ":mm");
                                                 }
 
                                             }
@@ -260,6 +261,6 @@
         var Type = 1;
 
     </script>
-    <script src="@Url.Content("~/Areas/Tools/Scripts/Friends/main.js?v="+DateTime.Now.ToString("MMddHHmmss"))"></script>
+    <script src="@Url.Content("~/Areas/Tools/Scripts/Friends/main.js?v="+DateTime.Now.Ticks)"></script>
 </body>
 </html>

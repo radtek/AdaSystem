@@ -136,5 +136,5 @@
             settleAccounts=@Html.Raw(Json.Encode(settleAccounts)),
             $table = $('#table');
     </script>
-    <script src="@Url.Content("~/Areas/Finance/Scripts/pay.js")"></script>
+    <script src="@Url.Content("~/Areas/Finance/Scripts/pay.js?v="+DateTime.Now.Ticks)"></script>
 }

@@ -32,6 +32,7 @@
             onImageUpload: function (files, editor, $editable) {
                 var data = new FormData(), filename = 'summernoteFile';
                 data.append(filename, files[0]);
+                data.append("__RequestVerificationToken", $('input[name=__RequestVerificationToken]').val());
                 $.ajax({
                     data: data,
                     type: "POST",

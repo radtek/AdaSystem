@@ -148,9 +148,9 @@
             dictInvalidFileType: "只允许上传图片类型文件（*.jpg,*.jpge,*.png）",
             dictMaxFilesExceeded: "只允许上传一张图片",
             dictResponseError:"上传失败，{{statusCode}}",
-            //sending: function (file, xhr, formData) {//如果你想给上传的文件添加额外（多个文件时会具体到每个文件）,您可以注册发送事件
-            //    formData.append("filesize", file.size);
-            //},
+            sending: function (file, xhr, formData) {//如果你想给上传的文件添加额外（多个文件时会具体到每个文件）,您可以注册发送事件
+                formData.append("__RequestVerificationToken", $('input[name=__RequestVerificationToken]').val());
+            },
             success: function (file, response, e) {
                 if (response.State==1) {
                     if (file.previewElement) {
