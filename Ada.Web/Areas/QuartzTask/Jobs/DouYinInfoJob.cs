@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity.SqlServer;
+using System.Data.Entity.Validation;
 using System.Linq;
 using Ada.Core;
 using Ada.Core.Domain;
@@ -12,6 +13,7 @@ using Ada.Data;
 using log4net;
 using Newtonsoft.Json;
 using Quartz;
+using QuartzTask.Models;
 
 
 namespace QuartzTask.Jobs
@@ -128,8 +130,16 @@ namespace QuartzTask.Jobs
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error("获取【" + media.MediaName + "-" + media.MediaID + "】抖音用户信息任务异常", ex);
-                        db.SaveChanges();
+                        context.Scheduler.PauseJob(context.JobDetail.Key);
+                        if (ex is DbEntityValidationException exception)
+                        {
+                            var error = JobHelper.GetFullErrorText(exception);
+                            _logger.Error("获取【" + media.MediaName + "-" + media.MediaID + "】抖音用户信息任务异常，任务停止:" + error, exception);
+                        }
+                        else
+                        {
+                            _logger.Error("获取【" + media.MediaName + "-" + media.MediaID + "】抖音用户信息任务异常，任务停止", ex);
+                        }
                     }
                 }
                 else

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.SqlServer;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Runtime.Caching;
 using Ada.Core;
@@ -13,6 +14,7 @@ using Ada.Data;
 using log4net;
 using Newtonsoft.Json;
 using Quartz;
+using QuartzTask.Models;
 using HttpUtility = Ada.Core.Tools.HttpUtility;
 
 namespace QuartzTask.Jobs
@@ -311,7 +313,16 @@ namespace QuartzTask.Jobs
                         }
                         catch (Exception ex)
                         {
-                            Logger.Error("获取【" + media.MediaName + "-" + media.MediaID + "】微信基本信息任务异常", ex);
+                            context.Scheduler.PauseJob(context.JobDetail.Key);
+                            if (ex is DbEntityValidationException exception)
+                            {
+                                var error = JobHelper.GetFullErrorText(exception);
+                                Logger.Error("获取【" + media.MediaName + "-" + media.MediaID + "】微信基本信息任务异常，任务停止:" + error, exception);
+                            }
+                            else
+                            {
+                                Logger.Error("获取【" + media.MediaName + "-" + media.MediaID + "】微信基本信息任务异常，任务停止", ex);
+                            }
                         }
                     }
                     else

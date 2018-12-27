@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Reflection;
 using System.Web;
@@ -47,6 +48,14 @@ namespace QuartzTask.Models
                 }
             }
             return null;
+        }
+        public static string GetFullErrorText(DbEntityValidationException exc)
+        {
+            var msg = string.Empty;
+            foreach (var validationErrors in exc.EntityValidationErrors)
+            foreach (var error in validationErrors.ValidationErrors)
+                msg += $"属性: {error.PropertyName} 错误: {error.ErrorMessage}" + Environment.NewLine;
+            return msg;
         }
     }
 }
