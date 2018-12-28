@@ -75,7 +75,7 @@ namespace Ada.Services.Admin
         /// 菜单权限（当前用户）
         /// </summary>
         /// <returns></returns>
-        public List<MenuView> AuthorizeMenu(string managerId,string roleId="")
+        public List<MenuView> AuthorizeMenu(string managerId, string roleId = "")
         {
             var allMenus = _menuRepository.LoadEntities(d => d.IsDelete == false && d.IsVisable != true).ToList();
             var manager = _managerRepository.LoadEntities(d => d.Id == managerId).FirstOrDefault();
@@ -84,18 +84,18 @@ namespace Ada.Services.Admin
             if (string.IsNullOrWhiteSpace(roleId))
             {
                 allRoleActionIds = (from r in manager.Roles
-                    from a in r.Actions
-                    where a.IsDelete == false && r.IsDelete == false
-                    select a.Id).ToList();
+                                    from a in r.Actions
+                                    where a.IsDelete == false && r.IsDelete == false
+                                    select a.Id).ToList();
             }
             else
             {
                 var role = manager.Roles.FirstOrDefault(d => d.Id == roleId);
                 allRoleActionIds = (from a in role.Actions
-                    where a.IsDelete == false && role.IsDelete == false
-                    select a.Id).ToList();
+                                    where a.IsDelete == false && role.IsDelete == false
+                                    select a.Id).ToList();
             }
-             
+
             //拿到了当前用户所有的允许的特殊权限
             var allUserActionIsPass = (from r in manager.ManagerActions
                                        where r.IsPass
@@ -151,24 +151,24 @@ namespace Ada.Services.Admin
             var allManager = _managerRepository.LoadEntities(d => d.IsDelete == false);
             //获取当前角色的数据范围  9:全部 0：个人 1：部门
             var role = manager.Roles.FirstOrDefault(d => d.Id == roleId);
-            List<string> managerIds=new List<string>();
-            if (role.DataRange==null)
+            List<string> managerIds = new List<string>();
+            if (role.DataRange == null)
             {
                 managerIds.Add(managerId);
             }
-            if (role.DataRange==0)
+            if (role.DataRange == 0)
             {
                 managerIds.Add(managerId);
             }
-            if (role.DataRange==1)
+            if (role.DataRange == 1)
             {
-                foreach (var managerOrganization in manager.Organizations)
+                foreach (var managerOrganization in manager.Organizations.Where(o => o.ParentId != null))
                 {
                     var managerOrgId = managerOrganization.Id;
                     var managers = (from m in allManager
-                        from o in m.Organizations
-                        where o.TreePath.Contains(managerOrgId)
-                        select m).Select(d=>d.Id).ToList();
+                                    from o in m.Organizations
+                                    where o.TreePath.Contains(managerOrgId)
+                                    select m).Select(d => d.Id).ToList();
                     managerIds.AddRange(managers);
                 }
             }

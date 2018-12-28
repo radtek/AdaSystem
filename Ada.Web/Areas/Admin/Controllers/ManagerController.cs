@@ -87,7 +87,10 @@ namespace Admin.Controllers
                     }
                 }
                 var str = string.Join(" → ", list);
-                names.Add(str);
+                if (list.Any())
+                {
+                    names.Add(str);
+                }
             }
             return string.Join(",", names);
 
@@ -300,7 +303,8 @@ namespace Admin.Controllers
                              m.EntryDate,
                              m.IsInsurance,
                              q.Title,
-                             Group = GetOrganization(m)
+                             Group = GetOrganization(m),
+                             Commpany=string.Join(",", m.Organizations.Where(o => o.ParentId == null).Select(n=>n.OrganizationName))
                          };
             var enumerable = result.ToList();
             if (!enumerable.Any())
@@ -337,6 +341,7 @@ namespace Admin.Controllers
                     }
                 }
                 jo.Add("五险一金", item.IsInsurance == true ? "是" : "否");
+                jo.Add("所属公司", item.Commpany);
                 jo.Add("开户行", item.BankName);
                 jo.Add("开户名", item.BankAccount);
                 jo.Add("开户号", item.BankNum);

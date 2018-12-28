@@ -12,7 +12,7 @@
         "checkbox": {
             "keep_selected_style": false,
             //"tie_selection": false
-            "three_state": false
+            "three_state": true
         }
     });
     $('#jstree_action').jstree({
@@ -37,8 +37,9 @@
     }
     $(".wrapper.wrapper-content form").validate({
         submitHandler: function (form) {
-            var arry = $('#jstree').jstree("get_checked");
+            var arry = $('#jstree').jstree("get_top_checked");
             $("#OrganizationIds").val(arry.join(','));
+            
             //特殊权限处理
             var actions = $(".action");
             var actionArry = [];

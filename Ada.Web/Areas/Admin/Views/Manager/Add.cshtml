@@ -34,7 +34,7 @@
 @section Scripts {
     @Scripts.Render("~/plugins/jsTree")
     @Scripts.Render("~/plugins/dateTimePickerScript")
-    <script src="@Url.Content("~/Areas/Admin/Scripts/manager.js")"></script>
+    <script src="@Url.Content("~/Areas/Admin/Scripts/manager.js?v="+DateTime.Now.Ticks)"></script>
     <script>
         $(function () {
             $('.input-group.date').datetimepicker({
