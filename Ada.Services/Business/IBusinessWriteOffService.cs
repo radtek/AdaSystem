@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
@@ -19,5 +20,8 @@ namespace Ada.Services.Business
         //IQueryable<BusinessWriteOffDetailView> LoadEntitiesFilterPage(BusinessWriteOffDetailView viewModel);
         IQueryable<BusinessWriteOffDetail> LoadEntitiesFilters(BusinessWriteOffDetailView viewModel);
         IQueryable<BusinessWriteOffDetail> LoadEntitiesFiltersPage(BusinessWriteOffDetailView viewModel);
+
+        void UpdateDetail(Expression<Func<BusinessWriteOffDetail, bool>> whereLambda,
+            Expression<Func<BusinessWriteOffDetail, BusinessWriteOffDetail>> updateLambda);
     }
 }

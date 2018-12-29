@@ -141,5 +141,10 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "总提成")]
         public decimal? TotalCommission { get; set; }
+        /// <summary>
+        /// 备注信息
+        /// </summary>
+        [Display(Name = "备注信息")]
+        public string Remark { get; set; }
     }
 }

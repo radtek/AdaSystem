@@ -38,6 +38,7 @@ namespace DataReport.Controllers
                     PurchaseMoney= d.CostMoney,
                     Profit=  d.Profit,
                     OrderId= d.BusinessOrderId,
+                    Remark = d.Remark,
                     //d.OrderId,
                     //d.LinkManName,
                     PublishDate= d.PublishDate,

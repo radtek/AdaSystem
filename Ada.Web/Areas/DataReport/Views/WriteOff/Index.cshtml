@@ -134,6 +134,14 @@
                 },
                 formatSearch: function() {
                     return "@Html.DisplayNameFor(d => d.Transactor)";
+                    },
+                rowStyle: function (row, index) {
+                    if (row.Remark) {
+                        return {
+                            classes: "danger"
+                        };
+                    }
+                    return {};
                 },
                 columns: [
                     {
@@ -227,6 +235,11 @@
                             }
                             return 0;
                         }
+                    },
+                    {
+                        field: 'Remark',
+                        title: '@Html.DisplayNameFor(d=>d.Remark)',
+                        align: "center", valign: "middle"
                     }
 
 

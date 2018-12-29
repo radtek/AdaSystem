@@ -179,17 +179,28 @@ namespace QuartzTask.Jobs
                                         //更新文章
                                         if (isUpdateArticle && weixinInfo.lastPost != null)
                                         {
-                                            //更新日期范围
-                                            var start = DateTime.Now.AddDays(-2).ToString("yyyy-MM-dd");
-                                            var end = DateTime.Now.ToString("yyyy-MM-dd");
-                                            var timeSpan = DateTime.Now - date;
-                                            if (timeSpan.TotalDays > 2)
+                                            //更新最新
+                                            //var start = DateTime.Now.AddDays(-2).ToString("yyyy-MM-dd");
+                                            //var end = DateTime.Now.ToString("yyyy-MM-dd");
+                                            //var timeSpan = DateTime.Now - date;
+                                            //if (timeSpan.TotalDays > 2)
+                                            //{
+                                            //    start = date.AddDays(-2).ToString("yyyy-MM-dd");
+                                            //    end = date.ToString("yyyy-MM-dd");
+                                            //}
+                                            //string urlArticle = string.Format(wxArticleApi + "?apikey={0}&uid={1}&pageToken=1&beginDate={2}&endDate={3}", token,
+                                            //    media.MediaID, start, end);
+                                            string urlArticle;
+                                            if (string.IsNullOrWhiteSpace(media.MediaLink))
                                             {
-                                                start = date.AddDays(-2).ToString("yyyy-MM-dd");
-                                                end = date.ToString("yyyy-MM-dd");
+                                                urlArticle = string.Format(wxArticleApi + "?apikey={0}&uid={1}&sort=1&strictID=1", token,
+                                                    media.MediaID);
                                             }
-                                            string urlArticle = string.Format(wxArticleApi + "?apikey={0}&uid={1}&pageToken=1&beginDate={2}&endDate={3}", token,
-                                                media.MediaID, start, end);
+                                            else
+                                            {
+                                                urlArticle = string.Format(wxArticleApi + "?apikey={0}&biz={1}&sort=1", token,
+                                                    media.MediaLink.Trim());
+                                            }
                                             string htmlstrArticle = string.Empty;
                                             int requestArticle = 1;
                                             while (requestArticle <= times)
