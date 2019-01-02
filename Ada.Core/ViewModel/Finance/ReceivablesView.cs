@@ -91,6 +91,11 @@ namespace Ada.Core.ViewModel.Finance
         [Display(Name = "结算账户")]
         public string SettleAccountId { get; set; }
         /// <summary>
+        /// 自定义税率
+        /// </summary>
+        [Display(Name = "自定义税率")]
+        public decimal? Tax { get; set; }
+        /// <summary>
         /// 单据号
         /// </summary>
         [Display(Name = "单据号")]

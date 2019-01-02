@@ -99,7 +99,7 @@ namespace Ada.Services.Business
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.BusinessWriteOff.Transactor.Contains(viewModel.search));
+                allList = allList.Where(d => d.BusinessWriteOff.Transactor.Contains(viewModel.search)||d.Remark.Contains(viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.TransactorId))
             {

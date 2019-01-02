@@ -87,6 +87,10 @@ namespace Finance.Controllers
 
             var account = _settleAccountrepository.LoadEntities(d => d.Id == viewModel.SettleAccountId).FirstOrDefault();
             var tax = account.Tax ?? 0;
+            if (viewModel.Tax!=null&&viewModel.Tax>0)
+            {
+                tax = viewModel.Tax.Value;
+            }
             decimal money = (decimal)viewModel.Money;
             decimal taxMoney = money - money / (1 + tax / 100);
             entity.TaxMoney = Math.Round(taxMoney);
@@ -155,6 +159,10 @@ namespace Finance.Controllers
             }
             var account = _settleAccountrepository.LoadEntities(d => d.Id == viewModel.SettleAccountId).FirstOrDefault();
             var tax = account.Tax ?? 0;
+            if (viewModel.Tax != null && viewModel.Tax > 0)
+            {
+                tax = viewModel.Tax.Value;
+            }
             decimal money = (decimal)viewModel.Money;
             decimal taxMoney = money - money / (1 + tax / 100);
             entity.TaxMoney = Math.Round(taxMoney);
