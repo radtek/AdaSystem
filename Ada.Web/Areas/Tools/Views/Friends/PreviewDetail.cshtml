@@ -160,7 +160,7 @@
 
                     <div class="cOthers cOthers2">
                         @{
-                            var dateStr = Model.FriendContent.PublishDate.ToString("yyyy年M月d日 "+ is24H + ":mm");
+                            var dateStr = Model.FriendContent.PublishDate.ToString("yyyy年M月d日 " + is24H + ":mm");
                             //if (publishDiff.TotalDays == 0)
                             //{
                             //    dateStr = Model.FriendContent.PublishDate.ToString("HH:mm");
@@ -171,7 +171,7 @@
                             //}
                             if (publishDiff.TotalDays < 2)
                             {
-                                dateStr = Model.FriendContent.PublishDate.ToString(publishDiff.TotalDays>=1 ? "昨天 " + is24H + ":mm" : "" + is24H + ":mm");
+                                dateStr = Model.FriendContent.PublishDate.ToString(publishDiff.TotalDays >= 1 ? "昨天 " + is24H + ":mm" : "" + is24H + ":mm");
                             }
                         }
                         <div class="cTime">@dateStr</div>
@@ -204,13 +204,21 @@
                                         @item.Fans.NickName
                                         <div class="cCommentTime">
                                             @{
-
-                                                var str = item.MessageDate.ToString("M月d日 " + is24H + ":mm");
-                                                var diffSpan =   item.MessageDate.Date-publishStart.Date;
-
-                                                if (diffSpan.TotalDays < 2&& publishDiff.TotalDays < 2)
+                                                var year = publishStart.Year != publishEnd.Year;
+                                                string yearStr = "";
+                                                if (year)
                                                 {
-                                                    str = item.MessageDate.ToString(diffSpan.TotalDays<1 ? "昨天 " + is24H + ":mm" : "" + is24H + ":mm");
+                                                    if (item.MessageDate.Year!= publishEnd.Year)
+                                                    {
+                                                        yearStr = "yyyy年";
+                                                    }
+                                                }
+                                                var str = item.MessageDate.ToString(yearStr + "M月d日 " + is24H + ":mm");
+                                                var diffSpan = item.MessageDate.Date - publishStart.Date;
+
+                                                if (diffSpan.TotalDays < 2 && publishDiff.TotalDays < 2)
+                                                {
+                                                    str = item.MessageDate.ToString(diffSpan.TotalDays < 1 ? "昨天 " + is24H + ":mm" : "" + is24H + ":mm");
                                                 }
 
                                             }
