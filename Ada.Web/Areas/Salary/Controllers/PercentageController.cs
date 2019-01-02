@@ -38,20 +38,20 @@ namespace Salary.Controllers
                                                                         view.MediaTypeIds.Contains(d.MediaTypeId);
             if (view.TransactorIds.Any())
             {
-                where= d => d.PublishDate >= start &&
-                            d.PublishDate < end &&
-                            view.MediaTypeIds.Contains(d.MediaTypeId)&&
-                            view.TransactorIds.Contains(d.BusinessWriteOff.TransactorId);
+                where = d => d.PublishDate >= start &&
+                             d.PublishDate < end &&
+                             view.MediaTypeIds.Contains(d.MediaTypeId) &&
+                             view.TransactorIds.Contains(d.BusinessWriteOff.TransactorId);
             }
             var setting = _settingService.GetSetting<WeiGuang>();
-            _businessWriteOffService.UpdateDetail(where,
-                d => new BusinessWriteOffDetail()
-                {
-                    Remark = view.Title,
-                    Percentage = d.MoneyBackDay >= setting.ReturnDays1 && d.MoneyBackDay <= setting.ReturnDays2 ? view.Percentage * 0.8M : d.MoneyBackDay > setting.ReturnDays2 ? 0 : view.Percentage,
-                    Commission = d.Profit * (d.MoneyBackDay >= setting.ReturnDays1 && d.MoneyBackDay <= setting.ReturnDays2 ? view.Percentage * 0.8M : d.MoneyBackDay > setting.ReturnDays2 ? 0 : view.Percentage)
-                });
-            return Json(new { State = 1, Msg = "操作成功" });
+            var result = _businessWriteOffService.UpdateDetail(where,
+                 d => new BusinessWriteOffDetail()
+                 {
+                     Remark = view.Title,
+                     Percentage = d.MoneyBackDay >= setting.ReturnDays1 && d.MoneyBackDay <= setting.ReturnDays2 ? view.Percentage * 0.8M : d.MoneyBackDay > setting.ReturnDays2 ? 0 : view.Percentage,
+                     Commission = d.Profit * (d.MoneyBackDay >= setting.ReturnDays1 && d.MoneyBackDay <= setting.ReturnDays2 ? view.Percentage * 0.8M : d.MoneyBackDay > setting.ReturnDays2 ? 0 : view.Percentage)
+                 });
+            return Json(new { State = 1, Msg = "成功更新" + result + "条提成明细" });
         }
     }
 }

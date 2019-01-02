@@ -57,9 +57,9 @@ namespace Ada.Services.Business
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.Transactor.Contains(viewModel.search)||
-                                             d.BusinessOrderDetails.Any(o=>o.BusinessOrder.OrderNum==viewModel.search)||
-                                             d.BusinessPayees.Any(p=>p.Receivables.AccountName.Contains(viewModel.search)));
+                allList = allList.Where(d => d.Transactor.Contains(viewModel.search) ||
+                                             d.BusinessOrderDetails.Any(o => o.BusinessOrder.OrderNum == viewModel.search) ||
+                                             d.BusinessPayees.Any(p => p.Receivables.AccountName.Contains(viewModel.search)));
             }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
@@ -115,16 +115,16 @@ namespace Ada.Services.Business
                 var endDate = viewModel.WriteOffDateEnd.Value.AddDays(1);
                 allList = allList.Where(d => d.BusinessWriteOff.WriteOffDate < endDate);
             }
-            
+
             return allList;
         }
         public IQueryable<BusinessWriteOffDetail> LoadEntitiesFiltersPage(BusinessWriteOffDetailView viewModel)
         {
             var allList = LoadEntitiesFilters(viewModel);
-            viewModel.TotalBusinessMoney = allList.Any()?allList.Sum(d => d.SellMoney):0;
-            viewModel.TotalCommission = allList.Any() ? allList.Sum(d => d.Commission):0;
-            viewModel.TotalProfit = allList.Any() ? allList.Sum(d => d.Profit):0;
-            viewModel.TotalPurchaseMoney = allList.Any() ? allList.Sum(d => d.CostMoney):0;
+            viewModel.TotalBusinessMoney = allList.Any() ? allList.Sum(d => d.SellMoney) : 0;
+            viewModel.TotalCommission = allList.Any() ? allList.Sum(d => d.Commission) : 0;
+            viewModel.TotalProfit = allList.Any() ? allList.Sum(d => d.Profit) : 0;
+            viewModel.TotalPurchaseMoney = allList.Any() ? allList.Sum(d => d.CostMoney) : 0;
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
@@ -188,7 +188,7 @@ namespace Ada.Services.Business
         //                   Percentage = SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays1 ? setting.Percentage1 : (SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays2 && SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) > setting.ReturnDays1 ? setting.Percentage2 : 0),
         //                   Commission = Math.Round((decimal)((o.SellMoney - (p.PurchaseMoney- (p.PurchaseReturenOrderDetails.Where(a => a.PurchaseReturnOrder.AuditStatus == Consts.StateNormal).Sum(d => d.Money) ?? 0))) * (SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays1 ? setting.Percentage1 : (SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) <= setting.ReturnDays2 && SqlFunctions.DateDiff("day", p.PublishDate, h.WriteOffDate) > setting.ReturnDays1 ? setting.Percentage2 : 0))), 2)
         //               };
-            
+
         //    return temp;
         //}
         public void Update(BusinessWriteOff entity)
@@ -198,10 +198,11 @@ namespace Ada.Services.Business
             _dbContext.SaveChanges();
         }
 
-        public void UpdateDetail(Expression<Func<BusinessWriteOffDetail, bool>> whereLambda, Expression<Func<BusinessWriteOffDetail, BusinessWriteOffDetail>> updateLambda)
+        public int UpdateDetail(Expression<Func<BusinessWriteOffDetail, bool>> whereLambda, Expression<Func<BusinessWriteOffDetail, BusinessWriteOffDetail>> updateLambda)
         {
-            _businessWriteoffDetailRepository.Update(whereLambda, updateLambda);
+            var result = _businessWriteoffDetailRepository.Update(whereLambda, updateLambda);
             _dbContext.SaveChanges();
+            return result;
         }
     }
 }

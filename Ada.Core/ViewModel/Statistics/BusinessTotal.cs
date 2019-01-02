@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Ada.Core.ViewModel.Business;
 
@@ -154,6 +155,11 @@ namespace Ada.Core.ViewModel.Statistics
         /// </summary>
         [Display(Name = "月份")]
         public string Month { get; set; }
+        /// <summary>
+        /// 月份
+        /// </summary>
+        [Display(Name = "月份")]
+        public DateTime? PublishDate { get; set; }
         /// <summary>
         /// 媒体类型
         /// </summary>

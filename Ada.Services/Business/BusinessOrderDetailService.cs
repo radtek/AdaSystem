@@ -331,7 +331,8 @@ namespace Ada.Services.Business
                         ProfitMoney = b.SellMoney - (p.PurchaseMoney - (p.PurchaseReturenOrderDetails.Where(a => a.PurchaseReturnOrder.AuditStatus == Consts.StateNormal).Sum(d => d.Money) ?? 0)),
                         PublishDateStr = SqlFunctions.DateName("yyyy", p.PublishDate)
                                          + "年" +
-                                         SqlFunctions.StringConvert((decimal)SqlFunctions.DatePart("mm", p.PublishDate)).Trim() + "月"
+                                         SqlFunctions.StringConvert((decimal)SqlFunctions.DatePart("mm", p.PublishDate)).Trim() + "月",
+                        //PublishDate = p.PublishDate
 
                     }).GroupBy(d => d.PublishDateStr).Select(d => new BusinessPerformance
                     {

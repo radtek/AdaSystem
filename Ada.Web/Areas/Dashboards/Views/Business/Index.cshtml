@@ -3,6 +3,7 @@
 @model Ada.Core.ViewModel.Statistics.BusinessTotal
 @{
     ViewBag.Title = "销售工作台";
+    var lastYear = Model.BusinessPerformances.OrderByDescending(d => DateTime.Parse(d.Month)).Take(12).Reverse();
 }
 <div class="wrapper wrapper-content">
     <div class="row">
@@ -176,7 +177,7 @@
                 <div class="ibox-title">
                     <h5>近四月销售概况</h5>
                 </div>
-                
+
                 @foreach (var item in Model.BusinessPerformances.OrderByDescending(d => DateTime.Parse(d.Month)).Take(4))
                 {
                     <div class="ibox-content">
@@ -215,32 +216,32 @@
                             <div class="scroll_content">
                                 <table class="table table-hover margin bottom">
                                     <thead>
-                                    <tr>
-                                        <th style="width: 5%" class="text-center">序号</th>
-                                        <th class="text-center">公司名称</th>
-                                        <th class="text-center">联系人</th>
-                                        <th class="text-center">未核销金额</th>
-                                    </tr>
+                                        <tr>
+                                            <th style="width: 5%" class="text-center">序号</th>
+                                            <th class="text-center">公司名称</th>
+                                            <th class="text-center">联系人</th>
+                                            <th class="text-center">未核销金额</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach (var item in Model.VerificationInfos)
-                                    {
-                                        <tr>
-                                            <td class="text-center">@index</td>
-                                            <td class="text-center">
-                                                @item.CompanyName
-                                            </td>
-                                            <td class="text-center">@item.LinkManName</td>
-                                            <td class="text-center"><a class="btn btn-danger btn-xs" href="@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", Status = Consts.StateOK, VerificationStatus = Consts.StateLock, PublishDateOrder = "asc", LinkManId = item.LinkManId})" target="_blank">¥@item.VerificationMoney</a></td>
-                                        </tr>
-                                        index++;
-                                    }
+                                        @foreach (var item in Model.VerificationInfos)
+                                        {
+                                            <tr>
+                                                <td class="text-center">@index</td>
+                                                <td class="text-center">
+                                                    @item.CompanyName
+                                                </td>
+                                                <td class="text-center">@item.LinkManName</td>
+                                                <td class="text-center"><a class="btn btn-danger btn-xs" href="@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", Status = Consts.StateOK, VerificationStatus = Consts.StateLock, PublishDateOrder = "asc", LinkManId = item.LinkManId})" target="_blank">¥@item.VerificationMoney</a></td>
+                                            </tr>
+                                            index++;
+                                        }
                                     </tbody>
                                 </table>
 
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
 
@@ -288,19 +289,19 @@
                             <div class="table-responsive">
                                 <table class="table table-hover margin bottom">
                                     <thead>
-                                    <tr>
-                                        <th class="text-center">排名</th>
-                                        <th>销售人员</th>
-                                        <th>销售额（不含税）</th>
-                                        <th>利润率(%)</th>
-                                        <th>利润</th>
-                                        <th>回款率(%)</th>
-                                    </tr>
+                                        <tr>
+                                            <th class="text-center">排名</th>
+                                            <th>销售人员</th>
+                                            <th>销售额（不含税）</th>
+                                            <th>利润率(%)</th>
+                                            <th>利润</th>
+                                            <th>回款率(%)</th>
+                                        </tr>
                                     </thead>
                                     <tbody></tbody>
                                 </table>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -333,19 +334,19 @@
                             <div class="table-responsive">
                                 <table class="table table-hover margin bottom">
                                     <thead>
-                                    <tr>
-                                        <th class="text-center">排名</th>
-                                        <th>销售人员</th>
-                                        <th>销售额（不含税）</th>
-                                        <th>利润率(%)</th>
-                                        <th>利润</th>
-                                        <th>回款率(%)</th>
-                                    </tr>
+                                        <tr>
+                                            <th class="text-center">排名</th>
+                                            <th>销售人员</th>
+                                            <th>销售额（不含税）</th>
+                                            <th>利润率(%)</th>
+                                            <th>利润</th>
+                                            <th>回款率(%)</th>
+                                        </tr>
                                     </thead>
                                     <tbody></tbody>
                                 </table>
                             </div>
-                            
+
 
                         </div>
                     </div>
@@ -465,7 +466,7 @@
                 xAxis : [
                     {
                         type : 'category',
-                        data : @Html.Raw(Json.Encode(Model.BusinessPerformances.OrderBy(d => DateTime.Parse(d.Month)).Select(d => d.Month)))
+                        data : @Html.Raw(Json.Encode(lastYear.Select(d => d.Month)))
                     }
                 ],
                 yAxis : [
@@ -477,13 +478,13 @@
                     {
                         name:'未核销',
                         type:'bar',
-                        data:@Html.Raw(Json.Encode(Model.BusinessPerformances.OrderBy(d => DateTime.Parse(d.Month)).Select(d => d.TotalVerificationMoney)))
+                        data:@Html.Raw(Json.Encode(lastYear.Select(d => d.TotalVerificationMoney)))
 
                     },
                     {
                         name:'已核销',
                         type:'bar',
-                        data:@Html.Raw(Json.Encode(Model.BusinessPerformances.OrderBy(d => DateTime.Parse(d.Month)).Select(d => d.TotalConfirmVerificationMoney)))
+                        data:@Html.Raw(Json.Encode(lastYear.Select(d => d.TotalConfirmVerificationMoney)))
 
                     }
                 ]

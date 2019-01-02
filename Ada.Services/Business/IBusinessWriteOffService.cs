@@ -21,7 +21,7 @@ namespace Ada.Services.Business
         IQueryable<BusinessWriteOffDetail> LoadEntitiesFilters(BusinessWriteOffDetailView viewModel);
         IQueryable<BusinessWriteOffDetail> LoadEntitiesFiltersPage(BusinessWriteOffDetailView viewModel);
 
-        void UpdateDetail(Expression<Func<BusinessWriteOffDetail, bool>> whereLambda,
+        int UpdateDetail(Expression<Func<BusinessWriteOffDetail, bool>> whereLambda,
             Expression<Func<BusinessWriteOffDetail, BusinessWriteOffDetail>> updateLambda);
     }
 }
