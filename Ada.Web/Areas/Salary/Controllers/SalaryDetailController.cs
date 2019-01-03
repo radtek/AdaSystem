@@ -7,6 +7,7 @@ using Ada.Core;
 using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Wages;
 using Ada.Core.ViewModel.Business;
+using Ada.Core.ViewModel.Setting;
 using Ada.Core.ViewModel.Wages;
 using Ada.Framework.Filter;
 using Ada.Services.Admin;
@@ -508,10 +509,14 @@ namespace Salary.Controllers
             }
             JArray jObjects = new JArray();
             var config = _settingService.GetSetting<SalarySet>();
+            var site = _settingService.GetSetting<Site>();
             foreach (var salaryDetail in result)
             {
                 var jo = new JObject();
                 var quarters = _quartersRepository.LoadEntities(d => d.Id == salaryDetail.Manager.QuartersId).FirstOrDefault();
+                var company = string.Join(",",
+                    salaryDetail.Manager.Organizations.Where(o => o.ParentId == null).Select(n => n.OrganizationName));
+                jo.Add("公司",string.IsNullOrWhiteSpace(company)?site.CompanyName:company );
                 jo.Add("姓名", salaryDetail.Manager.UserName);
                 jo.Add("岗位名称", quarters.Title);
                 jo.Add("基本工资", quarters.BaseSalary);
@@ -528,6 +533,13 @@ namespace Salary.Controllers
                 jo.Add("迟到次数", attendance.LateTimes);
                 jo.Add("未打卡次数", attendance.NoClockTimes);
                 jo.Add("考勤扣款", salaryDetail.AttendanceTotal);
+                jo.Add("养老保险", salaryDetail.Endowment);
+                jo.Add("医疗保险", salaryDetail.Health);
+                jo.Add("生育保险", salaryDetail.Childbirth);
+                jo.Add("工伤保险", salaryDetail.Injury);
+                jo.Add("失业保险", salaryDetail.Unemployment);
+                jo.Add("住房公积金", salaryDetail.HousingFund);
+                jo.Add("个人所得税", salaryDetail.Tax);
                 jo.Add("培训费用", quarters.Training);
                 jo.Add("伙食费用", config.FoodFee);
                 jo.Add("其他扣款", salaryDetail.DeductMoney);

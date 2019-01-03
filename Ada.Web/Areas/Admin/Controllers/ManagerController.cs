@@ -11,10 +11,12 @@ using Ada.Core.Domain.Wages;
 using Ada.Core.Tools;
 using Ada.Core.ViewModel;
 using Ada.Core.ViewModel.Admin;
+using Ada.Core.ViewModel.Setting;
 using Ada.Framework.Caching;
 using Ada.Framework.Filter;
 using Ada.Framework.UploadFile;
 using Ada.Services.Admin;
+using Ada.Services.Setting;
 using Newtonsoft.Json.Linq;
 using Action = Ada.Core.Domain.Admin.Action;
 
@@ -28,13 +30,15 @@ namespace Admin.Controllers
         private readonly IManagerService _managerService;
         private readonly IRepository<Quarters> _quartersRepository;
         private readonly IRepository<Organization> _organizationRepository;
+        private readonly ISettingService _settingService;
 
         public ManagerController(IManagerService managerService,
             IRepository<Manager> managerRepository,
             IRepository<Role> roleRepository,
             IRepository<Action> actionRepository,
             IRepository<Organization> organizationRepository,
-            IRepository<Quarters> quartersRepository)
+            IRepository<Quarters> quartersRepository,
+            ISettingService settingService)
         {
             _actionRepository = actionRepository;
             _roleRepository = roleRepository;
@@ -42,6 +46,7 @@ namespace Admin.Controllers
             _managerService = managerService;
             _organizationRepository = organizationRepository;
             _quartersRepository = quartersRepository;
+            _settingService = settingService;
         }
         public ActionResult Index()
         {
@@ -312,6 +317,7 @@ namespace Admin.Controllers
                 return Json(new { State = 0, Msg = "未找到相关的数据！" });
             }
             JArray jObjects = new JArray();
+            var commpany = _settingService.GetSetting<Site>().CompanyName;
             foreach (var item in enumerable.ToList())
             {
                 var jo = new JObject();
@@ -341,7 +347,7 @@ namespace Admin.Controllers
                     }
                 }
                 jo.Add("五险一金", item.IsInsurance == true ? "是" : "否");
-                jo.Add("所属公司", item.Commpany);
+                jo.Add("所属公司", string.IsNullOrWhiteSpace(item.Commpany)?commpany:item.Commpany);
                 jo.Add("开户行", item.BankName);
                 jo.Add("开户名", item.BankAccount);
                 jo.Add("开户号", item.BankNum);
