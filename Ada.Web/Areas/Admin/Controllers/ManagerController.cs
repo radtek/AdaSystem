@@ -412,7 +412,7 @@ namespace Admin.Controllers
         {
             return PartialView("UploadImage");
         }
-        [HttpPost]
+        [HttpPost,AdminAntiForgery(true)]
         public ActionResult UploadImage()
         {
             UEditorModel uploadConfig = new UEditorModel()

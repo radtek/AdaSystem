@@ -70,24 +70,14 @@ namespace Ada.Web.Controllers
                 var obj = _cacheService.GetObject<string>(loginModel.LoginName.Trim());
                 if (obj == null)
                 {
-                    ModelState.AddModelError("error", "验证码无效！");
+                    ModelState.AddModelError("error", "验证码已失效，请重新获取！");
                     return View(loginModel);
                 }
 
                 var code = obj.ToString();
                 if (code != loginModel.Code.Trim())
                 {
-                    //会员登陆日志
-                    user.FollowUps.Add(new FollowUp()
-                    {
-                        Id = IdBuilder.CreateIdNum(),
-                        IpAddress = Utils.GetIpAddress(),
-                        Content = Request.UserAgent,
-                        NextTime = DateTime.Now,
-                        FollowUpWay = "失败，ErrorCode：" + loginModel.Code + "，Code:" + code
-                    });
-                    _linkManService.Update(user);
-                    ModelState.AddModelError("error", "验证码错误！");
+                    ModelState.AddModelError("error", "验证码有误，请核对！");
                     return View(loginModel);
                 }
             }
@@ -131,12 +121,12 @@ namespace Ada.Web.Controllers
             var cacheCode = _cacheService.GetObject<string>(phone.Trim());
             if (cacheCode == null)
             {
-                ModelState.AddModelError("error", "验证码无效！");
+                ModelState.AddModelError("error", "验证码已失效，请重新获取！");
                 return View();
             }
             if (cacheCode.ToString() != code)
             {
-                ModelState.AddModelError("error", "验证码错误！");
+                ModelState.AddModelError("error", "验证码有误，请核对！");
                 return View();
             }
 
@@ -171,12 +161,12 @@ namespace Ada.Web.Controllers
             var user = _linkManService.CheackUser(phone.Trim());
             if (user == null)
             {
-                return Json(new { State = 0, Msg = "此手机号暂未开通会员，请联系我们处理！" }, JsonRequestBehavior.AllowGet);
+                return Json(new { State = 0, Msg = "此手机号暂未开通会员，请联系我们开通！" }, JsonRequestBehavior.AllowGet);
             }
             //生成随机码 3分钟有效
             RandomHelper random = new RandomHelper();
             var code = random.GenerateCheckCodeNum(5);
-            _cacheService.Put(phone, code, new TimeSpan(0, 3, 0));
+            _cacheService.Put(phone, code, TimeSpan.FromMinutes(3));
             //发送短信
             _messageService.Send("SMS", new Dictionary<string, object> {
                 {"PhoneNumbers", phone},
