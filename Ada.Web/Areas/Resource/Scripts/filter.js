@@ -181,10 +181,11 @@ filterFormat.priceProtection = function (value, row) {
 }
 
 filterFormat.mediaData = function (value, row) {
-    var read = "",tbzh="";
+    var read = "",tbzh="",bread="";
     if (row.AvgReadNum) {
         read = " <span class='label label-info'>平均浏览数：" + row.AvgReadNum + "</span>";
         tbzh = " <span class='label label-info'>综合能力指数：" + row.AvgReadNum + "</span>";
+        bread = " <span class='label label-info'>阅读数：" + row.AvgReadNum + "</span>";
     }
     var lastread = "";
     if (row.LastReadNum) {
@@ -194,9 +195,10 @@ filterFormat.mediaData = function (value, row) {
     if (row.CommentNum) {
         comment = " <span class='label label-info'>平均评论数：" + row.CommentNum + "</span>";
     }
-    var like = "";
+    var like = "", blike = "";
     if (row.LikesNum) {
         like = " <span class='label label-info'>平均点赞数：" + row.LikesNum + "</span>";
+        blike = " <span class='label label-info'>播放数：" + row.LikesNum + "</span>";
     }
     var avgpost = "";
     if (row.MonthPostNum) {
@@ -264,6 +266,8 @@ filterFormat.mediaData = function (value, row) {
     var linesclx = sclx ? "<div class='p-xxs'>" + sclx + "</div>" : "";
     var linecgsd = cgsd ? "<div class='p-xxs'>" + cgsd + "</div>" : "";
     var linetbzh = tbzh ? "<div class='p-xxs'>" + tbzh + "</div>" : "";
+    var linebread = bread ? "<div class='p-xxs'>" + bread + "</div>" : "";
+    var lineblike = blike ? "<div class='p-xxs'>" + blike + "</div>" : "";
     var line = "";
     if (row.MediaTypeIndex == "weixin") {
         line = line1 + line6 + line4 + line9 + line7;
@@ -282,6 +286,9 @@ filterFormat.mediaData = function (value, row) {
     }
     if (row.MediaTypeIndex == "taobao") {
         line = linetbzh;
+    }
+    if (row.MediaTypeIndex == "bilibili") {
+        line = line8 + lineblike + linebread;
     }
     return line || "<span class='label label-warning'>抱歉！暂无相关数据</span>";
 };

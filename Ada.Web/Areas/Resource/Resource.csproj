@@ -154,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AppointmentController.cs" />
+    <Compile Include="Controllers\BilibiliController.cs" />
     <Compile Include="Controllers\BrushController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\DouYinController.cs" />
@@ -248,6 +249,8 @@
     <Content Include="Views\Shared\ArticleDetails.cshtml" />
     <Content Include="Views\TaoBao\Index.cshtml" />
     <Content Include="Views\Shared\TaoBao.cshtml" />
+    <Content Include="Views\Bilibili\Index.cshtml" />
+    <Content Include="Views\Shared\Bilibili.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

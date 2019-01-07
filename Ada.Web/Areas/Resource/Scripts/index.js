@@ -331,6 +331,17 @@ function formatterRedBookData(value, row) {
         (row.PostNum || 0) +
         "</div>";
 }
+function formatterBilibiliData(value, row) {
+    return "<div class='p-xxs'><span class='label label-info'>关注数：" +
+        (row.FriendNum || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>播放数：" +
+        (row.LikesNum || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>阅读数：" +
+        (row.AvgReadNum || 0) +
+        "</div>";
+}
 function formatterblogLevel(value) {
     if (value == "黄V") {
         return " <span class='label label-warning'>V</span>";
