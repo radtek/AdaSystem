@@ -48,7 +48,7 @@ namespace QuartzTask.Jobs
                             var apiInfo = db.Set<APIInterfaces>().FirstOrDefault(d => d.CallIndex == "redbookinfo");
                             if (apiInfo != null)
                             {
-                                string url = string.Format(apiInfo.APIUrl + "?apikey={0}&id={1}", apiInfo.Token,
+                                string url = string.Format(apiInfo.APIUrl + "?apikey={0}&uid={1}", apiInfo.Token,
                                     media.MediaID.Trim());
                                 int times = apiInfo.TimeOut ?? 3;
                                 int request = 1;
