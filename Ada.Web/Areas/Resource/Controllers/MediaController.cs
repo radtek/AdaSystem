@@ -207,6 +207,13 @@ namespace Resource.Controllers
                         jo.Add("平均点赞数", media.LikesNum);
                         jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
                         break;
+                    case "bilibili":
+                        jo.Add("媒体链接", media.MediaLink);
+                        jo.Add("地区", media.Area);
+                        jo.Add("关注数", media.FriendNum);
+                        jo.Add("播放数", media.LikesNum);
+                        jo.Add("阅读数", media.AvgReadNum);
+                        break;
                     case "douyin":
                         jo.Add("媒体ID", media.MediaID);
                         jo.Add("抖音ID", media.Abstract);
@@ -218,7 +225,6 @@ namespace Resource.Controllers
                         jo.Add("平均浏览数", media.AvgReadNum);
                         jo.Add("平均评论数", media.CommentNum);
                         jo.Add("平均点赞数", media.LikesNum);
-                        jo.Add("星图价格", media.ChannelType);
                         break;
                     case "redbook":
                         jo.Add("媒体链接", media.MediaLink);
@@ -373,7 +379,7 @@ namespace Resource.Controllers
             {
                 var jo = new JObject();
                 jo.Add("Id", media.Id ?? "不存在的资源");
-                jo.Add("结算人", media.LinkMan?.Name);
+                jo.Add("结算人ID", media.LinkManId);
                 jo.Add("媒体类型", media.MediaType?.TypeName);
                 jo.Add("平台", media.Platform);
                 string website = string.Empty;
@@ -1645,6 +1651,7 @@ namespace Resource.Controllers
                 case "douyin":
                 case "taobao":
                 case "redbook":
+                case "bilibili":
                     whereLambda = d =>
                           d.MediaID.Equals(viewModel.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == isDelete &&
                           d.MediaTypeId == viewModel.MediaTypeId;

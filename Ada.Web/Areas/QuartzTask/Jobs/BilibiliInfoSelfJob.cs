@@ -44,9 +44,9 @@ namespace QuartzTask.Jobs
                     media.CollectionDate = DateTime.Now;
                     try
                     {
-                        if (!string.IsNullOrWhiteSpace(media.MediaLink))
+                        if (!string.IsNullOrWhiteSpace(media.MediaID))
                         {
-                            _webCrawler.OnCompleted += Crawler_OnCompleted;
+                            _webCrawler.OnCompleted += CrawlerBilibili_OnCompleted;
                             _webCrawler.OnError += Crawler_OnError;
                             _webCrawler.Start(new Uri("https://space.bilibili.com/" + media.MediaID),
                                 new Operation() { Timeout = 30000, Condition = d => d.FindElements(By.XPath("//div[@id='navigator']")).Any() });
@@ -76,7 +76,7 @@ namespace QuartzTask.Jobs
                 }
             }
         }
-        private void Crawler_OnCompleted(object sender, OnCompletedEventArgs e)
+        private void CrawlerBilibili_OnCompleted(object sender, OnCompletedEventArgs e)
         {
             var nick = e.WebDriver.FindElement(By.XPath("//span[@id='h-name']")).Text;
             var image = e.WebDriver.FindElement(By.XPath("//img[@id='h-avatar']")).GetAttribute("src");
