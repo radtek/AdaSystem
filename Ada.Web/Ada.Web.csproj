@@ -2185,6 +2185,7 @@
     <Content Include="Images\landing\wglhmp.jpg" />
     <Content Include="Images\landing\xiaohongshu.png" />
     <Content Include="Images\man.png" />
+    <Content Include="Images\medialogo\bilibili.jpg" />
     <Content Include="Images\medialogo\brush.jpg" />
     <Content Include="Images\medialogo\douyin.jpg" />
     <Content Include="Images\medialogo\friend.jpg" />

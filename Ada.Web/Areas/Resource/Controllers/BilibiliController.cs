@@ -193,7 +193,7 @@ namespace Resource.Controllers
             var nick = e.WebDriver.FindElement(By.XPath("//span[@id='h-name']")).Text;
             var image = e.WebDriver.FindElement(By.XPath("//img[@id='h-avatar']")).GetAttribute("src");
             var abstr = e.WebDriver.FindElement(By.XPath("//h4[@class='h-sign']")).Text;
-            var content = e.WebDriver.FindElement(By.XPath("//div[@class='content']/div[@id='i-ann-display']")).Text;
+            //var content = e.WebDriver.FindElement(By.XPath("//div[@class='content']/div[@id='i-ann-display']")).Text;
 
             var fans = e.WebDriver.FindElement(By.XPath("//div[@id='navigator']/div[@class='wrapper']/div[@class='n-inner clearfix']/div[@class='n-statistics']/a[@class='n-data n-fs']")).GetAttribute("title");
             var friends = e.WebDriver.FindElement(By.XPath("//div[@id='navigator']/div[@class='wrapper']/div[@class='n-inner clearfix']/div[@class='n-statistics']/a[@class='n-data n-gz']")).GetAttribute("title");
@@ -228,9 +228,9 @@ namespace Resource.Controllers
                     FriendNum = friendsNum,
                     AvgReadNum = readsNum,
                     LikesNum = playsNum,
-                    Content = string.IsNullOrWhiteSpace(content)?null:content.Trim(),
+                    //Content = string.IsNullOrWhiteSpace(content)?null:content.Trim(),
                     MediaLogo = image,
-                    Abstract = string.IsNullOrWhiteSpace(abstr) ? null : abstr.Trim(),
+                    Content = string.IsNullOrWhiteSpace(abstr) ? null : abstr.Trim(),
                     MediaLink = e.Uri.ToString()
                 });
             }
