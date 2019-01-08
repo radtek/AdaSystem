@@ -54,9 +54,9 @@ namespace Ada.Services.QuartzTask
             string order = string.IsNullOrWhiteSpace(viewModel.order) ? "desc" : viewModel.order;
             if (order == "desc")
             {
-                return allList.OrderByDescending(d => d.Id).Skip(offset).Take(rows);
+                return allList.OrderByDescending(d => d.GroupName).Skip(offset).Take(rows);
             }
-            return allList.OrderBy(d => d.Id).Skip(offset).Take(rows);
+            return allList.OrderBy(d => d.GroupName).Skip(offset).Take(rows);
         }
     }
 }

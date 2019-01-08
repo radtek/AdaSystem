@@ -57,7 +57,7 @@ namespace QuartzTask.Jobs
                             if (job != null)
                             {
                                 job.NextTime = context.NextFireTimeUtc.Value.ToLocalTime().DateTime;
-                                job.Remark = "获取B站用户信息任务正在运行中，本次成功更新：" + media.MediaName + "-" + media.MediaID;
+                                job.Remark = "Success:" + media.MediaName + "-" + media.MediaID;
                             }
                         }
 
@@ -65,13 +65,13 @@ namespace QuartzTask.Jobs
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error("获取【" + media.MediaName + "-" + media.MediaID + "】B站用户信息任务异常", ex);
+                        _logger.Error("B站用户信息API,Error:" + media.MediaName + "-" + media.MediaID, ex);
                         db.SaveChanges();
                     }
                 }
                 else
                 {
-                    if (job != null) job.Remark = "获取B站用户信息任务暂无可更新的资源数据！更新时间：" + DateTime.Now;
+                    if (job != null) job.Remark = "None:" + DateTime.Now;
                     db.SaveChanges();
                 }
             }

@@ -19,7 +19,7 @@ using QuartzTask.Models;
 namespace QuartzTask.Jobs
 {
     [DisallowConcurrentExecution]
-    public class RedBookArticlesJob : IJob
+    public class RedBookArticleInfoJob : IJob
     {
         private readonly ILog _logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public void Execute(IJobExecutionContext context)
@@ -34,22 +34,23 @@ namespace QuartzTask.Jobs
                 {
                     hour = job.Taxis ?? 24;
                 }
-                var media = db.Set<Media>().FirstOrDefault(d =>
-                      d.IsDelete == false && d.MediaType.CallIndex == "redbook" && d.IsSlide == true && d.Status == Consts.StateNormal &&
-                      (d.LastPushDate == null || SqlFunctions.DateDiff("hour", d.LastPushDate, DateTime.Now) > hour));
+                var media = db.Set<MediaArticle>().FirstOrDefault(d =>
+                      d.Media.IsDelete == false && d.Remark == "xiaohongshu_ids"  && d.Media.Status == Consts.StateNormal &&
+                      (d.ModifiedDate == null || SqlFunctions.DateDiff("hour", d.ModifiedDate, DateTime.Now) > hour));
                 if (media != null)
                 {
-                    media.LastPushDate = DateTime.Now;
+                    media.ModifiedDate = DateTime.Now;
+                    
                     try
                     {
-                        if (!string.IsNullOrWhiteSpace(media.MediaID))
+                        if (!string.IsNullOrWhiteSpace(media.ArticleId))
                         {
                             //获取api信息
-                            var apiInfo = db.Set<APIInterfaces>().FirstOrDefault(d => d.CallIndex == "redbookdata");
+                            var apiInfo = db.Set<APIInterfaces>().FirstOrDefault(d => d.CallIndex == "redbookdatainfo");
                             if (apiInfo != null)
                             {
-                                string url = string.Format(apiInfo.APIUrl + "?apikey={0}&uid={1}", apiInfo.Token,
-                                    media.MediaID.Trim());
+                                string url = string.Format(apiInfo.APIUrl + "?apikey={0}&id={1}", apiInfo.Token,
+                                    media.ArticleId);
                                 int times = apiInfo.TimeOut ?? 3;
                                 int request = 1;
                                 string htmlstr = string.Empty;
@@ -66,7 +67,7 @@ namespace QuartzTask.Jobs
                                         {
                                             APIRequestRecord exrecord = new APIRequestRecord();
                                             exrecord.Id = IdBuilder.CreateIdNum();
-                                            exrecord.RequestParameters = media.MediaID;
+                                            exrecord.RequestParameters = media.ArticleId;
                                             exrecord.IsSuccess = false;
                                             exrecord.Retcode = "500";
                                             exrecord.ReponseContent = ex.Message;
@@ -80,31 +81,19 @@ namespace QuartzTask.Jobs
                                 if (!string.IsNullOrWhiteSpace(htmlstr))
                                 {
                                     var result = JsonConvert.DeserializeObject<RedBookArticleJSON>(htmlstr);
-                                    if (result.data.Count > 0)
+                                    if (result.data.Any())
                                     {
-
-                                        foreach (var articleData in result.data)
+                                        var articleData = result.data[0];
+                                        media.LikeCount = articleData.likeCount;
+                                        if (DateTime.TryParse(articleData.publishDateStr, out var date))
                                         {
-                                            if (string.IsNullOrWhiteSpace(articleData.id))
-                                            {
-                                                continue;
-                                            }
-                                            if (articleData.id.Length > 128)
-                                            {
-                                                continue;
-                                            }
-                                            var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
-                                            if (article != null)
-                                            {
-                                                continue;
-                                            }
-                                            article = new MediaArticle();
-                                            article.Id = IdBuilder.CreateIdNum();
-                                            article.ArticleId = articleData.id;
-                                            article.Remark = "xiaohongshu_ids";
-                                            article.Title = articleData.title;
-                                            media.MediaArticles.Add(article);
+                                            media.PublishDate = date;
                                         }
+                                        media.ShareCount = articleData.favoriteCount;
+                                        media.CommentCount = articleData.commentCount;
+                                        media.ArticleUrl = articleData.url;
+                                        media.Content = articleData.content;
+                                        
                                     }
                                 }
                             }
@@ -115,9 +104,10 @@ namespace QuartzTask.Jobs
                             if (job != null)
                             {
                                 job.NextTime = context.NextFireTimeUtc.Value.ToLocalTime().DateTime;
-                                job.Remark = "Success:" + media.MediaName + "-" + media.MediaID;
+                                job.Remark = "Success:" + media.Media.MediaName + "-" + media.ArticleId;
                             }
                         }
+                        
                         db.SaveChanges();
                     }
                     catch (Exception ex)
@@ -126,11 +116,11 @@ namespace QuartzTask.Jobs
                         if (ex is DbEntityValidationException exception)
                         {
                             //var error = JobHelper.GetFullErrorText(exception);
-                            _logger.Error("小红书文章列表API,Error:" + media.MediaName + "-" + media.MediaID, exception);
+                            _logger.Error("小红书文章内容API,Error:" + media.Media.MediaName + "-" + media.ArticleId , exception);
                         }
                         else
                         {
-                            _logger.Error("小红书文章列表API,Error:" + media.MediaName + "-" + media.MediaID , ex);
+                            _logger.Error("小红书文章内容API,Error:" + media.Media.MediaName + "-" + media.ArticleId, ex);
                         }
                     }
                 }

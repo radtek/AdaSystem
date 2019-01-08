@@ -58,7 +58,7 @@ namespace QuartzTask.Jobs
                             if (job != null)
                             {
                                 job.NextTime = context.NextFireTimeUtc.Value.ToLocalTime().DateTime;
-                                job.Remark = "获取淘宝用户信息任务正在运行中，本次成功更新：" + media.MediaName + "-" + media.MediaID;
+                                job.Remark = "Success:" + media.MediaName + "-" + media.MediaID;
                             }
                         }
 
@@ -72,7 +72,7 @@ namespace QuartzTask.Jobs
                 }
                 else
                 {
-                    if (job != null) job.Remark = "获取淘宝用户信息任务暂无可更新的资源数据！更新时间：" + DateTime.Now;
+                    if (job != null) job.Remark = "None:" + DateTime.Now;
                     db.SaveChanges();
                 }
             }

@@ -104,10 +104,7 @@ namespace QuartzTask.Jobs
                                                         media.Area = mediaInfo.location;
                                                     }
                                                 }
-                                                
                                             }
-                                            
-                                           
                                         }
 
 
@@ -121,10 +118,22 @@ namespace QuartzTask.Jobs
                             if (job != null)
                             {
                                 job.NextTime = context.NextFireTimeUtc.Value.ToLocalTime().DateTime;
-                                job.Remark = "获取小红书用户信息任务正在运行中，本次成功更新：" + media.MediaName + "-" + media.MediaID;
+                                job.Remark = "Success:" + media.MediaName + "-" + media.MediaID;
                             }
                         }
-
+                        //更新统计
+                        var viewCount = media.MediaArticles.OrderByDescending(d => d.PublishDate).Take(50)
+                            .Average(d => d.ViewCount);
+                        media.AvgReadNum = Convert.ToInt32(viewCount);
+                        //平均评论数
+                        media.CommentNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate)
+                            .Take(50).Average(aaa => aaa.CommentCount));
+                        //平均点赞数
+                        media.AvgReadNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate)
+                            .Take(50).Average(aaa => aaa.LikeCount));
+                        //平均收藏数
+                        media.TransmitNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate)
+                            .Take(50).Average(aaa => aaa.ShareCount));
                         db.SaveChanges();
                     }
                     catch (Exception ex)
@@ -145,7 +154,7 @@ namespace QuartzTask.Jobs
                 }
                 else
                 {
-                    if (job != null) job.Remark = "获取小红书用户信息任务暂无可更新的资源数据！更新时间：" + DateTime.Now;
+                    if (job != null) job.Remark = "None:" + DateTime.Now;
                     db.SaveChanges();
                 }
             }
