@@ -364,7 +364,7 @@ formatter.mediaLogo = function (value, row) {
     var line = detail ? "<div class='p-xxs text-center'>" + detail + "</div>" : "";
     
     var comment = "";
-    if (row.MediaTypeIndex != "writer" && row.MediaTypeIndex != "taobao") {
+    if (row.MediaTypeIndex != "writer" && row.MediaTypeIndex != "taobao" && row.MediaTypeIndex != "bilibili") {
         comment = "<div class='p-xxs text-center'><a class='btn btn-danger btn-outline btn-xs' href='/Media/CommentDetail/" + row.Id + "' target='_blank'><i class='fa fa-comment'></i> 评价详情</a></div>";
     }
     return '<div class="p-xxs text-center">' + logo + '</div>' + vg + line + comment;
@@ -499,10 +499,11 @@ formatter.priceProtection = function (value, row) {
 
 formatter.mediaData = function (value, row) {
 
-    var read = "", tbzh = "";
+    var read = "", tbzh = "",bread="";
     if (row.AvgReadNum) {
         read = " <span class='label label-info'>平均浏览数：" + row.AvgReadNum + "</span>";
         tbzh = " <span class='label label-info'>综合能力指数：" + row.AvgReadNum + "</span>";
+        bread = " <span class='label label-info'>阅读数：" + row.AvgReadNum + "</span>";
     }
 
     var lastread = "";
@@ -513,9 +514,10 @@ formatter.mediaData = function (value, row) {
     if (row.CommentNum) {
         comment = " <span class='label label-info'>平均评论数：" + row.CommentNum + "</span>";
     }
-    var like = "";
+    var like = "",blike="";
     if (row.LikesNum) {
         like = " <span class='label label-info'>平均点赞数：" + row.LikesNum + "</span>";
+        blike = " <span class='label label-info'>播放数：" + row.LikesNum + "</span>";
     }
     var avgpost = "";
     if (row.MonthPostNum) {
@@ -584,6 +586,9 @@ formatter.mediaData = function (value, row) {
     var linesclx = sclx ? "<div class='p-xxs'>" + sclx + "</div>" : "";
     var linecgsd = cgsd ? "<div class='p-xxs'>" + cgsd + "</div>" : "";
     var linetbzh = tbzh ? "<div class='p-xxs'>" + tbzh + "</div>" : "";
+    var linetbread = bread ? "<div class='p-xxs'>" + bread + "</div>" : "";
+    var linetblike = blike ? "<div class='p-xxs'>" + blike + "</div>" : "";
+
     var line = "";
     if (row.MediaTypeIndex == "weixin") {
         line = line1 + line6 + line4 + line9 + line7;
@@ -602,6 +607,9 @@ formatter.mediaData = function (value, row) {
     }
     if (row.MediaTypeIndex == "taobao") {
         line = linetbzh;
+    }
+    if (row.MediaTypeIndex == "bilibili") {
+        line = line8 + linetblike + linetbread;
     }
     return line || "<span class='label label-warning'>抱歉！暂无相关数据</span>";
 };

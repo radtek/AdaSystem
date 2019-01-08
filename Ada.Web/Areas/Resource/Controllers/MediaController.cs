@@ -85,7 +85,7 @@ namespace Resource.Controllers
         /// <param name="viewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        
+
         public ActionResult Exports(MediaView viewModel)
         {
 
@@ -260,7 +260,7 @@ namespace Resource.Controllers
                             jo.Add("媒体频道", media.Channel);
                         }
 
-                        if (viewModel.MediaTypeIndex=="taobao")
+                        if (viewModel.MediaTypeIndex == "taobao")
                         {
                             jo.Add("媒体链接", "https://market.m.taobao.com/apps/abs/9/41/index?accountId=" + media.MediaID);
                         }
@@ -268,7 +268,7 @@ namespace Resource.Controllers
                         {
                             jo.Add("媒体链接", media.MediaLink);
                         }
-                        
+
                         jo.Add("性别", media.Sex);
                         jo.Add("地区", media.Area);
                         if (!string.IsNullOrWhiteSpace(media.ResourceType))
@@ -314,7 +314,7 @@ namespace Resource.Controllers
             return jObjects;
         }
         [HttpPost]
-        
+
         public ActionResult Export(MediaView viewModel)
         {
             viewModel.Managers = PremissionData();
@@ -379,7 +379,8 @@ namespace Resource.Controllers
             {
                 var jo = new JObject();
                 jo.Add("Id", media.Id ?? "不存在的资源");
-                jo.Add("结算人ID", media.LinkManId);
+                //jo.Add("结算人", media.LinkMan.Name + " [" + media.LinkManId + "]");
+                jo.Add("结算人", media.LinkMan?.Name);
                 jo.Add("媒体类型", media.MediaType?.TypeName);
                 jo.Add("平台", media.Platform);
                 string website = string.Empty;
@@ -558,7 +559,7 @@ namespace Resource.Controllers
         [HttpPost]
         public ActionResult AddArticle(MediaArticleView viewModel)
         {
-            MediaArticle entity=new MediaArticle();
+            MediaArticle entity = new MediaArticle();
             entity.Id = IdBuilder.CreateIdNum();
             entity.Title = viewModel.Title;
             entity.ArticleUrl = viewModel.ArticleUrl;
@@ -813,7 +814,7 @@ namespace Resource.Controllers
                 catch (Exception ex)
                 {
 
-                   throw new ApplicationException("第" + i + "行，导入异常，请检查数据", ex);
+                    throw new ApplicationException("第" + i + "行，导入异常，请检查数据", ex);
                 }
             }
         }
@@ -998,7 +999,7 @@ namespace Resource.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        
+
         public ActionResult Add(MediaView viewModel)
         {
 
@@ -1030,7 +1031,8 @@ namespace Resource.Controllers
             if (viewModel.MediaTypeIndex == "zhihu")
             {
                 entity.MediaLink = "https://www.zhihu.com/people/" + entity.MediaID;
-            }else if (viewModel.MediaTypeIndex == "taobao")
+            }
+            else if (viewModel.MediaTypeIndex == "taobao")
             {
                 entity.MediaLink = "https://v.taobao.com/v/home/?userId=" + entity.MediaID;
             }
@@ -1200,7 +1202,7 @@ namespace Resource.Controllers
             return View(entity);
         }
         [HttpPost]
-        
+
         public ActionResult Update(MediaView viewModel)
         {
             if (!ModelState.IsValid)
@@ -1335,7 +1337,7 @@ namespace Resource.Controllers
                     {
                         //找到最近更新的对比
                         var change = price.MediaPriceChanges.OrderByDescending(d => d.AddedDate).FirstOrDefault();
-                        if (change != null && (change.ChangeDate?.Date != price.InvalidDate?.Date||change.PurchasePrice!=price.PurchasePrice))
+                        if (change != null && (change.ChangeDate?.Date != price.InvalidDate?.Date || change.PurchasePrice != price.PurchasePrice))
                         {
                             price.MediaPriceChanges.Add(new MediaPriceChange()
                             {
@@ -1367,7 +1369,7 @@ namespace Resource.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        
+
         public ActionResult Delete(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -1383,7 +1385,7 @@ namespace Resource.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost]
-        
+
         public ActionResult Top(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -1404,7 +1406,7 @@ namespace Resource.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost]
-        
+
         public ActionResult Recommend(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -1425,7 +1427,7 @@ namespace Resource.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost]
-        
+
         public ActionResult Hot(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
@@ -1461,7 +1463,7 @@ namespace Resource.Controllers
             return View(entity);
         }
         [HttpPost]
-        
+
         public ActionResult Comment(MediaCommentView viewModel)
         {
 
@@ -1504,7 +1506,7 @@ namespace Resource.Controllers
 
         }
         [HttpPost]
-        
+
         public ActionResult WeiXinProCollection(WeiXinProParams viewModel)
         {
             var premission = PremissionData();
@@ -1531,7 +1533,7 @@ namespace Resource.Controllers
             return PartialView("WeiboCollection", view);
         }
         [HttpPost]
-        
+
         public ActionResult WeiboCollection(WeiBoParams viewModel)
         {
             var premission = PremissionData();
@@ -1548,7 +1550,7 @@ namespace Resource.Controllers
             return Json(new { State = 1, Msg = msg.Message });
         }
         [HttpPost]
-        
+
         public ActionResult WeixinCollection(WeiXinProParams baseParams)
         {
             var premission = PremissionData();
@@ -1565,7 +1567,7 @@ namespace Resource.Controllers
             return Json(new { State = 1, Msg = msg.Message });
         }
         [HttpPost]
-        
+
         public ActionResult DouYinInfoCollection(DouYinParams baseParams)
         {
             var premission = PremissionData();
@@ -1582,7 +1584,7 @@ namespace Resource.Controllers
             return Json(new { State = 1, Msg = msg.Message });
         }
         [HttpPost]
-        
+
         public ActionResult WeiXinUpdateArticle(WeiXinProParams proParams)
         {
             proParams.TransactorId = CurrentManager.Id;

@@ -11,7 +11,7 @@
     var settingService = EngineContext.Current.Resolve<ISettingService>();
     var setConfig = settingService.GetSetting<WeiGuang>();
     var excelFields = fieldService.GetFieldsByKey(Model.CallIndex + "-excel");
-    var isData = new List<string>() { "weixin", "sinablog", "douyin", "redbook","taobao" };
+    var isData = new List<string>() { "weixin", "sinablog", "douyin", "redbook","taobao","bilibili" };
     var areas = fieldService.GetFieldsByKey("Area").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var priceOrder = new List<SelectListItem>();
     foreach (var adPosition in Model.AdPositions.OrderByDescending(d=>d.Name))
@@ -115,6 +115,7 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
             break;
         case "redbook":
         case "taobao":
+        case "bilibili":
             priceRange = new List<SelectListItem>()
 {
 new SelectListItem(){Text = @"1000元以下",Value = "1-1000"},
@@ -316,6 +317,10 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
                     @if (Model.CallIndex == "taobao")
                     {
                         @Html.Partial("FilterTaobao")
+                    }
+                    @if (Model.CallIndex == "bilibili")
+                    {
+                        @Html.Partial("FilterBilibili")
                     }
                 </div>
 

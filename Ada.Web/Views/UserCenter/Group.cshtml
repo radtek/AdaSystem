@@ -1,4 +1,5 @@
 ﻿@using System.Web.Optimization
+@using Ada.Core.Domain
 @using Ada.Core.Infrastructure
 @using Ada.Core.ViewModel.Setting
 @using Ada.Services.Setting
@@ -29,7 +30,7 @@
                         <ul class="folder-list m-b-md" style="padding: 0">
                             @foreach (var item in Model)
                             {
-                                <li><a href="javascript:;" onclick="refreshTable('@item.Id','@item.GroupName')"> <i class="fa fa fa-bars "></i> @item.GroupName <span class="label label-warning pull-right">@item.Medias.Count</span> </a></li>
+                                <li><a href="javascript:;" onclick="refreshTable('@item.Id','@item.GroupName')"> <i class="fa fa fa-bars "></i> @item.GroupName <span class="label label-warning pull-right">@item.Medias.Count(d => d.IsDelete==false&&d.Status==Consts.StateNormal)</span> </a></li>
                             }
                         </ul>
 

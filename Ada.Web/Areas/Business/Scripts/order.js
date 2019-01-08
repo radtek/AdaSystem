@@ -100,13 +100,13 @@ function initData() {
         columns: [
             {
                 checkbox: true,
-                formatter: function (value, row, index) {
-                    if (row.Status === 2) {
-                        return {
-                            disabled: true
-                        };
-                    }
-                }
+                //formatter: function (value, row, index) {
+                //    if (row.Status === 2) {
+                //        return {
+                //            disabled: true
+                //        };
+                //    }
+                //}
             },
             {
                 field: 'Number',  

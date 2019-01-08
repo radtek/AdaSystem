@@ -50,12 +50,8 @@ namespace QuartzTask.Jobs
                                 var apiInfo = db.Set<APIInterfaces>().FirstOrDefault(d => d.CallIndex == "douyininfo");
                                 if (apiInfo != null)
                                 {
-                                    var kw = media.MediaName.Trim();
-                                    if (!string.IsNullOrWhiteSpace(media.Abstract))
-                                    {
-                                        kw = media.Abstract.Trim();
-                                    }
-                                    string url = string.Format(apiInfo.APIUrl + "?apikey={0}&kw={1}", apiInfo.Token,kw);
+                                    
+                                    string url = string.Format(apiInfo.APIUrl + "?apikey={0}&type=profile&id={1}", apiInfo.Token,media.MediaID);
                                     int times = apiInfo.TimeOut ?? 3;
                                     int request = 1;
                                     string htmlstr = string.Empty;

@@ -3105,6 +3105,8 @@
     <Content Include="Views\Shared\Maintain.cshtml" />
     <Content Include="Views\Media\Taobao.cshtml" />
     <Content Include="Views\Media\FilterTaobao.cshtml" />
+    <Content Include="Views\Media\Bilibili.cshtml" />
+    <Content Include="Views\Media\FilterBilibili.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

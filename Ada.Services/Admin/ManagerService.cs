@@ -189,7 +189,7 @@ namespace Ada.Services.Admin
             else if (!string.IsNullOrWhiteSpace(loginModel.Phone))
             {
                 manager =
-                    _managerRepository.LoadEntities(u => u.Phone==loginModel.Phone && u.Status == Consts.StateNormal && u.IsDelete == false).FirstOrDefault();
+                    _managerRepository.LoadEntities(u => u.Phone == loginModel.Phone && u.Status == Consts.StateNormal && u.IsDelete == false).FirstOrDefault();
             }
             else
             {
@@ -231,8 +231,8 @@ namespace Ada.Services.Admin
                 RoleName = role.RoleName,
                 RoleList = manager.Roles.Select(d => new RoleView() { Id = d.Id, RoleName = d.RoleName }),
                 Roles = manager.Roles.Count > 0 ? string.Join(",", manager.Roles.Select(d => d.RoleName)) : "",
-                OrganizationIds = string.Join("/",manager.Organizations.Select(d=>d.Id)),
-                Organizations = manager.Organizations.Count > 0 ? String.Join("-", manager.Organizations.Select(d => d.OrganizationName)) : ""
+                OrganizationIds = string.Join("/", manager.Organizations.Select(d => d.Id)),
+                Organizations = string.Join("-", manager.Organizations.Where(d => d.ParentId != null).Select(d => d.OrganizationName))
             };
         }
         public bool BindingOpenId(string loginName, string pwd, string openid, out string errmsg, string image = null)
@@ -310,7 +310,7 @@ namespace Ada.Services.Admin
                 RoleList = manager.Roles.Select(d => new RoleView() { Id = d.Id, RoleName = d.RoleName }),
                 Roles = manager.Roles.Count > 0 ? string.Join(",", manager.Roles.Select(d => d.RoleName)) : "",
                 OrganizationIds = string.Join("/", manager.Organizations.Select(d => d.Id)),
-                Organizations = manager.Organizations.Count > 0 ? String.Join("-", manager.Organizations.Select(d => d.OrganizationName)) : ""
+                Organizations = string.Join("-", manager.Organizations.Where(d => d.ParentId != null).Select(d => d.OrganizationName))
             };
         }
 

@@ -94,6 +94,10 @@ namespace Ada.Web.Controllers
         {
             return View();
         }
+        public ActionResult Bilibili()
+        {
+            return View();
+        }
         public ActionResult Writer()
         {
             return View();
@@ -316,7 +320,7 @@ namespace Ada.Web.Controllers
                 return Json(new { State = 0, Msg = "此分组不存在！" });
             }
             var rows = setting.UserExportGroupRows;
-            var result = group.Medias.Take(rows).GroupBy(d => d.MediaType.TypeName);
+            var result = group.Medias.Where(d=>d.IsDelete==false&&d.Status==Consts.StateNormal).Take(rows).GroupBy(d => d.MediaType.TypeName);
             IDictionary<string, string> dic = new Dictionary<string, string>();
             foreach (var item in result)
             {
@@ -668,12 +672,18 @@ namespace Ada.Web.Controllers
                 if (fields.Contains("CommentNum")) jo.Add("平均评论数", media.CommentNum);
                 if (fields.Contains("LikesNum")) jo.Add("平均点赞数", media.LikesNum);
                 if (fields.Contains("PostNum")) jo.Add("发布总数", media.PostNum);
+                //淘宝
+                if (fields.Contains("TaobaoAvgReadNum")) jo.Add("综合能力指数", media.AvgReadNum);
                 //小红书
                 if (fields.Contains("FriendNum")) jo.Add("关注数", media.FriendNum);
                 if (fields.Contains("RedBookAvgReadNum")) jo.Add("平均点赞数", media.AvgReadNum);
                 if (fields.Contains("RedBookTransmitNum")) jo.Add("平均收藏数", media.TransmitNum);
                 if (fields.Contains("RedBookLikesNum")) jo.Add("赞与收藏", media.LikesNum);
                 if (fields.Contains("RedBookPostNum")) jo.Add("笔记数", media.PostNum);
+                //B站
+                if (fields.Contains("BilibiliLikesNum")) jo.Add("播放数", media.LikesNum);
+                if (fields.Contains("BilibiliAvgReadNum")) jo.Add("阅读数", media.AvgReadNum);
+                
 
                 if (fields.Contains("PublishFrequency")) jo.Add("月发布频次", media.PublishFrequency);
                 if (fields.Contains("MonthPostNum")) jo.Add("最近月发文数", media.MonthPostNum);
@@ -756,6 +766,16 @@ namespace Ada.Web.Controllers
                         case "zhihu":
                             jo.Add("地区", media.Area);
                             break;
+                        case "taobao":
+                            jo.Add("地区", media.Area);
+                            jo.Add("综合能力指数", media.AvgReadNum);
+                            break;
+                        case "bilibili":
+                            jo.Add("地区", media.Area);
+                            jo.Add("关注数", media.FriendNum);
+                            jo.Add("播放数", media.LikesNum);
+                            jo.Add("阅读数", media.AvgReadNum);
+                            break;
                         case "writer":
                             jo.Add("擅长类型", media.ResourceType);
                             jo.Add("出稿速度", media.Efficiency);
@@ -768,7 +788,10 @@ namespace Ada.Web.Controllers
                     jo.Add(mediaMediaPrice.AdPositionName, price);
                 }
                 jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
-                jo.Add("媒体链接", media.MediaLink);
+                if (media.MediaType.CallIndex!="taobao")
+                {
+                    jo.Add("媒体链接", media.MediaLink);
+                }
                 jObjects.Add(jo);
             }
             return jObjects;

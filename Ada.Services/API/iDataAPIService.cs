@@ -1036,12 +1036,7 @@ namespace Ada.Services.API
         public RequestResult GetDouYinInfo(DouYinParams dyparams)
         {
             var apiInfo = _apiInterfacesService.GetAPIInterfacesByCallIndex(dyparams.CallIndex);
-            string url = string.Format(apiInfo.APIUrl + "?apikey={0}", apiInfo.Token);
-            string urlparams = string.Empty;
-            if (!string.IsNullOrWhiteSpace(dyparams.KeyWord))
-            {
-                urlparams = "&kw=" + dyparams.KeyWord;
-            }
+            string url = string.Format(apiInfo.APIUrl + "?apikey={0}&type=profile&id={1}", apiInfo.Token,dyparams.UID);
             int times = apiInfo.TimeOut ?? 3;
             string htmlstr = string.Empty;
             int request = 1;
@@ -1050,7 +1045,7 @@ namespace Ada.Services.API
             {
                 try
                 {
-                    htmlstr = HttpUtility.Get(url + urlparams);
+                    htmlstr = HttpUtility.Get(url);
                     request = 9999;
                 }
                 catch (Exception ex)
@@ -1060,7 +1055,7 @@ namespace Ada.Services.API
                         //异常日期
                         APIRequestRecord exrecord = new APIRequestRecord();
                         exrecord.Id = IdBuilder.CreateIdNum();
-                        exrecord.RequestParameters = urlparams;
+                        exrecord.RequestParameters = dyparams.UID;
                         exrecord.IsSuccess = false;
                         exrecord.Retcode = "500";
                         exrecord.ReponseContent = ex.Message;
@@ -1082,7 +1077,7 @@ namespace Ada.Services.API
                     APIRequestRecord record = new APIRequestRecord();
                     record.Id = IdBuilder.CreateIdNum();
                     record.IsSuccess = true;
-                    record.RequestParameters = urlparams;
+                    record.RequestParameters = dyparams.UID;
                     record.Retcode = result.retcode.GetHashCode().ToString();
                     record.Retmsg = result.message;
                     record.ReponseContent = "当前采集用户信息数：" + result.data.Count;
@@ -1097,7 +1092,7 @@ namespace Ada.Services.API
                     APIRequestRecord record = new APIRequestRecord();
                     record.Id = IdBuilder.CreateIdNum();
                     record.IsSuccess = false;
-                    record.RequestParameters = urlparams;
+                    record.RequestParameters = dyparams.UID;
                     record.Retcode = result.retcode.GetHashCode().ToString();
                     record.Retmsg = result.message;
                     record.ReponseContent = htmlstr;
