@@ -180,74 +180,95 @@ namespace Resource.Controllers
                 jo.Add("主键", media.Id);
                 jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
                 jo.Add("媒体名称", media.MediaName);
-                if (viewModel.MediaTypeIndex != "writer")
-                {
-                    jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
-                }
-
                 switch (viewModel.MediaTypeIndex)
                 {
                     case "weixin":
-                        jo.Add("媒体ID", media.MediaID);
-                        jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
-
-                        jo.Add("平均头条浏览数", media.AvgReadNum);
+                        jo.Add("微信号", media.MediaID);
+                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                        jo.Add("是否认证", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
+                        Price(media,jo,priceTypeList);
+                        jo.Add("头条阅读数", media.AvgReadNum);
+                        jo.Add("媒体说明", media.Content);
+                        jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
                         jo.Add("月发布频次", media.PublishFrequency);
                         jo.Add("月发文总数", media.MonthPostNum);
-                        jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
+                        jo.Add("备注说明", media.Remark);
                         break;
                     case "sinablog":
-                        jo.Add("媒体链接", media.MediaLink);
+                        jo.Add("微博链接", media.MediaLink);
+                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                        Price(media, jo, priceTypeList);
+                        jo.Add("认证类型", media.AuthenticateType);
+                        jo.Add("媒体说明",  media.Abstract);
+                        jo.Add("转发数", media.TransmitNum);
+                        jo.Add("评论数", media.CommentNum);
+                        jo.Add("点赞数", media.LikesNum);
                         jo.Add("性别", media.Sex);
                         jo.Add("地区", media.Area);
                         jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
-                        jo.Add("认证类型", media.AuthenticateType);
-                        jo.Add("平均转发数", media.TransmitNum);
-                        jo.Add("平均评论数", media.CommentNum);
-                        jo.Add("平均点赞数", media.LikesNum);
                         jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
+                        jo.Add("备注说明", media.Remark);
                         break;
                     case "bilibili":
                         jo.Add("媒体链接", media.MediaLink);
-                        jo.Add("地区", media.Area);
+                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                        Price(media, jo, priceTypeList);
+                        //jo.Add("地区", media.Area);
                         jo.Add("关注数", media.FriendNum);
                         jo.Add("播放数", media.LikesNum);
                         jo.Add("阅读数", media.AvgReadNum);
+                        jo.Add("备注说明", media.Remark);
                         break;
                     case "douyin":
-                        jo.Add("媒体ID", media.MediaID);
+                        //jo.Add("媒体ID", media.MediaID);
                         jo.Add("抖音ID", media.Abstract);
                         jo.Add("媒体链接", media.MediaLink);
+                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
                         jo.Add("性别", media.Sex);
-                        jo.Add("地区", media.Area);
-                        jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
+                        //jo.Add("地区", media.Area);
+                        Price(media, jo, priceTypeList);
+                        //jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
                         jo.Add("平均转发数", media.TransmitNum);
-                        jo.Add("平均浏览数", media.AvgReadNum);
+                        //jo.Add("平均浏览数", media.AvgReadNum);
                         jo.Add("平均评论数", media.CommentNum);
                         jo.Add("平均点赞数", media.LikesNum);
+                        jo.Add("备注说明", media.Remark);
                         break;
                     case "redbook":
                         jo.Add("媒体链接", media.MediaLink);
                         jo.Add("地区", media.Area);
-                        jo.Add("等级", media.AuthenticateType);
-                        jo.Add("平均收藏数", media.TransmitNum);
-                        jo.Add("平均点赞数", media.AvgReadNum);
-                        jo.Add("平均评论数", media.CommentNum);
-                        jo.Add("赞与收藏", media.LikesNum);
-                        jo.Add("关注数", media.FriendNum);
-                        jo.Add("笔记总数", media.PostNum);
+                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                        Price(media, jo, priceTypeList);
+                        //jo.Add("等级", media.AuthenticateType);
+                        jo.Add("收藏数", media.TransmitNum);
+                        jo.Add("点赞数", media.AvgReadNum);
+                        jo.Add("评论数", media.CommentNum);
+                        //jo.Add("赞与收藏", media.LikesNum);
+                        //jo.Add("关注数", media.FriendNum);
+                        //jo.Add("笔记总数", media.PostNum);
+                        jo.Add("媒体说明", media.Content);
+                        jo.Add("备注说明", media.Remark);
                         break;
                     case "zhihu":
                         jo.Add("媒体链接", media.MediaLink);
-                        jo.Add("地区", media.Area);
+                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                        Price(media, jo, priceTypeList);
+                        //jo.Add("地区", media.Area);
+                        jo.Add("媒体说明", media.Content);
+                        jo.Add("备注说明", media.Remark);
                         break;
                     case "writer":
                         jo.Add("擅长类型", media.ResourceType);
                         jo.Add("出稿速度", media.Efficiency);
+                        jo.Add("备注说明", media.Remark);
                         break;
                     case "taobao":
+                        jo.Add("媒体链接", "https://market.m.taobao.com/apps/abs/9/41/index?accountId="+media.MediaID);
+                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                        Price(media, jo, priceTypeList);
                         jo.Add("达人类型", media.Abstract);
                         jo.Add("综合能力指数", media.AvgReadNum);
+                        jo.Add("备注说明", media.Remark);
                         break;
                     default:
                         jo.Add("平台", media.Platform);
@@ -268,9 +289,10 @@ namespace Resource.Controllers
                         {
                             jo.Add("媒体链接", media.MediaLink);
                         }
-
+                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
                         jo.Add("性别", media.Sex);
                         jo.Add("地区", media.Area);
+                        Price(media, jo, priceTypeList);
                         if (!string.IsNullOrWhiteSpace(media.ResourceType))
                         {
                             jo.Add("资源类型", media.ResourceType);
@@ -283,35 +305,43 @@ namespace Resource.Controllers
                         {
                             jo.Add("收录效果", media.SEO);
                         }
+                        jo.Add("媒体说明", media.Content);
+                        jo.Add("备注说明", media.Remark);
                         break;
                 }
-                foreach (var priceType in priceTypeList)
-                {
-                    foreach (var mediaMediaPrice in media.MediaPrices.Where(d => d.IsDelete == false))
-                    {
-                        var price = mediaMediaPrice.PurchasePrice ?? 0;
-                        var priceStr = "【成本】";
-                        if (priceType == "1")
-                        {
-                            price = mediaMediaPrice.MarketPrice ?? 0;
-                            priceStr = "【销售】";
-                        }
-                        if (priceType == "2")
-                        {
-                            price = mediaMediaPrice.SellPrice ?? 0;
-                            priceStr = "【零售】";
-                        }
-                        jo.Add(priceStr + mediaMediaPrice.AdPositionName, price);
-                    }
-                }
-                jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
-                jo.Add("媒体说明", viewModel.MediaTypeIndex == "sinablog" ? media.Abstract : media.Content);
-                jo.Add("备注说明", media.Remark);
+                
+                
+                //jo.Add("媒体说明", viewModel.MediaTypeIndex == "sinablog" ? media.Abstract : media.Content);
+                //jo.Add("备注说明", media.Remark);
                 jo.Add("经办媒介", media.Transactor);
                 jObjects.Add(jo);
             }
 
             return jObjects;
+        }
+
+        private void Price(Media media, JObject jo,string[] priceTypeList)
+        {
+            foreach (var priceType in priceTypeList)
+            {
+                foreach (var mediaMediaPrice in media.MediaPrices.Where(d => d.IsDelete == false))
+                {
+                    var price = mediaMediaPrice.PurchasePrice ?? 0;
+                    var priceStr = "【成本】";
+                    if (priceType == "1")
+                    {
+                        price = mediaMediaPrice.MarketPrice ?? 0;
+                        priceStr = "【销售】";
+                    }
+                    if (priceType == "2")
+                    {
+                        price = mediaMediaPrice.SellPrice ?? 0;
+                        priceStr = "【零售】";
+                    }
+                    jo.Add(priceStr + mediaMediaPrice.AdPositionName, price);
+                }
+            }
+            jo.Add("价格日期", media.MediaPrices.FirstOrDefault()?.InvalidDate?.ToString("yyyy-MM-dd"));
         }
         [HttpPost]
 

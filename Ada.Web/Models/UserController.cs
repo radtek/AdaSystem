@@ -76,7 +76,7 @@ namespace Ada.Web.Models
             }
             CurrentUser = user;
             ViewBag.CurrentUser = CurrentUser;
-            _cacheService.Put(sessionId,user,new TimeSpan(1,0,0,0));
+            _cacheService.Put(sessionId,user,TimeSpan.FromDays(1));
         }
 
         /// <summary>

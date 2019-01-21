@@ -118,7 +118,12 @@ namespace Finance.Controllers
             entity.Image = viewModel.Image;
             entity.Remark = viewModel.Remark;
             //删除
-            _billPaymentDetailrepository.Remove(payDetails.Select(d=>d.Id).ToArray());
+            //entity.BillPaymentDetails.Clear();
+            foreach (var ids in entity.BillPaymentDetails.Select(d => d.Id).ToArray())
+            {
+                _billPaymentDetailrepository.Remove(ids);
+            }
+            //(payDetails.Where(d=>d.Id.StartsWith("X")).Select(d=>d.Id).ToArray());
             //新增
             decimal? money = 0;
             foreach (var billPaymentDetail in payDetails)
@@ -132,7 +137,9 @@ namespace Finance.Controllers
                 billPaymentDetail.AddedBy = CurrentManager.UserName;
                 billPaymentDetail.AddedById = CurrentManager.Id;
                 billPaymentDetail.AddedDate = DateTime.Now;
+                //billPaymentDetail.BillPaymentId = entity.Id;
                 money += billPaymentDetail.Money;
+                //_billPaymentDetailrepository.Add(billPaymentDetail);
                 entity.BillPaymentDetails.Add(billPaymentDetail);
             }
             decimal? paymoney = 0;
@@ -153,6 +160,7 @@ namespace Finance.Controllers
                 ModelState.AddModelError("message", "付款金额已超出申请金额！");
                 return View(viewModel);
             }
+            
             _billPaymentService.Update(entity);
             TempData["Msg"] = "更新成功";
             return RedirectToAction("Index");

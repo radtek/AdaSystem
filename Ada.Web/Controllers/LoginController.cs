@@ -188,7 +188,7 @@ namespace Ada.Web.Controllers
             viewModel.Transactor = user.Transactor;
             viewModel.TransactorId = user.TransactorId;
             string sessionId = Guid.NewGuid().ToString("N");
-            _cacheService.Put(sessionId, viewModel, new TimeSpan(1, 0, 0, 0));
+            _cacheService.Put(sessionId, viewModel, TimeSpan.FromDays(1));
             //Cookie
             Response.Cookies["UserSession"].Value = sessionId;
             //会员登陆日志
