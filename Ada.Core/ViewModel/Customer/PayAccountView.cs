@@ -30,6 +30,11 @@ namespace Ada.Core.ViewModel.Customer
         [Display(Name = "账户状态")]
         public short? Status { get; set; }
         /// <summary>
+        /// 是否商户
+        /// </summary>
+        [Display(Name = "是否商户")]
+        public bool? IsBusiness { get; set; }
+        /// <summary>
         /// 联系人
         /// </summary>
         [Display(Name = "联系人")]

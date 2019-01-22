@@ -73,6 +73,7 @@
                 //detailFormatter: detailFormatter,
                 queryParams: function(parameters) {
                     parameters.Status = $("#Status").val();
+                    parameters.IsBusiness = false;
                     return parameters;
                 },
                 formatSearch: function() {

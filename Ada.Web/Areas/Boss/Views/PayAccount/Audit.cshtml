@@ -167,40 +167,7 @@
 
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <div class="table-responsive">
-                                            <table class="table table-striped">
-
-                                                <thead>
-                                                    <tr>
-                                                        <th>
-                                                            订单编号
-                                                        </th>
-                                                        <th>
-                                                            项目摘要
-                                                        </th>
-                                                        <th>
-                                                            销售总额（不含税）
-                                                        </th>
-                                                        <th>
-                                                            订单日期
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach (var item in Model.LinkMan.BusinessOrders.OrderByDescending(d => d.OrderDate).Take(20))
-                                                    {
-                                                        <tr>
-                                                            <td>
-                                                                <button class="btn btn-info btn-xs" type="button" onclick="initDetails('@item.Id')">@item.OrderNum</button>
-                                                            </td>
-                                                            <td>@item.Remark</td>
-                                                            <td>@item.BusinessOrderDetails.Sum(d => d.SellMoney)</td>
-                                                            <td>@item.OrderDate.Value.ToString("yyyy年MM月dd日")</td>
-                                                        </tr>
-                                                    }
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                        <table id="table"></table>
                                     </div>
                                 </div>
 
@@ -219,10 +186,146 @@
 @section StylesFirst {
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
     @Styles.Render("~/plugins/blueimp")
+    @Styles.Render("~/plugins/bootstrapTableStyle")
 }
 @section Scripts {
     @Scripts.Render("~/plugins/lightboxGallery")
-<script>
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+    <script>
+        $(document).ready(function () {
+            var table = new TableInit();
+            table.Init();
+        });
+        var TableInit = function() {
+            var obj = new Object();
+            obj.Init = function() {
+                $('#table').bootstrapTable({
+                url: '@Url.Action("GetList", "BusinessOrderDetail", new { area = "DataReport" })',         //请求后台的URL（*）
+                classes: "table table-no-bordered",
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "desc",                   //排序方式
+                sortName: "Id",
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                //search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                //strictSearch: true,                 //设置为 true启用 全匹配搜索，否则为模糊搜索
+                showColumns: true,                  //是否显示所有的列
+                showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                singleSelect: true,                  //设置True 将禁止多选
+                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
+                mobileResponsive: true,
+                showFooter: true,
+                queryParams: function(parameters) {
+                    parameters.LinkManId = '@Model.LinkManId';
+                    return parameters;
+                },
+
+                columns: [
+
+                    {
+                        field: 'OrderNum',
+                        title: '订单编号',
+                        align: "center", valign: "middle",
+                        formatter: function(value,row) {
+                            return "<a class='label' href='@Url.Action("Update", "Order",new{area="Business"})?id=" + row.BusinessOrderId+"' target='_blank'><i class='fa fa-link'></i> " + value + "</a>";
+                        },
+                        footerFormatter: function () {
+                            return "合计";
+                        }
+                    },
+                    {
+                        field: 'OrderRemark',
+                        title: '项目备注',
+                        align: "center", valign: "middle",
+                    }
+                    ,
+
+                    {
+                        field: 'MediaName',
+                        title: '媒体信息',
+                        align: "left", valign: "middle",
+                        formatter: function(value,row) {
+                            return "["+row.MediaTypeName+"] "+ value;
+                        }
+                    },
+                    {
+                        field: 'AdPositionName',
+                        title: '广告位',
+                        align: "center", valign: "middle"
+                    },
+                    {
+                        field: 'SellMoney',
+                        title: '无税金额',
+                        align: "center", valign: "middle",
+                        footerFormatter: function (data) {
+                            if (data[0]) {
+                                return data[0].TotalSellMoney;
+                            }
+                            return 0;
+                        }
+                    },
+
+                    {
+                        field: 'PurchaseMoney',
+                        title: '采购成本',
+                        align: "center", valign: "middle",
+                        footerFormatter: function (data) {
+                            if (data[0]) {
+                                return data[0].TotalPurchaseMoney;
+                            }
+                            return 0;
+                        }
+                    },
+
+                    {
+                        field: 'PublishDate',
+                        title: '出刊日期',
+                        align: "center", valign: "middle",
+                        formatter: function (value) {
+                            if (value) {
+                                return moment(value).format("YYYY-MM-DD");
+                            }
+                        }
+                    },
+                    {
+                        field: 'PublishLink',
+                        title: '出刊链接',
+                        align: "center", valign: "middle",
+                        formatter: formatter.url
+                    },
+                    {
+                        field: 'MediaByPurchase',
+                        title: '经办媒介',
+                        align: "center", valign: "middle",
+                    },
+                    {
+                        field: 'Transactor',
+                        title: '销售人员',
+                        align: "center", valign: "middle",
+                    },
+
+                    {
+                        field: 'PurchaseStatus',
+                        title: '采购状态',
+                        align: "center", valign: "middle",
+                        formatter: formatter.purchaseStatus
+                    }
+
+
+                ]
+            });
+            };
+
+            return obj;
+        };
         function initDetails(id) {
             $("#modalView").load("@Url.Action("Details","Order",new{area="Business"})?id="+id,
                 function () {
@@ -235,7 +338,7 @@
                 });
 
         }
-</script>
+    </script>
 }
 
 

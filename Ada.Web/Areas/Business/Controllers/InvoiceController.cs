@@ -269,6 +269,7 @@ namespace Business.Controllers
             }
             var businessInvoicesIds = viewModel.BusinessInvoicesIds.Split(',').ToList().Distinct();
             var receivaluesIds = viewModel.ReceivalesIds.Split(',').ToList().Distinct();
+            
             var result = _businessInvoiceService.WriteOff(businessInvoicesIds, receivaluesIds);
             if (!result)
             {
