@@ -1,10 +1,15 @@
 ﻿@using System.Web.Optimization
+@using Ada.Core
 @using Ada.Core.Domain
 @using Ada.Core.Domain.Customer
+@using Ada.Core.Domain.Finance
+@using Ada.Core.Infrastructure
 @model PayAccount
 @{
     ViewBag.Title = "审批账户";
     ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "客户账户", Value = Url.Action("Index") } };
+    var repository = EngineContext.Current.Resolve<IRepository<Receivables>>();
+    var receivables = repository.LoadEntities(d => d.IsDelete == false && d.AccountName == Model.AccountName).OrderByDescending(d => d.BillDate).Take(50).ToList();
 }
 @Html.Partial("Bread")
 
@@ -23,6 +28,7 @@
                         <li class="active"><a data-toggle="tab" href="#tab-1"> 申请信息</a></li>
                         <li class=""><a data-toggle="tab" href="#tab-2"> 客户信息</a></li>
                         <li class=""><a data-toggle="tab" href="#tab-3"> 订单信息</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-4"> 到款信息</a></li>
                     </ul>
                     <div class="tab-content">
                         <div id="tab-1" class="tab-pane active">
@@ -169,13 +175,73 @@
                                     <div class="col-lg-12">
                                         <table id="table"></table>
                                     </div>
+                                    <div id="toolbar">
+                                        <div class="form-inline" role="form">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <select name="VerificationStatus" class="form-control" id="VerificationStatus">
+                                                        <option value="0">未核销</option>
+                                                        <option value="1">已核销</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
 
 
                             </div>
                         </div>
+                        <div id="tab-4" class="tab-pane">
+                            <div class="panel-body">
 
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            收款账户
+                                                        </th>
+                                                        <th>
+                                                            到款金额
+                                                        </th>
+                                                        <th>
+                                                            到款日期
+                                                        </th>
+                                                        <th>
+                                                            领款信息
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in receivables)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.AccountName</td>
+                                                            <td>@item.Money</td>
+                                                            <td>
+                                                                @if (item.BillDate != null)
+                                                                {
+                                                                    @item.BillDate.Value.ToString("yyyy-MM-dd")
+                                                                }
+                                                            </td>
+                                                            <td>@string.Join(",", item.BusinessPayees.Select(d => d.Transactor).Distinct())</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -195,13 +261,17 @@
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
+            $("#VerificationStatus").change(function () {
+                $('#table').bootstrapTable('refresh');
+            });
         });
         var TableInit = function() {
             var obj = new Object();
             obj.Init = function() {
                 $('#table').bootstrapTable({
                 url: '@Url.Action("GetList", "BusinessOrderDetail", new { area = "DataReport" })',         //请求后台的URL（*）
-                classes: "table table-no-bordered",
+                    classes: "table table-no-bordered",
+                    toolbar: '#toolbar',
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）
@@ -224,7 +294,8 @@
                 mobileResponsive: true,
                 showFooter: true,
                 queryParams: function(parameters) {
-                    parameters.LinkManId = '@Model.LinkManId';
+                    parameters.LinkManId = '@Model.LinkManId';//VerificationStatus
+                    parameters.VerificationStatus = $("#VerificationStatus").val();
                     return parameters;
                 },
 

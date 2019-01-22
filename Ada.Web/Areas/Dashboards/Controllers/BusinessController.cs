@@ -83,6 +83,9 @@ namespace Dashboards.Controllers
 
             viewModel.BusinessPerformances = _businessOrderDetailService.BusinessPerformanceGroupByDate(quare)
                 .OrderBy(d => d.Month).ToList();
+            viewModel.BusinessPerformancesByUser = _businessOrderDetailService
+                .BusinessPerformanceGroupByUser(new BusinessOrderDetailView()).OrderByDescending(d => d.TotalVerificationMoney)
+                .ToList();
             //未核销金额 联系人分组
             viewModel.VerificationInfos = business
                 .Where(d => d.Status == Consts.StateOK && d.VerificationStatus == Consts.StateLock)

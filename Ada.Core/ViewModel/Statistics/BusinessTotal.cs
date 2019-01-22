@@ -11,6 +11,7 @@ namespace Ada.Core.ViewModel.Statistics
         {
             BusinessPerformances=new List<BusinessPerformance>();
             VerificationInfos=new List<VerificationInfo>();
+            BusinessPerformancesByUser=new List<BusinessPerformance>();
         }
         /// <summary>
         /// 待转单
@@ -77,6 +78,11 @@ namespace Ada.Core.ViewModel.Statistics
         /// </summary>
         [Display(Name = "销售业绩")]
         public List<BusinessPerformance> BusinessPerformances { get; set; }
+        /// <summary>
+        /// 销售业绩
+        /// </summary>
+        [Display(Name = "销售业绩")]
+        public List<BusinessPerformance> BusinessPerformancesByUser { get; set; }
         /// <summary>
         /// 未核销明细
         /// </summary>
