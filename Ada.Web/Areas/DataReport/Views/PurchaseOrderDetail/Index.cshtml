@@ -57,14 +57,14 @@
                             @Html.DropDownListFor(d => d.Status, purchaseStatus, "请选择", new { @class = "form-control input-sm" })
                         </div>
                     </div>
-                    @*<div class="col-sm-3">
+                    <div class="col-sm-2">
             <div class="form-group">
                 @Html.LabelFor(d => d.PublishDateStartEnd, Html.DisplayNameFor(d => d.PublishDateStartEnd) + "：", new { @class = "control-label" })
                 @Html.TextBoxFor(d => d.PublishDateStartEnd, new { @class = "form-control input-sm", @readonly = "" })
                 @Html.HiddenFor(d => d.PublishDateStart)
                 @Html.HiddenFor(d => d.PublishDateEnd)
             </div>
-        </div>*@
+        </div>
                     <div class="col-sm-2">
                         <div class="form-group">
                             @Html.LabelFor(d => d.IsPayment, Html.DisplayNameFor(d => d.IsPayment) + "：", new { @class = "control-label" })
@@ -135,7 +135,58 @@
         $(document).ready(function () {
             var table = new TableInit();
             table.Init();
+            var $datepicker = $('#PublishDateStartEnd');
+            $datepicker.daterangepicker({
+                autoUpdateInput: false,
+                opens: "center",
+                linkedCalendars: false,
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    separator: " 至 ",
+                    applyLabel: "确认",
+                    cancelLabel: "取消",
+                    fromLabel: "从",
+                    toLabel: "到",
+                    customRangeLabel: "自定义",
+                    weekLabel: "周",
+                    daysOfWeek: [
+                        "日",
+                        "一",
+                        "二",
+                        "三",
+                        "四",
+                        "五",
+                        "六"
+                    ],
+                    monthNames: [
+                        "一月",
+                        "二月",
+                        "三月",
+                        "四月",
+                        "五月",
+                        "六月",
+                        "七月",
+                        "八月",
+                        "九月",
+                        "十月",
+                        "十一月",
+                        "十二月"
+                    ],
+                    firstDay: 1
+                }
+            },
+                function (start, end, label) {
+                    $("#PublishDateStart").val(start.format('YYYY-MM-DD'));
+                    $("#PublishDateEnd").val(end.format('YYYY-MM-DD'));
+                });
 
+            $datepicker.on('apply.daterangepicker', function (ev, picker) {
+                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' 至 ' + picker.endDate.format('YYYY-MM-DD'));
+            });
+            $datepicker.on('cancel.daterangepicker', function (ev, picker) {
+                $(this).val('');
+                resetDate();
+            });
         });
         var TableInit = function() {
             var obj = new Object();
@@ -320,7 +371,11 @@
             });
             };
             return obj;
-        };
+    };
+    function resetDate() {
+        $("#PublishDateStart").val("");
+        $("#PublishDateEnd").val("");
+    }
 </script>
 }
 

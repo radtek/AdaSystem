@@ -110,7 +110,7 @@ function initData() {
             {
                 field: 'MediaTypeName',
                 title: '媒体类型',
-                align: "center", valign: "middle",
+                align: "center", valign: "middle", sortable: true,
                 footerFormatter: function () {
                     return "合计";
                 }
@@ -118,13 +118,23 @@ function initData() {
             {
                 field: 'MediaName',
                 title: '媒体名称',
-                align: "center", valign: "middle"
+                align: "center", valign: "middle",sortable: true,
 
             },
             {
                 field: 'AdPositionName',
                 title: '广告位',
                 align: "center", valign: "middle"
+            },
+            {
+                field: 'PublishDate',
+                title: '出刊日期',
+                align: "center", valign: "middle", sortable: true,
+                formatter: function (value) {
+                    if (value) {
+                        return moment(value).format("YYYY-MM-DD");
+                    }
+                }
             },
             {
                 field: 'CostMoney',
@@ -154,7 +164,7 @@ function initData() {
             {
                 field: 'Money',
                 title: '采购金额',
-                align: "center", valign: "middle",
+                align: "center", valign: "middle", sortable: true,
                 //editable: {
                 //    mode: "inline",
                 //    emptytext: '请输入',

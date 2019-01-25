@@ -243,7 +243,7 @@ namespace Resource.Controllers
                         jo.Add("收藏数", media.TransmitNum);
                         jo.Add("点赞数", media.AvgReadNum);
                         jo.Add("评论数", media.CommentNum);
-                        //jo.Add("赞与收藏", media.LikesNum);
+                        jo.Add("赞与收藏", media.LikesNum);
                         //jo.Add("关注数", media.FriendNum);
                         //jo.Add("笔记总数", media.PostNum);
                         jo.Add("媒体说明", media.Content);

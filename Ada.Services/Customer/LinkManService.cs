@@ -31,11 +31,12 @@ namespace Ada.Services.Customer
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.Name.Contains(viewModel.search)||
-                                             d.LoginName.Contains(viewModel.search)||
-                                             d.Commpany.Name.Contains(viewModel.search)||
-                                             d.Id==viewModel.search||
-                                             d.Transactor.Contains(viewModel.search));
+                allList = allList.Where(d => d.Name.Contains(viewModel.search) ||
+                                             d.LoginName.Contains(viewModel.search) ||
+                                             d.Commpany.Name.Contains(viewModel.search) ||
+                                             d.Id == viewModel.search ||
+                                             d.Transactor.Contains(viewModel.search) ||
+                                             d.Phone.Contains(viewModel.search));
             }
             if (!string.IsNullOrWhiteSpace(viewModel.CommpanyName))
             {
@@ -109,7 +110,7 @@ namespace Ada.Services.Customer
         public LinkMan GetUserByOpenId(string openId)
         {
             //pwd = Encrypt.Encode(pwd.Trim());
-            var user = _repository.LoadEntities(d =>(d.OpenId==openId||d.UnionId==openId )&& d.IsDelete == false &&
+            var user = _repository.LoadEntities(d => (d.OpenId == openId || d.UnionId == openId) && d.IsDelete == false &&
                 d.IsLock == false).FirstOrDefault();
             return user;
         }

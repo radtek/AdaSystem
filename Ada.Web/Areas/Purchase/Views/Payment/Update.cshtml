@@ -72,5 +72,5 @@
             managerUrl = "@Url.Action("GetList", "Manager", new {area = "Admin"})",
             isReadonly = @Model.AuditStatus;
     </script>
-    <script src="@Url.Content("~/Areas/Purchase/Scripts/payment.js?v=2018081411357")"></script>
+    <script src="@Url.Content("~/Areas/Purchase/Scripts/payment.js?v="+DateTime.Now.Ticks)"></script>
 }
