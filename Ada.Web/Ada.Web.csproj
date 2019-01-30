@@ -1187,6 +1187,7 @@
     <Content Include="Content\landing\header_two.jpg" />
     <Content Include="Content\plugins\cubeportfolio\css\cubeportfolio.min.css" />
     <Content Include="Content\plugins\cubeportfolio\img\cbp-sprite.png" />
+    <Content Include="Images\grey.gif" />
     <Content Include="Images\landing\douyin.png" />
     <Content Include="Images\landing\fl1.png" />
     <Content Include="Images\landing\fl2.png" />
@@ -2232,6 +2233,10 @@
     <Content Include="Scripts\plugins\fullcalendar\locale-all.js" />
     <Content Include="Scripts\plugins\ionRangeSlider\ion.rangeSlider.js" />
     <Content Include="Scripts\plugins\jqLabelauty\jquery-labelauty.js" />
+    <Content Include="Scripts\plugins\jqLazyload\jquery.lazyload.js" />
+    <Content Include="Scripts\plugins\jqLazyload\jquery.lazyload.min.js" />
+    <Content Include="Scripts\plugins\jqLazyload\jquery.scrollstop.js" />
+    <Content Include="Scripts\plugins\jqLazyload\jquery.scrollstop.min.js" />
     <Content Include="Scripts\plugins\select2\select2tree.js" />
     <Content Include="Scripts\plugins\summernote\lang\summernote-ar-AR.js" />
     <Content Include="Scripts\plugins\summernote\lang\summernote-ar-AR.min.js" />

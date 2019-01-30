@@ -543,7 +543,11 @@ namespace Ada.Web
                 "~/Scripts/plugins/cubeportfolio/js/jquery.cubeportfolio.min.js"));
             bundles.Add(new StyleBundle("~/plugins/cubeportfolioStyles").Include(
                 "~/Content/plugins/cubeportfolio/css/cubeportfolio.min.css"));
-
+            // jqlazyload
+            bundles.Add(new ScriptBundle("~/plugins/jqLazyload").Include(
+                
+                "~/Scripts/plugins/jqLazyload/jquery.scrollstop.min.js",
+                "~/Scripts/plugins/jqLazyload/jquery.lazyload.min.js"));
 
 
 

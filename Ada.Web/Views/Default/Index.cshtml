@@ -128,7 +128,7 @@
                             var url = string.IsNullOrWhiteSpace(item.Url) ? Url.Action("Detail", new {id = item.Id}) : item.Url;
                             <div class="cbp-item @item.Column.CallIndex">
                                 <a href="@url" target="_blank">
-                                    <img class="img-fluid" src="@item.CoverPic" alt="@item.Title">
+                                    <img class="img-fluid lazy" src="/Images/grey.gif" alt="@item.Title" data-original="@item.CoverPic">
                                 </a>
                                 <div class="text-center m-t-sm">
                                     <h3 class="h4">@item.Title</h3>
@@ -193,7 +193,7 @@
             <div class="lightBoxGallery">
                 @foreach (var item in pics.Articles.Where(d => d.Status == 1).OrderBy(d => d.Taxis).ToList())
                 {
-                    <a href="@item.CoverPic" title="@item.Title" data-gallery=""><img src="@item.CoverPic"></a>
+                    <a href="@item.CoverPic" title="@item.Title" data-gallery=""><img class="lazy" src="/Images/grey.gif" data-original="@item.CoverPic"></a>
                 }
                 <!-- The Gallery as lightbox dialog, should be a child element of the document body -->
                 <div id="blueimp-gallery" class="blueimp-gallery">
@@ -233,6 +233,7 @@
 @section Scripts {
     @Scripts.Render("~/plugins/lightboxGallery")
     @Scripts.Render("~/plugins/cubeportfolioScript")
+    @Scripts.Render("~/plugins/jqLazyload")
     <script>
         var initCub = {
             _baseConfig: {},
@@ -306,6 +307,10 @@
         };
         $(document).ready(function () {
             initCub.init(".cbp");
+            $('img.lazy').lazyload({
+                effect:'fadeIn',
+                event: 'scrollstop'
+            });
         });
     </script>
 }
