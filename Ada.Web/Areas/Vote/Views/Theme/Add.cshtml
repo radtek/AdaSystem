@@ -1,0 +1,30 @@
+﻿
+@using System.Web.Optimization
+@model Ada.Core.ViewModel.Vote.VoteThemeView
+@{
+    ViewBag.Title = "新建主题";
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "投票主题", Value = Url.Action("Index") } };
+}
+@Html.Partial("Bread")
+<div class="wrapper wrapper-content animated fadeInRight">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <p class="bg-danger">@Html.ValidationMessage("message") </p>
+        @Html.Partial("Edit")
+    }
+</div>
+@section Styles {
+    @Styles.Render("~/plugins/summernoteStyles")
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+}
+@section Scripts {
+
+    @Scripts.Render("~/plugins/summernote")
+    <script src="@Url.Content("~/Areas/Content/Scripts/htmledit.js")"></script>
+    <script>
+        $(function () {
+            initSummernote();
+        });
+    </script>
+}

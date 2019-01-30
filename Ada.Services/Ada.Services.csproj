@@ -162,6 +162,10 @@
     <Compile Include="Salary\QuartersService.cs" />
     <Compile Include="Setting\ISettingService.cs" />
     <Compile Include="Setting\SettingService.cs" />
+    <Compile Include="Vote\IVoteItemService.cs" />
+    <Compile Include="Vote\IVoteThemeService.cs" />
+    <Compile Include="Vote\VoteItemService.cs" />
+    <Compile Include="Vote\VoteThemeService.cs" />
     <Compile Include="WeiXin\IWeiXinAccountService.cs" />
     <Compile Include="WeiXin\WeiXinAccountService.cs" />
     <Compile Include="WorkFlow\IWorkFlowDefinitionService.cs" />

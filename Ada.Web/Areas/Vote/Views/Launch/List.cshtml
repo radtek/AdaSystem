@@ -1,0 +1,124 @@
+﻿@using System.Web.Optimization
+@model Ada.Core.Domain.Vote.VoteTheme
+@{
+    ViewBag.Title = Model.Title;
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "投票列表", Value = Url.Action("Index") } };
+    var total = (int)Math.Ceiling(Model.VoteItems.Count / 4.0);
+    var list = Model.VoteItems.Where(d => d.Status).OrderBy(d => d.Taxis).ToList();
+}
+@Html.Partial("Bread")
+<div class="wrapper wrapper-content animated fadeInRight">
+    @Html.AntiForgeryToken()
+    @for (int i = 0; i < total; i++)
+    {
+        <div class="row">
+            @for (int j = 0; j < 4; j++)
+            {
+                if (j >= list.Count)
+                {
+                    break;
+                }
+                var item = list[j * i + j];
+                <div class="col-md-3">
+                    <div class="ibox">
+                        <div class="ibox-content product-box">
+                            <div class="product-imitation">
+                                <h1 class="font-bold no-margins">@item.Title</h1>
+                            </div>
+                            <div class="product-desc">
+                                <span class="product-price">
+                                    @item.Taxis.Value.ToString("000")
+                                </span>
+                                <div class="small">
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <div class="radio radio-warning radio-inline">
+                                                <input type="radio" id="score1-@item.Id" value="10" name="score-@item.Id" checked="">
+                                                <label for="score1-@item.Id">满意(10分)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <div class="radio radio-warning radio-inline">
+                                                <input type="radio" id="score2-@item.Id" value="5" name="score-@item.Id">
+                                                <label for="score2-@item.Id">一般(5分)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <div class="radio radio-warning radio-inline">
+                                                <input type="radio" id="score3-@item.Id" value="0" name="score-@item.Id">
+                                                <label for="score3-@item.Id">较差(0分)</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-t text-center">
+                                    <a href="javascript:vote('@item.Id');" class="btn btn-outline btn-danger">投票打分</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+        </div>
+    }
+
+
+
+
+
+
+
+
+</div>
+@section Styles {
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+
+}
+@section Scripts {
+
+    <script>
+        function vote(id) {
+            swal({
+                title: "提醒",
+                text: "确定要投吗?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true
+            }, function () {
+                var score = $('input:radio[name=score-'+id+']:checked').val();
+                var data = { id: id, score: score };
+                $.ajax({
+                    type: "post",
+                    url: "@Url.Action("Vote")",
+                    data: addAntiForgeryToken(data),
+                    success: function (data) {
+                        if (data.State === 1) {
+                            swal({
+                                title: data.Msg,
+                                timer: 1600,
+                                type: "success",
+                                showConfirmButton: false
+                            });
+                        } else {
+                            swal("操作提醒", data.Msg, "warning");
+                        }
+                    },
+                    error: function () {
+                        swal("操作失败", "系统错误", "error");
+                    },
+                    complete: function () {
+
+                    }
+
+                });
+            });
+        }
+    </script>
+}
+

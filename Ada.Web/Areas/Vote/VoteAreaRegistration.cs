@@ -1,10 +1,10 @@
 ﻿using System.Web.Mvc;
 
-namespace WeiXin
+namespace Vote
 {
-    public class WeiXinAreaRegistration : AreaRegistration
+    public class VoteAreaRegistration : AreaRegistration
     {
-        public override string AreaName => "WeiXin";
+        public override string AreaName => "Vote";
 
         public override void RegisterArea(AreaRegistrationContext context)
         {
@@ -12,7 +12,7 @@ namespace WeiXin
                 AreaName,
                 AreaName + "/{controller}/{action}/{id}",
                 new { controller = "Home", action = "Index", area = AreaName, id = UrlParameter.Optional },
-                new[] { "WeiXin.Controllers" }
+                new[] { "Vote.Controllers" }
             );
         }
     }

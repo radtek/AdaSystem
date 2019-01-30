@@ -1,0 +1,37 @@
+﻿@model List<Ada.Core.Domain.Vote.VoteTheme>
+@{
+    ViewBag.Title = "投票主题";
+}
+@Html.Partial("Bread")
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-3">
+                <div class="contact-box center-version">
+                    <a href="javascript:;">
+                        <i class="fa fa-trophy fa-4x"></i>
+                        <h2 class="m-b-xs"><strong>@item.Title</strong></h2>
+                        <div class="font-bold">@item.Rule</div>                    
+                    </a>
+                    <div class="contact-box-footer">
+                        <div class="m-t-xs btn-group">
+                            @if (item.Status)
+                            {
+                                <a class="btn btn-primary btn-outline" href="@Url.Action("List", new {id = item.Id})"><i class="fa fa-paper-plane"></i> 开始投票 </a>
+                            }
+                            else
+                            {
+                                <button class="btn btn-default" disabled="disabled"><i class="fa fa-frown-o"></i> 投票结束 </button>
+                            }
+
+                        </div>
+                        <p class="m-t-xs">有效期：@item.StartDate.ToString("yyyy-MM-dd") 至 @item.EndDate.ToString("yyyy-MM-dd")</p>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

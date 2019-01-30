@@ -121,6 +121,9 @@
     <Compile Include="Mapping\Resource\AdPositionMap.cs" />
     <Compile Include="Mapping\Resource\MediaDevelopMap.cs" />
     <Compile Include="Mapping\Resource\MediaTypeMap.cs" />
+    <Compile Include="Mapping\Vote\VoteItemMap.cs" />
+    <Compile Include="Mapping\Vote\VoteItemRecordMap.cs" />
+    <Compile Include="Mapping\Vote\VoteThemeMap.cs" />
     <Compile Include="Mapping\Wages\AttendanceDetailMap.cs" />
     <Compile Include="Mapping\Wages\SalaryDetailMap.cs" />
     <Compile Include="Mapping\Wages\QuartersMap.cs" />
@@ -394,6 +397,14 @@
     <Compile Include="Migrations\201812190414530_UserProfile1.Designer.cs">
       <DependentUpon>201812190414530_UserProfile1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901300417030_VoteUpdate.cs" />
+    <Compile Include="Migrations\201901300417030_VoteUpdate.Designer.cs">
+      <DependentUpon>201901300417030_VoteUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901300740129_VoteUpdate1.cs" />
+    <Compile Include="Migrations\201901300740129_VoteUpdate1.Designer.cs">
+      <DependentUpon>201901300740129_VoteUpdate1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -605,6 +616,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201812190414530_UserProfile1.resx">
       <DependentUpon>201812190414530_UserProfile1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901300417030_VoteUpdate.resx">
+      <DependentUpon>201901300417030_VoteUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901300740129_VoteUpdate1.resx">
+      <DependentUpon>201901300740129_VoteUpdate1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

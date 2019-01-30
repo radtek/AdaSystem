@@ -1,0 +1,122 @@
+﻿
+@using System.Web.Optimization
+@model Ada.Core.ViewModel.Vote.VoteItemView
+@{
+    ViewBag.Title = "投票选项";
+}
+@Html.Partial("Bread")
+<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <table id="table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+<div id="toolbar" class="btn-group">
+    <a class="btn btn-primary btn-outline" href="@Url.Action("Add")">
+        <i class="fa fa-plus"></i> 新增选项
+    </a>
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/laddaStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/ladda")
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            var table = new TableInit();
+            table.Init();
+        });
+        var TableInit = function() {
+            var obj = new Object();
+            obj.Init = function() {
+                $('#table').bootstrapTable({
+                    classes: "table table-no-bordered",
+                    url: '@Url.Action("GetList")', //请求后台的URL（*）
+                    toolbar: '#toolbar', //工具按钮用哪个容器
+                    striped: true, //是否显示行间隔色
+                    cache: false, //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    pagination: true, //是否显示分页（*）
+                    sortable: true, //是否启用排序
+                    sortOrder: "desc", //排序方式
+                    sortName: "Id",
+                    sidePagination: "server", //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1, //初始化加载第一页，默认第一页
+                    pageSize: 50, //每页的记录行数（*）
+                    search: true, //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                    strictSearch: true, //设置为 true启用 全匹配搜索，否则为模糊搜索
+                    showColumns: true, //是否显示所有的列
+                    showRefresh: true, //是否显示刷新按钮
+                    minimumCountColumns: 2, //最少允许的列数
+                    clickToSelect: true, //是否启用点击选中行
+                    singleSelect: true, //设置True 将禁止多选
+                    uniqueId: "Id", //每一行的唯一标识，一般为主键列
+                    showToggle: true, //是否显示详细视图和列表视图的切换按钮
+                    cardView: false, //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
+                    //detailView: true,                   //设置为 true 可以显示详细页面模式。
+                    //detailFormatter: detailFormatter,
+                    mobileResponsive: true,
+                    formatSearch: function() {
+                        return "@Html.DisplayNameFor(d => d.Title)";
+                    },
+                    columns: [
+                        {
+                            field: 'VoteThemeTitle',
+                            title: '@Html.DisplayNameFor(d => d.VoteThemeTitle)',
+                            align: "center", valign: "middle"
+                        },
+                        {
+                            field: 'Title',
+                            title: '@Html.DisplayNameFor(d => d.Title)',
+                            align: "center", valign: "middle"
+                        },
+                        
+                        {
+                            field: 'TotalCount',
+                            title: '@Html.DisplayNameFor(d => d.TotalCount)',
+                            align: "center", valign: "middle"
+                        },
+                        {
+                            field: 'Taxis',
+                            title: '@Html.DisplayNameFor(d => d.Taxis)',
+                            align: "center", valign: "middle"
+                        },
+                        {
+                            field: 'Id',
+                            title: '操作',
+                            align: "center",
+                            valign: "middle",
+                            formatter: function(value, row) {
+                                return "<div class='btn-group'>" +
+                                   
+                                    "<a class='btn btn-success btn-outline btn-xs' href='@Url.Action("Update")?id=" + value + "'><i class='fa fa-pencil'></i> 编辑</a> " +
+                                    "<button class='btn btn-danger btn-outline btn-xs' onclick=\"deleteData('@Url.Action("Delete")','" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button></div>";
+                            }
+                        }
+                    ]
+                });
+            };
+            return obj;
+        };
+
+    </script>
+}
+
+
+
+
+
+
+
+
+
