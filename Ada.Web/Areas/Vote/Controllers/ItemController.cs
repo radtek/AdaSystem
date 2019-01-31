@@ -14,10 +14,11 @@ namespace Vote.Controllers
     public class ItemController : BaseController
     {
         private readonly IVoteItemService _service;
-
-        public ItemController(IVoteItemService service)
+        private readonly IVoteRecordService _voteRecordService;
+        public ItemController(IVoteItemService service, IVoteRecordService voteRecordService)
         {
             _service = service;
+            _voteRecordService = voteRecordService;
         }
         public ActionResult Index()
         {
@@ -35,6 +36,7 @@ namespace Vote.Controllers
                     Title = d.Title,
                     Taxis = d.Taxis,
                     TotalCount = d.TotalCount,
+                    VoteCount = d.VoteItemRecords.Count,
                     VoteThemeTitle = d.VoteTheme.Title
 
                 })
@@ -115,6 +117,36 @@ namespace Vote.Controllers
         {
             var entity = _service.GetById(id);
             _service.Delete(entity);
+            return Json(new { State = 1, Msg = "删除成功" });
+        }
+        public ActionResult Record(string id)
+        {
+            return View(new VoteItemRecordView(){VoteItemId = id});
+        }
+        public ActionResult GetRecordList(VoteItemRecordView viewModel)
+        {
+            var result = _voteRecordService.LoadEntitiesFilter(viewModel).ToList();
+            return Json(new
+            {
+                viewModel.total,
+                rows = result.Select(d => new VoteItemRecordView
+                {
+                    Id = d.Id,
+                    Name = d.Name,
+                    VoteItemTitle = d.VoteItem.Title,
+                    Score = d.Score,
+                    Date = d.Date
+
+                })
+            }, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public ActionResult DeleteRecord(string id)
+        {
+
+            var entity = _voteRecordService.GetById(id);
+            
+            _voteRecordService.Delete(entity);
             return Json(new { State = 1, Msg = "删除成功" });
         }
     }

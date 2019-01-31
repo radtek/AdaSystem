@@ -106,7 +106,6 @@
   <ItemGroup>
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\LaunchController.cs" />
-    <Compile Include="Controllers\RecordController.cs" />
     <Compile Include="Controllers\ThemeController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VoteAreaRegistration.cs" />
@@ -117,7 +116,6 @@
     <Content Include="Views\Theme\Index.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Item\Index.cshtml" />
-    <Content Include="Views\Record\Index.cshtml" />
     <Content Include="Views\Theme\Add.cshtml" />
     <Content Include="Views\Theme\Update.cshtml" />
     <Content Include="Views\Theme\Edit.cshtml" />
@@ -127,6 +125,7 @@
     <Content Include="Views\Launch\Index.cshtml" />
     <Content Include="Views\Launch\List.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Views\Item\Record.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

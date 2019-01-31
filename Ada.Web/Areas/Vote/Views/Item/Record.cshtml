@@ -1,8 +1,9 @@
 ﻿
 @using System.Web.Optimization
-@model Ada.Core.ViewModel.Vote.VoteItemView
+@model Ada.Core.ViewModel.Vote.VoteItemRecordView
 @{
-    ViewBag.Title = "投票选项";
+    ViewBag.Title = "投票记录";
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "投票选项", Value = Url.Action("Index") } };
 }
 @Html.Partial("Bread")
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
@@ -18,11 +19,10 @@
 </div>
 @Html.AntiForgeryToken()
 <div id="toolbar" class="btn-group">
-    <a class="btn btn-primary btn-outline" href="@Url.Action("Add")">
-        <i class="fa fa-plus"></i> 新增选项
+    <a class="btn btn-primary btn-outline" href="javascript:goBackOrClose();">
+        <i class="fa fa-reply"></i> 返回
     </a>
 </div>
-
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
 }
@@ -40,7 +40,7 @@
             obj.Init = function() {
                 $('#table').bootstrapTable({
                     classes: "table table-no-bordered",
-                    url: '@Url.Action("GetList")', //请求后台的URL（*）
+                    url: '@Url.Action("GetRecordList")', //请求后台的URL（*）
                     toolbar: '#toolbar', //工具按钮用哪个容器
                     striped: true, //是否显示行间隔色
                     cache: false, //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
@@ -64,36 +64,37 @@
                     //detailView: true,                   //设置为 true 可以显示详细页面模式。
                     //detailFormatter: detailFormatter,
                     mobileResponsive: true,
+                    queryParams: function(parameters) {
+                        parameters.VoteItemId = "@Model.VoteItemId";
+                        return searchFrm.queryParams(parameters);
+                    },
                     formatSearch: function() {
-                        return "@Html.DisplayNameFor(d => d.Title)";
+                        return "投票人|投票选项";
                     },
                     columns: [
                         {
-                            field: 'VoteThemeTitle',
-                            title: '@Html.DisplayNameFor(d => d.VoteThemeTitle)',
+                            field: 'VoteItemTitle',
+                            title: '@Html.DisplayNameFor(d => d.VoteItemTitle)',
                             align: "center", valign: "middle"
                         },
                         {
-                            field: 'Title',
-                            title: '@Html.DisplayNameFor(d => d.Title)',
+                            field: 'Name',
+                            title: '@Html.DisplayNameFor(d => d.Name)',
                             align: "center", valign: "middle"
                         },
-                        
+
                         {
-                            field: 'TotalCount',
-                            title: '平均得分',
+                            field: 'Score',
+                            title: '@Html.DisplayNameFor(d => d.Score)',
+                            align: "center", valign: "middle"
+                        },
+                        {
+                            field: 'Date',
+                            title: '@Html.DisplayNameFor(d => d.Date)',
                             align: "center", valign: "middle",
-                            formatter: function (value,row) {
-                                if (row.VoteCount) {
-                                    return (value / row.VoteCount).toFixed(2);
-                                }
-                                return value;
+                            formatter: function(value) {
+                                return  moment(value).format("YYYY-MM-DD");
                             }
-                        },
-                        {
-                            field: 'VoteCount',
-                            title: '@Html.DisplayNameFor(d => d.VoteCount)',
-                            align: "center", valign: "middle"
                         },
                         {
                             field: 'Id',
@@ -102,9 +103,7 @@
                             valign: "middle",
                             formatter: function(value, row) {
                                 return "<div class='btn-group'>" +
-                                    "<a class='btn btn-info btn-outline btn-xs' href='@Url.Action("Record")?id=" + value + "' target='_blank'><i class='fa fa-search'></i> 记录</a> " +
-                                    "<a class='btn btn-success btn-outline btn-xs' href='@Url.Action("Update")?id=" + value + "'><i class='fa fa-pencil'></i> 编辑</a> " +
-                                    "<button class='btn btn-danger btn-outline btn-xs' onclick=\"deleteData('@Url.Action("Delete")','" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button></div>";
+                                    "<button class='btn btn-danger btn-outline btn-xs' onclick=\"deleteData('@Url.Action("DeleteRecord")','" + value + "');\"><i class='fa fa-trash-o'></i> 删除</button></div>";
                             }
                         }
                     ]
@@ -115,6 +114,7 @@
 
     </script>
 }
+
 
 
 

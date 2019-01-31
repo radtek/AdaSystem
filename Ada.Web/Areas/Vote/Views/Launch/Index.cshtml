@@ -13,17 +13,25 @@
                     <a href="javascript:;">
                         <i class="fa fa-trophy fa-4x"></i>
                         <h2 class="m-b-xs"><strong>@item.Title</strong></h2>
-                        <div class="font-bold">@item.Rule</div>                    
+                        <div class="font-bold">@item.Rule</div>
                     </a>
                     <div class="contact-box-footer">
                         <div class="m-t-xs btn-group">
                             @if (item.Status)
                             {
-                                <a class="btn btn-primary btn-outline" href="@Url.Action("List", new {id = item.Id})"><i class="fa fa-paper-plane"></i> 开始投票 </a>
+                                if (DateTime.Now > item.EndDate || DateTime.Now < item.StartDate)
+                                {
+                                    <button class="btn btn-default" disabled="disabled"><i class="fa fa-frown-o"></i> 投票已结束或未开始 </button>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-primary btn-outline" href="@Url.Action("List", new {id = item.Id})"><i class="fa fa-paper-plane"></i> 开始投票 </a>
+                                }
+
                             }
                             else
                             {
-                                <button class="btn btn-default" disabled="disabled"><i class="fa fa-frown-o"></i> 投票结束 </button>
+                                <button class="btn btn-default" disabled="disabled"><i class="fa fa-frown-o"></i> 投票未开启 </button>
                             }
 
                         </div>

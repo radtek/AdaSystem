@@ -56,10 +56,15 @@ namespace Ada.Core.ViewModel.Vote
         [Display(Name = "开启状态")]
         public bool Status { get; set; }
         /// <summary>
-        /// 投票数
+        /// 投票总数
         /// </summary>
-        [Display(Name = "投票数")]
+        [Display(Name = "投票总数")]
         public int TotalCount { get; set; }
+        /// <summary>
+        /// 投票次数
+        /// </summary>
+        [Display(Name = "投票次数")]
+        public int VoteCount { get; set; }
         /// <summary>
         /// 排序
         /// </summary>

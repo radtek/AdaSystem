@@ -54,5 +54,15 @@ namespace Ada.Core.ViewModel.Vote
         /// </summary>
         [Display(Name = "分数")]
         public int Score { get; set; }
+        /// <summary>
+        /// 投票选项
+        /// </summary>
+        [Display(Name = "投票选项")]
+        public string VoteItemId { get; set; }
+        /// <summary>
+        /// 投票选项
+        /// </summary>
+        [Display(Name = "投票选项")]
+        public string VoteItemTitle { get; set; }
     }
 }
