@@ -12,6 +12,7 @@
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var status = fieldService.GetFieldsByKey("Status").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var yesnos = fieldService.GetFieldsByKey("YesOrNo").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var sex = fieldService.GetFieldsByKey("Sex").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
 @Html.Partial("Bread")
 
@@ -73,6 +74,12 @@
                     <div class="form-group">
                         @Html.LabelFor(d => d.Areas, Html.DisplayNameFor(d => d.Areas).ToString(), new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.Areas, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Sex, Html.DisplayNameFor(d => d.Sex).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.Sex, sex, "请选择", new { @class = "form-control" })
                     </div>
                 </div>
                 <div class="col-sm-2">
