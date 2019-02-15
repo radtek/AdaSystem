@@ -11,6 +11,7 @@ using Ada.Framework.Caching;
 using Ada.Services.Admin;
 using Ada.Services.Cache;
 using Ada.Services.Customer;
+using log4net;
 using Senparc.Weixin;
 using Senparc.Weixin.MP.AdvancedAPIs;
 using Senparc.Weixin.Open.QRConnect;
@@ -24,6 +25,7 @@ namespace WeiXin.Controllers
         private readonly IManagerService _service;
         private readonly ICacheService _cacheService;
         private readonly ISignals _signals;
+        public ILog Log { get; set; }
 
         public OAuth2Controller(IRepository<WeiXinAccount> repository,
             IManagerService service, 
@@ -120,12 +122,13 @@ namespace WeiXin.Controllers
             {
                 return Content("错误：" + result.errmsg);
             }
-
+            
             var user = _linkManService.GetUserByOpenId(result.unionid);
             if (user == null)
             {
                 Session["CurrentWeiXinOpenVIPUnionid"] = result.unionid;
                 //绑定页面
+                Log.Info("微信绑定：" + result.unionid);
                 return RedirectToAction("Binding", "Login", new { area = "" });
             }
             LinkManView viewModel = new LinkManView();
