@@ -71,11 +71,17 @@ namespace Admin.Controllers
                     AddDate = d.AddedDate?.ToString("yyyy年MM月dd日") ?? "",
                     Roles = d.Roles.Count > 0 ? string.Join(",", d.Roles.Select(r => r.RoleName)) : "",
                     Organizations = GetOrganization(d),
+                    LoginCount = d.ManagerLoginLogs.Where(l=>l.LoginTime>=DateTime.Now.Date&&l.LoginTime<DateTime.Now.AddDays(1).Date).Select(l=>l.IpAddress).Distinct().Count(),
                     LastLoginDate = d.ManagerLoginLogs.OrderByDescending(l => l.LoginTime).FirstOrDefault() == null ? "" : Utils.ToRead(d.ManagerLoginLogs.OrderByDescending(l => l.LoginTime).FirstOrDefault().LoginTime)
                 })
             }, JsonRequestBehavior.AllowGet);
         }
-
+        public ActionResult LoginDetail(string id)
+        {
+            var manger = _managerRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            
+            return PartialView("LoginDetail", manger);
+        }
         private string GetOrganization(Manager manager)
         {
             List<string> names = new List<string>();

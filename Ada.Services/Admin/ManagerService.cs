@@ -54,7 +54,7 @@ namespace Ada.Services.Admin
             }
             if (viewModel.Status != null)
             {
-                allList = allList.Where(d => d.Status == viewModel.Status);
+                allList = viewModel.Status==0 ? allList.Where(d => d.Status == viewModel.Status||d.Status==null) : allList.Where(d => d.Status == viewModel.Status);
             }
 
             viewModel.total = allList.Count();

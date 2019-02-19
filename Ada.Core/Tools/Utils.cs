@@ -66,7 +66,30 @@ namespace Ada.Core.Tools
             return userIP;
 
         }
-
+        public static string GetClientByUserAgent(string userAgent)
+        {
+            var client = "未知设备";
+            if (!string.IsNullOrWhiteSpace(userAgent))
+            {
+                if (userAgent.Contains("iPhone"))
+                {
+                    client = "苹果手机";
+                }
+                if (userAgent.Contains("Windows"))
+                {
+                    client = "微软系统";
+                }
+                if (userAgent.Contains("Macintosh"))
+                {
+                    client = "苹果系统";
+                }
+                if (userAgent.Contains("Android"))
+                {
+                    client = "安卓手机";
+                }
+            }
+            return client;
+        }
         public static string GetIpByBaidu()
         {
             string currentIp = "";
@@ -83,6 +106,24 @@ namespace Ada.Core.Tools
             catch
             {
                 return currentIp;
+            }
+        }
+        public static string GetAreaByIp(string ip)
+        {
+            string area = "未知";
+            try
+            {
+                var htmlContent = HttpUtility.Get("https://www.baidu.com/s?wd="+ip);
+                var result = Regex.Match(htmlContent, @"IP地址:.+</span>(.+)\t");
+                if (result.Success)
+                {
+                    area = result.Groups[1].Value;
+                }
+                return area;
+            }
+            catch
+            {
+                return area;
             }
         }
         #endregion

@@ -48,7 +48,7 @@ namespace WorkFlow.Controllers
         {
             var record = _service.GetRecordById(id);
             ViewBag.FlowTos = _managerRepository.LoadEntities(d => d.IsDelete == false && d.Status == Consts.StateNormal && d.Roles.Any(r => r.DataRange > 0)).ToList()
-                .Select(d => new SelectListItem() { Text = string.Join(",", d.Organizations.Select(o => o.OrganizationName)) + " — " + d.UserName, Value = d.Id }).OrderByDescending(d => d.Text).ToList();
+                .Select(d => new SelectListItem() { Text = string.Join(",", d.Organizations.Where(g=>g.ParentId!=null).Select(o => o.OrganizationName)) + " — " + d.UserName, Value = d.Id }).OrderByDescending(d => d.Text).ToList();
 
             return View(record);
         }

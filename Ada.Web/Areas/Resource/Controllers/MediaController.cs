@@ -239,11 +239,11 @@ namespace Resource.Controllers
                         jo.Add("地区", media.Area);
                         jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
                         Price(media, jo, priceTypeList);
-                        //jo.Add("等级", media.AuthenticateType);
                         jo.Add("收藏数", media.TransmitNum);
                         jo.Add("点赞数", media.AvgReadNum);
                         jo.Add("评论数", media.CommentNum);
                         jo.Add("赞与收藏", media.LikesNum);
+                        jo.Add("等级", media.AuthenticateType);
                         //jo.Add("关注数", media.FriendNum);
                         //jo.Add("笔记总数", media.PostNum);
                         jo.Add("媒体说明", media.Content);

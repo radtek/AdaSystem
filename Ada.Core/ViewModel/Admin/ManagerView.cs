@@ -175,5 +175,10 @@ namespace Ada.Core.ViewModel.Admin
         /// </summary>
         [Display(Name = "是否五险一金")]
         public bool? IsInsurance { get; set; }
+        /// <summary>
+        /// 登陆次数
+        /// </summary>
+        [Display(Name = "登陆次数")]
+        public int? LoginCount { get; set; }
     }
 }

@@ -22,12 +22,21 @@
 </div>
 
 <div id="toolbar" class="btn-group">
-    <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
-        <i class="fa fa-plus"></i> 新增用户
-    </a>
-    <a class="btn btn-warning btn-outline" href="javascript:exportFile();">
-        <i class="fa fa-download"></i> 导出数据
-    </a>
+    
+    <div class="form-inline" role="form">
+        <div class="form-group">
+            <select name="Status" class="form-control" id="Status">
+                <option value="1">正常</option>
+                <option value="0">锁定</option>
+            </select>
+            <a id="btn_add" class="btn btn-primary btn-outline" href="@Url.Action("Add")">
+                <i class="fa fa-plus"></i> 新增用户
+            </a>
+            <a class="btn btn-warning btn-outline" href="javascript:exportFile();">
+                <i class="fa fa-download"></i> 导出数据
+            </a>
+        </div>
+    </div>
 </div>
 
 
@@ -47,7 +56,9 @@
             //1.初始化Table
             var oTable = new TableInit();
             oTable.Init();
-
+            $("#Status").change(function () {
+                $('#table').bootstrapTable('refresh');
+            });
         });
 
 
@@ -84,6 +95,10 @@
                     formatSearch: function() {
                         return "@Html.DisplayNameFor(d => d.UserName)";
                     },
+                    queryParams: function (parameters) {
+                        parameters.Status = $("#Status").val();
+                        return searchFrm.queryParams(parameters);
+                    },
                     columns: [
                         {
                             field: 'UserName',
@@ -102,11 +117,11 @@
                             title: '@Html.DisplayNameFor(d=>d.UserName)',
                             align: "center", valign: "middle"
                         },
-                        {
+                        @*{
                             field: 'RealName',
                             title: '@Html.DisplayNameFor(d=>d.RealName)',
                             align: "center", valign: "middle"
-                        },
+                        },*@
                         {
                             field: 'Phone',
                             title: '@Html.DisplayNameFor(d=>d.Phone)',
@@ -132,6 +147,22 @@
                             field: 'LastLoginDate',
                             title: '@Html.DisplayNameFor(d=>d.LastLoginDate)',
                             align: "center", valign: "middle"
+                        },
+                        {
+                            field: 'LoginCount',
+                            title: '@Html.DisplayNameFor(d=>d.LoginCount)',
+                            align: "center", valign: "middle", formatter: function (value, row) {
+                                if (value>2) {
+                                    return "<a class='btn btn-danger btn-xs' href='javascript:;' onclick=\"initDetails('" + row.Id + "');\");'>" + value + "</a>";
+                                }
+                                if (value>1) {
+                                    return "<a class='btn btn-warning btn-xs' href='javascript:;' onclick=\"initDetails('" + row.Id + "');\");'>" + value + "</a>";
+                                }
+                                if (value>0) {
+                                    return "<a class='btn btn-info btn-xs' href='javascript:;' onclick=\"initDetails('" + row.Id + "');\");'>" + value + "</a>";
+                                }
+                                return "<a class='btn btn-default btn-xs' href='javascript:;'>" + value + "</a>";
+                            }
                         },
                         {
                             field: 'AddDate',
@@ -210,8 +241,8 @@
                 cancelButtonText: "取消",
                 closeOnConfirm: false,
                 showLoaderOnConfirm: true,
-                animation: "slide-from-top", 
-                inputPlaceholder: "请输入正确的日期格式，如：2018-01-31" 
+                animation: "slide-from-top",
+                inputPlaceholder: "请输入正确的日期格式，如：2018-01-31"
             }, function (inputValue) {
                 if (inputValue === false) {
                     return;
@@ -243,6 +274,13 @@
                 });
             });
 
+
+        }
+        function initDetails(id) {
+            $("#modalView").load("@Url.Action("LoginDetail")?id="+id,
+                function () {
+                    $('#modalView .modal').modal('show');
+                });
 
         }
     </script>
