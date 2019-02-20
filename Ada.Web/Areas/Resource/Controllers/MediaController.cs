@@ -225,7 +225,7 @@ namespace Resource.Controllers
                         jo.Add("媒体链接", media.MediaLink);
                         jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
                         jo.Add("性别", media.Sex);
-                        //jo.Add("地区", media.Area);
+                        jo.Add("地区", media.Area);
                         Price(media, jo, priceTypeList);
                         //jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
                         jo.Add("平均转发数", media.TransmitNum);

@@ -1112,7 +1112,7 @@ namespace Ada.Services.API
                         if (mediaInfo != null)
                         {
                             media.MediaName = Utils.FilterEmoji(mediaInfo.screenName);
-                            media.Abstract = mediaInfo.douyinID;
+                            media.Abstract = string.IsNullOrWhiteSpace(mediaInfo.douyinID)?mediaInfo.douyinID2: mediaInfo.douyinID;
                             media.Content = mediaInfo.biography;
                             media.FansNum = mediaInfo.fansCount;
                             media.PostNum = mediaInfo.videoCount;
