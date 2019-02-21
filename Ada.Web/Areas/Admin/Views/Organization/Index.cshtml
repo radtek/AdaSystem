@@ -18,7 +18,7 @@ if (list.Count > 0)
         <ul>
             @foreach (var item in list)
             {
-                <li class="jstree-open">
+                <li class="jstree-open" id="@item.Id">
                     <span>@item.Text</span>
                     <div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-link btn-xs dropdown-toggle"><span class="caret"></span></button>
@@ -74,7 +74,10 @@ if (list.Count > 0)
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <p>选择一个机构组织</p>
+                    <div class="row" id="managers">
+                        <p>选择一个机构组织</p>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -138,6 +141,34 @@ if (list.Count > 0)
                         'icon': 'fa fa-folder'
                     }
                 }
+            }).on("activate_node.jstree", function (obj, e) {
+                // 处理代码
+                // 获取当前节点
+                var currentNode = e.node;
+                $.ajax({
+                    type: "get",
+                    url: "@Url.Action("GetManagersByOrganizationId")",
+                    data: { id: currentNode.id},
+                    success: function (data) {
+                        $("#managers").empty();
+                        if (data.length>0) {
+                            $.each(data,
+                                function(k, v) {
+                                    $("#managers").append('<div class="m-t-xs col-xs-4 col-md-2"><a class="btn btn-info btn-sm btn-outline" href="@Url.Action("Update","Manager")/' + v.Id +'" target="_blank">' + v.Name +'</a></div>');
+                                }); 
+                        } else {
+                            $("#managers").append('<p>暂无成员</p>');
+                        }
+                        
+                    },
+                    error: function () {
+                        swal("操作失败", "系统错误", "error");
+                    },
+                    complete: function () {
+
+                    }
+
+                });
             });
 
         });

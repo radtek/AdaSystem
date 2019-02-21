@@ -319,6 +319,8 @@ namespace Ada.Services.Admin
             var manager = _managerRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
             manager.UnionId = null;
             manager.OpenId = null;
+            manager.Status = null;
+            
             _dbContext.SaveChanges();
         }
         public IEnumerable<ManagerView> GetByOrganizationName(string name)

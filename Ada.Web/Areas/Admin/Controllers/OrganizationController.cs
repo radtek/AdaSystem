@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
+using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
 using Ada.Core.ViewModel;
 using Ada.Core.ViewModel.Admin;
@@ -16,11 +17,14 @@ namespace Admin.Controllers
     {
         private readonly IOrganizationService _organizationService;
         private readonly IRepository<Organization> _repository;
+        private readonly IRepository<Manager> _managerRepository;
         public OrganizationController(IOrganizationService organizationService,
-            IRepository<Organization> repository)
+            IRepository<Organization> repository,
+            IRepository<Manager> managerRepository)
         {
             _organizationService = organizationService;
             _repository = repository;
+            _managerRepository = managerRepository;
         }
         public ActionResult Index()
         {
@@ -55,6 +59,12 @@ namespace Admin.Controllers
                 Taxis = entity.Taxis
 
             }, JsonRequestBehavior.AllowGet);
+        }
+        [AllowAnonymous]
+        public ActionResult GetManagersByOrganizationId(string id)
+        {
+            var managers = _managerRepository.LoadEntities(d => d.Organizations.Any(o=>o.TreePath.Contains(id))&&d.IsDelete==false&&d.Status==Consts.StateNormal).Select(d=>new{Name=d.UserName,d.Id}).ToList();
+            return Json(managers, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
         
