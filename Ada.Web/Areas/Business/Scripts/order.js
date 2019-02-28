@@ -96,7 +96,7 @@ function initData() {
         toolbar: '#toolbar',
         classes: "table table-no-bordered",
         clickToSelect: true,
-        uniqueId: "Id", 
+        uniqueId: "Id",
         columns: [
             {
                 checkbox: true,
@@ -109,17 +109,17 @@ function initData() {
                 //}
             },
             {
-                field: 'Number',  
+                field: 'Number',
                 title: '序号',
                 formatter: function (value, row, index) {
                     return index + 1;
-                }  
-            }, 
+                }
+            },
             {
                 field: 'MediaTypeName',
                 title: '媒体类型',
                 align: "center", valign: "middle",
-                sortable:true,
+                sortable: true,
                 footerFormatter: function () {
                     return "合计";
                 }
@@ -127,7 +127,7 @@ function initData() {
             {
                 field: 'MediaName',
                 title: '媒体名称',
-                align: "center", valign: "middle", sortable:true
+                align: "center", valign: "middle", sortable: true
 
             },
             {
@@ -183,7 +183,7 @@ function initData() {
                         if (!reg.test(value)) {
                             return '请输入有效的日期格式（如：2018-01-01）';
                         }
-                        
+
                     }
                 }
             },
@@ -249,9 +249,9 @@ function initData() {
                 title: '销售状态',
                 sortable: true,
                 align: "center", valign: "middle",
-                formatter: function (value, row,index) {
+                formatter: function (value, row, index) {
                     if (row.PurchaseStatus == 3 && value == 1) {
-                        return "<button type='button' class='btn btn-warning btn-xs' onclick=\"confirmOrder('" + row.Id+"')\"><i class='fa fa-check'></i> 确认</button>";
+                        return "<button type='button' class='btn btn-warning btn-xs' onclick=\"confirmOrder('" + row.Id + "')\"><i class='fa fa-check'></i> 确认</button>";
                     } else {
                         return formatter.businessStatus(row.Status);
                     }
@@ -265,7 +265,7 @@ function initData() {
                 align: "center", valign: "middle",
                 formatter: function (value, row, index) {
                     if (row.Status == 2) {
-                        return "<button type='button' class='btn btn-danger btn-xs' onclick=\"showEditMoney('"+value+"');\"><i class='fa fa-pencil'></i> 申请改价</button>";
+                        return "<button type='button' class='btn btn-danger btn-xs' onclick=\"showEditMoney('" + value + "');\"><i class='fa fa-pencil'></i> 申请改价</button>";
                     } else {
                         return "";
                     }
@@ -326,19 +326,19 @@ function initData() {
 
 function confirmOrder(id) {
     var row = $table.bootstrapTable('getRowByUniqueId', id);
-    if (row.SellMoney <= row.PurchaseMoney) {
+    if (row.SellMoney <= row.PurchaseMoney && row.CallIndex != "brush") {
         swal({
-                title: "警告",
-                text: "销售价格低于采购成本，需审批。",
-                type: "input",
-                showCancelButton: true,
-                closeOnConfirm: false,
-                confirmButtonText: "申请",
-                cancelButtonText: "取消",
-                animation: "slide-from-top",
-                inputPlaceholder: "填写申请审批说明",
-                showLoaderOnConfirm: true
-            },
+            title: "警告",
+            text: "销售价格低于采购成本，需审批。",
+            type: "input",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            confirmButtonText: "申请",
+            cancelButtonText: "取消",
+            animation: "slide-from-top",
+            inputPlaceholder: "填写申请审批说明",
+            showLoaderOnConfirm: true
+        },
             function (inputValue) {
                 if (inputValue === false) return false;
                 if (inputValue === "") {
@@ -350,11 +350,11 @@ function confirmOrder(id) {
             });
     } else {
         subConfirm(row);
-        
+
     }
-    
+
 }
- 
+
 function showMedia(url) {
     $("#modalView").load(url,
         function () {
@@ -463,7 +463,7 @@ function initMediaData($obj, isrefresh) {
         function (k, v) {
             $positionSelect.append('<option value="' + v + '">' + v + '</option>');
         });
-    
+
     if (isrefresh) {
         $mediatable.bootstrapTable('refresh');
     }

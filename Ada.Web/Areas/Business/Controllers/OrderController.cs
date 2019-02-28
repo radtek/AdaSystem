@@ -267,6 +267,7 @@ namespace Business.Controllers
             {
                 d.Id,
                 d.MediaTypeName,
+                d.MediaPrice.Media.MediaType.CallIndex,
                 d.MediaName,
                 d.AdPositionName,
                 d.MediaTitle,
@@ -486,7 +487,7 @@ namespace Business.Controllers
                     continue;
                 if (entity.Status == Consts.StateOK)
                     continue;
-                if (!(entity.SellMoney > purchase.PurchaseMoney)) continue;
+                if (!(entity.SellMoney > purchase.PurchaseMoney || entity.MediaPrice.Media.MediaType.CallIndex == "brush")) continue;
                 entity.Status = Consts.StateOK;//订单已完成
                 entity.AuditStatus = Consts.StateNormal;//审核通过
                 entity.SellMoney = businessOrderDetail.SellMoney;
@@ -552,7 +553,7 @@ namespace Business.Controllers
             entity.VerificationMoney = viewModel.SellMoney;
             entity.Money = viewModel.Money;
             entity.AuditRemark = viewModel.Remark;
-            if (entity.SellMoney > purchase.PurchaseMoney)
+            if (entity.SellMoney > purchase.PurchaseMoney||entity.MediaPrice.Media.MediaType.CallIndex=="brush")
             {
                 entity.Status = Consts.StateOK;//订单已完成
                 entity.AuditStatus = Consts.StateNormal;//审核通过
@@ -1119,6 +1120,10 @@ namespace Business.Controllers
         public ActionResult Recommend(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(entity.BusinessType))
+            {
+                return Json(new { State = 0, Msg = "请先完善销售类型!" });
+            }
             string msg = "分享成功";
             if (entity.IsRecommend == true)
             {

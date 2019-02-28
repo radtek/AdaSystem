@@ -253,12 +253,10 @@ function initChangePwd(url, token) {
                 $("#modalView form").validate({
                     submitHandler: function (form) {
                         var $form = $(form),
-                            data = $form.serialize(); //序列化表单数据
+                            data = $form.serializeObject(); //序列化表单数据
+                        data.__RequestVerificationToken = token;
                         $.ajax({
                             type: "post",
-                            headers: {
-                                '__RequestVerificationToken': token
-                            },
                             url: form.action,
                             data: data,
                             success: function (res) {

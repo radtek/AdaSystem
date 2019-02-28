@@ -27,6 +27,11 @@
         <div class="form-group">
             @Html.DropDownListFor(d => d.BusinessType, businessTypes, "销售类型", new { @class = "form-control" })
         </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-primary btn-outline" onclick="exportFile();">
+                <i class="fa fa-download"></i> 导出数据
+            </button>
+        </div>
     </div>
 </div>
 
@@ -36,7 +41,7 @@
 
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
-    <script type="text/javascript">
+<script type="text/javascript">
 
         $(document).ready(function () {
             var table = new TableInit();
@@ -44,7 +49,7 @@
             $("#BusinessType").change(function() {
                 $('#table').bootstrapTable('refresh');
             });
-            
+
         });
         var TableInit = function() {
             var obj = new Object();
@@ -72,8 +77,6 @@
                 uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
                 showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
                 cardView: false,                    //设置为 true将显示card视图，适用于移动设备。否则为table试图，适用于pc
-                //detailView: true,                   //设置为 true 可以显示详细页面模式。
-                //detailFormatter: detailFormatter,
                 formatSearch: function() {
                     return "摘要|经办人";
                 },
@@ -83,7 +86,7 @@
                     return searchFrm.queryParams(parameters);
                 },
                 columns: [
-                   
+
 
                     {
                         field: 'BusinessType',
@@ -96,7 +99,7 @@
                         align: "center", valign: "middle",
                     }
                     ,
-                   
+
                     {
                         field: 'Transactor',
                         title: '@Html.DisplayNameFor(d=>d.Transactor)',
@@ -111,7 +114,7 @@
                           return  moment(value).format("YYYY-MM-DD");
                         }
                     },
-                    
+
                     {
                         field: 'Id',
                         align: "center", valign: "middle",
@@ -129,7 +132,7 @@
 
             return obj;
         };
-     
+
         function initDetails(id) {
             $("#modalView").load("@Url.Action("Detail")?id="+id,
                 function () {
@@ -142,8 +145,44 @@
                 });
 
         }
-     
-    </script>
+        function exportFile() {
+            swal({
+                title: "您确定吗?",
+                text: "确认要导出数据吗?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true
+            }, function () {
+              var options=  $('#table').bootstrapTable('getOptions');
+                var json = { BusinessType: $("#BusinessType").val(), search: options.searchText};
+                $.ajax({
+                    type: "post",
+                    url: "@Url.Action("Export")",
+                    data: addAntiForgeryToken(json),
+                    success: function (data) {
+                        if (data.State == 1) {
+                            swal({
+                                title: "导出成功",
+                                text: "正在下载中...",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                            window.location.href = "/Resource/Media/Download?file=" + data.Msg;
+                        } else {
+                            swal("消息", data.Msg, "warning");
+                        }
+                    },
+                    error: function () {
+                        swal("错误", "系统错误", "error");
+                    }
+                });
+        });
+        }
+</script>
 }
 
 
