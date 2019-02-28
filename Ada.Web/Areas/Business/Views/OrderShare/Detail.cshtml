@@ -1,0 +1,71 @@
+﻿
+@model IEnumerable<Ada.Core.ViewModel.Business.BusinessOrderDetailView>
+<div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">项目详情</h4>
+            </div>
+            <div class="modal-body">
+                @if (Model.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+
+                                    <th>
+                                        @Html.DisplayNameFor(d => d.MediaName)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(d => d.AdPositionName)
+                                    </th>
+                                    <th>
+                                        出刊信息
+                                    </th>
+
+                                    <th>
+                                        @Html.DisplayNameFor(d => d.MediaByPurchase)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>[@item.MediaTypeName] @item.MediaName</td>
+                                        <td>@item.AdPositionName</td>
+                                        <td>
+
+                                            @if (!string.IsNullOrWhiteSpace(item.PublishLink))
+                                            {
+                                                <a class='label' href='@item.PublishLink' target='_blank'><i class='fa fa-link'></i> 出刊链接</a>
+                                            }
+                                            @if (item.PublishDate != null)
+                                            {
+                                                <span class="label label-info">
+                                                    <i class='fa fa-calendar'></i> @item.PublishDate.Value.ToString("yyyy-MM-dd")
+                                                </span>
+                                            }
+                                        </td>
+                                        <td>@item.MediaByPurchase</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-center"><strong>暂无订单明细</strong></p>
+                }
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>

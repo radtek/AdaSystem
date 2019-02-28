@@ -405,6 +405,10 @@
     <Compile Include="Migrations\201901300740129_VoteUpdate1.Designer.cs">
       <DependentUpon>201901300740129_VoteUpdate1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201902270345078_UpdateFans.cs" />
+    <Compile Include="Migrations\201902270345078_UpdateFans.Designer.cs">
+      <DependentUpon>201902270345078_UpdateFans.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -622,6 +626,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901300740129_VoteUpdate1.resx">
       <DependentUpon>201901300740129_VoteUpdate1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902270345078_UpdateFans.resx">
+      <DependentUpon>201902270345078_UpdateFans.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

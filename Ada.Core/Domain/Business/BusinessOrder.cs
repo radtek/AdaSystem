@@ -146,6 +146,11 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "是否截图")]
         public bool? IsPic { get; set; }
         /// <summary>
+        /// 是否推荐
+        /// </summary>
+        [Display(Name = "是否推荐")]
+        public bool? IsRecommend { get; set; }
+        /// <summary>
         /// 联系客户
         /// </summary>
         [Display(Name = "联系客户")]

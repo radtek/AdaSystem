@@ -134,6 +134,11 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "订单状态")]
         public short? Status { get; set; }
         /// <summary>
+        /// 是否推荐
+        /// </summary>
+        [Display(Name = "是否推荐")]
+        public bool? IsRecommend { get; set; }
+        /// <summary>
         /// 媒体名称
         /// </summary>
         [Display(Name = "媒体名称")]

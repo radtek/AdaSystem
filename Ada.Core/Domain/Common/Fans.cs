@@ -29,5 +29,20 @@ namespace Ada.Core.Domain.Common
         /// </summary>
         [Display(Name = "封面")]
         public string Cover { get; set; }
+        /// <summary>
+        /// 父级
+        /// </summary>
+        [Display(Name = "父级")]
+        public string ParentId { get; set; }
+        /// <summary>
+        /// 头像范围
+        /// </summary>
+        [Display(Name = "头像范围")]
+        public string AvatarRange { get; set; }
+        /// <summary>
+        /// 粉丝范围
+        /// </summary>
+        [Display(Name = "粉丝范围")]
+        public string FansRange { get; set; }
     }
 }

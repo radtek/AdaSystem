@@ -154,6 +154,7 @@
     <Compile Include="Controllers\InvoiceController.cs" />
     <Compile Include="Controllers\OfferController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\OrderShareController.cs" />
     <Compile Include="Controllers\PayeeController.cs" />
     <Compile Include="Controllers\ReceivablesController.cs" />
     <Compile Include="Controllers\WriteOffController.cs" />
@@ -196,6 +197,8 @@
     <Content Include="Views\WriteOff\Details.cshtml" />
     <Content Include="Views\WriteOff\Detailss.cshtml" />
     <Content Include="Views\Invoice\WriteOff.cshtml" />
+    <Content Include="Views\OrderShare\Index.cshtml" />
+    <Content Include="Views\OrderShare\Detail.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -90,7 +90,9 @@ namespace Business.Controllers
                     //PurchaseSchedule = GetPurchaseSchedule(d),
                     OrderDetailCount = d.BusinessOrderDetails.Count,
                     OrderSchedule = d.BusinessOrderDetails.Count(o => o.Status == Consts.StateOK) + "/" + d.BusinessOrderDetails.Count,
-                    Remark = d.Remark
+                    Remark = d.Remark,
+                    BusinessType = d.BusinessType,
+                    IsRecommend = d.IsRecommend
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -200,7 +202,7 @@ namespace Business.Controllers
             entity.AddedBy = CurrentManager.UserName;
             entity.AddedById = CurrentManager.Id;
             entity.AddedDate = DateTime.Now;
-            //entity.BusinessType = viewModel.BusinessType;
+            entity.BusinessType = viewModel.BusinessType;
             entity.Remark = viewModel.Remark;
             entity.LinkManId = viewModel.LinkManId;
             entity.LinkManName = viewModel.LinkManName;
@@ -248,7 +250,7 @@ namespace Business.Controllers
             BusinessOrderView entity = new BusinessOrderView();
             entity.Id = item.Id;
             entity.OrderNum = item.OrderNum;
-            //entity.BusinessType = item.BusinessType;
+            entity.BusinessType = item.BusinessType;
             entity.LinkManId = item.LinkManId;
             entity.LinkManName = item.LinkManName;
             entity.Transactor = item.Transactor;
@@ -308,6 +310,7 @@ namespace Business.Controllers
             entity.Tax = viewModel.Tax??0;
             entity.OrderDate = viewModel.OrderDate;
             entity.Remark = viewModel.Remark;
+            entity.BusinessType = viewModel.BusinessType;
             //找到已删除的
             var ids = orderDetails.Select(d => d.Id).ToList();
             List<string> deleteIds = new List<string>();
@@ -1110,6 +1113,24 @@ namespace Business.Controllers
             }
             _businessOrderDetailService.Update(d => idList.Contains(d.Id), d => new BusinessOrderDetail { BusinessOrderId = order.Id,Tax = order.Tax});
             return Json(new { State = 0, Msg = "转移成功." });
+        }
+        [HttpPost]
+
+        public ActionResult Recommend(string id)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            string msg = "分享成功";
+            if (entity.IsRecommend == true)
+            {
+                entity.IsRecommend = null;
+                msg = "取消成功";
+            }
+            else
+            {
+                entity.IsRecommend = true;
+            }
+            _businessOrderService.Update(entity);
+            return Json(new { State = 1, Msg = msg });
         }
     }
 }

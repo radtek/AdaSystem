@@ -4,7 +4,7 @@
 @model Ada.Web.Models.FansCalculator
 @{
     Layout = "~/Views/Shared/_Layout_Web.cshtml";
-    ViewBag.Title = "公众号涨粉";
+    ViewBag.Title = "公众号真粉";
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var areas = fieldService.GetFieldsByKey("FansArea").OrderBy(d => d.Value).ThenBy(d => d.Text).Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
 }
@@ -21,7 +21,7 @@
         粉丝计算器
     </h2>
     <p>
-        用于微信公众号新增不同区域、性别的粉丝量价格计算器，如有相应需求请联系我们的业务代表吧：）.
+        真粉，真粉，真粉，用于微信公众号新增不同区域、性别的粉丝量价格计算器，如有相应需求请联系我们的业务代表吧：）.
     </p>
     <form id="form" action="#" class="wizard-big">
         <h1>区域选择</h1>

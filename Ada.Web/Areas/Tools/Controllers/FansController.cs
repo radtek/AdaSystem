@@ -8,6 +8,7 @@ using Ada.Core.Domain.Common;
 using Ada.Core.ViewModel.Common;
 using Ada.Framework.Filter;
 using Ada.Services.Common;
+using Newtonsoft.Json.Linq;
 
 namespace Tools.Controllers
 {
@@ -40,6 +41,21 @@ namespace Tools.Controllers
                 })
             }, JsonRequestBehavior.AllowGet);
         }
+        [HttpPost]
+        public ActionResult Export(FansView viewModel)
+        {
+            viewModel.limit = int.MaxValue;
+            var result = _service.LoadEntitiesFilter(viewModel).ToList();
+            JArray jObjects = new JArray();
+            foreach (var item in result)
+            {
+                var jo = new JObject();
+                jo.Add("主键", item.Id);
+                jo.Add("昵称", item.NickName);
+                jObjects.Add(jo);
+            }
+            return Json(new { State = 1, Msg = ExportFile(jObjects.ToString()) });
+        }
         public ActionResult Add()
         {
             return View(new FansView());
@@ -65,7 +81,10 @@ namespace Tools.Controllers
                 AddedById = CurrentManager.Id,
                 AddedBy = CurrentManager.UserName,
                 AddedDate = DateTime.Now,
-                NickName = viewModel.NickName,
+                NickName = viewModel.NickName.Trim(),
+                ParentId = viewModel.ParentId,
+                AvatarRange = viewModel.AvatarRange,
+                FansRange = viewModel.FansRange,
                 Type = viewModel.Type,
                 Avatar = idc["Avatar"]?.ToString(),
                 Cover = idc["Cover"]?.ToString()
@@ -83,7 +102,10 @@ namespace Tools.Controllers
                 NickName = item.NickName,
                 Avatar = item.Avatar,
                 Type = item.Type,
-                Cover = item.Cover
+                Cover = item.Cover,
+                ParentId = item.ParentId,
+                AvatarRange = item.AvatarRange,
+                FansRange = item.FansRange
             };
             return View(entity);
         }
@@ -106,7 +128,10 @@ namespace Tools.Controllers
             entity.ModifiedById = CurrentManager.Id;
             entity.ModifiedBy = CurrentManager.UserName;
             entity.ModifiedDate = DateTime.Now;
-            entity.NickName = viewModel.NickName;
+            entity.NickName = viewModel.NickName.Trim();
+            entity.ParentId = viewModel.ParentId;
+            entity.AvatarRange = viewModel.AvatarRange;
+            entity.FansRange = viewModel.FansRange;
             entity.Type = viewModel.Type;
             entity.Avatar = idc["Avatar"] == null ? entity.Avatar : idc["Avatar"]?.ToString();
             entity.Cover = idc["Cover"] == null ? entity.Cover : idc["Cover"]?.ToString();

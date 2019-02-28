@@ -16,6 +16,9 @@ namespace Ada.Data.Mapping.Common
             Property(s => s.Type).HasMaxLength(32);
             Property(s => s.Avatar).HasMaxLength(512);
             Property(s => s.Cover).HasMaxLength(512);
+            Property(s => s.ParentId).HasMaxLength(32);
+            Property(s => s.AvatarRange).HasMaxLength(32);
+            Property(s => s.FansRange).HasMaxLength(32);
 
             Property(s => s.AddedBy).HasMaxLength(32);
             Property(s => s.AddedById).HasMaxLength(32);

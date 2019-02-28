@@ -224,6 +224,11 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "是否截图")]
         public bool? IsPic { get; set; }
         /// <summary>
+        /// 是否分享
+        /// </summary>
+        [Display(Name = "是否分享")]
+        public bool? IsRecommend { get; set; }
+        /// <summary>
         /// 是否发票核销
         /// </summary>
         [Display(Name = "是否发票核销")]

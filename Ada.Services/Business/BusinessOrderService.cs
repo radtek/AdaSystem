@@ -40,7 +40,10 @@ namespace Ada.Services.Business
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
-                allList = allList.Where(d => d.LinkManName.Contains(viewModel.search) || d.OrderNum == viewModel.search || d.Remark.Contains(viewModel.search));
+                allList = allList.Where(d => d.LinkManName.Contains(viewModel.search) || 
+                                             d.OrderNum == viewModel.search || 
+                                             d.Remark.Contains(viewModel.search)||
+                                             d.Transactor==viewModel.search);
             }
             if (!string.IsNullOrWhiteSpace(viewModel.CompanyName))
             {
@@ -130,9 +133,17 @@ namespace Ada.Services.Business
             {
                 allList = allList.Where(d => d.AuditStatus == viewModel.AuditStatus);
             }
+            if (viewModel.IsRecommend != null)
+            {
+                allList = allList.Where(d => d.IsRecommend == viewModel.IsRecommend);
+            }
             if (!string.IsNullOrWhiteSpace(viewModel.OrderNum))
             {
                 allList = allList.Where(d => d.OrderNum == viewModel.OrderNum);
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.BusinessType))
+            {
+                allList = allList.Where(d => d.BusinessType == viewModel.BusinessType);
             }
             if (viewModel.IsInvoice == false)
             {
