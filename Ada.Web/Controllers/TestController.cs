@@ -15,6 +15,7 @@ using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Business;
+using Ada.Core.Domain.Common;
 using Ada.Core.Domain.Customer;
 using Ada.Core.Domain.Purchase;
 using Ada.Core.Domain.Resource;
@@ -23,6 +24,7 @@ using Ada.Core.ViewModel.API.iDataAPI;
 using Ada.Core.ViewModel.Business;
 using Ada.Services.Business;
 using Ada.Services.Cache;
+using Ada.Services.Common;
 using ClosedXML.Excel;
 using MvcThrottle;
 using Newtonsoft.Json;
@@ -51,6 +53,7 @@ namespace Ada.Web.Controllers
         private readonly IRepository<BusinessInvoice> _invoice;
         private readonly IBusinessWriteOffService _businessWriteOffService;
         private readonly IRepository<BusinessWriteOffDetail> _businessWriteOffDetail;
+        private readonly IRepository<Fans> _fans;
         public TestController(
             IDbContext dbContext,
             IRepository<BusinessOrderDetail> temp,
@@ -69,7 +72,8 @@ namespace Ada.Web.Controllers
             IRepository<Commpany> commpanyRepository,
             IRepository<BusinessInvoice> invoice,
             IBusinessWriteOffService businessWriteOffService,
-            IRepository<BusinessWriteOffDetail> businessWriteOffDetail)
+            IRepository<BusinessWriteOffDetail> businessWriteOffDetail,
+            IRepository<Fans> fans)
         {
             _dbContext = dbContext;
             _ptemp = ptemp;
@@ -86,6 +90,7 @@ namespace Ada.Web.Controllers
             _commpanyRepository = commpanyRepository;
             _businessWriteOffService = businessWriteOffService;
             _businessWriteOffDetail = businessWriteOffDetail;
+            _fans = fans;
         }
 
         public ActionResult Error()
@@ -396,7 +401,38 @@ namespace Ada.Web.Controllers
             }
             return Content("导入成功" + count + "条资源");
         }
+        public ActionResult Fans()
+        {
+            string path = Server.MapPath("~/upload/fans.xlsx");
+            int count = 0;
+            using (FileStream ms = new FileStream(path, FileMode.Open))
+            {
+                //创建工作薄
+                IWorkbook wk = new XSSFWorkbook(ms);
+                //1.获取第一个工作表
+                ISheet sheet = wk.GetSheetAt(0);
+                if (sheet.LastRowNum <= 1)
+                {
+                    return Content("此文件没有导入数据，请填充数据再进行导入");
+                }
 
+                for (int i = 1; i <= sheet.LastRowNum; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+                    var id = row.GetCell(0)?.ToString();
+                    var range1 = row.GetCell(1)?.ToString();
+                    var range2 = row.GetCell(2)?.ToString();
+                    var ids = row.GetCell(3)?.ToString();
+                    var parent = _fans.LoadEntities(d => d.Id == id).FirstOrDefault();
+                    parent.AvatarRange = range1 + "-" + range2;
+                    var arry = ids.Split(',').ToList();
+                    _fans.Update(d => arry.Contains(d.Id), f => new Fans() { ParentId = id });
+                    count++;
+                }
+                _dbContext.SaveChanges();
+            }
+            return Content("导入更新" + count + "条FANS资源");
+        }
         public ActionResult Cache(string id)
         {
             var cache = _cacheService.GetObject<string>(id);

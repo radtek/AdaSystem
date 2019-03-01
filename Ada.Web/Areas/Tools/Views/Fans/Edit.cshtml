@@ -18,6 +18,15 @@
                 </div>
                 <div class="form-horizontal">
                     <div class="form-group">
+                        @Html.LabelFor(d => d.ParentId, Html.DisplayNameFor(d => d.ParentId).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            <select class="form-control" required="" name="ParentId" id="ParentId">
+                                <option value="@Model.ParentId">@Model.ParentName</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
                         @Html.LabelFor(d => d.NickName, Html.DisplayNameFor(d => d.NickName).ToString(), new { @class = "col-sm-2 control-label" })
                         <div class="col-sm-10">
                             @Html.TextBoxFor(d => d.NickName, new { @class = "form-control", required = "" })
@@ -45,7 +54,7 @@
                                     <a href="#" class="btn btn-warning btn-sm fileinput-exists" data-dismiss="fileinput">移除图片</a>
                                 </div>
                             </div>
-                            
+
 
                         </div>
                     </div>
@@ -73,8 +82,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.AvatarRange, Html.DisplayNameFor(d => d.AvatarRange).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.AvatarRange, new { @class = "form-control" })
+                        </div>
+                    </div>
                     @Html.HiddenFor(d => d.Id)
                     @Html.HiddenFor(d => d.Type)
+                    @Html.HiddenFor(d => d.FansRange)
                 </div>
             </div>
         </div>

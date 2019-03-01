@@ -2,7 +2,7 @@
 @model Tools.Models.FriendsSet
 @{
     Layout = null;
-    List<Fans> list = ViewBag.Fans;
+    List<int> list = ViewBag.Fans;
     var isPlus = 1;
     switch (Model.PhoneType)
     {
@@ -187,7 +187,7 @@
                     <div class="cCommentPraise cCommentHeart2 PraiseAvatar">
                         @foreach (var item in list)
                         {
-                            <img src="@item.Avatar" alt="">
+                            <img src="/Images/heads/点赞 (@item).jpg" alt="">
                         }
                     </div>
                     <div class="cCommentCont isPraise2">

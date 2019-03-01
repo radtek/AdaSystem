@@ -489,8 +489,37 @@ namespace Ada.Core.Tools
             return buf.Length == source.Length ? source : buf.ToString();
         }
 
+        // Number随机数个数
+        // minNum随机数下限
+        // maxNum随机数上限
+        public static int[] GetRandomArray(int count, int minNum, int maxNum)
+        {
+            int j;
+            int[] b = new int[count];
+            Random r = new Random();
+            for (j = 0; j < count; j++)
+            {
+                int i = r.Next(minNum, maxNum + 1);
+                int num = 0;
+                for (int k = 0; k < j; k++)
+                {
+                    if (b[k] == i)
+                    {
+                        num = num + 1;
+                    }
+                }
+                if (num == 0)
+                {
+                    b[j] = i;
+                }
+                else
+                {
+                    j = j - 1;
+                }
+            }
+            return b;
+        }
 
-        
 
     }
 

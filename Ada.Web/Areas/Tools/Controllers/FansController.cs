@@ -28,7 +28,7 @@ namespace Tools.Controllers
 
         public ActionResult GetList(FansView viewModel)
         {
-            viewModel.Managers = PremissionData();
+            //viewModel.Managers = PremissionData();
             var result = _service.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {
@@ -96,6 +96,12 @@ namespace Tools.Controllers
         public ActionResult Update(string id)
         {
             var item = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            string parentName=null;
+            if (!string.IsNullOrWhiteSpace(item.ParentId))
+            {
+                var parent= _repository.LoadEntities(d => d.Id == item.ParentId).FirstOrDefault();
+                parentName = parent.NickName;
+            }
             FansView entity = new FansView
             {
                 Id = item.Id,
@@ -104,6 +110,7 @@ namespace Tools.Controllers
                 Type = item.Type,
                 Cover = item.Cover,
                 ParentId = item.ParentId,
+                ParentName = parentName,
                 AvatarRange = item.AvatarRange,
                 FansRange = item.FansRange
             };

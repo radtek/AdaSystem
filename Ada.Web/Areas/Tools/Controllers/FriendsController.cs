@@ -51,15 +51,15 @@ namespace Tools.Controllers
         
         public ActionResult SaveSet(FriendsSet friendsSet)
         {
-            var max = _repository.LoadEntities(d => d.IsDelete == false).Count();
-            if (friendsSet.FansRangeMax>max)
-            {
-                return Json(new { State = 0, Msg = "粉丝区间最大值超出粉丝总数" });
-            }
-            if (friendsSet.FansRangeMax - friendsSet.FansRangeMin < friendsSet.Likes)
-            {
-                return Json(new { State = 0, Msg = "粉丝区间总数不满足点赞数" });
-            }
+            //var max = _repository.LoadEntities(d => d.IsDelete == false).Count();
+            //if (friendsSet.FansRangeMax>max)
+            //{
+            //    return Json(new { State = 0, Msg = "粉丝区间最大值超出粉丝总数" });
+            //}
+            //if (friendsSet.FansRangeMax - friendsSet.FansRangeMin < friendsSet.Likes)
+            //{
+            //    return Json(new { State = 0, Msg = "粉丝区间总数不满足点赞数" });
+            //}
             var setting = new Ada.Core.Domain.Admin.Setting
             {
                 SettingName = typeof(FriendsSet).Name,
@@ -92,9 +92,12 @@ namespace Tools.Controllers
                 };
                 friendsSet.FriendContent.FansMessages.Add(msg);
             }
-            var allFans = _repository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Id)
-                .Skip(friendsSet.FansRangeMin).Take(friendsSet.FansRangeMax - friendsSet.FansRangeMin);
-            ViewBag.Fans = allFans.OrderBy(d => Guid.NewGuid()).Take(friendsSet.FriendContent.Likes).ToList();
+            //var allFans = _repository.LoadEntities(d => d.IsDelete == false).OrderBy(d => d.Id)
+            //    .Skip(friendsSet.FansRangeMin).Take(friendsSet.FansRangeMax - friendsSet.FansRangeMin);
+            //ViewBag.Fans = allFans.OrderBy(d => Guid.NewGuid()).Take(friendsSet.FriendContent.Likes).ToList();
+            var range = friendsSet.FriendContent.PublishFans.AvatarRange.Split('-');
+            ViewBag.Fans =
+                Utils.GetRandomArray(friendsSet.FriendContent.Likes, int.Parse(range[0]), int.Parse(range[1])).ToList();
             return View(friendsSet);
         }
         [AllowAnonymous]
@@ -109,7 +112,8 @@ namespace Tools.Controllers
             friendContent.Type = friendsSet.ContentType;
             friendContent.LinkContent = friendsSet.LinkContent;
             friendContent.Image = friendsSet.Images;
-            var fans = GetRandomFans(friendsSet.Comments,friendsSet.FansRangeMin,friendsSet.FansRangeMax);
+            var fans = GetChildFans(friendsSet.Comments, friendsSet.FriendId);
+            //var fans = GetRandomFans(friendsSet.Comments,friendsSet.FansRangeMin,friendsSet.FansRangeMax);
             foreach (var fan in fans)
             {
                 FansMessage fansMessage = new FansMessage();
@@ -137,6 +141,11 @@ namespace Tools.Controllers
                 result.Add(fan);
             }
             return result;
+        }
+        private List<Fans> GetChildFans(int count, string parentId)
+        {
+            return _repository.LoadEntities(d => d.IsDelete == false&&d.ParentId==parentId).OrderBy(d => Guid.NewGuid()).Take(count).ToList();
+            
         }
         /// <summary>
         /// 得到随机日期

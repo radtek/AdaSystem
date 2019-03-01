@@ -6,7 +6,7 @@
 }
 @Html.Partial("Bread")
 <div class="wrapper wrapper-content animated fadeInRight">
-    @using (Html.BeginForm("Add","Fans", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    @using (Html.BeginForm("Add", "Fans", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
         <p class="bg-danger">@Html.ValidationMessage("message") </p>
@@ -15,7 +15,10 @@
 </div>
 @section Styles {
     @Styles.Render("~/plugins/jasnyBootstrapStyles")
+    @Styles.Render("~/plugins/select2Styles")
 }
 @section Scripts {
     @Scripts.Render("~/plugins/jasnyBootstrap")
+    @Scripts.Render("~/plugins/select2")
+    <script src="@Url.Content("~/Areas/Tools/Scripts/fans.js?v="+DateTime.Now.Ticks)"></script>
 }

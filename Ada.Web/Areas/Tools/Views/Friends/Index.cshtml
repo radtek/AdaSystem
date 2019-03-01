@@ -214,7 +214,7 @@
                                     @Html.TextBoxFor(d => d.PublishDate, new { @class = "form-control", placeholder = "发布时间", required = "" })
                                 </div>
                             </div>
-                            <div class="hr-line-dashed"></div>
+                            @*<div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 @Html.LabelFor(d => d.FansRangeMin, Html.DisplayNameFor(d => d.FansRangeMin).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
@@ -226,7 +226,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>*@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 @Html.LabelFor(d => d.Likes, Html.DisplayNameFor(d => d.Likes).ToString(), new { @class = "col-sm-2 control-label" })
@@ -392,7 +392,8 @@
             options.url = "@Url.Action("GetList","Fans")";
             options.paramsData = function (params) {
                 return {
-                    search: params.term
+                    search: params.term,
+                    IsParent:true
                 };
             };
             options.processResults = function (data, params) {

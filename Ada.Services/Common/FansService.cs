@@ -41,7 +41,11 @@ namespace Ada.Services.Common
             {
                 allList = allList.Where(d => d.NickName.Contains(viewModel.search));
             }
-            
+
+            if (viewModel.IsParent==true)
+            {
+                allList = allList.Where(d => d.ParentId==null&&d.AvatarRange!=null);
+            }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;

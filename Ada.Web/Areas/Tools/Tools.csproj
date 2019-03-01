@@ -124,6 +124,7 @@
     <Content Include="Scripts\Friends\jQuery.md5.js" />
     <Content Include="Scripts\Friends\main.js" />
     <Content Include="Scripts\Friends\modernizr-2.8.3.min.js" />
+    <Content Include="Scripts\fans.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
