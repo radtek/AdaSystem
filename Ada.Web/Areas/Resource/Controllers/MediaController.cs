@@ -572,6 +572,7 @@ namespace Resource.Controllers
                 })
             });
         }
+        
         public ActionResult GetArticles(MediaArticleView viewModel)
         {
             var result = _mediaArticleService.LoadEntitiesFilter(viewModel).ToList();

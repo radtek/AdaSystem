@@ -1,0 +1,71 @@
+﻿@using Ada.Core.Domain.Resource
+@model Ada.Core.Domain.Resource.Media
+@{
+    List<MediaPriceChange> list = new List<MediaPriceChange>();
+    foreach (var mediaPrice in Model.MediaPrices.Where(d => d.IsDelete == false))
+    {
+        var arr = mediaPrice.MediaPriceChanges.OrderByDescending(d => d.AddedDate).Take(6);
+        list.AddRange(arr);
+    }
+    var date = list.OrderBy(d => d.AddedDate).GroupBy(d => d.AddedDate?.ToString("yyyy-MM-dd")).Select(d => d.Key);
+}
+<div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">价格(税前)走势折线图</h4>
+            </div>
+            <div class="modal-body">
+                <div class="flot-chart" style="height: 500px;">
+                    <div class="flot-chart-content" id="flot-dashboard-chart-price"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+     function initPriceCharts() {
+                    var myChart = echarts.init(document.getElementById('flot-dashboard-chart-price'));
+                    var option = {
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data:@Html.Raw(Json.Encode(Model.MediaType.AdPositions.Select(d=>d.Name)))
+                        },
+                        xAxis: {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: @Html.Raw(Json.Encode(date))
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [
+
+                            @foreach (var item in Model.MediaPrices.Where(d => d.IsDelete == false))
+                            {
+                                var arr = item.MediaPriceChanges.OrderByDescending(d => d.AddedDate).Take(6).OrderBy(d => d.AddedDate).Select(d => d.SellPrice);
+                                <text>
+                                    {
+                                        name:'@item.AdPositionName',
+                                        type:'line',
+                                        label: {
+                                            normal: {
+                                                show: true
+                                            }
+                                        },
+                                        data:@Html.Raw(Json.Encode(arr))
+                                    },
+                                </text>
+                            }
+                            
+                        ]
+                    };
+                    myChart.setOption(option);
+                }
+</script>

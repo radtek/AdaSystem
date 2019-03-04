@@ -4,9 +4,8 @@
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
     Layout = "~/Views/Shared/_Layout_Web.cshtml";
-    ViewBag.Title = "新浪微博";
-    var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("sinablog");
-
+    ViewBag.Title = "热门媒体平台";
+    var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("headline");
 }
 <div class="row wrapper border-bottom white-bg page-heading m-t-xs">
     <div class="col-lg-10">
@@ -40,8 +39,8 @@
             initFilter();
            $('#table').bootstrapTable({
                 url: '@Url.Action("GetList","Media")', //请求后台的URL（*）
-               method: 'post',
-               contentType: "application/x-www-form-urlencoded",
+                method: 'post',
+                contentType: "application/x-www-form-urlencoded",
                 classes: "table table-no-bordered",
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
@@ -62,14 +61,15 @@
                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
                searchAlign: "left",
                buttonsAlign: "left",
-                toolbarAlign:"right",
+               toolbarAlign: "right",
                     formatSearch: function() {
-                        return "微博名称关键字";
+                        return "号主关键字";
                     },
                onLoadSuccess: onLoadSuccess ,
                 mobileResponsive: true,
                 queryParams: function (parameters) {
                     parameters.MediaTypeId = '@meidaType.Id';
+                    
                     return searchFrm.queryParams(addAntiForgeryToken(parameters));
                 },
                 columns: [
@@ -83,18 +83,12 @@
                     },
                     {
                         field: 'MediaName',
-                        title: '微博账号',
+                        title: '媒体信息',
                         valign: "middle",
                         align: "left",
                         formatter: formatter.mediaInfo
                     },
-                    {
-                        field: 'AvgReadNum',
-                        title: '微博指数',
-                        valign: "middle",
-                        align: "left",
-                        formatter: formatter.mediaData
-                    },
+                    
                     {
                         field: 'MediaPrices',
                         title: '参考价格',
@@ -130,5 +124,10 @@
         });
     </script>
 }
+
+
+
+
+
 
 

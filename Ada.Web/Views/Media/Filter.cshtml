@@ -11,8 +11,9 @@
     var settingService = EngineContext.Current.Resolve<ISettingService>();
     var setConfig = settingService.GetSetting<WeiGuang>();
     var excelFields = fieldService.GetFieldsByKey(Model.CallIndex + "-excel");
-    var isData = new List<string>() { "weixin", "sinablog", "douyin", "redbook","taobao","bilibili" };
+    var isData = new List<string>() { "weixin", "sinablog", "douyin", "redbook","taobao","bilibili","headline" };
     var areas = fieldService.GetFieldsByKey("Area").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var platforms = fieldService.GetFieldsByKey("HeadLinePlatform").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var priceOrder = new List<SelectListItem>();
     foreach (var adPosition in Model.AdPositions.OrderByDescending(d=>d.Name))
     {
@@ -138,6 +139,25 @@ new SelectListItem(){Text = @"200-500万",Value = "200-500"},
 new SelectListItem(){Text = @"500万以上",Value = "500-"},
 };
             break;
+        case "headline":
+            priceRange = new List<SelectListItem>()
+            {
+                new SelectListItem(){Text = @"1000元以下",Value = "1-1000"},
+                new SelectListItem(){Text = @"1000-2000元",Value = "1000-2000"},
+                new SelectListItem(){Text = @"2000-3000元",Value = "2000-3000"},
+                new SelectListItem(){Text = @"3000-5000元",Value = "3000-5000"},
+                new SelectListItem(){Text = @"5000-10000元",Value = "5000-10000"},
+                new SelectListItem(){Text = @"10000元以上",Value = "10000-"},
+            };
+            fansRange = new List<SelectListItem>()
+            {
+                new SelectListItem(){Text = @"1万以下",Value = "0-1"},
+                new SelectListItem(){Text = @"5-10万",Value = "5-10"},
+                new SelectListItem(){Text = @"10-20万",Value = "10-20"},
+                new SelectListItem(){Text = @"20-50万",Value = "20-50"},
+                new SelectListItem(){Text = @"50万以上",Value = "50-"},
+            };
+            break;
         case "writer":
             priceRange = new List<SelectListItem>()
             {
@@ -154,6 +174,24 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
     <div class="ibox-content m-b-sm border-bottom">
         <div class="row">
             @Html.AntiForgeryToken()
+            @if (Model.CallIndex == "headline")
+            {
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label">媒体平台</label>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <ul class="ul-labelauty">
+                                    @foreach (var item in platforms)
+                                    {
+                                        <li><input type="radio" name="Platform" data-labelauty="@item.Text" value="@item.Value"></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
             @if (tags.Any())
             {
                 <div class="col-sm-12">
@@ -173,7 +211,8 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
                     </div>
                 </div>
             }
-            
+           
+
             <div class="col-sm-12">
                 <div class="form-group">
                     <label class="control-label">价格区间 </label><small class="text-muted"> (注：请先选择广告位，再选择区间)</small>
@@ -250,7 +289,7 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
                     </div>
                 </div>
             }
-            
+
         </div>
         <div class="ibox collapsed">
             <div class="ibox-title">
@@ -326,10 +365,7 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
 
             </div>
             <div class="ibox-footer  no-borders">
-                @*<div class="filters inline">
-
-                    </div>*@
-
+                
                 <button type="button" class="btn btn-danger btn-outline" onclick="resetFilter();">
                     <i class="fa fa-recycle"></i> 重置筛选
                 </button>

@@ -27,10 +27,10 @@
     List<MediaPriceChange> list = new List<MediaPriceChange>();
     foreach (var mediaPrice in Model.MediaPrices.Where(d => d.IsDelete == false))
     {
-        var arr = mediaPrice.MediaPriceChanges.OrderBy(d => d.AddedDate).Take(6);
+        var arr = mediaPrice.MediaPriceChanges.OrderByDescending(d => d.AddedDate).Take(6);
         list.AddRange(arr);
     }
-    var date = list.GroupBy(d => d.AddedDate?.ToString("yyyy-MM-dd")).Select(d => d.Key);
+    var date = list.OrderBy(d=>d.AddedDate).GroupBy(d => d.AddedDate?.ToString("yyyy-MM-dd")).Select(d => d.Key);
 }
 @Html.Partial("Bread")
 
@@ -456,7 +456,7 @@
 
                             @foreach (var item in Model.MediaPrices.Where(d => d.IsDelete == false))
                             {
-                                var arr = item.MediaPriceChanges.OrderBy(d => d.AddedDate).Take(6).Select(d => d.PurchasePrice);
+                                var arr = item.MediaPriceChanges.OrderByDescending(d => d.AddedDate).Take(6).OrderBy(d => d.AddedDate).Select(d => d.PurchasePrice);
                                 <text>
                                     {
                                         name:'@item.AdPositionName',
@@ -470,7 +470,7 @@
                                     },
                                 </text>
                             }
-
+                            
                         ]
                     };
                     myChart.setOption(option);

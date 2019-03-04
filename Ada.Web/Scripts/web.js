@@ -294,7 +294,7 @@ function initFilter() {
         $("#PriceEnd").val(arr[1]);
         searchTable();
     });
-    $("select").add("input[name='MediaTagIds']").change(function () {
+    $("select").add("input[name='MediaTagIds']").add("input[name='Platform']").change(function () {
         searchTable();
     });
 }
@@ -364,7 +364,7 @@ formatter.mediaLogo = function (value, row) {
     var line = detail ? "<div class='p-xxs text-center'>" + detail + "</div>" : "";
     
     var comment = "";
-    if (row.MediaTypeIndex != "writer" && row.MediaTypeIndex != "taobao" && row.MediaTypeIndex != "bilibili") {
+    if (row.MediaTypeIndex != "writer" && row.MediaTypeIndex != "taobao" && row.MediaTypeIndex != "bilibili" && row.MediaTypeIndex != "headline") {
         comment = "<div class='p-xxs text-center'><a class='btn btn-danger btn-outline btn-xs' href='/Media/CommentDetail/" + row.Id + "' target='_blank'><i class='fa fa-comment'></i> 评价详情</a></div>";
     }
     return '<div class="p-xxs text-center">' + logo + '</div>' + vg + line + comment;
@@ -464,6 +464,7 @@ formatter.mediaPrice = function (value, row) {
             
         });
     arr.push("<li class='list-group-item p-xxs'><span class='badge'>" + moment(value[0].InvalidDate).format("YYYY-MM-DD") + "</span>价格有效期</li>");
+    arr.push("<li class='list-group-item p-xxs'><span class='badge badge-info' onclick=\"mediaPrice('" + row.Id + "');\">点击查看</span>价格走势</li>");
     return "<ul class='list-group m-b-none'>" + arr.join('') + "</ul>";
 };
 formatter.priceProtection = function (value, row) {
@@ -998,7 +999,18 @@ function develop() {
         }
     });
 }
+function mediaPrice(id) {
+    $("#modalView").load("/Media/Price?id=" + id,
+        function () {
+            $('#modalView .modal').on('shown.bs.modal', function () {
+                initPriceCharts();
+            }).on('hidden.bs.modal', function () {
 
+            });
+            $('#modalView .modal').modal('show');
+        });
+
+}
 function groupDetail(id) {
     $("#modalView").load("/Media/GroupDetail/" + id,
         function () {

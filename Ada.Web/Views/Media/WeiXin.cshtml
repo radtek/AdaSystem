@@ -3,9 +3,11 @@
 @using Ada.Services.Resource
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
-    Layout = "~/Views/Shared/_Layout_Web.cshtml";
-    ViewBag.Title = "微信公众号";
-    var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("weixin");
+                /**/
+
+                Layout = "~/Views/Shared/_Layout_Web.cshtml";
+                ViewBag.Title = "微信公众号";
+                var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("weixin");
 
 }
 <div class="row wrapper border-bottom white-bg page-heading m-t-xs">
@@ -25,6 +27,7 @@
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
     @Styles.Render("~/plugins/bootstrapTableStyle")
     @Styles.Render("~/plugins/laddaStyles")
+    @Scripts.Render("~/plugins/echarts")
     <link href="@Url.Content("~/Content/plugins/jqLabelauty/jquery-labelauty.css")" rel="stylesheet" type="text/css" />
 }
 

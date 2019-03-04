@@ -98,6 +98,10 @@ namespace Ada.Web.Controllers
         {
             return View();
         }
+        public ActionResult Toutiao()
+        {
+            return View();
+        }
         public ActionResult Writer()
         {
             return View();
@@ -660,6 +664,7 @@ namespace Ada.Web.Controllers
                 var jo = new JObject();
                 jo.Add("媒体状态", string.IsNullOrWhiteSpace(media.Id) ? "不存在" : "正常");
                 if (fields.Contains("MediaTags")) jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
+                if (fields.Contains("Platform")) jo.Add("媒体平台", media.Platform);
                 jo.Add("媒体名称", media.MediaName);
                 if (fields.Contains("MediaID")) jo.Add("媒体ID", media.MediaID);
                 jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
@@ -720,6 +725,10 @@ namespace Ada.Web.Controllers
                 var jo = new JObject();
                 jo.Add("媒体状态", string.IsNullOrWhiteSpace(media.Id) ? "不存在" : "正常");
                 jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
+                if (!string.IsNullOrWhiteSpace(media.Platform))
+                {
+                    jo.Add("媒体平台", media.Platform);
+                }
                 jo.Add("媒体名称", media.MediaName);
                 jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
                 if (isData)
@@ -780,6 +789,7 @@ namespace Ada.Web.Controllers
                             jo.Add("擅长类型", media.ResourceType);
                             jo.Add("出稿速度", media.Efficiency);
                             break;
+                       
                     }
                 }
                 foreach (var mediaMediaPrice in media.MediaPrices.Where(d => d.IsDelete == false))
@@ -795,6 +805,11 @@ namespace Ada.Web.Controllers
                 jObjects.Add(jo);
             }
             return jObjects;
+        }
+        public ActionResult Price(string id)
+        {
+            var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            return PartialView("MediaPrice", entity);
         }
     }
 }
