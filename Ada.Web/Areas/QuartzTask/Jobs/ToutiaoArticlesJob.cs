@@ -122,9 +122,11 @@ namespace QuartzTask.Jobs
                                 job.Remark = "Success:" + media.MediaName + "-" + media.MediaID;
                             }
                             media.AvgReadNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate)
-                                .Take(50).Average(aaa => aaa.ViewCount));
+                                .Take(100).Average(aaa => aaa.ViewCount));
                             media.CommentNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate)
-                                .Take(50).Average(aaa => aaa.CommentCount));
+                                .Take(100).Average(aaa => aaa.CommentCount));
+                            media.LastPushDate = media.MediaArticles.OrderByDescending(a => a.PublishDate)
+                                .FirstOrDefault()?.PublishDate;
                             db.SaveChanges();
                         }
                         catch (Exception ex)
