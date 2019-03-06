@@ -290,6 +290,9 @@ filterFormat.mediaData = function (value, row) {
     if (row.MediaTypeIndex == "bilibili") {
         line = line8 + lineblike + linebread;
     }
+    if (row.MediaTypeIndex == "toutiao") {
+        line = line8 + line10 + line1 + line3 + line7;
+    }
     return line || "<span class='label label-warning'>抱歉！暂无相关数据</span>";
 };
 

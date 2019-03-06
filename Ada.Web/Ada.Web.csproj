@@ -2194,6 +2194,7 @@
     <Content Include="Images\medialogo\redbook.jpg" />
     <Content Include="Images\medialogo\sinablog.jpg" />
     <Content Include="Images\medialogo\taobao.jpg" />
+    <Content Include="Images\medialogo\toutiao.jpg" />
     <Content Include="Images\medialogo\webcast.jpg" />
     <Content Include="Images\medialogo\website.jpg" />
     <Content Include="Images\medialogo\weixin.jpg" />

@@ -62,7 +62,7 @@ namespace Resource.Controllers
                 for (int i = 1; i <= sheet.LastRowNum; i++)
                 {
                     IRow row = sheet.GetRow(i);
-                    var linkid = row.GetCell(0)?.ToString();
+                    var linkid = row.GetCell(7)?.ToString();
                     if (string.IsNullOrWhiteSpace(linkid))
                     {
                         continue;
@@ -71,8 +71,8 @@ namespace Resource.Controllers
                     media.Id = IdBuilder.CreateIdNum();
                     media.MediaTypeId = "X1903060948140279";
                     media.LinkManId = linkid.Trim();
-                    media.MediaName = row.GetCell(1)?.ToString();
-                    media.MediaID = row.GetCell(2)?.ToString();
+                    media.MediaName = row.GetCell(0)?.ToString();
+                    media.MediaID = row.GetCell(1)?.ToString();
                     //校验ID不能重复
                     var temp = _repository.LoadEntities(d =>
                         d.MediaID == media.MediaID &&
@@ -88,15 +88,15 @@ namespace Resource.Controllers
                         continue;
                     }
 
-                    decimal.TryParse(row.GetCell(3)?.ToString(), out var fans);
-                    media.FansNum = Utils.SetFansNum(fans);
+                    //decimal.TryParse(row.GetCell(3)?.ToString(), out var fans);
+                    //media.FansNum = Utils.SetFansNum(fans);
                     //价格
                     MediaPrice price1 = new MediaPrice();
                     price1.Id = IdBuilder.CreateIdNum();
                     price1.AdPositionId = "X1903060948140280";
                     price1.AdPositionName = "普通发布";
                     price1.InvalidDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
-                    decimal.TryParse(row.GetCell(6)?.ToString(), out var pt1);
+                    decimal.TryParse(row.GetCell(2)?.ToString(), out var pt1);
                     price1.PurchasePrice = pt1;
                     price1.PriceDate = DateTime.Now;
                     media.MediaPrices.Add(price1);
@@ -106,7 +106,7 @@ namespace Resource.Controllers
                     price2.AdPositionId = "X1903060948140281";
                     price2.AdPositionName = "原创发布";
                     price2.InvalidDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
-                    decimal.TryParse(row.GetCell(7)?.ToString(), out var pt2);
+                    decimal.TryParse(row.GetCell(4)?.ToString(), out var pt2);
                     price2.PurchasePrice = pt2;
                     price2.PriceDate = DateTime.Now;
                     media.MediaPrices.Add(price2);
@@ -116,7 +116,7 @@ namespace Resource.Controllers
                     price3.AdPositionId = "X1903060948140282";
                     price3.AdPositionName = "智能推荐";
                     price3.InvalidDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
-                    decimal.TryParse(row.GetCell(8)?.ToString(), out var pt3);
+                    decimal.TryParse(row.GetCell(3)?.ToString(), out var pt3);
                     price3.PurchasePrice = pt3;
                     price3.PriceDate = DateTime.Now;
                     media.MediaPrices.Add(price3);
@@ -137,13 +137,13 @@ namespace Resource.Controllers
                             }
                         }
                     }
-                    media.Area = row.GetCell(4)?.ToString();
-                    media.Remark = row.GetCell(11)?.ToString();
-                    media.Transactor = row.GetCell(12)?.ToString();
-                    media.TransactorId = row.GetCell(13)?.ToString();
+                    
+                    media.Remark = row.GetCell(6)?.ToString();
+                    media.Transactor = row.GetCell(8)?.ToString();
+                    media.TransactorId = row.GetCell(9)?.ToString();
                     media.Status = Consts.StateNormal;
                     media.IsSlide = true;
-                    media.AddedDate = DateTime.Now;
+                    media.AddedDate = DateTime.Now.AddDays(-100);//DateTime.Now;
                     _mediaService.Add(media);
                     count++;
 
