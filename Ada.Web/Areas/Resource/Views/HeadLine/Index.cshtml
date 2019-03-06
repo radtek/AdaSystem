@@ -5,7 +5,7 @@
 @using Ada.Services.Resource
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
-    ViewBag.Title = "头条资源";
+    ViewBag.Title = "其他平台";
     var tags = EngineContext.Current.Resolve<IMediaTagService>().GetTags();
     var meidaType = EngineContext.Current.Resolve<IMediaTypeService>().GetMediaTypeByCallIndex("headline");
     var adpositions = meidaType.AdPositions.Select(d => new SelectListItem() { Text = d.Name, Value = d.Name });
@@ -251,7 +251,7 @@
                 //detailView: true,                   //设置为 true 可以显示详细页面模式。
                 //detailFormatter: detailFormatter,
                     formatSearch: function() {
-                        return "头条名称";
+                        return "媒体名称";
                 },
                     queryParams: function (parameters) {
                         parameters.MediaTypeId = '@meidaType.Id';
@@ -271,7 +271,7 @@
 
                     {
                         field: 'MediaName',
-                        title: '头条名称',
+                        title: '@Html.DisplayNameFor(d=>d.MediaName)',
                         valign: "middle",
                         align: "left",
                         formatter: formatterMediaName

@@ -91,14 +91,6 @@ namespace Ada.Core.ViewModel.API.iDataAPI
         /// </summary>
         public int? viewCount { get; set; }
         /// <summary>
-        /// 点赞数
-        /// </summary>
-        public int? likeCount { get; set; }
-        /// <summary>
-        /// 分享数
-        /// </summary>
-        public int? shareCount { get; set; }
-        /// <summary>
         /// 文章链接
         /// </summary>
         public string url { get; set; }
@@ -110,10 +102,6 @@ namespace Ada.Core.ViewModel.API.iDataAPI
         /// 文章标题
         /// </summary>
         public string title { get; set; }
-        /// <summary>
-        /// 描述
-        /// </summary>
-        public string description { get; set; }
         
 
     }

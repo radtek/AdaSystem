@@ -128,6 +128,8 @@
   <ItemGroup>
     <Compile Include="Controllers\JobController.cs" />
     <Compile Include="Jobs\BilibiliInfoSelfJob.cs" />
+    <Compile Include="Jobs\ToutiaoArticlesJob.cs" />
+    <Compile Include="Jobs\ToutiaoInfoJob.cs" />
     <Compile Include="Jobs\RedBookArticleInfoJob.cs" />
     <Compile Include="Jobs\RedBookArticlesJob.cs" />
     <Compile Include="Jobs\DouYinArticlesJob.cs" />
