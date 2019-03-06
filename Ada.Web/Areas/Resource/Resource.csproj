@@ -168,6 +168,7 @@
     <Compile Include="Controllers\MediaTypeController.cs" />
     <Compile Include="Controllers\RedBookController.cs" />
     <Compile Include="Controllers\SinaBlogController.cs" />
+    <Compile Include="Controllers\ToutiaoController.cs" />
     <Compile Include="Controllers\UpdateController.cs" />
     <Compile Include="Controllers\WebCastController.cs" />
     <Compile Include="Controllers\WriterController.cs" />
@@ -251,6 +252,8 @@
     <Content Include="Views\Shared\TaoBao.cshtml" />
     <Content Include="Views\Bilibili\Index.cshtml" />
     <Content Include="Views\Shared\Bilibili.cshtml" />
+    <Content Include="Views\Toutiao\Index.cshtml" />
+    <Content Include="Views\Shared\Toutiao.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

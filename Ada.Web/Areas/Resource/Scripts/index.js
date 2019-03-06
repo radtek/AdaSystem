@@ -342,6 +342,26 @@ function formatterBilibiliData(value, row) {
         (row.AvgReadNum || 0) +
         "</div>";
 }
+function formatterToutiaoData(value, row) {
+    var date = "--";
+    if (row.LastPushDate) {
+        date = moment(row.LastPushDate).format("YYYY-MM-DD HH:mm");
+    }
+    return "<div class='p-xxs'><span class='label label-info'>关注数：" +
+        (row.FriendNum || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>转发数：" +
+        (row.TransmitNum || 0) +
+        "</div>" +"<div class='p-xxs'><span class='label label-info'>平均阅读数：" +
+        (row.AvgReadNum || 0) +
+        "</div>" +
+        "<div class='p-xxs'><span class='label label-info'>平均评论数：" +
+        (row.CommentNum || 0) +
+        "</div>" +
+        
+        "<div class='p-xxs'><span class='label label-info'>最近文章日期：" +
+        date + "</div>";
+}
 function formatterblogLevel(value) {
     if (value == "黄V") {
         return " <span class='label label-warning'>V</span>";

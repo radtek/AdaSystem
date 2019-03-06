@@ -1138,7 +1138,106 @@ namespace Ada.Services.API
             _dbContext.SaveChanges();
             return requestResult;
         }
+        public RequestResult GetToutiaoInfo(BaseParams tparams)
+        {
+            var apiInfo = _apiInterfacesService.GetAPIInterfacesByCallIndex(tparams.CallIndex);
+            string url = apiInfo.APIUrl+ tparams.UID;
+            int times = apiInfo.TimeOut ?? 3;
+            string htmlstr = string.Empty;
+            int request = 1;
+            string resultMsg = "无任何返回结果";
+            while (request <= times)
+            {
+                try
+                {
+                    htmlstr = HttpUtility.Get(url);
+                    request = 9999;
+                }
+                catch (Exception ex)
+                {
+                    if (request == times)
+                    {
+                        //异常日期
+                        APIRequestRecord exrecord = new APIRequestRecord();
+                        exrecord.Id = IdBuilder.CreateIdNum();
+                        exrecord.RequestParameters = tparams.UID;
+                        exrecord.IsSuccess = false;
+                        exrecord.Retcode = "500";
+                        exrecord.ReponseContent = ex.Message;
+                        exrecord.Retmsg = "请求异常";
+                        exrecord.ReponseDate = DateTime.Now;
+                        apiInfo.APIRequestRecords.Add(exrecord);
+                        resultMsg = "请求异常：" + ex.Message;
+                    }
+                    request++;
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(htmlstr))
+            {
+                var result = JsonConvert.DeserializeObject<ToutiaoJSON>(htmlstr);
+                //记录日志
+                //成功日志
+                if (result.retcode == ReturnCode.请求成功 && tparams.IsLog)
+                {
+                    APIRequestRecord record = new APIRequestRecord();
+                    record.Id = IdBuilder.CreateIdNum();
+                    record.IsSuccess = true;
+                    record.RequestParameters = tparams.UID;
+                    record.Retcode = result.retcode.GetHashCode().ToString();
+                    record.Retmsg = result.message;
+                    record.ReponseContent = "当前采集用户信息数：" + result.data.Count;
+                    record.ReponseDate = DateTime.Now;
+                    record.AddedById = tparams.TransactorId;
+                    record.AddedBy = tparams.Transactor;
+                    apiInfo.APIRequestRecords.Add(record);
+                }
+                //失败日志
+                if (result.retcode != ReturnCode.请求成功)
+                {
+                    APIRequestRecord record = new APIRequestRecord();
+                    record.Id = IdBuilder.CreateIdNum();
+                    record.IsSuccess = false;
+                    record.RequestParameters = tparams.UID;
+                    record.Retcode = result.retcode.GetHashCode().ToString();
+                    record.Retmsg = result.message;
+                    record.ReponseContent = htmlstr;
+                    record.ReponseDate = DateTime.Now;
+                    record.AddedById = tparams.TransactorId;
+                    record.AddedBy = tparams.Transactor;
+                    apiInfo.APIRequestRecords.Add(record);
+                }
+                else
+                {
+                    var media = _mediaRepository.LoadEntities(d => d.MediaID == tparams.UID&&d.MediaType.CallIndex=="toutiao" && d.IsDelete == false).FirstOrDefault();
+                    media.CollectionDate = DateTime.Now;
+                    if (result.data.Any())
+                    {
+                        //找到ID匹配的进行更新
+                        var mediaInfo = result.data.FirstOrDefault(d => d.id == tparams.UID);
+                        if (mediaInfo != null)
+                        {
+                            media.MediaName = Utils.FilterEmoji(mediaInfo.screenName);
+                            media.Abstract = mediaInfo.idVerifiedInfo;
+                            media.Content = mediaInfo.biography;
+                            media.FansNum = mediaInfo.fansCount;
+                            media.PostNum = mediaInfo.videoCount;
+                            media.MediaLink = mediaInfo.url;
+                            media.FriendNum = mediaInfo.followCount;
+                            media.TransmitNum = mediaInfo.shareCount;
+                            media.MediaLogo = mediaInfo.avatarUrl;
+                            media.IsAuthenticate = mediaInfo.idVerified;
+                            
+                        }
+                    }
+                }
 
+                resultMsg = result.ToString();
+            }
+            RequestResult requestResult = new RequestResult();
+            requestResult.Message = resultMsg;
+            _dbContext.SaveChanges();
+            return requestResult;
+        }
         public string TestApi(TestParams testParams)
         {
             var apiInfo = _apiInterfacesService.GetAPIInterfacesByCallIndex(testParams.CallIndex);

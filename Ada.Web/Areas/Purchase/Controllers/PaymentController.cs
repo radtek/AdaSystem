@@ -109,7 +109,7 @@ namespace Purchase.Controllers
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
             return PartialView("PaymentDetails", entity);
         }
-        [HttpPost]
+        [HttpPost,ValidateInput(false)]
         
         public ActionResult Add(PurchasePaymentView viewModel)
         {

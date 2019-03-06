@@ -1,22 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.SqlServer;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
 using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.API;
-using Ada.Core.Domain.Customer;
 using Ada.Core.Domain.Resource;
 using Ada.Core.Tools;
-using Ada.Core.ViewModel.API;
 using Ada.Core.ViewModel.API.iDataAPI;
 using Ada.Core.ViewModel.Resource;
 using Ada.Core.ViewModel.Setting;
@@ -217,6 +211,19 @@ namespace Resource.Controllers
                         jo.Add("关注数", media.FriendNum);
                         jo.Add("播放数", media.LikesNum);
                         jo.Add("阅读数", media.AvgReadNum);
+                        jo.Add("备注说明", media.Remark);
+                        break;
+                    case "toutiao":
+                        jo.Add("媒体链接", media.MediaLink);
+                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                        jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
+                        Price(media, jo, priceTypeList);
+                        //jo.Add("地区", media.Area);
+                        jo.Add("关注数", media.FriendNum);
+                        jo.Add("转发数", media.TransmitNum);
+                        jo.Add("平均阅读数", media.AvgReadNum);
+                        jo.Add("平均评论数", media.CommentNum);
+                        jo.Add("媒体说明", media.Content);
                         jo.Add("备注说明", media.Remark);
                         break;
                     case "douyin":
@@ -1606,12 +1613,29 @@ namespace Resource.Controllers
             {
                 if (CheckRequest(baseParams.CallIndex))
                 {
-                    return Json(new { State = 0, Msg = "今日请求采集抖音信息次数已用完" });
+                    return Json(new { State = 0, Msg = "采集抖音用户信息今日次数已用完" });
                 }
             }
             baseParams.TransactorId = CurrentManager.Id;
             baseParams.Transactor = CurrentManager.UserName;
             var msg = _iDataAPIService.GetDouYinInfo(baseParams);
+            return Json(new { State = 1, Msg = msg.Message });
+        }
+        [HttpPost]
+
+        public ActionResult ToutiaoInfoCollection(BaseParams baseParams)
+        {
+            var premission = PremissionData();
+            if (premission.Count > 0)
+            {
+                if (CheckRequest(baseParams.CallIndex))
+                {
+                    return Json(new { State = 0, Msg = "采集今日头条用户信息今日次数已用完" });
+                }
+            }
+            baseParams.TransactorId = CurrentManager.Id;
+            baseParams.Transactor = CurrentManager.UserName;
+            var msg = _iDataAPIService.GetToutiaoInfo(baseParams);
             return Json(new { State = 1, Msg = msg.Message });
         }
         [HttpPost]
@@ -1685,6 +1709,7 @@ namespace Resource.Controllers
                 case "taobao":
                 case "redbook":
                 case "bilibili":
+                case "toutiao":
                     whereLambda = d =>
                           d.MediaID.Equals(viewModel.MediaID.Trim(), StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == isDelete &&
                           d.MediaTypeId == viewModel.MediaTypeId;
