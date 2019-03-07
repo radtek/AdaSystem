@@ -102,6 +102,10 @@ namespace Ada.Web.Controllers
         {
             return View();
         }
+        public ActionResult Other()
+        {
+            return View();
+        }
         public ActionResult Writer()
         {
             return View();
@@ -238,6 +242,7 @@ namespace Ada.Web.Controllers
                     IsHot = d.IsHot,
                     PublishFrequency = d.PublishFrequency,
                     IsRecommend = d.IsRecommend,
+                    IsComment = d.MediaType.IsComment,
                     IsTop = d.IsTop,
                     MediaLogo = d.MediaLogo,
                     ResourceType = d.ResourceType,
@@ -784,6 +789,13 @@ namespace Ada.Web.Controllers
                             jo.Add("关注数", media.FriendNum);
                             jo.Add("播放数", media.LikesNum);
                             jo.Add("阅读数", media.AvgReadNum);
+                            break;
+                        case "toutiao":
+                            jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
+                            jo.Add("关注数", media.FriendNum);
+                            jo.Add("平均阅读数", media.AvgReadNum);
+                            jo.Add("平均评论数", media.CommentNum);
+                            jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
                             break;
                         case "writer":
                             jo.Add("擅长类型", media.ResourceType);

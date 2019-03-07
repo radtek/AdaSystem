@@ -364,7 +364,7 @@ formatter.mediaLogo = function (value, row) {
     var line = detail ? "<div class='p-xxs text-center'>" + detail + "</div>" : "";
     
     var comment = "";
-    if (row.MediaTypeIndex != "writer" && row.MediaTypeIndex != "taobao" && row.MediaTypeIndex != "bilibili" && row.MediaTypeIndex != "headline") {
+    if (row.IsComment) {
         comment = "<div class='p-xxs text-center'><a class='btn btn-danger btn-outline btn-xs' href='/Media/CommentDetail/" + row.Id + "' target='_blank'><i class='fa fa-comment'></i> 评价详情</a></div>";
     }
     return '<div class="p-xxs text-center">' + logo + '</div>' + vg + line + comment;
@@ -611,6 +611,9 @@ formatter.mediaData = function (value, row) {
     }
     if (row.MediaTypeIndex == "bilibili") {
         line = line8 + linetblike + linetbread;
+    }
+    if (row.MediaTypeIndex == "toutiao") {
+        line = line8 + line1 + line3 + line7;
     }
     return line || "<span class='label label-warning'>抱歉！暂无相关数据</span>";
 };

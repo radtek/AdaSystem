@@ -11,7 +11,7 @@
     var settingService = EngineContext.Current.Resolve<ISettingService>();
     var setConfig = settingService.GetSetting<WeiGuang>();
     var excelFields = fieldService.GetFieldsByKey(Model.CallIndex + "-excel");
-    var isData = new List<string>() { "weixin", "sinablog", "douyin", "redbook","taobao","bilibili","headline" };
+    var isData = new List<string>() { "weixin", "sinablog", "douyin", "redbook","taobao","bilibili","headline","toutiao" };
     var areas = fieldService.GetFieldsByKey("Area").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var platforms = fieldService.GetFieldsByKey("HeadLinePlatform").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var priceOrder = new List<SelectListItem>();
@@ -140,6 +140,7 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
 };
             break;
         case "headline":
+        case "toutiao":
             priceRange = new List<SelectListItem>()
             {
                 new SelectListItem(){Text = @"1000元以下",Value = "1-1000"},
@@ -158,6 +159,7 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
                 new SelectListItem(){Text = @"50万以上",Value = "50-"},
             };
             break;
+
         case "writer":
             priceRange = new List<SelectListItem>()
             {
@@ -360,6 +362,10 @@ new SelectListItem(){Text = @"500万以上",Value = "500-"},
                     @if (Model.CallIndex == "bilibili")
                     {
                         @Html.Partial("FilterBilibili")
+                    }
+                    @if (Model.CallIndex == "toutiao")
+                    {
+                        @Html.Partial("FilterToutiao")
                     }
                 </div>
 

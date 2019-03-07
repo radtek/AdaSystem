@@ -143,7 +143,7 @@ namespace Resource.Controllers
                     media.TransactorId = row.GetCell(9)?.ToString();
                     media.Status = Consts.StateNormal;
                     media.IsSlide = true;
-                    media.AddedDate = DateTime.Now.AddDays(-100);//DateTime.Now;
+                    media.AddedDate = DateTime.Now;//DateTime.Now;
                     _mediaService.Add(media);
                     count++;
 

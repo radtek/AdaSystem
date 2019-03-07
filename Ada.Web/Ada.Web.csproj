@@ -3115,6 +3115,8 @@
     <Content Include="Views\Media\FilterBilibili.cshtml" />
     <Content Include="Views\Media\MediaPrice.cshtml" />
     <Content Include="Views\Media\Toutiao.cshtml" />
+    <Content Include="Views\Media\Other.cshtml" />
+    <Content Include="Views\Media\FilterToutiao.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
