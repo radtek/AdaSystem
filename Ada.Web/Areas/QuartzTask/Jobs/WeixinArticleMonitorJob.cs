@@ -18,12 +18,12 @@ namespace QuartzTask.Jobs
         {
             var name = context.JobDetail.Key.Name;
             var group = context.JobDetail.Key.Group;
-            var job = _service.GetByJobKey(name,group);
+            var job = _service.GetByJobKey(name, group);
             byte[] b = System.Text.Encoding.Default.GetBytes(job.Params);
             //转成 Base64 
             var url = job.ApiUrl + Convert.ToBase64String(b);
             var times = job.Repetitions ?? 3;
-            var detail = new JobDetail {Id = IdBuilder.CreateIdNum(), RequestDate = DateTime.Now,IsSuccess = false};
+            var detail = new JobDetail { Id = IdBuilder.CreateIdNum(), RequestDate = DateTime.Now, IsSuccess = false };
             for (var i = 0; i < times; i++)
             {
                 try
@@ -48,7 +48,7 @@ namespace QuartzTask.Jobs
                         break;
                     }
 
-                    if (result.retcode == ReturnCode.目标参数搜索没结果)
+                    if (result.retcode == ReturnCode.目标参数搜索没结果 || result.retcode == ReturnCode.用户帐号不存在)
                     {
                         detail.Retmsg = result.message;
                         break;
@@ -60,22 +60,22 @@ namespace QuartzTask.Jobs
                     detail.Retcode = "502";
                 }
             }
-            detail.AddedDate=DateTime.Now;
+            detail.AddedDate = DateTime.Now;
             job.JobDetails.Add(detail);
             if (context.NextFireTimeUtc != null)
             {
                 job.NextTime = context.NextFireTimeUtc.Value.ToLocalTime().DateTime;
                 job.Remark = "微信文章监测：" + DateTime.Now;
-                if (job.NextTime>=job.EndTime)
+                if (job.NextTime >= job.EndTime)
                 {
                     job.TriggerState = TriggerState.Complete.ToString();
-                    job.Remark = "微信文章监测完成" ;
+                    job.Remark = "微信文章监测完成";
                     job.NextTime = null;
                     context.Scheduler.DeleteJob(context.JobDetail.Key);
                 }
             }
 
-            
+
             _service.Update(job);
         }
     }
