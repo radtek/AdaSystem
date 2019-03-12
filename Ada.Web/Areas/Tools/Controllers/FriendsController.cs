@@ -96,8 +96,7 @@ namespace Tools.Controllers
             //    .Skip(friendsSet.FansRangeMin).Take(friendsSet.FansRangeMax - friendsSet.FansRangeMin);
             //ViewBag.Fans = allFans.OrderBy(d => Guid.NewGuid()).Take(friendsSet.FriendContent.Likes).ToList();
             var range = friendsSet.FriendContent.PublishFans.AvatarRange.Split('-');
-            ViewBag.Fans =
-                Utils.GetRandomArray(friendsSet.FriendContent.Likes, int.Parse(range[0]), int.Parse(range[1])).ToList();
+            ViewBag.Fans =Utils.GetRandomArray(friendsSet.FriendContent.Likes, int.Parse(range[0]), int.Parse(range[1])).ToList();
             return View(friendsSet);
         }
         [AllowAnonymous]
@@ -170,5 +169,6 @@ namespace Tools.Controllers
 
             return newtime;
         }
+        
     }
 }

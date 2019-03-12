@@ -137,6 +137,7 @@
     <Compile Include="Domain\Purchase\PurchaseReturenOrderDetail.cs" />
     <Compile Include="Domain\Purchase\PurchaseReturnOrder.cs" />
     <Compile Include="Domain\QuartzTask\Job.cs" />
+    <Compile Include="Domain\QuartzTask\JobDetail.cs" />
     <Compile Include="Domain\Resource\Media.cs" />
     <Compile Include="Domain\API\APIInterfaces.cs" />
     <Compile Include="Domain\Resource\MediaAppointment.cs" />

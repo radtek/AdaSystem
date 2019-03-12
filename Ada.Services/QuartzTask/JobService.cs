@@ -47,7 +47,11 @@ namespace Ada.Services.QuartzTask
             {
                 allList = allList.Where(d => d.JobName.Contains(viewModel.search));
             }
-            
+
+            if (viewModel.Type!=null)
+            {
+                allList = allList.Where(d => d.Type == viewModel.Type);
+            }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
@@ -57,6 +61,10 @@ namespace Ada.Services.QuartzTask
                 return allList.OrderByDescending(d => d.GroupName).Skip(offset).Take(rows);
             }
             return allList.OrderBy(d => d.GroupName).Skip(offset).Take(rows);
+        }
+        public Job GetByJobKey(string name, string group)
+        {
+            return _repository.LoadEntities(d => d.JobName == name && d.GroupName == group).FirstOrDefault();
         }
     }
 }

@@ -1,0 +1,316 @@
+﻿
+@using Ada.Core.Domain.QuartzTask
+@model Ada.Core.Domain.QuartzTask.Job
+@{
+    var details = Model.JobDetails.OrderBy(d => d.AddedDate).ToList();
+    var timeData = details.Select(d => d.AddedDate.Value.ToString("MM-dd HH:mm"));
+    var num1 = details.Select(d => d.Num1);
+    var num2 = details.Select(d => d.Num2);
+    var addList=new List<JobDetail>();
+    for (int i = 0; i < details.Count; i++)
+    {
+        var item = details[i];
+        var last = i == 0 ? item : details[i - 1];
+        var rAdd = item.Num1 - last.Num1;
+        var lAdd = item.Num2 - last.Num2;
+        addList.Add(new JobDetail(){AddedDate = item.AddedDate,Num1 = rAdd,Num2 = lAdd});
+    }
+    var num1Add = addList.Select(d => d.Num1);
+    var num2Add = addList.Select(d => d.Num2);
+}
+<div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">@Model.JobName</h4>
+                <small class="font-bold">阅读数和点赞数趋势图.</small>
+            </div>
+            <div class="modal-body">
+                
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#data">数据走势</a></li>
+                    <li class=""><a data-toggle="tab" href="#add">增量走势</a></li>
+                    <li class=""><a data-toggle="tab" href="#list">数据明细</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="data" class="tab-pane active">
+                        <div class="panel-body">
+                            <div class="flot-chart" style="height: 600px;">
+                                <div class="flot-chart-content" id="jobchart"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="add" class="tab-pane">
+                        <div class="panel-body">
+                            <div class="flot-chart" style="height: 600px;">
+                                <div class="flot-chart-content" id="jobchartadd"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="list" class="tab-pane">
+                        <div class="panel-body">
+                            <div class="scroll_content">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                监测时间
+                                            </th>
+                                            <th>
+                                                总阅读数
+                                            </th>
+                                            <th>
+                                                阅读增量
+                                            </th>
+                                            <th>
+                                                总点赞数
+                                            </th>
+                                            <th>
+                                                点赞增量
+                                            </th>
+                                            <th>
+                                                备注
+                                            </th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @for (int i = 0; i < details.Count; i++)
+                                        {
+                                            var item = details[i];
+                                            var last = i == 0 ? item : details[i - 1];
+                                            var rAdd = item.Num1 - last.Num1;
+                                            var lAdd = item.Num2 - last.Num2;
+                                            var remark = item.IsSuccess == true ? "数据正常" : item.Retmsg;
+                                        <tr>
+                                            <td>
+                                                @item.AddedDate.Value.ToString("yyyy-MM-dd HH:mm")
+                                            </td>
+                                            <td>@item.Num1</td>
+                                            <td>@rAdd</td>
+                                            <td>@item.Num2</td>
+                                            <td>@lAdd</td>
+                                            <td>@remark</td>
+                                        </tr>
+                                        }
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function initCharts() {
+        var myChart = echarts.init(document.getElementById('jobchart'));
+        var times =@Html.Raw(Json.Encode(timeData));
+        var option = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    animation: false
+                }
+            },
+            legend: {
+                data:['阅读数','点赞数'],
+                x: 'left'
+            },
+            toolbox: {
+                feature: {
+                    dataZoom: {
+                        yAxisIndex: 'none'
+                    },
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            axisPointer: {
+                link: {xAxisIndex: 'all'}
+            },
+            dataZoom: [
+                {
+                    show: true,
+                    realtime: true,
+
+                    xAxisIndex: [0, 1]
+                },
+                {
+                    type: 'inside',
+                    realtime: true,
+
+                    xAxisIndex: [0, 1]
+                }
+            ],
+            grid: [{
+                left: 50,
+                right: 50,
+                height: '35%'
+            }, {
+                left: 50,
+                right: 50,
+                top: '55%',
+                height: '35%'
+            }],
+            xAxis : [
+                {
+                    type : 'category',
+                    boundaryGap : false,
+                    axisLine: {onZero: true},
+                    data: times
+                },
+                {
+                    gridIndex: 1,
+                    type : 'category',
+                    boundaryGap : false,
+                    axisLine: {onZero: true},
+                    data: times,
+                    position: 'top'
+                }
+            ],
+            yAxis : [
+                {
+                    name : '阅读数',
+                    type : 'value',
+                                
+                },
+                {
+                    gridIndex: 1,
+                    name : '点赞数',
+                    type : 'value',
+                    inverse: true
+                }
+            ],
+            series: [
+                {
+                    name: '阅读数',
+                    type: 'line',
+                    symbolSize: 8,
+                    hoverAnimation: false,
+                    data: @Json.Encode(num1)
+                },
+                {
+                    name: '点赞数',
+                    type: 'line',
+                    xAxisIndex: 1,
+                    yAxisIndex: 1,
+                    symbolSize: 8,
+                    hoverAnimation: false,
+                    data: @Json.Encode(num2)
+                }
+            ]
+        };
+        myChart.setOption(option);
+    }
+
+    function initChartsAdd() {
+         var myChart = echarts.init(document.getElementById('jobchartadd'));
+            var times =@Html.Raw(Json.Encode(timeData));
+            var option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        animation: false
+                    }
+                },
+                legend: {
+                    data:['阅读增量','点赞增量'],
+                    x: 'left'
+                },
+                toolbox: {
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                axisPointer: {
+                    link: {xAxisIndex: 'all'}
+                },
+                dataZoom: [
+                    {
+                        show: true,
+                        realtime: true,
+
+                        xAxisIndex: [0, 1]
+                    },
+                    {
+                        type: 'inside',
+                        realtime: true,
+
+                        xAxisIndex: [0, 1]
+                    }
+                ],
+                grid: [{
+                    left: 50,
+                    right: 50,
+                    height: '35%'
+                }, {
+                    left: 50,
+                    right: 50,
+                    top: '55%',
+                    height: '35%'
+                }],
+                xAxis : [
+                    {
+                        type : 'category',
+                        boundaryGap : false,
+                        axisLine: {onZero: true},
+                        data: times
+                    },
+                    {
+                        gridIndex: 1,
+                        type : 'category',
+                        boundaryGap : false,
+                        axisLine: {onZero: true},
+                        data: times,
+                        position: 'top'
+                    }
+                ],
+                yAxis : [
+                    {
+                        name: '阅读增量',
+                        type : 'value',
+                                
+                    },
+                    {
+                        gridIndex: 1,
+                        name: '点赞增量',
+                        type : 'value',
+                        inverse: true
+                    }
+                ],
+                series: [
+                    {
+                        name: '阅读增量',
+                        type: 'line',
+                        symbolSize: 8,
+                        hoverAnimation: false,
+                        data: @Json.Encode(num1Add)
+                    },
+                    {
+                        name: '点赞增量',
+                        type: 'line',
+                        xAxisIndex: 1,
+                        yAxisIndex: 1,
+                        symbolSize: 8,
+                        hoverAnimation: false,
+                        data: @Json.Encode(num2Add)
+                    }
+                ]
+            };
+        myChart.setOption(option);
+        return myChart;
+
+    }
+</script>

@@ -127,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\JobController.cs" />
+    <Compile Include="Controllers\WeiXinController.cs" />
     <Compile Include="Jobs\BilibiliInfoSelfJob.cs" />
     <Compile Include="Jobs\ToutiaoArticlesJob.cs" />
     <Compile Include="Jobs\ToutiaoInfoJob.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Jobs\DouYinInfoJob.cs" />
     <Compile Include="Jobs\UpdateMediaSellPriceJob.cs" />
     <Compile Include="Jobs\WeiboArticlesJob.cs" />
+    <Compile Include="Jobs\WeixinArticleMonitorJob.cs" />
     <Compile Include="Jobs\WeiXinArticlesJob.cs" />
     <Compile Include="Jobs\WeiXinBizJob.cs" />
     <Compile Include="Jobs\WeiXinInfoJob.cs" />
@@ -161,6 +163,11 @@
     <Content Include="Views\Job\Update.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Views\WeiXin\Index.cshtml" />
+    <Content Include="Views\WeiXin\Add.cshtml" />
+    <Content Include="Views\WeiXin\Update.cshtml" />
+    <Content Include="Views\WeiXin\Edit.cshtml" />
+    <Content Include="Views\WeiXin\Chart.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

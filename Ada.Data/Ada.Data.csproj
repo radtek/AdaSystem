@@ -108,6 +108,7 @@
     <Compile Include="Mapping\Purchase\PurchaseOrderMap.cs" />
     <Compile Include="Mapping\Purchase\PurchaseReturenOrderDetailMap.cs" />
     <Compile Include="Mapping\Purchase\PurchaseReturnOrderMap.cs" />
+    <Compile Include="Mapping\QuartzTask\JobDetailMap.cs" />
     <Compile Include="Mapping\QuartzTask\JobMap.cs" />
     <Compile Include="Mapping\Resource\MediaAppointmentMap.cs" />
     <Compile Include="Mapping\Resource\MediaPriceChangeMap.cs" />
@@ -409,6 +410,10 @@
     <Compile Include="Migrations\201902270345078_UpdateFans.Designer.cs">
       <DependentUpon>201902270345078_UpdateFans.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903110327222_UpdataJob.cs" />
+    <Compile Include="Migrations\201903110327222_UpdataJob.Designer.cs">
+      <DependentUpon>201903110327222_UpdataJob.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -629,6 +634,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201902270345078_UpdateFans.resx">
       <DependentUpon>201902270345078_UpdateFans.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903110327222_UpdataJob.resx">
+      <DependentUpon>201903110327222_UpdataJob.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

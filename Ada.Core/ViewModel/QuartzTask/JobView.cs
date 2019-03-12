@@ -94,5 +94,25 @@ namespace Ada.Core.ViewModel.QuartzTask
         /// </summary>
         [Display(Name = "时间范围(小时)")]
         public int? Times { get; set; }
+        /// <summary>
+        /// 重复次数
+        /// </summary>
+        [Display(Name = "重复次数")]
+        public short? Repetitions { get; set; }
+        /// <summary>
+        /// 是否记录
+        /// </summary>
+        [Display(Name = "是否记录")]
+        public bool? IsLog { get; set; }
+        /// <summary>
+        /// 请求超时
+        /// </summary>
+        [Display(Name = "请求超时")]
+        public int? TimeOut { get; set; }
+        /// <summary>
+        /// 类型
+        /// </summary>
+        [Display(Name = "类型")]
+        public short? Type { get; set; }
     }
 }

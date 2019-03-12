@@ -101,4 +101,31 @@ namespace Ada.Core.ViewModel.API.iDataAPI
         /// </summary>
         public string publishDateStr { get; set; }
     }
+
+    public class WeiXinPro2JSON : iDataJsonResult
+    {
+        public WeiXinPro2JSON()
+        {
+            data = new List<WeiXinArticleData2>();
+        }
+        /// <summary>
+        /// 文章集合
+        /// </summary>
+        public List<WeiXinArticleData2> data { get; set; }
+    }
+
+    public class WeiXinArticleData2
+    {
+        
+        /// <summary>
+        /// 点赞数
+        /// </summary>
+        public int? likeCount { get; set; }
+        
+        /// <summary>
+        /// 浏览数
+        /// </summary>
+        public int? viewCount { get; set; }
+       
+    }
 }

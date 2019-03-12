@@ -48,7 +48,8 @@ namespace QuartzTask.Controllers
                     NextTime = d.NextTime,
                     PreTime = d.PreTime,
                     Remark = d.Remark,
-                    Times = d.Taxis
+                    Times = d.Taxis,
+                    Params = d.Params
                 })
             }, JsonRequestBehavior.AllowGet);
         }
@@ -83,7 +84,7 @@ namespace QuartzTask.Controllers
             entity.AppId = viewModel.AppId;
             entity.Params = viewModel.Params;
             entity.Token = viewModel.Token;
-            
+            entity.Type = 0;
             _jobService.Add(entity);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");

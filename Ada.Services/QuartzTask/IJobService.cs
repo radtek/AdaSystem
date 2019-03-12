@@ -16,5 +16,6 @@ namespace Ada.Services.QuartzTask
         void Update(Job entity);
         void Delete(Job entity);
         IQueryable<Job> LoadEntitiesFilter(JobView viewModel);
+        Job GetByJobKey(string name, string group);
     }
 }
