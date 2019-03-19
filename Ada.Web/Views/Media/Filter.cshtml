@@ -11,7 +11,7 @@
     var settingService = EngineContext.Current.Resolve<ISettingService>();
     var setConfig = settingService.GetSetting<WeiGuang>();
     var excelFields = fieldService.GetFieldsByKey(Model.CallIndex + "-excel");
-    var isData = new List<string>() { "weixin", "sinablog", "douyin", "redbook","taobao","bilibili","headline","toutiao" };
+    var isData = new List<string>() { "weixin", "sinablog", "douyin", "redbook","taobao","bilibili","headline","toutiao","zhihu" };
     var areas = fieldService.GetFieldsByKey("Area").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var platforms = fieldService.GetFieldsByKey("HeadLinePlatform").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
     var priceOrder = new List<SelectListItem>();

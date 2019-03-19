@@ -441,26 +441,32 @@ namespace Ada.Web.Controllers
 
         public ActionResult ChangeMedia()
         {
-            var medias = _media.LoadEntities(d => d.TransactorId == "X1807121117097012").ToList();
-            var mediaId = "";
-            try
+            string path = Server.MapPath("~/upload/close.xlsx");
+            int count = 0;
+            using (FileStream ms = new FileStream(path, FileMode.Open))
             {
-                foreach (var media in medias)
+                //创建工作薄
+                IWorkbook wk = new XSSFWorkbook(ms);
+                //1.获取第一个工作表
+                ISheet sheet = wk.GetSheetAt(0);
+                if (sheet.LastRowNum <= 1)
                 {
-                    mediaId = media.Id;
-                    media.Transactor = "刘娟";
-                    media.TransactorId = "X1809031204013244";
-                    media.LinkMan.Transactor = "刘娟";
-                    media.LinkMan.TransactorId = "X1809031204013244";
+                    return Content("此文件没有导入数据，请填充数据再进行导入");
+                }
+                for (int i = 1; i <= sheet.LastRowNum; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+                    var mediaId = row.GetCell(0)?.ToString();
+                    var media = _media.LoadEntities(d => d.Id == mediaId.Trim()).FirstOrDefault();
+                    if (media == null) continue;
+                    //media.Status = 0;
+                    //media.LinkManId = "X1712181731290052";
+                    count++;
                 }
 
                 _dbContext.SaveChanges();
             }
-            catch
-            {
-                return Content("异常：" + mediaId);
-            }
-            return Content("成功转移：" + medias.Count());
+            return Content("成功更改" + count + "条资源");
         }
         public ActionResult ChangeMediaXls(string name, string id)
         {
@@ -578,7 +584,8 @@ namespace Ada.Web.Controllers
                     var mediaId = row.GetCell(0)?.ToString();
                     var media = _media.LoadEntities(d => d.Id == mediaId.Trim()).FirstOrDefault();
                     if (media == null) continue;
-                    media.Status = 0;
+                    //media.Status = 0;
+                    media.IsDelete = true;
                     count++;
                 }
 

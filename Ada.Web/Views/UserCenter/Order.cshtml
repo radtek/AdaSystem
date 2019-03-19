@@ -12,7 +12,7 @@
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var tyeService = EngineContext.Current.Resolve<IMediaTypeService>();
     var purchaseStatus = fieldService.GetFieldsByKey("PurchaseStatus").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
-    var types = tyeService.LoadEntitiesFilter(new MediaTypeView()).OrderBy(d => d.Taxis).Select(d => new SelectListItem { Text = d.TypeName, Value = d.Id }).ToList();
+    var types = tyeService.LoadEntitiesFilter(new MediaTypeView(){limit = int.MaxValue}).Where(d=>d.CallIndex!="brush").OrderBy(d => d.Taxis).Select(d => new SelectListItem { Text = d.TypeName, Value = d.Id }).ToList();
     int times = ViewBag.RequestTimes;
 }
 <div class="wrapper wrapper-content">
