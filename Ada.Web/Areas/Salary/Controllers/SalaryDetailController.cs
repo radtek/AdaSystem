@@ -156,7 +156,7 @@ namespace Salary.Controllers
             //请假
             var qj = (double)config.OffWork;
             double offwork = 0;
-            if (viewModel.OffWork < 5)
+            if (viewModel.OffWork <= 5)
             {
                 //offwork = viewModel.OffWork <= 2 ? viewModel.OffWork / 0.5 * qj : 2 * qj * Math.Pow(2, viewModel.OffWork - 1);
                 if (viewModel.OffWork <= 2)
@@ -182,7 +182,7 @@ namespace Salary.Controllers
             //旷工
             var kuanggong = (double)config.Absenteeism;
             double absenteeism = 0;
-            if (viewModel.Absenteeism < 5)
+            if (viewModel.Absenteeism <= 5)
             {
                 //absenteeism = viewModel.Absenteeism <= 2 ? viewModel.Absenteeism / 0.5 * kuanggong : 2 * kuanggong * Math.Pow(2, viewModel.Absenteeism - 1);
                 if (viewModel.Absenteeism <= 2)
@@ -377,7 +377,7 @@ namespace Salary.Controllers
             //请假
             var qj = (double)config.OffWork;
             double offwork = 0;
-            if (viewModel.OffWork < 5)
+            if (viewModel.OffWork <= 5)
             {
                 //offwork = viewModel.OffWork <= 2 ? viewModel.OffWork / 0.5 * qj : 2 * qj * Math.Pow(2, viewModel.OffWork - 1);
                 if (viewModel.OffWork <= 2)
@@ -403,7 +403,7 @@ namespace Salary.Controllers
             //旷工
             var kuanggong = (double)config.Absenteeism;
             double absenteeism = 0;
-            if (viewModel.Absenteeism < 5)
+            if (viewModel.Absenteeism <= 5)
             {
                 //absenteeism = viewModel.Absenteeism <= 2 ? viewModel.Absenteeism / 0.5 * kuanggong : 2 * kuanggong * Math.Pow(2, viewModel.Absenteeism - 1);
                 if (viewModel.Absenteeism <= 2)

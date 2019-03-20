@@ -1,0 +1,67 @@
+﻿@using Ada.Core
+@using Ada.Core.Domain.Finance
+@using Ada.Core.Infrastructure
+@{
+    var repository = EngineContext.Current.Resolve<IRepository<ExpenseDetail>>();
+    var month = DateTime.Now.AddDays(-Convert.ToInt32(DateTime.Now.Date.Day));
+    var details = repository.LoadEntities(d => d.IncomeExpendId == "X1903201038018971" && d.Expense.IsDelete == false && d.Expense.BillDate > month).GroupBy(d => d.Expense.Employe).Select(d => new
+    {
+        Name = d.Key,
+        Money = d.Sum(o => o.Money)
+    }).OrderByDescending(d=>d.Money).ToList();
+    int index = 1;
+}
+@if (details.Any())
+{
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox">
+            <div class="ibox-title">
+                <h5>本月考勤迟到罚款情况</h5>
+                <span class="label label-primary mouse-pointer" data-toggle="modal" data-target="#qrcode"><i class="fa fa-qrcode"></i> 收款码</span>
+            </div>
+            <div class="ibox-content">
+                <div class="table-responsive">
+                    <table class="table table-hover margin bottom">
+                        <thead>
+                            <tr>
+                                <th class="text-center">序号</th>
+                                <th class="text-center">迟到人员</th>
+                                <th class="text-center">罚款金额</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in details)
+                            {
+                                <tr>
+                                    <td class="text-center">@index</td>
+                                    <td class="text-center">@item.Name</td>
+                                    <td class="text-center">@item.Money</td>
+                                </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal inmodal fade" id="qrcode" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">财务收款码</h4>
+                </div>
+                <div class="modal-body">
+                    <img src="/Images/qrcode.jpg" class="img-responsive" alt="财务收款码">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}

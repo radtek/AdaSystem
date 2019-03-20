@@ -2217,6 +2217,7 @@
     <Content Include="Images\p_big1.jpg" />
     <Content Include="Images\p_big2.jpg" />
     <Content Include="Images\p_big3.jpg" />
+    <Content Include="Images\qrcode.jpg" />
     <Content Include="Images\top.png" />
     <Content Include="Images\tuijian.png" />
     <Content Include="Images\vglogo.png" />

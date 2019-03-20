@@ -172,17 +172,18 @@
 
 
     </div>
+    @Html.Partial("Late")
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins" id="iboxAdd">
                 <div class="ibox-title">
                     <h5>媒体资源开发排行榜</h5>
-                    <div class="ibox-tools">
+                    @*<div class="ibox-tools">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy-MM")</span> <i class="fa fa-chevron-down"></i></span>
                         </a>
                         <ul class="dropdown-menu dropdown-user">
-                            
+
                             @for (int i = 0; i < 12; i++)
                             {
                                 <li>
@@ -190,7 +191,7 @@
                                 </li>
                             }
                         </ul>
-                    </div>
+                    </div>*@
                 </div>
                 <div class="ibox-content">
                     <div class="sk-spinner sk-spinner-double-bounce">
