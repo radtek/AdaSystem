@@ -11,8 +11,7 @@
     }).OrderByDescending(d=>d.Money).ToList();
     int index = 1;
 }
-@if (details.Any())
-{
+
 <div class="row">
     <div class="col-lg-12">
         <div class="ibox">
@@ -21,28 +20,36 @@
                 <span class="label label-primary mouse-pointer" data-toggle="modal" data-target="#qrcode"><i class="fa fa-qrcode"></i> 收款码</span>
             </div>
             <div class="ibox-content">
-                <div class="table-responsive">
-                    <table class="table table-hover margin bottom">
-                        <thead>
-                            <tr>
-                                <th class="text-center">序号</th>
-                                <th class="text-center">迟到人员</th>
-                                <th class="text-center">罚款金额</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in details)
-                            {
+                @if (details.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover margin bottom">
+                            <thead>
                                 <tr>
-                                    <td class="text-center">@index</td>
-                                    <td class="text-center">@item.Name</td>
-                                    <td class="text-center">@item.Money</td>
+                                    <th class="text-center">序号</th>
+                                    <th class="text-center">迟到人员</th>
+                                    <th class="text-center">罚款金额</th>
                                 </tr>
-                                index++;
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in details)
+                                {
+                                    <tr>
+                                        <td class="text-center">@index</td>
+                                        <td class="text-center">@item.Name</td>
+                                        <td class="text-center">@item.Money</td>
+                                    </tr>
+                                    index++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p>本月暂无迟到现象，请大家继续保持！</p>
+                }
+
 
             </div>
         </div>
@@ -53,6 +60,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
                     <h4 class="modal-title">财务收款码</h4>
+                    <small class="font-bold">迟到半小时内罚款20元，半小时以上罚款100元.</small>
                 </div>
                 <div class="modal-body">
                     <img src="/Images/qrcode.jpg" class="img-responsive" alt="财务收款码">
@@ -64,4 +72,4 @@
         </div>
     </div>
 </div>
-}
+

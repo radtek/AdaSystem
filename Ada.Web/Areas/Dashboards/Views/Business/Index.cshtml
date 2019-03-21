@@ -9,457 +9,458 @@
 }
 <div class="wrapper wrapper-content">
 
-<div class="row">
-    <div class="col-lg-2">
+    <div class="row">
+        <div class="col-lg-2">
 
-        <div class="widget style1 white-bg mouse-pointer" onclick="window.open('@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", Status = Consts.StateLock})');">
-            <div class="row">
-                <div class="col-xs-4">
-                    <i class="fa fa-hourglass fa-5x"></i>
-                </div>
-                <div class="col-xs-8 text-right">
-                    <span> 待转采购单 </span>
-                    <h2 class="font-bold">@Model.Waiting</h2>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-2">
-
-        <div class="widget style1 yellow-bg mouse-pointer" onclick="window.open('@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", PurchaseStatus = Consts.PurchaseStatusTodo})');">
-            <div class="row">
-                <div class="col-xs-4">
-                    <i class="fa fa-comments fa-5x"></i>
-                </div>
-                <div class="col-xs-8 text-right">
-                    <span> 采购正处理 </span>
-                    <h2 class="font-bold">@Model.Doing</h2>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-2">
-
-        <div class="widget style1 navy-bg mouse-pointer" onclick="window.open('@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", PurchaseStatus = Consts.PurchaseStatusConfirm})');">
-            <div class="row">
-                <div class="col-xs-4">
-                    <i class="fa fa-handshake-o fa-5x"></i>
-                </div>
-                <div class="col-xs-8 text-right">
-                    <span> 采购已确认 </span>
-                    <h2 class="font-bold">@Model.Confirm</h2>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-2">
-
-        <div class="widget style1 blue-bg mouse-pointer" onclick="window.open('@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", Status = Consts.StateNormal, PurchaseStatus = Consts.PurchaseStatusSuccess})');">
-            <div class="row">
-                <div class="col-xs-4">
-                    <i class="fa fa-check fa-5x"></i>
-                </div>
-                <div class="col-xs-8 text-right">
-                    <span> 销售待确认 </span>
-                    <h2 class="font-bold">@Model.Done</h2>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-2">
-
-        <div class="widget style1 lazur-bg mouse-pointer" onclick="window.open('@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", PrePublishDateStart = DateTime.Now.Date.ToString("d"), PrePublishDateEnd = DateTime.Now.Date.ToString("d")})');">
-            <div class="row">
-                <div class="col-xs-4">
-                    <i class="fa fa-calendar-o fa-5x"></i>
-                </div>
-                <div class="col-xs-8 text-right">
-                    <span> 今日预出刊 </span>
-                    <h2 class="font-bold">@Model.Today</h2>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-2">
-        <div class="widget style1 lazur-bg mouse-pointer" onclick="window.open('@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", PrePublishDateStart = DateTime.Now.Date.AddDays(1).ToString("d"), PrePublishDateEnd = DateTime.Now.Date.AddDays(1).ToString("d")})');">
-            <div class="row">
-                <div class="col-xs-4">
-                    <i class="fa fa-calendar-plus-o fa-5x"></i>
-                </div>
-                <div class="col-xs-8 text-right">
-                    <span> 明日预出刊 </span>
-                    <h2 class="font-bold">@Model.Tomorrow</h2>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-lg-12">
-        <div class="ibox float-e-margins">
-            <div class="ibox-title">
-                <h5>销售核销统计</h5>
-
-            </div>
-            <div class="ibox-content">
+            <div class="widget style1 white-bg mouse-pointer" onclick="window.open('@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", Status = Consts.StateLock})');">
                 <div class="row">
-                    <div class="col-lg-10">
-                        <div class="flot-chart" style="height: 300px;">
-                            <div class="flot-chart-content" id="flot-dashboard-chart"></div>
-                        </div>
+                    <div class="col-xs-4">
+                        <i class="fa fa-hourglass fa-5x"></i>
                     </div>
-                    <div class="col-lg-2">
-                        <ul class="stat-list">
-                            <li>
-                                <h2 class="no-margins">@Model.OrderCount</h2>
-                                <small>销售订单数</small>
-
-                            </li>
-                            <li>
-                                <a class="btn btn-link" href="javascript:;">
-                                    <h3 class="no-margins "><i class="fa fa-jpy "></i> @Model.SellMoney</h3>
-                                    <small>销售总额（不含税）</small>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="btn btn-link" href="@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", Status = Consts.StateOK, VerificationStatus = Consts.StateLock, PublishDateOrder = "asc"})" target="_blank">
-                                    <h3 class="no-margins "><i class="fa fa-jpy "></i> @Model.VerificationMoney</h3>
-                                    <small>未核销金额</small>
-                                </a>
-
-                            </li>
-                            <li>
-                                <a class="btn btn-link" href="@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", VerificationStatus = Consts.StateNormal})" target="_blank">
-                                    <h3 class="no-margins "><i class="fa fa-jpy "></i> @Model.ConfirmVerificationMoney</h3>
-                                    <small>已核销金额</small>
-                                </a>
-                            </li>
-                        </ul>
+                    <div class="col-xs-8 text-right">
+                        <span> 待转采购单 </span>
+                        <h2 class="font-bold">@Model.Waiting</h2>
                     </div>
                 </div>
-
-
             </div>
-
         </div>
-    </div>
+        <div class="col-lg-2">
 
-</div>
-  
-@Html.Partial("Late")
-
-<div class="row">
-    <div class="col-lg-6">
-        <div class="ibox float-e-margins">
-            <div class="ibox-title">
-                <h5>未核销排名（销售员）</h5>
+            <div class="widget style1 yellow-bg mouse-pointer" onclick="window.open('@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", PurchaseStatus = Consts.PurchaseStatusTodo})');">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-comments fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 采购正处理 </span>
+                        <h2 class="font-bold">@Model.Doing</h2>
+                    </div>
+                </div>
             </div>
-            <div class="ibox-content">
-                <div class="table-responsive">
-                    <div class="scroll_content">
-                        <table class="table table-hover margin bottom">
-                            <thead>
-                                <tr>
-                                    <th style="width: 10%" class="text-center">序号</th>
-                                    <th class="text-center">销售员</th>
-                                    <th class="text-center">未核销总额</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.BusinessPerformancesByUser.Take(10))
-                                {
-                                    <tr>
-                                        <td class="text-center">@indexUser</td>
-                                        <td class="text-center">
-                                            @item.Transactor
-                                        </td>
+        </div>
+        <div class="col-lg-2">
 
-                                        <td class="text-center">
-                                            @{
-                                                var total = item.TotalVerificationMoney ?? 0;
-                                                var money = Math.Round(total / 10000, 2);
-                                            }
-                                            <span class="label label-danger">@money 万</span>
-                                        </td>
-                                    </tr>
-                                    indexUser++;
-                                }
-                            </tbody>
-                        </table>
+            <div class="widget style1 navy-bg mouse-pointer" onclick="window.open('@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", PurchaseStatus = Consts.PurchaseStatusConfirm})');">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-handshake-o fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 采购已确认 </span>
+                        <h2 class="font-bold">@Model.Confirm</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
 
+            <div class="widget style1 blue-bg mouse-pointer" onclick="window.open('@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", Status = Consts.StateNormal, PurchaseStatus = Consts.PurchaseStatusSuccess})');">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-check fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 销售待确认 </span>
+                        <h2 class="font-bold">@Model.Done</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+
+            <div class="widget style1 lazur-bg mouse-pointer" onclick="window.open('@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", PrePublishDateStart = DateTime.Now.Date.ToString("d"), PrePublishDateEnd = DateTime.Now.Date.ToString("d")})');">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-calendar-o fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 今日预出刊 </span>
+                        <h2 class="font-bold">@Model.Today</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="widget style1 lazur-bg mouse-pointer" onclick="window.open('@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", PrePublishDateStart = DateTime.Now.Date.AddDays(1).ToString("d"), PrePublishDateEnd = DateTime.Now.Date.AddDays(1).ToString("d")})');">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-calendar-plus-o fa-5x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> 明日预出刊 </span>
+                        <h2 class="font-bold">@Model.Tomorrow</h2>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-lg-6">
-        <div class="ibox">
-            <div class="ibox-title">
-                <h5>未核销排名（公司）</h5>
-            </div>
-            <div class="ibox-content">
-                <div class="table-responsive">
-                    <div class="scroll_content">
-                        <table class="table table-hover margin bottom">
-                            <thead>
-                                <tr>
-                                    <th style="width: 10%" class="text-center">序号</th>
-                                    <th class="text-center">公司名称</th>
-                                    <th class="text-center">联系人</th>
-                                    <th class="text-center">未核销金额</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.VerificationInfos)
-                                {
-                                    <tr>
-                                        <td class="text-center">@index</td>
-                                        <td class="text-center">
-                                            @item.CompanyName
-                                        </td>
-                                        <td class="text-center">@item.LinkManName</td>
-                                        <td class="text-center">
-                                            @{
-                                                var total = item.VerificationMoney ?? 0;
-                                                var money = Math.Round(total / 10000, 2);
-                                            }
-                                            <a class="btn btn-danger btn-xs" href="@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", Status = Consts.StateOK, VerificationStatus = Consts.StateLock, PublishDateOrder = "asc", LinkManId = item.LinkManId})" target="_blank">@money 万</a>
-                                        </td>
-                                    </tr>
-                                    index++;
-                                }
-                            </tbody>
-                        </table>
 
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
-</div>
-
-<div class="row">
-    <div class="col-lg-6">
-        <div class="ibox float-e-margins">
-            <div class="ibox-title">
-                <h5>销售利润占比</h5>
-                <div class="ibox-tools">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <span class="label label-info pull-right"><span id="dateZB">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        @for (int i = 0; i < 12; i++)
-                        {
-                            <li>
-                                <a href="javascript:initPieCharts('@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")');">@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")</a>
-                            </li>
-                        }
-                    </ul>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>销售核销统计</h5>
 
                 </div>
-            </div>
-
-            <div class="ibox-content">
-                <div class="flot-chart" style="height: 300px;">
-                    <div class="flot-chart-content" id="flot-dashboard-chart-pie"></div>
-                </div>
-            </div>
-
-
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <div class="ibox float-e-margins">
-            <div class="ibox-title">
-                <h5>近四月销售概况</h5>
-            </div>
-
-            @foreach (var item in Model.BusinessPerformances.OrderByDescending(d => DateTime.Parse(d.Month)).Take(4))
-            {
                 <div class="ibox-content">
                     <div class="row">
-                        <div class="col-xs-4">
-                            <small class="stats-label">月份</small>
-                            <h4>@item.Month</h4>
+                        <div class="col-lg-10">
+                            <div class="flot-chart" style="height: 300px;">
+                                <div class="flot-chart-content" id="flot-dashboard-chart"></div>
+                            </div>
                         </div>
-                        <div class="col-xs-4">
-                            <small class="stats-label">销售额</small>
-                            <h4><i class="fa fa-jpy "></i> @item.TotalSellMoney</h4>
-                        </div>
-                        <div class="col-xs-4">
-                            <small class="stats-label">利润值</small>
-                            <h4><i class="fa fa-jpy "></i> @item.TotalProfitMoney</h4>
-                        </div>
-                    </div>
-                </div>
-            }
-
-
-        </div>
-    </div>
-</div>
-
-
-
-<div class="row">
-
-
-    <div class="col-lg-12">
-
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="ibox float-e-margins" id="ibox1">
-                    <div class="ibox-title">
-                        <h5>销售一部销售业绩排行</h5>
-                        <div class="ibox-tools">
-
-                            @*<a href="javascript:getTop('业务一部', 'ibox1');">
-                            <i class="fa fa-refresh"></i>
-                        </a>*@
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
+                        <div class="col-lg-2">
+                            <ul class="stat-list">
                                 <li>
-                                    <a href="javascript:getTop('业务一部','', 'ibox1');">全部</a>
+                                    <h2 class="no-margins">@Model.OrderCount</h2>
+                                    <small>销售订单数</small>
+
                                 </li>
-                                @for (int i = 0; i < 12; i++)
-                                {
-                                    <li>
-                                        <a href="javascript:getTop('业务一部','@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")', 'ibox1');">@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")</a>
-                                    </li>
-                                }
-                            </ul>
-
-                        </div>
-                    </div>
-                    <div class="ibox-content">
-                        <div class="sk-spinner sk-spinner-double-bounce">
-                            <div class="sk-double-bounce1"></div>
-                            <div class="sk-double-bounce2"></div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-hover margin bottom">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">排名</th>
-                                        <th>销售人员</th>
-                                        <th>销售额（不含税）</th>
-                                        <th>利润率(%)</th>
-                                        <th>利润</th>
-                                        <th>回款率(%)</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="ibox float-e-margins" id="ibox2">
-                    <div class="ibox-title">
-                        <h5>销售二部销售业绩排行</h5>
-                        <div class="ibox-tools">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
                                 <li>
-                                    <a href="javascript:getTop('业务二部','', 'ibox2');">全部</a>
+                                    <a class="btn btn-link" href="javascript:;">
+                                        <h3 class="no-margins "><i class="fa fa-jpy "></i> @Model.SellMoney</h3>
+                                        <small>销售总额（不含税）</small>
+                                    </a>
                                 </li>
-                                @for (int i = 0; i < 12; i++)
-                                {
-                                    <li>
-                                        <a href="javascript:getTop('业务二部','@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")', 'ibox2');">@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")</a>
-                                    </li>
-                                }
+                                <li>
+                                    <a class="btn btn-link" href="@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", Status = Consts.StateOK, VerificationStatus = Consts.StateLock, PublishDateOrder = "asc"})" target="_blank">
+                                        <h3 class="no-margins "><i class="fa fa-jpy "></i> @Model.VerificationMoney</h3>
+                                        <small>未核销金额</small>
+                                    </a>
+
+                                </li>
+                                <li>
+                                    <a class="btn btn-link" href="@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", VerificationStatus = Consts.StateNormal})" target="_blank">
+                                        <h3 class="no-margins "><i class="fa fa-jpy "></i> @Model.ConfirmVerificationMoney</h3>
+                                        <small>已核销金额</small>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
-                    <div class="ibox-content">
-                        <div class="sk-spinner sk-spinner-double-bounce">
-                            <div class="sk-double-bounce1"></div>
-                            <div class="sk-double-bounce2"></div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-hover margin bottom">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">排名</th>
-                                        <th>销售人员</th>
-                                        <th>销售额（不含税）</th>
-                                        <th>利润率(%)</th>
-                                        <th>利润</th>
-                                        <th>回款率(%)</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
 
 
-                    </div>
                 </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="ibox float-e-margins" id="ibox3">
-                    <div class="ibox-title">
-                        <h5>销售三部销售业绩排行</h5>
-                        <div class="ibox-tools">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li>
-                                    <a href="javascript:getTop('业务三部','', 'ibox3');">全部</a>
-                                </li>
-                                @for (int i = 0; i < 12; i++)
-                                {
-                                    <li>
-                                        <a href="javascript:getTop('业务三部','@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")', 'ibox3');">@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")</a>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="ibox-content">
-                        <div class="sk-spinner sk-spinner-double-bounce">
-                            <div class="sk-double-bounce1"></div>
-                            <div class="sk-double-bounce2"></div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-hover margin bottom">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">排名</th>
-                                        <th>销售人员</th>
-                                        <th>销售额（不含税）</th>
-                                        <th>利润率(%)</th>
-                                        <th>利润</th>
-                                        <th>回款率(%)</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
 
-
-                    </div>
-                </div>
             </div>
         </div>
-      
 
     </div>
 
 
-</div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>未核销排名（销售员）</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <div class="scroll_content">
+                            <table class="table table-hover margin bottom">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10%" class="text-center">序号</th>
+                                        <th class="text-center">销售员</th>
+                                        <th class="text-center">未核销总额</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.BusinessPerformancesByUser.Take(10))
+                                    {
+                                        <tr>
+                                            <td class="text-center">@indexUser</td>
+                                            <td class="text-center">
+                                                @item.Transactor
+                                            </td>
+
+                                            <td class="text-center">
+                                                @{
+                                                    var total = item.TotalVerificationMoney ?? 0;
+                                                    var money = Math.Round(total / 10000, 2);
+                                                }
+                                                <span class="label label-danger">@money 万</span>
+                                            </td>
+                                        </tr>
+                                        indexUser++;
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>未核销排名（公司）</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <div class="scroll_content">
+                            <table class="table table-hover margin bottom">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10%" class="text-center">序号</th>
+                                        <th class="text-center">公司名称</th>
+                                        <th class="text-center">联系人</th>
+                                        <th class="text-center">未核销金额</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.VerificationInfos)
+                                    {
+                                        <tr>
+                                            <td class="text-center">@index</td>
+                                            <td class="text-center">
+                                                @item.CompanyName
+                                            </td>
+                                            <td class="text-center">@item.LinkManName</td>
+                                            <td class="text-center">
+                                                @{
+                                                    var total = item.VerificationMoney ?? 0;
+                                                    var money = Math.Round(total / 10000, 2);
+                                                }
+                                                <a class="btn btn-danger btn-xs" href="@Url.Action("Index", "BusinessOrderDetail", new {area = "DataReport", Status = Consts.StateOK, VerificationStatus = Consts.StateLock, PublishDateOrder = "asc", LinkManId = item.LinkManId})" target="_blank">@money 万</a>
+                                            </td>
+                                        </tr>
+                                        index++;
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>销售利润占比</h5>
+                    <div class="ibox-tools">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="label label-info pull-right"><span id="dateZB">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            @for (int i = 0; i < 12; i++)
+                            {
+                                <li>
+                                    <a href="javascript:initPieCharts('@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")');">@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")</a>
+                                </li>
+                            }
+                        </ul>
+
+                    </div>
+                </div>
+
+                <div class="ibox-content">
+                    <div class="flot-chart" style="height: 300px;">
+                        <div class="flot-chart-content" id="flot-dashboard-chart-pie"></div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>近四月销售概况</h5>
+                </div>
+
+                @foreach (var item in Model.BusinessPerformances.OrderByDescending(d => DateTime.Parse(d.Month)).Take(4))
+                {
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <small class="stats-label">月份</small>
+                                <h4>@item.Month</h4>
+                            </div>
+                            <div class="col-xs-4">
+                                <small class="stats-label">销售额</small>
+                                <h4><i class="fa fa-jpy "></i> @item.TotalSellMoney</h4>
+                            </div>
+                            <div class="col-xs-4">
+                                <small class="stats-label">利润值</small>
+                                <h4><i class="fa fa-jpy "></i> @item.TotalProfitMoney</h4>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+
+
+        <div class="col-lg-12">
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="ibox float-e-margins" id="ibox1">
+                        <div class="ibox-title">
+                            <h5>销售一部销售业绩排行</h5>
+                            <div class="ibox-tools">
+
+                                @*<a href="javascript:getTop('业务一部', 'ibox1');">
+                                        <i class="fa fa-refresh"></i>
+                                    </a>*@
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li>
+                                        <a href="javascript:getTop('业务一部','', 'ibox1');">全部</a>
+                                    </li>
+                                    @for (int i = 0; i < 12; i++)
+                                    {
+                                        <li>
+                                            <a href="javascript:getTop('业务一部','@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")', 'ibox1');">@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")</a>
+                                        </li>
+                                    }
+                                </ul>
+
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="sk-spinner sk-spinner-double-bounce">
+                                <div class="sk-double-bounce1"></div>
+                                <div class="sk-double-bounce2"></div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover margin bottom">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">排名</th>
+                                            <th>销售人员</th>
+                                            <th>销售额（不含税）</th>
+                                            <th>利润率(%)</th>
+                                            <th>利润</th>
+                                            <th>回款率(%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="ibox float-e-margins" id="ibox2">
+                        <div class="ibox-title">
+                            <h5>销售二部销售业绩排行</h5>
+                            <div class="ibox-tools">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li>
+                                        <a href="javascript:getTop('业务二部','', 'ibox2');">全部</a>
+                                    </li>
+                                    @for (int i = 0; i < 12; i++)
+                                    {
+                                        <li>
+                                            <a href="javascript:getTop('业务二部','@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")', 'ibox2');">@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="sk-spinner sk-spinner-double-bounce">
+                                <div class="sk-double-bounce1"></div>
+                                <div class="sk-double-bounce2"></div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover margin bottom">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">排名</th>
+                                            <th>销售人员</th>
+                                            <th>销售额（不含税）</th>
+                                            <th>利润率(%)</th>
+                                            <th>利润</th>
+                                            <th>回款率(%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="ibox float-e-margins" id="ibox3">
+                        <div class="ibox-title">
+                            <h5>销售三部销售业绩排行</h5>
+                            <div class="ibox-tools">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <span class="label label-info pull-right"><span class="currentdate">@DateTime.Now.ToString("yyyy年MM月")</span> <i class="fa fa-chevron-down"></i></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li>
+                                        <a href="javascript:getTop('业务三部','', 'ibox3');">全部</a>
+                                    </li>
+                                    @for (int i = 0; i < 12; i++)
+                                    {
+                                        <li>
+                                            <a href="javascript:getTop('业务三部','@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")', 'ibox3');">@DateTime.Now.AddMonths(-i).ToString("yyyy年MM月")</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="sk-spinner sk-spinner-double-bounce">
+                                <div class="sk-double-bounce1"></div>
+                                <div class="sk-double-bounce2"></div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover margin bottom">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">排名</th>
+                                            <th>销售人员</th>
+                                            <th>销售额（不含税）</th>
+                                            <th>利润率(%)</th>
+                                            <th>利润</th>
+                                            <th>回款率(%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+    @Html.Partial("Late")
 </div>
 
 
