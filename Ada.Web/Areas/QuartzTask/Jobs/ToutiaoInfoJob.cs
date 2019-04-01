@@ -58,7 +58,7 @@ namespace QuartzTask.Jobs
                                     {
                                         if (request == times)
                                         {
-                                            _logger.Error("采集今日头条用户信息工作任务抓取" + times + "次都失败", ex);
+                                            _logger.Error(media.MediaID+":采集今日头条用户信息工作任务抓取" + times + "次都失败", ex);
                                         }
                                         request++;
                                     }

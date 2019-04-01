@@ -584,8 +584,8 @@ namespace Ada.Web.Controllers
                     var mediaId = row.GetCell(0)?.ToString();
                     var media = _media.LoadEntities(d => d.Id == mediaId.Trim()).FirstOrDefault();
                     if (media == null) continue;
-                    //media.Status = 0;
-                    media.IsDelete = true;
+                    media.Status = 0;
+                    //media.IsDelete = true;
                     count++;
                 }
 

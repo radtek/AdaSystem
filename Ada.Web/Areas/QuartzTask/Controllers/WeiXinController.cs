@@ -115,6 +115,13 @@ namespace QuartzTask.Controllers
         public ActionResult Start(string id)
         {
             var entity = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (entity.EndTime!=null)
+            {
+                if (DateTime.Now>=entity.EndTime)
+                {
+                    return Json(new { State = 0, Msg = "该任务结束时间已过，无法启动任务，请修改任务结束时间，再进行启动" });
+                }
+            }
             entity.TriggerState = Quartz.TriggerState.Normal.ToString();
             _jobService.Update(entity);
             _quartzService.Start(entity);
