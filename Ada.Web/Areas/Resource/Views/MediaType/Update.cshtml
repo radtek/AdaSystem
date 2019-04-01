@@ -77,14 +77,14 @@
                                     </button>
                                     @foreach (var item in Model.AdPositions)
                                     {
-                                        <div class="input-group m-b">
-                                            <input type="text" class="form-control" name="AdPositions" value="@item">
-                                            <span class="input-group-btn">
-                                                <button type="button" class="btn btn-primary" onclick="deleteBtn(this);">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
-                                            </span>
-                                        </div>
+                                    <div class="input-group m-b">
+                                        <input type="text" class="form-control" name="AdPositions" value="@item">
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-primary" onclick="deleteBtn(this);">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </span>
+                                    </div>
                                     }
                                 </div>
                             </div>

@@ -181,7 +181,7 @@ namespace Resource.Controllers
                         jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
                         jo.Add("是否认证", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
                         Price(media,jo,priceTypeList);
-                        jo.Add("头条阅读数", media.AvgReadNum);
+                        jo.Add("头条平均阅读数", media.AvgReadNum);
                         jo.Add("媒体说明", media.Content);
                         jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
                         jo.Add("月发布频次", media.PublishFrequency);
@@ -194,9 +194,9 @@ namespace Resource.Controllers
                         Price(media, jo, priceTypeList);
                         jo.Add("认证类型", media.AuthenticateType);
                         jo.Add("媒体说明",  media.Abstract);
-                        jo.Add("转发数", media.TransmitNum);
-                        jo.Add("评论数", media.CommentNum);
-                        jo.Add("点赞数", media.LikesNum);
+                        jo.Add("平均转发数", media.TransmitNum);
+                        jo.Add("平均评论数", media.CommentNum);
+                        jo.Add("平均点赞数", media.LikesNum);
                         jo.Add("性别", media.Sex);
                         jo.Add("地区", media.Area);
                         jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
