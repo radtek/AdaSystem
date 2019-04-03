@@ -55,7 +55,7 @@ namespace QuartzTask.Controllers
         }
         public ActionResult Add()
         {
-            return View();
+            return View(new JobView(){IsLog = true});
         }
         [HttpPost]
         public ActionResult Add(JobView viewModel)
@@ -84,7 +84,10 @@ namespace QuartzTask.Controllers
             entity.AppId = viewModel.AppId;
             entity.Params = viewModel.Params;
             entity.Token = viewModel.Token;
+            entity.TimeOut = viewModel.TimeOut;
+            entity.Repetitions = viewModel.Repetitions;
             entity.Type = 0;
+            entity.IsLog = viewModel.IsLog;
             _jobService.Add(entity);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
@@ -108,6 +111,9 @@ namespace QuartzTask.Controllers
             entity.AppId = item.AppId;
             entity.Params = item.Params;
             entity.Token = item.Token;
+            entity.TimeOut = item.TimeOut;
+            entity.Repetitions = item.Repetitions;
+            entity.IsLog = item.IsLog;
             return View(entity);
         }
         [HttpPost]
@@ -136,6 +142,9 @@ namespace QuartzTask.Controllers
             entity.AppId = viewModel.AppId;
             entity.Params = viewModel.Params;
             entity.Token = viewModel.Token;
+            entity.TimeOut = viewModel.TimeOut;
+            entity.Repetitions = viewModel.Repetitions;
+            entity.IsLog = viewModel.IsLog;
             _jobService.Update(entity);
             TempData["Msg"] = "操作成功";
             return RedirectToAction("Index");

@@ -493,6 +493,16 @@ namespace Ada.Core.ViewModel.Resource
         [Display(Name = "最后一次采集时间")]
         public DateTime? CollectionDate { get; set; }
         /// <summary>
+        /// 最后一次采集时间
+        /// </summary>
+        [Display(Name = "最后一次采集时间")]
+        public DateTime? CollectionDateStart { get; set; }
+        /// <summary>
+        /// 最后一次采集时间
+        /// </summary>
+        [Display(Name = "最后一次采集时间")]
+        public DateTime? CollectionDateEnd { get; set; }
+        /// <summary>
         /// 媒体评论
         /// </summary>
         [Display(Name = "媒体评论")]

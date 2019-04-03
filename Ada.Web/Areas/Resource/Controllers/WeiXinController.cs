@@ -14,6 +14,7 @@ using Ada.Framework.Filter;
 using Ada.Services.API;
 using Ada.Services.Resource;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -154,6 +155,23 @@ namespace Resource.Controllers
         {
             var result = _iDataAPIService.GetWeiBoArticlesByBiz(id);
             return Json(new { State = 1, Msg = result.Message },JsonRequestBehavior.AllowGet);
+        }
+        [AllowAnonymous]
+        public ActionResult ExprotNoBiz()
+        {
+            JArray jObjects = new JArray();
+            var list = _repository.LoadEntities(d =>
+                d.MediaType.CallIndex == "weixin" && d.IsDelete == false && d.Status == Consts.StateNormal &&
+                d.MediaLink == null);
+            foreach (var media in list)
+            {
+                var jo = new JObject();
+                jo.Add("UID", media.MediaID);
+                jo.Add("BIZ","");
+                jObjects.Add(jo);
+            }
+            var bytes = ExportData(jObjects.ToString());
+            return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
         }
 
     }

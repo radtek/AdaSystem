@@ -118,7 +118,7 @@
                         <tr>
                             <th>文章信息</th>
                             <th data-breakpoints="xs sm">浏览数</th>
-                            <th data-breakpoints="xs sm">评论数</th>
+                            @*<th data-breakpoints="xs sm">评论数</th>*@
                             <th data-breakpoints="xs sm">点赞数</th>
                             <th data-breakpoints="xs sm">发布日期</th>
                         </tr>
@@ -143,7 +143,7 @@
                                     <a class='label' href='@item.ArticleUrl' target='_blank'><i class='fa fa-link'></i> @title</a>
                                 </td>
                                 <td>@item.ViewCount</td>
-                                <td>@item.CommentCount</td>
+                                @*<td>@item.CommentCount</td>*@
                                 <td>@item.LikeCount</td>
                                 <td>@dateTime</td>
                             </tr>

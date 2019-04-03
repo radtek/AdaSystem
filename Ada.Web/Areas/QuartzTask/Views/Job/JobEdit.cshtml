@@ -77,28 +77,57 @@
                     <div class="form-group">
                         @Html.LabelFor(d => d.ApiUrl, Html.DisplayNameFor(d => d.ApiUrl).ToString(), new { @class = "col-sm-2 control-label" })
                         <div class="col-sm-10">
-                            @Html.TextBoxFor(d => d.ApiUrl, new { @class = "form-control"})
+                            @Html.TextBoxFor(d => d.ApiUrl, new { @class = "form-control" })
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         @Html.LabelFor(d => d.AppId, Html.DisplayNameFor(d => d.AppId).ToString(), new { @class = "col-sm-2 control-label" })
                         <div class="col-sm-10">
-                            @Html.TextBoxFor(d => d.AppId, new { @class = "form-control"})
+                            @Html.TextBoxFor(d => d.AppId, new { @class = "form-control" })
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         @Html.LabelFor(d => d.Token, Html.DisplayNameFor(d => d.Token).ToString(), new { @class = "col-sm-2 control-label" })
                         <div class="col-sm-10">
-                            @Html.TextBoxFor(d => d.Token, new { @class = "form-control"})
+                            @Html.TextBoxFor(d => d.Token, new { @class = "form-control" })
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         @Html.LabelFor(d => d.Params, Html.DisplayNameFor(d => d.Params).ToString(), new { @class = "col-sm-2 control-label" })
                         <div class="col-sm-10">
-                            @Html.TextBoxFor(d => d.Params, new { @class = "form-control"})
+                            @Html.TextBoxFor(d => d.Params, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.TimeOut, Html.DisplayNameFor(d => d.TimeOut).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.TimeOut, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.Repetitions, Html.DisplayNameFor(d => d.Repetitions).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(d => d.Repetitions, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.IsLog, Html.DisplayNameFor(d => d.IsLog).ToString(), new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            <div class="checkbox checkbox-info">
+                                @{
+                                    var isChecked = Model.IsLog == true ? "checked=\"\"" : "";
+                                }
+                                <input id="@Html.IdFor(d => d.IsLog)" type="checkbox" name="@Html.IdFor(d => d.IsLog)" value="true" @isChecked>
+                                <label for="@Html.IdFor(d => d.IsLog)">
+                                    <strong>开启</strong>
+                                </label>
+                            </div>
                         </div>
                     </div>
                     @Html.HiddenFor(d => d.Id)

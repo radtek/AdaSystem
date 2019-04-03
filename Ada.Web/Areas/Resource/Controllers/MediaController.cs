@@ -1074,9 +1074,9 @@ namespace Resource.Controllers
             {
                 entity.MediaLink = "https://v.taobao.com/v/home/?userId=" + entity.MediaID;
             }
-            else
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaLink))
             {
-                entity.MediaLink = viewModel.MediaLink;
+                entity.MediaLink = viewModel.MediaLink.Trim();
             }
 
 
@@ -1272,9 +1272,9 @@ namespace Resource.Controllers
             {
                 entity.MediaLink = "https://v.taobao.com/v/home/?userId=" + entity.MediaID;
             }
-            else
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaLink))
             {
-                entity.MediaLink = viewModel.MediaLink;
+                entity.MediaLink = viewModel.MediaLink.Trim();
             }
 
             entity.Client = viewModel.Client;

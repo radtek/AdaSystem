@@ -142,14 +142,19 @@
     <Compile Include="Jobs\WeiboArticlesJob.cs" />
     <Compile Include="Jobs\WeixinArticleMonitorJob.cs" />
     <Compile Include="Jobs\WeiXinArticlesJob.cs" />
+    <Compile Include="Jobs\WeiXinAtricleDataProJob.cs" />
+    <Compile Include="Jobs\WeiXinAtricleProJob.cs" />
     <Compile Include="Jobs\WeiXinBizJob.cs" />
     <Compile Include="Jobs\WeiXinInfoJob.cs" />
+    <Compile Include="Jobs\WeiXinInfoProJob.cs" />
     <Compile Include="Models\AppStartLoad.cs" />
     <Compile Include="Models\IQuartzService.cs" />
     <Compile Include="Models\JobHelper.cs" />
     <Compile Include="Models\QuartzService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuartzTaskAreaRegistration.cs" />
+    <Compile Include="Services\IMediaJobService.cs" />
+    <Compile Include="Services\MediaJobService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
