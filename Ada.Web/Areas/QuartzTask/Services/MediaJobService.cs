@@ -531,6 +531,16 @@ namespace QuartzTask.Services
                                     }
                                 }
                                 isSuccess = true;
+                                media.TransmitNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50)
+                                                    .Average(aaa => aaa.ShareCount));
+                                media.CommentNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate)
+                                    .Take(50).Average(aaa => aaa.CommentCount));
+                                media.LikesNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate).Take(50)
+                                    .Average(aaa => aaa.LikeCount));
+                                media.LastPushDate = media.MediaArticles.OrderByDescending(a => a.PublishDate).FirstOrDefault()?.PublishDate;
+                                var weekDate = DateTime.Now.Date.AddDays(-7);
+                                media.MonthPostNum = media.MediaArticles.OrderByDescending(a => a.PublishDate)
+                                    .Count(l => l.PublishDate > weekDate);
                                 break;
                             }
 
