@@ -37,9 +37,11 @@ namespace Resource.Controllers
         private readonly IRepository<MediaType> _mediaTypeRepository;
         private readonly IRepository<MediaPrice> _mediaPriceRepository;
         private readonly IRepository<MediaTag> _mediaTagRepository;
+        private readonly IRepository<MediaGroup> _mediaGroupRepository;
         private readonly IDbContext _dbContext;
         private readonly IFieldService _fieldService;
         private readonly IMediaArticleService _mediaArticleService;
+        private readonly IMediaGroupService _mediaGroupService;
         public MediaController(IMediaPriceService mediaPriceService,
             IMediaService mediaService,
             IRepository<MediaPrice> mediaPriceRepository,
@@ -51,7 +53,9 @@ namespace Resource.Controllers
             IiDataAPIService iDataAPIService,
             IRepository<APIRequestRecord> apiRequestRecordRepository,
             IFieldService fieldService,
-            IMediaArticleService mediaArticleService)
+            IMediaArticleService mediaArticleService,
+            IRepository<MediaGroup> mediaGroupRepository,
+            IMediaGroupService mediaGroupService)
         {
             _mediaPriceService = mediaPriceService;
             _mediaService = mediaService;
@@ -65,6 +69,8 @@ namespace Resource.Controllers
             _apiRequestRecordRepository = apiRequestRecordRepository;
             _fieldService = fieldService;
             _mediaArticleService = mediaArticleService;
+            _mediaGroupRepository = mediaGroupRepository;
+            _mediaGroupService = mediaGroupService;
         }
 
         public ActionResult Index(string id)
@@ -170,164 +176,179 @@ namespace Resource.Controllers
             }
             foreach (var media in results.OrderBy(d => d.Taxis))
             {
-                var jo = new JObject();
-                jo.Add("主键", media.Id);
-                jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
-                jo.Add("媒体名称", media.MediaName);
-                switch (viewModel.MediaTypeIndex)
-                {
-                    case "weixin":
-                        jo.Add("微信号", media.MediaID);
-                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
-                        jo.Add("是否认证", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
-                        Price(media,jo,priceTypeList);
-                        jo.Add("头条平均阅读数", media.AvgReadNum);
-                        jo.Add("媒体说明", media.Content);
-                        jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
-                        jo.Add("月发布频次", media.PublishFrequency);
-                        jo.Add("月发文总数", media.MonthPostNum);
-                        jo.Add("备注说明", media.Remark);
-                        break;
-                    case "sinablog":
-                        jo.Add("微博链接", media.MediaLink);
-                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
-                        Price(media, jo, priceTypeList);
-                        jo.Add("认证类型", media.AuthenticateType);
-                        jo.Add("媒体说明",  media.Abstract);
-                        jo.Add("平均转发数", media.TransmitNum);
-                        jo.Add("平均评论数", media.CommentNum);
-                        jo.Add("平均点赞数", media.LikesNum);
-                        jo.Add("性别", media.Sex);
-                        jo.Add("地区", media.Area);
-                        jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
-                        jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
-                        jo.Add("备注说明", media.Remark);
-                        break;
-                    case "bilibili":
-                        jo.Add("媒体链接", media.MediaLink);
-                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
-                        Price(media, jo, priceTypeList);
-                        //jo.Add("地区", media.Area);
-                        jo.Add("关注数", media.FriendNum);
-                        jo.Add("播放数", media.LikesNum);
-                        jo.Add("阅读数", media.AvgReadNum);
-                        jo.Add("备注说明", media.Remark);
-                        break;
-                    case "toutiao":
-                        jo.Add("媒体链接", media.MediaLink);
-                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
-                        jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
-                        Price(media, jo, priceTypeList);
-                        //jo.Add("地区", media.Area);
-                        jo.Add("关注数", media.FriendNum);
-                        jo.Add("转发数", media.TransmitNum);
-                        jo.Add("平均阅读数", media.AvgReadNum);
-                        jo.Add("平均评论数", media.CommentNum);
-                        jo.Add("媒体说明", media.Content);
-                        jo.Add("备注说明", media.Remark);
-                        break;
-                    case "douyin":
-                        //jo.Add("媒体ID", media.MediaID);
-                        jo.Add("抖音ID", media.Abstract);
-                        jo.Add("媒体链接", media.MediaLink);
-                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
-                        jo.Add("性别", media.Sex);
-                        jo.Add("地区", media.Area);
-                        Price(media, jo, priceTypeList);
-                        //jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
-                        jo.Add("平均转发数", media.TransmitNum);
-                        //jo.Add("平均浏览数", media.AvgReadNum);
-                        jo.Add("平均评论数", media.CommentNum);
-                        jo.Add("平均点赞数", media.LikesNum);
-                        jo.Add("备注说明", media.Remark);
-                        break;
-                    case "redbook":
-                        jo.Add("媒体链接", media.MediaLink);
-                        jo.Add("地区", media.Area);
-                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
-                        Price(media, jo, priceTypeList);
-                        jo.Add("收藏数", media.TransmitNum);
-                        jo.Add("点赞数", media.AvgReadNum);
-                        jo.Add("评论数", media.CommentNum);
-                        jo.Add("赞与收藏", media.LikesNum);
-                        jo.Add("等级", media.AuthenticateType);
-                        //jo.Add("关注数", media.FriendNum);
-                        //jo.Add("笔记总数", media.PostNum);
-                        jo.Add("媒体说明", media.Content);
-                        jo.Add("备注说明", media.Remark);
-                        break;
-                    case "zhihu":
-                        jo.Add("媒体链接", media.MediaLink);
-                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
-                        Price(media, jo, priceTypeList);
-                        //jo.Add("地区", media.Area);
-                        jo.Add("媒体说明", media.Content);
-                        jo.Add("备注说明", media.Remark);
-                        break;
-                    case "writer":
-                        jo.Add("擅长类型", media.ResourceType);
-                        jo.Add("出稿速度", media.Efficiency);
-                        jo.Add("备注说明", media.Remark);
-                        break;
-                    case "taobao":
-                        jo.Add("媒体链接", "https://market.m.taobao.com/apps/abs/9/41/index?accountId="+media.MediaID);
-                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
-                        Price(media, jo, priceTypeList);
-                        jo.Add("达人类型", media.Abstract);
-                        jo.Add("综合能力指数", media.AvgReadNum);
-                        jo.Add("备注说明", media.Remark);
-                        break;
-                    default:
-                        jo.Add("平台", media.Platform);
-                        if (!string.IsNullOrWhiteSpace(media.Client))
-                        {
-                            jo.Add("客户端", media.Client);
-                        }
-                        if (!string.IsNullOrWhiteSpace(media.Channel))
-                        {
-                            jo.Add("媒体频道", media.Channel);
-                        }
-
-                        if (viewModel.MediaTypeIndex == "taobao")
-                        {
-                            jo.Add("媒体链接", "https://market.m.taobao.com/apps/abs/9/41/index?accountId=" + media.MediaID);
-                        }
-                        else
-                        {
-                            jo.Add("媒体链接", media.MediaLink);
-                        }
-                        jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
-                        jo.Add("性别", media.Sex);
-                        jo.Add("地区", media.Area);
-                        Price(media, jo, priceTypeList);
-                        if (!string.IsNullOrWhiteSpace(media.ResourceType))
-                        {
-                            jo.Add("资源类型", media.ResourceType);
-                        }
-                        if (!string.IsNullOrWhiteSpace(media.Efficiency))
-                        {
-                            jo.Add("出稿速度", media.Efficiency);
-                        }
-                        if (!string.IsNullOrWhiteSpace(media.SEO))
-                        {
-                            jo.Add("收录效果", media.SEO);
-                        }
-                        jo.Add("媒体说明", media.Content);
-                        jo.Add("备注说明", media.Remark);
-                        break;
-                }
-                
-                
-                //jo.Add("媒体说明", viewModel.MediaTypeIndex == "sinablog" ? media.Abstract : media.Content);
-                //jo.Add("备注说明", media.Remark);
-                jo.Add("经办媒介", media.Transactor);
-                jObjects.Add(jo);
+                MediaExport(media, viewModel.MediaTypeIndex, priceTypeList, jObjects);
             }
 
             return jObjects;
         }
+        private JArray ExprotTemplate(List<Media> results, string[] priceTypeList)
+        {
 
-        private void Price(Media media, JObject jo,string[] priceTypeList)
+            JArray jObjects = new JArray();
+            foreach (var media in results)
+            {
+                MediaExport(media, media.MediaType.CallIndex, priceTypeList, jObjects);
+            }
+            return jObjects;
+        }
+
+        private void MediaExport(Media media, string mediaTypeIndex, string[] priceTypeList, JArray jObjects)
+        {
+            var jo = new JObject();
+            jo.Add("主键", media.Id);
+            jo.Add("媒体分类", string.Join(",", media.MediaTags.Select(d => d.TagName)));
+            jo.Add("媒体名称", media.MediaName);
+            switch (mediaTypeIndex)
+            {
+                case "weixin":
+                    jo.Add("微信号", media.MediaID);
+                    jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                    jo.Add("是否认证", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
+                    Price(media, jo, priceTypeList);
+                    jo.Add("头条平均阅读数", media.AvgReadNum);
+                    jo.Add("媒体说明", media.Content);
+                    jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
+                    jo.Add("月发布频次", media.PublishFrequency);
+                    jo.Add("月发文总数", media.MonthPostNum);
+                    jo.Add("备注说明", media.Remark);
+                    break;
+                case "sinablog":
+                    jo.Add("微博链接", media.MediaLink);
+                    jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                    Price(media, jo, priceTypeList);
+                    jo.Add("认证类型", media.AuthenticateType);
+                    jo.Add("媒体说明", media.Abstract);
+                    jo.Add("平均转发数", media.TransmitNum);
+                    jo.Add("平均评论数", media.CommentNum);
+                    jo.Add("平均点赞数", media.LikesNum);
+                    jo.Add("性别", media.Sex);
+                    jo.Add("地区", media.Area);
+                    jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
+                    jo.Add("最近发布日期", media.LastPushDate?.ToString("yyyy-MM-dd"));
+                    jo.Add("备注说明", media.Remark);
+                    break;
+                case "bilibili":
+                    jo.Add("媒体链接", media.MediaLink);
+                    jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                    Price(media, jo, priceTypeList);
+                    //jo.Add("地区", media.Area);
+                    jo.Add("关注数", media.FriendNum);
+                    jo.Add("播放数", media.LikesNum);
+                    jo.Add("阅读数", media.AvgReadNum);
+                    jo.Add("备注说明", media.Remark);
+                    break;
+                case "toutiao":
+                    jo.Add("媒体链接", media.MediaLink);
+                    jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                    jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
+                    Price(media, jo, priceTypeList);
+                    //jo.Add("地区", media.Area);
+                    jo.Add("关注数", media.FriendNum);
+                    jo.Add("转发数", media.TransmitNum);
+                    jo.Add("平均阅读数", media.AvgReadNum);
+                    jo.Add("平均评论数", media.CommentNum);
+                    jo.Add("媒体说明", media.Content);
+                    jo.Add("备注说明", media.Remark);
+                    break;
+                case "douyin":
+                    //jo.Add("媒体ID", media.MediaID);
+                    jo.Add("抖音ID", media.Abstract);
+                    jo.Add("媒体链接", media.MediaLink);
+                    jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                    jo.Add("性别", media.Sex);
+                    jo.Add("地区", media.Area);
+                    Price(media, jo, priceTypeList);
+                    //jo.Add("认证情况", media.IsAuthenticate == null ? "" : media.IsAuthenticate == true ? "已认证" : "未认证");
+                    jo.Add("平均转发数", media.TransmitNum);
+                    //jo.Add("平均浏览数", media.AvgReadNum);
+                    jo.Add("平均评论数", media.CommentNum);
+                    jo.Add("平均点赞数", media.LikesNum);
+                    jo.Add("备注说明", media.Remark);
+                    break;
+                case "redbook":
+                    jo.Add("媒体链接", media.MediaLink);
+                    jo.Add("地区", media.Area);
+                    jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                    Price(media, jo, priceTypeList);
+                    jo.Add("收藏数", media.TransmitNum);
+                    jo.Add("点赞数", media.AvgReadNum);
+                    jo.Add("评论数", media.CommentNum);
+                    jo.Add("赞与收藏", media.LikesNum);
+                    jo.Add("等级", media.AuthenticateType);
+                    //jo.Add("关注数", media.FriendNum);
+                    //jo.Add("笔记总数", media.PostNum);
+                    jo.Add("媒体说明", media.Content);
+                    jo.Add("备注说明", media.Remark);
+                    break;
+                case "zhihu":
+                    jo.Add("媒体链接", media.MediaLink);
+                    jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                    Price(media, jo, priceTypeList);
+                    //jo.Add("地区", media.Area);
+                    jo.Add("媒体说明", media.Content);
+                    jo.Add("备注说明", media.Remark);
+                    break;
+                case "writer":
+                    jo.Add("擅长类型", media.ResourceType);
+                    jo.Add("出稿速度", media.Efficiency);
+                    jo.Add("备注说明", media.Remark);
+                    break;
+                case "taobao":
+                    jo.Add("媒体链接", "https://market.m.taobao.com/apps/abs/9/41/index?accountId=" + media.MediaID);
+                    jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                    Price(media, jo, priceTypeList);
+                    jo.Add("达人类型", media.Abstract);
+                    jo.Add("综合能力指数", media.AvgReadNum);
+                    jo.Add("备注说明", media.Remark);
+                    break;
+                default:
+                    jo.Add("平台", media.Platform);
+                    if (!string.IsNullOrWhiteSpace(media.Client))
+                    {
+                        jo.Add("客户端", media.Client);
+                    }
+                    if (!string.IsNullOrWhiteSpace(media.Channel))
+                    {
+                        jo.Add("媒体频道", media.Channel);
+                    }
+
+                    if (mediaTypeIndex == "taobao")
+                    {
+                        jo.Add("媒体链接", "https://market.m.taobao.com/apps/abs/9/41/index?accountId=" + media.MediaID);
+                    }
+                    else
+                    {
+                        jo.Add("媒体链接", media.MediaLink);
+                    }
+                    jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));
+                    jo.Add("性别", media.Sex);
+                    jo.Add("地区", media.Area);
+                    Price(media, jo, priceTypeList);
+                    if (!string.IsNullOrWhiteSpace(media.ResourceType))
+                    {
+                        jo.Add("资源类型", media.ResourceType);
+                    }
+                    if (!string.IsNullOrWhiteSpace(media.Efficiency))
+                    {
+                        jo.Add("出稿速度", media.Efficiency);
+                    }
+                    if (!string.IsNullOrWhiteSpace(media.SEO))
+                    {
+                        jo.Add("收录效果", media.SEO);
+                    }
+                    jo.Add("媒体说明", media.Content);
+                    jo.Add("备注说明", media.Remark);
+                    break;
+            }
+
+
+            //jo.Add("媒体说明", viewModel.MediaTypeIndex == "sinablog" ? media.Abstract : media.Content);
+            //jo.Add("备注说明", media.Remark);
+            jo.Add("经办媒介", media.Transactor);
+            jObjects.Add(jo);
+        }
+
+        private void Price(Media media, JObject jo, string[] priceTypeList)
         {
             foreach (var priceType in priceTypeList)
             {
@@ -507,6 +528,7 @@ namespace Resource.Controllers
                     PriceProtectionRemark = d.PriceProtectionRemark,
                     PriceProtectionIsBrand = d.PriceProtectionIsBrand,
                     RetentionTime = d.RetentionTime,
+                    IsGroup = d.MediaGroups.Any(g => g.GroupType == Consts.StateOK && g.AddedById == CurrentManager.Id),
                     MediaGroups = d.MediaGroups.Where(m => m.GroupType == Consts.StateNormal).Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
                     MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).ToList(),
                     MediaPrices = d.MediaPrices.Where(p => p.IsDelete == false).Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = p.PurchasePrice, SellPrice = p.SellPrice, MarketPrice = p.MarketPrice }).OrderByDescending(p => p.AdPositionName).ToList()
@@ -573,13 +595,14 @@ namespace Resource.Controllers
                     PriceProtectionRemark = d.PriceProtectionRemark,
                     PriceProtectionIsBrand = d.PriceProtectionIsBrand,
                     RetentionTime = d.RetentionTime,
+
                     MediaGroups = d.MediaGroups.Where(m => m.GroupType == Consts.StateNormal).Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
                     MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).ToList(),
                     MediaPrices = d.MediaPrices.Where(p => p.IsDelete == false).Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = p.PurchasePrice, SellPrice = p.SellPrice, MarketPrice = p.MarketPrice }).OrderByDescending(p => p.AdPositionName).ToList()
                 })
             });
         }
-        
+
         public ActionResult GetArticles(MediaArticleView viewModel)
         {
             var result = _mediaArticleService.LoadEntitiesFilter(viewModel).ToList();
@@ -1647,6 +1670,87 @@ namespace Resource.Controllers
             var result = _iDataAPIService.UpdateWeiXinArticle(proParams);
             return result.IsSuccess ? Json(new { State = 1, Data = result }) : Json(new { State = 0, Msg = result.Message });
         }
+        public ActionResult Collection(string id)
+        {
+            var groups = _mediaGroupRepository.LoadEntities(d => d.AddedById == CurrentManager.Id && d.GroupType == Consts.StateOK).ToList();
+            ViewBag.CurrentGroup = id;
+            return View(groups);
+        }
+        public ActionResult AddGroup(string name, string id)
+        {
+            ViewBag.MediaName = name;
+            ViewBag.MediaId = id;
+            var groups = _mediaGroupRepository.LoadEntities(d => d.AddedById == CurrentManager.Id && d.GroupType == Consts.StateOK);
+            return PartialView("AddGroup", groups.ToList());
+        }
+        [HttpPost]
+
+        public ActionResult AddGroup(MediaGroupView viewModel)
+        {
+            //组名不能超出10个字符
+            if (viewModel.GroupName.Length > 10)
+            {
+                return Json(new { State = 0, Msg = "分组名称不能超出10个字符" });
+            }
+            //校验是否超出10个分组
+            var count = _mediaGroupRepository.LoadEntities(d => d.AddedById == CurrentManager.Id && d.IsDelete == false&&d.GroupType==Consts.StateOK).Count();
+            var config = _settingService.GetSetting<WeiGuang>();
+            if (count > config.MediaGroupTotal)
+            {
+                return Json(new { State = 0, Msg = "最多只能建立" + config.MediaGroupTotal + "个分组" });
+            }
+            //校验唯一性
+            var temp = _mediaGroupRepository
+                .LoadEntities(d => d.GroupName.Equals(viewModel.GroupName, StringComparison.CurrentCultureIgnoreCase) && d.IsDelete == false && d.AddedById == CurrentManager.Id && d.GroupType == Consts.StateOK)
+                .FirstOrDefault();
+            if (temp != null)
+            {
+                return Json(new { State = 0, Msg = viewModel.GroupName + "，此分组已存在" });
+            }
+            MediaGroup entity = new MediaGroup();
+            entity.Id = IdBuilder.CreateIdNum();
+            entity.AddedById = CurrentManager.Id;
+            entity.AddedBy = CurrentManager.UserName;
+            entity.AddedDate = DateTime.Now;
+            entity.GroupName = viewModel.GroupName;
+            entity.GroupType = Consts.StateOK;//系统用户分组
+            _mediaGroupService.Add(entity);
+            return Json(new { State = 1, Msg = entity.Id });
+        }
+        [HttpPost]
+
+        public ActionResult JoinGroup(string mId, string gIds)
+        {
+            var groups = gIds.Split(',');
+            var media = _repository.LoadEntities(d => d.Id == mId).FirstOrDefault();
+            if (media != null)
+            {
+                _mediaGroupService.AddMedia(groups.ToList(), media, Consts.StateOK);
+                return Json(new { State = 1, Msg = "收藏成功" });
+            }
+            return Json(new { State = 0, Msg = "媒体资源不存在" });
+        }
+        [HttpPost]
+
+        public ActionResult RemoveGroup(string mId, string gId)
+        {
+
+            var media = _repository.LoadEntities(d => d.Id == mId).FirstOrDefault();
+            if (media != null)
+            {
+                _mediaGroupService.RemoveMedia(gId, media);
+                return Json(new { State = 1, Msg = "移除成功" });
+            }
+            return Json(new { State = 0, Msg = "媒体资源不存在" });
+        }
+        [HttpPost]
+
+        public ActionResult DeleteGroup(string id)
+        {
+            var group = _mediaGroupRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            _mediaGroupService.Delete(group);
+            return Json(new { State = 1, Msg = "删除成功" });
+        }
         [AllowAnonymous]
         public ActionResult FenPei()
         {
@@ -1692,6 +1796,26 @@ namespace Resource.Controllers
                 _dbContext.SaveChanges();
             }
             return Content("成功更新" + count + "条资源");
+        }
+        [HttpPost]
+        public ActionResult ExportGroup(string id, string p = "0")
+        {
+            var setting = _settingService.GetSetting<WeiGuang>();
+            var group = _mediaGroupRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+            if (group == null)
+            {
+                return Json(new { State = 0, Msg = "此分组不存在！" });
+            }
+            var rows = setting.BusinessExportRows;
+            var priceTypeList = p.Split(',');
+            var result = group.Medias.Where(d => d.IsDelete == false && d.Status == Consts.StateNormal).Take(rows).GroupBy(d => d.MediaType.TypeName);
+            IDictionary<string, string> dic = new Dictionary<string, string>();
+            foreach (var item in result)
+            {
+                var jObjects = ExprotTemplate(item.ToList(), priceTypeList);
+                dic.Add(item.Key, jObjects.ToString());
+            }
+            return Json(new { State = 1, Msg = ExportFile(dic) });
         }
 
         private Media IsExist(MediaView viewModel, out string msg, bool isSelf = false, bool isDelete = false)

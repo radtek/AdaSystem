@@ -56,13 +56,13 @@ namespace Purchase.Controllers
                     MediaPriceId = d.MediaPrice.MediaId,
                     Money = d.Money,
                     MediaTitle = GetBusinessOrderDetail(d.BusinessOrderDetailId)?.MediaTitle,
-                    PrePublishDate = GetBusinessOrderDetail(d.BusinessOrderDetailId)?.PrePublishDate,
+                    //PrePublishDate = GetBusinessOrderDetail(d.BusinessOrderDetailId)?.PrePublishDate,
                     PublishDate = d.PublishDate,
                     PublishLink = d.PublishLink,
                     Transactor = d.Transactor,
                     OrderDate = d.PurchaseOrder.OrderDate,
-                    IsPayment = d.PurchasePaymentOrderDetails.Count > 0,
-                    BusinessRemark = GetBusinessOrderDetail(d.BusinessOrderDetailId)?.BusinessOrder.Remark
+                    IsPayment = d.PurchasePaymentOrderDetails.Any(),
+                    //BusinessRemark = GetBusinessOrderDetail(d.BusinessOrderDetailId)?.BusinessOrder.Remark
 
                 })
             }, JsonRequestBehavior.AllowGet);

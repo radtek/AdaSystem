@@ -1,0 +1,342 @@
+﻿
+@using System.Web.Optimization
+@using Ada.Core.Domain.Resource
+@model List<MediaGroup>
+@{
+    ViewBag.Title = "我的收藏";
+    var groups = Model.OrderBy(d => d.GroupName).ToList();
+    var first = groups.FirstOrDefault();
+    string cId = ViewBag.CurrentGroup;
+    if (string.IsNullOrWhiteSpace(cId))
+    {
+        cId = first?.Id;
+    }
+}
+@Html.Partial("Bread")
+
+<div class="wrapper wrapper-content">
+    @Html.AntiForgeryToken()
+    <div class="row">
+        @if (groups.Any())
+        {
+            <div class="col-lg-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <h3>
+                            我的分组
+                        </h3>
+                        <div class="list-group">
+                            @foreach (var item in groups)
+                            {
+                                var isactive = item.Id == cId ? "active" : "";
+
+                                <a class="list-group-item @isactive" href="@Url.Action("Collection", "Media", new {id = item.Id})">
+                                    @if (item.Medias.Any())
+                                    {
+                                        <span class="badge badge-primary">@item.Medias.Count</span>
+                                    }
+
+                                    @item.GroupName
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 animated fadeInRight">
+                <div class="row">
+                    <table id="table"></table>
+                    <div id="toolbar" class="m-l-sm">
+                        <div class="form-inline" role="form">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-primary btn-outline" data-toggle="modal" data-target="#exportModal">
+                                    <i class="fa fa-download"></i> 导出当前资源
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-danger btn-outline" onclick="delGroup();">
+                                    <i class="fa fa-trash-o"></i> 删除当前分组
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal inmodal" id="exportModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content animated bounceInRight">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <i class="fa fa-download modal-icon"></i>
+                            <h4 class="modal-title">媒体资源导出</h4>
+                            <small class="font-bold">请选择要导出的价格类型（可多选，如不选默认为成本价格）.</small>
+                        </div>
+                        <div class="modal-body text-center">
+                            <div class="checkbox checkbox-success checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox1" name="PriceType" value="0" checked="">
+                                <label for="inlineCheckbox1"> 成本价格 </label>
+                            </div>
+                            <div class="checkbox checkbox-success checkbox-success checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox2" name="PriceType" value="1">
+                                <label for="inlineCheckbox2"> 销售价格 </label>
+                            </div>
+                            <div class="checkbox checkbox-success checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox3" name="PriceType" value="2">
+                                <label for="inlineCheckbox3"> 零售价格 </label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">返回关闭</button>
+                            <button type="button" class="btn btn-primary ladda-button" data-style="zoom-in" onclick="exportGroup();">开始导出</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="middle-box text-center animated fadeInRightBig">
+                <h3 class="font-bold">暂无收藏任何媒体资源</h3>
+
+                <div class="error-desc">
+                    您可以进入媒体资源库选择需要的媒体资源进行分组收藏.
+                    <br /><a href="@Url.Action("Index")" class="btn btn-primary m-t">媒体资源库</a>
+                </div>
+
+
+            </div>
+
+        }
+
+    </div>
+
+
+</div>
+
+
+
+@section Styles {
+    @Styles.Render("~/plugins/awesomeCheckboxStyles")
+    @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/laddaStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/ladda")
+    <script src="@Url.Content("~/Areas/Resource/Scripts/filter.js?v="+DateTime.Now.Ticks)"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            @if (!string.IsNullOrWhiteSpace(cId))
+            {
+                <text>
+                    initTable('@cId');
+                </text>
+            }
+
+        });
+
+
+        function initTable(id) {
+            $('#table').bootstrapTable({
+                url: '@Url.Action("GetListAll", "Media")', //请求后台的URL（*）
+                method: 'post',
+                contentType: "application/x-www-form-urlencoded",
+                classes: "table table-no-bordered",
+                toolbar: '#toolbar', //工具按钮用哪个容器
+                striped: true, //是否显示行间隔色
+                cache: false, //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true, //是否显示分页（*）
+                sortable: true, //是否启用排序
+                sortOrder: "desc", //排序方式
+                sortName: "Id",
+                sidePagination: "server", //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1, //初始化加载第一页，默认第一页
+                pageSize: 10, //每页的记录行数（*）
+                search: true, //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true, //设置为 true启用 全匹配搜索，否则为模糊搜索
+                showRefresh: true, //是否显示刷新按钮
+                minimumCountColumns: 2, //最少允许的列数
+                clickToSelect: true, //是否启用点击选中行
+                singleSelect: true, //设置True 将禁止多选
+                uniqueId: "Id", //每一行的唯一标识，一般为主键列
+                //searchAlign:"left",
+                formatSearch: function() {
+                    return "媒体名称或媒体ID";
+                },
+                mobileResponsive: true,
+                queryParams: function(parameters) {
+                    parameters.GroupId = id;
+                    return searchFrm.queryParams(addAntiForgeryToken(parameters));
+                },
+                columns: [
+                    {
+                        field: 'MediaTypeName',
+                        title: '媒体类型',
+                        valign: "middle",
+                        align: "center"
+                    },
+                    {
+                        field: 'MediaName',
+                        title: '媒体名称',
+                        valign: "middle",
+                        align: "left",
+                        formatter: filterFormat.mediaInfo
+                    },
+                    {
+                        field: 'MediaPrices',
+                        title: '广告位参考价格',
+                        valign: "middle",
+                        align: "left",
+                        formatter: filterFormat.mediaPrice
+                    },
+                    {
+                        field: 'Id',
+                        title: '操作',
+                        valign: "middle",
+                        align: "center",
+                        formatter: function(value,row) {
+                            return "<div class='p-xxs'><div class='btn-group'>" +
+                                "<button class='btn btn-danger btn-outline btn-xs' onclick=\"showGroup('" + row.MediaName + "','" + row.Id + "');\"><i class='fa fa-star-o'></i> 重新分组</button>" +
+                                "<button class='btn btn-danger btn-outline btn-xs' onclick=\"removeMedia('" + row.MediaName + "','" + row.Id + "');\"><i class='fa fa-trash-o'></i> 移出分组</button>" +
+                                "</div></div>";
+                        }
+                    }
+                ]
+            });
+        }
+
+        function removeMedia(name, id) {
+            swal({
+                title: "提醒",
+                text: "确认要将 [" + name + "] 移除分组吗?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true
+
+            }, function () {
+                var json = { mId: id, gId: "@cId" };
+                $.ajax({
+                    type: "post",
+                    url: "@Url.Action("RemoveGroup")",
+                    data: addAntiForgeryToken(json),
+                    success: function (data) {
+                        if (data.State == 1) {
+                            $("#table").bootstrapTable('refresh');
+                            swal({
+                                title: "操作成功",
+                                text: data.Msg,
+                                timer: 1000,
+                                type: "success",
+                                showConfirmButton: false
+                            });
+
+                        } else {
+                            swal("操作提醒", data.Msg, "warning");
+                        }
+                    },
+                    error: function () {
+                        swal("操作失败", "系统错误", "error");
+                    },
+                    complete: function () {
+
+                    }
+                });
+            });
+        }
+        function delGroup() {
+            swal({
+                title: "提醒",
+                text: "确认要将删除此分组吗?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true
+
+            }, function () {
+                var json = { id: "@cId" };
+                $.ajax({
+                    type: "post",
+                    url: "@Url.Action("DeleteGroup")",
+                    data: addAntiForgeryToken(json),
+                    success: function (data) {
+                        if (data.State == 1) {
+
+                            swal({
+                                title: data.Msg,
+                                timer: 1000,
+                                type: "success"
+                            },
+                                function () {
+                                    window.location.href="@Url.Action("Collection",new{id=string.Empty})";
+                                });
+
+                        } else {
+                            swal("操作提醒", data.Msg, "warning");
+                        }
+                    },
+                    error: function () {
+                        swal("操作失败", "系统错误", "error");
+                    },
+                    complete: function () {
+
+                    }
+                });
+            });
+        }
+
+        function exportGroup() {
+            var subBtn = $('.ladda-button').ladda();
+            var chkValue = [];
+            $('#exportModal input:checkbox:checked').each(function () {
+                chkValue.push($(this).val());
+            });
+            var json = { id: "@cId", p: chkValue.join(',') };
+            $.ajax({
+                type: "post",
+                url: "@Url.Action("ExportGroup")",
+                data: addAntiForgeryToken(json),
+                success: function (data) {
+                    if (data.State == 1) {
+                        $('#exportModal').modal('hide');
+                        swal({
+                            title: "导出成功",
+                            text: "正在下载中...",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        window.location.href = "/Resource/Media/Download?file=" + data.Msg;
+                    } else {
+                        swal("消息", data.Msg, "warning");
+                    }
+                },
+                error: function () {
+                    swal("错误", "系统错误", "error");
+                },
+                beforeSend: function () {
+                    subBtn.ladda('start');
+                },
+                complete: function () {
+                    subBtn.ladda('stop');
+                }
+            });
+        }
+
+    </script>
+}
+
+
+
+
+
+
+
+

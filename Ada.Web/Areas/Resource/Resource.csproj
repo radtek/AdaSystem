@@ -254,6 +254,8 @@
     <Content Include="Views\Shared\Bilibili.cshtml" />
     <Content Include="Views\Toutiao\Index.cshtml" />
     <Content Include="Views\Shared\Toutiao.cshtml" />
+    <Content Include="Views\Shared\AddGroup.cshtml" />
+    <Content Include="Views\Media\Collection.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -61,9 +61,9 @@ namespace Ada.Services.Resource
             _repository.Update(entity);
             _dbContext.SaveChanges();
         }
-        public void AddMedia(List<string> groupIds, Media media)
+        public void AddMedia(List<string> groupIds, Media media,short groupType)
         {
-            var oldGroups = media.MediaGroups.Where(d => d.GroupType == Consts.StateLock).ToList();
+            var oldGroups = media.MediaGroups.Where(d => d.GroupType == groupType).ToList();
             //找出所有对应的媒体组，删除此媒体，再加入媒体组
             foreach (var mediaGroup in oldGroups)
             {

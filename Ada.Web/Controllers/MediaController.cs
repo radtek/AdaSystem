@@ -544,7 +544,7 @@ namespace Ada.Web.Controllers
             var media = _repository.LoadEntities(d => d.Id == mId).FirstOrDefault();
             if (media != null)
             {
-                _mediaGroupService.AddMedia(groups.ToList(), media);
+                _mediaGroupService.AddMedia(groups.ToList(), media,Consts.StateLock);
                 return Json(new { State = 1, Msg = "加入成功" });
             }
             return Json(new { State = 0, Msg = "媒体资源不存在" });

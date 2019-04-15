@@ -37,8 +37,12 @@ filterFormat.mediaLogo = function (value, row) {
     if (row.MediaTypeIndex != "writer") {
         comment = "<div class='p-xxs text-center'><a class='btn btn-info btn-outline btn-xs' href='/Resource/Media/Comment/" + row.Id + "' target='_blank'><i class='fa fa-comment'></i> 评价</a></div>";
     }
-        
-    return '<div class="p-xxs text-center">' + logo + '</div>' + vg + line + comment;
+
+    var keepcss = row.IsGroup ? "" : 'btn-outline';
+    var keepfa = row.IsGroup ? "fa-heart" : 'fa-heart-o';
+    var keep = "<div class='p-xxs text-center'><a class='btn btn-danger " + keepcss + " btn-xs' href='javascript:showGroup(\"" + row.MediaName + "\",\"" + row.Id + "\");'><i class='fa " + keepfa+"'></i> 收藏</a></div>";   
+
+    return '<div class="p-xxs text-center">' + logo + '</div>' + vg + line + keep + comment;
 };
 filterFormat.mediaInfo = function (value, row) {
     var sex = "";
@@ -433,4 +437,100 @@ function articleDetails(id) {
             $('#modalView .modal').modal('show');
         });
 
+}
+function showGroup(name, id) {
+    $("#modalView").load("/Resource/Media/AddGroup?name=" + name + "&id=" + id,
+        function () {
+            $('#modalView .modal').on('shown.bs.modal', function () {
+                $("#MediaId").val(id);
+                $("#errorMsg").text("");
+            }).on('hidden.bs.modal', function () {
+
+            });
+            $('#modalView .modal').modal('show');
+        });
+}
+function addGroup() {
+    var groupName = $("#groupName").val();
+    if (groupName) {
+        if (groupName.length > 10) {
+            $("#errorMsg").text("分组名称不能超过10个字符");
+            return;
+        } else {
+            var subBtn = $('.btn-warning.ladda-button').ladda();
+            var json = { GroupName: groupName };
+            $.ajax({
+                type: "post",
+                url: "/Resource/Media/AddGroup",
+                data: addAntiForgeryToken(json),
+                success: function (data) {
+                    if (data.State == 1) {
+                        var id = data.Msg;
+                        $("#groups").append('<div class="col-md-4 col-xs-6">' +
+                            '<div class="checkbox checkbox-success checkbox-inline">' +
+                            '<input type="checkbox" id="' + id + '" name="Group" value="' + id + '" checked="">' +
+                            '<label for="' + id + '"> ' + groupName + ' </label>' +
+                            '</div>' +
+                            '</div>');
+                        $("#errorMsg").text("");
+                        $("#groupName").val("");
+                    } else {
+                        $("#errorMsg").text(data.Msg);
+                    }
+                },
+                error: function () {
+                    $("#errorMsg").text("系统错误");
+                },
+                beforeSend: function () {
+                    subBtn.ladda('start');
+                },
+                complete: function () {
+                    subBtn.ladda('stop');
+                }
+            });
+        }
+    } else {
+        $("#errorMsg").text("请输入分组名称");
+        return;
+    }
+}
+
+function joinGroup() {
+    var arr = [], checkeds = $("[name='Group']:checked");
+    $.each(checkeds, function () {
+        arr.push($(this).val());
+    });
+    if (arr.length <= 0) {
+        $("#errorMsg").text("请选择要加入的分组，如果没有，请先添加分组");
+        return;
+    }
+    var subBtn = $('.btn-primary.ladda-button').ladda();
+    var json = { gIds: arr.join(','), mId: $("#MediaId").val() };
+    $.ajax({
+        type: "post",
+        url: "/Resource/Media/JoinGroup",
+        data: addAntiForgeryToken(json),
+        success: function (data) {
+            $('#modalView .modal').modal('hide');
+            var gid = $("#GroupId").val();
+            if (gid) {
+                $('#table').bootstrapTable('refresh', { query: { GroupId: gid } });
+            } else {
+                $("#table").bootstrapTable("refresh");
+            }
+            swal({
+                title: data.Msg,
+                type: "success"
+            });
+        },
+        error: function () {
+            swal("消息", "系统错误", "error");
+        },
+        beforeSend: function () {
+            subBtn.ladda('start');
+        },
+        complete: function () {
+            subBtn.ladda('stop');
+        }
+    });
 }

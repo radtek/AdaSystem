@@ -1,0 +1,58 @@
+﻿@model List<Ada.Core.Domain.Resource.MediaGroup>
+@{
+    var mediaId = ViewBag.MediaId;
+}
+<div class="modal inmodal" tabindex="-1" role="dialog" aria-hidden="true" id="addgroup">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInUp">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <i class="fa fa-heart-o modal-icon text-danger"></i>
+                <h4 class="modal-title">为 <span class="text-danger">@ViewBag.MediaName</span> 选择分组</h4>
+                <small class="font-bold"></small>
+            </div>
+            <div class="modal-body">
+                <div class="row" id="groups">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-md-4 col-xs-6">
+                            <div class="checkbox checkbox-success checkbox-inline">
+                                @if (item.Medias.Any(d => d.Id == mediaId))
+                                {
+                                    <input type="checkbox" id="@item.Id" name="Group" value="@item.Id" checked="">
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="@item.Id" name="Group" value="@item.Id">
+                                }
+
+                                <label for="@item.Id"> @item.GroupName </label>
+                            </div>
+                        </div>
+                    }
+
+                    <input type="hidden" id="MediaId" />
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <input type="text" value="" id="groupName" placeholder="请输入分组名称，名称最多10个字" class="form-control input-sm">
+
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-warning btn-sm ladda-button" data-style="zoom-in" onclick="addGroup();">
+                                    添加分组
+                                </button>
+                            </span>
+                        </div>
+                        <span class="help-block m-b-none text-danger" id="errorMsg"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary ladda-button" data-style="zoom-in" onclick="joinGroup();">确定</button>
+            </div>
+        </div>
+    </div>
+</div>

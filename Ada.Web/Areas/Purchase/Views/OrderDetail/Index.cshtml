@@ -121,7 +121,7 @@
     @Scripts.Render("~/plugins/bootstrapTableScript")
     @Scripts.Render("~/plugins/dateRange")
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
         $(document).ready(function () {
             var table = new TableInit();
@@ -238,11 +238,11 @@
                             }
                         }
                     },
-                    {
+                    @*{
                         field: 'BusinessRemark',
                         title: '@Html.DisplayNameFor(d=>d.BusinessRemark)',
                         align: "center", valign: "middle",
-                    },
+                    },*@
                     {
                         field: 'LinkManName',
                         title: '@Html.DisplayNameFor(d=>d.LinkManName)',
@@ -251,10 +251,12 @@
                     },
                     {
                         field: 'MediaTypeName',
-                        title: '@Html.DisplayNameFor(d=>d.MediaTypeName)',
-                        align: "center", valign: "middle",
+                        title: '媒体信息',
+                        align: "left", valign: "middle", formatter: function (value,row) {
+                            return "["+value+"] " + row.MediaName + " - " + row.AdPositionName;
+                        }
                     },
-                    {
+                    @*{
                         field: 'MediaName',
                         title: '@Html.DisplayNameFor(d=>d.MediaName)',
                         align: "left", valign: "middle",
@@ -265,7 +267,7 @@
                         field: 'AdPositionName',
                         title: '@Html.DisplayNameFor(d=>d.AdPositionName)',
                         align: "center", valign: "middle",
-                    },
+                    },*@
                     @*{
                         field: 'CostMoney',
                         title: '@Html.DisplayNameFor(d=>d.CostMoney)',
@@ -292,12 +294,12 @@
                         field: 'DiscountMoney',
                         title: '@Html.DisplayNameFor(d=>d.DiscountMoney)',
                         align: "center"
-                    },*@
+                    },
                     {
                         field: 'MediaTitle',
                         title: '@Html.DisplayNameFor(d=>d.MediaTitle)',
                         align: "center", valign: "middle", formatter: formatter.tooltip
-                    },
+                    },*@
                     {
                         field: 'PurchaseMoney',
                         title: '@Html.DisplayNameFor(d=>d.PurchaseMoney)',
@@ -399,7 +401,7 @@
                 });
 
         }
-    </script>
+</script>
 }
 
 

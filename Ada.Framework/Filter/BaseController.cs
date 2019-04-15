@@ -192,6 +192,22 @@ namespace Ada.Framework.Filter
             }
             return bytes;
         }
+        public string ExportFile(IDictionary<string, string> dic)
+        {
+
+            var fileName = "MangerExport_" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx";
+            var fullPath = Server.MapPath("~/upload/" + fileName);
+            using (var workbook = new XLWorkbook())
+            {
+                foreach (KeyValuePair<string, string> keyValuePair in dic)
+                {
+                    var dt = JsonConvert.DeserializeObject<DataTable>(keyValuePair.Value);
+                    workbook.Worksheets.Add(dt, keyValuePair.Key);
+                }
+                workbook.SaveAs(fullPath);
+            }
+            return fileName;
+        }
         /// <summary>
         /// 导出数据
         /// </summary>

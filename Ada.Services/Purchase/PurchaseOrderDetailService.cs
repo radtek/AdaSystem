@@ -137,24 +137,24 @@ namespace Ada.Services.Purchase
                 PurchaseAchievement purchaseAchievement = new PurchaseAchievement();
                 purchaseAchievement.Transactor = managerView.UserName;
 
-                var purchases = _repository.LoadEntities(d => d.IsDelete == false && d.TransactorId == managerView.Id);
+                var purchases = _repository.LoadEntities(d => d.IsDelete == false && d.TransactorId == managerView.Id&&d.Status!=Consts.PurchaseStatusFail);
+                //需付款的金额
+                decimal? totalMoney= purchases.Sum(d => d.Money);
                 if (start != null && end != null)
                 {
                     purchaseAchievement.OrderCount = purchases.Count(d => d.PublishDate >= start && d.PublishDate < end);
+                    purchaseAchievement.TotalMoney = purchases.Where(d => d.PublishDate >= start && d.PublishDate < end).Sum(d => d.Money);
                 }
                 else
                 {
                     purchaseAchievement.OrderCount = purchases.Count();
                 }
-
-                //需付款的金额
-                purchaseAchievement.TotalMoney = purchases.Sum(d => d.Money);
                 //实际付款金额
                 var payment = _purchasePaymentDetailRepository.LoadEntities(d => d.PurchasePayment.IsDelete == false &&
                     d.IsDelete == false && d.AuditStatus == Consts.StateNormal && d.PurchasePayment.TransactorId == managerView.Id);
                 purchaseAchievement.PayMoney = payment.Sum(d => d.PayMoney);
                 //压款金额
-                purchaseAchievement.Unpaid = (purchaseAchievement.TotalMoney ?? 0) - (purchaseAchievement.PayMoney ?? 0);
+                purchaseAchievement.Unpaid = (totalMoney ?? 0) - (purchaseAchievement.PayMoney ?? 0);
                 //节省金额
                 purchaseAchievement.Money = _purchasePaymentRepository.LoadEntities(d => d.IsDelete == false && d.PurchasePayment.IsDelete == false && d.PurchaseOrderDetail.IsDelete == false && d.PurchaseOrderDetail.TransactorId == managerView.Id).Sum(d => d.PurchaseOrderDetail.Money);
                 //var paymentPurchases = from p in payment

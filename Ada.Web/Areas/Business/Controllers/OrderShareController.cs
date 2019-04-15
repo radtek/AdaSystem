@@ -36,7 +36,7 @@ namespace Business.Controllers
         }
         public ActionResult GetList(BusinessOrderView viewModel)
         {
-            viewModel.IsRecommend = true;
+            //viewModel.IsRecommend = true;
             var result = _service.LoadEntitiesFilter(viewModel).ToList();
             return Json(new
             {

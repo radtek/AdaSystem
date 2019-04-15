@@ -36,7 +36,13 @@ namespace Ada.Core.ViewModel.Setting
             UserRequestMediaCount = 10;
             WorkFlowPush = false;
             ErpWebSocket = false;
+            MediaGroupTotal = 10;
         }
+        /// <summary>
+        /// 资源分组数
+        /// </summary>
+        [Display(Name = "资源分组数")]
+        public int MediaGroupTotal { get; set; }
         /// <summary>
         /// 媒介资源查询数
         /// </summary>
