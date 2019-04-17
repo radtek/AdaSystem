@@ -162,7 +162,11 @@
                             return  moment(value).format("YYYY-MM-DD");
                         }
                     },
-
+                    {
+                        field: 'Remark',
+                        title: '@Html.DisplayNameFor(d=>d.Remark)',
+                        align: "center", valign: "middle"
+                    },
                     {
                         field: 'Transactor',
                         title: '@Html.DisplayNameFor(d=>d.Transactor)',

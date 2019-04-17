@@ -163,6 +163,7 @@ namespace Resource.Controllers
                     media.Area = row.GetCell(13)?.ToString();
                     media.Transactor = row.GetCell(15)?.ToString();
                     media.TransactorId = row.GetCell(16)?.ToString();
+                    media.AddedDate = DateTime.Now;
                     media.Status = Consts.StateNormal;
                     media.IsSlide = true;
                     _mediaService.Add(media);
