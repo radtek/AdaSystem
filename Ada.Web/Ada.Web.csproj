@@ -2189,6 +2189,7 @@
     <Content Include="Images\medialogo\bilibili.jpg" />
     <Content Include="Images\medialogo\brush.jpg" />
     <Content Include="Images\medialogo\douyin.jpg" />
+    <Content Include="Images\medialogo\expert.jpg" />
     <Content Include="Images\medialogo\friend.jpg" />
     <Content Include="Images\medialogo\headline.jpg" />
     <Content Include="Images\medialogo\redbook.jpg" />

@@ -293,6 +293,13 @@ namespace Resource.Controllers
                     jo.Add("出稿速度", media.Efficiency);
                     jo.Add("备注说明", media.Remark);
                     break;
+                case "expert":
+                    jo.Add("性别", media.Sex);
+                    jo.Add("地区", media.Area);
+                    jo.Add("差旅费说明", media.Abstract);
+                    jo.Add("媒体说明", media.Content);
+                    jo.Add("备注说明", media.Remark);
+                    break;
                 case "taobao":
                     jo.Add("媒体链接", "https://market.m.taobao.com/apps/abs/9/41/index?accountId=" + media.MediaID);
                     jo.Add("粉丝数(万)", Utils.ShowFansNum(media.FansNum));

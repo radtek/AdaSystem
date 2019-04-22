@@ -158,6 +158,7 @@
     <Compile Include="Controllers\BrushController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\DouYinController.cs" />
+    <Compile Include="Controllers\ExpertController.cs" />
     <Compile Include="Controllers\HeadLineController.cs" />
     <Compile Include="Controllers\MediaController.cs" />
     <Compile Include="Controllers\MediaDevelopAllotController.cs" />
@@ -256,6 +257,8 @@
     <Content Include="Views\Shared\Toutiao.cshtml" />
     <Content Include="Views\Shared\AddGroup.cshtml" />
     <Content Include="Views\Media\Collection.cshtml" />
+    <Content Include="Views\Expert\Index.cshtml" />
+    <Content Include="Views\Shared\Expert.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

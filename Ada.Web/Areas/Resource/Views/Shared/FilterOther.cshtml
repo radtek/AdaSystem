@@ -189,6 +189,19 @@
         </div>
     </div>
 }
+@if (Model == "expert")
+{
+    <div class="col-sm-3">
+        <div class="form-group">
+            <label class="control-label">性别</label>
+            <select name="Sex" class="form-control">
+                <option value="">请选择</option>
+                <option value="男">男</option>
+                <option value="女">女</option>
+            </select>
+        </div>
+    </div>
+}
 @if (Model == "sinablog")
 {
     <div class="col-sm-3">
@@ -540,7 +553,7 @@
 }
 @if (Model == "toutiao")
 {
-    
+
     <div class="col-sm-3">
         <div class="form-group">
             <label class="control-label">是否认证</label>
@@ -551,7 +564,7 @@
             </select>
         </div>
     </div>
- 
+
     <div class="col-sm-3">
         <div class="form-group">
             <label class="control-label">平均评论数</label>

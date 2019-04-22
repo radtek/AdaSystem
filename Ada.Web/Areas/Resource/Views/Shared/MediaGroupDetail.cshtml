@@ -27,7 +27,9 @@
                                 var platform = string.IsNullOrWhiteSpace(item.Platform) ? "" : item.Platform + " - ";
                                 <tr>
                                     <td>@item.MediaType.TypeName</td>
-                                    <td>@platform@item.MediaName</td>
+                                    <td>
+                                        <a class="btn btn-w-m btn-link btn-xs" href="@Url.Action("Detail","Media",new{id=item.Id})" target="_blank">@platform@item.MediaName</a>
+                                    </td>
                                     <td>@item.FansNum</td>
                                     <td>
                                         @foreach (var price in item.MediaPrices)

@@ -564,6 +564,34 @@ namespace Ada.Web.Controllers
                 o => new PurchaseOrderDetail() { TransactorId = "X1809031204013244", Transactor = "刘娟" });
             return Content("成功更换" + result + "条订单");
         }
+        public ActionResult ChangeOrderXls()
+        {
+            string path = Server.MapPath("~/upload/order.xlsx");
+            int count = 0;
+            using (FileStream ms = new FileStream(path, FileMode.Open))
+            {
+                //创建工作薄
+                IWorkbook wk = new XSSFWorkbook(ms);
+                //1.获取第一个工作表
+                ISheet sheet = wk.GetSheetAt(0);
+                if (sheet.LastRowNum <= 1)
+                {
+                    return Content("此文件没有导入数据，请填充数据再进行导入");
+                }
+                for (int i = 1; i <= sheet.LastRowNum; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+                    var orderId = row.GetCell(0)?.ToString();
+                    var order = _ptemp.LoadEntities(d => d.Id == orderId.Trim()).FirstOrDefault();
+                    if (order == null) continue;
+                    order.Transactor= row.GetCell(1)?.ToString();
+                    order.TransactorId = row.GetCell(2)?.ToString();
+                    count++;
+                }
+                _dbContext.SaveChanges();
+            }
+            return Content("成功转移" + count + "条订单");
+        }
         public ActionResult CloseMediaXls()
         {
             string path = Server.MapPath("~/upload/close.xlsx");
@@ -870,6 +898,49 @@ namespace Ada.Web.Controllers
             return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "媒体异常数据.xlsx");
 
         }
+        public ActionResult ExportBusiness()
+        {
+            DateTime start = new DateTime(2018, 1, 1);
+            DateTime end = new DateTime(2019, 1, 1);
+            var orders = _temp
+                .LoadEntities(d =>
+                    d.BusinessOrder.IsDelete == false &&
+                    (d.Status == Consts.StateOK || d.Status == Consts.StateNormal) &&
+                    d.VerificationStatus == Consts.StateLock);
+            var pOrders = _ptemp.LoadEntities(d => d.IsDelete == false);
+            orders= from b in orders
+                    from p in pOrders
+                    where b.Id == p.BusinessOrderDetailId && p.PublishDate >= start&&p.PublishDate<end
+                select b;
+            var group = orders.GroupBy(d => d.BusinessOrder.LinkMan).Select(d => new
+            {
+                d.Key,
+                Total = d.Sum(o => o.VerificationMoney)
+            }).OrderBy(d => d.Total).ToList();
+            JArray jObjects = new JArray();
+            foreach (var item in group)
+            {
+                var jo = new JObject();
+                jo.Add("公司名称", item.Key.Commpany.Name);
+                jo.Add("联系人", item.Key.Name);
+                jo.Add("未核销总额", item.Total);
+                jo.Add("经办人员", item.Key.Transactor);
+                jObjects.Add(jo);
+            }
+            var dt = JsonConvert.DeserializeObject<DataTable>(jObjects.ToString());
+            byte[] bytes;
+            using (var workbook = new XLWorkbook())
+            {
+                workbook.Worksheets.Add(dt, "2018年未核销金额汇总");
+                using (var ms = new MemoryStream())
+                {
+                    workbook.SaveAs(ms);
+                    bytes = ms.ToArray();
+                }
+            }
+            return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "2018年未核销金额汇总.xlsx");
+
+        }
         public ActionResult MediaUpdateByDouYinPrice(string n, string c)
         {
             int count =
@@ -877,6 +948,14 @@ namespace Ada.Web.Controllers
                     p => new MediaPrice() { AdPositionName = c });
             _dbContext.SaveChanges();
             return Content("成功更换" + count + "条资源");
+        }
+        public ActionResult DeleteMedia()
+        {
+            var media = _media.Update(
+                d => d.MediaTypeId == "X1904190915292236" && d.TransactorId == "X1801180851430024",
+                d => new Media() {IsDelete = true});
+            _dbContext.SaveChanges();
+            return Content("成功删除" + media + "条资源");
         }
         public async Task<ActionResult> Http(string p)
         {
