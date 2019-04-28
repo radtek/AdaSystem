@@ -78,6 +78,11 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "收款账户")]
         public string ReceivableInfo { get; set; }
         /// <summary>
+        /// 收款金额（税前）
+        /// </summary>
+        [Display(Name = "收款金额（税前）")]
+        public decimal? ReceivableMoney { get; set; }
+        /// <summary>
         /// 请款记录数
         /// </summary>
         [Display(Name = "请款记录数")]

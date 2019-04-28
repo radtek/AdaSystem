@@ -45,6 +45,7 @@ var myDropzone = new Dropzone("#myDropzone", {
         return this._updateMaxFilesReachedClass();
     },
     init: function () {
+        console.log(this);
         if (typeof thumbimage != "undefined") {
             if (thumbimage) {
                 var mockFile = {
@@ -52,6 +53,7 @@ var myDropzone = new Dropzone("#myDropzone", {
                     size: 6,
                     status: "success"
                 };
+                
                 this.emit("addedfile", mockFile);
                 this.emit("thumbnail", mockFile, thumbimage);
                 this.emit("complete", mockFile);
