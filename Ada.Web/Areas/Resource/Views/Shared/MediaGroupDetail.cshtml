@@ -28,14 +28,18 @@
                                 <tr>
                                     <td>@item.MediaType.TypeName</td>
                                     <td>
-                                        <a class="btn btn-w-m btn-link btn-xs" href="@Url.Action("Detail","Media",new{id=item.Id})" target="_blank">@platform@item.MediaName</a>
+                                        <a class="btn btn-default btn-xs" href="@Url.Action("Detail","Media",new{id=item.Id})" target="_blank">@platform@item.MediaName</a>
                                     </td>
                                     <td>@item.FansNum</td>
                                     <td>
                                         @foreach (var price in item.MediaPrices)
                                         {
-                                            var str = price.AdPositionName + "：¥ " + price.PurchasePrice + "　　有效期至：" + price.InvalidDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"));
-                                            <div class="bg-info">@str</div>
+                                            if (price.PurchasePrice>0)
+                                             {
+                                                 var str = price.AdPositionName + "：¥ " + price.PurchasePrice + "　　有效期至：" + price.InvalidDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd"));
+                                                 <div class="bg-info">@str</div>
+                                             }
+                                            
                                         }
                                     </td>
                                     <td>

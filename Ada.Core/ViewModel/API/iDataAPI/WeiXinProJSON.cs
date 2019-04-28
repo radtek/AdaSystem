@@ -43,7 +43,7 @@ namespace Ada.Core.ViewModel.API.iDataAPI
         /// <summary>
         /// 是否原创
         /// </summary>
-        public bool? original { get; set; }
+        public bool? origin { get; set; }
         /// <summary>
         /// 文章ID
         /// </summary>

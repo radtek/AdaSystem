@@ -241,7 +241,7 @@ namespace Ada.Services.API
                         {
                             article.ArticleIdx = articleData.idx;
                             article.ArticleUrl = articleData.url;
-                            article.IsOriginal = articleData.original;
+                            article.IsOriginal = articleData.origin;
                             //article.OriginUrl = articleData.originUrl;
                             article.Biz = articleData.biz;
                             article.CommentCount = articleData.commentCount;
@@ -267,7 +267,7 @@ namespace Ada.Services.API
                             article.ArticleId = articleData.id;
                             article.ArticleIdx = articleData.idx;
                             article.ArticleUrl = articleData.url;
-                            article.IsOriginal = articleData.original;
+                            article.IsOriginal = articleData.origin;
                             //article.OriginUrl = articleData.originUrl;
                             article.Biz = articleData.biz;
                             article.CommentCount = articleData.commentCount;
@@ -659,7 +659,7 @@ namespace Ada.Services.API
                                                 if (string.IsNullOrWhiteSpace(articleData.publishDateStr)) continue;
                                                 article.ArticleIdx = articleData.idx;
                                                 article.ArticleUrl = articleData.url;
-                                                article.IsOriginal = articleData.original;
+                                                article.IsOriginal = articleData.origin;
                                                 article.Biz = articleData.biz;
                                                 article.CommentCount = articleData.commentCount;
                                                 article.Content = GetBrands(articleData.content, brands);
@@ -682,7 +682,7 @@ namespace Ada.Services.API
                                                 article.ArticleId = articleData.id;
                                                 article.ArticleIdx = articleData.idx;
                                                 article.ArticleUrl = articleData.url;
-                                                article.IsOriginal = articleData.original;
+                                                article.IsOriginal = articleData.origin;
                                                 article.Biz = articleData.biz;
                                                 article.CommentCount = articleData.commentCount;
                                                 article.Content = GetBrands(articleData.content, brands);
@@ -978,7 +978,7 @@ namespace Ada.Services.API
                     {
                         article.ArticleIdx = articleData.idx;
                         article.ArticleUrl = articleData.url;
-                        article.IsOriginal = articleData.original;
+                        article.IsOriginal = articleData.origin;
                         //article.OriginUrl = articleData.originUrl;
                         article.Biz = articleData.biz;
                         article.CommentCount = articleData.commentCount;
@@ -999,7 +999,7 @@ namespace Ada.Services.API
                         article.ArticleId = articleData.id;
                         article.ArticleIdx = articleData.idx;
                         article.ArticleUrl = articleData.url;
-                        article.IsOriginal = articleData.original;
+                        article.IsOriginal = articleData.origin;
                         //article.OriginUrl = articleData.originUrl;
                         article.Biz = articleData.biz;
                         article.CommentCount = articleData.commentCount;

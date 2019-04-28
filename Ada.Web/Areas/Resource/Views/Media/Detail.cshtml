@@ -144,14 +144,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.MediaPrices.Where(d => d.IsDelete == false).OrderByDescending(d => d.AdPositionName))
+                                @foreach (var item in Model.MediaPrices.Where(d => d.IsDelete == false&&d.Media.IsDelete==false).OrderByDescending(d => d.AdPositionName))
                                 {
-                                    <tr>
-                                        <td>@item.AdPositionName</td>
-                                        <td>@item.PurchasePrice 元</td>
-                                        <td>@item.MarketPrice 元</td>
-                                        <td>@item.SellPrice 元</td>
-                                    </tr>
+                                    if (item.PurchasePrice>0)
+                                     {
+                                         <tr>
+                                             <td>@item.AdPositionName</td>
+                                             <td>@item.PurchasePrice 元</td>
+                                             <td>@item.MarketPrice 元</td>
+                                             <td>@item.SellPrice 元</td>
+                                         </tr>
+                                     }
+                                    
                                 }
 
 

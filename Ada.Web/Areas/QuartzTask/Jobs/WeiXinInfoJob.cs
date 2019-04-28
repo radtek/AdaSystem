@@ -245,7 +245,7 @@ namespace QuartzTask.Jobs
                                                                 continue;
                                                             article.ArticleIdx = articleData.idx;
                                                             article.ArticleUrl = articleData.url;
-                                                            article.IsOriginal = articleData.original;
+                                                            article.IsOriginal = articleData.origin;
                                                             article.Biz = articleData.biz;
                                                             article.CommentCount = articleData.commentCount;
                                                             article.Content = GetBrands(articleData.content, brands);
@@ -272,7 +272,7 @@ namespace QuartzTask.Jobs
                                                             article.ArticleId = articleData.id;
                                                             article.ArticleIdx = articleData.idx;
                                                             article.ArticleUrl = articleData.url;
-                                                            article.IsOriginal = articleData.original;
+                                                            article.IsOriginal = articleData.origin;
                                                             article.Biz = articleData.biz;
                                                             article.CommentCount = articleData.commentCount;
                                                             article.Content = GetBrands(articleData.content, brands);

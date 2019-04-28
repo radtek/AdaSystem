@@ -63,17 +63,27 @@
                     var bg2 = "gray-bg";
                     var name1 = "可预约";
                     var name2 = "可预约";
+                    var remark1 = "";
+                    var remark2 = "";
                     var make1 = media.MediaAppointments.FirstOrDefault(d => d.AppointmentDate.Value.Date == date.Date && d.Taxis == 1);
                     var make2 = media.MediaAppointments.FirstOrDefault(d => d.AppointmentDate.Value.Date == date.Date && d.Taxis == 2);
                     if (make1 != null)
                     {
                         bg1 = make1.State == Consts.StateNormal ? "red-bg" : "yellow-bg";
                         name1 = make1.Transactor;
+                        if (!string.IsNullOrWhiteSpace(make1.Remark))
+                        {
+                            remark1 = make1.Remark;
+                        }
                     }
                     if (make2 != null)
                     {
                         bg2 = make2.State == Consts.StateNormal ? "red-bg" : "yellow-bg";
                         name2 = make2.Transactor;
+                        if (!string.IsNullOrWhiteSpace(make2.Remark))
+                        {
+                            remark2 = make2.Remark;
+                        }
                     }
                     var dateStr = date.ToString("MM月dd日") + " " + Utils.GetWeek(date);
                     var boxid = date.ToString("yyyyMMdd");
@@ -92,6 +102,19 @@
                                                     头条
                                                 </h3>
                                                 <div class="font-bold">@name1</div>
+                                                @if (!string.IsNullOrWhiteSpace(remark1))
+                                                {
+                                                    <div class="m-t-xs">
+                                                        <button class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="@remark1" type="button">预约备注</button>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="m-t-xs">
+                                                        <button class="btn btn-default btn-sm btn-outline" type="button">暂未备注</button>
+                                                    </div>
+
+                                                }
                                             </div>
                                         </div>
                                         <div class="widget-text-box text-center">
@@ -115,6 +138,19 @@
                                                     次条
                                                 </h3>
                                                 <div class="font-bold">@name2</div>
+                                                @if (!string.IsNullOrWhiteSpace(remark2))
+                                                {
+                                                <div class="m-t-xs">
+                                                    <button class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="@remark2" type="button">预约备注</button>
+                                                </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="m-t-xs">
+                                                        <button class="btn btn-default btn-sm btn-outline" type="button">暂未备注</button>
+                                                    </div>
+                                                    
+                                                }
                                             </div>
                                         </div>
                                         <div class="widget-text-box text-center">

@@ -115,7 +115,7 @@ namespace QuartzTask.Jobs
                                             {
                                                 article.ArticleIdx = articleData.idx;
                                                 article.ArticleUrl = articleData.url;
-                                                article.IsOriginal = articleData.original;
+                                                article.IsOriginal = articleData.origin;
                                                 article.Biz = articleData.biz;
                                                 article.CommentCount = articleData.commentCount;
                                                 article.Content = articleData.content;
@@ -135,7 +135,7 @@ namespace QuartzTask.Jobs
                                                 article.ArticleId = articleData.id;
                                                 article.ArticleIdx = articleData.idx;
                                                 article.ArticleUrl = articleData.url;
-                                                article.IsOriginal = articleData.original;
+                                                article.IsOriginal = articleData.origin;
                                                 article.Biz = articleData.biz;
                                                 article.CommentCount = articleData.commentCount;
                                                 article.Content = articleData.content;
