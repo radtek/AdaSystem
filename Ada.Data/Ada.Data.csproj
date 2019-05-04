@@ -414,6 +414,10 @@
     <Compile Include="Migrations\201903110327222_UpdataJob.Designer.cs">
       <DependentUpon>201903110327222_UpdataJob.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905040257023_UserProfile2.cs" />
+    <Compile Include="Migrations\201905040257023_UserProfile2.Designer.cs">
+      <DependentUpon>201905040257023_UserProfile2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -637,6 +641,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903110327222_UpdataJob.resx">
       <DependentUpon>201903110327222_UpdataJob.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905040257023_UserProfile2.resx">
+      <DependentUpon>201905040257023_UserProfile2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

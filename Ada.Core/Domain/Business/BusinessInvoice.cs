@@ -125,6 +125,11 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "审核状态")]
         public short? AuditStatus { get; set; }
         /// <summary>
+        /// 客户公司
+        /// </summary>
+        [Display(Name = "客户公司")]
+        public string CompanyId { get; set; }
+        /// <summary>
         /// 联系客户
         /// </summary>
         [Display(Name = "联系客户")]

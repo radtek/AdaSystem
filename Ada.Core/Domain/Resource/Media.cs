@@ -265,6 +265,16 @@ namespace Ada.Core.Domain.Resource
         [Display(Name = "保留时长")]
         public string RetentionTime { get; set; }
         /// <summary>
+        /// 差旅地区
+        /// </summary>
+        [Display(Name = "差旅地区")]
+        public string TravelArea { get; set; }
+        /// <summary>
+        /// 差旅说明
+        /// </summary>
+        [Display(Name = "差旅说明")]
+        public string TravelRemark { get; set; }
+        /// <summary>
         /// 媒体类型
         /// </summary>
         [Display(Name = "媒体类型")]
