@@ -76,7 +76,7 @@ namespace Business.Controllers
         public ActionResult Export(BusinessOrderView viewModel)
         {
             viewModel.limit = 100;
-            viewModel.IsRecommend = true;
+            //viewModel.IsRecommend = true;
             var result = _service.LoadEntitiesFilter(viewModel).ToList();
             JArray jObjects = new JArray();
             foreach (var item in result)

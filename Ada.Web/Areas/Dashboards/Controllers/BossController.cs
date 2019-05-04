@@ -57,9 +57,10 @@ namespace Dashboards.Controllers
             WeiGuangTotal total = new WeiGuangTotal();
             var business = _businessRepository
                 .LoadEntities(d => d.IsDelete == false && d.BusinessOrder.IsDelete == false && d.Status != 0);
+            var purchase = _purchaseRepository.LoadEntities(d => d.IsDelete == false);
             //订单数校验
             total.BusinessCount = business.Count();
-            total.PurchaseCount = _purchaseRepository.LoadEntities(d => d.IsDelete == false).Count();
+            total.PurchaseCount = purchase.Count();
             total.OrderStatus = total.BusinessCount == total.PurchaseCount;
             //核销金额校验
 
@@ -107,6 +108,16 @@ namespace Dashboards.Controllers
                     Text = d.Key,
                     Value = (d.Sum(r => r.RequestSellMoney) - d.Sum(r => r.SellMoney)) + ""
                 }).ToList();
+            var date = DateTime.Now.Date.AddMonths(-1);
+            var noConfirms= from b in business
+                from p in purchase
+                where b.Id == p.BusinessOrderDetailId && p.PublishDate <= date&&p.Status==Consts.PurchaseStatusSuccess&&b.Status==Consts.StateNormal
+                            select b;
+            total.NoConfirms = noConfirms.GroupBy(d => d.BusinessOrder.Transactor).Select(d => new Comment()
+            {
+                Transactor = d.Key,
+                Count = d.Count()
+            }).ToList();
             return View(total);
         }
 

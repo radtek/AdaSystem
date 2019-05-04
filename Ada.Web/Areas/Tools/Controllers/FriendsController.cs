@@ -118,7 +118,7 @@ namespace Tools.Controllers
                 FansMessage fansMessage = new FansMessage();
                 fansMessage.Fans = fan;
                 fansMessage.MessageDate =
-                    GetRandomTime(DateTime.Parse(dateRange[0]), DateTime.Parse(dateRange[1]));
+                    GetRandomTime(DateTime.Parse(dateRange[0]), DateTime.Parse(dateRange[0]).Date.AddDays(1));
                 friendContent.FansMessages.Add(fansMessage);
             }
             return PartialView("ContentPreview", friendContent);

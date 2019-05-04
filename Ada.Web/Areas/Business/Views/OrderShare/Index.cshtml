@@ -83,6 +83,7 @@
                 mobileResponsive: true,
                 queryParams: function(parameters) {
                     parameters.BusinessType = $("#BusinessType").val();
+                    parameters.OrderStatus = 1;
                     return searchFrm.queryParams(parameters);
                 },
                 columns: [

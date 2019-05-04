@@ -584,7 +584,7 @@ namespace Ada.Web.Controllers
                     var orderId = row.GetCell(0)?.ToString();
                     var order = _ptemp.LoadEntities(d => d.Id == orderId.Trim()).FirstOrDefault();
                     if (order == null) continue;
-                    order.Transactor= row.GetCell(1)?.ToString();
+                    order.Transactor = row.GetCell(1)?.ToString();
                     order.TransactorId = row.GetCell(2)?.ToString();
                     count++;
                 }
@@ -908,10 +908,10 @@ namespace Ada.Web.Controllers
                     (d.Status == Consts.StateOK || d.Status == Consts.StateNormal) &&
                     d.VerificationStatus == Consts.StateLock);
             var pOrders = _ptemp.LoadEntities(d => d.IsDelete == false);
-            orders= from b in orders
-                    from p in pOrders
-                    where b.Id == p.BusinessOrderDetailId && p.PublishDate >= start&&p.PublishDate<end
-                select b;
+            orders = from b in orders
+                     from p in pOrders
+                     where b.Id == p.BusinessOrderDetailId && p.PublishDate >= start && p.PublishDate < end
+                     select b;
             var group = orders.GroupBy(d => d.BusinessOrder.LinkMan).Select(d => new
             {
                 d.Key,
@@ -949,11 +949,37 @@ namespace Ada.Web.Controllers
             _dbContext.SaveChanges();
             return Content("成功更换" + count + "条资源");
         }
+        public ActionResult MediaUpdatePrice(string tId, string aId, string aName)
+        {
+            var medias = _media.LoadEntities(d => d.IsDelete == false && d.MediaTypeId == tId);
+            foreach (var item in medias)
+            {
+                if (item.MediaPrices.Any(d=>d.AdPositionName==aName))
+                {
+                    continue;
+                }
+                var priceDate = item.MediaPrices.FirstOrDefault()?.PriceDate;
+                var invalidDate = item.MediaPrices.FirstOrDefault()?.InvalidDate;
+                item.MediaPrices.Add(new MediaPrice()
+                {
+                    Id = IdBuilder.CreateIdNum(),
+                    AdPositionId = aId,
+                    AdPositionName = aName,
+                    InvalidDate = invalidDate,
+                    PriceDate = priceDate,
+                    PurchasePrice = 0,
+                    SellPrice = 0,
+                    MarketPrice = 0
+                });
+            }
+            _dbContext.SaveChanges();
+            return Content("成功更新价格");
+        }
         public ActionResult DeleteMedia()
         {
             var media = _media.Update(
                 d => d.MediaTypeId == "X1904190915292236" && d.TransactorId == "X1801180851430024",
-                d => new Media() {IsDelete = true});
+                d => new Media() { IsDelete = true });
             _dbContext.SaveChanges();
             return Content("成功删除" + media + "条资源");
         }

@@ -95,6 +95,11 @@ namespace Ada.Core.ViewModel.Statistics
         /// </summary>
         [Display(Name = "改价统计")]
         public List<SelectListItem> PriceChanges { get; set; }
+        /// <summary>
+        /// 未确认统计
+        /// </summary>
+        [Display(Name = "未确认统计")]
+        public List<Comment> NoConfirms { get; set; }
 
     }
 
