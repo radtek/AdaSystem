@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ada.Core.Domain.Business;
 
 namespace Ada.Core.Domain.Customer
 {
@@ -12,6 +13,7 @@ namespace Ada.Core.Domain.Customer
         public Commpany()
         {
             LinkMans=new HashSet<LinkMan>();
+            BusinessInvoices = new HashSet<BusinessInvoice>();
         }
         /// <summary>
         /// 公司名称
@@ -65,6 +67,7 @@ namespace Ada.Core.Domain.Customer
         public bool? IsCooperation { get; set; }
 
         public virtual ICollection<LinkMan> LinkMans { get; set; }
+        public virtual ICollection<BusinessInvoice> BusinessInvoices { get; set; }
 
     }
 }

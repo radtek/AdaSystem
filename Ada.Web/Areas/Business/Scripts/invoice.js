@@ -14,7 +14,7 @@ linkmanSelect.paramsData = function (params) {
 linkmanSelect.processResults = function (data, params) {
     var result = $.map(data.rows,
         function (v, k) {
-            return { id: v.Id, text: v.Name, commpany: v.CommpanyName };
+            return { id: v.Id, text: v.Name};
         });
     return {
         results: result
@@ -24,10 +24,10 @@ linkmanSelect.formatRepo = function (repo) {
     if (repo.loading) {
         return repo.text;
     }
-    return "<p>" + repo.commpany + " 【 " + repo.text + " 】 <p>";
+    return repo.text;
 };
 linkmanSelect.formatRepoSelection = function (repo) {
-    $("#LinkManName").val(repo.text);
+    $("#CompanyName").val(repo.text);
     $table.bootstrapTable("removeAll");
     return repo.text;
 };
@@ -90,7 +90,7 @@ $(function () {
 
 function initData() {
     if (!isReadonly) {
-        initSelect2("LinkManId", linkmanSelect);
+        initSelect2("CompanyId", linkmanSelect);
         initSelect2("TransactorId", transactorSelect);
     }
     $table.bootstrapTable({
@@ -237,7 +237,7 @@ function setTableData() {
 }
 //显示采购订单模态窗口
 function showOrder() {
-    var linkman = $("#LinkManId").val();
+    var linkman = $("#CompanyId").val();
     if (linkman) {
         $("#modalView").load(orderdetail,
             function () {
@@ -263,7 +263,7 @@ function showOrder() {
                         uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
                         responseHandler: responseHandler,
                         queryParams: function (parameters) {
-                            parameters.LinkManId = linkman;
+                            parameters.CompanyId = linkman;
                             parameters.IsInvoice = true;
                             return parameters;
                         },
@@ -316,7 +316,7 @@ function showOrder() {
 
             });
     } else {
-        swal("操作提醒", "请先选择客户", "warning");
+        swal("操作提醒", "请先选择客户公司", "warning");
     }
 
 }

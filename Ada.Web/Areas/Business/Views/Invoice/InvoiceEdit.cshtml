@@ -19,19 +19,19 @@
     <div class="row">
 
         <div class="form-group col-md-4">
-            @Html.LabelFor(d => d.LinkManId, Html.DisplayNameFor(d => d.LinkManId).ToString(), new { @class = "col-sm-4 control-label" })
+            @Html.LabelFor(d => d.CompanyId, Html.DisplayNameFor(d => d.CompanyId).ToString(), new { @class = "col-sm-4 control-label" })
             <div class="col-sm-8">
                 @if (Model.AuditStatus == Consts.StateNormal)
                 {
-                    @Html.TextBoxFor(d => d.LinkManName, new { @readonly = "readonly", @class = "form-control" })
-                    @Html.HiddenFor(d => d.LinkManId)
+                    @Html.TextBoxFor(d => d.CompanyName, new { @readonly = "readonly", @class = "form-control" })
+                    @Html.HiddenFor(d => d.CompanyId)
                 }
                 else
                 {
-                    <select class="form-control" required="" name="LinkManId" id="LinkManId">
-                        <option value="@Model.LinkManId">@Model.LinkManName</option>
+                    <select class="form-control" required="" name="CompanyId" id="CompanyId">
+                        <option value="@Model.CompanyId">@Model.CompanyName</option>
                     </select>
-                    @Html.HiddenFor(d => d.LinkManName)
+                    @Html.HiddenFor(d => d.CompanyName)
                 }
             </div>
         </div>

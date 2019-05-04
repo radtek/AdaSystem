@@ -39,7 +39,7 @@ namespace Finance.Controllers
             BusinessInvoiceView viewModel = new BusinessInvoiceView();
             viewModel.Id = id;
             viewModel.Transactor = entity.Transactor;
-            viewModel.LinkManName = entity.LinkManName;
+            viewModel.CompanyName = entity.Corporation.Name;
             viewModel.InvoiceTitle = entity.InvoiceTitle;
             viewModel.InvoiceType = entity.InvoiceType;
             viewModel.Address = entity.Address;

@@ -21,9 +21,9 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "发票类型")]
         public string InvoiceType { get; set; }
         /// <summary>
-        /// 公司名称
+        /// 开票公司
         /// </summary>
-        [Display(Name = "公司名称")]
+        [Display(Name = "开票公司")]
         public string Company { get; set; }
         /// <summary>
         /// 纳税识别号
@@ -71,15 +71,15 @@ namespace Ada.Core.ViewModel.Business
         [Display(Name = "经办人")]
         public string TransactorId { get; set; }
         /// <summary>
-        /// 客户名称
+        /// 客户公司
         /// </summary>
-        [Display(Name = "客户名称")]
-        public string LinkManId { get; set; }
+        [Display(Name = "客户公司")]
+        public string CompanyId { get; set; }
         /// <summary>
-        /// 客户名称
+        /// 客户公司
         /// </summary>
-        [Display(Name = "客户名称")]
-        public string LinkManName { get; set; }
+        [Display(Name = "客户公司")]
+        public string CompanyName { get; set; }
         /// <summary>
         /// 发票金额
         /// </summary>

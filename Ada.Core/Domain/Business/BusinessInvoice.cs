@@ -30,9 +30,9 @@ namespace Ada.Core.Domain.Business
         [Display(Name = "发票类型")]
         public string InvoiceType { get; set; }
         /// <summary>
-        /// 公司名称
+        /// 开票公司
         /// </summary>
-        [Display(Name = "公司名称")]
+        [Display(Name = "开票公司")]
         public string Company { get; set; }
         /// <summary>
         /// 纳税识别号
@@ -129,17 +129,7 @@ namespace Ada.Core.Domain.Business
         /// </summary>
         [Display(Name = "客户公司")]
         public string CompanyId { get; set; }
-        /// <summary>
-        /// 联系客户
-        /// </summary>
-        [Display(Name = "联系客户")]
-        public string LinkManName { get; set; }
-        /// <summary>
-        /// 联系客户
-        /// </summary>
-        [Display(Name = "联系客户")]
-        public string LinkManId { get; set; }
-        public virtual LinkMan LinkMan { get; set; }
+        public virtual Commpany Corporation { get; set; }
 
         public virtual ICollection<BusinessInvoiceDetail> BusinessInvoiceDetails { get; set; }
         public virtual ICollection<Receivables> Receivableses { get; set; }

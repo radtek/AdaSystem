@@ -176,12 +176,12 @@ namespace Ada.Web.Controllers
         public ActionResult UpdateInvoice()
         {
 
-            var lists = _invoice.LoadEntities(d => d.IsDelete == false);
-            foreach (var item in lists)
-            {
-                item.Company = item.Company.Trim().Replace(" ", "").Replace("　", "");
-            }
-            _dbContext.SaveChanges();
+            //var lists = _invoice.LoadEntities(d => d.IsDelete == false).ToList();
+            //foreach (var item in lists)
+            //{
+            //    item.CompanyId = item.LinkMan.CommpanyId;
+            //}
+            //_dbContext.SaveChanges();
             return Content("发票公司名称更新完成");
 
 

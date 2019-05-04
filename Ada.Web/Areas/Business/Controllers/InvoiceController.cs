@@ -43,7 +43,7 @@ namespace Business.Controllers
                 rows = result.Select(d => new BusinessInvoiceView
                 {
                     Id = d.Id,
-                    LinkManName = d.LinkManName,
+                    CompanyName = d.Corporation.Name,
                     Transactor = d.Transactor,
                     AddedDate = d.AddedDate,
                     TotalMoney = d.TotalMoney,
@@ -100,8 +100,8 @@ namespace Business.Controllers
             invoice.TransactorId = viewModel.TransactorId;
             invoice.Status = Consts.StateLock;//待开票
             invoice.MoneyStatus = Consts.StateLock;//未到款
-            invoice.LinkManName = viewModel.LinkManName;
-            invoice.LinkManId = viewModel.LinkManId;
+            //invoice.LinkManName = viewModel.LinkManName;
+            invoice.CompanyId = viewModel.CompanyId;
             invoice.InvoiceTitle = viewModel.InvoiceTitle;
             invoice.InvoiceType = viewModel.InvoiceType;
             invoice.Address = viewModel.Address;
@@ -138,8 +138,8 @@ namespace Business.Controllers
             viewModel.Id = id;
             viewModel.Transactor = entity.Transactor;
             viewModel.TransactorId = entity.TransactorId;
-            viewModel.LinkManName = entity.LinkManName;
-            viewModel.LinkManId = entity.LinkManId;
+            viewModel.CompanyName = entity.Corporation.Name;
+            viewModel.CompanyId = entity.CompanyId;
             viewModel.InvoiceTitle = entity.InvoiceTitle;
             viewModel.InvoiceType = entity.InvoiceType;
             viewModel.Address = entity.Address;
@@ -186,8 +186,8 @@ namespace Business.Controllers
             }
             invoice.Transactor = viewModel.Transactor;
             invoice.TransactorId = viewModel.TransactorId;
-            invoice.LinkManName = viewModel.LinkManName;
-            invoice.LinkManId = viewModel.LinkManId;
+            //invoice.LinkManName = viewModel.LinkManName;
+            invoice.CompanyId = viewModel.CompanyId;
             invoice.InvoiceTitle = viewModel.InvoiceTitle;
             invoice.InvoiceType = viewModel.InvoiceType;
             invoice.Address = viewModel.Address;

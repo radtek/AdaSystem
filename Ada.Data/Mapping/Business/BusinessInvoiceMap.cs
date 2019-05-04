@@ -25,8 +25,8 @@ namespace Ada.Data.Mapping.Business
             Property(s => s.Bank).HasMaxLength(32);
             Property(s => s.BankNum).HasMaxLength(32);
             Property(s => s.Phone).HasMaxLength(32);
-            Property(s => s.LinkManName).HasMaxLength(32);
-            Property(s => s.LinkManId).HasMaxLength(32);
+            Property(s => s.CompanyId).HasMaxLength(32);
+            //Property(s => s.LinkManId).HasMaxLength(32);
             Property(s => s.ReceivableNum).HasMaxLength(32);
             Property(s => s.InvoiceNum).HasMaxLength(32);
             Property(s => s.AuditBy).HasMaxLength(32);
@@ -44,7 +44,7 @@ namespace Ada.Data.Mapping.Business
 
             //配置表
             ToTable("BusinessInvoice");
-            HasRequired(s => s.LinkMan).WithMany(s => s.BusinessInvoices).HasForeignKey(s => s.LinkManId).WillCascadeOnDelete(false);
+            HasRequired(s => s.Corporation).WithMany(s => s.BusinessInvoices).HasForeignKey(s => s.CompanyId).WillCascadeOnDelete(false);
             HasMany(s => s.Receivableses).
                 WithMany(s => s.BusinessInvoices)
                 .Map(s => s.ToTable("BusinessInvoiceReceivables").

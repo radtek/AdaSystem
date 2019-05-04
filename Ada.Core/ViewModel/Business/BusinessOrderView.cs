@@ -233,5 +233,11 @@ namespace Ada.Core.ViewModel.Business
         /// </summary>
         [Display(Name = "是否发票核销")]
         public bool? IsWriteOff { get; set; }
+        /// <summary>
+        /// 客户公司
+        /// </summary>
+        [Display(Name = "客户公司")]
+        [Required]
+        public string CompanyId { get; set; }
     }
 }
