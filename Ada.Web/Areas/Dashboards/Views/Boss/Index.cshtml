@@ -444,7 +444,7 @@
         <div class="col-lg-4">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>销售未确认订单统计（截止：@DateTime.Now.Date.AddMonths(-1).ToString("yyyy-MM-dd")）</h5>
+                    <h5>销售未确认订单统计（截止：@DateTime.Parse(DateTime.Now.ToString("yyyy-MM-01")).AddDays(-1).ToString("yyyy-MM-dd")）</h5>
                 </div>
                 <div class="ibox-content">
                     <div class="scroll_content">

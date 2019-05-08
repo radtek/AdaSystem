@@ -237,7 +237,6 @@ namespace Ada.Core.ViewModel.Business
         /// 客户公司
         /// </summary>
         [Display(Name = "客户公司")]
-        [Required]
         public string CompanyId { get; set; }
     }
 }

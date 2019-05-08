@@ -61,6 +61,16 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
+                        @Html.LabelFor(d => d.FansNum, Html.DisplayNameFor(d => d.FansNum).ToString(), new { @class = "control-label" })
+                        <div class="input-daterange input-group">
+                            @Html.TextBoxFor(d => d.FansNumStart, new { @class = "form-control" })
+                            <span class="input-group-addon">至</span>
+                            @Html.TextBoxFor(d => d.FansNumEnd, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
                         @Html.LabelFor(d => d.PriceStart, Html.DisplayNameFor(d => d.PriceStart).ToString(), new { @class = "control-label" })
                         <div class="input-daterange input-group">
                             @Html.TextBoxFor(d => d.PriceStart, new { @class = "form-control" })

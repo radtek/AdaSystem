@@ -35,12 +35,12 @@
                         <div class="row">
                             <div class="col-md-12">
                                 @foreach (var item in tags)
-                    {
-                        <div class="checkbox checkbox-success checkbox-inline">
-                            <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
-                            <label for="@item.Id">@item.TagName</label>
-                        </div>
-        }
+                                {
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" name="MediaTagIds" value="@item.Id" id="@item.Id">
+                                        <label for="@item.Id">@item.TagName</label>
+                                    </div>
+                                }
                             </div>
                         </div>
 
@@ -62,6 +62,16 @@
                     <div class="form-group">
                         @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
                         @Html.DropDownListFor(d => d.AdPositionName, adpositions, "不限", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.FansNum, Html.DisplayNameFor(d => d.FansNum).ToString(), new { @class = "control-label" })
+                        <div class="input-daterange input-group">
+                            @Html.TextBoxFor(d => d.FansNumStart, new { @class = "form-control" })
+                            <span class="input-group-addon">至</span>
+                            @Html.TextBoxFor(d => d.FansNumEnd, new { @class = "form-control" })
+                        </div>
                     </div>
                 </div>
                 <div class="col-sm-2">

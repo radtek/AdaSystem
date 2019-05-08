@@ -108,7 +108,7 @@ namespace Dashboards.Controllers
                     Text = d.Key,
                     Value = (d.Sum(r => r.RequestSellMoney) - d.Sum(r => r.SellMoney)) + ""
                 }).ToList();
-            var date = DateTime.Now.Date.AddMonths(-1);
+            var date = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-01")).AddDays(-1);
             var noConfirms= from b in business
                 from p in purchase
                 where b.Id == p.BusinessOrderDetailId && p.PublishDate <= date&&p.Status==Consts.PurchaseStatusSuccess&&b.Status==Consts.StateNormal

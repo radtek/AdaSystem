@@ -66,6 +66,12 @@ namespace QuartzTask.Jobs
                                 if (!string.IsNullOrWhiteSpace(htmlstr))
                                 {
                                     var result = JsonConvert.DeserializeObject<ToutiaoJSON>(htmlstr);
+                                    if (result.retcode == ReturnCode.目标参数搜索没结果 || result.retcode == ReturnCode.用户帐号不存在)
+                                    {
+                                        media.Content = "媒体没有找到结果";
+                                        media.Status = Consts.StateLock; ;
+                                        
+                                    }
                                     if (result.data.Any())
                                     {
                                         //找到ID匹配的进行更新

@@ -59,7 +59,7 @@
                         @Html.TextBoxFor(d => d.Abstract, new { @class = "form-control" })
                     </div>
                 </div>
-             
+
                 <div class="col-sm-2">
                     <div class="form-group">
                         @Html.LabelFor(d => d.Sex, Html.DisplayNameFor(d => d.Sex).ToString(), new { @class = "control-label" })
@@ -70,6 +70,16 @@
                     <div class="form-group">
                         @Html.LabelFor(d => d.AdPositionName, Html.DisplayNameFor(d => d.AdPositionName).ToString(), new { @class = "control-label" })
                         @Html.DropDownListFor(d => d.AdPositionName, adpositions, "不限", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        @Html.LabelFor(d => d.FansNum, Html.DisplayNameFor(d => d.FansNum).ToString(), new { @class = "control-label" })
+                        <div class="input-daterange input-group">
+                            @Html.TextBoxFor(d => d.FansNumStart, new { @class = "form-control" })
+                            <span class="input-group-addon">至</span>
+                            @Html.TextBoxFor(d => d.FansNumEnd, new { @class = "form-control" })
+                        </div>
                     </div>
                 </div>
                 <div class="col-sm-2">
