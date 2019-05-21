@@ -228,13 +228,23 @@
                         title: '备注信息',
                         valign: "middle",
                         align: "center",
-                        formatter: function(value,row) {
+                        formatter: function (value, row) {
+                            var group = "",result="";
+                            if (row.MediaGroups) {
+                                $.each(row.MediaGroups,
+                                    function (k, v) {
+                                        group += "<button class='btn btn-warning btn-xs' type='button' onclick=\"groupDetail('" + v.Id + "');\"><i class='fa fa-object-group'></i> 媒介分组</button> ";
+                                    });
+                                if (group) {
+                                    result= "<div class='p-xxs'>" + group + "</div>";
+                                }
+                            }
                             return "<div class='p-xxs text-center'><span class='label label-info'  data-toggle='tooltip' data-placement='bottom' title='" +
                                 (value || '暂无信息') +
                                 "'>媒介备注</span></div>" +
                                 "<div class='p-xxs text-center'><span class='label label-info'  data-toggle='tooltip' data-placement='bottom' title='" +
                                 (row.Content || '暂无简介') +
-                                "'>媒体简介</span></div>";
+                                "'>媒体简介</span></div>"+result;
                         }
 
                     },
@@ -248,6 +258,17 @@
             });
 
         });
+        function groupDetail(id) {
+            $("#modalView").load("/Resource/MediaGroup/Detail/" + id,
+                function () {
+                    $('#modalView .modal').on('shown.bs.modal', function () {
+                        $('[data-toggle="tooltip"]').tooltip();
+                    }).on('hidden.bs.modal', function () {
 
+                    });
+                    $('#modalView .modal').modal('show');
+                });
+
+        }
     </script>
 }

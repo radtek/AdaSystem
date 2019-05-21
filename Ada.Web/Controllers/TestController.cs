@@ -50,7 +50,7 @@ namespace Ada.Web.Controllers
         private readonly IRepository<Commpany> _commpanyRepository;
         private readonly IDbContext _dbContext;
         private readonly ICacheService _cacheService;//IBusinessOrderDetailService
-        private readonly IRepository<BusinessInvoice> _invoice;
+        private readonly IRepository<Organization> _organization;
         private readonly IBusinessWriteOffService _businessWriteOffService;
         private readonly IRepository<BusinessWriteOffDetail> _businessWriteOffDetail;
         private readonly IRepository<Fans> _fans;
@@ -70,7 +70,7 @@ namespace Ada.Web.Controllers
             IRepository<Manager> manager,
             IRepository<LinkMan> linkman,
             IRepository<Commpany> commpanyRepository,
-            IRepository<BusinessInvoice> invoice,
+            IRepository<Organization> organization,
             IBusinessWriteOffService businessWriteOffService,
             IRepository<BusinessWriteOffDetail> businessWriteOffDetail,
             IRepository<Fans> fans)
@@ -84,7 +84,7 @@ namespace Ada.Web.Controllers
             _fieldRepository = fieldRepository;
             _cacheService = cacheService;
             _mediaArticleRepository = mediaArticleRepository;
-            _invoice = invoice;
+            _organization = organization;
             _manager = manager;
             _linkman = linkman;
             _commpanyRepository = commpanyRepository;
@@ -912,6 +912,49 @@ namespace Ada.Web.Controllers
                      from p in pOrders
                      where b.Id == p.BusinessOrderDetailId && p.PublishDate >= start && p.PublishDate < end
                      select b;
+            var group = orders.GroupBy(d => d.BusinessOrder.LinkMan).Select(d => new
+            {
+                d.Key,
+                Total = d.Sum(o => o.VerificationMoney)
+            }).OrderBy(d => d.Total).ToList();
+            JArray jObjects = new JArray();
+            foreach (var item in group)
+            {
+                var jo = new JObject();
+                jo.Add("公司名称", item.Key.Commpany.Name);
+                jo.Add("联系人", item.Key.Name);
+                jo.Add("未核销总额", item.Total);
+                jo.Add("经办人员", item.Key.Transactor);
+                jObjects.Add(jo);
+            }
+            var dt = JsonConvert.DeserializeObject<DataTable>(jObjects.ToString());
+            byte[] bytes;
+            using (var workbook = new XLWorkbook())
+            {
+                workbook.Worksheets.Add(dt, "2018年未核销金额汇总");
+                using (var ms = new MemoryStream())
+                {
+                    workbook.SaveAs(ms);
+                    bytes = ms.ToArray();
+                }
+            }
+            return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "2018年未核销金额汇总.xlsx");
+
+        }
+        public ActionResult ExportBusinessDetails(string id)
+        {
+            DateTime start = new DateTime(2018, 1, 1);
+            DateTime end = new DateTime(2019, 1, 1);
+            var orders = _temp
+                .LoadEntities(d =>
+                    d.BusinessOrder.IsDelete == false &&
+                    (d.Status == Consts.StateOK || d.Status == Consts.StateNormal) &&
+                    d.VerificationStatus == Consts.StateLock);
+            var pOrders = _ptemp.LoadEntities(d => d.IsDelete == false);
+            orders = from b in orders
+                from p in pOrders
+                where b.Id == p.BusinessOrderDetailId && p.PublishDate >= start && p.PublishDate < end
+                select b;
             var group = orders.GroupBy(d => d.BusinessOrder.LinkMan).Select(d => new
             {
                 d.Key,

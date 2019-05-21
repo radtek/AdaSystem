@@ -134,7 +134,7 @@ namespace Ada.Services.Resource
             }
             if (viewModel.IsGroup != null)
             {
-                allList = viewModel.IsGroup.Value ? allList.Where(d => d.MediaGroups.Any()) : allList.Where(d => !d.MediaGroups.Any());
+                allList = viewModel.IsGroup.Value ? allList.Where(d => d.MediaGroups.Any(g=>g.GroupType== Consts.StateNormal)) : allList.Where(d => !d.MediaGroups.Any(g => g.GroupType == Consts.StateNormal));
             }
             if (viewModel.HaveTag != null)
             {

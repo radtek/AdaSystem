@@ -15,8 +15,8 @@
                             <tr>
                                 <th>媒体类型</th>
                                 <th>媒体名称</th>
-                                <th>粉丝数</th>
-                                <th>媒体价格</th>
+                                @*<th>粉丝数</th>
+                                <th>媒体价格</th>*@
                                 <th>媒体备注</th>
                                 <th>经办媒介</th>
                             </tr>
@@ -30,7 +30,7 @@
                                     <td>
                                         <a class="btn btn-default btn-xs" href="@Url.Action("Detail","Media",new{id=item.Id})" target="_blank">@platform@item.MediaName</a>
                                     </td>
-                                    <td>@item.FansNum</td>
+                                    @*<td>@item.FansNum</td>
                                     <td>
                                         @foreach (var price in item.MediaPrices)
                                         {
@@ -41,7 +41,7 @@
                                              }
                                             
                                         }
-                                    </td>
+                                    </td>*@
                                     <td>
                                         <span class="label label-info" data-toggle="tooltip" data-placement="bottom" title="@item.Remark">
                                             <i class="fa fa-info-circle"></i> 查看

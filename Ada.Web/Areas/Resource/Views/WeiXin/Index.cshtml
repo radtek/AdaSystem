@@ -187,6 +187,12 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group">
+                        @Html.LabelFor(d => d.IsGroup, Html.DisplayNameFor(d => d.IsGroup).ToString(), new { @class = "control-label" })
+                        @Html.DropDownListFor(d => d.IsGroup, yesnos, "请选择", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
                         @Html.LabelFor(d => d.Areas, Html.DisplayNameFor(d => d.Areas).ToString(), new { @class = "control-label" })
                         @Html.TextBoxFor(d => d.Areas, new { @class = "form-control" })
                     </div>
