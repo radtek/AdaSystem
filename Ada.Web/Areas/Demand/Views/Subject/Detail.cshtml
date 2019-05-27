@@ -22,19 +22,7 @@
                                         头像类型
                                     </th>
                                     <th>
-                                        认领人员
-                                    </th>
-                                    <th>
-                                        认领日期
-                                    </th>
-                                    <th>
-                                        制作人员
-                                    </th>
-                                    <th>
-                                        制作日期
-                                    </th>
-                                    <th>
-                                        完成日期
+                                        任务情况
                                     </th>
                                     <th>
                                         操作
@@ -62,11 +50,27 @@
                                         }
                                         <td>@item.Title</td>
                                         <td>@item.Type</td>
-                                        <td>@item.Transactor</td>
-                                        <td>@item.GetDate</td>
-                                        <td>@item.ProducerBy</td>
-                                        <td>@item.ProducerDate</td>
-                                        <td>@item.CompletDate</td>
+                                        <td>
+                                            <ul class="list-group">
+                                                <li class="list-group-item p-xxs">
+                                                    <span class="badge badge-warning">@item.Transactor</span> 认领人员
+                                                </li>
+                                                <li class="list-group-item p-xxs">
+                                                    <span class="badge badge-success">@item.GetDate</span> 认领日期
+                                                </li>
+                                                <li class="list-group-item p-xxs">
+                                                    <span class="badge badge-warning">@item.ProducerBy</span> 制作人员
+                                                </li>
+                                                <li class="list-group-item p-xxs">
+                                                    <span class="badge badge-success">@item.ProducerDate</span> 制作日期
+                                                </li>
+                                                <li class="list-group-item p-xxs">
+                                                    <span class="badge badge-danger">@item.CompletDate</span> 完成日期
+                                                </li>
+                                            </ul>
+                                            
+                                        </td>
+                                        
                                         <td>
                                             <a class='btn btn-info btn-outline btn-xs' href='@Url.Action("Detail","SubjectDetail",new{id=item.Id})' target='_blank'><i class='fa fa-search'></i> 进程</a>
                                             <a class='btn btn-warning btn-outline btn-xs' href='javascript:done("@item.Id");'><i class='fa fa-gavel'></i> 完结</a>

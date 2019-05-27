@@ -6,7 +6,7 @@
     ViewBag.Title = "制作认领";
 }
 @Html.Partial("Bread")
-
+@Html.AntiForgeryToken()
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
 
     <div class="row">
@@ -20,8 +20,8 @@
     </div>
 </div>
 <div id="toolbar" class="btn-group">
-    <a href="@Url.Action("Self")" class="btn btn-success btn-outline">
-        <i class="fa fa-plus"></i> 我的认领
+    <a href="@Url.Action("Self")" class="btn btn-primary btn-outline">
+        <i class="fa fa-user"></i> 我的制作
     </a>
 </div>
 @section Styles {
@@ -65,6 +65,10 @@
                 //detailFormatter: detailFormatter,
                 formatSearch: function() {
                     return "@Html.DisplayNameFor(d => d.Title)";
+                    },
+                queryParams: function (parameters) {
+                    parameters.IsProducer = true;
+                    return parameters;
                 },
                 mobileResponsive:true,
                 columns: [
@@ -74,7 +78,7 @@
                         align: "center", valign: "middle"
                     },
                     {
-                        field: 'Schedule',
+                        field: 'Type',
                         title: '@Html.DisplayNameFor(d=>d.Type)',
                         align: "center", valign: "middle"
                     },
@@ -97,8 +101,8 @@
                         align: "center", valign: "middle",
                         formatter: function (value, row) {
                             return "<div class='btn-group'>" +
-                                "<a class='btn btn-success btn-outline btn-xs' href='@Url.Action("Detail","SubjectDetail")/"+value+"' target='_blank'><i class='fa fa-search'></i> 查看需求</a> " +
-                                "<button class='btn btn-danger btn-outline btn-xs' onclick=\"order('" + value + "');\"><i class='fa fa-trash-o'></i> 认领制作</button></div>";
+                                "<a class='btn btn-success btn-outline btn-xs' href='@Url.Action("Detail","SubjectDetail")/"+value+"' target='_blank'><i class='fa fa-search'></i> 查看</a> " +
+                                "<button class='btn btn-danger btn-outline btn-xs' onclick=\"order('" + value + "');\"><i class='fa fa-trash-o'></i> 制作</button></div>";
                         }
                     }
                 ]

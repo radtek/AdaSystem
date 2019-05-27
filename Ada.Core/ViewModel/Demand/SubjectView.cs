@@ -29,7 +29,7 @@ namespace Ada.Core.ViewModel.Demand
         /// <summary>
         /// 需求内容
         /// </summary>
-        [Display(Name = "需求内容"),AllowHtml]
+        [Display(Name = "文案内容"),AllowHtml]
         public string Content { get; set; }
         /// <summary>
         /// 需求报价
@@ -62,9 +62,9 @@ namespace Ada.Core.ViewModel.Demand
         [Display(Name = "发布者信息")]
         public string DetailsJson { get; set; }
         /// <summary>
-        /// 需求素材
+        /// 发布图片
         /// </summary>
-        [Display(Name = "需求素材")]
+        [Display(Name = "发布图片")]
         public List<string> MaterialImage { get; set; }
         /// <summary>
         /// 需求素材

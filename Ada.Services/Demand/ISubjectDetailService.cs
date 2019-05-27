@@ -15,5 +15,6 @@ namespace Ada.Services.Demand
         void Delete(SubjectDetail entity);
         IQueryable<SubjectDetail> LoadEntitiesFilter(SubjectDetailView viewModel);
         SubjectDetail GetById(string id);
+        SubjectDetailProgress GetProgressById(string id);
     }
 }

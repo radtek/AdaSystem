@@ -1,14 +1,26 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Ada.Core.ViewModel.Demand
 {
    public class SubjectDetailProgressView : BaseView
     {
+        public SubjectDetailProgressView()
+        {
+            MaterialImage=new System.Collections.Generic.List<string>();
+            MaterialThumbImage = new System.Collections.Generic.List<string>();
+            MaterialRemark = new System.Collections.Generic.List<string>();
+            MaterialSize = new System.Collections.Generic.List<int>();
+            MaterialName = new System.Collections.Generic.List<string>();
+            MaterialExt = new System.Collections.Generic.List<string>();
+        }
+        /// <summary>
+        /// 明细状态
+        /// </summary>
+        [Display(Name = "明细状态")]
+        public short? SubjectDetailStatus { get; set; }
         /// <summary>
         /// 需求明细
         /// </summary>

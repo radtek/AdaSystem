@@ -4,6 +4,7 @@
 @model Ada.Core.ViewModel.Demand.SubjectDetailView
 @{
     ViewBag.Title = "我的认领";
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "认领接单", Value = Url.Action("Index", "ClaimDo") } };
 }
 @Html.Partial("Bread")
 
@@ -14,6 +15,20 @@
             <div class="ibox">
                 <div class="ibox-content">
                     <table id="table"></table>
+                    <div id="toolbar" class="btn-group">
+                        <div class="form-inline" role="form">
+                            <div class="form-group">
+                                <select name="Status" class="form-control" id="Status">
+                                    <option value="1">待确认</option>
+                                    <option value="3">已完成</option>
+                                </select>
+                                <a href="javascript:goBackOrClose();" class="btn btn-success btn-outline">
+                                    <i class="fa fa-reply"></i> 返回
+                                </a>
+                                
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -29,6 +44,9 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
+            $("#Status").change(function () {
+                $('#table').bootstrapTable('refresh');
+            });
             var table = new TableInit();
             table.Init();
         });
@@ -38,6 +56,7 @@
                 $('#table').bootstrapTable({
                 classes: "table table-no-bordered",
                     url: '@Url.Action("GetList","SubjectDetail")',         //请求后台的URL（*）BalanceMoneyMin
+                    toolbar: '#toolbar',
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                 pagination: true,                   //是否显示分页（*）
@@ -61,7 +80,12 @@
                 //detailFormatter: detailFormatter,
                 formatSearch: function() {
                     return "@Html.DisplayNameFor(d => d.Title)";
-                },
+                    },
+                    queryParams: function (parameters) {
+                        parameters.Status = $("#Status").val();
+                        parameters.IsSelfDo = true;
+                        return parameters;
+                    },
                 mobileResponsive:true,
                 columns: [
                     {
@@ -70,7 +94,7 @@
                         align: "center", valign: "middle"
                     },
                     {
-                        field: 'Schedule',
+                        field: 'Type',
                         title: '@Html.DisplayNameFor(d=>d.Type)',
                         align: "center", valign: "middle"
                     },
@@ -93,8 +117,8 @@
                         align: "center", valign: "middle",
                         formatter: function (value, row) {
                             return "<div class='btn-group'>" +
-                                "<a class='btn btn-success btn-outline btn-xs' href='javascript:details(\""+value+"\");'><i class='fa fa-search'></i> 需求下载</a> " +
-                                "<a class='btn btn-danger btn-outline btn-xs' href='@Url.Action("Upload","SubjectDetail")/"+value+"'><i class='fa fa-trash-o'></i> 上传资料</button></div>";
+                                "<a class='btn btn-info btn-outline btn-xs' href='@Url.Action("Detail","SubjectDetail")/" + value +"' target='_blank'><i class='fa fa-search'></i> 查看详情</a> " +
+                                "<a class='btn btn-warning btn-outline btn-xs' href='@Url.Action("Upload","SubjectDetail")/" + value +"?returnurl=ClaimDo'><i class='fa fa-upload'></i> 上传资料</button></div>";
                         }
 
 
@@ -106,22 +130,6 @@
             return obj;
         };
 
-
-        function details(id) {
-
-            $("#modalView").load("@Url.Action("Detail")/" + id,
-                    function () {
-                        $('#modalView .modal').on('shown.bs.modal', function () {
-
-
-                        }).on('hidden.bs.modal', function () {
-
-                        });
-                        $('#modalView .modal').modal('show');
-
-                    });
-
-        }
 
     </script>
 }

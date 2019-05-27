@@ -13,92 +13,113 @@
 }
 @Html.Partial("Bread")
 <div class="wrapper wrapper-content">
-    @using (Html.BeginForm())
+
+
+    @if (Model.SubjectDetailStatus == 3)
     {
-        @Html.AntiForgeryToken()
-        <p class="bg-danger">@Html.ValidationMessage("message") </p>
         <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox">
-                    <div class="ibox-title">
-                        <a class="btn btn-outline btn-default btn-sm" href="javascript:goBackOrClose();"><i class="fa fa-reply"></i> 返回</a>
-                        <button class="btn btn-primary btn-sm ladda-button" type="submit" data-style="slide-right"><i class="fa fa-floppy-o"></i> 保存</button>
-                    </div>
-                    <div class="ibox-content">
-                        <div class="form-horizontal">
-                            
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    @Html.TextAreaFor(d => d.Remark, new { @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                @Html.LabelFor(d => d.MaterialImage, Html.DisplayNameFor(d => d.MaterialImage).ToString(), new { @class = "col-sm-2 control-label" })
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-lg-12 upload">
-                                        </div>
-                                        <div class="col-lg-12 file-list">
-                                            <div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true" id="imgRemark">
-                                                <div class="modal-dialog modal-sm">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                                            <h4 class="modal-title">图片描述</h4>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="form-horizontal">
-                                                                <div class="form-group">
-                                                                    <input type="text" class="form-control" />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-white" name="batch">批量描述</button>
-                                                            <button type="button" class="btn btn-primary" name="single">单张描述</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            @for (int i = 0; i < Model.MaterialImage.Count; i++)
-                                            {
-                                                var remark = string.IsNullOrWhiteSpace(Model.MaterialRemark[i]) ? "" : Model.MaterialRemark[i];
-                                                var remarkStr = string.IsNullOrWhiteSpace(remark) ? "暂无描述" : remark;
-                                                <div class="file-box">
-                                                    <input type="hidden" name="MaterialImage" value="@Model.MaterialImage[i]" />
-                                                    <input type="hidden" name="MaterialThumbImage" value="@Model.MaterialThumbImage[i]" />
-                                                    <input type="hidden" name="MaterialRemark" value="@remark" />
-                                                    <input type="hidden" name="MaterialName" value="@Model.MaterialName[i]" />
-                                                    <input type="hidden" name="MaterialSize" value="@Model.MaterialSize[i]" />
-                                                    <input type="hidden" name="MaterialExt" value="@Model.MaterialExt[i]" />
-                                                    <div class="file">
-                                                        <div class="file-image">
-                                                            <img class="img-responsive" src="@Model.MaterialThumbImage[i]" />
-                                                        </div>
-                                                        <div class="file-name text-center">@remarkStr</div>
-                                                        <div class="file-btn">
-                                                            <button type="button" class="btn btn-sm btn-outline btn-primary" data-toggle="modal" data-target="#imgRemark">描述</button>
-                                                            <button type="button" onclick="delImg(this);" class="btn btn-sm btn-outline btn-danger pull-right">删除</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @Html.HiddenFor(d => d.SubjectDetailId)
-                            @Html.HiddenFor(d => d.Redirect)
-                        </div>
-                    </div>
+            <div class="middle-box text-center animated fadeInRightBig">
+                <h3 class="font-bold">此需求已完结</h3>
+                <div class="error-desc">
+                    此需求已经被发布者完结，无需再进行上传资料.
+                    <br /><a href="javascript:goBackOrClose();" class="btn btn-primary m-t">返回</a>
                 </div>
             </div>
         </div>
         
-
     }
+    else
+    {
+        using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <p class="bg-danger">@Html.ValidationMessage("message") </p>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <a class="btn btn-outline btn-default btn-sm" href="javascript:goBackOrClose();"><i class="fa fa-reply"></i> 返回</a>
+                            <button class="btn btn-primary btn-sm ladda-button" type="submit" data-style="slide-right"><i class="fa fa-floppy-o"></i> 保存</button>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="form-horizontal">
+
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.Remark, Html.DisplayNameFor(d => d.Remark).ToString(), new { @class = "col-sm-2 control-label" })
+                                    <div class="col-sm-10">
+                                        @Html.TextAreaFor(d => d.Remark, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    @Html.LabelFor(d => d.MaterialImage, Html.DisplayNameFor(d => d.MaterialImage).ToString(), new { @class = "col-sm-2 control-label" })
+                                    <div class="col-sm-10">
+                                        <div class="row">
+                                            <div class="col-lg-12 upload">
+                                            </div>
+                                            <div class="col-lg-12 file-list">
+                                                <div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true" id="imgRemark">
+                                                    <div class="modal-dialog modal-sm">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                                <h4 class="modal-title">图片描述</h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="form-horizontal">
+                                                                    <div class="form-group">
+                                                                        <input type="text" class="form-control" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-white" name="batch">批量描述</button>
+                                                                <button type="button" class="btn btn-primary" name="single">单张描述</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @for (int i = 0; i < Model.MaterialImage.Count; i++)
+                                                {
+                                                    var remark = string.IsNullOrWhiteSpace(Model.MaterialRemark[i]) ? "" : Model.MaterialRemark[i];
+                                                    var remarkStr = string.IsNullOrWhiteSpace(remark) ? "暂无描述" : remark;
+                                                    <div class="file-box">
+                                                        <input type="hidden" name="MaterialImage" value="@Model.MaterialImage[i]" />
+                                                        <input type="hidden" name="MaterialThumbImage" value="@Model.MaterialThumbImage[i]" />
+                                                        <input type="hidden" name="MaterialRemark" value="@remark" />
+                                                        <input type="hidden" name="MaterialName" value="@Model.MaterialName[i]" />
+                                                        <input type="hidden" name="MaterialSize" value="@Model.MaterialSize[i]" />
+                                                        <input type="hidden" name="MaterialExt" value="@Model.MaterialExt[i]" />
+                                                        <div class="file">
+                                                            <div class="file-image">
+                                                                <img class="img-responsive" src="@Model.MaterialThumbImage[i]" />
+                                                            </div>
+                                                            <div class="file-name text-center">@remarkStr</div>
+                                                            <div class="file-btn">
+                                                                <button type="button" class="btn btn-sm btn-outline btn-primary" data-toggle="modal" data-target="#imgRemark">描述</button>
+                                                                <button type="button" onclick="delImg(this);" class="btn btn-sm btn-outline btn-danger pull-right">删除</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @Html.HiddenFor(d => d.SubjectDetailId)
+                                @Html.HiddenFor(d => d.Redirect)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        }
+    }
+
+
+
 </div>
 
 @section Scripts {

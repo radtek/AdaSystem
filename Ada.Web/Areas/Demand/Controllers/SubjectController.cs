@@ -119,7 +119,7 @@ namespace Demand.Controllers
                     AddedById = CurrentManager.Id
                 });
             }
-            //_service.Add(subject);
+            _service.Add(subject);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Index");
         }
@@ -146,6 +146,11 @@ namespace Demand.Controllers
         public ActionResult Done(string id)
         {
             var entity = _detailService.GetById(id);
+            if (string.IsNullOrWhiteSpace(entity.TransactorId)||string.IsNullOrWhiteSpace(entity.ProducerById))
+            {
+                return Json(new { State = 0, Msg = "需求还未完成！" });
+            }
+            
             entity.Status = 3;
             entity.CompletDate = DateTime.Now;
             entity.SubjectDetailProgresses.Add(new SubjectDetailProgress()
@@ -157,7 +162,7 @@ namespace Demand.Controllers
                 AddedById = CurrentManager.Id
             });
             _detailService.Update(entity);
-            return Json(new { State = 1, Msg = "删除成功" });
+            return Json(new { State = 1, Msg = "操作成功" });
         }
         public ActionResult Download(string id)
         {

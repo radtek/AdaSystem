@@ -73,7 +73,7 @@ namespace Ada.Core.ViewModel.Demand
         /// 发布日期
         /// </summary>
         [Display(Name = "发布日期")]
-        public string AddedDate { get; set; }
+        public DateTime? AddedDate { get; set; }
         /// <summary>
         /// 是否编辑人员
         /// </summary>
@@ -84,5 +84,15 @@ namespace Ada.Core.ViewModel.Demand
         /// </summary>
         [Display(Name = "是否发布人员")]
         public bool? IsDo { get; set; }
+        /// <summary>
+        /// 是否编辑人员
+        /// </summary>
+        [Display(Name = "是否编辑人员")]
+        public bool? IsSelfProducer { get; set; }
+        /// <summary>
+        /// 是否发布人员
+        /// </summary>
+        [Display(Name = "是否发布人员")]
+        public bool? IsSelfDo { get; set; }
     }
 }

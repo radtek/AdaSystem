@@ -40,6 +40,9 @@ namespace Demand.Controllers
                 {
                     Id = d.Id,
                     Title = d.Title,
+                    Type = d.Type,
+                    AddedBy = d.Subject.AddedBy,
+                    AddedDate = d.Subject.AddedDate
 
                 })
             }, JsonRequestBehavior.AllowGet);
@@ -55,6 +58,10 @@ namespace Demand.Controllers
             lock (_olocker)
             {
                 var detail = _service.GetById(id);
+                if (detail==null)
+                {
+                    return Json(new { State = 0, Msg = "抱歉，此需求不存在或者已被撤销！" });
+                }
                 //制作者枪弹
                 if (!string.IsNullOrWhiteSpace(detail.TransactorId) && string.IsNullOrWhiteSpace(detail.ProducerById))
                 {
@@ -81,15 +88,16 @@ namespace Demand.Controllers
         }
         public ActionResult Download(string id)
         {
-            var entity = _service.GetById(id);
-            var imgs = entity.Subject.Attachments.Select(d => new SelectListItem() { Value = Server.MapPath(d.Path), Text = string.IsNullOrWhiteSpace(d.Describe) ? d.Title : d.Describe }).ToList();
+            var entity = _service.GetProgressById(id);
+            var imgs = entity.Attachments.Select(d => new SelectListItem() { Value = Server.MapPath(d.Path), Text = string.IsNullOrWhiteSpace(d.Describe) ? d.Title : d.Describe }).ToList();
             var zip = _fileService.ZipFiles(imgs);
             return File(zip,
-                "application/zip", entity.Title + ".zip");
+                "application/zip", entity.SubjectDetail.Title + ".zip");
         }
         public ActionResult Upload(string id, string returnurl)
         {
-            return View(new SubjectDetailProgressView() { SubjectDetailId = id, Redirect = returnurl });
+            var detail = _service.GetById(id);
+            return View(new SubjectDetailProgressView() { SubjectDetailId = id, Redirect = returnurl,SubjectDetailStatus = detail.Status});
         }
         [HttpPost]
         public ActionResult Upload(SubjectDetailProgressView viewModel)

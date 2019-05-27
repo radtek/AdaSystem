@@ -25,9 +25,11 @@
 </div>
 @section Styles {
     @Styles.Render("~/plugins/bootstrapTableStyle")
+
 }
 @section Scripts {
     @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/peity")
     <script type="text/javascript">
         $(document).ready(function () {
             var table = new TableInit();
@@ -63,7 +65,8 @@
                 //detailFormatter: detailFormatter,
                 formatSearch: function() {
                     return "@Html.DisplayNameFor(d => d.Title)";
-                },
+                    },
+                onLoadSuccess: initPie,
                 mobileResponsive:true,
                 columns: [
                     {
@@ -109,7 +112,7 @@
             return obj;
         };
 
- 
+
         function details(id) {
             $("#modalView").load("@Url.Action("Detail")/" + id,
                     function () {

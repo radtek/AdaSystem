@@ -13,11 +13,13 @@ namespace Ada.Services.Demand
     {
         private readonly IDbContext _dbContext;
         private readonly IRepository<SubjectDetail> _repository;
+        private readonly IRepository<SubjectDetailProgress> _subjectDetailProgressRepository;
         public SubjectDetailService(IDbContext dbContext,
-            IRepository<SubjectDetail> repository)
+            IRepository<SubjectDetail> repository, IRepository<SubjectDetailProgress> subjectDetailProgressRepository)
         {
             _dbContext = dbContext;
             _repository = repository;
+            _subjectDetailProgressRepository = subjectDetailProgressRepository;
         }
         public void Delete(SubjectDetail entity)
         {
@@ -29,27 +31,49 @@ namespace Ada.Services.Demand
         {
             return _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
         }
-
+        public SubjectDetailProgress GetProgressById(string id)
+        {
+            return _subjectDetailProgressRepository.LoadEntities(d => d.Id == id).FirstOrDefault();
+        }
         public IQueryable<SubjectDetail> LoadEntitiesFilter(SubjectDetailView viewModel)
         {
             var allList = _repository.LoadEntities(d => d.IsDelete == false);
             //条件过滤
             if (viewModel.Managers != null && viewModel.Managers.Count > 0)
             {
-                if (viewModel.IsDo==true)
+                if (viewModel.IsSelfDo == true)
                 {
                     allList = allList.Where(d => viewModel.Managers.Contains(d.TransactorId));
                 }
-                if (viewModel.IsProducer == true)
+                if (viewModel.IsSelfProducer == true)
                 {
                     allList = allList.Where(d => viewModel.Managers.Contains(d.ProducerById));
                 }
+            }
+            if (viewModel.IsDo == true)
+            {
+                allList = allList.Where(d => d.TransactorId==null);
+            }
+            if (viewModel.IsProducer == true)
+            {
+                allList = allList.Where(d => d.TransactorId!=null && d.ProducerById==null);
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
                 allList = allList.Where(d => d.Title.Contains(viewModel.search));
             }
-
+            if (viewModel.Status !=null)
+            {
+                if (viewModel.Status==3)
+                {
+                    allList = allList.Where(d => d.Status==3);
+                }
+                else
+                {
+                    allList = allList.Where(d => d.Status == 1|| d.Status == 2);
+                }
+                
+            }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
             int rows = viewModel.limit ?? 10;
