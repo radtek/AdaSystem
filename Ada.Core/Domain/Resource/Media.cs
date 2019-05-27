@@ -18,6 +18,7 @@ namespace Ada.Core.Domain.Resource
             MediaComments=new HashSet<MediaComment>();
             MediaArticles=new HashSet<MediaArticle>();
             MediaAppointments = new HashSet<MediaAppointment>();
+            MediaReferencePrices=new HashSet<MediaReferencePrice>();
         }
         /// <summary>
         /// 媒体名称
@@ -292,5 +293,6 @@ namespace Ada.Core.Domain.Resource
         public virtual ICollection<MediaComment> MediaComments { get; set; }
         public virtual ICollection<MediaArticle> MediaArticles { get; set; }
         public virtual ICollection<MediaAppointment> MediaAppointments { get; set; }
+        public virtual ICollection<MediaReferencePrice> MediaReferencePrices { get; set; }
     }
 }

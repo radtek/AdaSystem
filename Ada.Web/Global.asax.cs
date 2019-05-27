@@ -36,14 +36,14 @@ namespace Ada.Web
 
 
         //}
-        protected void Application_Error()
-        {
-            //var ex = Server.GetLastError();
-            //ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-            //logger.Error("Application_Error触发，请求IP：" + Utils.GetIpAddress(), ex);
-            Server.ClearError();
-            Response.Redirect("~/404.html", true);
-        }
+        //protected void Application_Error()
+        //{
+        //    //var ex = Server.GetLastError();
+        //    //ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //    //logger.Error("Application_Error触发，请求IP：" + Utils.GetIpAddress(), ex);
+        //    Server.ClearError();
+        //    Response.Redirect("~/404.html", true);
+        //}
        
     }
 }

@@ -91,6 +91,9 @@
     <Compile Include="Mapping\Customer\PayAccountMap.cs" />
     <Compile Include="Mapping\Customer\LinkManMap.cs" />
     <Compile Include="Mapping\Customer\CommpanyMap.cs" />
+    <Compile Include="Mapping\Demand\SubjectDetailProgressMap.cs" />
+    <Compile Include="Mapping\Demand\SubjectDetailMap.cs" />
+    <Compile Include="Mapping\Demand\SubjectMap.cs" />
     <Compile Include="Mapping\Finance\ExpenseDetailMap.cs" />
     <Compile Include="Mapping\Finance\ExpenseMap.cs" />
     <Compile Include="Mapping\Finance\SettleAccountMap.cs" />
@@ -122,6 +125,7 @@
     <Compile Include="Mapping\Resource\AdPositionMap.cs" />
     <Compile Include="Mapping\Resource\MediaDevelopMap.cs" />
     <Compile Include="Mapping\Resource\MediaTypeMap.cs" />
+    <Compile Include="Mapping\Resource\MediaReferencePriceMap.cs" />
     <Compile Include="Mapping\Vote\VoteItemMap.cs" />
     <Compile Include="Mapping\Vote\VoteItemRecordMap.cs" />
     <Compile Include="Mapping\Vote\VoteThemeMap.cs" />
@@ -422,6 +426,10 @@
     <Compile Include="Migrations\201905040321243_UserProfile3.Designer.cs">
       <DependentUpon>201905040321243_UserProfile3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905270416173_Demand.cs" />
+    <Compile Include="Migrations\201905270416173_Demand.Designer.cs">
+      <DependentUpon>201905270416173_Demand.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -651,6 +659,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905040321243_UserProfile3.resx">
       <DependentUpon>201905040321243_UserProfile3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905270416173_Demand.resx">
+      <DependentUpon>201905270416173_Demand.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

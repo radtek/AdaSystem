@@ -1,0 +1,88 @@
+﻿@model Ada.Core.Domain.Demand.Subject
+<div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">需求明细</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        进程状态
+                                    </th>
+                                    <th>
+                                        头像名称
+                                    </th>
+                                    <th>
+                                        头像类型
+                                    </th>
+                                    <th>
+                                        认领人员
+                                    </th>
+                                    <th>
+                                        认领日期
+                                    </th>
+                                    <th>
+                                        制作人员
+                                    </th>
+                                    <th>
+                                        制作日期
+                                    </th>
+                                    <th>
+                                        完成日期
+                                    </th>
+                                    <th>
+                                        操作
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.SubjectDetails)
+                                {
+                                    <tr id="@item.Id">
+                                        @switch (item.Status)
+                                        {
+                                            case 0:
+                                                <td><span class='label'>待接单</span></td>
+                                                break;
+                                            case 1:
+                                                <td><span class='label label-warning'>发布中</span></td>
+                                                break;
+                                            case 2:
+                                                <td><span class='label label-info'>制作中</span></td>
+                                                break;
+                                            case 3:
+                                                <td><span class='label label-primary'>已完成</span></td>
+                                                break;
+                                        }
+                                        <td>@item.Title</td>
+                                        <td>@item.Type</td>
+                                        <td>@item.Transactor</td>
+                                        <td>@item.GetDate</td>
+                                        <td>@item.ProducerBy</td>
+                                        <td>@item.ProducerDate</td>
+                                        <td>@item.CompletDate</td>
+                                        <td>
+                                            <a class='btn btn-info btn-outline btn-xs' href='@Url.Action("Detail","SubjectDetail",new{id=item.Id})' target='_blank'><i class='fa fa-search'></i> 进程</a>
+                                            <a class='btn btn-warning btn-outline btn-xs' href='javascript:done("@item.Id");'><i class='fa fa-gavel'></i> 完结</a>
+                                            <a class='btn btn-danger btn-outline btn-xs' href='javascript:delDetail("@item.Id");'><i class='fa fa-trash-o'></i> 删除</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+

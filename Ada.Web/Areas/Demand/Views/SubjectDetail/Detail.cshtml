@@ -1,0 +1,112 @@
+﻿@using System.Web.Optimization
+@model Ada.Core.Domain.Demand.SubjectDetail
+@{
+    ViewBag.Title = "需求详情";
+}
+@Html.Partial("Bread")
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox-title">
+                <a class="btn btn-outline btn-default btn-sm" href="javascript:goBackOrClose();"><i class="fa fa-reply"></i> 返回</a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <h2><strong>需求信息</strong></h2>
+                    <div class="hr-line-dashed"></div>
+                    <ul class="list-group clear-list">
+                        <li class="list-group-item fist-item">
+                            <span class="pull-right"> @Model.Subject.Type </span>
+                            <strong>需求类型</strong>
+                        </li>
+                        <li class="list-group-item">
+                            <span class="pull-right"> @Model.Title </span>
+                            <strong>头像名称</strong>
+                        </li>
+                        <li class="list-group-item">
+                            <span class="pull-right"> @Model.Type </span>
+                            <strong>头像类型</strong>
+                        </li>
+
+                        <li class="list-group-item">
+                            <span class="pull-right"> @Model.Subject.AddedDate.Value.ToString("yyyy年MM月dd日 HH:mm") </span>
+                            <strong>需求日期</strong>
+                        </li>
+                    </ul>
+                    <h2><strong>需求内容</strong></h2>
+                    <div class="hr-line-dashed"></div>
+                    <p>
+                        @Html.Raw(Model.Subject.Content)
+                    </p>
+                    <hr />
+                    <h2><strong>需求素材</strong></h2>
+                    <small><a href="@Url.Action("Download","Subject",new{id=Model.SubjectId})">打包下载</a></small>
+                    <div class="hr-line-dashed"></div>
+                    <div class="lightBoxGallery">
+                        @foreach (var item in Model.Subject.Attachments)
+                        {
+                            <a href="@item.Path" title="@item.Describe" data-gallery=""><img src="@item.ThumbPath"></a>
+                        }
+                    </div>
+                    <hr />
+                    @if (Model.SubjectDetailProgresses.Any())
+                    {
+                        <h2><strong>需求进程</strong></h2>
+                        <div class="hr-line-dashed"></div>
+                        <div id="vertical-timeline" class="vertical-container dark-timeline">
+                            @foreach (var item in Model.SubjectDetailProgresses)
+                            {
+                                <div class="vertical-timeline-block">
+                                    <div class="vertical-timeline-icon gray-bg">
+                                        <i class="fa fa-user"></i>
+                                    </div>
+                                    <div class="vertical-timeline-content">
+                                        <p>
+                                            备注说明：@item.Remark
+                                        </p>
+                                        @if (item.Attachments.Any())
+                                        {
+                                            <p>
+                                                上传资料：（ <a href="@Url.Action("Download",new{id=item.SubjectDetailId})">打包下载</a> ）
+                                            </p>
+                                            <div class="lightBoxGallery">
+                                                @foreach (var img in item.Attachments)
+                                                {
+                                                    <a href="@img.Path" title="@img.Describe" data-gallery=""><img src="@img.ThumbPath"></a>
+                                                }
+                                            </div>
+                                        }
+                                        <p class="text-info">
+                                            @item.AddedBy <i class="fa fa-clock-o"></i>
+                                            @if (item.UploadDate.HasValue)
+                                            {
+                                                @item.UploadDate.Value.ToString("yyyy-MM-dd HH:mm")
+                                            }
+                                        </p>
+
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="blueimp-gallery" class="blueimp-gallery">
+        <div class="slides"></div>
+        <h3 class="title"></h3>
+        <a class="prev">‹</a>
+        <a class="next">›</a>
+        <a class="close">×</a>
+        <a class="play-pause"></a>
+        <ol class="indicator"></ol>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/plugins/lightboxGallery")
+}

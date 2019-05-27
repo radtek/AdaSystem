@@ -548,7 +548,10 @@ namespace Ada.Web
                 
                 "~/Scripts/plugins/jqLazyload/jquery.scrollstop.min.js",
                 "~/Scripts/plugins/jqLazyload/jquery.lazyload.min.js"));
-
+            // webuploader
+            bundles.Add(new ScriptBundle("~/plugins/webuploader").Include(
+                "~/Scripts/plugins/webuploader/webuploader.min.js",
+                "~/Scripts/plugins/webuploader/uploader-init.js"));
 
 
             //===========================前端=============================

@@ -263,3 +263,4 @@ __pycache__/
 Ada.Web/*.config
 upload/*
 Ada.Data/*.config
+/Ada.Web/upload

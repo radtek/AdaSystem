@@ -1,0 +1,278 @@
+﻿
+@model Files.Models.FileConfig
+@{
+    ViewBag.Title = "文件上传配置";
+    var uploadServers = new List<SelectListItem>() { new SelectListItem() { Text = "本地存储", Value = "localhost" } };
+    var saveDirectoryType = new List<SelectListItem>()
+{
+new SelectListItem() { Text = "按年月日每天一个目录", Value = "1" },
+new SelectListItem() { Text = "按年月/日/存入不同目录", Value = "2" }
+};
+    var thumbnailmodes = new List<SelectListItem>()
+{
+new SelectListItem() { Text = "裁剪", Value = "Cut" },
+new SelectListItem() { Text = "补白", Value = "HW" }
+};
+    var watermarktypes = new List<SelectListItem>()
+{
+new SelectListItem() { Text = "关闭水印", Value = "0" },
+new SelectListItem() { Text = "文字水印", Value = "1" },
+new SelectListItem() { Text = "图片水印", Value = "2" }
+};
+    var watermarkpositions = new List<SelectListItem>()
+{
+new SelectListItem() { Text = "左上", Value = "1" },
+new SelectListItem() { Text = "中上", Value = "2" },
+new SelectListItem() { Text = "右上", Value = "3" },
+new SelectListItem() { Text = "左中", Value = "4" },
+new SelectListItem() { Text = "居中", Value = "5" },
+new SelectListItem() { Text = "右中", Value = "6" },
+new SelectListItem() { Text = "左下", Value = "7" },
+new SelectListItem() { Text = "中下", Value = "8" },
+new SelectListItem() { Text = "右下", Value = "9" }
+};
+    var fonts = new List<SelectListItem>()
+{
+new SelectListItem() { Text = "Arial", Value = "Arial" },
+new SelectListItem() { Text = "Arial Black", Value = "Arial Black" },
+new SelectListItem() { Text = "Tahoma", Value = "Tahoma" },
+new SelectListItem() { Text = "Times New Roman", Value = "Times New Roman" },
+new SelectListItem() { Text = "Verdana", Value = "Verdana" },
+new SelectListItem() { Text = "仿宋_GB2312", Value = "仿宋_GB2312" },
+new SelectListItem() { Text = "宋体", Value = "宋体" },
+new SelectListItem() { Text = "新宋体", Value = "新宋体" },
+new SelectListItem() { Text = "楷体_GB2312", Value = "楷体_GB2312" },
+new SelectListItem() { Text = "黑体", Value = "黑体" },
+};
+}
+@Html.Partial("Bread")
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>参数配置</h5>
+                </div>
+                <div class="ibox-content">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <p class="bg-danger">@Html.ValidationMessage("message") </p>
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.UploadServer, Html.DisplayNameFor(d => d.UploadServer).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(d => d.UploadServer, uploadServers, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.UploadDirectory, Html.DisplayNameFor(d => d.UploadDirectory).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.UploadDirectory, new { @class = "form-control" })
+                                    <span class="help-block m-b-none">*文件保存的目录名，自动创建根目录下.</span>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.SaveDirectoryType, Html.DisplayNameFor(d => d.SaveDirectoryType).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(d => d.SaveDirectoryType, saveDirectoryType, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.FileExt, Html.DisplayNameFor(d => d.FileExt).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.FileExt, new { @class = "form-control" })
+                                    <span class="help-block m-b-none">*以英文的逗号分隔开，如：“zip,rar”</span>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.VideoExt, Html.DisplayNameFor(d => d.VideoExt).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.VideoExt, new { @class = "form-control" })
+                                    <span class="help-block m-b-none">*以英文的逗号分隔开，如：“mp4,flv”</span>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.FileMaxSize, Html.DisplayNameFor(d => d.FileMaxSize).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(d => d.FileMaxSize, new { @class = "form-control" })
+                                        <span class="input-group-addon">kb</span>
+                                    </div>
+                                    <span class="help-block m-b-none">*超过设定的文件大小不予上传，0不限制</span>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.VideoMaxSize, Html.DisplayNameFor(d => d.VideoMaxSize).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(d => d.VideoMaxSize, new { @class = "form-control" })
+                                        <span class="input-group-addon">kb</span>
+                                    </div>
+                                    <span class="help-block m-b-none">*超过设定的文件大小不予上传，0不限制</span>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.ImageMaxSize, Html.DisplayNameFor(d => d.ImageMaxSize).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(d => d.ImageMaxSize, new { @class = "form-control" })
+                                        <span class="input-group-addon">kb</span>
+                                    </div>
+                                    <span class="help-block m-b-none">*超过设定的文件大小不予上传，0不限制</span>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.ImageWidth, "图片尺寸", new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-white">@Html.DisplayNameFor(d => d.ImageWidth).ToString()</button>
+                                                </span>
+                                                @Html.TextBoxFor(d => d.ImageWidth, new { @class = "form-control" })
+                                                <span class="input-group-addon">px</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-white">@Html.DisplayNameFor(d => d.ImageHeigth).ToString()</button>
+                                                </span>
+                                                @Html.TextBoxFor(d => d.ImageHeigth, new { @class = "form-control" })
+                                                <span class="input-group-addon">px</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.ThumbnailWidth, "缩略图尺寸", new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-white">@Html.DisplayNameFor(d => d.ThumbnailWidth).ToString()</button>
+                                                </span>
+                                                @Html.TextBoxFor(d => d.ThumbnailWidth, new { @class = "form-control" })
+                                                <span class="input-group-addon">px</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-white">@Html.DisplayNameFor(d => d.ThumbnailHeigth).ToString()</button>
+                                                </span>
+                                                @Html.TextBoxFor(d => d.ThumbnailHeigth, new { @class = "form-control" })
+                                                <span class="input-group-addon">px</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Thumbnailmode, Html.DisplayNameFor(d => d.Thumbnailmode).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(d => d.Thumbnailmode, thumbnailmodes, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Watermarktype, Html.DisplayNameFor(d => d.Watermarktype).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(d => d.Watermarktype, watermarktypes, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Watermarkposition, Html.DisplayNameFor(d => d.Watermarkposition).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(d => d.Watermarkposition, watermarkpositions, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Watermarkimgquality, Html.DisplayNameFor(d => d.Watermarkimgquality).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.Watermarkimgquality, new { @class = "form-control" })
+                                    <span class="help-block m-b-none">*只适用于加水印的jpeg格式图片.取值范围 0-100, 0质量最低, 100质量最高, 默认80</span>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Watermarkpic, Html.DisplayNameFor(d => d.Watermarkpic).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.Watermarkpic, new { @class = "form-control" })
+                                    <span class="help-block m-b-none">*需存放在站点目录下，如图片不存在将使用文字水印</span>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Watermarktransparency, Html.DisplayNameFor(d => d.Watermarktransparency).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.Watermarktransparency, new { @class = "form-control" })
+                                    <span class="help-block m-b-none">*取值范围1--10 (10为不透明)</span>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Watermarktext, Html.DisplayNameFor(d => d.Watermarktext).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(d => d.Watermarktext, new { @class = "form-control" })
+                                    <span class="help-block m-b-none">*文字水印的内容</span>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(d => d.Watermarkfont, Html.DisplayNameFor(d => d.Watermarkfont).ToString(), new { @class = "col-sm-2 control-label" })
+                                <div class="col-sm-10">
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.DropDownListFor(d => d.Watermarkfont, fonts, new { @class = "form-control" })
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-white">@Html.DisplayNameFor(d => d.Watermarkfontsize).ToString()</button>
+                                                </span>
+                                                @Html.TextBoxFor(d => d.Watermarkfontsize, new { @class = "form-control" })
+                                                <span class="input-group-addon">px</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-success" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

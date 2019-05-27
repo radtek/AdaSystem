@@ -1,0 +1,245 @@
+﻿
+@using System.Web.Optimization
+@using Ada.Core.Infrastructure
+@using Ada.Services.Admin
+@using Ada.Services.Setting
+@using Files.Models
+@model Ada.Core.ViewModel.Demand.SubjectView
+@{
+    ViewBag.Title = "发布需求";
+    ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "需求列表", Value = Url.Action("Index") } };
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var setting = EngineContext.Current.Resolve<ISettingService>().GetSetting<FileConfig>();
+    var subjectTypes = fieldService.GetFieldsByKey("SubjectType").Select(d => new SelectListItem { Text = d.Text, Value = d.Value });
+    var headerTypes = fieldService.GetFieldsByKey("HeaderType").Select(d => new { text = d.Text, value = d.Value });
+}
+@Html.Partial("Bread")
+<div class="wrapper wrapper-content">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox-title">
+                    <a class="btn btn-outline btn-default btn-sm" href="javascript:goBackOrClose();"><i class="fa fa-reply"></i> 返回</a>
+                    <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-floppy-o"></i> 保存</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="tabs-container">
+                    <p class="bg-danger">@Html.ValidationMessage("message") </p>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#tab-1"> 基本信息</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-2"> 需求明细</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Type, Html.DisplayNameFor(d => d.Type).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.DropDownListFor(d => d.Type, subjectTypes, new { @class = "form-control", required = "" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Title, Html.DisplayNameFor(d => d.Title).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextBoxFor(d => d.Title, new { @class = "form-control", required = "" })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.Content, Html.DisplayNameFor(d => d.Content).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            @Html.TextAreaFor(d => d.Content, new { @class = "form-control", rows = 10 })
+                                        </div>
+                                    </div>
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(d => d.MaterialImage, Html.DisplayNameFor(d => d.MaterialImage).ToString(), new { @class = "col-sm-2 control-label" })
+                                        <div class="col-sm-10">
+                                            <div class="row">
+                                                <div class="col-lg-12 upload">
+                                                </div>
+                                                <div class="col-lg-12 file-list">
+                                                    <div class="modal inmodal fade" tabindex="-1" role="dialog" aria-hidden="true" id="imgRemark">
+                                                        <div class="modal-dialog modal-sm">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                                    <h4 class="modal-title">图片描述</h4>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="form-horizontal">
+                                                                        <div class="form-group">
+                                                                            <input type="text" class="form-control" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-white" name="batch">批量描述</button>
+                                                                    <button type="button" class="btn btn-primary" name="single">单张描述</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @for (int i = 0; i < Model.MaterialImage.Count; i++)
+                                                    {
+                                                        var remark = string.IsNullOrWhiteSpace(Model.MaterialRemark[i]) ? "" : Model.MaterialRemark[i];
+                                                        var remarkStr = string.IsNullOrWhiteSpace(remark) ? "暂无描述" : remark;
+                                                        <div class="file-box">
+                                                            <input type="hidden" name="MaterialImage" value="@Model.MaterialImage[i]" />
+                                                            <input type="hidden" name="MaterialThumbImage" value="@Model.MaterialThumbImage[i]" />
+                                                            <input type="hidden" name="MaterialRemark" value="@remark" />
+                                                            <input type="hidden" name="MaterialName" value="@Model.MaterialName[i]" />
+                                                            <input type="hidden" name="MaterialSize" value="@Model.MaterialSize[i]" />
+                                                            <input type="hidden" name="MaterialExt" value="@Model.MaterialExt[i]" />
+                                                            <div class="file">
+                                                                <div class="file-image">
+                                                                    <img class="img-responsive" src="@Model.MaterialThumbImage[i]" />
+                                                                </div>
+                                                                <div class="file-name text-center">@remarkStr</div>
+                                                                <div class="file-btn">
+                                                                    <button type="button" class="btn btn-sm btn-outline btn-primary" data-toggle="modal" data-target="#imgRemark">描述</button>
+                                                                    <button type="button" onclick="delImg(this);" class="btn btn-sm btn-outline btn-danger pull-right">删除</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @Html.HiddenFor(d => d.Offer)
+                                    @Html.HiddenFor(d => d.DetailsJson)
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab-2" class="tab-pane">
+                            <div class="panel-body">
+                                <div id="toolbar" class="btn-group m-b-lg">
+                                    <button id="btn_add" type="button" class="btn btn-primary btn-outline btn-sm">
+                                        <i class="fa fa-plus"></i> 添加明细
+                                    </button>
+                                </div>
+                                <table id="table"></table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    }
+</div>
+
+@section Styles {
+    @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/bootstrapEditTableStyle")
+    @Styles.Render("~/plugins/select2Styles")
+}
+@section Scripts {
+    @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/bootstrapEditTableScript")
+    @Scripts.Render("~/plugins/select2")
+    @Scripts.Render("~/plugins/webuploader")
+    <script>
+        var $table = $("#table");
+        var data = @Html.Raw(string.IsNullOrWhiteSpace(Model.DetailsJson) ?"[]": Model.DetailsJson);
+        window.operateEvents = {
+            'click .remove': function (e, value, row, index) {
+                $table.bootstrapTable('remove', {
+                    field: 'Id',
+                    values: [row.Id]
+                });
+            }
+        };
+        $(function () {
+
+            $(".upload").InitUploader(
+                {
+                    btntext: "批量上传",
+                    multiple: true,
+                    thumbnail: true,
+                    filesize: "@setting.ImageMaxSize",
+                    sendurl: "@Url.Action("Ajax","Upload",new{area="Files"})",
+                    postdata: addAntiForgeryToken({
+                        thumbnail: true,
+                        input:"upfile"
+                    })
+                });
+            $table.bootstrapTable({
+                data: data,
+                //classes: "table table-no-bordered",
+                columns: [
+                    {
+                        field: 'Text',
+                        title: '人物名称',
+                        align: "center", valign: "middle",
+                        editable: {
+                            mode: "inline",
+                            emptytext: '请输入'
+                        }
+                    },
+                    {
+                        field: 'Value',
+                        title: '头像类型',
+                        align: "center", valign: "middle",
+                        editable: {
+                            mode: "inline",
+                            emptytext: '请选择',
+                            type: 'select',
+                            source: @Html.Raw(Json.Encode(headerTypes))
+                        }
+                    },
+                    {
+                        field: 'operate',
+                        title: '操作',
+                        align: "center", valign: "middle",
+                        events: operateEvents,
+                        formatter: operateFormatter
+                    }
+
+                ],
+                formatNoMatches: function () {  //没有匹配的结果
+                    return '请添加需求明细';
+                }
+            });
+            $("#btn_add").click(function () {
+                var randomId = 100 + ~~(Math.random() * 100);
+                $table.bootstrapTable('insertRow', {
+                    index: 0,
+                    row: {
+                        Id: randomId,
+                        Text: "",
+                        Value: ""
+                    }
+                });
+            });
+            $(".wrapper.wrapper-content form").validate({
+                submitHandler: function (form) {
+                    var tableData = $table.bootstrapTable('getData');
+                    $("#DetailsJson").val(JSON.stringify(tableData));
+                    form.submit();
+                }
+            });
+        });
+        //删除操作
+        function operateFormatter(value, row, index) {
+            return [
+                '<a class="remove" href="javascript:;" title="Remove">',
+                '<i class="glyphicon glyphicon-remove"></i>',
+                '</a>'
+            ].join('');
+        }
+    </script>
+
+}

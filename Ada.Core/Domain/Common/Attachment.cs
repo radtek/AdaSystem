@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ada.Core.Domain.Content;
+using Ada.Core.Domain.Demand;
 using Ada.Core.Domain.WorkFlow;
 
 namespace Ada.Core.Domain.Common
@@ -15,6 +16,8 @@ namespace Ada.Core.Domain.Common
         {
             Articles=new HashSet<Article>();
             WorkFlowRecords=new HashSet<WorkFlowRecord>();
+            Subjects= new HashSet<Subject>();
+            SubjectDetailProgresses = new HashSet<SubjectDetailProgress>();
         }
         /// <summary>
         /// 附件名称
@@ -50,7 +53,6 @@ namespace Ada.Core.Domain.Common
         /// </summary>
         [Display(Name = "播放/查看/下载次数")]
         public int? Times { get; set; }
-
         /// <summary>
         /// 缩略图路径
         /// </summary>
@@ -59,5 +61,7 @@ namespace Ada.Core.Domain.Common
 
         public virtual ICollection<Article> Articles { get; set; }
         public virtual ICollection<WorkFlowRecord> WorkFlowRecords { get; set; }
+        public virtual ICollection<Subject> Subjects { get; set; }
+        public virtual ICollection<SubjectDetailProgress> SubjectDetailProgresses { get; set; }
     }
 }

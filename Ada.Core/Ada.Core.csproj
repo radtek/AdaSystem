@@ -115,6 +115,9 @@
     <Compile Include="Domain\Business\BusinessOffer.cs" />
     <Compile Include="Domain\Customer\PayAccount.cs" />
     <Compile Include="Domain\Customer\FollowUp.cs" />
+    <Compile Include="Domain\Demand\Subject.cs" />
+    <Compile Include="Domain\Demand\SubjectDetail.cs" />
+    <Compile Include="Domain\Demand\SubjectDetailProgress.cs" />
     <Compile Include="Domain\Finance\BillPayment.cs" />
     <Compile Include="Domain\Finance\BillPaymentDetail.cs" />
     <Compile Include="Domain\Finance\Expense.cs" />
@@ -149,6 +152,7 @@
     <Compile Include="Domain\Resource\MediaGroup.cs" />
     <Compile Include="Domain\Resource\MediaPrice.cs" />
     <Compile Include="Domain\Resource\AdPosition.cs" />
+    <Compile Include="Domain\Resource\MediaReferencePrice.cs" />
     <Compile Include="Domain\Resource\MediaTag.cs" />
     <Compile Include="Domain\Resource\MediaType.cs" />
     <Compile Include="Domain\StatusEnum.cs" />
@@ -227,6 +231,9 @@
     <Compile Include="ViewModel\Common\FansView.cs" />
     <Compile Include="ViewModel\Content\ArticleView.cs" />
     <Compile Include="ViewModel\Content\ColumnView.cs" />
+    <Compile Include="ViewModel\Demand\SubjectDetailProgressView.cs" />
+    <Compile Include="ViewModel\Demand\SubjectDetailView.cs" />
+    <Compile Include="ViewModel\Demand\SubjectView.cs" />
     <Compile Include="ViewModel\LoginModel.cs" />
     <Compile Include="ViewModel\Purchase\PurchaseReturnOrderView.cs" />
     <Compile Include="ViewModel\Resource\MediaAppointmentView.cs" />

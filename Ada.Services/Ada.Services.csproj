@@ -107,6 +107,10 @@
     <Compile Include="Customer\IFollowUpService.cs" />
     <Compile Include="Customer\IPayAccountService.cs" />
     <Compile Include="Customer\PayAccountService.cs" />
+    <Compile Include="Demand\ISubjectDetailService.cs" />
+    <Compile Include="Demand\ISubjectService.cs" />
+    <Compile Include="Demand\SubjectDetailService.cs" />
+    <Compile Include="Demand\SubjectService.cs" />
     <Compile Include="Finance\BillPaymentDetailService.cs" />
     <Compile Include="Finance\ExpenseDetailService.cs" />
     <Compile Include="Finance\ExpenseService.cs" />
