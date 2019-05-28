@@ -18,6 +18,7 @@
                 <li class=""><a data-toggle="tab" href="#tab-2"> 媒体数据</a></li>
                 <li class=""><a data-toggle="tab" href="#tab-3"> 媒体价格</a></li>
                 <li class=""><a data-toggle="tab" href="#tab-5"> 媒体保价</a></li>
+                <li class=""><a data-toggle="tab" href="#tab-6"> 平台报价</a></li>
             </ul>
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane active">
@@ -63,7 +64,7 @@
                                     @Html.DropDownListFor(d => d.Sex, sexs, "请选择", new { @class = "form-control" })
                                 </div>
                             </div>
-                           
+
                             <div class="form-group">
                                 @Html.LabelFor(d => d.MediaTagIds, Html.DisplayNameFor(d => d.MediaTagIds).ToString(), new { @class = "col-sm-2 control-label" })
                                 <div class="col-sm-10">
@@ -195,6 +196,7 @@
                     </div>
                 </div>
                 @Html.Partial("MediaPriceProtection", Model)
+                @Html.Partial("MediaReferencePrice", Model)
             </div>
         </div>
     </div>

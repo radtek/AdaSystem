@@ -17,15 +17,18 @@ namespace Ada.Services.Resource
         private readonly IRepository<Media> _repository;
         private readonly IRepository<Manager> _managerRepository;
         private readonly IRepository<MediaComment> _mediaCommentRepository;
+        private readonly IRepository<MediaReferencePrice> _mediaReferenceRepository;
         public MediaService(IRepository<Media> repository,
             IDbContext dbContext,
             IRepository<Manager> managerRepository,
-            IRepository<MediaComment> mediaCommentRepository)
+            IRepository<MediaComment> mediaCommentRepository,
+            IRepository<MediaReferencePrice> mediaReferenceRepository)
         {
             _repository = repository;
             _dbContext = dbContext;
             _managerRepository = managerRepository;
             _mediaCommentRepository = mediaCommentRepository;
+            _mediaReferenceRepository = mediaReferenceRepository;
         }
 
         public void Add(Media entity)
@@ -761,6 +764,15 @@ namespace Ada.Services.Resource
             return list;
         }
 
+        public void ClearMediaReferencePrices(string id)
+        {
+            var list = _mediaReferenceRepository.LoadEntities(d => d.MediaId == id);
+            foreach (var item in list)
+            {
+                _mediaReferenceRepository.Remove(item);
+            }
+            
+        }
     }
 
 }

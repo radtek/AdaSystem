@@ -1,8 +1,12 @@
 ﻿@using System.Web.Optimization
+@using Ada.Core.Infrastructure
+@using Ada.Services.Admin
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
     ViewBag.Title = "编辑" + Model.MediaTypeName + " - " + Model.MediaName;
     ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "媒体资源", Value = Url.Action("Index") } };
+    var fieldService = EngineContext.Current.Resolve<IFieldService>();
+    var platformPriceType = fieldService.GetFieldsByKey("PlatformPriceType").Select(d => new { text = d.Text, value = d.Value });
 }
 @Html.Partial("Bread")
 <div class="wrapper wrapper-content animated fadeInRight ecommerce">
@@ -14,6 +18,7 @@
         @Html.HiddenFor(d => d.MediaTypeId)
         @Html.HiddenFor(d => d.MediaTypeIndex)
         @Html.HiddenFor(d => d.MediaTypeName)
+        @Html.HiddenFor(d => d.MediaReferencePriceJson)
     }
 </div>
 
@@ -21,19 +26,24 @@
 @section Styles {
     @Styles.Render("~/plugins/select2Styles")
     @Styles.Render("~/plugins/awesomeCheckboxStyles")
-    @Styles.Render("~/plugins/dataPickerStyles")
+    @Styles.Render("~/plugins/dateTimePickerStyle")
     @Styles.Render("~/plugins/bootstrapTableStyle")
+    @Styles.Render("~/plugins/bootstrapEditTableStyle")
     @Styles.Render("~/plugins/laddaStyles")
+    
 }
 @section Scripts {
     @Scripts.Render("~/plugins/select2")
-    @Scripts.Render("~/plugins/dataPicker")
     @Scripts.Render("~/plugins/bootstrapTableScript")
+    @Scripts.Render("~/plugins/bootstrapEditTableScript")
     @Scripts.Render("~/plugins/ladda")
+    @Scripts.Render("~/plugins/dateTimePickerScript")
     <script>
         var linkmanurl = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})";
+        var data = @Html.Raw(string.IsNullOrWhiteSpace(Model.MediaReferencePriceJson) ?"[]": Model.MediaReferencePriceJson);
+        var platformData=@Html.Raw(Json.Encode(platformPriceType));  
     </script>
-    <script src="@Url.Content("~/Areas/Resource/Scripts/resource.js?v=20180920")"></script>
+    <script src="@Url.Content("~/Areas/Resource/Scripts/resource.js?v="+DateTime.Now.Ticks)"></script>
     <script src="@Url.Content("~/Areas/Resource/Scripts/transactor.js")"></script>
     @if (Model.MediaTypeIndex == "writer")
     {

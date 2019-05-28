@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
 using Ada.Core.Domain.Demand;
+using Ada.Core.ViewModel;
 using Ada.Core.ViewModel.Demand;
 
 namespace Ada.Services.Demand
@@ -52,27 +53,27 @@ namespace Ada.Services.Demand
             }
             if (viewModel.IsDo == true)
             {
-                allList = allList.Where(d => d.TransactorId==null);
+                allList = allList.Where(d => d.TransactorId == null);
             }
             if (viewModel.IsProducer == true)
             {
-                allList = allList.Where(d => d.TransactorId!=null && d.ProducerById==null);
+                allList = allList.Where(d => d.TransactorId != null && d.ProducerById == null);
             }
             if (!string.IsNullOrWhiteSpace(viewModel.search))
             {
                 allList = allList.Where(d => d.Title.Contains(viewModel.search));
             }
-            if (viewModel.Status !=null)
+            if (viewModel.Status != null)
             {
-                if (viewModel.Status==3)
+                if (viewModel.Status == 3)
                 {
-                    allList = allList.Where(d => d.Status==3);
+                    allList = allList.Where(d => d.Status == 3);
                 }
                 else
                 {
-                    allList = allList.Where(d => d.Status == 1|| d.Status == 2);
+                    allList = allList.Where(d => d.Status == 1 || d.Status == 2);
                 }
-                
+
             }
             viewModel.total = allList.Count();
             int offset = viewModel.offset ?? 0;
@@ -89,6 +90,47 @@ namespace Ada.Services.Demand
         {
             _repository.Update(entity);
             _dbContext.SaveChanges();
+        }
+        public IEnumerable<BaseStatistics> Group(SubjectDetailView view)
+        {
+            var allList = _repository.LoadEntities(d => d.IsDelete == false && d.Status == 3);
+            if (view.CompletDateStart != null)
+            {
+                allList = allList.Where(d => d.CompletDate >= view.CompletDateStart);
+            }
+            if (view.CompletDateEnd != null)
+            {
+                var end = view.CompletDateEnd.Value.AddDays(1);
+                allList = allList.Where(d => d.CompletDate < end);
+            }
+
+            if (view.IsDo == true)
+            {
+                return allList.GroupBy(d => d.Transactor)
+                    .Select(d =>
+                        new BaseStatistics
+                        {
+                            Key = d.Key,
+                            TotalCount = d.Count()
+                        }).ToList();
+            }
+            if (view.IsProducer == true)
+            {
+                return allList.GroupBy(d => d.ProducerBy)
+                    .Select(d =>
+                        new BaseStatistics
+                        {
+                            Key = d.Key,
+                            TotalCount = d.Count()
+                        }).ToList();
+            }
+            return allList.GroupBy(d => d.AddedBy)
+                .Select(d =>
+                    new BaseStatistics
+                    {
+                        Key = d.Key,
+                        TotalCount = d.Count()
+                    }).ToList();
         }
     }
 }

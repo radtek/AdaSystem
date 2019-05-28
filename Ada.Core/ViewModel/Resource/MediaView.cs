@@ -15,6 +15,7 @@ namespace Ada.Core.ViewModel.Resource
         {
             Medias = new List<Media>();
             MediaCommentViews=new List<MediaCommentView>();
+            MediaReferencePrices=new List<MediaReferencePriceView>();
         }
         /// <summary>
         /// 媒体名称
@@ -587,6 +588,16 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "保留时长")]
         public string RetentionTime { get; set; }
+        /// <summary>
+        /// 平台报价
+        /// </summary>
+        [Display(Name = "平台报价")]
+        public string MediaReferencePriceJson { get; set; }
+        /// <summary>
+        /// 平台报价
+        /// </summary>
+        [Display(Name = "平台报价")]
+        public List<MediaReferencePriceView> MediaReferencePrices { get; set; }
     }
 
 }

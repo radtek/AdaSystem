@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ada.Core;
 using Ada.Core.Domain.Demand;
+using Ada.Core.ViewModel;
 using Ada.Core.ViewModel.Demand;
 
 namespace Ada.Services.Demand
@@ -16,5 +17,6 @@ namespace Ada.Services.Demand
         IQueryable<SubjectDetail> LoadEntitiesFilter(SubjectDetailView viewModel);
         SubjectDetail GetById(string id);
         SubjectDetailProgress GetProgressById(string id);
+        IEnumerable<BaseStatistics> Group(SubjectDetailView view);
     }
 }

@@ -60,6 +60,16 @@ namespace Ada.Core.ViewModel.Demand
         [Display(Name = "完成日期")]
         public DateTime? CompletDate { get; set; }
         /// <summary>
+        /// 完成日期开始
+        /// </summary>
+        [Display(Name = "完成日期开始")]
+        public DateTime? CompletDateStart { get; set; }
+        /// <summary>
+        /// 完成日期结束
+        /// </summary>
+        [Display(Name = "完成日期结束")]
+        public DateTime? CompletDateEnd { get; set; }
+        /// <summary>
         /// 需求项目
         /// </summary>
         [Display(Name = "需求项目")]

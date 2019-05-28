@@ -126,6 +126,31 @@
                                     <button id="btn_add" type="button" class="btn btn-primary btn-outline btn-sm">
                                         <i class="fa fa-plus"></i> 添加明细
                                     </button>
+                                    <button id="btn_batch" type="button" class="btn btn-warning btn-outline btn-sm" data-toggle="modal" data-target="#batchModal">
+                                        <i class="fa fa-plus"></i> 批量添加
+                                    </button>
+                                    <div class="modal inmodal" id="batchModal" tabindex="-1" role="dialog" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content animated bounceInRight">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                    <i class="fa fa-plus modal-icon"></i>
+                                                    <h4 class="modal-title">批量添加</h4>
+                                                    <small class="font-bold">注：输入格式为: 人物名称|头像类型 回车换行，其中头像类型需按指定类型填写</small>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <textarea class="form-control" placeholder="请按格式填写，如：张三|指定 回车换行" rows="15" cols="3"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                                                    <button type="button" class="btn btn-primary" name="add">添加</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                                 </div>
                                 <table id="table"></table>
                             </div>
@@ -214,15 +239,7 @@
                 }
             });
             $("#btn_add").click(function () {
-                var randomId = 100 + ~~(Math.random() * 100);
-                $table.bootstrapTable('insertRow', {
-                    index: 0,
-                    row: {
-                        Id: randomId,
-                        Text: "",
-                        Value: ""
-                    }
-                });
+                insertRow();
             });
             $(".wrapper.wrapper-content form").validate({
                 submitHandler: function (form) {
@@ -230,6 +247,30 @@
                     $("#DetailsJson").val(JSON.stringify(tableData));
                     form.submit();
                 }
+            });
+            //批量添加
+            $('#batchModal').on('show.bs.modal', function () {
+                var modal = $(this);
+                var $remark = modal.find('.modal-body textarea');
+                $remark.val("");
+                modal.find('.modal-footer button[name=add]').on("click", function () {
+                    if ($remark.val()) {
+                        console.log($remark.val());
+                        var str = $remark.val(),r = /\r\n|[\r\n]/;
+                        var arr = str.split(r);
+                        $.each(arr,
+                            function(k, v) {
+                                if(v.indexOf("|")>-1) {
+                                    var temp = v.trim().split("|");
+                                    insertRow(temp[0],temp[1]);
+                                }
+                            });
+                    }
+                    modal.modal('hide');
+                });
+                
+            }).on('hidden.bs.modal', function () {
+                $(this).find('.modal-footer button[name=add]').off("click");
             });
         });
         //删除操作
@@ -239,6 +280,18 @@
                 '<i class="glyphicon glyphicon-remove"></i>',
                 '</a>'
             ].join('');
+        }
+
+        function insertRow(t,v) {
+            var randomId = 100 + ~~(Math.random() * 100);
+            $table.bootstrapTable('insertRow', {
+                index: 0,
+                row: {
+                    Id: randomId,
+                    Text: t||"",
+                    Value: v||""
+                }
+            });
         }
     </script>
 

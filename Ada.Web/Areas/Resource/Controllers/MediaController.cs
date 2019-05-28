@@ -20,6 +20,7 @@ using Ada.Services.Admin;
 using Ada.Services.API;
 using Ada.Services.Resource;
 using Ada.Services.Setting;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -1194,6 +1195,23 @@ namespace Resource.Controllers
                     entity.MediaTags.Add(tag);
                 }
             }
+            //平台报价
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaReferencePriceJson))
+            {
+                viewModel.MediaReferencePrices = JsonConvert.DeserializeObject<List<MediaReferencePriceView>>(viewModel.MediaReferencePriceJson);
+                foreach (var item in viewModel.MediaReferencePrices)
+                {
+                    entity.MediaReferencePrices.Add(new MediaReferencePrice()
+                    {
+                        Id = IdBuilder.CreateIdNum(),
+                        Platform = item.Platform,
+                        PriceName = item.PriceName,
+                        Offer = item.Offer,
+                        OfferDate = item.OfferDate
+                    });
+                }
+            }
+            
             _mediaService.Add(entity);
             TempData["Msg"] = "添加成功";
             return RedirectToAction("Add", new { id = entity.MediaTypeId });
@@ -1265,6 +1283,15 @@ namespace Resource.Controllers
                 PurchasePrice = d.PurchasePrice,
                 MarketPrice = d.MarketPrice
             }).ToList();
+            //平台价格
+            if (item.MediaReferencePrices.Any())
+            {
+                entity.MediaReferencePriceJson = JsonConvert.SerializeObject(item.MediaReferencePrices.Select(d =>
+                    new MediaReferencePriceView()
+                    {
+                        Platform = d.Platform, PriceName = d.PriceName, Offer = d.Offer, OfferDate = d.OfferDate,Id = d.Id
+                    }));
+            }
             entity.PriceUpdateDate = item.MediaPrices.FirstOrDefault()?.PriceDate;
             entity.PriceInvalidDate = item.MediaPrices.FirstOrDefault()?.InvalidDate;
             return View(entity);
@@ -1430,6 +1457,23 @@ namespace Resource.Controllers
                             AddedDate = DateTime.Now
                         });
                     }
+                }
+            }
+            //平台价格
+            _mediaService.ClearMediaReferencePrices(entity.Id);
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaReferencePriceJson))
+            {
+                viewModel.MediaReferencePrices = JsonConvert.DeserializeObject<List<MediaReferencePriceView>>(viewModel.MediaReferencePriceJson);
+                foreach (var item in viewModel.MediaReferencePrices)
+                {
+                    entity.MediaReferencePrices.Add(new MediaReferencePrice()
+                    {
+                        Id = IdBuilder.CreateIdNum(),
+                        Platform = item.Platform,
+                        PriceName = item.PriceName,
+                        Offer = item.Offer,
+                        OfferDate = item.OfferDate
+                    });
                 }
             }
             _mediaService.Update(entity);

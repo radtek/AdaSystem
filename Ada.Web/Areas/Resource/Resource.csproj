@@ -259,6 +259,7 @@
     <Content Include="Views\Media\Collection.cshtml" />
     <Content Include="Views\Expert\Index.cshtml" />
     <Content Include="Views\Shared\Expert.cshtml" />
+    <Content Include="Views\Shared\MediaReferencePrice.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

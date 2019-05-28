@@ -1,6 +1,7 @@
 ﻿@using Ada.Core.Domain
 @using Ada.Core.Infrastructure
 @using Ada.Services.Resource
+@using Microsoft.Ajax.Utilities
 @model Ada.Core.ViewModel.Resource.MediaView
 @{
     var mediaTypeService = EngineContext.Current.Resolve<IMediaTypeService>();
@@ -73,7 +74,7 @@
             <span class="input-group-addon">
                 <i class="fa fa-calendar"></i>
             </span>
-            @Html.TextBoxFor(d => d.PriceUpdateDate, new { @class = "form-control" })
+            @Html.TextBoxFor(d => d.PriceUpdateDate, Model.PriceUpdateDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd")), new { @class = "form-control" })
         </div>
     </div>
 </div>
@@ -84,7 +85,7 @@
             <span class="input-group-addon">
                 <i class="fa fa-calendar"></i>
             </span>
-            @Html.TextBoxFor(d => d.PriceInvalidDate, new { @class = "form-control" })
+            @Html.TextBoxFor(d => d.PriceInvalidDate, Model.PriceInvalidDate.IfNotNull(d => d.Value.ToString("yyyy-MM-dd")), new { @class = "form-control" })
         </div>
     </div>
 </div>

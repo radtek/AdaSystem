@@ -219,6 +219,7 @@
     <Compile Include="ViewModel\API\iDataAPI\WeiBoParams.cs" />
     <Compile Include="ViewModel\API\iDataAPI\WeiXinProJSON.cs" />
     <Compile Include="ViewModel\API\iDataAPI\WeiXinProParams.cs" />
+    <Compile Include="ViewModel\BaseStatistics.cs" />
     <Compile Include="ViewModel\BaseView.cs" />
     <Compile Include="ViewModel\Business\BusinessInvoiceView.cs" />
     <Compile Include="ViewModel\Business\BusinessOfferView.cs" />
@@ -241,6 +242,7 @@
     <Compile Include="ViewModel\Resource\MediaDevelopProgressView.cs" />
     <Compile Include="ViewModel\Resource\MediaDevelopView.cs" />
     <Compile Include="ViewModel\Resource\MediaArticleView.cs" />
+    <Compile Include="ViewModel\Resource\MediaReferencePriceView.cs" />
     <Compile Include="ViewModel\Statistics\BusinessTotal.cs" />
     <Compile Include="ViewModel\Business\BusinessWriteOffDetailView.cs" />
     <Compile Include="ViewModel\Business\BusinessWriteOffView.cs" />
