@@ -598,6 +598,11 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "平台报价")]
         public List<MediaReferencePriceView> MediaReferencePrices { get; set; }
+        /// <summary>
+        /// 报价平台
+        /// </summary>
+        [Display(Name = "报价平台")]
+        public string MediaReferencePricePlatform { get; set; }
     }
 
 }

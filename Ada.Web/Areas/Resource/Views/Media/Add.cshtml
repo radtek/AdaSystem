@@ -7,6 +7,7 @@
     ViewBag.Bread = new List<SelectListItem>() { new SelectListItem() { Text = "媒体资源", Value = Url.Action("Index") } };
     var fieldService = EngineContext.Current.Resolve<IFieldService>();
     var platformPriceType = fieldService.GetFieldsByKey("PlatformPriceType").Select(d => new { text = d.Text, value = d.Value });
+    var platformPriceName = fieldService.GetFieldsByKey(Model.MediaTypeIndex+"PlatformPriceName").Select(d => new { text = d.Text, value = d.Value });
 }
 @Html.Partial("Bread")
 
@@ -42,7 +43,8 @@
     <script>
         var linkmanurl = "@Url.Action("GetList", "LinkMan", new {area = "Customer"})";
         var data = @Html.Raw(string.IsNullOrWhiteSpace(Model.MediaReferencePriceJson) ?"[]": Model.MediaReferencePriceJson);
-        var platformData=@Html.Raw(Json.Encode(platformPriceType));
+        var platformData =@Html.Raw(Json.Encode(platformPriceType));
+        var platformPriceData=@Html.Raw(Json.Encode(platformPriceName));
     </script>
     <script src="@Url.Content("~/Areas/Resource/Scripts/resource.js?v="+DateTime.Now.Ticks)"></script>
     <script src="@Url.Content("~/Areas/Resource/Scripts/transactor.js")"></script>

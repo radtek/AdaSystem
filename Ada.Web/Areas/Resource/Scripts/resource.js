@@ -76,7 +76,9 @@ $(function () {
                 align: "center", valign: "middle",
                 editable: {
                     mode: "inline",
-                    emptytext: '请输入'
+                    emptytext: '请选择',
+                    type: 'select',
+                    source: platformPriceData
                 }
             },
             {

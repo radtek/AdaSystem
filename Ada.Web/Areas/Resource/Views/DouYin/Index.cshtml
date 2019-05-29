@@ -190,7 +190,7 @@
                     </div>
                 </div>
 
-
+                @Html.HiddenFor(d=>d.MediaReferencePricePlatform)
                 <div class="row">
                     <div class="col-sm-12 text-center">
                         <div class="form-group">
@@ -226,6 +226,9 @@
     </button>
     <button type="button" class="btn btn-primary btn-outline" data-toggle="modal" data-target="#uploadModal">
         <i class="fa fa-upload"></i> 更新导入
+    </button>
+    <button type="button" class="btn btn-primary btn-outline" data-toggle="modal" data-target="#priceModal">
+        <i class="fa fa-vimeo"></i> 更新比价
     </button>
     <button type="button" class="btn btn-primary btn-outline" onclick="collectDouYin('@Url.Action("DouYinInfoCollection","Media")');">
         <i class="fa fa-cloud"></i> 采集用户

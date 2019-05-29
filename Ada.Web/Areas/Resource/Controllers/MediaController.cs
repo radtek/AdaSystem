@@ -386,7 +386,7 @@ namespace Resource.Controllers
             viewModel.Managers = PremissionData();
             var setting = _settingService.GetSetting<WeiGuang>();
             viewModel.limit = setting.PurchaseExportRows;
-            var bytes = ExportData(ExportExcel(viewModel));
+            var bytes = ExportData(string.IsNullOrWhiteSpace(viewModel.MediaReferencePricePlatform)? ExportExcel(viewModel):ExportReferencePriceExcel(viewModel));
             return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
         }
 
@@ -471,6 +471,85 @@ namespace Resource.Controllers
                 foreach (var mediaMediaPrice in media.MediaPrices.OrderByDescending(d => d.AdPositionName).Where(d => d.IsDelete == false))
                 {
                     jo.Add(mediaMediaPrice.AdPositionName, mediaMediaPrice.PurchasePrice);
+                }
+                jObjects.Add(jo);
+            }
+            return jObjects.ToString();
+        }
+        /// <summary>
+        /// 比价模板
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        private string ExportReferencePriceExcel(MediaView viewModel)
+        {
+            var result = _mediaService.LoadEntitiesFilter(viewModel).ToList();
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaNames))
+            {
+                var names = viewModel.MediaNames.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
+                int i = 0;
+                foreach (var name in names)
+                {
+                    var temp = result.FirstOrDefault(d =>
+                        d.MediaName.ToLower() == name.ToLower().Trim());
+                    if (temp == null)
+                    {
+                        result.Add(new Media
+                        {
+                            MediaName = name,
+                            Taxis = i
+                        });
+                    }
+                    else
+                    {
+                        temp.Taxis = i;
+                    }
+
+                    i++;
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(viewModel.MediaIDs))
+            {
+                var ids = viewModel.MediaIDs.Split(',').Distinct().Where(d => !string.IsNullOrWhiteSpace(d)).ToList();
+                int i = 0;
+                foreach (var id in ids)
+                {
+                    var temp = result.FirstOrDefault(d =>
+                        d.MediaID.ToLower() == id.ToLower().Trim());
+                    if (temp == null)
+                    {
+                        result.Add(new Media
+                        {
+                            MediaID = id,
+                            Taxis = i
+                        });
+                    }
+                    else
+                    {
+                        temp.Taxis = i;
+                    }
+                    i++;
+                }
+            }
+            JArray jObjects = new JArray();
+            foreach (var media in result.OrderBy(d => d.Taxis))
+            {
+                var jo = new JObject();
+                jo.Add("Id", media.Id ?? "不存在的资源");
+                jo.Add("媒体类型", media.MediaType?.TypeName);
+                string website = string.Empty;
+                if (!string.IsNullOrWhiteSpace(media.Client) && !string.IsNullOrWhiteSpace(media.Channel))
+                {
+                    website = "-" + media.Client + "-" + media.Channel;
+                }
+                jo.Add("媒体名称", media.MediaName + website);
+                jo.Add("媒体ID", media.MediaID);
+                jo.Add("报价平台", viewModel.MediaReferencePricePlatform);
+                var date = media.MediaReferencePrices.FirstOrDefault()?.OfferDate;
+                jo.Add("报价日期", date?.ToString("yyyy-MM-dd") ?? "");
+                foreach (var item in media.MediaReferencePrices.Where(d=>d.Platform==viewModel.MediaReferencePricePlatform))
+                {
+                    jo.Add(item.PriceName, item.Offer);
                 }
                 jObjects.Add(jo);
             }
@@ -686,7 +765,16 @@ namespace Resource.Controllers
             {
                 return Json(new { State = 0, Msg = "此文件没有导入数据，请填充数据再进行导入" });
             }
-            UpdateMedia(sheet);
+
+            var platform = Request["platform"];
+            if (string.IsNullOrWhiteSpace(platform))
+            {
+                UpdateMedia(sheet);
+            }
+            else
+            {
+                UpdateMediaReferencePrice(sheet, platform);
+            }
             _dbContext.SaveChanges();
             return Json(new { State = 1, Msg = "导入成功" });
         }
@@ -887,7 +975,92 @@ namespace Resource.Controllers
                 }
             }
         }
+        private void UpdateMediaReferencePrice(ISheet sheet,string platform)
+        {
+            //拿到广告位的名称
+            IRow headRow = sheet.GetRow(0);
+            List<string> adpostionNames = new List<string>();
+            int startPrice = 6;//价格所在位置
+            for (int i = startPrice; i < headRow.LastCellNum; i++)
+            {
+                var adpostionName = headRow.GetCell(i).StringCellValue;
+                adpostionNames.Add(adpostionName);
+            }
+            for (int i = 1; i <= sheet.LastRowNum; i++)
+            {
+                try
+                {
+                    IRow row = sheet.GetRow(i);
+                    if (row == null)
+                    {
+                        continue;
+                    }
+                    var id = row.GetCell(0)?.StringCellValue;
+                    if (string.IsNullOrWhiteSpace(id) || id == "不存在的资源")
+                    {
+                        continue;
+                    }
 
+                    var media = _repository.LoadEntities(d => d.Id == id).FirstOrDefault();
+                    if (media == null)
+                    {
+                        continue;
+                    }
+                    var pName = row.GetCell(4)?.ToString();
+                    if (platform!=pName)
+                    {
+                        continue;
+                    }
+                    DateTime date = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
+                        DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+                    var dateCell = row.GetCell(5);
+                    if (dateCell != null)
+                    {
+                        var cellType = dateCell.CellType;
+                        if (cellType == CellType.String)
+                        {
+                            DateTime.TryParse(dateCell.ToString(), out date);
+                        }
+                        if (cellType == CellType.Numeric)
+                        {
+                            date = dateCell.DateCellValue;
+                        }
+                    }
+                    //清空，再新增
+                    _mediaService.ClearMediaReferencePrices(media.Id, pName);
+                    for (int j = 0; j < adpostionNames.Count; j++)
+                    {
+                        var name = adpostionNames[j];
+                        var tempCell = row.GetCell(startPrice + j);
+                        double tempPrice = 0;
+                        if (tempCell != null)
+                        {
+                            if (tempCell.CellType == CellType.Formula || tempCell.CellType == CellType.Numeric)
+                            {
+                                tempPrice = tempCell.NumericCellValue;
+                            }
+                            if (tempCell.CellType == CellType.String)
+                            {
+                                double.TryParse(tempCell.ToString(), out tempPrice);
+                            }
+                        }
+                        var temp = new MediaReferencePrice()
+                        {
+                            Id = IdBuilder.CreateIdNum(),
+                            Platform = pName,
+                            PriceName = name,
+                            Offer = Convert.ToDecimal(tempPrice),
+                            OfferDate = date
+                        };
+                        media.MediaReferencePrices.Add(temp);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new ApplicationException("第" + i + "行，导入异常，请检查数据", ex);
+                }
+            }
+        }
         private bool ParseBool(string str)
         {
             if (string.IsNullOrWhiteSpace(str))

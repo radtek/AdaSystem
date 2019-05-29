@@ -764,9 +764,13 @@ namespace Ada.Services.Resource
             return list;
         }
 
-        public void ClearMediaReferencePrices(string id)
+        public void ClearMediaReferencePrices(string id,string platform = null)
         {
             var list = _mediaReferenceRepository.LoadEntities(d => d.MediaId == id);
+            if (!string.IsNullOrWhiteSpace(platform))
+            {
+                list = list.Where(d => d.Platform == platform);
+            }
             foreach (var item in list)
             {
                 _mediaReferenceRepository.Remove(item);

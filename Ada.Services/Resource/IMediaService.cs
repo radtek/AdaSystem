@@ -21,6 +21,6 @@ namespace Ada.Services.Resource
         void Update(Media entity);
         void Update(Expression<Func<Media, bool>> whereLambda, Expression<Func<Media, Media>> updateLambda);
         void Delete(Media entity);
-        void ClearMediaReferencePrices(string id);
+        void ClearMediaReferencePrices(string id, string platform = null);
     }
 }

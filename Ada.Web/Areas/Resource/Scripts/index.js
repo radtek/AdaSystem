@@ -472,7 +472,86 @@ function upLoadFile() {
         }
     });
 }
-
+function priceUpdate(is) {
+    var platform = $("#pricePlatform").val();
+    if (!platform) {
+        swal("操作失败", "请选择报价平台", "warning");
+        return;
+    }
+    //导入
+    if (is) {
+        var fileObj = document.getElementById("pricefile").files[0]; // js 获取文件对象
+        if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
+            swal("操作失败", "请选择文件", "warning");
+            return;
+        }
+        if (!checkFileExt(fileObj.name)) {
+            swal("操作失败", "只支持xlsx后缀文件", "warning");
+            return;
+        }
+        var formFile = new FormData();
+        formFile.append("platform", platform);
+        formFile.append("upfile", fileObj); //加入文件对象
+        formFile.append("__RequestVerificationToken", $('input[name=__RequestVerificationToken]').val());
+        var data = formFile;
+        var subBtn = $('.ladda-button').ladda();
+        $.ajax({
+            url: "/Resource/Media/Import",
+            data: data,
+            type: "Post",
+            dataType: "json",
+            cache: false, //上传文件无需缓存
+            processData: false, //用于对data参数进行序列化处理 这里必须false
+            contentType: false, //必须
+            success: function (result) {
+                if (result.State == 1) {
+                    swal({
+                        title: "操作成功",
+                        text: result.Msg,
+                        timer: 2000,
+                        type: "success",
+                        showConfirmButton: false
+                    });
+                } else {
+                    swal("操作失败", result.Msg, "error");
+                }
+            },
+            error: function () {
+                swal("操作失败", "系统错误", "error");
+            },
+            beforeSend: function () {
+                subBtn.ladda('start');
+            },
+            complete: function () {
+                subBtn.ladda('stop');
+            }
+        }); 
+    } else {
+        //导出
+        swal({
+            title: "您确定吗?",
+            text: "确认要导出数据吗?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            closeOnConfirm: false,
+            showLoaderOnConfirm: true
+        }, function () {
+            $("#MediaReferencePricePlatform").val(platform);
+            $('#searchFrm')[0].submit();
+            swal({
+                title: "数据正在导出中...",
+                text: "请耐心等待",
+                timer: 2000,
+                showConfirmButton: false
+            });
+            $("#MediaReferencePricePlatform").val("");
+        });
+    }
+    
+}
 function confirmFile() {
 
     var fileObj = document.getElementById("confirmfile").files[0]; // js 获取文件对象
