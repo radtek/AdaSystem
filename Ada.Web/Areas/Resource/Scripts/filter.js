@@ -188,17 +188,18 @@ filterFormat.referencePrice = function (value, row) {
         var result = "";
         $.each(value,
             function (k, v) {
-                var arr = [];
+                var arr = [], date = "";
                 $.each(v.MediaReferencePrices,
                     function (k1, v1) {
                         if (v1.Offer) {
                             var price = "<i class='fa fa-jpy'></i> " + v1.Offer;
                             arr.push("<li class='list-group-item p-xxs'><span class='badge badge-primary'>" + price + "</span> " + v1.PriceName + "</li>");
+                            date = v1.OfferDate;
                         }
 
                     });
                 if (arr.length > 0) {
-                    arr.push("<li class='list-group-item p-xxs'><span class='badge'>" + moment(v.OffDate).format("YYYY-MM-DD") + "</span>" + v.Name + "</li>");
+                    arr.push("<li class='list-group-item p-xxs'><span class='badge'>" + moment(date).format("YYYY-MM-DD") + "</span>" + v.Name + "</li>");
                     result += "<ul class='list-group m-b-none'>" + arr.join('') + "</ul>";
                 }
 

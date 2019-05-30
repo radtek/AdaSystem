@@ -121,6 +121,7 @@
     <Content Include="Views\Purchase\Index.cshtml" />
     <Content Include="Views\Boss\Index.cshtml" />
     <Content Include="Views\Shared\Late.cshtml" />
+    <Content Include="Views\Shared\Subject.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

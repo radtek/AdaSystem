@@ -618,11 +618,11 @@ namespace Resource.Controllers
                     GroupReferencePrices = d.MediaReferencePrices.GroupBy(p => p.Platform).Select(p => new GroupReferencePrice
                     {
                         Name = p.Key,
-                        OfferDate = p.FirstOrDefault()?.OfferDate,
                         MediaReferencePrices = p.Select(m => new MediaReferencePriceView()
                         {
                             PriceName = m.PriceName,
-                            Offer = m.Offer
+                            Offer = m.Offer,
+                            OfferDate = m.OfferDate
                         }).ToList()
                     }).ToList(),
                     IsGroup = d.MediaGroups.Any(g => g.GroupType == Consts.StateOK && g.AddedById == CurrentManager.Id),
@@ -695,11 +695,11 @@ namespace Resource.Controllers
                     GroupReferencePrices = d.MediaReferencePrices.GroupBy(p=>p.Platform).Select(p=>new GroupReferencePrice
                     {
                         Name = p.Key,
-                        OfferDate = p.FirstOrDefault()?.OfferDate,
                         MediaReferencePrices = p.Select(m=>new MediaReferencePriceView()
                         {
                             PriceName = m.PriceName,
-                            Offer = m.Offer
+                            Offer = m.Offer,
+                            OfferDate = m.OfferDate
                         }).ToList()
                     }).ToList(),
                     MediaGroups = d.MediaGroups.Where(m => m.GroupType == Consts.StateNormal).Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),

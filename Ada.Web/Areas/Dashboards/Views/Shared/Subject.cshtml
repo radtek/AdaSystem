@@ -1,0 +1,109 @@
+﻿@using Ada.Core.Infrastructure
+@using Ada.Core.ViewModel.Demand
+@using Ada.Services.Demand
+@{
+    var service = EngineContext.Current.Resolve<ISubjectDetailService>();
+    var month = DateTime.Now.AddDays(-Convert.ToInt32(DateTime.Now.Date.Day));
+    var doList = service.Group(new SubjectDetailView() { CompletDateStart = month, IsDo = true }).OrderByDescending(d => d.TotalCount);
+    int indexDo = 1;
+    int indexProducer = 1;
+    var producerList = service.Group(new SubjectDetailView() { CompletDateStart = month, IsProducer = true }).OrderByDescending(d => d.TotalCount);
+    var doSearch = new SubjectDetailView() {IsDo = true, Status = 3};
+    var producerSearch = new SubjectDetailView() { IsProducer = true, Status = 3 };
+    service.LoadEntitiesFilter(doSearch);
+    service.LoadEntitiesFilter(producerSearch);
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>朋友圈需求统计 <small>排名为当月数据</small></h5>
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <div class="widget red-bg p-lg text-center mouse-pointer" onclick="window.open('@Url.Action("Index","ClaimDo",new{area="Demand"})');">
+                                <div class="m-b-md">
+                                    <i class="fa fa-bell fa-4x"></i>
+                                    <h1 class="m-xs">@doSearch.total</h1>
+                                    <h3 class="font-bold no-margins">
+                                        等待发布
+                                    </h3>
+                                    <small>请抓紧时间接单发布哦.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="widget yellow-bg p-lg text-center mouse-pointer" onclick="window.open('@Url.Action("Index","ClaimMake",new{area="Demand"})');">
+                                <div class="m-b-md">
+                                    <i class="fa fa-bell fa-4x"></i>
+                                    <h1 class="m-xs">@producerSearch.total</h1>
+                                    <h3 class="font-bold no-margins">
+                                        等待制作
+                                    </h3>
+                                    <small>请抓紧时间接单制作哦.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="table-responsive">
+                            <div class="scroll_content">
+                                <table class="table table-hover margin bottom">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10%" class="text-center">序号</th>
+                                            <th class="text-center">接单人员</th>
+                                            <th class="text-center">接单总数</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in doList)
+                                        {
+                                        <td>@indexDo</td>
+                                        <td>@item.Key</td>
+                                        <td>@item.TotalCount</td>
+                                        indexDo++;
+                                    }
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="table-responsive">
+                                <div class="scroll_content">
+                                    <table class="table table-hover margin bottom">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 10%" class="text-center">序号</th>
+                                                <th class="text-center">制作人员</th>
+                                                <th class="text-center">制作总数</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach (var item in producerList)
+                                        {
+                                            <td>@indexProducer</td>
+                                            <td>@item.Key</td>
+                                            <td>@item.TotalCount</td>
+                                            indexProducer++;
+                                        }
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
