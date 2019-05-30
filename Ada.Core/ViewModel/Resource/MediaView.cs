@@ -16,6 +16,7 @@ namespace Ada.Core.ViewModel.Resource
             Medias = new List<Media>();
             MediaCommentViews=new List<MediaCommentView>();
             MediaReferencePrices=new List<MediaReferencePriceView>();
+            GroupReferencePrices=new List<GroupReferencePrice>();
         }
         /// <summary>
         /// 媒体名称
@@ -603,6 +604,22 @@ namespace Ada.Core.ViewModel.Resource
         /// </summary>
         [Display(Name = "报价平台")]
         public string MediaReferencePricePlatform { get; set; }
+        /// <summary>
+        /// 第三方报价
+        /// </summary>
+        [Display(Name = "第三方报价")]
+        public List<GroupReferencePrice> GroupReferencePrices { get; set; }
+    }
+
+    public class GroupReferencePrice
+    {
+        public GroupReferencePrice()
+        {
+            MediaReferencePrices=new List<MediaReferencePriceView>();
+        }
+        public string Name { get; set; }
+        public DateTime? OfferDate { get; set; }
+        public List<MediaReferencePriceView> MediaReferencePrices { get; set; }
     }
 
 }

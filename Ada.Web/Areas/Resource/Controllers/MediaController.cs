@@ -615,6 +615,16 @@ namespace Resource.Controllers
                     PriceProtectionRemark = d.PriceProtectionRemark,
                     PriceProtectionIsBrand = d.PriceProtectionIsBrand,
                     RetentionTime = d.RetentionTime,
+                    GroupReferencePrices = d.MediaReferencePrices.GroupBy(p => p.Platform).Select(p => new GroupReferencePrice
+                    {
+                        Name = p.Key,
+                        OfferDate = p.FirstOrDefault()?.OfferDate,
+                        MediaReferencePrices = p.Select(m => new MediaReferencePriceView()
+                        {
+                            PriceName = m.PriceName,
+                            Offer = m.Offer
+                        }).ToList()
+                    }).ToList(),
                     IsGroup = d.MediaGroups.Any(g => g.GroupType == Consts.StateOK && g.AddedById == CurrentManager.Id),
                     MediaGroups = d.MediaGroups.Where(m => m.GroupType == Consts.StateNormal).Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
                     MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).ToList(),
@@ -682,7 +692,16 @@ namespace Resource.Controllers
                     PriceProtectionRemark = d.PriceProtectionRemark,
                     PriceProtectionIsBrand = d.PriceProtectionIsBrand,
                     RetentionTime = d.RetentionTime,
-
+                    GroupReferencePrices = d.MediaReferencePrices.GroupBy(p=>p.Platform).Select(p=>new GroupReferencePrice
+                    {
+                        Name = p.Key,
+                        OfferDate = p.FirstOrDefault()?.OfferDate,
+                        MediaReferencePrices = p.Select(m=>new MediaReferencePriceView()
+                        {
+                            PriceName = m.PriceName,
+                            Offer = m.Offer
+                        }).ToList()
+                    }).ToList(),
                     MediaGroups = d.MediaGroups.Where(m => m.GroupType == Consts.StateNormal).Select(g => new MediaGroupView() { Id = g.Id, GroupName = g.GroupName }).ToList(),
                     MediaTags = d.MediaTags.Select(t => new MediaTagView() { Id = t.Id, TagName = t.TagName }).ToList(),
                     MediaPrices = d.MediaPrices.Where(p => p.IsDelete == false).Select(p => new MediaPriceView() { AdPositionName = p.AdPositionName, PriceDate = p.PriceDate, InvalidDate = p.InvalidDate, PurchasePrice = p.PurchasePrice, SellPrice = p.SellPrice, MarketPrice = p.MarketPrice }).OrderByDescending(p => p.AdPositionName).ToList()

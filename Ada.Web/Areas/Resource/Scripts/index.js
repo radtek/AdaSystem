@@ -68,6 +68,31 @@ function formatterPrice(value, row, index) {
     arr.push("<li class='list-group-item p-xxs'><span class='badge'>" + moment(value[0].InvalidDate).format("YYYY-MM-DD") + "</span>价格有效期</li>");
     return "<ul class='list-group m-b-none'>" + arr.join('') + "</ul>" ;
 }
+function formatterReferencePrice(value, row, index) {
+    if (value) {
+        var result = "";
+        $.each(value,
+            function (k, v) {
+                var arr = [];
+                $.each(v.MediaReferencePrices,
+                    function (k1, v1) {
+                        if (v1.Offer) {
+                            var price = "<i class='fa fa-jpy'></i> " + v1.Offer;
+                            arr.push("<li class='list-group-item p-xxs'><span class='badge badge-primary'>" + price + "</span> " + v1.PriceName + "</li>");
+                        }
+
+                    });
+                if (arr.length > 0) {
+                    arr.push("<li class='list-group-item p-xxs'><span class='badge'>" + moment(v.OffDate).format("YYYY-MM-DD") + "</span>" + v.Name + "</li>");
+                    result += "<ul class='list-group m-b-none'>" + arr.join('') + "</ul>";
+                }
+
+            });
+        return result || "暂无数据";
+    } else {
+        return "暂无数据";
+    }
+}
 function formatterPriceProtection(value, row, index) {
     if (value == 0 || !value) {
         return "不保价";

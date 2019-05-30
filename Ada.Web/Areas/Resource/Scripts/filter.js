@@ -183,7 +183,31 @@ filterFormat.priceProtection = function (value, row) {
         "</span> 品牌提供</li>";
     return "<ul class='list-group'>" + line + "</ul>";
 }
+filterFormat.referencePrice = function (value, row) {
+    if (value) {
+        var result = "";
+        $.each(value,
+            function (k, v) {
+                var arr = [];
+                $.each(v.MediaReferencePrices,
+                    function (k1, v1) {
+                        if (v1.Offer) {
+                            var price = "<i class='fa fa-jpy'></i> " + v1.Offer;
+                            arr.push("<li class='list-group-item p-xxs'><span class='badge badge-primary'>" + price + "</span> " + v1.PriceName + "</li>");
+                        }
 
+                    });
+                if (arr.length > 0) {
+                    arr.push("<li class='list-group-item p-xxs'><span class='badge'>" + moment(v.OffDate).format("YYYY-MM-DD") + "</span>" + v.Name + "</li>");
+                    result += "<ul class='list-group m-b-none'>" + arr.join('') + "</ul>";
+                }
+
+            });
+        return result || "暂无数据";
+    } else {
+        return "暂无数据";
+    }
+}
 filterFormat.mediaData = function (value, row) {
     var read = "",tbzh="",bread="";
     if (row.AvgReadNum) {
