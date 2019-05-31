@@ -5,12 +5,14 @@ using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain;
+using Ada.Core.Domain.Admin;
 using Ada.Core.Domain.Common;
 using Ada.Core.Domain.Demand;
 using Ada.Core.ViewModel.Demand;
 using Ada.Framework.Filter;
 using Ada.Services.Demand;
 using Files.Services;
+using Action = Ada.Core.Domain.Admin.Action;
 
 namespace Demand.Controllers
 {
@@ -63,7 +65,9 @@ namespace Demand.Controllers
                     return Json(new { State = 0, Msg = "抱歉，此需求不存在或者已被撤销！" });
                 }
                 //制作者枪弹
-                if (!string.IsNullOrWhiteSpace(detail.TransactorId) && string.IsNullOrWhiteSpace(detail.ProducerById))
+               var isMarker= IsPremission(new Action()
+                    {Area = "Demand", MethodName = "Index", HttpMethod = "GET", ControllerName = "ClaimMake"});
+                if (isMarker)
                 {
                     detail.ProducerDate = DateTime.Now;
                     detail.ProducerBy = CurrentManager.UserName;

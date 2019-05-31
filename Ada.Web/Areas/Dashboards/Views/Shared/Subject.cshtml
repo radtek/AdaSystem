@@ -8,8 +8,8 @@
     int indexDo = 1;
     int indexProducer = 1;
     var producerList = service.Group(new SubjectDetailView() { CompletDateStart = month, IsProducer = true }).OrderByDescending(d => d.TotalCount);
-    var doSearch = new SubjectDetailView() {IsDo = true, Status = 3};
-    var producerSearch = new SubjectDetailView() { IsProducer = true, Status = 3 };
+    var doSearch = new SubjectDetailView() {IsDo = true};
+    var producerSearch = new SubjectDetailView() { IsProducer = true};
     service.LoadEntitiesFilter(doSearch);
     service.LoadEntitiesFilter(producerSearch);
 }
@@ -21,7 +21,7 @@
             </div>
             <div class="ibox-content">
                 <div class="row">
-                    <div class="col-lg-4">
+                    <div class="col-lg-2">
                         <div class="row">
                             <div class="widget red-bg p-lg text-center mouse-pointer" onclick="window.open('@Url.Action("Index","ClaimDo",new{area="Demand"})');">
                                 <div class="m-b-md">
@@ -48,7 +48,7 @@
                         </div>
 
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-5">
                         <div class="table-responsive">
                             <div class="scroll_content">
                                 <table class="table table-hover margin bottom">
@@ -73,7 +73,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-5">
                             <div class="table-responsive">
                                 <div class="scroll_content">
                                     <table class="table table-hover margin bottom">
