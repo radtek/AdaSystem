@@ -64,17 +64,6 @@ namespace Demand.Controllers
                 {
                     return Json(new { State = 0, Msg = "抱歉，此需求不存在或者已被撤销！" });
                 }
-                //制作者枪弹
-               var isMarker= IsPremission(new Action()
-                    {Area = "Demand", MethodName = "Index", HttpMethod = "GET", ControllerName = "ClaimMake"});
-                if (isMarker)
-                {
-                    detail.ProducerDate = DateTime.Now;
-                    detail.ProducerBy = CurrentManager.UserName;
-                    detail.ProducerById = CurrentManager.Id;
-                    _service.Update(detail);
-                    return Json(new { State = 1, Msg = "获取成功，请抓紧时间制作并上传素材！" });
-                }
                 //全体抢单
                 if (string.IsNullOrWhiteSpace(detail.TransactorId))
                 {
@@ -85,6 +74,18 @@ namespace Demand.Controllers
                     _service.Update(detail);
                     return Json(new { State = 1, Msg = "获取成功，请抓紧时间截图上传素材" });
                 }
+                //制作者枪弹
+                var isMarker= IsPremission(new Action()
+                    {Area = "Demand", MethodName = "Index", HttpMethod = "GET", ControllerName = "ClaimMake"});
+                if (isMarker)
+                {
+                    detail.ProducerDate = DateTime.Now;
+                    detail.ProducerBy = CurrentManager.UserName;
+                    detail.ProducerById = CurrentManager.Id;
+                    _service.Update(detail);
+                    return Json(new { State = 1, Msg = "获取成功，请抓紧时间制作并上传素材！" });
+                }
+                
                 return Json(new { State = 0, Msg = "抱歉，此需求已被他人获取！" });
             }
 

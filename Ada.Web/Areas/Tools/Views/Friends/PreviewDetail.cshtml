@@ -139,7 +139,7 @@
                     <div class="cName">@Model.FriendContent.PublishFans.NickName</div>
                     <div class="cContent cContent2">
 
-                        <p style="text-align: justify;">@Model.FriendContent.Content</p>
+                        <p style="text-align: justify;">@Html.Raw(Model.FriendContent.Content)</p>
                         @if (Model.FriendContent.Type == "link")
                         {
                             var lineCss = Model.FriendContent.LinkContent.Length > 17 ? "cLinkContent" : "cLinkContentTwo";
@@ -228,7 +228,7 @@
                                     <div class="cCommentContent">
                                         @if (string.IsNullOrWhiteSpace(item.ReplyFans))
                                         {
-                                            @item.Message
+                                            @Html.Raw(item.Message)
                                         }
                                         else
                                         {
@@ -237,7 +237,8 @@
                                                 @item.ReplyFans
                                             </div>
                                             <span class="div">:</span>
-                                            @item.Message
+
+                                            @Html.Raw(item.Message)
                                         }
 
                                     </div>

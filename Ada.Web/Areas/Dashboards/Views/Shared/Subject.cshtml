@@ -54,20 +54,26 @@
                                 <table class="table table-hover margin bottom">
                                     <thead>
                                         <tr>
-                                            <th style="width: 10%" class="text-center">序号</th>
+                                            <th  class="text-center">序号</th>
                                             <th class="text-center">接单人员</th>
                                             <th class="text-center">接单总数</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var item in doList)
-                                        {
-                                        <td>@indexDo</td>
-                                        <td>@item.Key</td>
-                                        <td>@item.TotalCount</td>
+                                    
+                                    @foreach (var item in doList)
+                                    {
+                                        <tr>
+                                            <td class="text-center">@indexDo</td>
+                                            <td class="text-center">@item.Key</td>
+                                            <td class="text-center">
+                                                <span class="label label-warning">@item.TotalCount</span>
+                                                
+                                            </td>
+                                        </tr>
                                         indexDo++;
                                     }
-                                        </tbody>
+                                    </tbody>
                                     </table>
 
                                 </div>
@@ -79,7 +85,7 @@
                                     <table class="table table-hover margin bottom">
                                         <thead>
                                             <tr>
-                                                <th style="width: 10%" class="text-center">序号</th>
+                                                <th class="text-center">序号</th>
                                                 <th class="text-center">制作人员</th>
                                                 <th class="text-center">制作总数</th>
                                             </tr>
@@ -87,9 +93,14 @@
                                         <tbody>
                                         @foreach (var item in producerList)
                                         {
-                                            <td>@indexProducer</td>
-                                            <td>@item.Key</td>
-                                            <td>@item.TotalCount</td>
+                                            <tr>
+                                                <td class="text-center">@indexProducer</td>
+                                                <td class="text-center">@item.Key</td>
+                                                <td class="text-center">
+                                                    <span class="label label-warning">@item.TotalCount</span>
+                                                
+                                                </td>
+                                            </tr>
                                             indexProducer++;
                                         }
                                         </tbody>

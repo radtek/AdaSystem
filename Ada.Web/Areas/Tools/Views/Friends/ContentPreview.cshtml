@@ -36,7 +36,7 @@
     </div>
     <div class="social-body">
         <p>
-            @Model.Content
+           @Html.Raw(Model.Content)
         </p>
         @if (Model.Type == "link")
         {

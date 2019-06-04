@@ -580,7 +580,7 @@
                         var comment = {
                             FansId: $(v).find("strong").data("id"),
                             ReplyFans: $(v).find(".editselect2").html() === "回复" ? "" : $(v).find(".editselect2").html(),
-                            Message: $(v).find(".commentmsg").html() === "请输入留言内容" ? "" : $(v).find(".commentmsg").html(),
+                            Message: $(v).find(".commentmsg").text() === "请输入留言内容" ? "" : $(v).find(".commentmsg").text(),
                             MessageDate: $(v).find(".commentdate").html()
                         };
                         arr.push(comment);

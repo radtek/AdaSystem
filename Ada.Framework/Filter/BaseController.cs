@@ -226,6 +226,17 @@ namespace Ada.Framework.Filter
             }
             return fileName;
         }
+
+        public string StrReplace(string str)
+        {
+            if (string.IsNullOrWhiteSpace(str)) return str;
+            str = str.Trim().Replace(" ", "");
+            if (str.Contains("（")&&str.Contains("）"))
+            {
+                str = str.Replace("（", "(").Replace("）", ")");
+            }
+            return str;
+        }
         /// <summary>
         /// 上传图片
         /// </summary>

@@ -79,7 +79,7 @@ namespace Finance.Controllers
             entity.AddedById = CurrentManager.Id;
             entity.AddedDate = DateTime.Now;
             entity.AccountBank = viewModel.AccountBank;
-            entity.AccountName = viewModel.AccountName.Trim().Replace(" ","");
+            entity.AccountName = StrReplace(viewModel.AccountName);
             entity.AccountNum = viewModel.AccountNum;
             entity.Transactor = CurrentManager.UserName;
             entity.TransactorId = CurrentManager.Id;
@@ -149,7 +149,7 @@ namespace Finance.Controllers
             entity.ModifiedById = CurrentManager.Id;
             entity.ModifiedDate = DateTime.Now;
             entity.AccountBank = viewModel.AccountBank;
-            entity.AccountName = viewModel.AccountName.Trim().Replace(" ", "");
+            entity.AccountName = StrReplace(viewModel.AccountName);
             entity.AccountNum = viewModel.AccountNum;
             entity.Money = viewModel.Money;
             if (entity.BusinessPayees.Any())

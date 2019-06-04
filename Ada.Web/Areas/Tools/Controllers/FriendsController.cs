@@ -47,7 +47,7 @@ namespace Tools.Controllers
             };
             return View(view);
         }
-        [HttpPost]
+        [HttpPost,ValidateInput(false)]
         
         public ActionResult SaveSet(FriendsSet friendsSet)
         {
@@ -99,7 +99,7 @@ namespace Tools.Controllers
             ViewBag.Fans =Utils.GetRandomArray(friendsSet.FriendContent.Likes, int.Parse(range[0]), int.Parse(range[1])).ToList();
             return View(friendsSet);
         }
-        [AllowAnonymous]
+        [AllowAnonymous,ValidateInput(false)]
         public ActionResult Publish(FriendsSet friendsSet)
         {
             var dateRange = friendsSet.PublishDate.Split('至');

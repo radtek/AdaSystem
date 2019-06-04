@@ -77,7 +77,7 @@ namespace Finance.Controllers
             invoice.Remark = viewModel.Remark;
             invoice.TotalMoney = viewModel.TotalMoney;
             invoice.TaxNum = viewModel.TaxNum;
-            invoice.Company = viewModel.Company;
+            invoice.Company = StrReplace(viewModel.Company);
             invoice.ModifiedBy = CurrentManager.UserName;
             invoice.ModifiedById = CurrentManager.Id;
             invoice.ModifiedDate = DateTime.Now;
