@@ -400,6 +400,187 @@ namespace QuartzTask.Services
             _repository.Update(job);
             _dbContext.SaveChanges();
         }
+
+        public void WeixinArticleBySouhu(IJobExecutionContext context)
+        {
+            var name = context.JobDetail.Key.Name;
+            var group = context.JobDetail.Key.Group;
+            var job = _repository.LoadEntities(d => d.JobName == name && d.GroupName == group).FirstOrDefault();
+            var times = job.Repetitions ?? 3;
+            var hour = job.Taxis ?? 24;
+            var no = job.TimeOut ?? -6;
+            var where = job.Params.Split(',');
+            var noUpdate = DateTime.Now.AddMonths(no);//
+            var media = _mediaRepository.LoadEntities(d =>
+                    d.IsDelete == false &&
+                    where.Contains(d.TransactorId) &&
+                    d.IsSlide == true &&
+                    d.MediaType.CallIndex == "weixin" &&
+                    d.Status == Consts.StateNormal &&
+                    (d.LastPushDate > noUpdate || d.LastPushDate == null) &&
+                    (d.ApiUpDate == null || SqlFunctions.DateDiff("hour", d.ApiUpDate, DateTime.Now) > hour))
+                .FirstOrDefault();
+
+            if (media != null)
+            {
+                media.ApiUpDate = DateTime.Now;
+                var detail = new JobDetail { Id = IdBuilder.CreateIdNum(), RequestDate = DateTime.Now, IsSuccess = true };
+                if (!string.IsNullOrWhiteSpace(media.MediaID))
+                {
+                    var url = job.ApiUrl + media.MediaID.Trim();
+                    for (int i = 0; i < times; i++)
+                    {
+                        try
+                        {
+                            var rhtml = Ada.Core.Tools.HttpUtility.Get(url);
+                            var result = JsonConvert.DeserializeObject<WeiXinProJSON>(rhtml);
+                            if (result.retcode == ReturnCode.请求成功)
+                            {
+                                if (result.data.Any())
+                                {
+                                    var cache = _cacheService.GetObject<List<string>>("WEIXINBRAND");
+                                    if (cache == null)
+                                    {
+                                        var brandList = _fieldRepository.LoadEntities(d => d.FieldType.CallIndex == "Brand").Select(d => d.Text).ToList();
+                                        cache = brandList;
+                                        _cacheService.Put("WEIXINBRAND", brandList, TimeSpan.FromDays(180));
+                                    }
+                                    List<string> brands = cache as List<string>;
+                                    DateTime? lastPush = null;
+                                    int index = 1;
+                                    foreach (var articleData in result.data.OrderByDescending(d => d.publishDate))
+                                    {
+                                        if (string.IsNullOrWhiteSpace(articleData.id))
+                                        {
+                                            continue;
+                                        }
+                                        if (articleData.id.Length > 128)
+                                        {
+                                            continue;
+                                        }
+
+                                        DateTime? pubDate = null;
+                                        if (DateTime.TryParse(articleData.publishDateStr, out var publishDate))
+                                        {
+                                            if (index == 1)
+                                            {
+                                                lastPush = publishDate;
+                                            }
+
+                                            pubDate = publishDate;
+                                        }
+                                        var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
+                                        if (article == null)
+                                        {
+                                            article = new MediaArticle();
+                                            article.Id = IdBuilder.CreateIdNum();
+                                            article.ArticleId = articleData.id;
+                                            article.ArticleIdx = articleData.idx;
+                                            article.ArticleUrl = articleData.url;
+                                            article.IsOriginal = articleData.origin;
+                                            article.Biz = articleData.biz;
+                                            article.CommentCount = articleData.commentCount;
+                                            article.Content = GetBrands(articleData.content, brands);
+                                            article.IsTop = articleData.isTop;
+                                            article.PublishDate = pubDate;
+                                            article.LikeCount = articleData.likeCount;
+                                            article.ViewCount = articleData.viewCount;
+                                            article.Title = articleData.title;
+                                            if (!string.IsNullOrWhiteSpace(articleData.posterId))
+                                            {
+                                                media.MediaID = articleData.posterId;
+                                            }
+                                            if (!string.IsNullOrWhiteSpace(articleData.posterScreenName))
+                                            {
+                                                media.MediaName = articleData.posterScreenName;
+                                            }
+                                            media.MediaArticles.Add(article);
+                                        }
+                                        //else
+                                        //{
+                                        //    if (articleData.viewCount != null)
+                                        //    {
+                                        //        article.ViewCount = articleData.viewCount;
+                                        //    }
+                                        //    if (articleData.likeCount != null)
+                                        //    {
+                                        //        article.LikeCount = articleData.likeCount;
+                                        //    }
+                                        //    if (articleData.commentCount != null)
+                                        //    {
+                                        //        article.CommentCount = articleData.commentCount;
+                                        //    }
+                                        //}
+                                        index++;
+                                    }
+                                    //更新文章统计
+                                    var viewCount = media.MediaArticles.Where(d => d.IsTop == true).OrderByDescending(d => d.PublishDate).Take(10)
+                                        .Average(d => d.ViewCount);
+                                    media.AvgReadNum = Convert.ToInt32(viewCount);
+                                    //media.LastReadNum = media.MediaArticles.Where(l => l.IsTop == true)
+                                    //    .OrderByDescending(a => a.PublishDate).FirstOrDefault()?.ViewCount;
+                                    var start30 = DateTime.Now.Date.AddDays(-30);
+                                    var end30 = DateTime.Now.AddDays(1).Date;
+                                    var count = media.MediaArticles.Where(d => d.PublishDate >= start30 && d.PublishDate < end30).Select(d => new
+                                    {
+                                        Date = d.PublishDate.Value.ToString("yyyy-MM-dd")
+                                    }).GroupBy(d => d.Date).Count();
+                                    media.PublishFrequency = count;
+                                    media.LastPushDate = lastPush;
+                                }
+
+                                detail.IsSuccess = true;
+                                break;
+                            }
+
+                            if (result.retcode == ReturnCode.目标参数搜索没结果)
+                            {
+                                detail.IsSuccess = true;
+                                break;
+                            }
+                            if (result.retcode == ReturnCode.用户帐号不存在)
+                            {
+                                media.Content = result.message;
+                                media.Status = Consts.StateLock;
+                                detail.IsSuccess = true;
+                                break;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            detail.Retmsg = "采集微信文章列表:" + media.MediaID + "异常，" + ex.Message;
+                            detail.Retcode = "502";
+                            detail.IsSuccess = false;
+                        }
+                    }
+                }
+                if (detail.IsSuccess == false && job.IsLog == true)
+                {
+                    detail.AddedDate = DateTime.Now;
+                    job.JobDetails.Add(detail);
+                }
+                job.Remark = media.MediaID + "-" + DateTime.Now;
+
+
+                _mediaRepository.Update(media);
+
+            }
+            else
+            {
+                job.Remark = "暂无可采集数据";
+            }
+            if (context.NextFireTimeUtc != null)
+            {
+                job.NextTime = context.NextFireTimeUtc.Value.ToLocalTime().DateTime;
+            }
+            _repository.Update(job);
+            _dbContext.SaveChanges();
+        }
+
+
+
+
+
         private string GetBrands(string content, List<string> brands)
         {
             string htmlstr = string.Empty;

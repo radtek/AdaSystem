@@ -12,6 +12,7 @@ namespace QuartzTask.Services
    {
        void WeixinInfo(IJobExecutionContext context);
        void WeixinArticle(IJobExecutionContext context);
+       void WeixinArticleBySouhu(IJobExecutionContext context);
        void WeixinArticleData(IJobExecutionContext context);
 
        void WeiboArticle(IJobExecutionContext context);
