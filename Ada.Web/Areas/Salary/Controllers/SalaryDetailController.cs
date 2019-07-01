@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Ada.Core;
 using Ada.Core.Domain.Admin;
+using Ada.Core.Domain.Demand;
 using Ada.Core.Domain.Wages;
 using Ada.Core.ViewModel.Business;
 using Ada.Core.ViewModel.Setting;
@@ -30,6 +31,7 @@ namespace Salary.Controllers
         private readonly IRepository<Quarters> _quartersRepository;
         private readonly IRepository<AttendanceDetail> _attendanceRepository;
         private readonly IRepository<SalaryDetail> _salaryRepository;
+        private readonly IRepository<SubjectDetail> _subjectRepository;
         private readonly IBusinessWriteOffService _businessWriteOffService;
         private readonly ISettingService _settingService;
         public SalaryDetailController(ISalaryDetailService service,
@@ -39,7 +41,8 @@ namespace Salary.Controllers
             IRepository<Quarters> quartersRepository,
             IRepository<SalaryDetail> salaryRepository,
             ISettingService settingService,
-            IRepository<AttendanceDetail> attendanceRepository)
+            IRepository<AttendanceDetail> attendanceRepository,
+            IRepository<SubjectDetail> subjectRepository)
         {
             _service = service;
             _managerService = managerService;
@@ -49,6 +52,7 @@ namespace Salary.Controllers
             _salaryRepository = salaryRepository;
             _settingService = settingService;
             _attendanceRepository = attendanceRepository;
+            _subjectRepository = subjectRepository;
         }
         public ActionResult Index()
         {
@@ -237,7 +241,25 @@ namespace Salary.Controllers
             var saleCommissionList = _businessWriteOffService.LoadEntitiesFilters(quare);
             var saleCommission = saleCommissionList.Any() ? saleCommissionList.Sum(d => d.Commission) : 0;
             saleCommission = saleCommission * quarters.Commission;//乘以系数
-            var total = gw + jt + kq + viewModel.Bonus + viewModel.Commission + saleCommission + sb + zwjt;
+            //制作提成
+            var endDay = quare.WriteOffDateEnd.Value.AddDays(1);
+            var subjects = _subjectRepository.LoadEntities(d =>
+                d.IsDelete == false && d.CompletDate >= quare.WriteOffDateStar && d.CompletDate < endDay&&d.Subject.IsDelete==false&&d.Status==3);
+            var getCount = subjects.Count(d => d.TransactorId == viewModel.ManagerId);
+            var makeCount = subjects.Count(d => d.ProducerById == viewModel.ManagerId);
+            var makeCommission = getCount * 10+ makeCount * 20;
+            string subjectRemark = string.Empty;
+            if (getCount > 0)
+            {
+                var money1 = getCount * 10;
+                subjectRemark = "\r\n需求提成(认领)：总数[" + getCount + "]条，提成" + money1 + "元；";
+            }
+            if (makeCount > 0)
+            {
+                var money2 = makeCount * 20;
+                subjectRemark += "\r\n需求提成(制作)：总数[" + makeCount + "]条，提成" + money2 + "元；";
+            }
+            var total = gw + jt + kq + viewModel.Bonus + viewModel.Commission + saleCommission + sb + zwjt+ makeCommission;
             //五险+个人所得税
             decimal tax = 0;
             decimal wx = 0;
@@ -263,10 +285,10 @@ namespace Salary.Controllers
             salaryDetail.Bonus = viewModel.Bonus;
             salaryDetail.Date = viewModel.Date;
             salaryDetail.DeductMoney = viewModel.DeductMoney;
-            salaryDetail.SaleCommission = saleCommission;
+            salaryDetail.SaleCommission = saleCommission+ makeCommission;
             salaryDetail.AttendanceTotal = deductTotal;
             
-            salaryDetail.Remark = viewModel.Remark;
+            salaryDetail.Remark = viewModel.Remark+ subjectRemark;
             if (isAddAttendance)
             {
                 manager.AttendanceDetails.Add(entity);
@@ -451,7 +473,25 @@ namespace Salary.Controllers
             var saleCommissionList = _businessWriteOffService.LoadEntitiesFilters(quare);
             var saleCommission = saleCommissionList.Any() ? saleCommissionList.Sum(d => d.Commission) : 0;
             saleCommission = saleCommission * quarters.Commission;//乘以系数
-            var total = gw + jt + kq + viewModel.Bonus + viewModel.Commission + saleCommission + sb + zwjt;
+            //制作提成
+            var endDay = quare.WriteOffDateEnd.Value.AddDays(1);
+            var subjects = _subjectRepository.LoadEntities(d =>
+                d.IsDelete == false && d.CompletDate >= quare.WriteOffDateStar && d.CompletDate < endDay && d.Subject.IsDelete == false && d.Status == 3);
+            var getCount = subjects.Count(d => d.TransactorId == viewModel.ManagerId);
+            var makeCount = subjects.Count(d => d.ProducerById == viewModel.ManagerId);
+            var makeCommission = getCount * 10 + makeCount * 20;
+            string subjectRemark = string.Empty;
+            if (getCount > 0)
+            {
+                var money1 = getCount * 10;
+                subjectRemark = "\r\n需求提成(认领)：总数[" + getCount + "]条，提成" + money1 + "元；";
+            }
+            if (makeCount > 0)
+            {
+                var money2 = makeCount * 20;
+                subjectRemark += "\r\n需求提成(制作)：总数[" + makeCount + "]条，提成" + money2 + "元；";
+            }
+            var total = gw + jt + kq + viewModel.Bonus + viewModel.Commission + saleCommission + sb + zwjt+ makeCommission;
             SalaryDetail salaryDetail = manager.SalaryDetails.FirstOrDefault(d => d.Date == viewModel.Date);
             //五险+个人所得税
             decimal tax = 0;
@@ -477,9 +517,9 @@ namespace Salary.Controllers
             salaryDetail.Commission = viewModel.Commission;
             salaryDetail.Bonus = viewModel.Bonus;
             salaryDetail.DeductMoney = viewModel.DeductMoney;
-            salaryDetail.SaleCommission = saleCommission;
+            salaryDetail.SaleCommission = saleCommission+ makeCommission;
             salaryDetail.AttendanceTotal = deductTotal;
-            salaryDetail.Remark = viewModel.Remark;
+            salaryDetail.Remark = viewModel.Remark+ subjectRemark;
             _managerService.Edit(manager);
             TempData["Msg"] = "编辑成功";
             //AttendanceDetailView temp = new AttendanceDetailView();

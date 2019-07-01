@@ -9,6 +9,7 @@ using Ada.Core.Domain.Resource;
 using Ada.Core.ViewModel.Resource;
 using Ada.Framework.Filter;
 using Ada.Services.Resource;
+using Newtonsoft.Json.Linq;
 
 namespace Resource.Controllers
 {
@@ -69,6 +70,22 @@ namespace Resource.Controllers
             entity.MediaDevelopProgresses.Add(progress);
             _service.Update(entity);
             return Json(new { State = 1, Msg = "认领成功" });
+        }
+        public ActionResult Export(MediaDevelopView viewModel)
+        {
+            
+            viewModel.limit = int.MaxValue;
+            var result = _service.LoadEntitiesFilter(viewModel).ToList();
+            JArray jObjects = new JArray();
+            foreach (var item in result)
+            {
+                var jo = new JObject();
+                jo.Add("媒体类型", item.MediaType.TypeName);
+                jo.Add("媒体名称", item.MediaName);
+                jo.Add("申请人员", item.SubBy);
+                jObjects.Add(jo);
+            }
+            return File(ExportData(jObjects.ToString()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "微广联合数据表-" + DateTime.Now.ToString("yyMMddHHmmss") + ".xlsx");
         }
     }
 }

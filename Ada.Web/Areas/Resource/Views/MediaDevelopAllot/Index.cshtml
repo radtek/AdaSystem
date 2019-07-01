@@ -13,6 +13,11 @@
             <div class="ibox">
                 <div class="ibox-content">
                     <table id="table"></table>
+                    <div id="toolbar" class="btn-group">
+                        <a href="@Url.Action("Export")?Status=0" class="btn btn-primary btn-outline">
+                            <i class="fa fa-download"></i> 导出数据
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -42,7 +47,7 @@
             obj.Init = function() {
                 $('#table').bootstrapTable({
                 url: '@Url.Action("GetList")',         //请求后台的URL（*）
-                //toolbar: '#toolbar',                //工具按钮用哪个容器
+                toolbar: '#toolbar',                //工具按钮用哪个容器
                 classes: "table table-no-bordered",
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）

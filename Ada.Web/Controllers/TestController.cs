@@ -538,8 +538,16 @@ namespace Ada.Web.Controllers
                             continue;
                         }
                     }
-                    media.Transactor = transactor;
-                    media.TransactorId = transactorId;
+
+                    if (!string.IsNullOrWhiteSpace(transactor))
+                    {
+                        media.Transactor = transactor;
+                    }
+                    if (!string.IsNullOrWhiteSpace(transactorId))
+                    {
+                        media.TransactorId = transactorId;
+                    }
+                    
                     if (!string.IsNullOrWhiteSpace(linkId))
                     {
                         media.LinkManId = linkId;
