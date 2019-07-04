@@ -24,7 +24,7 @@ namespace QuartzTask.Jobs
         private readonly IMediaJobService _service = EngineContext.Current.Resolve<IMediaJobService>();
         public void Execute(IJobExecutionContext context)
         {
-            _service.WeixinArticleBySouhu(context);
+            _service.WeixinArticlePro4(context);
         }
     }
     [DisallowConcurrentExecution]
@@ -33,7 +33,7 @@ namespace QuartzTask.Jobs
         private readonly IMediaJobService _service = EngineContext.Current.Resolve<IMediaJobService>();
         public void Execute(IJobExecutionContext context)
         {
-            _service.WeixinArticleBySouhu(context);
+            _service.WeixinArticlePro4(context);
         }
     }
     [DisallowConcurrentExecution]
@@ -42,7 +42,7 @@ namespace QuartzTask.Jobs
         private readonly IMediaJobService _service = EngineContext.Current.Resolve<IMediaJobService>();
         public void Execute(IJobExecutionContext context)
         {
-            _service.WeixinArticleBySouhu(context);
+            _service.WeixinArticlePro4(context);
         }
     }
     [DisallowConcurrentExecution]
@@ -51,7 +51,7 @@ namespace QuartzTask.Jobs
         private readonly IMediaJobService _service = EngineContext.Current.Resolve<IMediaJobService>();
         public void Execute(IJobExecutionContext context)
         {
-            _service.WeixinArticleBySouhu(context);
+            _service.WeixinArticlePro4(context);
         }
     }
     [DisallowConcurrentExecution]
@@ -60,7 +60,7 @@ namespace QuartzTask.Jobs
         private readonly IMediaJobService _service = EngineContext.Current.Resolve<IMediaJobService>();
         public void Execute(IJobExecutionContext context)
         {
-            _service.WeixinArticleBySouhu(context);
+            _service.WeixinArticlePro4(context);
         }
     }
     [DisallowConcurrentExecution]
@@ -69,7 +69,7 @@ namespace QuartzTask.Jobs
         private readonly IMediaJobService _service = EngineContext.Current.Resolve<IMediaJobService>();
         public void Execute(IJobExecutionContext context)
         {
-            _service.WeixinArticleBySouhu(context);
+            _service.WeixinArticlePro4(context);
         }
     }
     [DisallowConcurrentExecution]
@@ -78,7 +78,7 @@ namespace QuartzTask.Jobs
         private readonly IMediaJobService _service = EngineContext.Current.Resolve<IMediaJobService>();
         public void Execute(IJobExecutionContext context)
         {
-            _service.WeixinArticleBySouhu(context);
+            _service.WeixinArticlePro4(context);
         }
     }
     [DisallowConcurrentExecution]
@@ -87,7 +87,7 @@ namespace QuartzTask.Jobs
         private readonly IMediaJobService _service = EngineContext.Current.Resolve<IMediaJobService>();
         public void Execute(IJobExecutionContext context)
         {
-            _service.WeixinArticleBySouhu(context);
+            _service.WeixinArticlePro4(context);
         }
     }
 }
