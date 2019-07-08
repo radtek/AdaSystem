@@ -141,11 +141,7 @@
     <Compile Include="Jobs\UpdateMediaSellPriceJob.cs" />
     <Compile Include="Jobs\WeiboArticlesJob.cs" />
     <Compile Include="Jobs\WeixinArticleMonitorJob.cs" />
-    <Compile Include="Jobs\WeiXinArticlesJob.cs" />
-    <Compile Include="Jobs\WeiXinAtricleDataProJob.cs" />
     <Compile Include="Jobs\WeiXinAtricleProJob.cs" />
-    <Compile Include="Jobs\WeiXinBizJob.cs" />
-    <Compile Include="Jobs\WeiXinInfoJob.cs" />
     <Compile Include="Jobs\WeiXinInfoProJob.cs" />
     <Compile Include="Models\AppStartLoad.cs" />
     <Compile Include="Models\IQuartzService.cs" />
