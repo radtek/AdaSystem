@@ -604,7 +604,7 @@ namespace QuartzTask.Services
                 var detail = new JobDetail { Id = IdBuilder.CreateIdNum(), RequestDate = DateTime.Now, IsSuccess = true };
                 if (!string.IsNullOrWhiteSpace(media.MediaID))
                 {
-                    var url = job.ApiUrl + media.MediaID.Trim()+ "&beginDate="+ DateTime.Now.AddDays(-3).ToString("yyyy-MM-dd") + "&endDate="+DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
+                    var url = job.ApiUrl + media.MediaID.Trim()+ "&beginDate="+ DateTime.Now.AddDays(-29).ToString("yyyy-MM-dd") + "&endDate="+DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
                     for (int i = 0; i < times; i++)
                     {
                         try
