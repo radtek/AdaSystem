@@ -785,7 +785,257 @@ namespace QuartzTask.Services
             }
             return null;
         }
+        public void RedBookInfo(IJobExecutionContext context)
+        {
+            var name = context.JobDetail.Key.Name;
+            var group = context.JobDetail.Key.Group;
+            var job = _repository.LoadEntities(d => d.JobName == name && d.GroupName == group).FirstOrDefault();
+            var times = job.Repetitions ?? 3;
+            var hour = job.Taxis ?? 360;
+            var media = _mediaRepository.LoadEntities(d =>
+                    d.IsDelete == false &&
+                    d.IsSlide == true &&
+                    d.MediaType.CallIndex == "redbook" &&
+                    d.Status == Consts.StateNormal &&
+                    (d.CollectionDate == null || SqlFunctions.DateDiff("hour", d.CollectionDate, DateTime.Now) > hour))
+                .FirstOrDefault();
+            if (media != null)
+            {
+                media.CollectionDate = DateTime.Now;
+                bool isSuccess = true;
+                string errMsg = null;
+                if (!string.IsNullOrWhiteSpace(media.MediaID))
+                {
+                    var url = job.ApiUrl + media.MediaID;
+                    for (int i = 0; i < times; i++)
+                    {
+                        try
+                        {
+                            var rhtml = Ada.Core.Tools.HttpUtility.Get(url);
+                            var result = JsonConvert.DeserializeObject<RedBookJSON>(rhtml);
+                            if (result.retcode == ReturnCode.请求成功)
+                            {
+                                if (result.data.Any())
+                                {
+                                    var info = result.data.FirstOrDefault();
+                                    if (info != null)
+                                    {
+                                        media.MediaName = Utils.FilterEmoji(info.screenName);
+                                        media.Content = info.biography;
+                                        media.FansNum = info.fansCount;
+                                        media.PostNum = info.postCount;
+                                        media.MediaLink = info.url;
+                                        media.FriendNum = info.followCount;
+                                        media.LikesNum = info.likeCount;
+                                        media.MediaLogo = info.avatarUrl;
+                                        media.AuthenticateType = info.idGrade;
+                                        if (!string.IsNullOrWhiteSpace(info.location))
+                                        {
+                                            if (info.location.Length <= 30)
+                                            {
+                                                media.Area = info.location;
+                                            }
+                                        }
+                                    }
+                                }
+                                isSuccess = true;
+                                break;
+                            }
 
+                            if (result.retcode == ReturnCode.目标参数搜索没结果 || result.retcode == ReturnCode.用户帐号不存在)
+                            {
+                                media.Content = result.message;
+                                isSuccess = true;
+                                break;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            errMsg = ex.Message;
+                            isSuccess = false;
+                        }
+                    }
+                }
+                if (isSuccess == false && job.IsLog == true)
+                {
+                    var detail = new JobDetail
+                    {
+                        Id = IdBuilder.CreateIdNum(),
+                        RequestDate = DateTime.Now,
+                        AddedDate = DateTime.Now,
+                        IsSuccess = false,
+                        Retcode = "502",
+                        Retmsg = "采集小红书用户信息:" + media.MediaID + "异常，" + errMsg
+                    };
+                    job.JobDetails.Add(detail);
+                }
+                job.Remark = media.MediaID + "-" + DateTime.Now;
+                _mediaRepository.Update(media);
+
+            }
+            else
+            {
+                job.Remark = "暂无可采集数据";
+            }
+            if (context.NextFireTimeUtc != null)
+            {
+                job.NextTime = context.NextFireTimeUtc.Value.ToLocalTime().DateTime;
+            }
+            _repository.Update(job);
+            _dbContext.SaveChanges();
+        }
+        public void RedBookArticle(IJobExecutionContext context)
+        {
+            var name = context.JobDetail.Key.Name;
+            var group = context.JobDetail.Key.Group;
+            var job = _repository.LoadEntities(d => d.JobName == name && d.GroupName == group).FirstOrDefault();
+            var times = job.Repetitions ?? 3;
+            var hour = job.Taxis ?? 48;
+            var media = _mediaRepository.LoadEntities(d =>
+                    d.IsDelete == false &&
+                    d.IsSlide == true &&
+                    d.MediaType.CallIndex == "redbook" &&
+                    d.Status == Consts.StateNormal &&
+                    (d.ApiUpDate == null || SqlFunctions.DateDiff("hour", d.ApiUpDate, DateTime.Now) > hour))
+                .FirstOrDefault();
+            if (media != null)
+            {
+                media.ApiUpDate = DateTime.Now;
+                bool isSuccess = true;
+                string errMsg = null;
+                if (!string.IsNullOrWhiteSpace(media.MediaID))
+                {
+                    var url = job.ApiUrl + media.MediaID.Trim();
+                    for (int i = 0; i < times; i++)
+                    {
+                        try
+                        {
+                            var rhtml = Ada.Core.Tools.HttpUtility.Get(url);
+                            var result = JsonConvert.DeserializeObject<RedBookArticleJSON>(rhtml);
+                            if (result.retcode == ReturnCode.请求成功)
+                            {
+                                if (result.data.Any())
+                                {
+                                    
+                                    foreach (var articleData in result.data)
+                                    {
+                                        if (string.IsNullOrWhiteSpace(articleData.id))
+                                        {
+                                            continue;
+                                        }
+                                        if (articleData.id.Length > 128)
+                                        {
+                                            continue;
+                                        }
+                                        var article = media.MediaArticles.FirstOrDefault(d => d.ArticleId == articleData.id);
+                                        if (article != null)
+                                        {
+                                            continue;
+                                        }
+                                        article = new MediaArticle();
+                                        article.Id = IdBuilder.CreateIdNum();
+                                        article.ArticleId = articleData.id;
+                                        article.Title = articleData.title;
+                                        GetRedBookArticle(article);
+                                        media.MediaArticles.Add(article);
+                                    }
+                                }
+                                isSuccess = true;
+                                break;
+                            }
+
+                            if (result.retcode == ReturnCode.目标参数搜索没结果)
+                            {
+                                isSuccess = true;
+                                break;
+                            }
+                            if (result.retcode == ReturnCode.用户帐号不存在)
+                            {
+                                media.Status = Consts.StateLock;
+                                isSuccess = true;
+                                break;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            errMsg = ex.Message;
+                            isSuccess = false;
+                        }
+                    }
+                }
+                if (isSuccess == false && job.IsLog == true)
+                {
+                    var detail = new JobDetail
+                    {
+                        Id = IdBuilder.CreateIdNum(),
+                        RequestDate = DateTime.Now,
+                        AddedDate = DateTime.Now,
+                        IsSuccess = false,
+                        Retcode = "502",
+                        Retmsg = "采集小红书文章列表信息:" + media.MediaID + "异常，" + errMsg
+                    };
+                    job.JobDetails.Add(detail);
+                }
+                job.Remark = media.MediaID + "-" + DateTime.Now;
+                //更新统计
+                var viewCount = media.MediaArticles.OrderByDescending(d => d.PublishDate).Take(50)
+                    .Average(d => d.ViewCount);
+                media.AvgReadNum = Convert.ToInt32(viewCount);
+                //平均评论数
+                media.CommentNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate)
+                    .Take(50).Average(aaa => aaa.CommentCount));
+                //平均点赞数
+                media.AvgReadNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate)
+                    .Take(50).Average(aaa => aaa.LikeCount));
+                //平均收藏数
+                media.TransmitNum = Convert.ToInt32(media.MediaArticles.OrderByDescending(a => a.PublishDate)
+                    .Take(50).Average(aaa => aaa.ShareCount));
+                _mediaRepository.Update(media);
+
+            }
+            else
+            {
+                job.Remark = "暂无可采集数据";
+            }
+            if (context.NextFireTimeUtc != null)
+            {
+                job.NextTime = context.NextFireTimeUtc.Value.ToLocalTime().DateTime;
+            }
+            _repository.Update(job);
+            _dbContext.SaveChanges();
+        }
+
+        private void GetRedBookArticle(MediaArticle article)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                try
+                {
+                    var url =
+                                "http://api01.idataapi.cn:8000/post/xiaohongshu_ids?apikey=aHkIQg6KZL5nKgqhcAbrT7AYq484DkAfmFzd8rBgYDrK6CItsvAAOWwz7BiFkoQx&id=" +
+                                article.ArticleId;
+                    var rhtml = Ada.Core.Tools.HttpUtility.Get(url);
+                    var result = JsonConvert.DeserializeObject<RedBookArticleJSON>(rhtml);
+                    if (result.retcode != ReturnCode.请求成功) continue;
+                    if (!result.data.Any()) continue;
+                    var articleData = result.data[0];
+                    article.LikeCount = articleData.likeCount;
+                    if (DateTime.TryParse(articleData.publishDateStr, out var date))
+                    {
+                        article.PublishDate = date;
+                    }
+                    article.ShareCount = articleData.favoriteCount;
+                    article.CommentCount = articleData.commentCount;
+                    article.ArticleUrl = articleData.url;
+                    article.Content = articleData.content;
+                    break;
+                }
+                catch
+                {
+                    //
+                }
+            }
+        }
 
         public void WeiboArticle(IJobExecutionContext context)
         {
