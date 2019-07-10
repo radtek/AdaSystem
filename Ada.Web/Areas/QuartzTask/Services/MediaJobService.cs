@@ -540,8 +540,8 @@ namespace QuartzTask.Services
                             }
                             if (result.retcode == ReturnCode.用户帐号不存在)
                             {
-                                media.Content = result.message;
-                                media.Status = Consts.StateLock;
+                                //media.Content = result.message;
+                                //media.Status = Consts.StateLock;
                                 detail.IsSuccess = true;
                                 break;
                             }
@@ -586,17 +586,38 @@ namespace QuartzTask.Services
             var times = job.Repetitions ?? 3;
             var hour = job.Taxis ?? 24;
             var no = job.TimeOut ?? -6;
-            var where = job.Params.Split(',');
+            List<string> where = new List<string>();
+            if (!string.IsNullOrWhiteSpace(job.Params))
+            {
+                where = job.Params.Split(',').ToList();
+            }
+            
             var noUpdate = DateTime.Now.AddMonths(no);//
-            var media = _mediaRepository.LoadEntities(d =>
-                    d.IsDelete == false &&
-                    where.Contains(d.TransactorId) &&
-                    d.IsSlide == true &&
-                    d.MediaType.CallIndex == "weixin" &&
-                    d.Status == Consts.StateNormal &&
-                    (d.LastPushDate > noUpdate || d.LastPushDate == null) &&
-                    (d.ApiUpDate == null || SqlFunctions.DateDiff("hour", d.ApiUpDate, DateTime.Now) > hour))
-                .FirstOrDefault();
+            Media media;
+            if (where.Any())
+            {
+                media = _mediaRepository.LoadEntities(d =>
+                        d.IsDelete == false &&
+                        where.Contains(d.TransactorId) &&
+                        d.IsSlide == true &&
+                        d.MediaType.CallIndex == "weixin" &&
+                        d.Status == Consts.StateNormal &&
+                        (d.LastPushDate > noUpdate || d.LastPushDate == null) &&
+                        (d.ApiUpDate == null || SqlFunctions.DateDiff("hour", d.ApiUpDate, DateTime.Now) > hour))
+                    .FirstOrDefault();
+            }
+            else
+            {
+                media = _mediaRepository.LoadEntities(d =>
+                        d.IsDelete == false &&
+                        d.IsSlide == true &&
+                        d.MediaType.CallIndex == "weixin" &&
+                        d.Status == Consts.StateNormal &&
+                        (d.LastPushDate > noUpdate || d.LastPushDate == null) &&
+                        (d.ApiUpDate == null || SqlFunctions.DateDiff("hour", d.ApiUpDate, DateTime.Now) > hour))
+                    .FirstOrDefault();
+            }
+            
 
             if (media != null)
             {
@@ -717,8 +738,8 @@ namespace QuartzTask.Services
                             }
                             if (result.retcode == ReturnCode.用户帐号不存在)
                             {
-                                media.Content = result.message;
-                                media.Status = Consts.StateLock;
+                                //media.Content = result.message;
+                                //media.Status = Consts.StateLock;
                                 detail.IsSuccess = true;
                                 break;
                             }

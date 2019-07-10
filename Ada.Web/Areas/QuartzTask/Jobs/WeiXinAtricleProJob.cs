@@ -19,6 +19,15 @@ using QuartzTask.Services;
 namespace QuartzTask.Jobs
 {
     [DisallowConcurrentExecution]
+    public class WeiXinAtricleProJob : IJob
+    {
+        private readonly IMediaJobService _service = EngineContext.Current.Resolve<IMediaJobService>();
+        public void Execute(IJobExecutionContext context)
+        {
+            _service.WeixinArticlePro4(context);
+        }
+    }
+    [DisallowConcurrentExecution]
     public class WeiXinAtricleProJob1 : IJob
     {
         private readonly IMediaJobService _service = EngineContext.Current.Resolve<IMediaJobService>();
@@ -88,6 +97,79 @@ namespace QuartzTask.Jobs
         public void Execute(IJobExecutionContext context)
         {
             _service.WeixinArticlePro4(context);
+        }
+    }
+
+    [DisallowConcurrentExecution]
+    public class WeiXinAtricleJob1 : IJob
+    {
+        private readonly IMediaJobService _service = EngineContext.Current.Resolve<IMediaJobService>();
+        public void Execute(IJobExecutionContext context)
+        {
+            _service.WeixinArticleBySouhu(context);
+        }
+    }
+    [DisallowConcurrentExecution]
+    public class WeiXinAtricleJob2 : IJob
+    {
+        private readonly IMediaJobService _service = EngineContext.Current.Resolve<IMediaJobService>();
+        public void Execute(IJobExecutionContext context)
+        {
+            _service.WeixinArticleBySouhu(context);
+        }
+    }
+    [DisallowConcurrentExecution]
+    public class WeiXinAtricleJob3 : IJob
+    {
+        private readonly IMediaJobService _service = EngineContext.Current.Resolve<IMediaJobService>();
+        public void Execute(IJobExecutionContext context)
+        {
+            _service.WeixinArticleBySouhu(context);
+        }
+    }
+    [DisallowConcurrentExecution]
+    public class WeiXinAtricleJob4 : IJob
+    {
+        private readonly IMediaJobService _service = EngineContext.Current.Resolve<IMediaJobService>();
+        public void Execute(IJobExecutionContext context)
+        {
+            _service.WeixinArticleBySouhu(context);
+        }
+    }
+    [DisallowConcurrentExecution]
+    public class WeiXinAtricleJob5 : IJob
+    {
+        private readonly IMediaJobService _service = EngineContext.Current.Resolve<IMediaJobService>();
+        public void Execute(IJobExecutionContext context)
+        {
+            _service.WeixinArticleBySouhu(context);
+        }
+    }
+    [DisallowConcurrentExecution]
+    public class WeiXinAtricleJob6 : IJob
+    {
+        private readonly IMediaJobService _service = EngineContext.Current.Resolve<IMediaJobService>();
+        public void Execute(IJobExecutionContext context)
+        {
+            _service.WeixinArticleBySouhu(context);
+        }
+    }
+    [DisallowConcurrentExecution]
+    public class WeiXinAtricleJob7 : IJob
+    {
+        private readonly IMediaJobService _service = EngineContext.Current.Resolve<IMediaJobService>();
+        public void Execute(IJobExecutionContext context)
+        {
+            _service.WeixinArticleBySouhu(context);
+        }
+    }
+    [DisallowConcurrentExecution]
+    public class WeiXinAtricleJob8 : IJob
+    {
+        private readonly IMediaJobService _service = EngineContext.Current.Resolve<IMediaJobService>();
+        public void Execute(IJobExecutionContext context)
+        {
+            _service.WeixinArticleBySouhu(context);
         }
     }
 }
